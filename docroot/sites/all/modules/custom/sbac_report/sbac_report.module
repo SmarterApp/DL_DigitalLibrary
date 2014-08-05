@@ -14,6 +14,7 @@ define('SBAC_REPORT_TAB_INDIVIDUAL', 'individual');
 define('SBAC_REPORT_TAB_USER', 'user_activity');
 define('SBAC_REPORT_TAB_STATES', 'resource_states');
 define('SBAC_REPORT_FILTER_ERROR', t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.'));
+define('SBAC_REPORT_RESOURCE_DETAILS_PAGER', 'sbac_report_resource_details_pager');
 
 include_once('sbac_report.utils.inc');
 include_once('sbac_report.features.inc');
@@ -126,7 +127,21 @@ function sbac_report_user_access() {
   $account->entity_type = 'user';
   $account->entity_id = $account->uid;
   $slt = field_entity_value($account, 'field_slt_member');
-  if ($slt) {
+  $sne = field_entity_value($account, 'field_sne_member');
+  if ($slt || $sne) {
+    return TRUE;
+  }
+
+  $allowed_roles = array(
+    'resource contributor',
+    'resource reviewer',
+    'resource publisher',
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+  );
+
+  if (array_intersect($user->roles, $allowed_roles)) {
     return TRUE;
   }
 
@@ -150,6 +165,26 @@ function sbac_report_user_access_all($account = NULL) {
   );
 
   return (bool) array_intersect(array_keys($account->roles), array_keys($allowed_roles));
+}
+
+/**
+ * Checks to see if the current user is allowed to search for other users
+ * @return bool
+ */
+function sbac_report_select_other_users($account) {
+  if (is_null($account)) {
+    global $user;
+    $account = user_load($user);
+  }
+
+  $allowed_roles = array(
+    'resource publisher',
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+  );
+
+  return array_intersect($account->roles, $allowed_roles);
 }
 
 /**
@@ -182,6 +217,17 @@ function sbac_report_theme($existing, $type, $theme, $path) {
 
   $themes['sbac_report_resource_summary'] = array(
     'template' => 'templates/sbac-report-resource-summary',
+    'path' => $module_path,
+    'variables' => array(
+      'rows' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_posted_resource_stats'] = array(
+    'template' => 'templates/sbac-report-user-posted-resources-stats',
     'path' => $module_path,
     'variables' => array(
       'rows' => NULL,
@@ -316,18 +362,35 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
     ),
   );
 
-  $form["date_range_dropdown$which"] = array(
-    '#type' => 'markup',
-    '#markup' => theme("sbac_report_date_range_dropdown",
-      array(
-        'which' => $which,
-        'date_display' => $date_display ? $date_display : t('Last 30 Days'),
-        'ago_30' => $date_options['Last 30 Days'],
-        'ago_60' => $date_options['Last 60 Days'],
-        'ago_90' => $date_options['Last 90 Days'],
+  if ($which) {
+    $form["date_range_dropdown$which"] = array(
+      '#type' => 'markup',
+      '#markup' => theme("sbac_report_date_range_dropdown",
+        array(
+          'which' => $which,
+          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+          'ago_30' => $date_options['Last 30 Days'],
+          'ago_60' => $date_options['Last 60 Days'],
+          'ago_90' => $date_options['Last 90 Days'],
+        )
       )
-    )
-  );
+    );
+  }
+  else {
+    $form["date_range_dropdown"] = array(
+      '#type' => 'markup',
+      '#markup' => theme("sbac_report_date_range_dropdown",
+        array(
+          'which' => $which,
+          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+          'cumulative' => $date_options['Cumulative to date'],
+          'ago_30' => $date_options['Last 30 Days'],
+          'ago_60' => $date_options['Last 60 Days'],
+          'ago_90' => $date_options['Last 90 Days'],
+        )
+      )
+    );
+  }
 
   $form["from_date$which"] = array(
     '#id' => "from-date$which",
@@ -384,7 +447,7 @@ function sbac_report_state_options() {
     }
   }
   // SLT user can only select their own states.
-  elseif (sbac_report_is_slt($user)) {
+  else {
     $result = db_select('field_data_field_state', 'fs')
       ->fields('fs', array('field_state_tid'))
       ->condition('entity_type', 'user')
@@ -454,14 +517,40 @@ function sbac_report_is_slt($account) {
 }
 
 /**
+ * Check if the user is an SNE.
+ *
+ * @param object $account
+ *   User object.
+ *
+ * @return bool
+ *   True if an SNE. False otherwise.
+ */
+function sbac_report_is_sne($account) {
+  // First check if the user has resource contributor role.
+  if (in_array('resource contributor', $account->roles)) {
+    $result = db_select('field_data_field_sne_member', 'sne')
+      ->fields('sne', array('field_sne_member_value'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $account->uid)
+      ->condition('field_sne_member_value', '1')
+      ->execute();
+    $count = $result->rowCount();
+    return $result->rowCount();
+  }
+  return FALSE;
+}
+
+/**
  * Options for the date range field.
  */
 function sbac_report_date_range_options() {
   $today = format_date(REQUEST_TIME, 'custom', 'Ymd');
+  $beginning = format_date(0, 'custom', 'Ymd');
   $ago_30 = format_date(strtotime('30 days ago'), 'custom', 'Ymd');
   $ago_60 = format_date(strtotime('60 days ago'), 'custom', 'Ymd');
   $ago_90 = format_date(strtotime('90 days ago'), 'custom', 'Ymd');
   $options = array(
+    'Cumulative to date' => $beginning . '--' . $today,
     'Last 30 Days' => $ago_30 . '--' . $today,
     'Last 60 Days' => $ago_60 . '--' . $today,
     'Last 90 Days' => $ago_90 . '--' . $today,

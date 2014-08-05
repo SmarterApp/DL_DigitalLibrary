@@ -73,6 +73,15 @@ define('SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_VIEWS_FILTER', 'distinc
  */
 
 /**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_forum_update_projects_alter(&$projects) {
+  unset($projects['sbac_forum']);
+}
+
+/**
  * Implements hook_menu().
  */
 function sbac_forum_menu() {
@@ -195,6 +204,14 @@ function sbac_forum_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+
+  $items['sbac-forum/load-more'] = array(
+    'title' => 'Load More Forum Data',
+    'page callback' => 'sbac_forum_load_more_ajax',
+    'access arguments' => array('access content'),
+    'file' => 'includes/sbac_forum.pages.inc',
+  );
+
   return $items;
 }
 
@@ -2207,44 +2224,46 @@ function sbac_forum_user_has_recommended($cid, $uid) {
  */
 function sbac_forum_query_comment_filter_alter(QueryAlterableInterface $query) {
   if (($node = $query->getMetaData('node')) && (get_class($query) == 'PagerDefault')) {
-    switch ($_SESSION['sbac-topic-comment-sorts']) {
-      case 'comment-oldest':
-        // Do nothing, the comments are sorted by oldest->newest by default
-        break;
-      case 'comment-most-recommended':
-        // remove the old ordering
-        $orderby = & $query->getOrderBy();
-        unset($orderby['torder']);
-
-        // sort by most recommended
-        $query->leftJoin('field_data_field_topic_comment_recommended', 'recommended', 'recommended.entity_id = c.cid');
-        $query->groupBy('c.cid');
-        $query->orderBy('count(recommended.field_topic_comment_recommended_target_id)', 'DESC');
-        $query->orderBy('c.created', 'DESC');
-        break;
-      case 'comment-most-recent-activity':
-      default;
-        // Copied from comment_goodness_query_comment_filter_alter()
-        $orderby = & $query->getOrderBy();
-        $expressions = & $query->getExpressions();
-        // Sorting for threaded comments.
-        if (isset($orderby['torder'])) {
-          // Get rid of the expressions that prepare the threads for ASC ordering.
-          unset($expressions['torder']);
+    if (isset($_SESSION['sbac-topic-comment-sorts'])) {
+      switch ($_SESSION['sbac-topic-comment-sorts']) {
+        case 'comment-oldest':
+          // Do nothing, the comments are sorted by oldest->newest by default
+          break;
+        case 'comment-most-recommended':
+          // remove the old ordering
+          $orderby = & $query->getOrderBy();
           unset($orderby['torder']);
-          // Simply order by the thread field.
-          $orderby['c.thread'] = 'DESC';
-        }
-        // Sorting for flat comments.
-        else {
-          $direction = 'DESC';
-          if (isset($orderby['c.cid'])) {
-            unset($orderby['c.cid']);
+
+          // sort by most recommended
+          $query->leftJoin('field_data_field_topic_comment_recommended', 'recommended', 'recommended.entity_id = c.cid');
+          $query->groupBy('c.cid');
+          $query->orderBy('count(recommended.field_topic_comment_recommended_target_id)', 'DESC');
+          $query->orderBy('c.created', 'DESC');
+          break;
+        case 'comment-most-recent-activity':
+        default;
+          // Copied from comment_goodness_query_comment_filter_alter()
+          $orderby = & $query->getOrderBy();
+          $expressions = & $query->getExpressions();
+          // Sorting for threaded comments.
+          if (isset($orderby['torder'])) {
+            // Get rid of the expressions that prepare the threads for ASC ordering.
+            unset($expressions['torder']);
+            unset($orderby['torder']);
+            // Simply order by the thread field.
+            $orderby['c.thread'] = 'DESC';
           }
-          $orderby['c.created'] = $direction;
-          $orderby['c.cid'] = $direction;
-        }
-        break;
+          // Sorting for flat comments.
+          else {
+            $direction = 'DESC';
+            if (isset($orderby['c.cid'])) {
+              unset($orderby['c.cid']);
+            }
+            $orderby['c.created'] = $direction;
+            $orderby['c.cid'] = $direction;
+          }
+          break;
+      }
     }
   }
 }

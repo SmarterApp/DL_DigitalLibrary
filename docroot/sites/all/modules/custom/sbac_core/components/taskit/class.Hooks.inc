@@ -127,6 +127,21 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Posting Action.'),
         'class' => 'PostingAction',
       ),
+      array(
+        'name' => 'resource_reposted',
+        'description' => t('Resource Reposted'),
+        'class' => 'ResourceReposted',
+      ),
+      array(
+        'name' => 'resource_promoted',
+        'description' => t('Resource Promoted'),
+        'class' => 'ResourcePromoted',
+      ),
+      array(
+        'name' => 'resource_demoted',
+        'description' => t('Resource Demoted'),
+        'class' => 'ResourceDemoted',
+      ),
       // resource is flagged
       array(
         'name' => 'resource_flagged',
@@ -222,6 +237,12 @@ class Hooks extends \devtools\Hooks {
         'name' => 'post_removed_creator',
         'description' => t('Notify Post creator'),
         'class' => 'PostRemovedCreator',
+      ),
+      // notify poster of HTML5 content
+      array(
+        'name' => 'html5_upload_error',
+        'description' => t('Notify HTML5 Poster'),
+        'class' => 'HTML5UploadError',
       ),
     );
 

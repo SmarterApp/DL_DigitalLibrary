@@ -13,6 +13,7 @@ function sbac_flag_moderation() {
   $result = sbac_flag_get_flags();
   $count = 0;
   $offset = 0;
+
   $list_output = sbac_flag_moderation_output($result, $count, $offset);
   $_SESSION['sbac-flag']['count'] = $count;
   $load_more_button = NULL;
@@ -40,14 +41,17 @@ function sbac_flag_moderation() {
 function sbac_flag_load_more() {
   $list_output = '';
   $offset = $_POST['offset'];
+  $hash_loading = $_POST['hash_load'];
+  ($hash_loading == 'true' ? $hash_loading = TRUE : $hash_loading = FALSE);
   $remove_button = FALSE;
   if ($offset) {
     $result = sbac_flag_get_flags();
     $count = 0;
-    $list_output = sbac_flag_moderation_output($result, $count, $offset);
+    $list_output = sbac_flag_moderation_output($result, $count, $offset, TRUE, $hash_loading);
     if (isset($list_output['remove_button'])) {
       $remove_button = TRUE;
     }
+    $_SESSION['load_more']['moderation']['page'] = $offset;
   }
   $output = array('list_output' => $list_output['list_output'], 'offset' => $offset, 'remove_button' => $remove_button);
   print drupal_json_encode($output);
@@ -77,12 +81,22 @@ function sbac_flag_get_flags() {
  * @param $count
  * @return string
  */
-function sbac_flag_moderation_output($result, &$count, &$offset = NULL) {
+function sbac_flag_moderation_output($result, &$count, &$offset = NULL, $load_more_ajax = FALSE, $hash_load_more = FALSE) {
   global $user;
   $list_output = '';
   $sorted_flags = array();
 
-  if ($offset) {
+  if (!$load_more_ajax && isset($_SESSION['load_more']['moderation']['page'])) {
+    $start = 0;
+    $end = $_SESSION['load_more']['moderation']['page'] * SBAC_FLAG_MODERATION_COUNT;
+    $offset = $_SESSION['load_more']['moderation']['page'];
+  }
+  else if ($hash_load_more) {
+    $start = 0;
+    $end = ($offset + 1) * SBAC_FLAG_MODERATION_COUNT;
+    $offset++;
+  }
+  else if ($offset) {
     $start = SBAC_FLAG_MODERATION_COUNT * $offset;
     $end = $start + SBAC_FLAG_MODERATION_COUNT;
     $offset++;

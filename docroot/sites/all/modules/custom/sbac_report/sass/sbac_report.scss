@@ -1,5 +1,7 @@
 @import "compass/css3/";
 
+$table-grey: #a1a4a8;
+$white: #fff;
 
 /* -----------------------------------------
     Variables and Mixins
@@ -38,7 +40,7 @@ $darkgreen: #246a34;
 	.row {
 		max-width: 960px;
 	}
-	
+
 	h1#page-title {
 		color: #04384E;
 	  display: block;
@@ -48,7 +50,7 @@ $darkgreen: #246a34;
     padding: 20px 0 15px;
     text-transform: capitalize;
 	}
-	
+
 	#main.columns {
 		/*padding: 0 50px 0 40px;*/
 	}
@@ -135,7 +137,8 @@ i.icon-info {
   }
 }
 
-.view-display-id-resources_details {
+.view-display-id-resources_details,
+.view-id-posted_resource_stats {
   .form-type-select {
     label {
       display: inline-block;
@@ -144,8 +147,14 @@ i.icon-info {
     select {
       width: 85px;
 			font-size: 0.8em;
+			border: 1px solid #aaa;
     }
   }
+}
+
+select#edit-limit {
+    width: 85px;
+    font-size: 0.8em;
 }
 
 .view-filters {
@@ -255,7 +264,7 @@ i.icon-info {
     margin-right: 10px;
 		padding-right: 20px;
 		margin-top: 0;
-		
+
 		#autocomplete {
 			padding-left: 10px;
 			background: #fff;
@@ -348,9 +357,9 @@ i.icon-info {
 			margin-top: 20px;
 		}
 	}
-	
+
 	#sbac-csv-report-user-activity-form {
-		
+
 		label {
 			font-size: 13px;
 		}
@@ -358,14 +367,14 @@ i.icon-info {
 			margin-right: 20px;
 		}
 	}
-	
+
 	.view-sne-details {
-		
+
 		.large-3.profile-pic {
 			padding-right: 0;
 			margin-bottom: 15px;
 			width: 16%;
-			
+
 			.user-picture {
 			  background-image: url("../images/avatar.png");
 		    background-position: center center;
@@ -376,26 +385,26 @@ i.icon-info {
 		    width: 100px;
 			  height: 100px;
 			  /*height: auto;*/
-			
+
 				.profile-img {
 					width: 100px !important;
 					height: auto !important;
 				}
 			}
 		}
-		
+
 		.large-9.user-profile {
 			float:left;
-			
+
 			h2 {
 				padding: 0 !important;
 				margin-bottom: 8px;
 			}
-			
+
 			.views-field {
 				margin-bottom: 7px;
 				font-size: 15px;
-				
+
 				&.email {
 					color: #0583AC;
 			    cursor: pointer;
@@ -407,10 +416,10 @@ i.icon-info {
 		.profile-details {
 			clear: both;
 			margin: 0 1em;
-			
+
 			.views-field {
 				margin-bottom: 20px;
-				
+
 				.title {
 					border-bottom: 1px solid #CECECE;
 					color: #04384E;
@@ -423,7 +432,7 @@ i.icon-info {
 			    padding: 0 0 3px;
 			    text-transform: uppercase;
 				}
-				
+
 				.tag {
 					background-color: #F2F2F2;
 					border-radius: 2px;
@@ -437,9 +446,9 @@ i.icon-info {
 			}
 		}
 	}
-	
+
 	#individual {
-		
+
 		table {
 			color: #464B54;
 			font-size: 13px;
@@ -447,7 +456,7 @@ i.icon-info {
 	    text-align: left;
 			margin-bottom: 30px;
 		}
-		
+
 		th {
 		  background-color: #F2F2F2;
 			font-size: 13px;
@@ -455,27 +464,72 @@ i.icon-info {
 			color: #464B54;
 			line-height: 1.5;
 		}
-		
+
 		td {
 			padding: 10px;
 			font-size: 13px;
 			text-align: left;
 			background: none repeat scroll 0 0 #FFFFFF;
 		}
+
+
+		.view-contributed-resources {
+			table {
+				border: none;
+			}
+
+			.sbac_report_reviews_empty {
+				visibility: hidden;
+				border: none;
+			}
+
+			.sbac_report_collaboration_activity {
+				border: none;
+				text-align: center;
+				background-color: $table-grey;
+				background-image: none;
+				text-transform: uppercase;
+				color: $white;
+				font-size: 12px;
+								border-radius: 12px 12px 0 0;
+
+			}
+
+			th {
+				text-align: center;
+
+				&.views-field-rating {
+					width: 100px;
+				}
+			}
+
+			td {
+				text-align: center;
+
+				a {
+					text-decoration: underline;
+				}
+
+				&.views-field-nid-active {
+					text-align: left;
+				}
+			}
+		}
 	}
-	
+
 	.form-item-display {
 		float: right;
 	}
-	
+
 	label[for="edit-display"] {
 		display: inline-block;
 	}
-	
+
 	select#edit-display {
 		width: 85px;
 		margin-bottom: 30px;
 		font-size: 0.8em;
+		border: 1px solid #aaa;
 	}
 }
 
@@ -484,11 +538,11 @@ i.icon-info {
  Tables
   **/
 .page-reports {
-	
+
 	#main {
 		width: 960px;
 	}
-	
+
   div.vertical-tabs {
     margin-left: 8em;
 
@@ -533,7 +587,7 @@ i.icon-info {
 					background-color: #fff;
 					background-image: none;
 					padding: 10px 2px !important;
-					
+
 	        &.subheader{
 	          /*@include table-header();*/
 						background-color: #fff;
@@ -581,7 +635,7 @@ i.icon-info {
 
       .slides {
 				margin-bottom: 0;
-				
+
         li {
           margin: 0;
 					height: 350px;
@@ -624,12 +678,12 @@ i.icon-info {
 
 /*SNE tab, CSV tab*/
 .page-reports {
-	
+
 	ul.vertical-tabs-list {
 		margin-left: 0;
 		padding-bottom: 5px;
 	}
-		
+
 	fieldset[id*="edit-date-range"] {
 			clear: left;
 			border: none;
@@ -638,7 +692,7 @@ i.icon-info {
 
 			input[type="radio"] {
 				margin-bottom: 15px;
-			}	
+			}
 
 			.form-wrapper {
 				border: none;
@@ -647,15 +701,15 @@ i.icon-info {
 				.form-type-textfield {
 					.description {display: none;}
 				}
-			}	
+			}
 	}
-	
+
 	.container-inline-date {
 		label, input {
 			display: block;
 			float: left;
 		}
-		
+
 		label {
 			margin-right: 10px;
 			margin-top: 10px;
@@ -669,12 +723,12 @@ i.icon-info {
 
 .page-reports {
 	.report-form-container {
-		button:focus { 
+		button:focus {
 			border-color: #9ecaed !important;
-			box-shadow: 0 0 10px #9ecaed !important; 
+			box-shadow: 0 0 10px #9ecaed !important;
 		}
 	}
-} 
+}
 
 /*Report individual modal*/
 .sbac-report-modal.ctools-modal-content {
@@ -682,15 +736,15 @@ i.icon-info {
 	padding-right: 10px !important;
 	position: relative;
 	z-index: 99;
-	
+
 	#modal-title {
 		margin-left: 20px;
 	}
-	
+
 	.modal-content {
 		padding: 0;
 		overflow-y: hidden !important;
-		
+
 		.intro {
 			.review-date {
 				width: 50%;
@@ -702,28 +756,28 @@ i.icon-info {
 				text-align: right;
 			}
 		}
-		
+
 		.flexslider {
 			.flex-viewport {
 				overflow-y: hidden;
 				overflow-x: hidden;
 				max-height: 420px;
 				border-bottom: 0;
-				
+
 				li {
-					margin: 0; 
+					margin: 0;
 					overflow-y: auto !important;
 					max-height: 420px;
 				}
 			}
 		}
-	}	
+	}
 }
-	
+
 form[id*="sbac-report-ct-individual-modal-form"] {
 	margin-bottom: 0;
 	padding: 0 40px;
-	
+
 	button {
 		float: right;
 		margin-left: 20px;

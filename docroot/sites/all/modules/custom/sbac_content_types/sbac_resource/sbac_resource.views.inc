@@ -14,13 +14,27 @@ function sbac_resource_views_query_alter(&$view, &$query) {
   if ($view->name == 'resources') {
     _sbac_resource_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'my_resources') {
+    sbac_resource_my_resource_apply_filters($view);
     _sbac_resource_my_resources_view_query_alter($view, $query);
   }
-
   if ($view->name == 'resource_review') {
     _sbac_resource_resource_review_view_query_alter($view, $query);
+  }
+}
+
+/**
+ * Implements hook_view_post_render().
+ *
+ * @param $view
+ * @param $output
+ * @param $cache
+ */
+function sbac_resource_views_post_render(&$view, &$output, &$cache) {
+  if ($view->name == 'resources' || $view->name == 'resource_review' || $view->name == 'my_resources') {
+    if (isset($_POST['page'])) {
+      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
+    }
   }
 }
 
@@ -59,8 +73,6 @@ function sbac_resource_views_default_views_alter(&$views) {
  */
 function sbac_resource_my_resource_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
-  $available_states = array('draft', 'needs_review', 'being_reviewed', 'rejected', 'published', 'removed');
-  $resource_states = array();
 
   // Current filter session - create the args where needed.
   if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] != '') {
@@ -73,69 +85,31 @@ function sbac_resource_my_resource_apply_filters(&$view) {
           $vid = $filter_info[0];
           $tid = $filter_info[1];
           if ($vid && $tid) {
-            $vocabulary = taxonomy_vocabulary_load($vid);
-            $term = taxonomy_term_load($tid);
-            if ($vocabulary && $term) {
-              switch ($vocabulary->machine_name) {
-                case 'focus':
-                  $view_filters['field_focus_tid']['value'][] = $tid;
-                  $view_filters['field_focus_tid']['operator'] = 'and';
-                  break;
-                case 'grades':
-                  $view_filters['field_grades_tid']['value'][] = $tid;
-                  $view_filters['field_grades_tid']['operator'] = 'and';
-                  break;
-                case 'subject':
-                  $view_filters['field_subject_tid']['value'][] = $tid;
-                  $view_filters['field_subject_tid']['operator'] = 'and';
-                  break;
-                case 'resource_states':
-                  switch($term->name) {
-                    case 'Draft':
-                      $state['draft'] = 'draft';
-                      break;
-                    case 'In Review':
-                      $state['being_reviewed'] = 'being_reviewed';
-                      // $state['needs_review'] = 'needs_review';
-                      // $state['approved'] = 'approved';
-                      break;
-                    case 'Posted':
-                      $state['published'] = 'published';
-                      break;
-                    case 'Returned':
-                      $state['rejected'] = 'rejected';
-                      break;
-                    case 'Submitted':
-                      $state['needs_review'] = 'needs_review';
-                      break;
-                    case 'Removed':
-                      $state['removed'] = 'removed';
-                      break;
-                    default:
-                      $state['draft'] = 'draft';
-                      $state['approved'] = 'approved';
-                      break;
-                  }
-                  $resource_states = $state;
-                  break;
+            if ($vid == 'resource-status') {
+              $view->custom_filters[$vid][] = $tid;
+            }
+            else {
+              $vocabulary = taxonomy_vocabulary_load($vid);
+              $term = taxonomy_term_load($tid);
+              if ($vocabulary && $term) {
+                switch ($vocabulary->machine_name) {
+                  case 'focus':
+                    $view_filters['field_focus_tid']['value'][] = $tid;
+                    $view_filters['field_focus_tid']['operator'] = 'and';
+                    break;
+                  case 'grades':
+                    $view_filters['field_grades_tid']['value'][] = $tid;
+                    $view_filters['field_grades_tid']['operator'] = 'and';
+                    break;
+                  case 'subject':
+                    $view_filters['field_subject_tid']['value'][] = $tid;
+                    $view_filters['field_subject_tid']['operator'] = 'and';
+                    break;
+                }
               }
             }
           }
         }
-      }
-    }
-
-    if (!$resource_states) {
-      foreach ($available_states AS $state) {
-        $view_filters['state']['value'][$state] = $state;
-        $view_filters['state']['operator'] = 'in';
-      }
-    }
-    else {
-      $view_filters['state']['value'] = array();
-      foreach ($resource_states AS $state) {
-        $view_filters['state']['value'][$state] = $state;
-        $view_filters['state']['operator'] = 'in';
       }
     }
     $view->display_handler->set_option('filters', $view_filters);
@@ -153,7 +127,8 @@ function sbac_resource_my_resource_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
 
   if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS]) &&
-      $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != '') {
+    $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != ''
+  ) {
 
     $current_sorting = $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS];
     $sort_field_key = 'created';
@@ -264,7 +239,8 @@ function sbac_resource_digital_library_apply_filters(&$view) {
     if (!empty($ccss_filters)) {
       $ccss_terms = implode(',', $ccss_filters);
       $view->set_arguments(array($ccss_terms));
-    } else  {
+    }
+    else {
       // If no filter is set for this, you have to pass "all" so its ignored.
       $view->set_arguments(array('all'));
     }
@@ -291,7 +267,8 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
 
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
-      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != '') {
+    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != ''
+  ) {
 
     $current_sorting = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
     $sort_field_key = 'timestamp';
@@ -317,6 +294,37 @@ function sbac_resource_digital_library_apply_sorts(&$view) {
       $view->display_handler->set_option('sorts', $new_sorts);
     }
   }
+}
+
+/**
+ * Changes Digital Library output to display Distinct or mixed when provided.
+ * @param  [type] $view The view object.
+ */
+function sbac_resource_digital_library_apply_pwd(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+  if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD])) {
+    $view_filters['sticky']['value'] = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? '1' : 'All';
+  }
+  else {
+    $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] = '0';
+    $view_filters['sticky']['value'] = 'All';
+  }
+  $view->display_handler->set_option('filters', $view_filters);
+}
+
+/**
+ * Apply the pager and sticky to the view.
+ *
+ * @param $view
+ */
+function sbac_resource_digital_library_pwd_reel(&$view) {
+  $view_filters = $view->display_handler->get_option('filters');
+  $view_filters['sticky']['value'] = '1';
+  $view->display_handler->set_option('filters', $view_filters);
+  $views_pager = $view->display_handler->get_option('pager');
+  $views_pager['type'] = 'some';
+  $views_pager['options']['items_per_page'] = 4;
+  $view->display_handler->set_option('pager', $views_pager);
 }
 
 /**
@@ -381,7 +389,8 @@ function sbac_resource_resource_review_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
 
   if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS]) &&
-      $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != '') {
+    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != ''
+  ) {
 
     $current_sorting = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS];
     $sort_field_key = 'stamp';
@@ -425,7 +434,7 @@ function sbac_resource_filter_user_tags(&$view, $account = NULL) {
 
   $view_filters = $view->display_handler->get_option('filters');
 
-  $get_tid = function($element) {
+  $get_tid = function ($element) {
     return $element['tid'];
   };
 
@@ -639,7 +648,7 @@ function _sbac_resource_resources_view_query_alter(&$view, &$query) {
 
     // create the join object. STATE
     $join = new views_join;
-    $join->table ='field_data_field_view_permissions_per_state';
+    $join->table = 'field_data_field_view_permissions_per_state';
     $join->left_table = 'node';
     $join->left_field = 'nid';
     $join->field = 'entity_id';
@@ -674,14 +683,50 @@ function _sbac_resource_resources_view_query_alter(&$view, &$query) {
  */
 function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
   global $user;
-  $view->query->add_table('sbac_node_resource_state');
-  $view->query->add_field('sbac_node_resource_state', 'uid', 'sbac_node_resource_state_uid');
-  $view->query->add_field('sbac_node_resource_state', 'state', 'sbac_node_resource_state_state');
-  $view->query->add_field('sbac_node_resource_state', 'flag', 'sbac_node_resource_state_flag');
-  $user_condition = db_and()->condition('sbac_node_resource_state.state', "author")->condition('sbac_node_resource_state.uid', $user->uid);
-  $view->query->add_where('AND', $user_condition);
   $node_condition = db_or()->condition('node.uid', $user->uid);
   $view->query->add_where('AND', $node_condition);
+  $view->query->add_groupby('node.nid');
+
+  if (!empty($view->custom_filters)) {
+    if (!empty($view->custom_filters['resource-status'])) {
+      $join = new views_join();
+      $join->construct('eck_feedback', 'node', 'nid', 'node_id', "eck_feedback.created > IFNULL((SELECT max(h2.stamp) FROM workbench_moderation_node_history h2 WHERE h2.nid = node.nid AND h2.from_state = 'draft'  and h2.state = 'needs_review' and h2.stamp > (SELECT max(h3.stamp) FROM workbench_moderation_node_history h3 WHERE h3.nid = node.nid AND h3.state = 'rejected')), 0)");
+      $query->add_table('eck_feedback', 'node', $join);
+
+      $having = array();
+      foreach ($view->custom_filters['resource-status'] as $filter) {
+        switch ($filter) {
+          case 'gk':
+            $having[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND max(eck_feedback.completed) = 0)';
+            break;
+          case 'qc':
+            $having[] = '(workbench_moderation_node_history.state = \'being_reviewed\' AND max(eck_feedback.completed) = 1)';
+            break;
+          case 'draft':
+            $having[] = '(workbench_moderation_node_history.state = \'draft\')';
+            break;
+          case 'posted':
+            $having[] = '(workbench_moderation_node_history.state = \'published\')';
+            break;
+          case 'submitted':
+            $having[] = '(workbench_moderation_node_history.state = \'needs_review\')';
+            break;
+          case 'artbitration':
+            $having[] = '(workbench_moderation_node_history.state = \'approved\')';
+            break;
+          case 'returned':
+            $having[] = '(workbench_moderation_node_history.state = \'rejected\')';
+            break;
+          case 'removed':
+            $having[] = '(workbench_moderation_node_history.state = \'removed\')';
+            break;
+        }
+      }
+      if (!empty($having)) {
+        $query->add_having_expression(count($query->having), implode(' OR ', $having));
+      }
+    }
+  }
 }
 
 /**
@@ -702,6 +747,7 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   $view->query->add_field('sbac_node_resource_state', 'state', 'sbac_node_resource_state_state');
   $view->query->add_field('sbac_node_resource_state', 'flag', 'sbac_node_resource_state_flag');
   $view->query->add_table('field_data_field_recent_reviewers');
+  $view->query->add_table('field_data_field_recent_publishers');
 
   $roles = array();
   if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
@@ -722,7 +768,7 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   }
 
   $current_filters = array();
-  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
+  if ($view->apply_filter === TRUE && isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
     $current_filters = explode('::', $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]);
   }
 
@@ -740,6 +786,11 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
     if (isset($roles['both']) && $roles['both']) {
       _sbac_resource_resource_review_apply_stock_both_role($view);
     }
+  }
+  if (isset($view->resubmission_only) && $view->resubmission_only === TRUE) {
+    $query->add_where_expression(count($query->where), "(SELECT max(h2.stamp) FROM workbench_moderation_node_history h2 WHERE h2.nid = node.nid AND h2.from_state = 'draft' and h2.state = 'needs_review' AND h2.stamp > (SELECT max(h3.stamp) FROM workbench_moderation_node_history h3 WHERE h3.nid = node.nid AND h3.state = 'rejected')) IS NOT NULL");
+    $query->add_where(count($query->where), db_or()->condition('field_data_field_recent_reviewers.field_recent_reviewers_target_id', $user->uid)
+      ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid));
   }
 }
 
@@ -764,7 +815,7 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
         $vocabulary = taxonomy_vocabulary_load($vid);
         $term = taxonomy_term_load($tid);
         if ($vocabulary && $term) {
-          if ($vocabulary->machine_name = 'resource_states') {
+          if ('resource_states' == $vocabulary->machine_name) {
 
             if (isset($roles['rp'])) {
               switch ($term->name) {
@@ -773,7 +824,8 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $not_like = "qc_reviewed::" . $user->uid;
                     $values[] = 'post_needs_review';
                     $all_states = array('post_needs_review');
-                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
+                      ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
                     $needs_stock_filter = FALSE;
                   }
@@ -798,7 +850,8 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $values[] = 'gk_needs_review';
                     $values[] = 'qc_needs_review';
                     $all_states = array('gk_needs_review', 'qc_needs_review');
-                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
+                      ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
                     $needs_stock_filter = FALSE;
                   }
@@ -823,7 +876,8 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $not_like = "qc_reviewed::" . $user->uid;
                     $values[] = 'gk_needs_review';
                     $all_states = array('gk_needs_review', 'qc_needs_review');
-                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
+                      ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
                     $needs_stock_filter = FALSE;
                   }
@@ -842,7 +896,8 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $not_like = "qc_reviewed::" . $user->uid;
                     $values[] = 'post_needs_review';
                     $all_states = array('post_needs_review');
-                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
+                    $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
+                      ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
                     $needs_stock_filter = FALSE;
                   }
@@ -876,7 +931,14 @@ function _sbac_resource_resource_review_apply_stock_rp_role(&$view) {
   global $user;
   $all_states = array('post_needs_review');
   $user_states = array('post_being_reviewed', 'post_view_rejected');
-  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0);
+  $publisher_condition = db_or()
+    // there are no original reviewers
+    ->isNull('field_data_field_recent_publishers.field_recent_publishers_target_id')
+    // or i'm the original publisher
+    ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid)
+    // or 2 weeks have elapsed since the resource was resubmitted
+    ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
+  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition($publisher_condition);
   $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
   $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
 }
@@ -903,7 +965,8 @@ function _sbac_resource_resource_review_apply_stock_rr_role(&$view) {
     ->where("sbac_node_resource_state.state = 'qc_needs_review' AND 1 > (SELECT count(*) FROM field_data_field_recent_reviewers reviewer left join sbac_node_resource_state state on reviewer.entity_id = state.nid where reviewer.entity_id = node.nid and state.state = 'qc_reviewed' and reviewer.field_recent_reviewers_target_id <> state.uid)")
     // or 2 weeks have elapsed since the resource was resubmitted
     ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
-  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE')->condition($reviewer_condition);
+  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE')
+    ->condition($reviewer_condition);
   $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
   $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
 }

@@ -29,6 +29,7 @@ $text: #5a5a5a;
 $header: #18577e;
 $teal: #0085ad;
 $darkgreen: #246a34;
+$dark-blue: #04384e;
 
 
 /** Font Face **/
@@ -414,7 +415,6 @@ html.js {
 	    font-weight: bold;
 	    line-height: 1;
 	    padding: 20px 40px 20px 20px;
-	    text-align: right;
 			color: #0583AC;
 
 			&:hover {
@@ -455,7 +455,7 @@ html.js {
 		    font-weight: normal;
 		    padding-top: 6px;
 		}
-		
+
 		a span.form-required {
 			display: inline-block;
 			color: #FF0000;
@@ -1554,11 +1554,11 @@ a.tabledrag-handle .handle {
 	.read-more,
 	.ccss-term-delete {
 		margin-left: 20px;
-		
+
 		span {
 			text-indent: -9999em;
 			float: left;
-		} 
+		}
 	}
 }
 
@@ -2086,8 +2086,9 @@ a.tabledrag-handle .handle {
    CTools Modal
    ----------------------------------------- */
 #modalBackdrop {
-  background: url(../images/colorbox/overlay.png) repeat 0 0 !important;
-  opacity: 0.9 !important;
+/*  background: url(../images/colorbox/overlay.png) repeat 0 0 !important;*/  
+  opacity: 0.5 !important;
+  background-color: #000 !important;
 }
 
 // add alignment modal
@@ -2097,8 +2098,8 @@ a.tabledrag-handle .handle {
 		box-shadow: 0 1px 4px 2px rgba(0, 0, 0, 0.4);
     border: 1px solid #ccc;
     overflow: hidden;
-    height: auto !important;
 		padding: 10px 30px 15px;
+    height: auto !important;
 
     .modal-header {
       background: none;
@@ -2122,7 +2123,8 @@ a.tabledrag-handle .handle {
       overflow: hidden;
       overflow-y:auto;
       width: auto !important;
-
+/*      height: auto !important;
+*/
 			p {
 				font-size: 16px;
 				line-height: 1.6;
@@ -2211,12 +2213,12 @@ a.tabledrag-handle .handle {
 #modalContent {
 	.ctools-modal-content.sbac-resource-changes-modal {
 		height: 255px !important;
-		
+
 		#modal-content {
 			height: 215px !important;
-			
+
 			button#edit-cancel-overlay {
-				margin-left: 225px;
+				margin-left: 140px;
 			}
 		}
 	}
@@ -2253,7 +2255,7 @@ a.tabledrag-handle .handle {
 	.ctools-modal-content.small {
 		height: 235px !important;
 		padding: 10px 0 0 0;
-		
+
 		.modal-content {
 			overflow: hidden;
 			padding: 0 40px !important;
@@ -2267,7 +2269,7 @@ a.tabledrag-handle .handle {
 				font-size: 18px !important;
 			}
 		}
-		
+
 		h2 {
 		  padding-bottom: 15px;
 	    color: #000000;
@@ -2283,18 +2285,18 @@ a.tabledrag-handle .handle {
 			float: right;
 			margin-left: 30px;
 		}
-		
+
 		.button.form-submit {
 			padding-left: 40px !important;
 		}
-		
+
 		.button.form-submit:before {
 		 content: url("../images/buttonAccept.png");
 		 left: 15px;
 		 position: absolute;
 		 top: 4px;
 		}
-		
+
 		button[id*="edit-cancel"].gray {
 		  background-color: #6E7379;
 	    border: 1px solid #4D5457;
@@ -2308,7 +2310,7 @@ a.tabledrag-handle .handle {
 			position: absolute;
 			top: 4px;
 		}
-					
+
 		button.form-submit.red {
 			line-height: 20px;
 			background-color: #8A1538 !important;
@@ -2348,6 +2350,208 @@ a.tabledrag-handle .handle {
 	}
 }*/
 
+// Welcom Tutorial Modal
+#modalContent {
+  .ctools-modal-content.sbac-welcome {
+    padding: 0;
+    height: 650px !important;
+
+    .modal-header {
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+      padding: 20px 40px;
+      position: relative;
+      z-index: 3;
+    }
+
+    #modal-title {
+      color: $dark-blue;
+      font-size: 22px;
+      padding: 0;
+    }
+
+    .close {
+      display: block;
+      background: url('../images/icons/icon-close.png') no-repeat right center;
+      width: 30px;
+      height: 30px;
+      text-indent: -9999px;
+      border: none;
+      box-shadow: none;
+
+      img {
+        display: none;
+      }
+    }
+
+    .modal-content {
+      padding: 0;
+    }
+
+    .sbac-tutorial-header-cont {
+      overflow: auto;
+      border-bottom: 1px solid $header-borders;
+      margin-bottom: 20px;
+      padding: 10px 0;
+
+      h2 {
+        float: left;
+        margin: 0;
+        font-size: 18px;
+        color: $dark-blue;
+      }
+
+      .welcome-tutorial-edit-topics {
+        float: right;
+        margin-top: 5px;
+        background: url('../images/icons/icon-edit.png') no-repeat left center;
+        padding-left: 25px;
+
+        a {
+          font-size: 14px;
+          color: $teal;
+        }
+      }
+    }
+
+    .sbac-welcome-update-cont {
+      @include border-radius (12px);
+      padding: 10px 30px;
+      border: 1px solid $darkgreen;
+      background-color: rgba(237, 243, 224, 1);
+      font-weight: normal;
+      position: relative;
+      margin: 15px 0;
+
+      #edit-profile-updated {
+        margin: 10px 0;
+
+        label {
+          font-weight: bold;
+          font-size: 16px;
+        }
+
+        a {
+          color: $teal;
+          text-decoration: underline;
+        }
+      }
+
+      .ajax-processed {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        display: block;
+        background: url('../images/icons/icon-close.png') no-repeat right center;
+        background-size: 100%;
+        width: 30px;
+        height: 30px;
+        text-indent: -9999px;
+      }
+    }
+
+    .welcome-modal-container {
+      height: 500px;
+      overflow-y: scroll;
+      padding: 10px 40px;
+      background-color: #F2F2F2;
+    }
+
+    .welcome-topic-container {
+      @include clearfix();
+      background: $white;
+      border-radius: (5px);
+      padding: 15px;
+      border: 1px solid #F2F2F2;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);      
+      margin-bottom: 20px;
+    }
+
+    .welcome-container-left {
+      float: left;
+      width: 75%;
+    }
+
+    .welcome-container-image {
+
+      img {
+        display: block;
+        float: left;
+        width: 180px;
+        height: 90px;
+        border: 1px solid $header-borders;
+      }
+    }
+
+    .welcome-tutorial-topic-title {
+      a {
+        color: $teal;
+        font-size: 16px;
+      }
+    }
+
+    .welcome-tutorial-topic-summary {
+      line-height: 1.2;
+      color: $text;
+    }
+
+    .welcome-tutorial-node-container {
+      background: $white;
+      border-radius: (5px);
+      border-top: 1px solid #F2F2F2;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      margin-bottom: 20px;      
+    }
+
+    .welcome-tutorial-node-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: $dark-blue;
+      margin-bottom: 25px;
+    }
+
+    .welcome-tutorial-back-button {
+      background: url('../images/icons/back-blue.png') no-repeat left -6px;
+      margin: 20px 0 35px;
+      padding-left: 30px;
+
+      a {
+        color: $teal;
+      }
+    }
+
+    .tutorial-image {
+      img {
+        margin: 0 20px 20px 0;
+        border: 1px solid $header-borders;
+        float: left;
+        width: 300px;
+        height: 150px;
+        display: block;
+      }
+    }
+
+    .welcome-modal-buttons {
+      border-top: 1px solid #F2F2F2;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+      display: block;
+      padding: 17px 40px;
+      position: relative;
+      width: 100%;
+      z-index: 4;
+      background: $white;
+      overflow: auto;
+
+      .form-item.form-type-checkbox {
+        float: left;
+      }
+
+      .button {
+        float: right;
+      }
+    }
+  }
+}
 /* -----------------------------------------
   Textify
   ------------------------------------------  */
@@ -2450,6 +2654,21 @@ a.tabledrag-handle .handle {
     }
   }
 }
+
+.page-user     {
+  .counter {
+    text-align: right;
+    margin: 10px 0;
+    font-size: 12px;
+    float: right;
+    padding: 10px 10px 10px 50px;
+
+      &.warning {
+        background-position: 8px 4px;
+      }
+    }
+}
+
 
 .page-admin-structure-types-manage-resource {
   .description {
@@ -2594,7 +2813,7 @@ a.tabledrag-handle .handle {
 
 .view-id-help_topics .help-topic-link2,
 .welcome-tutorial-topic-link {
-  bottom: 20px; 
+  bottom: 20px;
   position: absolute;
   right: 190px;
 }
@@ -3129,14 +3348,14 @@ a.tabledrag-handle .handle {
 		vertical-align: top;
 		height: 35px;
 	}
-	
+
 	.form-type-select {
 	    display: inline-block;
 	    position: relative;
 	    vertical-align: middle;
 			margin-top: 22px;
 	}
-	
+
 	.form-type-select:before {
 		background-color: #fff;
 		content: "";
@@ -3151,7 +3370,7 @@ a.tabledrag-handle .handle {
 		height: 33px;
 		z-index:99;
 	}
-	
+
 	.form-type-select:after {
 		content: "\e610";
 	 	display: inline-block;
@@ -3200,14 +3419,14 @@ a.tabledrag-handle .handle {
 #views-exposed-form-forum-topic-list-block,
 #views-exposed-form-forum-member-list-block,
 #views-exposed-form-forum-topic-list-collaboration {
-	
+
 	select {
 		border: 1px solid #CECECE;
 		width: auto;
 		border-radius: 0;
 		height: 34px;
 	}
-	
+
 	.form-type-select:before {
 		border-radius: 0;
 		height: 32px;
@@ -3289,7 +3508,7 @@ a.tabledrag-handle .handle {
 
 @media all and (max-width: 1280px) and (min-width: 961px){
 	.top-bar.last-top {
-		max-width: 960px; 
+		max-width: 960px;
 	}
 }
 
@@ -3483,7 +3702,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	color: #fff;
 	position: relative;
 	margin-left: 15px;
-	
+
 	.title {
 		font-family: Verdana,Geneva,sans-serif;
 	  font-size: 12px;
@@ -3499,18 +3718,18 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		position: relative;
 		border-top: 1px #50a8c4 solid;
 	}
-	
+
 	.additional-resoutces {
 		font-size: 15px;
 		margin-top: 10px;
 		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
 		position: relative;
-		
+
 		a {
 			color: #fff;
 			text-decoration: underline;
 		}
-		
+
 		a:after {
 		  background-image: url("../images/icons/icon-new-window.png");
 	    background-position: center center;
@@ -3522,7 +3741,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	    width: 12.5px;
 		}
 	}
-	
+
 	.title:before {
 		content: " ";
     display: inline-block;
@@ -3536,18 +3755,18 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 }
 
 /* ---------------------------------------------------------------------
-    SBAC Resource Access Denied page 
+    SBAC Resource Access Denied page
 ------------------------------------------------------------------------ */
 .sbac-resource-access-denied {
 	.top-bar.last-top {
 	  max-width: 960px;
 		padding: 0;
-	
+
 		.block-sbac-resource-sbac-resource-back-button {
 			width: 960px;
 			height: 50px;
 			position: relative;
-			
+
 			.button {
 			  background-color: #0684AD;
 		    border: medium none;
@@ -3565,13 +3784,13 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		    text-align: center;
 		    text-shadow: none;
 		    vertical-align: top;
-		
+
 				&:hover {
 					background-color: #0684AD;
 					background-image: none;
 				}
 			}
-	
+
 			.button:before {
 			  content: "\e620";
 		    display: inline;
@@ -3584,11 +3803,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 			}
 		}
 	}
-	
+
 	.main-container {
 		margin-top: 5px;
 	}
-	
+
 	/*Nav search box*/
 	.search {
 	  text-align: right;
@@ -3599,7 +3818,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	    vertical-align: top;
 	    width: 200px;
 
-			.form-text, 
+			.form-text,
 			.form-text:focus {
 			  background: url("../images/search.png") no-repeat scroll 5% center rgba(0, 0, 0, 0);
 			  border-radius: 20px;
@@ -3631,44 +3850,44 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
     Create Help Page
 ------------------------------------------------------------------------ */
 .page-node-add-help-page {
-	
+
 	h1#page-title {
 		padding-left: 22px;
 	}
-	
+
 	.description {
 		line-height: 1.4;
 	}
-	
+
 	.form-textarea-wrapper textarea {
 		max-width: none;
 	}
-	
+
 	#body-add-more-wrapper {
 		.filter-wrapper {
 			padding-top: 5px;
 		}
 	}
-	
+
 	.image-widget-data {
 		width: 100%;
-		
+
 		input, button {
 			display: inline-block;
 		}
-		
+
 		input {
 			width: 50%;
 			margin-right: 20px;
 		}
 	}
-	
+
 	#edit-actions {
 		float: right;
 	}
 }
 
-#helpmodal, 
+#helpmodal,
 #current-help-topic-modal {
 	h2 {
 		text-align: center;
@@ -3686,7 +3905,7 @@ p.helpmodal-desc {
 .page-help-topics {
 	#main.columns {
 		padding: 0 40px;
-		
+
 		.view-help-topics {
 			li {
 				margin-left: 0;
@@ -3699,9 +3918,9 @@ p.helpmodal-desc {
 .page-admin-help-topics {
 	.main-container {
 		padding: 40px 45px 10px;
-		
+
 		.content {
-			width: 960px; 
+			width: 960px;
 			margin-left: -45px;
 			padding: 10px 40px !important;
 	 	}
@@ -3709,11 +3928,11 @@ p.helpmodal-desc {
 }
 
 .node-type-help-page {
-	
+
 	#main {
 		padding: 0 20px;
 	}
-	
+
 	.form-textarea-wrapper textarea {
 		max-width: 100%;
 	}
@@ -3736,4 +3955,9 @@ p.helpmodal-desc {
 /*Override the radius of gobal button*/
 button.radius, .button.radius {
   @include border-radius (6px);
+}
+
+// Admin fix input email
+form#sbac-user-filter-form #edit-email {
+  clear: both;
 }

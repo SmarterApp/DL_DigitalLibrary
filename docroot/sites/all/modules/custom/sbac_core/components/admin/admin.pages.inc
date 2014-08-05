@@ -52,7 +52,7 @@ function sbac_user_filter_form() {
       $options = call_user_func_array('array_merge', array_slice($filters[$type]['options'], 1));
       $value = $options[$value];
     }
-    else {
+    elseif ($type != 'email') {
       $value = $filters[$type]['options'][$value];
     }
     $t_args = array('%property' => $filters[$type]['title'], '%value' => $value);

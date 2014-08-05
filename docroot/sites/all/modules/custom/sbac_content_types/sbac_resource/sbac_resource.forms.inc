@@ -163,6 +163,7 @@ function _sbac_resource_clean_workbench_moderation($form, $form_state) {
  * @param $form_state
  */
 function sbac_resource_save_and_close(&$form, &$form_state) {
+  $node = $form_state['node'];
   sbac_resource_clean_text($form_state);
   // If there's a title, lets create a URL for the node.
   $form_state['values']['path']['pathauto'] = TRUE;
@@ -191,17 +192,33 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
       }
     }
 
+    $task_type = '';
     switch ($chosen_option) {
       case 0:
         $form_state['values']['sticky'] = 0;
         $form_state['values']['workbench_moderation_state_new'] = 'published';
+        if ('removed' == $node->workbench_moderation['current']->state) {
+          $task_type = 'resource_reposted';
+        }
+        elseif ('published' == $node->workbench_moderation['current']->state && 1 == $node->sticky) {
+          $task_type = 'resource_demoted';
+        }
         break;
       case 1:
         $form_state['values']['sticky'] = 1;
         $form_state['values']['workbench_moderation_state_new'] = 'published';
+        if ('removed' == $node->workbench_moderation['current']->state) {
+          $task_type = 'resource_reposted';
+        }
+        elseif ('published' == $node->workbench_moderation['current']->state && 0 == $node->sticky) {
+          $task_type = 'resource_promoted';
+        }
         break;
       case 2:
         $form_state['values']['workbench_moderation_state_new'] = 'removed';
+        if ('published' == $node->workbench_moderation['current']->state) {
+          $task_type = 'removed_resource';
+        }
         break;
       case 3:
         $form_state['values']['workbench_moderation_state_new'] = 'published';
@@ -210,13 +227,13 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
         $form_state['values']['workbench_moderation_state_new'] = 'published';
     }
 
-    if (isset($_SESSION['sbac-posting-option-comment']) && $_SESSION['sbac-posting-option-comment']) {
-      // Create notificaton for contributor.
-      if ($task = taskit_get_object('posting_action')) {
+    if (!empty($task_type)) {
+      if ($task = taskit_get_object($task_type)) {
         global $user;
-        $node = $form_state['node'];
         $task->addVisibility($task::VISIBILITY_USER);
         $task->addEntity('node', $node->nid);
+        // TODO: Figure out a way to keep a history of the comments. Right now it's just reading the current comment.
+//            $task->addEntity('feedback', $form_state['values']['field_posting_options_comment']['und'][0]['value']);
         $task->addOwningUser($node->uid);
         $task->addTriggeringUser($user->uid);
         $task->save();
@@ -350,6 +367,34 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       $form['field_file_container']['materials']['#weight'] = -100;
     }
     return $form;
+  }
+
+  if ($form_state['html5'] && isset($_SESSION['file_attributes'])) {
+    $html5_progress = db_query('SELECT * FROM {sbac_html5_progress} WHERE nid = :nid', array(':nid' => $form['#node']->nid))->fetchObject();
+    if (!$html5_progress) {
+      error_log("TRYING TO REUPLOAD");
+      // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
+      $callback_options = array(
+        array(
+          'function' => 'sbac_media_html5_upload_asynchronous',
+          // Setup options array.
+          'options' => array(
+            'timeout' => 1200,
+            'global_timeout' => 1200,
+          ),
+        ),
+        $_SESSION['file_attributes'],
+      );
+      // Queue up the request.
+      httprl_queue_background_callback($callback_options);
+      // Execute request.
+      $response = httprl_send_request();
+      error_log(print_r($response));
+      if ($response === FALSE) {
+        watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
+      }
+    }
+    unset($_SESSION['file_attributes']);
   }
 
   $duplicates = FALSE;
@@ -1005,6 +1050,19 @@ function sbac_resource_validate_tags(&$form, &$form_state) {
 function sbac_resource_validate_advanced($form, $form_state) {
   $error = FALSE;
   $required = FALSE;
+
+  if (isset($form_state['html5']) && $form_state['html5'] == TRUE) {
+    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " . $form['#node']->nid)->fetchObject();
+    // If there is HTML5 progress record and its set to Finished or Error.
+    if ($html5_progress && $html5_progress->status == SBAC_MEDIA_HTML5_ERROR) {
+      $error = 'Module upload did not complete. Please try again.';
+      form_set_error('field_posting_options_comment', $error);
+      _sbac_resource_remove_error_message($error);
+      drupal_set_message('advanced:html5:single:' . $error, 'sbac_resource_error');
+      $error = TRUE;
+    }
+  }
+
   if (isset($form_state['values']['field_posting_options']['und'][0]['value'])) {
     if ($form_state['values']['field_posting_options']['und'][0]['value'] == 2) {
       $required = TRUE;
@@ -1256,21 +1314,39 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               ->propertyCondition('node_id', $node->nid)
               ->count()
               ->execute();
+            workbench_moderation_moderate($node, 'needs_review');
             if ($submitted) {
-              // if there is already a gatekeeper entry, then this is a re-submission
-              $task_type = 'resource_resubmitted';
-              // get the current feedback for this node so we can notify the gk/reviewers
-              $query = new EntityFieldQuery();
-              $feedbacks = $query->entityCondition('entity_type', 'feedback')
-                ->propertyCondition('completed', 1)
-                ->propertyCondition('type', array('qc', 'gate_keeper', 'IN'))
-                ->propertyCondition('node_id', $node->nid)
-                ->propertyCondition('current', 1)
-                ->propertyCondition('status', 1)
-                ->execute();
-              if (isset($feedbacks['feedback'])) {
-                foreach ($feedbacks['feedback'] as $feedback) {
-                  $recipients[] = entity_load_single('feedback', $feedback->id);
+              if (!empty($node->field_recent_publishers[LANGUAGE_NONE])) {
+                // If the node was returned by the poster, send them back to the poster, skip the QC and GK reviews
+                workbench_moderation_moderate($node, 'approved');
+                $task_type = 'resource_resubmitted';
+                // get the current feedback for this node so we can notify the gk/reviewers
+                $query = new EntityFieldQuery();
+                $feedbacks = $query->entityCondition('entity_type', 'feedback')
+                  ->propertyCondition('completed', 1)
+                  ->propertyCondition('type', 'post')
+                  ->propertyCondition('node_id', $node->nid)
+                  ->execute();
+                if (isset($feedbacks['feedback'])) {
+                  foreach ($feedbacks['feedback'] as $feedback) {
+                    $recipients[] = entity_load_single('feedback', $feedback->id);
+                  }
+                }
+              }
+              else {
+                // if there is already a gatekeeper entry, then this is a re-submission
+                $task_type = 'resource_resubmitted';
+                // get the current feedback for this node so we can notify the gk/reviewers
+                $query = new EntityFieldQuery();
+                $feedbacks = $query->entityCondition('entity_type', 'feedback')
+                  ->propertyCondition('completed', 1)
+                  ->propertyCondition('type', array('qc', 'gate_keeper'), 'IN')
+                  ->propertyCondition('node_id', $node->nid)
+                  ->execute();
+                if (isset($feedbacks['feedback'])) {
+                  foreach ($feedbacks['feedback'] as $feedback) {
+                    $recipients[] = entity_load_single('feedback', $feedback->id);
+                  }
                 }
               }
             }
@@ -1278,7 +1354,6 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               $task_type = 'resource_submitted';
             }
 
-            workbench_moderation_moderate($node, 'needs_review');
             sbac_resource_save_current_state($node);
 
             if ($task = taskit_get_object($task_type)) {
@@ -1323,7 +1398,7 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
     $form_state = array(
-      'title' => t('You are about to delete this draft resource'),
+      'title' => t('You are about to delete this resource'),
       'ajax' => TRUE,
       'nid' => $_GET['nid'],
     );
@@ -1335,7 +1410,12 @@ function sbac_resource_delete_resource_modal_callback($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         if (isset($_GET['nid'])) {
-          node_delete($_GET['nid']);
+          global $user;
+          $node = node_load($_GET['nid']);
+          if ($node && $node->uid == $user->uid) {
+            $node->field_is_hidden[LANGUAGE_NONE][0]['value'] = 1;
+            field_attach_update('node', $node);
+          }
           $url = 'my-resources';
           $output[] = ctools_ajax_command_redirect($url);
         }
@@ -1886,7 +1966,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY id DESC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
+          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY changed ASC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
 
           // check for QC feedbacks first
           $qc_entities = entity_load('feedback', $qc_ids);
@@ -2585,8 +2665,9 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_resource_state']['#access'] = FALSE;
   $form['field_html5']['#access'] = FALSE;
   $form['field_thumbnail_uri']['#access'] = FALSE;
-  // hide recent reviewers field
   $form['field_recent_reviewers']['#access'] = FALSE;
+  $form['field_recent_publishers']['#access'] = FALSE;
+  $form['field_is_hidden']['#access'] = FALSE;
 }
 
 /**
@@ -3001,12 +3082,18 @@ function _sbac_resource_check_duplicated_title($form, $form_state, $title) {
 function sbac_resource_digital_library_sort_form($form, $form_state) {
   $form = array();
   $default = 'dl-newest'; // Hardcoded default. Change?
+  $pwd_only = 0;
 
   // If session var is set, make it the default.
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
     $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != ''
   ) {
     $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
+  }
+  if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD]) &&
+    $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] != ''
+  ) {
+    $pwd_only = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD];
   }
 
   $options = array(
@@ -3044,6 +3131,20 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
     ),
   );
 
+  $form['dl_pwd'] = array(
+    '#prefix' => '<div id="sbac-pwd-check">',
+    '#suffix' => '</div>',
+    '#type' => 'checkbox',
+    '#title' => "Posted with Distinction Only",
+    '#default_value' => $pwd_only,
+    '#ajax' => array(
+      'callback' => '_sbac_resource_digital_library_sort_form__pwd',
+      'event' => 'change',
+      'wrapper' => 'sbac-pwd-check',
+      'progress' => array('type' => 'none'),
+    ),
+  );
+
   return $form;
 }
 
@@ -3060,11 +3161,30 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['dl_sort_order'];
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['resources']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['dl_sort_order'];
 
   // Ctools ajax implementation using commands to refresh page.
+  ctools_include('ajax');
+  $commands = array();
+  $commands[] = ctools_ajax_command_reload();
+  print ajax_render($commands);
+  exit;
+}
+
+/**
+ * Sets value to determine posted with distinction
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_digital_library_sort_form__pwd($form, $form_state) {
+  $key = $form_state['values']['dl_pwd'];
+  $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] = $key;
+  unset($_SESSION['load_more']['resources']['page']);
+
   ctools_include('ajax');
   $commands = array();
   $commands[] = ctools_ajax_command_reload();
@@ -3148,6 +3268,7 @@ function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_sta
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['rr_sort_order'];
   $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['resource_review']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['rr_sort_order'];
@@ -3231,6 +3352,7 @@ function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state)
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['mr_sort_order'];
   $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = $new_value_key;
+  unset($_SESSION['load_more']['my_resources']['page']);
 
   // Just return the form, dont force page refresh.
   // return $form['mr_sort_order'];
@@ -3622,4 +3744,181 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
  */
 function _sbac_resource_my_resource_redirect() {
   drupal_goto('my-resources');
+}
+
+/**
+ * Displays the two subnav/tabs
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_resource_resource_review_subnav_form($form, &$form_state) {
+  $form = array();
+  $resource_tab_classes = '';
+  $resubmission_tab_classes = '';
+  $active_tab = sbac_resource_get_active_subnav();
+  switch ($active_tab) {
+    case SBAC_RESOURCE_SUBNAV_RESOURCES:
+      $resource_tab_classes = 'is-pressed';
+      break;
+    case SBAC_RESOURCE_SUBNAV_RESUBMISSIONS:
+      $resubmission_tab_classes = 'is-pressed';
+      break;
+    default:
+      break;
+  }
+  $form['container'] = array(
+    '#type' => 'container'
+  );
+
+  $resource_tab_count_text = '0';
+  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT]) && !empty($_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT])) {
+    $resource_tab_count_text = $_SESSION[SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT];
+  }
+  // Resources tab
+  if (!isset($_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB]) || $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] === FALSE) {
+    $form['container'] ['resources_tab'] = array(
+      '#markup' => '<h3 class="left" style="color:#fff"><span>' . $resource_tab_count_text . '</span>' . t(' Resources') . '</h3>',
+    );
+  }
+  else {
+    $form['container'] ['resources_tab'] = array(
+      '#type' => 'submit',
+      '#value' => t('Resources') . ' (' . $resource_tab_count_text . ')',
+      '#title' => t('Resources'),
+      '#attributes' => array(
+        'class' => array($resource_tab_classes),
+      ),
+      '#submit' => array('_sbac_resource_sub_nav__set_resource__submit'),
+    );
+  }
+
+  // Resubmissions tab
+  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB]) && $_SESSION[SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB] === TRUE) {
+    $resubmission_tab_count_text = '';
+    $resubmission_tab_count_text = '(' . $_SESSION[SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT] . ')';
+    $form['container'] ['resubmissions_tab'] = array(
+      '#type' => 'submit',
+      '#value' => t('Resubmissions') . ' ' . $resubmission_tab_count_text,
+      '#title' => t('Resubmissions'),
+      '#attributes' => array(
+        'class' => array($resubmission_tab_classes),
+      ),
+      '#submit' => array('_sbac_resource_sub_nav__set_resubmission__submit'),
+    );
+    $form['container']['#attributes'] = array('class' => array('with-resubmission'));
+  }
+
+  return $form;
+}
+
+/**
+ * Submit handler for the resource tab
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_sub_nav__set_resource__submit($form, &$form_state) {
+  sbac_resource_set_active_subnav(SBAC_RESOURCE_SUBNAV_RESOURCES);
+}
+
+/**
+ * Submit handler for the resubmission tab
+ *
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_sub_nav__set_resubmission__submit($form, &$form_state) {
+  sbac_resource_set_active_subnav(SBAC_RESOURCE_SUBNAV_RESUBMISSIONS);
+}
+
+/**
+ * Get the current active subnav/tab
+ *
+ * @return string
+ */
+function sbac_resource_get_active_subnav() {
+  $active_subnav = SBAC_RESOURCE_SUBNAV_RESOURCES;
+
+  if (isset($_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE])) {
+    if (!empty($_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE])) {
+      $active_subnav = $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE];
+    }
+  }
+  return $active_subnav;
+}
+
+/**
+ * Set the current subnav/tab
+ *
+ * @param null $value
+ */
+function sbac_resource_set_active_subnav($value = NULL) {
+  if (!empty($value)) {
+    $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE] = $value;
+  }
+  else {
+    $_SESSION[SBAC_RESOURCE_SUBNAV_ACTIVE] = '';
+  }
+}
+
+/**
+ * Form to update resource thumbnails.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_resource_update_thumb_form($form, &$form_state) {
+  $form = array();
+
+  $form['node_id'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Resource nid',
+    '#required' => TRUE,
+    '#description' => t('Enter the Node ID to be updated.'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Update Thumbnail',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_validate().
+ * Ensures that the node ID is a valid resource node.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_resource_update_thumb_form_validate($form, &$form_state) {
+  if (!is_numeric($form_state['values']['node_id'])) {
+    form_set_error('node_id', t('Please enter a number value.'));
+  }
+  $query = db_select('node', 'node');
+  $query->fields('node', array('type'));
+  $query->condition('nid', $form_state['values']['node_id'], '=');
+  $result = $query->execute()->fetchAssoc();
+  if (array_pop($result) != 'resource') {
+    form_set_error('node_id', t($form_state['values']['node_id'] . ' is not a resource node type.'));
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ * Updates the resource node's thumbnail.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_resource_update_thumb_form_submit($form, &$form_state) {
+  if ($node = node_load($form_state['values']['node_id'])) {
+    sbac_resource_determine_thumbnail_uri($node);
+    entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+    $path = drupal_get_path_alias('node/' . $node->nid);
+    drupal_goto($path);
+  }
 }

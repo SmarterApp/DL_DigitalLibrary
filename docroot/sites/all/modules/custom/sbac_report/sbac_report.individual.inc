@@ -4,6 +4,9 @@
  * Individual Report filter form.
  */
 function sbac_report_individual_form($form, &$form_state) {
+  global $user;
+  $account = user_load($user->uid);
+
   $form = array();
 
   // Make sure to load this after autocomplete.js
@@ -18,6 +21,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
     '#multiple' => FALSE,
+    '#disabled' => !sbac_report_user_access_all($account),
     '#default_value' => sbac_report_get_default_state_tid(),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
@@ -35,10 +39,10 @@ function sbac_report_individual_form($form, &$form_state) {
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
 
   // If there was no date range stored in SESSION.
-  // Default to the "Last 30 Days".
+  // Default to the "Cumulative to date".
   if (empty($session_date_range)) {
-    $session_date_range = $date_options['Last 30 Days'];
-    $date_display = t('Last 30 Days');
+    $session_date_range = $date_options['Cumulative to date'];
+    $date_display = t('Cumulative to date');
   }
   // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
   elseif ($key = array_search($session_date_range, $date_options)) {
@@ -49,13 +53,18 @@ function sbac_report_individual_form($form, &$form_state) {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
 
+
+  $see_others = sbac_report_select_other_users($account);
+  $name_value = sbac_user_format_username($user);
+
   $form['sne'] = array(
     '#type' => 'textfield',
     '#title' => t('Choose a SNE'),
     '#autocomplete_path' => 'sne/autocomplete',
     '#required' => TRUE,
     '#size' => 30,
-    '#default_value' => sbac_report_get_session_value('sne', 'name'),
+    '#disabled' => !$see_others,
+    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'name') : $name_value,
     '#attributes' => array('aria-required' => "true"),
   );
 
@@ -67,7 +76,7 @@ function sbac_report_individual_form($form, &$form_state) {
   // @see sbac_report.js
   $form['uid'] = array(
     '#type' => 'hidden',
-    '#default_value' => sbac_report_get_session_value('sne', 'uid'),
+    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'uid') : $user->uid,
     '#attributes' => array(
       'id' => 'sne-uid-field',
     ),
@@ -91,7 +100,14 @@ function sbac_report_individual_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
   
   if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
-    form_set_error('sne', t('Please type and select an existing SNE'));
+    global $user;
+    $account = user_load($user->uid);
+    if (!sbac_report_select_other_users($account)) {
+      $form_state['values']['uid'] = $user->uid;
+    }
+    else {
+      form_set_error('sne', t('Please type and select an existing SNE'));
+    }
   }
 
   if (empty($form_state['values']['date_range'])) {

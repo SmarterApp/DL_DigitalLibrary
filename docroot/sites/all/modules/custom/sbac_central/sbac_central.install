@@ -1210,3 +1210,32 @@ function sbac_central_process_files_to_upload($files_to_upload, $client, $servic
 function sbac_central_update_7081() {
   module_enable(array('sbac_forum'));
 }
+
+/**
+ * Enable httprl module
+ */
+function sbac_central_update_7082() {
+  module_enable(array('httprl'));
+}
+
+/**
+ * Move no-preview-image.png to the file directory.
+ * Need this so that image_style can work with the image.
+ */
+function sbac_central_update_7083() {
+  global $base_url;
+  $image_path = $base_url . base_path() . 'sites/all/themes/SBAC/images/no-preview-html5.jpg';
+  $public_path = drupal_realpath('public://') . '/no-preview-html5.jpg';
+  copy($image_path, $public_path);
+}
+
+/**
+ * If cache_eck exits, drop the table.
+ *
+ * In place because we update the module but broke stuff, so reverted back to non-cache version.
+ */
+function sbac_central_update_7084() {
+  if (db_table_exists('cache_eck')) {
+    db_drop_table('cache_eck');
+  }
+}

@@ -60,7 +60,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 
   // If there was no date range stored in SESSION.
   // Default to the "Last 30 Days".
-  if (empty($session_date_range)) {
+  if (empty($session_date_range) || $session_date_range = $date_options['Cumulative to date']) {
     $session_date_range = $date_options['Last 30 Days'];
     $date_display = t('Last 30 Days');
   }

@@ -1,5 +1,5 @@
 <div
-  class="view view-contributed-resources view-id-contributed_resources view-display-id-resources_details">
+  class="view view-contributed-resources view-id-contributed_resources view-display-id-resources_details" id="contriubted-resource-details">
   <div class="view-content">
     <table class="views-table cols-3">
       <thead>

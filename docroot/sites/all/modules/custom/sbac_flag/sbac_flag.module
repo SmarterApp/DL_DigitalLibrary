@@ -16,6 +16,15 @@ include_once 'sbac_flag.features.inc';
 define('SBAC_FLAG_MODERATION_COUNT', 7);
 
 /**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_flag_update_projects_alter(&$projects) {
+  unset($projects['sbac_flag']);
+}
+
+/**
  * Implements hook_menu().
  *
  * @return mixed
@@ -171,6 +180,11 @@ function sbac_flag_moderation_access() {
   return FALSE;
 }
 
+/**
+ * Determine collaboration access.
+ *
+ * @return bool
+ */
 function sbac_flag_collaboration_access() {
   global $user;
   if ($user->uid) {

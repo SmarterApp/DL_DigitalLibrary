@@ -17,24 +17,32 @@
   <h2><?php print t('Contributed Resources'); ?></h2>
   <div id="contributed-resources">
   <?php print $contributed_summary; ?>
+  <?php if ($resource_statistics): ?>
+    <h2>Feedback on Posted Resource(s)</h2>
+    <p><?php print t('Thank you for contributing to the Digital Library. The
+                  table below displays information about your posted resource(s).'); ?></p>
+    <?php print $resource_statistics; ?>
+  <?php endif; ?>
+  <h2>Resource Submission Status</h2>
+  <p><?php print t('The table below displays the status of your submitted resource(s).'); ?></p>
   <?php print $contributed_details; ?>
   </div>
   <div style="clear:both;"></div>
   <h2><?php print t('Resource Reviews'); ?></h2>
   <h3><?php print t('Gate-Keeping Reviews'); ?></h3>
-  <p><?php print t('The table below includes decisions this reviewer made based
+  <p><?php print t('The table below includes decisions you made based
                   on the Gate-Keeping Criteria during the selected period of
-                  time, including the resources the reviewer accepted and
-                  moved forward to Quality Criteria Reviews and those the
-                  reviewer returned to the contributor(s).'); ?></p>
+                  time, including the resources you accepted and
+                  moved forward to Quality Criteria Reviews and those you
+                  returned to the contributor(s).'); ?></p>
   <?php print $gate_keeping; ?>
 
   <div style="clear:both;"></div>
   <h3><?php print t('Quality Criteria Reviews'); ?></h3>
   <p><?php print t('The table below includes the number of Quality Criteria Reviews
-                    the reviewer has started but not yet completed,
-                    and the total number Quality Criteria Reviews the reviewer
-                    has completed in the selected time period.'); ?></p>
+                    you have started but not yet completed,
+                    and the total number Quality Criteria Reviews you have
+                    completed in the selected time period.'); ?></p>
   <?php print $all_reviews; ?>
   <?php $help_link = l('help topics', 'help-topics') ;?>
   <h3><?php print t('Consistency Analysis of Quality Criteria Reviews'); ?></h3>

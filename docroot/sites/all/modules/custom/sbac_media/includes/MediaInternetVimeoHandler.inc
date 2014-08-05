@@ -17,6 +17,7 @@ class MediaInternetVimeoHandler extends MediaInternetBaseHandler {
       '@vimeo\.com/video/(\d+)@i',
       '@vimeo\.com/groups/.+/videos/(\d+)@i',
       '@vimeo\.com/channels/.+#(\d+)@i',
+      '@vimeo\.com/channels/staffpicks/(\d+)@i',
     );
     foreach ($patterns as $pattern) {
       preg_match($pattern, $embedCode, $matches);
