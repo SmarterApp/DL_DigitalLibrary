@@ -1095,7 +1095,7 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
       $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
       $filename = $filename . '.' . $ext;
       if ($filename) {
-        if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY && !file_exists($dir . '/' . $filename))) {
+        if (!file_exists($dir . '/' . $filename) && file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
           $download = sbac_resource_system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
 
           if ($download) {
@@ -1108,7 +1108,6 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
           }
         }
         else if (file_exists($dir . '/' . $filename)) {
-          dpm('already has thumb');
           $uri_url['uri'] = $dir . '/' . $filename;
           $uri_url['url'] = $url;
           $thumbnail_exists = TRUE;
