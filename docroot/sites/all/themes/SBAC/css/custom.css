@@ -10836,7 +10836,7 @@ a.tabledrag-handle .handle {
 /* line 3288, ../sass/custom.scss */
 .page-node-add-resource .ctools-modal-content .modal-content {
   padding: 0 !important;
-  height: auto !important;
+  /*height: auto !important;*/
 }
 
 /* line 3296, ../sass/custom.scss */
