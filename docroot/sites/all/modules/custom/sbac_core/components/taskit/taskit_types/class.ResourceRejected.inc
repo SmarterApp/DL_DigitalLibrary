@@ -12,23 +12,21 @@ class ResourceRejected extends \taskit\sbac_core\BaseTask {
       if ($node && $account) {
         $this->setTaskUrl('node/' . $node->nid);
 
-        $viewing_account = current_user();
-
+        global $user;
         $output = array();
-        $details = '';
-        if ($node->uid == $viewing_account->uid) {
+        if ($node->uid == $user->uid) {
           $output[] = t('!title was returned to you for revision', array(
             '!title' => '<span class="taskit-title">' . $node->title . '</span>',
           ));
 
-          $details = $this->contributorFeedback($node->nid, $viewing_account->uid, $feedback);
+          $details = $this->contributorFeedback($node->nid, $user->uid, $feedback);
         }
         else {
           $output[] = t('!title, a resource you reviewed, was returned to the submitter', array(
             '!title' => '<span class="taskit-title">' . $node->title. '</span>',
           ));
 
-          $details = $this->reviewerFeedback($node->nid, $viewing_account->uid, $feedback);
+          $details = $this->reviewerFeedback($node->nid, $user->uid, $feedback);
         }
 
         // $this->addClass('taskit-collapsed');
