@@ -10,10 +10,11 @@ class ResourceResubmitted extends \taskit\sbac_core\BaseTask {
 
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
-      $viewing_account = current_user();
+
+      global $user;
 
       $output = array();
-      if ($node->uid == $viewing_account->uid) {
+      if ($node->uid == $user->uid) {
         $output[] = t('You re-submitted !title.', array(
           '!title' => '<span class="taskit-title">' . $node->title . '</span>',
         ));
