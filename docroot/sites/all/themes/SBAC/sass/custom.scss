@@ -1314,6 +1314,39 @@ a.tabledrag-handle .handle {
   ------------------------------------------ */
 .section-container.auto {
 	position: relative;
+	min-height: 500px;
+	
+	.ajax-progress-throbber {
+		position: fixed;
+		left: 0;
+		top: 0;
+		float: none;
+		display:inline;
+		
+		.throbber  {
+			display: block;
+			position: fixed;
+			top: 63%;
+			left: 43%;
+			background: url('../images/foundation/orbit/loading.gif') no-repeat center center;
+			background-size:70%;
+			width: 225px;
+			height: 180px;
+			z-index: 9999;
+		}
+	}
+}
+
+/*Override icon of throbber for node type resource*/
+.node-resource {
+	.specific-section {
+
+		.throbber  {
+			top: 70% !important;
+			background: url('../images/foundation/orbit/loading.gif') no-repeat center center !important;
+			background-size:70% !important;
+		}
+	}
 }
 
 .section-container.auto:before {
