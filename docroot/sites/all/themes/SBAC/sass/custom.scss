@@ -1316,7 +1316,8 @@ a.tabledrag-handle .handle {
 	position: relative;
 	min-height: 500px;
 	
-	.ajax-progress-throbber {
+	
+	p.title > .ajax-progress-throbber {
 		position: fixed;
 		left: 0;
 		top: 0;
@@ -1333,14 +1334,14 @@ a.tabledrag-handle .handle {
 			background-size:70%;
 			width: 225px;
 			height: 180px;
-			z-index: 9999;
+			z-index: 10;
 		}
 	}
 }
 
 /*Override icon of throbber for node type resource*/
 .node-resource {
-	.specific-section {
+	p.title  > .ajax-progress-throbber {
 		
 		.throbber  {
 			top: 63% !important;
