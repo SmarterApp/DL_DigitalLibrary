@@ -997,7 +997,9 @@ function _sbac_resource_my_resources_links($fields, $row) {
         }
 
         // if there is no active or completed gate keeper.
-        if ($row->sbac_node_resource_state_uid == 0 && $row->sbac_node_resource_state_flag == 'gk_needs_review') {
+        $gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
+        $completed_gate_keeper = _sbac_resource_determine_feedback($nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+        if (!$gate_keeper && !$completed_gate_keeper) {
           $variables['buttons'][] = l(t('Un-submit'), 'sbac-resource/nojs/unsubmit-resource-modal', array(
             'html' => TRUE,
             'query' => array(
