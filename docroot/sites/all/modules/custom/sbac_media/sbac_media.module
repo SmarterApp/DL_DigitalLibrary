@@ -1787,6 +1787,30 @@ function sbac_media_delete_html5_record($file) {
   sbac_media_delete_media_record($file->id, $file->fid);
 }
 
+/**
+ * Implements hook_file_delete()
+ *
+ * @param $file
+ */
+function sbac_media_file_delete($file) {
+  _sbac_media_log('unknown', $file->fid);
+}
+
+/**
+ * Logger to help debug missing materials
+ *
+ */
+function _sbac_media_log($nid, $fid) {
+  global $user;
+  $e = new Exception();
+  $stack_trace = $e->getTraceAsString();
+  $time = time();
+  $date = date('Y-m-d h:i:s', $time);
+  $msg = "User $user->uid removed file $fid (node $nid) on $time ($date)\n$stack_trace";
+  error_log($msg);
+  watchdog('sbac_media', $msg);
+}
+
 
 /**
  * Deletes the media record.
@@ -1885,6 +1909,7 @@ function sbac_media_delete_media($js = FALSE) {
           $media_list = _sbac_media_create_list($media_items, $form_state);
           $output[] = ajax_command_html('#sbac-media-list', $media_list);
         }
+        _sbac_media_log($form_state['values']['nid'], $form_state['values']['fid']);
       }
     }
     print ajax_render($output);
