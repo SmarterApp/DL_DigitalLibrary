@@ -605,7 +605,7 @@ function sbac_central_format_size_units($bytes) {
 /**
  * Implements hook_user_login().
  */
-function sbac_central_login_user_login(&$edit, $account) {
+function sbac_central_user_login(&$edit, $account) {
   // record the login session to memcache
   // we don't use drupals helper functions as they can also be cleared by
   // cc all which will sometimes remove good data that is yet to be recorded.
@@ -655,7 +655,7 @@ function sbac_central_login_user_login(&$edit, $account) {
 /**
  * Implements hook_cron
  */
-function sbac_central_login_cron(){
+function sbac_central_cron(){
   // periodically write the login data to the database
   $key = 'login_count';
   // get all the things from the cache

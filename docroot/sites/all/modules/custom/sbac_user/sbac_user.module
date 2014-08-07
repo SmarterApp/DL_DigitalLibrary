@@ -117,7 +117,31 @@ function sbac_user_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-user/delete-test-users'] = array(
+    'title' => 'Delete Test Users',
+    'page callback' => 'sbac_user_delete_test_users',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Just a function for cleaning up generated users.
+ *
+ * @return string
+ */
+function sbac_user_delete_test_users() {
+  $sql = "SELECT uid FROM {users} WHERE name like '%%appnovation_%%'";
+  $results = db_query($sql);
+  $count = 1;
+  foreach ($results as $row) {
+    user_delete($row->uid);
+    $count++;
+  }
+  $output = "Deleted " . $count . " users";
+  return $output;
 }
 
 /**
@@ -1192,9 +1216,9 @@ function sbac_user_login_overlay() {
  * Callback function for terms-and-conditions-print menu item
  */
 function sbac_user_terms_page() {
-
+  global $user;
   drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
-  $form = drupal_get_form('legal_login');
+  $form = drupal_get_form('legal_login', NULL, $user->uid);
 
   $form['cancel'] = array();
   $form['legal']['legal_accept'] = array();
@@ -1506,6 +1530,8 @@ function sbac_user_user_import_data($settings, $update_setting, $column_settings
 }
 
 /**
+ * Preprocess the favorites menu item.
+ *
  * @param $vars
  * @param $user
  */
@@ -1516,7 +1542,8 @@ function sbac_user_preprocess_favorites(&$vars, $user) {
     $favorites_count = 0;
   }
   $text .= ' (<span>' . $favorites_count . '</span>)';
-  $vars['user']->favorites_link = l($text, 'user', array(
+  $link = drupal_get_path_alias('user/' . $user->uid);
+  $vars['user']->favorites_link = l($text, $link, array(
     'html' => TRUE,
     'fragment' => 'profile-favorites',
     'attributes' => array('title' => 'Favorites'),
@@ -1525,6 +1552,8 @@ function sbac_user_preprocess_favorites(&$vars, $user) {
 }
 
 /**
+ * Preprocess the notications menu item.
+ *
  * @param $vars
  * @param $user
  */
@@ -1534,7 +1563,8 @@ function sbac_user_preprocess_notifications(&$vars, $user) {
   if ($taskit_counts['_no_role_'] != 0) {
     $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
   }
-  $vars['user']->notifications = l($text, 'user', array(
+  $link = drupal_get_path_alias('user/' . $user->uid);
+  $vars['user']->notifications = l($text, $link, array(
     'html' => TRUE,
     'fragment' => 'profile-notifications',
     'attributes' => array('title' => 'Notifications'),
