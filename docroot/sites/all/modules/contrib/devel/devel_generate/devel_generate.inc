@@ -15,6 +15,7 @@
  *  A string to be used as common password for all generated users. Defaults to NULL.
  */
 function devel_create_users($num, $kill, $age = 0, $roles = array(), $pass = NULL) {
+  ini_set('max_execution_time', 86400);
   $url = parse_url($GLOBALS['base_url']);
   if ($kill) {
     $uids = db_select('users', 'u')
