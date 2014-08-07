@@ -126,7 +126,7 @@
 
 
 </div> <!-- END row first-->
-<div class="line"></div>
+<!--<div class="line"></div>-->
 <div class="row second">
 	<div class="column large-12">
 		<?php

@@ -1284,3 +1284,19 @@ function sbac_central_update_7087() {
 function sbac_central_update_7088() {
   module_enable(array('entitycache'));
 }
+
+/**
+ * Enables feedback-box block.
+ */
+function sbac_central_update_7089() {
+  $update = db_update('block');
+  $update->fields(
+    array(
+      'region' => 'feedback',
+      'status' => 1,
+      )
+  );
+  $update->condition('module', 'sbac_central', '=');
+  $update->condition('delta', 'feedback-box', '=');
+  $update->execute();
+}

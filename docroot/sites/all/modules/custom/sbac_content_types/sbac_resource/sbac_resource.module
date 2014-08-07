@@ -1908,7 +1908,7 @@ function sbac_resource_query_alter(&$query) {
               $tables[$key]['arguments'] = array();
             }
             else {
-              $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.entity_id';
+              $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.entity_id AND ' . $filter_name . "0.bundle = 'resource'";
               $tables[$key]['arguments'] = array();
             }
           }

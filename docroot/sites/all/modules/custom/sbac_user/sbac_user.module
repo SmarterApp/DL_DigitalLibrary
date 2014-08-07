@@ -1192,9 +1192,9 @@ function sbac_user_login_overlay() {
  * Callback function for terms-and-conditions-print menu item
  */
 function sbac_user_terms_page() {
-
+  global $user;
   drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
-  $form = drupal_get_form('legal_login');
+  $form = drupal_get_form('legal_login', NULL, $user->uid);
 
   $form['cancel'] = array();
   $form['legal']['legal_accept'] = array();

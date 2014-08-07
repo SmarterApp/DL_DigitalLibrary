@@ -1910,7 +1910,7 @@ a.sbac-grid-layout {
 }
 /* line 1880, ../sass/sbac_resource.scss */
 .node-resource .section-container section:last-child {
-  margin-top: -20px;
+  /*margin-top: -20px;*/
   padding-bottom: 50px;
 }
 /* line 1886, ../sass/sbac_resource.scss */
