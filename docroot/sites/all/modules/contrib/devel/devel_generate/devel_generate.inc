@@ -37,7 +37,7 @@ function devel_create_users($num, $kill, $age = 0, $roles = array(), $pass = NUL
 
   if ($num > 0) {
     $names = array();
-    $counter = 1;
+    $counter = 10001;
     while (count($names) < $num) {
       $name = 'appnovation_' . $counter;
       $names[$name] = '';
@@ -48,7 +48,7 @@ function devel_create_users($num, $kill, $age = 0, $roles = array(), $pass = NUL
       $roles = array(DRUPAL_AUTHENTICATED_RID);
     }
 
-    $counter = 1;
+    $counter = 10001;
     foreach ($names as $name => $value) {
       $edit = array(
         'uid'     => NULL,
