@@ -1031,7 +1031,7 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
 function sbac_user_user_login(&$edit, $account) {
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+    if (!isset($account->data['login'])) {
       drupal_goto('sbac-user/setup');
     }
   }
@@ -1504,6 +1504,7 @@ function sbac_user_user_import_data($settings, $update_setting, $column_settings
  * @param $user
  */
 function sbac_user_preprocess_favorites(&$vars, $user) {
+  module_load_include('module', 'sbac_favorites');
   $favorites_count = sbac_favorites_get_count($user->uid);
   $text = t('Favorites');
   if (!$favorites_count) {
