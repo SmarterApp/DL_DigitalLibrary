@@ -10,16 +10,36 @@ Drupal.behaviors.sections = {
       $(this).removeClass('use-ajax');
     });
 
+    // On click of menu item, click the section if it exists.
+    $('.inline-list.right.user-nav .notifications a').once('sbacNotificationsMenuClick', function(){
+      $(this).click(function () {
+        var section = $('.section-notifications a');
+        if (section.length) {
+          section.click();
+//          window.location.href = section.attr('href');
+        }
+      });
+    });
+
+    // On click of menu item, click the section if it exists.
+    $('.inline-list.right.user-nav .sbac-favorites-menu a').once('sbacFavoritesMenuClick', function(){
+      $(this).click(function() {
+        var section = $('.section-favorites a');
+        if (section.length) {
+          section.click();
+//          window.location.href = section.attr('href');
+        }
+      });
+    });
+
     // check for tab hash and switch the active tab
     var hash = window.location.hash;
     if (window.location.hash) {
-      if (hash == '#profile-favorites' && clicked == false) {
+      if (hash == '#profile-favorites' && $('#section-favorites').is(':empty')) {
         $('.section-favorites a').click();
-        clicked = true;
       }
-      else if (hash == '#profile-notifications' && clicked == false) {
+      else if (hash == '#profile-notifications' && $('#section-notifications').is(':empty')) {
         $('.section-notifications a').click();
-        clicked = true;
       }
       else {
         $('body').once('switch-section', function() {
@@ -30,18 +50,27 @@ Drupal.behaviors.sections = {
     }
 
     // add support for disabling sections via class name
-//    var container = $('.section-container');
-//    if (container.length) {
-//      $('section', container).each(function(i, el) {
-//        var section = $(el);
-//        section.click(function(e) {
-//          if (section.hasClass('disabled')) {
-//            e.preventDefault();
-//            return false;
-//          }
-//        });
-//      });
-//    }
+    var container = $('.section-container');
+    if (container.length) {
+      console.log(container);
+      $('section', container).each(function(i, el) {
+        var section = $(el);
+        section.find('a').click(function(e) {
+          var href = $(this);
+          console.log(href.attr('section_id'));
+          if (href.attr('section_id') == 'section-favorites') {
+            window.location.hash = 'profile-favorites';
+          }
+          if (href.attr('section_id') == 'section-notifications') {
+            window.location.hash = 'profile-notifications';
+          }
+          if (href.attr('section_id') == 'section-account') {
+            window.location.hash = '';
+          }
+          console.log(section);
+        });
+      });
+    }
   },
 
   /**
@@ -89,10 +118,6 @@ if (Drupal.ajax) {
    * We unfortunately need to override this function, which originally comes from
    * misc/ajax.js, in order to be able to cache loaded tabs, i.e. once a tab
    * content has loaded it should not need to be loaded again.
-   *
-   * I have removed all comments that were in the original core function, so that
-   * the only comments inside this function relate to the MY MUH TRUCKIN CODE modification
-   * of it.
    */
   Drupal.ajax.prototype.eventResponse = function (element, event) {
     var ajax = this;

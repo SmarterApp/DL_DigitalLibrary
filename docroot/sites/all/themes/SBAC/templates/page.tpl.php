@@ -22,7 +22,7 @@
           ?>
         </a>
         <ul id="drop3" class="f-dropdown">
-          <li><?php echo l('Account', 'user', array('attributes' => array('title' => 'Account'))); ?></li>
+          <li><?php echo l('Account', drupal_get_path_alias('user/' . $user->uid), array('attributes' => array('title' => 'Account'))); ?></li>
           <li><?php echo l('Logout', 'user/logout', array('attributes' => array('title' => 'Logout'))); ?></li>
         </ul>
       </li>
