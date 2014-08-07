@@ -135,7 +135,9 @@ if (Drupal.ajax) {
         if (!$(element).hasClass('section-loaded')) {
           ajax.beforeSerialize(ajax.element, ajax.options);
           $.ajax(ajax.options);
-          $(element).addClass('section-loaded');
+          if ($('#main').find($(element)).length > 0) {
+            $(element).addClass('section-loaded');
+          }
         }
       }
     }

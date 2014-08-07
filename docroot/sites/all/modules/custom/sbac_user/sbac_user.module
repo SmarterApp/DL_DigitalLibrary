@@ -1504,6 +1504,7 @@ function sbac_user_user_import_data($settings, $update_setting, $column_settings
  * @param $user
  */
 function sbac_user_preprocess_favorites(&$vars, $user) {
+  module_load_include('module', 'sbac_favorites');
   $favorites_count = sbac_favorites_get_count($user->uid);
   $text = t('Favorites');
   if (!$favorites_count) {
