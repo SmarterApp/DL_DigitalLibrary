@@ -1315,8 +1315,6 @@ a.tabledrag-handle .handle {
 .section-container.auto {
 	position: relative;
 	min-height: 500px;
-	left: 0;
-	top: 0;
 	
 	.ajax-progress-throbber {
 		position: fixed;
@@ -1329,7 +1327,7 @@ a.tabledrag-handle .handle {
 		.throbber  {
 			display: block;
 			position: fixed;
-			top: 53%;
+			top: 63%;
 			left: 43%;
 			background: url('../images/foundation/orbit/loading.gif') no-repeat center center;
 			background-size:70%;
@@ -1345,7 +1343,7 @@ a.tabledrag-handle .handle {
 	.specific-section {
 		
 		.throbber  {
-			top: 43% !important;
+			top: 63% !important;
 			background: url('../images/foundation/orbit/loading.gif') no-repeat center center !important;
 			background-size:70% !important;
 		}
