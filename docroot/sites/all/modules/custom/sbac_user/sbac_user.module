@@ -127,6 +127,11 @@ function sbac_user_menu() {
   return $items;
 }
 
+/**
+ * Just a function for cleaning up generated users.
+ *
+ * @return string
+ */
 function sbac_user_delete_test_users() {
   $sql = "SELECT uid FROM {users} WHERE name like '%%appnovation_%%'";
   $results = db_query($sql);
