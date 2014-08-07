@@ -68,6 +68,12 @@ function section_get_content() {
     }
     elseif ($tab == 'favorites') {
       $content = sbac_favorites_get_html_content();
+      $commands = array();
+      $commands[] = ajax_command_invoke('#' . $_GET['section_id'], 'empty');
+      $commands[] = ajax_command_append('#' . $_GET['section_id'], $content);
+      $page = array('#type' => 'ajax', '#commands' => $commands);
+      ajax_deliver($page);
+      exit();
     }
   }
   else {

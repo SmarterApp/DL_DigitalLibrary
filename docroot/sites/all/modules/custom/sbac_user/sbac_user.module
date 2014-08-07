@@ -185,38 +185,6 @@ function sbac_user_access_check() {
   return TRUE;
 }
 
-/**
- * Implements hook_init().
- *
- * Dev did not have this anymore. Load Test branch did. Since this seems like
- * funcitonality, I'm going to keep this in but comment it out for now.
- *
- */
-function sbac_user_init() {
-//global $user;
-//  if (!user_is_logged_in()) {
-//    variable_set('site_404', 'user');
-//  }
-//  else {
-//    variable_set('site_404', '');
-//  }
-
-  // Intercept page request to user/uid/edit with pass-reset-token query value and send to change-password instead.
-  // Is this the best place to do this? Can't seem to use hook_user_login() because there is no way to
-  // retrieve the pass-reset-token value.
-//  if (isset($_GET['pass-reset-token'])) {
-//    $pass_reset = isset($_SESSION['pass_reset_' . $user->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $user->uid]);
-//
-//    if ($pass_reset && arg(0) == 'user' && arg(1) == $user->uid && arg(2) == 'edit') {
-//      drupal_goto('change-password', array('query' => array('pass-reset-token' => $_GET['pass-reset-token'])));
-//    }
-//  }
-//  // redirect any user not admin from the user/id/edit screen to user
-//  if ($user->uid != 1 && arg(0) == 'user' && arg(1) && arg(2) == 'edit') {
-//    drupal_goto('user');
-//  }
-}
-
 /*
  * Implements hook_permission().
  */

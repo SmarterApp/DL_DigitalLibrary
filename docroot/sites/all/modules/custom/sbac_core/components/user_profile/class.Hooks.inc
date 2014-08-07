@@ -64,6 +64,8 @@ class Hooks extends \devtools\Hooks {
     if (user_access('view and edit account information')) {
       drupal_add_js(drupal_get_path('module', 'sbac_user') . '/js/sbac_user.js');
       drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
+      drupal_add_library('system', 'drupal.ajax');
+      drupal_add_library('system', 'jquery.form');
 
       $help_content = variable_get('user_account_help', input_default_full_html());
 
