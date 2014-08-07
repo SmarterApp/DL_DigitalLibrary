@@ -11,8 +11,12 @@
  *  The max age of each randomly-generated user, in seconds.
  * @param $roles
  *  An array of role IDs that the users should receive.
+ * @param $pass
+ *  A string to be used as common password for all generated users. Defaults to NULL.
  */
-function devel_create_users($num, $kill, $age = 0, $roles = array()) {
+function devel_create_users($num, $kill, $age = 0, $roles = array(), $pass = NULL) {
+  ini_set('max_execution_time', 86400);
+  set_time_limit(0);
   $url = parse_url($GLOBALS['base_url']);
   if ($kill) {
     $uids = db_select('users', 'u')
@@ -33,19 +37,23 @@ function devel_create_users($num, $kill, $age = 0, $roles = array()) {
 
   if ($num > 0) {
     $names = array();
+    $counter = 10001;
     while (count($names) < $num) {
-      $name = devel_generate_word(mt_rand(6, 12));
+      $name = 'appnovation_' . $counter;
       $names[$name] = '';
+      $counter++;
     }
 
     if (empty($roles)) {
       $roles = array(DRUPAL_AUTHENTICATED_RID);
     }
+
+    $counter = 10001;
     foreach ($names as $name => $value) {
       $edit = array(
         'uid'     => NULL,
         'name'    => $name,
-        'pass'    => NULL, // No password avoids user_hash_password() which is expensive.
+        'pass'    => '123',
         'mail'    => $name . '@' . $url['host'],
         'status'  => 1,
         'created' => REQUEST_TIME - mt_rand(0, $age),
@@ -59,6 +67,9 @@ function devel_create_users($num, $kill, $age = 0, $roles = array()) {
       $edit->language = LANGUAGE_NONE;
       devel_generate_fields($edit, 'user', 'user');
       $edit = (array) $edit;
+
+      $edit['field_first_name']['und'][0]['value'] = 'Appnovation';
+      $edit['field_last_name']['und'][0]['value'] = 'Load' . $counter;
 
       $account = user_save(drupal_anonymous_user(), $edit);
 
@@ -103,8 +114,10 @@ function devel_create_users($num, $kill, $age = 0, $roles = array()) {
         // Save the user record with the new picture.
         $edit = (array) $account;
         $edit['picture'] = $file;
+        $edit['pass'] = $pass; // Reassign password as it is replaced with the hashed version in $account
         user_save($account, $edit);
       }
+      $counter++;
     }
   }
   drupal_set_message(t('!num_users created.', array('!num_users' => format_plural($num, '1 user', '@count users'))));

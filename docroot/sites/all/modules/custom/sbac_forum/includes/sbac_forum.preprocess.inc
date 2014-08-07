@@ -3,8 +3,8 @@
 
 function sbac_forum_preprocess_node__topic(&$vars) {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
-  drupal_add_js('/misc/form.js');
-  drupal_add_js('/misc/collapse.js');
+  drupal_add_js('misc/form.js');
+  drupal_add_js('misc/collapse.js');
 
   ctools_include('ajax');
   ctools_include('modal');

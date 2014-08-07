@@ -22,7 +22,7 @@
           ?>
         </a>
         <ul id="drop3" class="f-dropdown">
-          <li><?php echo l('Account', 'user', array('attributes' => array('title' => 'Account'))); ?></li>
+          <li><?php echo l('Account', drupal_get_path_alias('user/' . $user->uid), array('attributes' => array('title' => 'Account'))); ?></li>
           <li><?php echo l('Logout', 'user/logout', array('attributes' => array('title' => 'Logout'))); ?></li>
         </ul>
       </li>
@@ -194,14 +194,21 @@
       }
       ?>
       <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
-      <ul class="footer-links inline-list right">
-        <li>
-          <?php if (isset($help_dropdown_footer)) : ?>
-            <?php echo $help_dropdown_footer; ?>
-          <?php endif; ?>
-        </li>
-        <li><a title="Terms of Service" class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
-      </ul>
+        <ul class="footer-links inline-list right">
+          <li>
+            <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
+              <div class="footer-help">
+                <a title="Help Menu" class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
+                <ul id="drop2" class="f-dropdown" data-dropdown-content>
+                  <li><a title="Welcome Tutorial" href="welcome-tutorial/nojs" class="ctools-use-ajax use-ajax ctools-modal-sbac-help-welcome-tutorial">Welcome Tutorial</a></li>
+                  <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE, 'attributes' => array('title' => 'Glossary'))); ?></li>
+                  <li><a title='Help Topics' href="help-topics">Help Topics</a></li>
+                </ul>
+              </div>
+            <?php endif; ?>
+          </li>
+          <li><a title="Terms of Service" class="terms-and-conditions" href="/terms-of-service">Terms of Service</a></li>
+        </ul>
       <?php endif; ?>
     </div>
   </div>

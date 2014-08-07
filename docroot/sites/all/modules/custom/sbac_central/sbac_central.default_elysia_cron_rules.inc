@@ -33,6 +33,16 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
+  $cron_rule->name = 'acquia_spi_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = '2 4 * * *';
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['acquia_spi_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
   $cron_rule->name = 'apachesolr_cron';
   $cron_rule->disable = NULL;
   $cron_rule->rule = '6 4 * * *';
@@ -73,6 +83,16 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
   $cron_rule->api_version = 1;
+  $cron_rule->name = 'httprl_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = '34 4 * * *';
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['httprl_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
   $cron_rule->name = 'node_cron';
   $cron_rule->disable = NULL;
   $cron_rule->rule = '26 4 * * *';
@@ -89,6 +109,26 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['rate_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'sbac_air_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = NULL;
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['sbac_air_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'sbac_central_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = '*/1 * * * *';
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['sbac_central_cron'] = $cron_rule;
 
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
@@ -179,6 +219,16 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['user_import_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'views_data_export_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = NULL;
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['views_data_export_cron'] = $cron_rule;
 
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */

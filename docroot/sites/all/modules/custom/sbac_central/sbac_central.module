@@ -605,86 +605,90 @@ function sbac_central_format_size_units($bytes) {
 /**
  * Implements hook_user_login().
  */
-function sbac_central_login_user_login(&$edit, $account) {
-  // record the login session to memcache
-  // we don't use drupals helper functions as they can also be cleared by
-  // cc all which will sometimes remove good data that is yet to be recorded.
-  $u = user_load($account->uid);
-  // create an object to store in the cache
-  $wrapper = entity_metadata_wrapper('user', $u);
-  if (is_null($wrapper->field_login_count->raw())) {
-    $c = 0;
-  }
-  else {
-    $c = $wrapper->field_login_count->raw();
-  }
-  // create the array
-  $login_count['uid'] = $u->uid;
-  $login_count['count'] = ++$c;
-  $key = 'login_count';
-  // check if there is data already in memcache
-  $existing_data = dmemcache_get($key);
-  // if there is no data set then assign the array
-  if ($existing_data === FALSE) {
-    $new_data[0] = $login_count;
-  }
-  else {
-    // add the data to the array
-    $new_data = $existing_data;
-    // set a marker for if a duplicate uid is detected
-    $new = 0;
-    // TODO check if the user has already registered a login before the last flush to disk
-    foreach ($new_data as $k => $v) {
-      // if the uid is the same as the current logged in user
-      if ($v['uid'] == $u->uid) {
-        // then increment the login count
-        $new_data[$k]['count'] = $v['count'] + 1;
-        // and increment the marker
-        $new = 1;
+function sbac_central_user_login(&$edit, $account) {
+  if (class_exists('Memcache') && function_exists('dmemcache_get')) {
+    // record the login session to memcache
+    // we don't use drupals helper functions as they can also be cleared by
+    // cc all which will sometimes remove good data that is yet to be recorded.
+    $u = user_load($account->uid);
+    // create an object to store in the cache
+    $wrapper = entity_metadata_wrapper('user', $u);
+    if (is_null($wrapper->field_login_count->raw())) {
+      $c = 0;
+    }
+    else {
+      $c = $wrapper->field_login_count->raw();
+    }
+    // create the array
+    $login_count['uid'] = $u->uid;
+    $login_count['count'] = ++$c;
+    $key = 'login_count';
+    // check if there is data already in memcache
+    $existing_data = dmemcache_get($key);
+    // if there is no data set then assign the array
+    if ($existing_data === FALSE) {
+      $new_data[0] = $login_count;
+    }
+    else {
+      // add the data to the array
+      $new_data = $existing_data;
+      // set a marker for if a duplicate uid is detected
+      $new = 0;
+      // TODO check if the user has already registered a login before the last flush to disk
+      foreach ($new_data as $k => $v) {
+        // if the uid is the same as the current logged in user
+        if ($v['uid'] == $u->uid) {
+          // then increment the login count
+          $new_data[$k]['count'] = $v['count'] + 1;
+          // and increment the marker
+          $new = 1;
+        }
+      }
+      // if the new var is still 0 then add the new data
+      if ($new == 0) {
+        $new_data[] = $login_count;
       }
     }
-    // if the new var is still 0 then add the new data
-    if ($new == 0) {
-      $new_data[] = $login_count;
-    }
+    dmemcache_set($key, $new_data, $exp = 0);
   }
-  dmemcache_set($key, $new_data, $exp = 0);
 }
 
 
 /**
  * Implements hook_cron
  */
-function sbac_central_login_cron(){
-  // periodically write the login data to the database
-  $key = 'login_count';
-  // get all the things from the cache
-  $items = dmemcache_get($key);
+function sbac_central_cron(){
+  if (class_exists('Memcache') && function_exists('dmemcache_get')) {
+    // periodically write the login data to the database
+    $key = 'login_count';
+    // get all the things from the cache
+    $items = dmemcache_get($key);
 
-  // check if items[0]==FALSE if so return here (this means no logins to write)
-  if($items[0] === FALSE){
-    return;
-  }
-  // if there are items write them to the db
-  // nuke the objects from memcache.  Should this be done before or after the loop?
-  // i guess we're going to nuke it anyway so maybe should be done before we run
-  // the loop so there is a smaller chance of new logins getting nuked
-  dmemcache_delete($key);
+    // check if items[0]==FALSE if so return here (this means no logins to write)
+    if($items[0] === FALSE){
+      return;
+    }
+    // if there are items write them to the db
+    // nuke the objects from memcache.  Should this be done before or after the loop?
+    // i guess we're going to nuke it anyway so maybe should be done before we run
+    // the loop so there is a smaller chance of new logins getting nuked
+    dmemcache_delete($key);
 
-  // for each item, explode the uid and count
-  foreach($items as $i){
-    // This is the correct way to do it, but less performant
-    // load the user
-    // this should already be in static cache as the user logged in at most 59s ago
-    $u = user_load($i['uid']);
+    // for each item, explode the uid and count
+    foreach($items as $i){
+      // This is the correct way to do it, but less performant
+      // load the user
+      // this should already be in static cache as the user logged in at most 59s ago
+      $u = user_load($i['uid']);
 
-    // get the wrapper
-    $wrapper = entity_metadata_wrapper('user', $u);
+      // get the wrapper
+      $wrapper = entity_metadata_wrapper('user', $u);
 
-    // update the field_login_count field
-    $wrapper->field_login_count->set($i['count']);
+      // update the field_login_count field
+      $wrapper->field_login_count->set($i['count']);
 
-    // then write them to the user object
-    $wrapper->save();
+      // then write them to the user object
+      $wrapper->save();
+    }
   }
 }
