@@ -76,7 +76,7 @@ function _sbac_resource_setup_form(&$form, &$form_state) {
   }
 
   if (!isset($form['#node']->nid)) {
-    drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/resource.js");
+    drupal_add_js(drupal_get_path("module", "sbac_help") . "/js/sbac_help.resource.js");
     drupal_add_js(array('resource_nid' => 0), 'setting');
   }
   else {

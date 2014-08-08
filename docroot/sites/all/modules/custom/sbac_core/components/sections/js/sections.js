@@ -4,20 +4,35 @@ var clicked = false;
 
 Drupal.behaviors.sections = {
   attach: function (context, settings) {
-    $('.section-link').click(function(e) {
-      $('.specific-section').removeClass('active').css('padding-top', 0);
-      $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
-      $(this).removeClass('use-ajax');
+    $('.section-link').once('sbacLinkClick', function() {
+      $(this).click(function(e) {
+        if ($(this).parents('.specific-section').hasClass('disabled')) {
+          return false;
+        }
+        $('.specific-section').removeClass('active').css('padding-top', 0);
+        $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
+        $(this).removeClass('use-ajax');
+      });
     });
+
 
     // On click of menu item, click the section if it exists.
     $('.inline-list.right.user-nav .notifications a').once('sbacNotificationsMenuClick', function(){
       $(this).click(function () {
         var section = $('.section-notifications a');
         if (section.length) {
-          section.click();
-//          window.location.href = section.attr('href');
+          if (!$.trim($('#section-notifications').html() ).length) {
+            section.click();
+          }
+          else {
+            $('.specific-section').removeClass('active').css('padding-top', 0);
+            $('.specific-section.section-notifications').addClass('active').css('padding-top', '45px');
+          }
         }
+        else {
+          window.location.href = $(this).attr('href');
+        }
+        return false;
       });
     });
 
@@ -26,22 +41,31 @@ Drupal.behaviors.sections = {
       $(this).click(function() {
         var section = $('.section-favorites a');
         if (section.length) {
-          section.click();
-//          window.location.href = section.attr('href');
+          if (!$.trim($('#section-favorites').html() ).length) {
+            section.click();
+          }
+          else {
+            $('.specific-section').removeClass('active').css('padding-top', 0);
+            $('.specific-section.section-favorites').addClass('active').css('padding-top', '45px');
+          }
         }
+        else {
+          window.location.href = $(this).attr('href');
+        }
+        return false;
       });
     });
 
     // check for tab hash and switch the active tab
     var hash = window.location.hash;
     if (window.location.hash) {
-      if (hash == '#profile-favorites' && $('#section-favorites').is(':empty')) {
+      if (hash == '#profile-favorites' && !$.trim($('#section-favorites').html() ).length) {
         $('.section-favorites a').click();
       }
-      else if (hash == '#profile-notifications' && $('#section-notifications').is(':empty')) {
+      else if (hash == '#profile-notifications' && !$.trim($('#section-notifications').html() ).length) {
         $('.section-notifications a').click();
       }
-      else {
+      else if (hash != '#profile-favorites' && hash != '#profile-notifications') {
         $('body').once('switch-section', function() {
           var hash = window.location.hash;
           Drupal.behaviors.sections.switch_tab(hash);
@@ -52,12 +76,10 @@ Drupal.behaviors.sections = {
     // add support for disabling sections via class name
     var container = $('.section-container');
     if (container.length) {
-      console.log(container);
       $('section', container).each(function(i, el) {
         var section = $(el);
         section.find('a').click(function(e) {
           var href = $(this);
-          console.log(href.attr('section_id'));
           if (href.attr('section_id') == 'section-favorites') {
             window.location.hash = 'profile-favorites';
           }
@@ -67,7 +89,6 @@ Drupal.behaviors.sections = {
           if (href.attr('section_id') == 'section-account') {
             window.location.hash = '';
           }
-          console.log(section);
         });
       });
     }
@@ -152,6 +173,103 @@ if (Drupal.ajax) {
       return false;
     }
   };
+
+  /**
+   * Prepare the Ajax request before it is sent.
+   *
+   * This code is pulled from misc/ajax.js. We needed to do this to override
+   * the placement of the default drupal throbber.
+   */
+  Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
+    // For forms without file inputs, the jQuery Form plugin serializes the form
+    // values, and then calls jQuery's $.ajax() function, which invokes this
+    // handler. In this circumstance, options.extraData is never used. For forms
+    // with file inputs, the jQuery Form plugin uses the browser's normal form
+    // submission mechanism, but captures the response in a hidden IFRAME. In this
+    // circumstance, it calls this handler first, and then appends hidden fields
+    // to the form to submit the values in options.extraData. There is no simple
+    // way to know which submission mechanism will be used, so we add to extraData
+    // regardless, and allow it to be ignored in the former case.
+    if (this.form) {
+      options.extraData = options.extraData || {};
+
+      // Let the server know when the IFRAME submission mechanism is used. The
+      // server can use this information to wrap the JSON response in a TEXTAREA,
+      // as per http://jquery.malsup.com/form/#file-upload.
+      options.extraData.ajax_iframe_upload = '1';
+
+      // The triggering element is about to be disabled (see below), but if it
+      // contains a value (e.g., a checkbox, textfield, select, etc.), ensure that
+      // value is included in the submission. As per above, submissions that use
+      // $.ajax() are already serialized prior to the element being disabled, so
+      // this is only needed for IFRAME submissions.
+      var v = $.fieldValue(this.element);
+      if (v !== null) {
+        options.extraData[this.element.name] = Drupal.checkPlain(v);
+      }
+    }
+
+    // Disable the element that received the change to prevent user interface
+    // interaction while the Ajax request is in progress. ajax.ajaxing prevents
+    // the element from triggering a new request, but does not prevent the user
+    // from changing its value.
+    $(this.element).addClass('progress-disabled').attr('disabled', true);
+
+    // Insert progressbar or throbber.
+    if (this.progress.type == 'bar') {
+      var progressBar = new Drupal.progressBar('ajax-progress-' + this.element.id, eval(this.progress.update_callback), this.progress.method, eval(this.progress.error_callback));
+      if (this.progress.message) {
+        progressBar.setProgress(-1, this.progress.message);
+      }
+      if (this.progress.url) {
+        progressBar.startMonitoring(this.progress.url, this.progress.interval || 1500);
+      }
+      this.progress.element = $(progressBar.element).addClass('ajax-progress ajax-progress-bar');
+      this.progress.object = progressBar;
+      $(this.element).after(this.progress.element);
+    }
+    else if (this.progress.type == 'throbber') {
+      var url = this.url;
+      if (url.indexOf('section-get-content') > -1) {
+        var title = this.element.title;
+        this.progress.element = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+        if (this.progress.message) {
+          $('.throbber', this.progress.element).after('<div class="message">' + this.progress.message + '</div>');
+        }
+        switch (title) {
+          case 'Notifications':
+            $('#section-notifications').append(this.progress.element);
+            break;
+          case 'Favorites':
+            $('#section-favorites').append(this.progress.element);
+            break;
+          case 'Collaboration':
+            $('#section-collaboration').append(this.progress.element);
+            break;
+          case 'Reviews':
+            $('#section-reviews').append(this.progress.element);
+            break;
+          case 'Share':
+            $('#section-share').append(this.progress.element);
+            break;
+          case 'Related Resources':
+            $('#section-related-resources').append(this.progress.element);
+            break;
+          case 'Flag':
+            $('#section-flag').append(this.progress.element);
+            break;
+        }
+      }
+      else {
+        this.progress.element = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+        if (this.progress.message) {
+          $('.throbber', this.progress.element).after('<div class="message">' + this.progress.message + '</div>');
+        }
+        $(this.element).after(this.progress.element);
+      }
+    }
+  };
+
 }
 
 })(jQuery);

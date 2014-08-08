@@ -1,6 +1,6 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
-  found = false;
+  var ajax_request = null;
   /**
    * If the material is a doc, load google,
    * else load JwPlayer
@@ -17,6 +17,7 @@
             var response = jQuery.parseJSON(data);
             ajax_request = null;
             Drupal.behaviors.sbac_resource_load_media.inject_data(link, response.url)
+            // $('.infobar .ajax-progress-throbber').hide();
           }
         });
       }
@@ -104,12 +105,14 @@
       doc_type.removeClass();
       doc_type.addClass(type);
       doc_type.empty().append(type);
+      $('.infobar .ajax-progress-throbber').hide();
     },
     attach: function (context, settings) {
       $('#sbac-materials li a').click( function (event) {
         event.stopPropagation();
         event.preventDefault();
         Drupal.behaviors.sbac_resource_load_media.get_url($(this));
+        $('.infobar .ajax-progress-throbber').show();
         return false;
       });
 
