@@ -3528,3 +3528,43 @@ function theme_sbac_resource_views_load_more_pager($vars) {
     $_GET['q'] = $old_url;
   }
 }
+
+/**
+ * Get the timestamp the resource was resubmitted
+ *
+ * @param $resource_nid
+ * @return mixed
+ */
+function _sbac_resource_resubmit_timestamp($resource_nid) {
+  $timestamp = db_query("
+SELECT
+	max(h.stamp)
+FROM {workbench_moderation_node_history} h
+WHERE
+	h.nid = :nid
+	AND h.from_state = 'draft'
+	AND h.state = 'needs_review'
+	AND h.stamp > (
+		SELECT
+			max(h2.stamp)
+		FROM {workbench_moderation_node_history} h2
+		WHERE h2.nid = :nid
+		      AND h2.state = 'rejected'
+	)", array(':nid' => $resource_nid))->fetchField();
+  if (!$timestamp) {
+    $timestamp = 0;
+  }
+  return $timestamp;
+}
+
+/**
+ * Is this a recent reviewer?
+ */
+function _sbac_resource_is_recent_reviewers($resource_nid, $account_uid){
+  $original_reviewers = db_query("
+                SELECT
+                    DISTINCT r.field_recent_reviewers_target_id
+                FROM {field_data_field_recent_reviewers} r
+                WHERE r.entity_id = :nid", array(':nid' => $resource_nid))->fetchCol();
+  return !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
+}

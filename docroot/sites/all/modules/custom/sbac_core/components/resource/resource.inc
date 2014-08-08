@@ -121,14 +121,7 @@ function resource_access($op, $node, $account = NULL) {
 
     if ($op == 'access quality criteria revisions') {
       // only allow access to the Revisions tab if this is a resubmission
-      return db_query("SELECT
-                          max(history.stamp)
-                        FROM node
-                          LEFT JOIN workbench_moderation_node_history history
-                            ON history.nid = node.nid
-                        WHERE node.nid = :nid AND from_state = 'draft' AND state = 'needs_review'
-                        group by history.nid
-                        having count(history.nid) > 1;", array(':nid' => $node->nid))->fetchField();
+      return _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
     }
 
     $args = array(
@@ -179,99 +172,34 @@ function resource_access($op, $node, $account = NULL) {
       return FALSE;
     }
 
-    if (in_array($op, array('view gate keeper', 'start gate keeper', 'edit gate keeper'))) {
-      if ($node->workbench_moderation['current']->state == 'draft') {
-        return FALSE;
-      }
-
-      // is this a resubmission?
-      $resubmission_timestamp = db_query("SELECT
-                                            max(history.stamp)
-                                          FROM {node}
-                                            LEFT JOIN {workbench_moderation_node_history history}
-                                              ON history.nid = node.nid
-                                          WHERE node.nid = :nid AND from_state = 'draft' AND state = 'needs_review'
-                                          group by history.nid
-                                          having count(history.nid) > 1;", array(':nid' => $node->nid))->fetchField();
-      if ($resubmission_timestamp) {
-        // if we're still within the 2 weeks (FEEDBACK_RESUBMISSION_TIMEOUT) limit
-        if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $resubmission_timestamp) {
-          $count = db_select('eck_feedback', 'f')->condition('node_id', $node->nid)->fields('f')->countQuery()->execute()->fetchField();
-          if ($count == 0) {
-            return TRUE;
-          }
-          else {
-            $query = "SELECT count(*) FROM {eck_feedback} WHERE node_id = :nid AND uid = :uid";
-            $reviewers = db_query($query, array(':nid' => $node->nid, ':uid' => $account->uid))->fetchField();
-            return $reviewers > 0;
-          }
+    switch ($op) {
+      case 'start gate keeper':
+        return _resource_access_start_gate_keeper($node, $account);
+        break;
+      case 'edit gate keeper':
+        return _resource_access_edit_gate_keeper($node, $account);
+        break;
+      case 'view gate keeper':
+        $access = _resource_access_view_gate_keeper($node, $account);
+        if (!$access) {
+          // we'll allow it if the user did the GK
+          $gk = db_query("
+          SELECT
+              DISTINCT f.uid
+          FROM {eck_feedback} f
+          WHERE
+              f.node_id = :nid
+              AND f.completed = 1
+              AND f.type = 'gate_keeper'
+              AND f.uid = :uid
+              AND f.created > :resubmit_timestamp", array(':nid' => $node->nid, ':resubmit_timestamp' => _sbac_resource_resubmit_timestamp($node->nid), ':uid' => $account->uid))->fetchCol();
+          $access = !empty($gk) && count($gk) > 0;
         }
-      }
-      // read-only access
-      // users can view the GK if:
-      //  1. there are no existing GK entities, AND
-      //  2. there is an existing GK entity, created by the user, and it is active
-      //
-      // we check both criteria by looking for an active GK entity created by
-      // someone else
-      $query = "  SELECT  id
-                  FROM    eck_feedback
-                  WHERE   type = 'gate_keeper'
-                  AND     node_id = :node_id
-                  AND     uid != :uid
-                  AND     status = 1
-               ";
-
-      $id = db_query($query, $args)->fetchField();
-
-      // if we found an id matching our query, then access is denied
-      if ($id) {
-        return FALSE;
-      }
-      // user passed the read-only process, so the last check is to ensure the user
-      // doesn't have an existing, active entity
-      elseif ($op == 'start gate keeper') {
-        $query = "  SELECT  id
-                    FROM    eck_feedback
-                    WHERE   type = 'gate_keeper'
-                    AND     node_id = :node_id
-                    AND     uid = :uid
-                    AND     status = 1
-                 ";
-        return (bool) !($id = db_query($query, $args)->fetchField());
-      }
-      // user has read-only access, but wants to edit
-      elseif ($op == 'edit gate keeper') {
-        // if the user is starting a gate keeper, then we don't need to do anything
-        // else
-        if (resource_access('start gate keeper', $node, $account)) {
-          return TRUE;
-        }
-
-        // if this is not the user's entity, then access will have been denied at the
-        // read-only level (above). since the user has gotten this far, then the
-        // entity belongs to the current user, and is active;
-        // the only thing left to check is that the entity isn't in completed state
-        $query = "  SELECT  completed
-                    FROM    eck_feedback
-                    WHERE   type = 'gate_keeper'
-                    AND     node_id = :node_id
-                    AND     uid = :uid
-                    AND     status = 1
-                 ";
-
-        return (bool) (!$completed = db_query($query, $args)->fetchField());
-      }
-      elseif ($op == 'view gate keeper') {
-        if ($node->uid == $account->uid) {
-          return FALSE;
-        }
-      }
-
-      // default read-only access
-      return TRUE;
+        return $access;
+        break;
     }
-    elseif (in_array($op, array('view quality criteria', 'edit quality criteria'))) {
+
+    if (in_array($op, array('view quality criteria', 'edit quality criteria'))) {
       $access = FALSE;
 
       // If this node belongs to the user looking at it. Deny access.
@@ -449,4 +377,98 @@ function resource_access($op, $node, $account = NULL) {
   }
 
   return FALSE;
+}
+
+/**
+ * 'view gate keeper' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_view_gate_keeper($node, $account) {
+  $access = FALSE;
+  if (in_array($node->workbench_moderation['current']->state, array('needs_review', 'being_reviewed')) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+    $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
+    // Make sure we are still in GK. This means no completed GK since the last time it was submitted/resubmitted
+    $gk = db_query("
+          SELECT
+              DISTINCT f.uid
+          FROM {eck_feedback} f
+          WHERE
+              f.node_id = :nid
+              AND f.completed = 1
+              AND f.type = 'gate_keeper'
+              AND f.created > :resubmit_timestamp", array(':nid' => $node->nid, ':resubmit_timestamp' => $submit_timestamp))->fetchCol();
+    if (empty($gk) || 0 == count($gk)) {
+      // is this a resubmission? Timestamp == 0 means new submission
+      if ($submit_timestamp) {
+        // if we're still within the FEEDBACK_RESUBMISSION_TIMEOUT limit, then only original reviewers can review this resource
+        if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $submit_timestamp) {
+          $access = _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
+        }
+        else {
+          // FEEDBACK_RESUBMISSION_TIMEOUT has expired
+          $access = TRUE;
+        }
+      }
+      else {
+        // this is a new submission
+        $access = TRUE;
+      }
+    }
+  }
+  return $access;
+}
+
+/**
+ * 'start gate keeper' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_start_gate_keeper($node, $account) {
+  $access = _resource_access_view_gate_keeper($node, $account);
+  if ($access) {
+    // make sure we don't have any active GK
+    $gk = db_query("
+          SELECT
+              DISTINCT f.uid
+          FROM {eck_feedback} f
+          WHERE
+              f.node_id = :nid
+              AND f.status = 1
+              AND f.type = 'gate_keeper'
+              AND f.uid = :uid
+              AND f.created > :resubmit_timestamp", array(':nid' => $node->nid, ':resubmit_timestamp' => _sbac_resource_resubmit_timestamp($node->nid), ':uid' => $account->uid))->fetchCol();
+    $access = empty($gk) || 0 == count($gk);
+  }
+  return $access;
+}
+
+/**
+ * 'edit gate keeper' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_edit_gate_keeper($node, $account) {
+  $access = _resource_access_view_gate_keeper($node, $account);
+  if ($access) {
+    // make sure we don't have any completed GK
+    $gk = db_query("
+          SELECT
+              DISTINCT f.uid
+          FROM {eck_feedback} f
+          WHERE
+              f.node_id = :nid
+              AND f.completed = 1
+              AND f.type = 'gate_keeper'
+              AND f.uid = :uid
+              AND f.created > :resubmit_timestamp", array(':nid' => $node->nid, ':resubmit_timestamp' => _sbac_resource_resubmit_timestamp($node->nid), ':uid' => $account->uid))->fetchCol();
+    $access = empty($gk) || 0 == count($gk);
+  }
+  return $access;
 }
