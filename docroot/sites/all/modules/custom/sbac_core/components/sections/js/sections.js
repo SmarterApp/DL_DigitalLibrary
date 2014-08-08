@@ -110,6 +110,11 @@ Drupal.behaviors.sections = {
       $('section.section-gate-keeping-criteria-review').addClass('active').css('padding-top', '45px');
       Feedback.about.init_flexslider();
     }
+    else if (hash == '#review-qc') {
+      $('section.section-1').css('width', '100%');
+      $('.specific-section').removeClass('active').css('padding-top', 0);
+      $('section.section-quality-criteria-review').addClass('active').css('padding-top', '45px');
+    }
 
     var tab = $('a[href=' + hash + ']');
     if (tab.length) {
