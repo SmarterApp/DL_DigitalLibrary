@@ -1108,6 +1108,7 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
       $type = $finfo->buffer(file_get_contents($url));
       $ext = explode('/', $type);
       $ext = array_pop($ext);
+      $file_ext = $ext;
       if (_sbac_resource_determine_file_type_icon($ext) != 'image') {
         $ext = 'png';
       }
@@ -1121,6 +1122,14 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
             $uri_url['uri'] = $download->uri;
             $uri_url['url'] = $url;
             $thumbnail_exists = TRUE;
+            if (_sbac_resource_determine_file_type_icon($file_ext) == 'image') {
+              error_log('generate image');
+              theme('image_style', array(
+                'style_name' => 'resource_profile',
+                'path' => $download->uri,
+                'alt' => 'Resource preview"'
+              ));
+            }
           }
           else {
             watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
