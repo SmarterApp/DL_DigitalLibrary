@@ -3412,6 +3412,7 @@ a.tabledrag-handle .handle {
     cursor: pointer;
     /*for firefox*/
 		-moz-appearance: none;
+		padding: 0 3px; 
 	  /*for chrome*/
 	  -webkit-appearance:none;
 		text-indent: 3px;

@@ -10972,6 +10972,7 @@ a.tabledrag-handle .handle {
   cursor: pointer;
   /*for firefox*/
   -moz-appearance: none;
+  padding: 0 3px;
   /*for chrome*/
   -webkit-appearance: none;
   text-indent: 3px;
@@ -10983,7 +10984,7 @@ a.tabledrag-handle .handle {
   vertical-align: top;
   height: 35px;
 }
-/* line 3427, ../sass/custom.scss */
+/* line 3428, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form .form-type-select,
 .block-sbac-resource-sbac-resource-rr-sort-form .form-type-select,
 .block-sbac-resource-sbac-resource-mr-sort-form .form-type-select,
@@ -10998,7 +10999,7 @@ a.tabledrag-handle .handle {
   vertical-align: middle;
   margin-top: 22px;
 }
-/* line 3434, ../sass/custom.scss */
+/* line 3435, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form .form-type-select:before,
 .block-sbac-resource-sbac-resource-rr-sort-form .form-type-select:before,
 .block-sbac-resource-sbac-resource-mr-sort-form .form-type-select:before,
@@ -11021,7 +11022,7 @@ a.tabledrag-handle .handle {
   height: 33px;
   z-index: 99;
 }
-/* line 3449, ../sass/custom.scss */
+/* line 3450, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form .form-type-select:after,
 .block-sbac-resource-sbac-resource-rr-sort-form .form-type-select:after,
 .block-sbac-resource-sbac-resource-mr-sort-form .form-type-select:after,
@@ -11044,7 +11045,7 @@ a.tabledrag-handle .handle {
   right: 7px;
   top: 0;
 }
-/* line 3464, ../sass/custom.scss */
+/* line 3465, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form option,
 .block-sbac-resource-sbac-resource-rr-sort-form option,
 .block-sbac-resource-sbac-resource-mr-sort-form option,
@@ -11058,7 +11059,7 @@ a.tabledrag-handle .handle {
   font-size: 15px;
   padding: 3px;
 }
-/* line 3471, ../sass/custom.scss */
+/* line 3472, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-dl-sort-form select:-moz-focusring,
 .block-sbac-resource-sbac-resource-rr-sort-form select:-moz-focusring,
 .block-sbac-resource-sbac-resource-mr-sort-form select:-moz-focusring,
@@ -11072,7 +11073,7 @@ a.tabledrag-handle .handle {
   text-shadow: 0 0 0 #000;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  /* line 3478, ../sass/custom.scss */
+  /* line 3479, ../sass/custom.scss */
   .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
   .block-sbac-resource-sbac-resource-rr-sort-form select,
   .block-sbac-resource-sbac-resource-rr-sort-form option,
@@ -11094,7 +11095,7 @@ a.tabledrag-handle .handle {
   }
 }
 @media screen and (min-width: 0 \0) {
-  /* line 3485, ../sass/custom.scss */
+  /* line 3486, ../sass/custom.scss */
   .block-sbac-resource-sbac-resource-dl-sort-form select, .block-sbac-resource-sbac-resource-dl-sort-form option,
   .block-sbac-resource-sbac-resource-rr-sort-form select,
   .block-sbac-resource-sbac-resource-rr-sort-form option,
@@ -11117,7 +11118,7 @@ a.tabledrag-handle .handle {
   }
 }
 
-/* line 3498, ../sass/custom.scss */
+/* line 3499, ../sass/custom.scss */
 #sbac-forum-comment-sort-form select,
 #sbac-forum-sub-nav-form select,
 #views-exposed-form-forum-topic-list-block select,
@@ -11128,7 +11129,7 @@ a.tabledrag-handle .handle {
   border-radius: 0;
   height: 34px;
 }
-/* line 3505, ../sass/custom.scss */
+/* line 3506, ../sass/custom.scss */
 #sbac-forum-comment-sort-form .form-type-select:before,
 #sbac-forum-sub-nav-form .form-type-select:before,
 #views-exposed-form-forum-topic-list-block .form-type-select:before,
@@ -11139,18 +11140,18 @@ a.tabledrag-handle .handle {
   right: 1px;
 }
 
-/* line 3512, ../sass/custom.scss */
+/* line 3513, ../sass/custom.scss */
 #views-exposed-form-forum-topic-list-collaboration .form-type-select {
   margin-top: 0;
 }
 
 /*Overwrite foundation/components/_grid.scss*/
-/* line 3518, ../sass/custom.scss */
+/* line 3519, ../sass/custom.scss */
 .row {
   max-width: 960px;
 }
 
-/* line 3525, ../sass/custom.scss */
+/* line 3526, ../sass/custom.scss */
 .page-admin-structure #edit-cancel {
   padding: 7px 18px;
   height: 34px;
@@ -11161,17 +11162,17 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------------
     Restricted Resource Message
   ------------------------------------------------ */
-/* line 3537, ../sass/custom.scss */
+/* line 3538, ../sass/custom.scss */
 .sbac-resource-access-denied #main {
   width: 600px;
   margin: 0 auto;
   padding-bottom: 80px;
 }
-/* line 3542, ../sass/custom.scss */
+/* line 3543, ../sass/custom.scss */
 .sbac-resource-access-denied #main.columns {
   float: none !important;
 }
-/* line 3546, ../sass/custom.scss */
+/* line 3547, ../sass/custom.scss */
 .sbac-resource-access-denied #main h1 {
   color: #04384E;
   display: block;
@@ -11180,13 +11181,13 @@ a.tabledrag-handle .handle {
   margin: 0;
   padding: 20px 0;
 }
-/* line 3555, ../sass/custom.scss */
+/* line 3556, ../sass/custom.scss */
 .sbac-resource-access-denied #main p {
   font-size: 16px;
   line-height: 1.6;
   margin: 0 0 40px;
 }
-/* line 3561, ../sass/custom.scss */
+/* line 3562, ../sass/custom.scss */
 .sbac-resource-access-denied #main a.medium.button {
   margin: 0 auto;
   text-align: center;
@@ -11203,24 +11204,24 @@ a.tabledrag-handle .handle {
 		- Grid/List view
 ------------------------------------------------------------------------ */
 @media all and (min-width: 1281px) {
-  /* line 3579, ../sass/custom.scss */
+  /* line 3580, ../sass/custom.scss */
   .top-bar.last-top {
     max-width: 1280px;
   }
 }
 @media all and (max-width: 1280px) and (min-width: 961px) {
-  /* line 3585, ../sass/custom.scss */
+  /* line 3586, ../sass/custom.scss */
   .top-bar.last-top {
     max-width: 960px;
   }
 }
-/* line 3591, ../sass/custom.scss */
+/* line 3592, ../sass/custom.scss */
 .list-view .top-bar.last-top {
   max-width: 960px;
 }
 
 /* fix for back button block for resource node pages.*/
-/* line 3597, ../sass/custom.scss */
+/* line 3598, ../sass/custom.scss */
 .page-moderation .top-bar.last-top,
 .node-type-resource .top-bar.last-top {
   height: 25px;
@@ -11228,26 +11229,26 @@ a.tabledrag-handle .handle {
   padding: 0 0 0;
 }
 
-/* line 3603, ../sass/custom.scss */
+/* line 3604, ../sass/custom.scss */
 .top-bar.last-top {
   background-color: #0684AD;
   padding: 20px 0 5px;
   margin: 0 auto;
 }
 
-/* line 3611, ../sass/custom.scss */
+/* line 3612, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-results-count h3 {
   color: #FFFFFF;
   font-size: 15px;
   font-weight: normal;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 }
-/* line 3617, ../sass/custom.scss */
+/* line 3618, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-results-count h3 span {
   font-weight: bold;
 }
 
-/* line 3625, ../sass/custom.scss */
+/* line 3626, ../sass/custom.scss */
 div.block-sbac-resource-sbac-resource-dl-sort-form,
 div.block-sbac-resource-sbac-resource-mr-sort-form,
 div.block-sbac-resource-sbac-resource-rr-sort-form {
@@ -11255,14 +11256,14 @@ div.block-sbac-resource-sbac-resource-rr-sort-form {
   position: relative;
   z-index: 5;
 }
-/* line 3630, ../sass/custom.scss */
+/* line 3631, ../sass/custom.scss */
 div.block-sbac-resource-sbac-resource-dl-sort-form select,
 div.block-sbac-resource-sbac-resource-mr-sort-form select,
 div.block-sbac-resource-sbac-resource-rr-sort-form select {
   width: 180px;
 }
 
-/* line 3637, ../sass/custom.scss */
+/* line 3638, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button a.button {
   moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
@@ -11292,11 +11293,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   top: 6px;
   z-index: 4;
 }
-/* line 3667, ../sass/custom.scss */
+/* line 3668, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button a.button.sbac-create-resource-dropdown {
   padding: 0 54px 0 18px;
 }
-/* line 3671, ../sass/custom.scss */
+/* line 3672, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button a.button.sbac-create-resource-dropdown:after {
   background-color: rgba(0, 0, 0, 0.1);
   background-image: url("../images/button-select.png");
@@ -11312,11 +11313,11 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   top: 0;
   width: 36px;
 }
-/* line 3687, ../sass/custom.scss */
+/* line 3688, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button a.button.open-list {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
 }
-/* line 3691, ../sass/custom.scss */
+/* line 3692, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown {
   box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
   transition: max-height 0.75s ease 0s;
@@ -11332,7 +11333,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   position: absolute;
   z-index: 3;
 }
-/* line 3707, ../sass/custom.scss */
+/* line 3708, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li a {
   background-color: transparent !important;
   color: #464B54  !important;
@@ -11342,18 +11343,18 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   padding: 12px 20px !important;
   word-wrap: break-word;
 }
-/* line 3716, ../sass/custom.scss */
+/* line 3717, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li a:hover {
   background-color: #F2F2F2;
   color: #006082;
   text-decoration: underline;
 }
-/* line 3724, ../sass/custom.scss */
+/* line 3725, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li.last {
   border-top: 1px solid #FFFFFF;
   box-shadow: 0 -1px 0 0 #CECECE;
 }
-/* line 3728, ../sass/custom.scss */
+/* line 3729, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button ul#sbac-create-resource.f-dropdown li.last:hover {
   -webkit-border-radius: 0 0 5px 5px;
   -moz-border-radius: 0 0 5px 5px;
@@ -11361,13 +11362,13 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   -o-border-radius: 0 0 5px 5px;
   border-radius: 0 0 5px 5px;
 }
-/* line 3735, ../sass/custom.scss */
+/* line 3736, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-create-button #sbac-create-resource.f-dropdown:before,
 .block-sbac-resource-sbac-resource-create-button #sbac-create-resource.f-dropdown:after {
   display: none;
 }
 
-/* line 3743, ../sass/custom.scss */
+/* line 3744, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-grid-list-button a.sbac-grid-layout,
 .block-sbac-resource-sbac-resource-grid-list-button a.sbac-list-layout {
   float: right;
@@ -11376,7 +11377,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
   margin-right: 35px;
 }
-/* line 3752, ../sass/custom.scss */
+/* line 3753, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-grid-list-button a.sbac-list-layout:before,
 .block-sbac-resource-sbac-resource-grid-list-button a.sbac-grid-layout:before {
   content: "\e609";
@@ -11389,7 +11390,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   position: relative;
   top: 0px;
 }
-/* line 3764, ../sass/custom.scss */
+/* line 3765, ../sass/custom.scss */
 .block-sbac-resource-sbac-resource-grid-list-button a.sbac-grid-layout:before {
   content: "\e608";
 }
@@ -11397,7 +11398,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
 /* ---------------------------------------------------------------------
     Experimental Feature Section
 ------------------------------------------------------------------------ */
-/* line 3773, ../sass/custom.scss */
+/* line 3774, ../sass/custom.scss */
 .experimental-feature {
   text-align: center;
   float: left;
@@ -11406,7 +11407,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   position: relative;
   margin-left: 15px;
 }
-/* line 3781, ../sass/custom.scss */
+/* line 3782, ../sass/custom.scss */
 .experimental-feature .title {
   font-family: Verdana,Geneva,sans-serif;
   font-size: 12px;
@@ -11422,19 +11423,19 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   position: relative;
   border-top: 1px #50a8c4 solid;
 }
-/* line 3797, ../sass/custom.scss */
+/* line 3798, ../sass/custom.scss */
 .experimental-feature .additional-resoutces {
   font-size: 15px;
   margin-top: 10px;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
   position: relative;
 }
-/* line 3803, ../sass/custom.scss */
+/* line 3804, ../sass/custom.scss */
 .experimental-feature .additional-resoutces a {
   color: #fff;
   text-decoration: underline;
 }
-/* line 3808, ../sass/custom.scss */
+/* line 3809, ../sass/custom.scss */
 .experimental-feature .additional-resoutces a:after {
   background-image: url("../images/icons/icon-new-window.png");
   background-position: center center;
@@ -11445,7 +11446,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   vertical-align: baseline;
   width: 12.5px;
 }
-/* line 3820, ../sass/custom.scss */
+/* line 3821, ../sass/custom.scss */
 .experimental-feature .title:before {
   content: " ";
   display: inline-block;
@@ -11460,22 +11461,22 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
 /* ---------------------------------------------------------------------
     SBAC Resource Access Denied page
 ------------------------------------------------------------------------ */
-/* line 3835, ../sass/custom.scss */
+/* line 3836, ../sass/custom.scss */
 .sbac-resource-access-denied {
   /*Nav search box*/
 }
-/* line 3836, ../sass/custom.scss */
+/* line 3837, ../sass/custom.scss */
 .sbac-resource-access-denied .top-bar.last-top {
   max-width: 960px;
   padding: 0;
 }
-/* line 3840, ../sass/custom.scss */
+/* line 3841, ../sass/custom.scss */
 .sbac-resource-access-denied .top-bar.last-top .block-sbac-resource-sbac-resource-back-button {
   width: 960px;
   height: 50px;
   position: relative;
 }
-/* line 3845, ../sass/custom.scss */
+/* line 3846, ../sass/custom.scss */
 .sbac-resource-access-denied .top-bar.last-top .block-sbac-resource-sbac-resource-back-button .button {
   background-color: #0684AD;
   border: medium none;
@@ -11494,12 +11495,12 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   text-shadow: none;
   vertical-align: top;
 }
-/* line 3863, ../sass/custom.scss */
+/* line 3864, ../sass/custom.scss */
 .sbac-resource-access-denied .top-bar.last-top .block-sbac-resource-sbac-resource-back-button .button:hover {
   background-color: #0684AD;
   background-image: none;
 }
-/* line 3869, ../sass/custom.scss */
+/* line 3870, ../sass/custom.scss */
 .sbac-resource-access-denied .top-bar.last-top .block-sbac-resource-sbac-resource-back-button .button:before {
   content: "\e620";
   display: inline;
@@ -11510,22 +11511,22 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   position: relative;
   top: -2px;
 }
-/* line 3882, ../sass/custom.scss */
+/* line 3883, ../sass/custom.scss */
 .sbac-resource-access-denied .main-container {
   margin-top: 5px;
 }
-/* line 3887, ../sass/custom.scss */
+/* line 3888, ../sass/custom.scss */
 .sbac-resource-access-denied .search {
   text-align: right;
 }
-/* line 3890, ../sass/custom.scss */
+/* line 3891, ../sass/custom.scss */
 .sbac-resource-access-denied .search .block-search {
   margin-right: 1em;
   position: relative;
   vertical-align: top;
   width: 200px;
 }
-/* line 3897, ../sass/custom.scss */
+/* line 3898, ../sass/custom.scss */
 .sbac-resource-access-denied .search .block-search .form-text,
 .sbac-resource-access-denied .search .block-search .form-text:focus {
   background: url("../images/search.png") no-repeat scroll 5% center rgba(0, 0, 0, 0);
@@ -11534,7 +11535,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   position: absolute;
   top: 8px;
 }
-/* line 3905, ../sass/custom.scss */
+/* line 3906, ../sass/custom.scss */
 .sbac-resource-access-denied .search .block-search .sbac-clear-search {
   background: url("../images/icon-validation-fail.png") no-repeat scroll center center rgba(0, 0, 0, 0);
   cursor: pointer;
@@ -11546,7 +11547,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   top: 14px;
   width: 15px;
 }
-/* line 3917, ../sass/custom.scss */
+/* line 3918, ../sass/custom.scss */
 .sbac-resource-access-denied .search .block-search button {
   display: none !important;
 }
@@ -11554,41 +11555,41 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
 /* ---------------------------------------------------------------------
     Create Help Page
 ------------------------------------------------------------------------ */
-/* line 3929, ../sass/custom.scss */
+/* line 3930, ../sass/custom.scss */
 .page-node-add-help-page h1#page-title {
   padding-left: 22px;
 }
-/* line 3933, ../sass/custom.scss */
+/* line 3934, ../sass/custom.scss */
 .page-node-add-help-page .description {
   line-height: 1.4;
 }
-/* line 3937, ../sass/custom.scss */
+/* line 3938, ../sass/custom.scss */
 .page-node-add-help-page .form-textarea-wrapper textarea {
   max-width: none;
 }
-/* line 3942, ../sass/custom.scss */
+/* line 3943, ../sass/custom.scss */
 .page-node-add-help-page #body-add-more-wrapper .filter-wrapper {
   padding-top: 5px;
 }
-/* line 3947, ../sass/custom.scss */
+/* line 3948, ../sass/custom.scss */
 .page-node-add-help-page .image-widget-data {
   width: 100%;
 }
-/* line 3950, ../sass/custom.scss */
+/* line 3951, ../sass/custom.scss */
 .page-node-add-help-page .image-widget-data input, .page-node-add-help-page .image-widget-data button {
   display: inline-block;
 }
-/* line 3954, ../sass/custom.scss */
+/* line 3955, ../sass/custom.scss */
 .page-node-add-help-page .image-widget-data input {
   width: 50%;
   margin-right: 20px;
 }
-/* line 3960, ../sass/custom.scss */
+/* line 3961, ../sass/custom.scss */
 .page-node-add-help-page #edit-actions {
   float: right;
 }
 
-/* line 3967, ../sass/custom.scss */
+/* line 3968, ../sass/custom.scss */
 #helpmodal h2,
 #current-help-topic-modal h2 {
   text-align: center;
@@ -11596,57 +11597,57 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   font-family: Arial,sans-serif;
 }
 
-/* line 3974, ../sass/custom.scss */
+/* line 3975, ../sass/custom.scss */
 p.helpmodal-desc {
   font-size: 13px !important;
   margin-top: 20px;
   margin-bottom: 40px;
 }
 
-/* line 3981, ../sass/custom.scss */
+/* line 3982, ../sass/custom.scss */
 .page-help-topics #main.columns {
   padding: 0 40px;
 }
-/* line 3985, ../sass/custom.scss */
+/* line 3986, ../sass/custom.scss */
 .page-help-topics #main.columns .view-help-topics li {
   margin-left: 0;
   font-size: 15px;
 }
 
-/* line 3994, ../sass/custom.scss */
+/* line 3995, ../sass/custom.scss */
 .page-admin-help-topics .main-container {
   padding: 40px 45px 10px;
 }
-/* line 3997, ../sass/custom.scss */
+/* line 3998, ../sass/custom.scss */
 .page-admin-help-topics .main-container .content {
   width: 960px;
   margin-left: -45px;
   padding: 10px 40px !important;
 }
 
-/* line 4007, ../sass/custom.scss */
+/* line 4008, ../sass/custom.scss */
 .node-type-help-page #main {
   padding: 0 20px;
 }
-/* line 4011, ../sass/custom.scss */
+/* line 4012, ../sass/custom.scss */
 .node-type-help-page .form-textarea-wrapper textarea {
   max-width: 100%;
 }
 
-/* line 4018, ../sass/custom.scss */
+/* line 4019, ../sass/custom.scss */
 #current-help-topic .body span {
   font-size: 13px !important;
 }
 
 /*Glossary Terms Page*/
-/* line 4025, ../sass/custom.scss */
+/* line 4026, ../sass/custom.scss */
 .section-glossary #main.columns,
 .page-admin-structure-taxonomy #main.columns {
   padding: 15px 40px 0;
 }
 
 /*Override the radius of gobal button*/
-/* line 4031, ../sass/custom.scss */
+/* line 4032, ../sass/custom.scss */
 button.radius, .button.radius {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
@@ -11655,7 +11656,7 @@ button.radius, .button.radius {
   border-radius: 6px;
 }
 
-/* line 4036, ../sass/custom.scss */
+/* line 4037, ../sass/custom.scss */
 form#sbac-user-filter-form #edit-email {
   clear: both;
 }
