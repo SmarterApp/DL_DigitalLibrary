@@ -754,16 +754,16 @@ h2.name {
 	width: 100%;
 }
 
-#edit-tab-container-resource-tab-buttons,
-#edit-tab-container-forum-tab-buttons {
+div[id*="edit-tab-container-resource-tab-buttons"],
+div[id*="edit-tab-container-forum-tab-buttons"] {
 	button {
 		float: right;
 		margin-left: 20px;
 		padding-left: 40px;
 	}
 	
-	#sbac-favorites-forum-submit:before,
-	#sbac-favorites-resource-submit:before {
+	button[id*="edit-tab-container-resource-tab-buttons-save"]:before,
+	button[id*="edit-tab-container-forum-tab-buttons-save"]:before {
 	  content: url("../images/icon-buttonAccept.png");
     left: 15px;
     position: absolute;
