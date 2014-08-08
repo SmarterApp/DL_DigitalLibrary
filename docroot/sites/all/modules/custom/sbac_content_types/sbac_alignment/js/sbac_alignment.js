@@ -132,7 +132,8 @@
                 var countType = countStandard = 0;
                 $('#alignment-msg').html('');
                 //count standards
-                $('input[id^=edit-term-]').each(function () {
+                // $('input[id^=edit-term-]').each(function () {
+                $('input:checkbox[id*=edit-term-]').each(function () {
                   if ($(this).is(':checked')) {
                     countStandard++;
                   }
@@ -145,7 +146,8 @@
                   //get ref
                   var alignmentRef = $('input[id=alignment_ref]').val();
                   //count standards
-                  $('input[id^=edit-term-]').each(function () {
+                  // $('input[id^=edit-term-]').each(function () {
+                  $('input:checkbox[id*=edit-term-]').each(function () {
                     if ($(this).is(':checked')) {
                       var temp = $(this).attr('id');
                       var id = temp.split('-');
