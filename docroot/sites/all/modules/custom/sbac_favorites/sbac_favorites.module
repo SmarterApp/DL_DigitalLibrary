@@ -177,13 +177,9 @@ function sbac_favorites_ajax_delete() {
  * @return array
  */
 function sbac_favorites_get_count($uid) {
-  $favorites_count = array();
-  $sql = "SELECT count(*) AS count FROM {sbac_favorites} sf WHERE uid = :uid";
-  $result = db_query($sql, array(':uid' => $uid))->fetchObject();
-  if ($result) {
-    $favorites_count = $result->count;
-  }
-  return $favorites_count;
+  $forum_favorites = sbac_favorites_get_favorite_forum_list($uid);
+  $resource_favorites = sbac_favorites_get_favorite_resource_list($uid);
+  return count($forum_favorites) + count($resource_favorites);
 }
 
 /**
