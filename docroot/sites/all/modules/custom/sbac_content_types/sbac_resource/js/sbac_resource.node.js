@@ -1,6 +1,6 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
-  found = false;
+  var ajax_request = null;
   /**
    * If the material is a doc, load google,
    * else load JwPlayer
