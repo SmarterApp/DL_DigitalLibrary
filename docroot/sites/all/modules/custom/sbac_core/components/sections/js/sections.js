@@ -106,6 +106,8 @@ Drupal.behaviors.sections = {
     }
     else if (hash == '#review-gk') {
       $('section.section-1').css('width', '100%');
+      $('.specific-section').removeClass('active').css('padding-top', 0);
+      $('section.section-gate-keeping-criteria-review').addClass('active').css('padding-top', '45px');
       Feedback.about.init_flexslider();
     }
 
