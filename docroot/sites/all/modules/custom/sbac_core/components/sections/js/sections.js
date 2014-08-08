@@ -6,6 +6,9 @@ Drupal.behaviors.sections = {
   attach: function (context, settings) {
     $('.section-link').once('sbacLinkClick', function() {
       $(this).click(function(e) {
+        if ($(this).parents('.specific-section').hasClass('disabled')) {
+          return false;
+        }
         $('.specific-section').removeClass('active').css('padding-top', 0);
         $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
         $(this).removeClass('use-ajax');
