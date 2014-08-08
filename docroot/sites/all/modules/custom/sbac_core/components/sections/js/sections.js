@@ -6,6 +6,9 @@ Drupal.behaviors.sections = {
   attach: function (context, settings) {
     $('.section-link').once('sbacLinkClick', function() {
       $(this).click(function(e) {
+        if ($(this).parents('.specific-section').hasClass('disabled')) {
+          return false;
+        }
         $('.specific-section').removeClass('active').css('padding-top', 0);
         $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
         $(this).removeClass('use-ajax');
@@ -26,6 +29,9 @@ Drupal.behaviors.sections = {
             $('.specific-section.section-notifications').addClass('active').css('padding-top', '45px');
           }
         }
+        else {
+          window.location.href = $(this).attr('href');
+        }
         return false;
       });
     });
@@ -34,12 +40,17 @@ Drupal.behaviors.sections = {
     $('.inline-list.right.user-nav .sbac-favorites-menu a').once('sbacFavoritesMenuClick', function(){
       $(this).click(function() {
         var section = $('.section-favorites a');
-        if (!$.trim($('#section-favorites').html() ).length) {
-          section.click();
+        if (section.length) {
+          if (!$.trim($('#section-favorites').html() ).length) {
+            section.click();
+          }
+          else {
+            $('.specific-section').removeClass('active').css('padding-top', 0);
+            $('.specific-section.section-favorites').addClass('active').css('padding-top', '45px');
+          }
         }
         else {
-          $('.specific-section').removeClass('active').css('padding-top', 0);
-          $('.specific-section.section-favorites').addClass('active').css('padding-top', '45px');
+          window.location.href = $(this).attr('href');
         }
         return false;
       });

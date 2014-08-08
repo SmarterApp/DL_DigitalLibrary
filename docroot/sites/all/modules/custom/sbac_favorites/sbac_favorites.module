@@ -380,7 +380,8 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     $form['tab_container']['resource_tab']['buttons']['save'] = array(
       '#type' => 'submit',
       '#value' => t('Save Order'),
-      '#attributes' => array('id' => 'sbac-favorites-resource-submit'),
+      '#weight' => -100,
+//      '#attributes' => array('id' => 'sbac-favorites-resource-submit'),
       '#name' => 'sbac-favorites-resource-submit',
       '#ajax' => array(
         'wrapper' => 'sbac-user-profile-favorites-form',
@@ -392,6 +393,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     $form['tab_container']['resource_tab']['buttons']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel'),
+      '#weight' => 100,
       '#attributes' => array('id' => 'sbac-favorites-resource-cancel', 'class' => array('gray')),
       '#name' => 'sbac-favorites-resource-cancel',
     );
@@ -437,12 +439,20 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     $form['tab_container']['forum_tab']['buttons']['save'] = array(
       '#type' => 'submit',
       '#value' => t('Save Order'),
-      '#attributes' => array('id' => 'sbac-favorites-forum-submit'),
+      '#weight' => -100,
+//      '#attributes' => array('id' => 'sbac-favorites-forum-submit'),
       '#name' => 'sbac-favorites-forum-submit',
+      '#ajax' => array(
+        'wrapper' => 'sbac-user-profile-favorites-form',
+        'callback' => 'sbac_favorites_user_favorites_submit',
+        'method' => 'replace',
+        'effect' => 'fade'
+      ),
     );
     $form['tab_container']['forum_tab']['buttons']['cancel'] = array(
       '#type' => 'submit',
       '#value' => t('Cancel'),
+      '#weight' => 100,
       '#attributes' => array('id' => 'sbac-favorites-forum-cancel', 'class' => array('gray')),
       '#name' => 'sbac-favorites-forum-cancel',
     );
@@ -458,7 +468,8 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
  */
 function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
   $tab = '';
-  switch ($form_state['clicked_button']['#attributes']['id']) {
+//  switch ($form_state['clicked_button']['#attributes']['id']) {
+  switch ($form_state['clicked_button']['#name']) {
     case 'sbac-favorites-resource-submit':
       $tab = 'resource_tab';
       break;
@@ -466,6 +477,7 @@ function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
       $tab = 'forum_tab';
       break;
   }
+
   if (!empty($tab)) {
     foreach ($form_state['values']['tab_container'][$tab]['content']['favorites'] as $favorite_id => $item) {
       $identifiers = explode(':', $favorite_id);
@@ -482,7 +494,7 @@ function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
       );
     }
   }
-  return $form;
+  return drupal_rebuild_form('sbac_favorites_user_favorites', $form_state);
 }
 
 /**
