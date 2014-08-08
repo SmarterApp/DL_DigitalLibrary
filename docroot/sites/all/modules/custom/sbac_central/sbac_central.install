@@ -1300,3 +1300,13 @@ function sbac_central_update_7089() {
   $update->condition('delta', 'feedback-box', '=');
   $update->execute();
 }
+
+/**
+ * Enable views content cache.
+ */
+function sbac_central_update_7090() {
+  $modules = array(
+    'views_content_cache',
+  );
+  module_enable($modules);
+}
