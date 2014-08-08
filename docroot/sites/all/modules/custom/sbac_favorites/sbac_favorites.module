@@ -377,15 +377,10 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     $form['tab_container']['resource_tab']['buttons'] = array(
       '#type' => 'container',
     );
-    $form['tab_container']['resource_tab']['buttons']['cancel'] = array(
-      '#type' => 'submit',
-      '#value' => t('Cancel'),
-      '#attributes' => array('id' => 'sbac-favorites-resource-cancel', 'class' => array('gray')),
-      '#name' => 'sbac-favorites-resource-cancel',
-    );
     $form['tab_container']['resource_tab']['buttons']['save'] = array(
       '#type' => 'submit',
       '#value' => t('Save Order'),
+      '#weight' => -100,
 //      '#attributes' => array('id' => 'sbac-favorites-resource-submit'),
       '#name' => 'sbac-favorites-resource-submit',
       '#ajax' => array(
@@ -394,6 +389,13 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
         'method' => 'replace',
         'effect' => 'fade'
       ),
+    );
+    $form['tab_container']['resource_tab']['buttons']['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => t('Cancel'),
+      '#weight' => 100,
+      '#attributes' => array('id' => 'sbac-favorites-resource-cancel', 'class' => array('gray')),
+      '#name' => 'sbac-favorites-resource-cancel',
     );
   }
   // Forum Tab
@@ -434,15 +436,10 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     $form['tab_container']['forum_tab']['buttons'] = array(
       '#type' => 'container',
     );
-    $form['tab_container']['forum_tab']['buttons']['cancel'] = array(
-      '#type' => 'submit',
-      '#value' => t('Cancel'),
-      '#attributes' => array('id' => 'sbac-favorites-forum-cancel', 'class' => array('gray')),
-      '#name' => 'sbac-favorites-forum-cancel',
-    );
     $form['tab_container']['forum_tab']['buttons']['save'] = array(
       '#type' => 'submit',
       '#value' => t('Save Order'),
+      '#weight' => -100,
 //      '#attributes' => array('id' => 'sbac-favorites-forum-submit'),
       '#name' => 'sbac-favorites-forum-submit',
       '#ajax' => array(
@@ -451,6 +448,13 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
         'method' => 'replace',
         'effect' => 'fade'
       ),
+    );
+    $form['tab_container']['forum_tab']['buttons']['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => t('Cancel'),
+      '#weight' => 100,
+      '#attributes' => array('id' => 'sbac-favorites-forum-cancel', 'class' => array('gray')),
+      '#name' => 'sbac-favorites-forum-cancel',
     );
   }
   return $form;
