@@ -250,7 +250,7 @@ if (Drupal.ajax) {
             $('#section-share').append(this.progress.element);
             break;
           case 'Related Resources':
-            $('#section-releated-resources').append(this.progress.element);
+            $('#section-related-resources').append(this.progress.element);
             break;
           case 'Flag':
             $('#section-flag').append(this.progress.element);

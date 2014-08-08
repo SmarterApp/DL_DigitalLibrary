@@ -2233,6 +2233,15 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 	}
 }
 
+/*overwrite welcome Modal*/
+.page-my-resources {
+	.sbac-welcome {
+		.modal-header {
+			padding-left: 40px !important;
+		}
+	}
+}
+
 /* ----------------------------------------------
     Revisions, Quality Criteria tab of page node
    --------------------------------------------- */

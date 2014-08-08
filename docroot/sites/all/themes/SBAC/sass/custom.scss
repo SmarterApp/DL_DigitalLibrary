@@ -1312,44 +1312,6 @@ a.tabledrag-handle .handle {
 /* -----------------------------------------
   Horizontal Tabs
   ------------------------------------------ */
-.section-container.auto {
-	position: relative;
-	min-height: 500px;
-	
-	
-	p.title > .ajax-progress-throbber {
-		position: fixed;
-		left: 0;
-		top: 0;
-		float: none;
-		display:inline;
-		height: 500px;
-		
-		.throbber  {
-			display: block;
-			position: fixed;
-			top: 63%;
-			left: 43%;
-			background: url('../images/foundation/orbit/loading.gif') no-repeat center center;
-			background-size:70%;
-			width: 225px;
-			height: 180px;
-			z-index: 10;
-		}
-	}
-}
-
-/*Override icon of throbber for node type resource*/
-.node-resource {
-	p.title  > .ajax-progress-throbber {
-		
-		.throbber  {
-			top: 63% !important;
-			background: url('../images/foundation/orbit/loading.gif') no-repeat center center !important;
-			background-size:70% !important;
-		}
-	}
-}
 
 .section-container.auto:before {
 	background: none repeat scroll 0 0 #FFFFFF;
@@ -1423,6 +1385,43 @@ a.tabledrag-handle .handle {
 
 .section-container.auto > section.section-about-this-resource > .title a {
     border-left: 1px solid #CECECE;
+}
+
+/*Overwrite icon of throbber and keep the loading icon in content part - My account page and Resource page*/
+
+#section-notifications,
+#section-favorites,
+#section-collaboration,
+#section-reviews,
+#section-share,
+#section-related-resources,
+#section-flag {
+	position: relative;
+	min-height: 500px;
+	
+	>.ajax-progress-throbber {
+		position: absolute;
+		left: 62%;
+		top: 190px;
+		float: none;
+		display:inline;
+		
+		.throbber  {
+			display: block;
+			background: url('../images/loading.gif') no-repeat center center !important;
+			background-size:70% !important;
+			width: 225px;
+			height: 180px;
+			z-index: 10;
+		}
+	}
+}
+
+#section-notifications,
+#section-favorites {
+	>.ajax-progress-throbber {
+		left: 38% !important;
+	}
 }
 
 /* overwrite foundation/components/_section.scss */
