@@ -32,7 +32,7 @@ function drush_sbac_user_accept_terms() {
   $sql = "SELECT * FROM {users} WHERE name like 'appnovation_%'";
   $result = db_query($sql);
   foreach ($result as $row) {
-    $insert = "INSERT INTO {legal_accepted} VALUES (30, 1, 'en', " . $row->uid . ", " . time() . ")";
+    $insert = "INSERT INTO {legal_accepted} VALUES (NULL, 30, 1, 'en', " . $row->uid . ", " . time() . ")";
     db_query($insert);
   }
 }
