@@ -4,20 +4,29 @@ var clicked = false;
 
 Drupal.behaviors.sections = {
   attach: function (context, settings) {
-    $('.section-link').click(function(e) {
-      $('.specific-section').removeClass('active').css('padding-top', 0);
-      $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
-      $(this).removeClass('use-ajax');
+    $('.section-link').once('sbacLinkClick', function() {
+      $(this).click(function(e) {
+        $('.specific-section').removeClass('active').css('padding-top', 0);
+        $(this).parents('.specific-section').addClass('active').css('padding-top', '45px');
+        $(this).removeClass('use-ajax');
+      });
     });
+
 
     // On click of menu item, click the section if it exists.
     $('.inline-list.right.user-nav .notifications a').once('sbacNotificationsMenuClick', function(){
       $(this).click(function () {
         var section = $('.section-notifications a');
         if (section.length) {
-          section.click();
-//          window.location.href = section.attr('href');
+          if (!$.trim($('#section-notifications').html() ).length) {
+            section.click();
+          }
+          else {
+            $('.specific-section').removeClass('active').css('padding-top', 0);
+            $('.specific-section.section-notifications').addClass('active').css('padding-top', '45px');
+          }
         }
+        return false;
       });
     });
 
@@ -25,23 +34,27 @@ Drupal.behaviors.sections = {
     $('.inline-list.right.user-nav .sbac-favorites-menu a').once('sbacFavoritesMenuClick', function(){
       $(this).click(function() {
         var section = $('.section-favorites a');
-        if (section.length) {
+        if (!$.trim($('#section-favorites').html() ).length) {
           section.click();
-//          window.location.href = section.attr('href');
         }
+        else {
+          $('.specific-section').removeClass('active').css('padding-top', 0);
+          $('.specific-section.section-favorites').addClass('active').css('padding-top', '45px');
+        }
+        return false;
       });
     });
 
     // check for tab hash and switch the active tab
     var hash = window.location.hash;
     if (window.location.hash) {
-      if (hash == '#profile-favorites' && $('#section-favorites').is(':empty')) {
+      if (hash == '#profile-favorites' && !$.trim($('#section-favorites').html() ).length) {
         $('.section-favorites a').click();
       }
-      else if (hash == '#profile-notifications' && $('#section-notifications').is(':empty')) {
+      else if (hash == '#profile-notifications' && !$.trim($('#section-notifications').html() ).length) {
         $('.section-notifications a').click();
       }
-      else {
+      else if (hash != '#profile-favorites' && hash != '#profile-notifications') {
         $('body').once('switch-section', function() {
           var hash = window.location.hash;
           Drupal.behaviors.sections.switch_tab(hash);
@@ -52,12 +65,10 @@ Drupal.behaviors.sections = {
     // add support for disabling sections via class name
     var container = $('.section-container');
     if (container.length) {
-      console.log(container);
       $('section', container).each(function(i, el) {
         var section = $(el);
         section.find('a').click(function(e) {
           var href = $(this);
-          console.log(href.attr('section_id'));
           if (href.attr('section_id') == 'section-favorites') {
             window.location.hash = 'profile-favorites';
           }
@@ -67,7 +78,6 @@ Drupal.behaviors.sections = {
           if (href.attr('section_id') == 'section-account') {
             window.location.hash = '';
           }
-          console.log(section);
         });
       });
     }
