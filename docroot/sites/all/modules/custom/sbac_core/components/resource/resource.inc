@@ -285,54 +285,51 @@ function _resource_access_view_quality_criteria($node, $account) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
     // if this is a new submission, or if it is a resubmission and the user has access
     if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_access($node, $account, $submit_timestamp))) {
-      // If the user has not completed a review
-      $user_qc_completed = db_select('eck_feedback', 'f')
+      // If the user has a review in progress, allow
+      $user_qc_in_progress = db_select('eck_feedback', 'f')
         ->condition('f.node_id', $node->nid)
         ->condition('f.type', 'qc')
         ->condition('f.current', 1)
-        ->condition('f.completed', 1)
+        ->condition('f.completed', 0)
+        ->condition('f.status', 1)
         ->condition('f.uid', $account->uid)
         ->condition('f.created', $submit_timestamp, '>')
         ->fields('f')->countQuery()->execute()->fetchField();
-      if (!$user_qc_completed) {
-        // If the user has a review in progress, allow
-        $user_qc_in_progress = db_select('eck_feedback', 'f')
+      if ($user_qc_in_progress) {
+        $access = TRUE;
+      }
+      else {
+        $completed_reviews = db_select('eck_feedback', 'f')
+          ->condition('f.node_id', $node->nid)
+          ->condition('f.type', 'qc')
+          ->condition('f.current', 1)
+          ->condition('f.completed', 1)
+          ->condition('f.created', $submit_timestamp, '>')
+          ->fields('f', array('uid'))->distinct()->countQuery()->execute()->fetchField();
+        $in_progress_reviews = db_select('eck_feedback', 'f')
           ->condition('f.node_id', $node->nid)
           ->condition('f.type', 'qc')
           ->condition('f.current', 1)
           ->condition('f.completed', 0)
           ->condition('f.status', 1)
-          ->condition('f.uid', $account->uid)
           ->condition('f.created', $submit_timestamp, '>')
-          ->fields('f')->countQuery()->execute()->fetchField();
-        if ($user_qc_in_progress) {
+          ->condition('f.uid', db_select('eck_feedback', 'f2')
+            ->condition('f2.node_id', $node->nid)
+            ->condition('f2.status', 1)
+            ->condition('f2.completed', 1)
+            ->condition('f2.current', 1)
+            ->condition('f2.type', 'qc')
+            ->condition('f2.created', $submit_timestamp, '>')
+            ->fields('f2', array('uid'))->distinct(), 'NOT IN')
+          ->fields('f', array('uid'))->distinct()->countQuery()->execute()->fetchField();
+        if (0 == $completed_reviews && $in_progress_reviews < 3) {
           $access = TRUE;
         }
-        else {
-          $completed_reviews = db_select('eck_feedback', 'f')
-            ->condition('f.node_id', $node->nid)
-            ->condition('f.type', 'qc')
-            ->condition('f.current', 1)
-            ->condition('f.completed', 1)
-            ->condition('f.created', $submit_timestamp, '>')
-            ->fields('f')->countQuery()->execute()->fetchField();
-          $in_progress_reviews = db_select('eck_feedback', 'f')
-            ->condition('f.node_id', $node->nid)
-            ->condition('f.type', 'qc')
-            ->condition('f.current', 1)
-            ->condition('f.completed', 0)
-            ->condition('f.status', 1)
-            ->condition('f.created', $submit_timestamp, '>')
-            ->fields('f')->countQuery()->execute()->fetchField();
-          if (0 == $completed_reviews && $in_progress_reviews < 3) {
-            $access = TRUE;
-          }
-          elseif (1 == $completed_reviews && $in_progress_reviews < 2) {
-            $access = TRUE;
-          }
-          elseif (2 == $completed_reviews && 0 == $in_progress_reviews) {
-            $access = TRUE;
-          }
+        elseif (1 == $completed_reviews && $in_progress_reviews < 2) {
+          $access = TRUE;
+        }
+        elseif (2 == $completed_reviews && 0 == $in_progress_reviews) {
+          $access = TRUE;
         }
       }
     }
@@ -350,7 +347,16 @@ function _resource_access_view_quality_criteria($node, $account) {
 function _resource_access_edit_quality_criteria($node, $account) {
   $access = _resource_access_view_quality_criteria($node, $account);
   if ($access) {
-
+    // make sure the user hasn't completed a review yet
+    $user_qc_completed = db_select('eck_feedback', 'f')
+      ->condition('f.node_id', $node->nid)
+      ->condition('f.type', 'qc')
+      ->condition('f.current', 1)
+      ->condition('f.completed', 1)
+      ->condition('f.uid', $account->uid)
+      ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+      ->fields('f')->countQuery()->execute()->fetchField();
+    $access = !$user_qc_completed;
   }
 
   return $access;
