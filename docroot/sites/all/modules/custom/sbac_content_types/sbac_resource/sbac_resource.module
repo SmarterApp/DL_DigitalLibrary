@@ -756,7 +756,7 @@ function _sbac_resource_preview_content(&$vars) {
   $viewer = NULL;
   $html5 = FALSE;
   if (isset($vars['document']['html5'])) {
-    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " .$vars['nid'])->fetchObject();
+    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " . $vars['nid'])->fetchObject();
     if ($html5_progress && $html5_progress->status == SBAC_MEDIA_HTML5_FINISHED) {
       // Add required js and css files
       drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
@@ -769,7 +769,7 @@ function _sbac_resource_preview_content(&$vars) {
       $folder = variable_get('google_cdn_folder');
 
       // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
-      $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid']/32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
+      $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid'] / 32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
       $viewer['viewer_filename'] = ucwords($path_variables[1]);
       $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
     }
@@ -1549,7 +1549,7 @@ function sbac_resource_node_load($nodes, $types) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
       // Grab the alignemnt terms.
-      $sql  = 'SELECT r.*, a.field_education_alignment_tid ';
+      $sql = 'SELECT r.*, a.field_education_alignment_tid ';
       $sql .= 'FROM field_data_field_resource_reference r ';
       $sql .= 'JOIN field_data_field_education_alignment a ON r.entity_id = a.entity_id ';
       $sql .= 'WHERE field_resource_reference_target_id = :nid';
@@ -3114,11 +3114,11 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
 function _sbac_resource_determine_state_access_via_sql($nid, $account) {
   $all_states = array();
   $access = FALSE;
-  $sql  = "SELECT * FROM {field_data_field_view_permissions} p ";
+  $sql = "SELECT * FROM {field_data_field_view_permissions} p ";
   $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
   $state_permission = db_query($sql, array(':nid' => $nid))->fetchObject();
   if ($state_permission->field_view_permissions_value == 1) {
-    $sql  = "SELECT * FROM {field_data_field_view_permissions_per_state} p ";
+    $sql = "SELECT * FROM {field_data_field_view_permissions_per_state} p ";
     $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
     $result = db_query($sql, array(':nid' => $nid));
     foreach ($result as $row) {
@@ -3457,7 +3457,7 @@ function sbac_resource_load_more_ajax() {
  */
 function theme_sbac_resource_views_load_more_pager($vars) {
   global $pager_page_array, $pager_total;
-  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
+  drupal_add_js(drupal_get_path('module', 'views_load_more') . '/views_load_more.js');
   $tags = $vars['tags'];
   $element = $vars['element'];
   $parameters = $vars['parameters'];
@@ -3489,13 +3489,13 @@ function theme_sbac_resource_views_load_more_pager($vars) {
       $_GET['q'] = $referer;
     }
   }
-  else if (isset($_SESSION['load_more'][$view_name]['page'])) {
-    $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
-    $old_url = $_GET['q'];
-    if ($referer) {
-      $_GET['q'] = $referer;
+  elseif (isset($_SESSION['load_more'][$view_name]['page'])) {
+      $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
+      $old_url = $_GET['q'];
+      if ($referer) {
+        $_GET['q'] = $referer;
+      }
     }
-  }
 
   $li_next = theme('pager_next',
     array(
@@ -3534,6 +3534,7 @@ function theme_sbac_resource_views_load_more_pager($vars) {
  *
  * @param $resource_nid
  * @return mixed
+ * If this not a resubmission, return 0
  */
 function _sbac_resource_resubmit_timestamp($resource_nid) {
   $timestamp = db_query("
@@ -3560,11 +3561,37 @@ WHERE
 /**
  * Is this a recent reviewer?
  */
-function _sbac_resource_is_recent_reviewers($resource_nid, $account_uid){
+function _sbac_resource_is_recent_reviewers($resource_nid, $account_uid) {
   $original_reviewers = db_query("
                 SELECT
                     DISTINCT r.field_recent_reviewers_target_id
                 FROM {field_data_field_recent_reviewers} r
                 WHERE r.entity_id = :nid", array(':nid' => $resource_nid))->fetchCol();
   return !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
+}
+
+/**
+ * Is the resource in gate keeping?
+ */
+function _sbac_resource_is_in_gate_keeping($resource_nid) {
+  $query = db_select('workbench_moderation_node_history', 'h');
+  $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
+  $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
+  $query->fields('f', array('id'))->distinct();
+  $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
+//  dpq($query);
+  return is_null($results);
+}
+
+/**
+ * Is the resource in QC?
+ */
+function _sbac_resource_is_in_quality_review($resource_nid) {
+  $query = db_select('workbench_moderation_node_history', 'h');
+  $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
+  $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
+  $query->fields('f', array('id'))->distinct();
+  $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
+//  dpq($query);
+  return !is_null($results);
 }
