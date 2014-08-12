@@ -219,7 +219,13 @@ function _resource_access_view_gate_keeper($node, $account) {
   $access = FALSE;
   // Make sure we are still in GK and have the right role.
   if (_sbac_resource_is_in_gate_keeping($node->nid) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
-    $access = _resource_access_resubmission_access($node, $account, _sbac_resource_resubmit_timestamp($node->nid));
+    $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
+    if ($submit_timestamp) {
+      $access = _resource_access_resubmission_access($node, $account, $submit_timestamp);
+    }
+    else {
+      $access = TRUE;
+    }
   }
   return $access;
 }
@@ -235,15 +241,14 @@ function _resource_access_start_gate_keeper($node, $account) {
   $access = _resource_access_view_gate_keeper($node, $account);
   if ($access) {
     // make sure we don't have any active GK
-    $query = db_select('eck_feedback', 'f')
+    $active_gk = db_select('eck_feedback', 'f')
       ->condition('f.node_id', $node->nid)
       ->condition('f.status', 1)
       ->condition('f.current', 1)
       ->condition('f.type', 'gate_keeper')
       ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-      ->fields('f', array('uid'))->distinct();
-    $gk = $query->execute()->fetchCol();
-    $access = empty($gk) || 0 == count($gk);
+      ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+    $access = !$active_gk;
   }
   return $access;
 }
@@ -259,15 +264,14 @@ function _resource_access_edit_gate_keeper($node, $account) {
   $access = _resource_access_view_gate_keeper($node, $account);
   if ($access) {
     // make sure haven't already completed a GK
-    $query = db_select('eck_feedback', 'f')
+    $completed_gk = db_select('eck_feedback', 'f')
       ->condition('f.node_id', $node->nid)
       ->condition('f.completed', 1)
       ->condition('f.type', 'gate_keeper')
       ->condition('f.uid', $account->uid)
       ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-      ->fields('f', array('id'));
-    $gk = $query->execute()->fetchCol();
-    $access = empty($gk) || 0 == count($gk);
+      ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+    $access = !$completed_gk;
   }
   return $access;
 }
@@ -294,7 +298,7 @@ function _resource_access_view_quality_criteria($node, $account) {
         ->condition('f.status', 1)
         ->condition('f.uid', $account->uid)
         ->condition('f.created', $submit_timestamp, '>')
-        ->fields('f')->countQuery()->execute()->fetchField();
+        ->fields('f', array('id'))->countQuery()->execute()->fetchField();
       if ($user_qc_in_progress) {
         $access = TRUE;
       }
@@ -355,7 +359,7 @@ function _resource_access_edit_quality_criteria($node, $account) {
       ->condition('f.completed', 1)
       ->condition('f.uid', $account->uid)
       ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-      ->fields('f')->countQuery()->execute()->fetchField();
+      ->fields('f', array('id'))->countQuery()->execute()->fetchField();
     $access = !$user_qc_completed;
   }
 
