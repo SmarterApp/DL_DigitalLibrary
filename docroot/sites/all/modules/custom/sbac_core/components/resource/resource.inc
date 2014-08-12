@@ -180,21 +180,7 @@ function resource_access($op, $node, $account = NULL) {
         return _resource_access_edit_gate_keeper($node, $account);
         break;
       case 'view gate keeper':
-        $access = _resource_access_view_gate_keeper($node, $account);
-        if (!$access) {
-          // we'll allow it if the user did the GK
-          $gk = db_select('eck_feedback', 'f')
-            ->condition('f.node_id', $node->nid)
-            ->condition('f.completed', 1)
-            ->condition('f.type', 'gate_keeper')
-            ->condition('f.uid', $account->uid)
-            ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-            ->fields('f', array('id'))
-            ->execute()
-            ->fetchCol();
-          $access = !empty($gk) && count($gk) > 0;
-        }
-        return $access;
+        return _resource_access_view_gate_keeper($node, $account);
         break;
       case 'view quality criteria':
         return _resource_access_view_quality_criteria($node, $account);
@@ -220,11 +206,33 @@ function _resource_access_view_gate_keeper($node, $account) {
   // Make sure we are still in GK and have the right role.
   if (_sbac_resource_is_in_gate_keeping($node->nid) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
-    if ($submit_timestamp) {
-      $access = _resource_access_resubmission_access($node, $account, $submit_timestamp);
-    }
-    else {
-      $access = TRUE;
+    // if this is a new submission, or if it is a resubmission and the user has access
+    if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_access($node, $account, $submit_timestamp))) {
+      // if the user has an active GK (we don't care if it's completed or not), then allow
+      $user_active_gk = db_select('eck_feedback', 'f')
+        ->condition('f.node_id', $node->nid)
+        ->condition('f.status', 1)
+        ->condition('f.current', 1)
+        ->condition('f.type', 'gate_keeper')
+        ->condition('f.uid', $account->uid)
+        ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+        ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+      if ($user_active_gk) {
+        $access = TRUE;
+      }
+      else {
+        // if there are no other active GK (by anybody), then allow
+        $other_active_gk = db_select('eck_feedback', 'f')
+          ->condition('f.node_id', $node->nid)
+          ->condition('f.status', 1)
+          ->condition('f.current', 1)
+          ->condition('f.type', 'gate_keeper')
+          ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+          ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+        if (!$other_active_gk) {
+          $access = TRUE;
+        }
+      }
     }
   }
   return $access;
@@ -238,19 +246,7 @@ function _resource_access_view_gate_keeper($node, $account) {
  * @return bool
  */
 function _resource_access_start_gate_keeper($node, $account) {
-  $access = _resource_access_view_gate_keeper($node, $account);
-  if ($access) {
-    // make sure we don't have any active GK
-    $active_gk = db_select('eck_feedback', 'f')
-      ->condition('f.node_id', $node->nid)
-      ->condition('f.status', 1)
-      ->condition('f.current', 1)
-      ->condition('f.type', 'gate_keeper')
-      ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-      ->fields('f', array('id'))->countQuery()->execute()->fetchField();
-    $access = !$active_gk;
-  }
-  return $access;
+  return _resource_access_view_gate_keeper($node, $account);
 }
 
 /**
