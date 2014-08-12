@@ -124,19 +124,6 @@ function resource_access($op, $node, $account = NULL) {
       return _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
     }
 
-    $args = array(
-      ':node_id' => $node->nid,
-      ':uid' => $account->uid,
-    );
-
-    $qc_perms = array(
-      'view gate keeper',
-      'start gate keeper',
-      'edit gate keeper',
-      'view quality criteria',
-      'edit quality criteria',
-    );
-
     $post_perms = array(
       'view post',
       'start post',
@@ -145,31 +132,10 @@ function resource_access($op, $node, $account = NULL) {
       'edit tags',
     );
 
-    // if the user does not have the 'resource reviewer' role, they have no access
-    // to anything in the review process
-    if (in_array($op, $qc_perms)) {
-      if (!in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
-        return FALSE;
-      }
-    }
-    elseif (in_array($op, $post_perms)) {
+    if (in_array($op, $post_perms)) {
       if (!in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))) {
         return FALSE;
       }
-    }
-    // incorrect permssion string
-    else {
-      return FALSE;
-    }
-
-    // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
-    if ($op == 'view gate keeper'
-      && isset($node->workbench_moderation['current']->state)
-      && $node->workbench_moderation['current']->state == 'published'
-      && isset($node->field_html5['und'][0]['value'])
-      && $node->field_html5['und'][0]['value']
-    ) {
-      return FALSE;
     }
 
     switch ($op) {
@@ -203,34 +169,45 @@ function resource_access($op, $node, $account = NULL) {
  */
 function _resource_access_view_gate_keeper($node, $account) {
   $access = FALSE;
-  // Make sure we are still in GK and have the right role.
-  if (_sbac_resource_is_in_gate_keeping($node->nid) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
-    $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
-    // if this is a new submission, or if it is a resubmission and the user has access
-    if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_access($node, $account, $submit_timestamp))) {
-      // if the user has an active GK (we don't care if it's completed or not), then allow
-      $user_active_gk = db_select('eck_feedback', 'f')
-        ->condition('f.node_id', $node->nid)
-        ->condition('f.status', 1)
-        ->condition('f.current', 1)
-        ->condition('f.type', 'gate_keeper')
-        ->condition('f.uid', $account->uid)
-        ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-        ->fields('f', array('id'))->countQuery()->execute()->fetchField();
-      if ($user_active_gk) {
-        $access = TRUE;
-      }
-      else {
-        // if there are no other active GK (by anybody), then allow
-        $other_active_gk = db_select('eck_feedback', 'f')
+
+  // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
+  if (isset($node->workbench_moderation['current']->state)
+    && $node->workbench_moderation['current']->state == 'published'
+    && isset($node->field_html5['und'][0]['value'])
+    && $node->field_html5['und'][0]['value']
+  ) {
+    $access FALSE;
+  }
+  else {
+    // Make sure we are still in GK and have the right role.
+    if (_sbac_resource_is_in_gate_keeping($node->nid) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+      $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
+      // if this is a new submission, or if it is a resubmission and the user has access
+      if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_access($node, $account, $submit_timestamp))) {
+        // if the user has an active GK (we don't care if it's completed or not), then allow
+        $user_active_gk = db_select('eck_feedback', 'f')
           ->condition('f.node_id', $node->nid)
           ->condition('f.status', 1)
           ->condition('f.current', 1)
           ->condition('f.type', 'gate_keeper')
+          ->condition('f.uid', $account->uid)
           ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
           ->fields('f', array('id'))->countQuery()->execute()->fetchField();
-        if (!$other_active_gk) {
+        if ($user_active_gk) {
           $access = TRUE;
+        }
+        else {
+          // if there are no other active GK (by anybody), then allow
+          $other_active_gk = db_select('eck_feedback', 'f')
+            ->condition('f.node_id', $node->nid)
+            ->condition('f.status', 1)
+            ->condition('f.current', 1)
+            ->condition('f.type', 'gate_keeper')
+            ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+            ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+          if (!$other_active_gk) {
+            $access = TRUE;
+          }
         }
       }
     }
