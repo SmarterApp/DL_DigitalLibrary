@@ -31,7 +31,7 @@ function resource_access($op, $node, $account = NULL) {
   }
 
   $access = & drupal_static(__FUNCTION__);
-  if (empty($access) || !isset($access[$op])) {
+  if (empty($access) || empty($access[$account->uid]) || !isset($access[$account->uid][$op])) {
     if ('resource' == $node->type) {
       switch ($op) {
         case 'start gate keeper':
@@ -68,6 +68,7 @@ function resource_access($op, $node, $account = NULL) {
           break;
         case 'view collaboration':
           $perm = _resource_access_node_has_state('published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
+          break;
         case 'access review comments':
           $perm = _resource_access_node_has_state('rejected') && $node->uid == $account->uid;
           break;
@@ -95,10 +96,10 @@ function resource_access($op, $node, $account = NULL) {
           $perm = (bool) $qc_entities;
           break;
       }
-      $access[$op] = $perm;
+      $access[$account->uid][$op] = $perm;
     }
   }
-  return $access[$op];
+  return $access[$account->uid][$op];
 }
 
 /**
