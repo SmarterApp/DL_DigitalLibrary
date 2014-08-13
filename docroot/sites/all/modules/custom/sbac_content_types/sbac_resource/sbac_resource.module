@@ -3500,12 +3500,12 @@ function theme_sbac_resource_views_load_more_pager($vars) {
     }
   }
   elseif (isset($_SESSION['load_more'][$view_name]['page'])) {
-      $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
-      $old_url = $_GET['q'];
-      if ($referer) {
-        $_GET['q'] = $referer;
-      }
+    $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
+    $old_url = $_GET['q'];
+    if ($referer) {
+      $_GET['q'] = $referer;
     }
+  }
 
   $li_next = theme('pager_next',
     array(
@@ -3547,61 +3547,77 @@ function theme_sbac_resource_views_load_more_pager($vars) {
  * If this not a resubmission, return 0
  */
 function _sbac_resource_resubmit_timestamp($resource_nid) {
-  $timestamp = db_query("
-SELECT
-	max(h.stamp)
-FROM {workbench_moderation_node_history} h
-WHERE
-	h.nid = :nid
-	AND h.from_state = 'draft'
-	AND h.state = 'needs_review'
-	AND h.stamp > (
-		SELECT
-			max(h2.stamp)
-		FROM {workbench_moderation_node_history} h2
-		WHERE h2.nid = :nid
-		      AND h2.state = 'rejected'
+  $timestamp = & drupal_static(__FUNCTION__);
+  if (empty($timestamp) || !isset($timestamp[$resource_nid])) {
+    $result = db_query("
+      SELECT
+          max(h.stamp)
+      FROM {workbench_moderation_node_history} h
+      WHERE
+          h.nid = :nid
+          AND h.from_state = 'draft'
+          AND h.state = 'needs_review'
+          AND h.stamp > (
+              SELECT
+                  max(h2.stamp)
+              FROM {workbench_moderation_node_history} h2
+              WHERE h2.nid = :nid
+                    AND h2.state = 'rejected'
 	)", array(':nid' => $resource_nid))->fetchField();
-  if (!$timestamp) {
-    $timestamp = 0;
+    if (!$result) {
+      $result = 0;
+    }
+    $timestamp[$resource_nid] = $result;
   }
-  return $timestamp;
+  return $timestamp[$resource_nid];
 }
 
 /**
  * Is this a recent reviewer?
  */
 function _sbac_resource_is_recent_reviewers($resource_nid, $account_uid) {
-  $original_reviewers = db_query("
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result || empty($result[$resource_nid] || !isset($result[$resource_nid][$account_uid])))) {
+    $original_reviewers = db_query("
                 SELECT
                     DISTINCT r.field_recent_reviewers_target_id
                 FROM {field_data_field_recent_reviewers} r
                 WHERE r.entity_id = :nid", array(':nid' => $resource_nid))->fetchCol();
-  return !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
+    $result[$resource_nid][$account_uid] = !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
+  }
+  return $result[$resource_nid][$account_uid];
 }
 
 /**
  * Is the resource in gate keeping?
  */
 function _sbac_resource_is_in_gate_keeping($resource_nid) {
-  $query = db_select('workbench_moderation_node_history', 'h');
-  $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
-  $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
-  $query->fields('f', array('id'))->distinct();
-  $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
-//  dpq($query);
-  return is_null($results);
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result) || !isset($result[$resource_nid])) {
+    // if the resource has no completed GK and it's still in needs_review, being_reviewed, then it must be in GK
+    $query = db_select('workbench_moderation_node_history', 'h');
+    $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
+    $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
+    $query->fields('f', array('id'))->distinct();
+    $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
+    $result[$resource_nid] = is_null($results);
+  }
+  return $result[$resource_nid];
 }
 
 /**
  * Is the resource in QC?
  */
 function _sbac_resource_is_in_quality_review($resource_nid) {
-  $query = db_select('workbench_moderation_node_history', 'h');
-  $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
-  $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
-  $query->fields('f', array('id'))->distinct();
-  $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
-//  dpq($query);
-  return !is_null($results);
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result) || !isset($result[$resource_nid])) {
+    // if the resource has at least one completed GK and still in needs_review or being reviewed, then it must be in QC
+    $query = db_select('workbench_moderation_node_history', 'h');
+    $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
+    $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
+    $query->fields('f', array('id'))->distinct();
+    $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
+    $result[$resource_nid] = !is_null($results);
+  }
+  return $result[$resource_nid];
 }

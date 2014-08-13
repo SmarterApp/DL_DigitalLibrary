@@ -34,12 +34,10 @@ function resource_access($op, $node, $account = NULL) {
   if (empty($access) || empty($access[$account->uid]) || !isset($access[$account->uid][$op])) {
     if ('resource' == $node->type) {
       switch ($op) {
-        case 'start gate keeper':
-          $perm = _resource_access_start_gate_keeper($node, $account);
-          break;
         case 'edit gate keeper':
           $perm = _resource_access_edit_gate_keeper($node, $account);
           break;
+        case 'start gate keeper':
         case 'view gate keeper':
           $perm = _resource_access_view_gate_keeper($node, $account);
           break;
@@ -49,13 +47,19 @@ function resource_access($op, $node, $account = NULL) {
         case 'edit quality criteria':
           $perm = _resource_access_edit_quality_criteria($node, $account);
           break;
-        case 'view post':
-        case 'start post':
-        case 'edit post':
-        case 'view tags':
-        case 'edit tags':
         case 'access post process':
           $perm = in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
+          break;
+        case 'view post':
+        case 'start post':
+          $perm = _resource_access_view_post($node, $account);
+          break;
+        case 'edit post':
+          $perm = _resource_access_edit_post($node, $account);
+          break;
+        case 'view tags':
+        case 'edit tags':
+          $perm = _resource_access_view_tags($node, $account);
           break;
         case 'access quality criteria revisions':
           $perm = _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
@@ -154,17 +158,6 @@ function _resource_access_view_gate_keeper($node, $account) {
 }
 
 /**
- * 'start gate keeper' access control
- *
- * @param $node
- * @param $account
- * @return bool
- */
-function _resource_access_start_gate_keeper($node, $account) {
-  return _resource_access_view_gate_keeper($node, $account);
-}
-
-/**
  * 'edit gate keeper' access control
  *
  * @param $node
@@ -178,6 +171,7 @@ function _resource_access_edit_gate_keeper($node, $account) {
     $completed_gk = db_select('eck_feedback', 'f')
       ->condition('f.node_id', $node->nid)
       ->condition('f.completed', 1)
+      ->condition('f.current', 1)
       ->condition('f.type', 'gate_keeper')
       ->condition('f.uid', $account->uid)
       ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
@@ -248,6 +242,73 @@ function _resource_access_view_quality_criteria($node, $account) {
         }
       }
     }
+  }
+  return $access;
+}
+
+/**
+ * 'view post' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_view_post($node, $account) {
+  // check for active reviews by others
+  $other_reviews = db_select('eck_feedback', 'f')
+    ->condition('f.type', 'post')
+    ->condition('f.node_id', $node->nid)
+    ->condition('f.status', 1)
+    ->condition('f.uid', $account->uid, '<>')
+    ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+    ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+  return _resource_access_node_has_state($node, 'approved') && !$other_reviews && in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
+}
+
+/**
+ * 'edit post' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_edit_post($node, $account) {
+  $access = _resource_access_view_post($node, $account);
+  if ($access) {
+    // make sure the user hasn't completed a post review yet
+    $user_post_completed = db_select('eck_feedback', 'f')
+      ->condition('f.node_id', $node->nid)
+      ->condition('f.type', 'post')
+      ->condition('f.current', 1)
+      ->condition('f.completed', 1)
+      ->condition('f.uid', $account->uid)
+      ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+      ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+    $access = !$user_post_completed;
+  }
+  return $access;
+}
+
+/**
+ * 'view tags' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_view_tags($node, $account) {
+  $access = FALSE;
+  if (in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))) {
+    // to access the tags screen the user must have an active post
+    $access = db_select('eck_feedback', 'f')
+      ->condition('f.type', 'post')
+      ->condition('f.node_id', $node->nid)
+      ->condition('f.uid', $account->uid)
+      ->condition('f.status', 1)
+      ->condition('f.current', 1)
+      ->condition('f.completed', 0)
+      ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+      ->fields('f', array('id'))->countQuery()->execute()->fetchField();
   }
   return $access;
 }
