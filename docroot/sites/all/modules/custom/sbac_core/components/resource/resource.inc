@@ -19,22 +19,12 @@ function resource_access($op, $node, $account = NULL) {
     $account = $user;
   }
 
-  if ($account->uid == 1) {
-    // return TRUE;
-  }
-
   if ($node->type == 'resource') {
     if (isset($_GET['sec']) && $_GET['sec'] == '1') {
       if (in_array($op, array('access about process', 'view about'))) {
         return TRUE;
       }
       return FALSE;
-    }
-
-    if (in_array($op, array('view collaboration'))) {
-      if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published' && !in_array(SBAC_SHARE_GUEST, $account->roles)) {
-        return sbac_forum_get_resource_forum_id($node->nid);
-      }
     }
 
     // TODO: maybe we should just load & statically cache all feedback records
@@ -49,7 +39,7 @@ function resource_access($op, $node, $account = NULL) {
       return FALSE;
     }
 
-    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+    if (_resource_access_node_has_state('published')) {
       if (($op == 'access about process' || $op == 'view about') || ($op == 'access review process' || $op == 'view reviews') || ($op == 'access share process' || $op == 'view share') || $op == 'access related resources' || $op == 'access flag') {
         // Only show the About This Resource tab for guests
         if (in_array(SBAC_SHARE_GUEST, $account->roles) && !in_array($op, array('view about', 'access about process'))) {
@@ -66,22 +56,11 @@ function resource_access($op, $node, $account = NULL) {
       return TRUE;
     }
     elseif ($op == 'access review comments') {
-      if ($node->workbench_moderation['current']->state == 'rejected' && $node->uid == $account->uid) {
+      if (_resource_access_node_has_state('rejected') && $node->uid == $account->uid) {
         return TRUE;
       }
 
       return FALSE;
-    }
-    elseif ($op == 'access qc review comments') {
-      $qc_entities = entity_load('feedback', FALSE, array(
-        'node_id' => $node->nid,
-        'type' => 'qc',
-        'status' => 1,
-        'current' => 1,
-        'completed' => 1,
-      ));
-
-      return (bool) $qc_entities;
     }
 
     if (!in_array(SBAC_SHARE_GUEST, $account->roles) &&
@@ -92,50 +71,19 @@ function resource_access($op, $node, $account = NULL) {
       return TRUE;
     }
 
-    if (isset($node->workbench_moderation['current']->state) &&
-      $node->workbench_moderation['current']->state == 'published' &&
-      $op == 'access flag' || $op == 'view flag'
-    ) {
+    if (_resource_access_node_has_state('published') && $op == 'access flag' || $op == 'view flag') {
       return TRUE;
     }
 
-    if (isset($node->workbench_moderation['current']->state) &&
-      $node->workbench_moderation['current']->state == 'published' &&
-      $op == 'access related resources' || $op == 'view related resources'
-    ) {
+    if (_resource_access_node_has_state('published') && $op == 'access related resources') {
       return TRUE;
     }
 
-    if ($op == 'access quality criteria process') {
-      return (in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles)));
-    }
-    elseif ($op == 'access post process') {
-      return (in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles)));
-    }
-    elseif (!in_array(SBAC_SHARE_GUEST, $account->roles) && in_array($op, array('access review process', 'view reviews'))) {
-      $published = ($node->status && $node->workbench_moderation['current']->state == 'published');
+    if (!in_array(SBAC_SHARE_GUEST, $account->roles) && in_array($op, array('access review process', 'view reviews'))) {
+      $published = _resource_access_node_has_state('published');
       $role = in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
 
       return ($published && $role);
-    }
-
-    if ($op == 'access quality criteria revisions') {
-      // only allow access to the Revisions tab if this is a resubmission
-      return _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
-    }
-
-    $post_perms = array(
-      'view post',
-      'start post',
-      'edit post',
-      'view tags',
-      'edit tags',
-    );
-
-    if (in_array($op, $post_perms)) {
-      if (!in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))) {
-        return FALSE;
-      }
     }
 
     switch ($op) {
@@ -154,10 +102,47 @@ function resource_access($op, $node, $account = NULL) {
       case 'edit quality criteria':
         return _resource_access_edit_quality_criteria($node, $account);
         break;
+      case 'view post':
+      case 'start post':
+      case 'edit post':
+      case 'view tags':
+      case 'edit tags':
+        return in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))
+        break;
+      case 'access quality criteria revisions':
+        return _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
+        break;
+      case 'access quality criteria process':
+        return in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles));
+        break;
+      case 'access post process':
+        return in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
+        break;
+      case 'view related resources':
+        return _resource_access_node_has_state('published');
+        break;
+      case 'view collaboration':
+        return _resource_access_node_has_state('published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
     }
-  }
+    break;
+  case
+    'access qc review comments':
+        $qc_entities = entity_load('feedback', FALSE, array(
+          'node_id' => $node->nid,
+          'type' => 'qc',
+          'status' => 1,
+          'current' => 1,
+          'completed' => 1,
+        ));
 
-  return FALSE;
+        return (bool) $qc_entities;
+        break;
+      case 'access review process':
+        break;
+    }
+}
+
+return FALSE;
 }
 
 /**
@@ -171,11 +156,7 @@ function _resource_access_view_gate_keeper($node, $account) {
   $access = FALSE;
 
   // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
-  if (isset($node->workbench_moderation['current']->state)
-    && $node->workbench_moderation['current']->state == 'published'
-    && isset($node->field_html5['und'][0]['value'])
-    && $node->field_html5['und'][0]['value']
-  ) {
+  if (_resource_access_node_has_state('published') && isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
     $access FALSE;
   }
   else {
@@ -356,4 +337,15 @@ function _resource_access_resubmission_access($node, $account, $submit_timestamp
     $access = TRUE;
   }
   return $access;
+}
+
+/**
+ * Checks the current state of the node
+ *
+ * @param $node
+ * @param $state
+ * @return bool
+ */
+function _resource_access_node_has_state($node, $state) {
+  return isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == $state
 }
