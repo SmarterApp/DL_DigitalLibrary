@@ -816,27 +816,27 @@ h2.name .field {
 }
 
 /* line 759, ../sass/profile.scss */
-#edit-tab-container-resource-tab-buttons button,
-#edit-tab-container-forum-tab-buttons button {
+div[id*="edit-tab-container-resource-tab-buttons"] button,
+div[id*="edit-tab-container-forum-tab-buttons"] button {
   float: right;
   margin-left: 20px;
   padding-left: 40px;
 }
 /* line 766, ../sass/profile.scss */
-#edit-tab-container-resource-tab-buttons #sbac-favorites-forum-submit:before,
-#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-submit:before,
-#edit-tab-container-forum-tab-buttons #sbac-favorites-forum-submit:before,
-#edit-tab-container-forum-tab-buttons #sbac-favorites-resource-submit:before {
+div[id*="edit-tab-container-resource-tab-buttons"] button[id*="edit-tab-container-resource-tab-buttons-save"]:before,
+div[id*="edit-tab-container-resource-tab-buttons"] button[id*="edit-tab-container-forum-tab-buttons-save"]:before,
+div[id*="edit-tab-container-forum-tab-buttons"] button[id*="edit-tab-container-resource-tab-buttons-save"]:before,
+div[id*="edit-tab-container-forum-tab-buttons"] button[id*="edit-tab-container-forum-tab-buttons-save"]:before {
   content: url("../images/icon-buttonAccept.png");
   left: 15px;
   position: absolute;
   top: 4px;
 }
 /* line 774, ../sass/profile.scss */
-#edit-tab-container-resource-tab-buttons #sbac-favorites-forum-cancel:before,
-#edit-tab-container-resource-tab-buttons #sbac-favorites-resource-cancel:before,
-#edit-tab-container-forum-tab-buttons #sbac-favorites-forum-cancel:before,
-#edit-tab-container-forum-tab-buttons #sbac-favorites-resource-cancel:before {
+div[id*="edit-tab-container-resource-tab-buttons"] #sbac-favorites-forum-cancel:before,
+div[id*="edit-tab-container-resource-tab-buttons"] #sbac-favorites-resource-cancel:before,
+div[id*="edit-tab-container-forum-tab-buttons"] #sbac-favorites-forum-cancel:before,
+div[id*="edit-tab-container-forum-tab-buttons"] #sbac-favorites-resource-cancel:before {
   content: url("../images/icon-buttonCancel.png");
   left: 15px;
   position: absolute;

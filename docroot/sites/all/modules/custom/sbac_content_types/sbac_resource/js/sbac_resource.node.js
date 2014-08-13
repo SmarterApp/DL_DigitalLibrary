@@ -67,7 +67,7 @@
           resource.removeClass('google-doc');
           break;
         case 'vimeo':
-          resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + decodeURIComponent($(this).attr('href')) + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>');
+          resource.empty().append('<div class="flex-video"><iframe title="resource-preview" src="' + local_url + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>');
           resource.removeClass('google-doc');
           break;
         case 'youtube':

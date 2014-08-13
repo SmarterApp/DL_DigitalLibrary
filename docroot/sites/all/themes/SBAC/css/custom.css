@@ -8782,7 +8782,7 @@ a.tabledrag-handle .handle {
   color: #464B54;
   height: 43px;
   position: relative;
-  z-index: 2;
+  z-index: 9;
 }
 
 /* line 1373, ../sass/custom.scss */
