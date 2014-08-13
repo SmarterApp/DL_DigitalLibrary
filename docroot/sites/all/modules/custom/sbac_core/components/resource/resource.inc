@@ -64,13 +64,13 @@ function resource_access($op, $node, $account = NULL) {
           $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles));
           break;
         case 'view related resources':
-          $perm = _resource_access_node_has_state('published');
+          $perm = _resource_access_node_has_state($node, 'published');
           break;
         case 'view collaboration':
-          $perm = _resource_access_node_has_state('published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
+          $perm = _resource_access_node_has_state($node, 'published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
           break;
         case 'access review comments':
-          $perm = _resource_access_node_has_state('rejected') && $node->uid == $account->uid;
+          $perm = _resource_access_node_has_state($node, 'rejected') && $node->uid == $account->uid;
           break;
         case 'access share process':
         case 'view share':
@@ -79,7 +79,7 @@ function resource_access($op, $node, $account = NULL) {
         case 'access flag':
         case 'view reviews':
         case 'access review process':
-          $perm = _resource_access_node_has_state('published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
+          $perm = _resource_access_node_has_state($node, 'published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
           break;
         case 'access about process':
         case 'view about':
@@ -113,7 +113,7 @@ function _resource_access_view_gate_keeper($node, $account) {
   $access = FALSE;
 
   // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
-  if (_resource_access_node_has_state('published') && isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+  if (_resource_access_node_has_state($node, 'published') && isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
     $access = FALSE;
   }
   else {
