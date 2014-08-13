@@ -24,7 +24,7 @@ function resource_access($op, $node, $account = NULL) {
       return FALSE;
     }
   }
-  if (isset($_GET['flag']) && ($_GET['flag'] == 'view-resource-flags' || $_GET['flag'] == 'view-resource-review-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
+  if (isset($_GET['flag']) && in_array($_GET['flag'], array('view-resource-flags', 'view-resource-review-flags', 'resolve-resource-review-flags'))) {
     if (!in_array($op, array('access about process', 'view about', 'access moderate flag', 'view moderate flag'))) {
       return FALSE;
     }
@@ -32,7 +32,7 @@ function resource_access($op, $node, $account = NULL) {
 
   $access = & drupal_static(__FUNCTION__);
   if (empty($access) || !isset($access[$op])) {
-    if ($node->type == 'resource') {
+    if ('resource' == $node->type) {
       switch ($op) {
         case 'start gate keeper':
           $perm = _resource_access_start_gate_keeper($node, $account);
@@ -84,8 +84,7 @@ function resource_access($op, $node, $account = NULL) {
         case 'view about':
           $perm = TRUE;
           break;
-        case
-        'access qc review comments':
+        case 'access qc review comments':
           $qc_entities = entity_load('feedback', FALSE, array(
             'node_id' => $node->nid,
             'type' => 'qc',
@@ -93,7 +92,6 @@ function resource_access($op, $node, $account = NULL) {
             'current' => 1,
             'completed' => 1,
           ));
-
           $perm = (bool) $qc_entities;
           break;
       }
