@@ -3577,13 +3577,29 @@ function _sbac_resource_resubmit_timestamp($resource_nid) {
  */
 function _sbac_resource_is_recent_reviewers($resource_nid, $account_uid) {
   $result = & drupal_static(__FUNCTION__);
-  if (empty($result || empty($result[$resource_nid] || !isset($result[$resource_nid][$account_uid])))) {
+  if (empty($result) || empty($result[$resource_nid]) || !isset($result[$resource_nid][$account_uid])) {
     $original_reviewers = db_query("
                 SELECT
                     DISTINCT r.field_recent_reviewers_target_id
                 FROM {field_data_field_recent_reviewers} r
                 WHERE r.entity_id = :nid", array(':nid' => $resource_nid))->fetchCol();
     $result[$resource_nid][$account_uid] = !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
+  }
+  return $result[$resource_nid][$account_uid];
+}
+
+/**
+ * Is this a recent publisher?
+ */
+function _sbac_resource_is_recent_publishers($resource_nid, $account_uid) {
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result) || empty($result[$resource_nid]) || !isset($result[$resource_nid][$account_uid])) {
+    $original_publishers = db_query("
+                SELECT
+                    DISTINCT p.field_recent_publishers_target_id
+                FROM {field_data_field_recent_publishers} p
+                WHERE p.entity_id = :nid", array(':nid' => $resource_nid))->fetchCol();
+    $result[$resource_nid][$account_uid] = !empty($original_publishers) && in_array($account_uid, $original_publishers);
   }
   return $result[$resource_nid][$account_uid];
 }
@@ -3596,14 +3612,8 @@ function _sbac_resource_is_in_gate_keeping($node) {
   if (empty($result) || !isset($result[$node->nid])) {
     $in_gk = FALSE;
     if (_resource_access_node_has_state($node, array('needs_review', 'being_reviewed'))) {
-      $completed_gk = db_select('eck_feedback', 'f')
-        ->condition('f.node_id', $node->nid)
-        ->condition('f.type', 'gate_keeper')
-        ->condition('f.completed', 1)
-        ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-        ->fields('f', array('id'))
-        ->execute();
-      $in_gk = 0 == $completed_gk->rowCount();
+      $completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', FALSE, FALSE, 1);
+      $in_gk = 0 == $completed_gk;
     }
     $result[$node->nid] = $in_gk;
   }
@@ -3618,14 +3628,8 @@ function _sbac_resource_is_in_quality_review($node) {
   if (empty($result) || !isset($result[$node->nid])) {
     $in_qc = FALSE;
     if (_resource_access_node_has_state($node, array('needs_review', 'being_reviewed'))) {
-      $completed_gk = db_select('eck_feedback', 'f')
-        ->condition('f.node_id', $node->nid)
-        ->condition('f.type', 'gate_keeper')
-        ->condition('f.completed', 1)
-        ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
-        ->fields('f', array('id'))
-        ->execute();
-      $in_qc = $completed_gk->rowCount() > 0;
+      $completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', FALSE, FALSE, 1);
+      $in_qc = $completed_gk;
     }
     $result[$node->nid] = $in_qc;
   }
