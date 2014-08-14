@@ -33,6 +33,7 @@ function resource_access($op, $node, $account = NULL) {
   $access = & drupal_static(__FUNCTION__);
   if (empty($access) || empty($access[$account->uid]) || !isset($access[$account->uid][$op])) {
     if ('resource' == $node->type) {
+      $perm = FALSE;
       switch ($op) {
         case 'edit gate keeper':
           $perm = _resource_access_edit_gate_keeper($node, $account);
@@ -116,7 +117,7 @@ function resource_access($op, $node, $account = NULL) {
 function _resource_access_view_gate_keeper($node, $account) {
   $access = FALSE;
 
-  // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
+  // Specific check, if its an HTML5 module and it's published, do not show GK tab.
   if (_resource_access_node_has_state($node, array('published')) && isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
     $access = FALSE;
   }
