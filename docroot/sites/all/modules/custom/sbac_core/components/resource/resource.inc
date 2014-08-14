@@ -68,13 +68,13 @@ function resource_access($op, $node, $account = NULL) {
           $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles));
           break;
         case 'view related resources':
-          $perm = _resource_access_node_has_state($node, 'published');
+          $perm = _resource_access_node_has_state($node, array('published'));
           break;
         case 'view collaboration':
-          $perm = _resource_access_node_has_state($node, 'published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
+          $perm = _resource_access_node_has_state($node, array('published')) && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
           break;
         case 'access review comments':
-          $perm = _resource_access_node_has_state($node, 'rejected') && $node->uid == $account->uid;
+          $perm = _resource_access_node_has_state($node, array('rejected')) && $node->uid == $account->uid;
           break;
         case 'access share process':
         case 'view share':
@@ -83,7 +83,7 @@ function resource_access($op, $node, $account = NULL) {
         case 'access flag':
         case 'view reviews':
         case 'access review process':
-          $perm = _resource_access_node_has_state($node, 'published') && !in_array(SBAC_SHARE_GUEST, $account->roles) && in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
+          $perm = _resource_access_node_has_state($node, array('published')) && !in_array(SBAC_SHARE_GUEST, $account->roles) && in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
           break;
         case 'access about process':
         case 'view about':
@@ -117,12 +117,12 @@ function _resource_access_view_gate_keeper($node, $account) {
   $access = FALSE;
 
   // Specifc check, if its an HTML5 module and it's published, do not show GK tab.
-  if (_resource_access_node_has_state($node, 'published') && isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+  if (_resource_access_node_has_state($node, array('published')) && isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
     $access = FALSE;
   }
   else {
     // Make sure we are still in GK and have the right role.
-    if (_sbac_resource_is_in_gate_keeping($node->nid) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+    if (_sbac_resource_is_in_gate_keeping($node) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
       $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
       // if this is a new submission, or if it is a resubmission and the user has access
       if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_access($node, $account, $submit_timestamp))) {
@@ -190,7 +190,7 @@ function _resource_access_edit_gate_keeper($node, $account) {
  */
 function _resource_access_view_quality_criteria($node, $account) {
   $access = FALSE;
-  if (_sbac_resource_is_in_quality_review($node->nid) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+  if (_sbac_resource_is_in_quality_review($node) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
     // if this is a new submission, or if it is a resubmission and the user has access
     if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_access($node, $account, $submit_timestamp))) {
@@ -262,7 +262,7 @@ function _resource_access_view_post($node, $account) {
     ->condition('f.uid', $account->uid, '<>')
     ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
     ->fields('f', array('id'))->countQuery()->execute()->fetchField();
-  return _resource_access_node_has_state($node, 'approved') && !$other_reviews && in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
+  return _resource_access_node_has_state($node, array('approved')) && !$other_reviews && in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
 }
 
 /**
@@ -361,9 +361,10 @@ function _resource_access_resubmission_access($node, $account, $submit_timestamp
  * Checks the current state of the node
  *
  * @param $node
- * @param $state
+ * @param $states
  * @return bool
  */
-function _resource_access_node_has_state($node, $state) {
-  return isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == $state;
+function _resource_access_node_has_state($node, $states) {
+  return isset($node->workbench_moderation['current']->state) && in_array($node->workbench_moderation['current']->state, $states);
 }
+

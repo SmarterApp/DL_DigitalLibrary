@@ -3591,33 +3591,45 @@ function _sbac_resource_is_recent_reviewers($resource_nid, $account_uid) {
 /**
  * Is the resource in gate keeping?
  */
-function _sbac_resource_is_in_gate_keeping($resource_nid) {
+function _sbac_resource_is_in_gate_keeping($node) {
   $result = & drupal_static(__FUNCTION__);
-  if (empty($result) || !isset($result[$resource_nid])) {
-    // if the resource has no completed GK and it's still in needs_review, being_reviewed, then it must be in GK
-    $query = db_select('workbench_moderation_node_history', 'h');
-    $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
-    $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
-    $query->fields('f', array('id'))->distinct();
-    $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
-    $result[$resource_nid] = is_null($results);
+  if (empty($result) || !isset($result[$node->nid])) {
+    $in_gk = FALSE;
+    if (_resource_access_node_has_state($node, array('needs_review', 'being_reviewed'))) {
+      $completed_gk = db_select('eck_feedback', 'f')
+        ->condition('f.node_id', $node->nid)
+        ->condition('f.type', 'gate_keeper')
+        ->condition('f.completed', 1)
+        ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+        ->fields('f', array('id'))
+        ->execute();
+      $in_gk = 0 == $completed_gk->rowCount();
+    }
+    $result[$node->nid] = $in_gk;
   }
-  return $result[$resource_nid];
+  return $result[$node->nid];
 }
 
 /**
  * Is the resource in QC?
  */
-function _sbac_resource_is_in_quality_review($resource_nid) {
+function _sbac_resource_is_in_quality_review($node) {
   $result = & drupal_static(__FUNCTION__);
-  if (empty($result) || !isset($result[$resource_nid])) {
-    // if the resource has at least one completed GK and still in needs_review or being reviewed, then it must be in QC
-    $query = db_select('workbench_moderation_node_history', 'h');
-    $query->leftJoin('eck_feedback', 'f', 'h.nid = f.node_id AND f.completed = 1 AND f.type = \'gate_keeper\' AND f.created > :time_stamp', array(':time_stamp' => _sbac_resource_resubmit_timestamp($resource_nid)));
-    $query->condition('h.current', 1)->condition('h.state', array('needs_review', 'being_reviewed'))->condition('h.nid', $resource_nid);
-    $query->fields('f', array('id'))->distinct();
-    $results = $query->orderBy('f.completed', 'DESC')->range(0, 1)->execute()->fetchField();
-    $result[$resource_nid] = !is_null($results);
+  if (empty($result) || !isset($result[$node->nid])) {
+    $in_qc = FALSE;
+    if (_resource_access_node_has_state($node, array('needs_review', 'being_reviewed'))) {
+      $completed_gk = db_select('eck_feedback', 'f')
+        ->condition('f.node_id', $node->nid)
+        ->condition('f.type', 'gate_keeper')
+        ->condition('f.completed', 1)
+        ->condition('f.created', _sbac_resource_resubmit_timestamp($node->nid), '>')
+        ->fields('f', array('id'))
+        ->execute();
+      $in_qc = $completed_gk->rowCount() > 0;
+    }
+    $result[$node->nid] = $in_qc;
   }
-  return $result[$resource_nid];
+  return $result[$node->nid];
 }
+
+
