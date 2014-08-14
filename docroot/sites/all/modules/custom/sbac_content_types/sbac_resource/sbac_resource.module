@@ -1516,35 +1516,6 @@ function sbac_resource_node_load($nodes, $types) {
     return;
   }
 
-  // Save a variable for the nid that is loaded, used to scroll to loaded node
-//  if (isset($_SERVER['HTTP_REFERER']) && count($nodes) == 1) {
-//    global $base_url;
-//    $resource_node = array_pop($nodes);
-//    $url = str_replace($base_url . '/', '', $_SERVER['HTTP_REFERER']);
-//    if ($url == 'moderation' || $url == 'digital-library-resources' || $url == 'resource-review' || $url == 'my-resources' || $url == 'forums') {
-//      switch ($url) {
-//        case 'moderation':
-//          $name = 'moderation';
-//          break;
-//        case 'digital-library-resources':
-//          $name = 'resources';
-//          break;
-//        case 'resource-review':
-//          $name = 'resource_review';
-//          break;
-//        case 'my-resources':
-//          $name = 'my_resources';
-//          break;
-//        case 'forums':
-//          $name = 'forums';
-//          break;
-//      }
-//      if (isset($name)) {
-//        $_SESSION['load_more'][$name]['nid'] = $resource_node->nid;
-//      }
-//    }
-//  }
-
   foreach ($nodes as $node) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
