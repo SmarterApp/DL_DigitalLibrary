@@ -167,19 +167,11 @@ SELECT
 	f.id
 FROM {eck_feedback} f
 WHERE f.node_id = :node_id
-      AND f.created >
-          (
-	          SELECT
-		          max(f2.created)
-	          FROM {eck_feedback} f2
-	          WHERE
-		          f2.node_id = :node_id
-		          AND f2.type = 'gate_keeper'
-		          AND f2.completed = 1
-          )
+      AND f.created > :time_stamp
+      AND f.completed = 1
       AND f.type = 'qc'";
 
-    $result = db_query($query, array(':node_id' => $this->_resource->nid));
+    $result = db_query($query, array(':node_id' => $this->_resource->nid, ':time_stamp' => _sbac_resource_resubmit_timestamp($this->_resource->nid)));
 
     $i = 0;
     $counter = 1;
