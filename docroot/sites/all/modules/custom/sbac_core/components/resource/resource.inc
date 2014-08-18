@@ -63,7 +63,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_view_tags($node, $account);
           break;
         case 'access quality criteria revisions':
-          $perm = _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
+          $perm = _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node, $account->uid);
           break;
         case 'access quality criteria process':
           $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles));
@@ -309,7 +309,7 @@ function _resource_access_edit_quality_criteria($node, $account) {
 function _resource_access_resubmission_reviewer_access($node, $account, $submit_timestamp) {
   // if we're still within the FEEDBACK_RESUBMISSION_TIMEOUT limit, then only original reviewers can review this resource
   if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $submit_timestamp) {
-    $access = _sbac_resource_is_recent_reviewers($node->nid, $account->uid);
+    $access = _sbac_resource_is_recent_reviewers($node, $account->uid);
   }
   else {
     // FEEDBACK_RESUBMISSION_TIMEOUT has expired
