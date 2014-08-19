@@ -329,7 +329,7 @@ function _resource_access_resubmission_reviewer_access($node, $account, $submit_
 function _resource_access_resubmission_publisher_access($node, $account, $submit_timestamp) {
   // if we're still within the FEEDBACK_RESUBMISSION_TIMEOUT limit, then only original publisher can review this resource
   if (time() - FEEDBACK_RESUBMISSION_TIMEOUT < $submit_timestamp) {
-    $access = _sbac_resource_is_recent_publishers($node->nid, $account->uid);
+    $access = _sbac_resource_is_recent_publishers($node, $account->uid);
   }
   else {
     // FEEDBACK_RESUBMISSION_TIMEOUT has expired

@@ -3567,17 +3567,22 @@ function _sbac_resource_is_recent_reviewers($resource_node, $account_uid) {
 /**
  * Is this a recent publisher?
  */
-function _sbac_resource_is_recent_publishers($resource_nid, $account_uid) {
+function _sbac_resource_is_recent_publishers($resource_node, $account_uid) {
   $result = & drupal_static(__FUNCTION__);
-  if (empty($result) || empty($result[$resource_nid]) || !isset($result[$resource_nid][$account_uid])) {
+  if (empty($result) || empty($result[$resource_node->nid]) || !isset($result[$resource_node->nid][$account_uid])) {
     $original_publishers = db_query("
                 SELECT
                     DISTINCT p.field_recent_publishers_target_id
                 FROM {field_data_field_recent_publishers} p
-                WHERE p.entity_id = :nid", array(':nid' => $resource_nid))->fetchCol();
-    $result[$resource_nid][$account_uid] = !empty($original_publishers) && in_array($account_uid, $original_publishers);
+                WHERE p.entity_id = :nid", array(':nid' => $resource_node->nid))->fetchCol();
+    if (_resource_access_node_has_state($resource_node, array('approved')) && count($original_publishers) < 1) {
+      $result[$resource_node->nid][$account_uid] = TRUE;
+    }
+    else {
+      $result[$resource_node->nid][$account_uid] = !empty($original_publishers) && in_array($account_uid, $original_publishers);
+    }
   }
-  return $result[$resource_nid][$account_uid];
+  return $result[$resource_node->nid][$account_uid];
 }
 
 /**
