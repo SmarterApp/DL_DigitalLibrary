@@ -1953,12 +1953,12 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
   if (isset($form['#node']->nid)) {
     if ($user->uid == $form['#node']->uid) {
       // what was the last feedback?
-      $last_feedback_type = db_query("SELECT type FROM eck_feedback WHERE node_id = :nid AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchField();
+      $last_feedback_type = db_query("SELECT type FROM eck_feedback WHERE node_id = :nid AND completed = 1 ORDER BY changed DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchField();
       switch ($last_feedback_type) {
         case 'post':
         case 'qc':
           if ($last_feedback_type == 'post') {
-            $post_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'post' AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
+            $post_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'post' AND completed = 1 ORDER BY changed DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
             $post_entities = entity_load('feedback', $post_id);
 
             if ($post_entities) {
