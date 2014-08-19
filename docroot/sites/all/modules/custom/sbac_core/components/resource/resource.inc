@@ -217,6 +217,13 @@ function _resource_access_view_quality_criteria($node, $account) {
       }
     }
   }
+  else {
+    // it is not in QC, but we'll allow the owner of the QC review to view (read-only) his review
+    $user_completed_qc = _resource_access_count_feedback($node->nid, 'qc', $account->uid, FALSE, 1);
+    if ($user_completed_qc) {
+      $access = TRUE;
+    }
+  }
   return $access;
 }
 
