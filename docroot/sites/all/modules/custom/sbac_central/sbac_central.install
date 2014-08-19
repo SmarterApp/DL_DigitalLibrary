@@ -1310,3 +1310,13 @@ function sbac_central_update_7090() {
   );
   module_enable($modules);
 }
+
+/**
+ * Disable Reroute Emails, SMTP modules (not used anymore since site does not send emails)
+ */
+function sbac_central_update_7091() {
+  $modules = array(
+    'reroute_email', 'smtp',
+  );
+  module_disable($modules);
+}
