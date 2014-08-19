@@ -214,21 +214,15 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
       if ($node) {
         $entity_node = entity_metadata_wrapper('node', $node);
         if ($entity_node) {
-          $resource_feedback = get_entities_for_resources($entity_node, 'feedback');
+          $resource_feedback = get_entities_for_resources($nid);
           $workbench_moderation = get_workbench_moderation_history($entity_node);
           $share_data = get_share_data_for_resource($entity_node);
-          $authors = NULL;
-          $reviewers = NULL;
-          list($authors, $reviewers) = get_users_for_resources_stats_report($entity_node, $resource_feedback);
-          ksort($resource_feedback);
           ksort($workbench_moderation);
 
           $data = array();
           $data['resource_node'] = $entity_node;
           $data['resource_feedback'] = $resource_feedback;
           $data['workbench_moderation'] = $workbench_moderation;
-          $data['authors'] = $authors;
-          $data['reviewers'] = $reviewers;
           $data['share'] = $share_data;
           get_counts_for_resource_stats($entity_node, $data);
           get_counts_for_flags($entity_node, $data);
@@ -275,8 +269,6 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
           }
           unset($field_key);
 
-          get_resource_review_output_for_csv($data, $row);
-
           fputcsv($handle, $row);
           unset($row);
           unset($data);
@@ -310,28 +302,6 @@ function sbac_report_resource_statistics_finished_batch($success, $results, $ope
     $directory .= $results['filename'];
     $directory_real_path = drupal_realpath($directory);
     $mime_type = file_get_mimetype($directory);
-
-    $review_count = $results['review_count'];
-    if ($review_count > 0) {
-      $handle = fopen($results['file'], 'r');
-      $data = fgetcsv($handle);
-      fclose($handle);
-
-      for ($i = 0; $i < $review_count - 1; $i++) {
-        array_push($data, 'Reviewer/Rater Name');
-        array_push($data, 'Reviewer/Rating Date');
-        array_push($data, 'Reviewer/Rating Title');
-        array_push($data, 'Reviewer/Rater Description');
-        array_push($data, 'Student Learning Rating');
-        array_push($data, 'Professional Development Rating');
-        array_push($data, 'Ease of Use Rating');
-        array_push($data, '"Appropriate For" Categories');
-      }
-
-      $handle = fopen($results['file'], 'r+');
-      fputcsv($handle, $data);
-      fclose($handle);
-    }
 
     global $user;
     $dir_file = new stdClass();
@@ -702,56 +672,41 @@ function fitler_resource_status($node, $statuses) {
  * @param $entity_type
  * @return array
  */
-function get_entities_for_resources($resource, $entity_type) {
-  $query = new EntityFieldQuery();
-  $entities = $query->entityCondition('entity_type', $entity_type)
-    ->propertyCondition('node_id', $resource->nid->value())
-    ->propertyCondition('completed', 1)
-    ->execute();
-
-  $wrappers = array();
-  if ($entities) {
-    $eids = array_keys($entities[$entity_type]);
-    $values = entity_load($entity_type, $eids);
-    foreach ($values as $value) {
-      if ($value->status === '0') {
-        continue;
-      }
-      $wrapper = entity_metadata_wrapper($entity_type, $value);
-      $node_id = $wrapper->node_id->value();
-      if ($wrapper and $node_id) {
-        if (!array_key_exists($node_id, $wrappers) or
-          is_null($wrappers[$node_id])
-        ) {
-          $wrappers[$node_id] = array();
-        }
-        if ($value->type == 'qc') {
-          if (!array_key_exists('qc1', $wrappers[$node_id])) {
-            $wrappers[$node_id]['qc1'] = $wrapper;
-          }
-          else {
-            if (!array_key_exists('qc2', $wrappers[$node_id])) {
-              $wrappers[$node_id]['qc2'] = $wrapper;
-            }
-            else {
-              $wrappers[$node_id]['qc3'] = $wrapper;
-            }
-          }
-        }
-        else {
-          if ($value->type == 'post') {
-            $wrappers[$node_id][$value->type] = $wrapper;
-          }
-          else {
-            if ($value->type == 'gate_keeper') {
-              $wrappers[$node_id][$value->type] = $wrapper;
-            }
-          }
-        }
-      }
-    }
-  }
-  return $wrappers;
+function get_entities_for_resources($nid) {
+  $query = db_select('eck_feedback', 'f');
+  $query->leftJoin('users', 'u', 'u.uid = f.uid');
+  $query->leftJoin('field_data_field_first_name', 'fn', 'fn.entity_id = u.uid AND fn.entity_type = \'user\'');
+  $query->leftJoin('field_data_field_last_name', 'ln', 'ln.entity_id = u.uid AND fn.entity_type = \'user\'');
+  $query->leftJoin('field_data_field_state', 's', 's.entity_id = u.uid AND s.entity_type = \'user\'');
+  $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
+  $query->leftJoin('field_data_field_rec_options', 'o', 'o.entity_id = f.id');
+  $query->leftJoin('field_data_field_rec_rationale', 'r', 'r.entity_id = f.id');
+  $query->leftJoin('field_data_field_posting_options', 'p', 'p.entity_id = f.node_id');
+  $query->leftJoin('field_data_field_to_contributor', 'c', 'c.entity_id = f.id AND c.entity_type = \'feedback\' AND c.bundle = \'post\'');
+  $query->leftJoin('field_data_field_to_reviewer_1', 'rv1', 'rv1.entity_id = f.id AND rv1.entity_type = \'feedback\' AND rv1.bundle = \'post\'');
+  $query->leftJoin('field_data_field_to_reviewer_2', 'rv2', 'rv2.entity_id = f.id AND rv2.entity_type = \'feedback\' AND rv2.bundle = \'post\'');
+  $query->leftJoin('field_data_field_to_reviewer_3', 'rv3', 'rv3.entity_id = f.id AND rv3.entity_type = \'feedback\' AND rv3.bundle = \'post\'');
+  $query->condition('f.node_id', $nid)
+    ->condition('f.status', 1)
+    ->condition('f.created', _sbac_resource_resubmit_timestamp($nid), '>');
+  $query->fields('u', array('mail'))
+    ->fields('f', array('status', 'completed', 'type'))
+    ->fields('o', array('field_rec_options_value'))
+    ->fields('r', array('field_rec_rationale_value'))
+    ->fields('p', array('field_posting_options_value'))
+    ->fields('c', array('field_to_contributor_value'))
+    ->fields('rv1', array('field_to_reviewer_1_value'))
+    ->fields('rv2', array('field_to_reviewer_2_value'))
+    ->fields('rv3', array('field_to_reviewer_3_value'))
+    ->fields('t', array('name'));
+  $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
+  $query->addExpression('FROM_UNIXTIME(f.changed, \'%c/%d/%Y\')', 'changed');
+  $query->addExpression('
+  CASE
+    WHEN f.met_criteria = 1 THEN \'Met all Criteria\'
+    WHEN f.met_criteria = 0 THEN \'Does not Meet all Criteria\'
+  END', 'met_criteria');
+  return $query->orderBy('f.changed', 'ASC')->execute()->fetchAll();
 }
 
 /**
@@ -968,10 +923,6 @@ function get_counts_for_resource_stats($node, &$data) {
           nid = :nid";
   $data['return_date'] = count_with_nodes_query($sql, $node, TRUE);
 
-  # Review cycle number
-  $sql = "SELECT nid, count(nid) as review_cycle FROM workbench_moderation_node_history where state = 'rejected' group by nid";
-  $data['review_cycle'] = count_with_nodes_query($sql, $node, FALSE);
-
   # Current student learning rating (average)
   $sql = "select n.nid, AVG(sl.field_student_learning_rating) as average from
             eck_review as er
@@ -1015,19 +966,19 @@ function get_counts_for_resource_stats($node, &$data) {
  */
 function get_counts_for_flags($node, &$data) {
   # Is Flagged
-  $sql = "SELECT ef.id FROM {eck_flag} ef WHERE ef.type = 'resource' AND ef.nid = :nid";
+  $sql = "SELECT ef.id FROM {eck_flag} ef WHERE ef.type = 'resource' AND ef.nid = :nid AND ef.resolved = 0";
   $data['is_flagged'] = count_with_nodes_query($sql, $node, TRUE);
 
   # Resource Flag Reason(s)
-  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'resource' AND ef.nid = :nid";
+  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'resource' AND ef.nid = :nid AND ef.resolved = 0";
   $data['resource_flag_reasons'] = count_with_nodes_query($sql, $node, TRUE, TRUE);
 
   # Has Flagged Reviews
-  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'review_end_use' AND ef.nid = :nid";
+  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'review_end_use' AND ef.nid = :nid AND ef.resolved = 0";
   $data['has_flagged_reviews'] = count_with_nodes_query($sql, $node, TRUE);
 
   # Resource Review Flag Reason(s)
-  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'review_end_use' AND ef.nid = :nid";
+  $sql = "SELECT ef.* FROM {eck_flag} ef WHERE ef.type = 'review_end_use' AND ef.nid = :nid AND ef.resolved = 0";
   $data['resource_review_flag_reasons'] = count_with_nodes_query($sql, $node, TRUE, TRUE);
 }
 
@@ -1367,38 +1318,6 @@ function get_resource_review_data($fieldkey, $data, $resource) {
 }
 
 /**
- * Puts the resource review output into the csv.
- *
- * @param $data
- * @param $row
- */
-function get_resource_review_output_for_csv(&$data, &$row) {
-  if (isset($data['review'])) {
-    foreach ($data['review'] as $eck_review_id => $eck_review) {
-      if ($eck_review) {
-        foreach ($eck_review as $key => $value) {
-          if ($key == 'appropriate_for_categories') {
-            $appropriate_for_categories = array();
-            foreach ($eck_review['appropriate_for_categories'] as $index => $term) {
-              $appropriate_for_categories[] = $term->name;
-            }
-            if ($appropriate_for_categories) {
-              $row[] = implode(',', $appropriate_for_categories);
-            }
-            else {
-              $row[] = '';
-            }
-          }
-          else {
-            $row[] = $value;
-          }
-        }
-      }
-    }
-  }
-}
-
-/**
  * Generates an absolute URL for the report generated.
  * @param  [type] $fieldkey [description]
  * @param  [type] $data     [description]
@@ -1408,6 +1327,216 @@ function get_resource_review_output_for_csv(&$data, &$row) {
 function get_node_url($fieldkey, $data, $resource) {
   $path = drupal_get_path_alias('node/' . $resource->nid->value());
   return url($path, array('absolute' => TRUE));
+}
+
+function sbac_report_get_resource_status($fieldkey, $data, $resource) {
+  $results = _sbac_resource_get_review_progress($resource->nid->value());
+  $result = $results->fetchAssoc();
+  if ($result) {
+    return $result['state'];
+  }
+  else {
+    return 'Draft';
+  }
+}
+
+function sbac_report_get_qc_info($fieldkey, $data, $resource) {
+  $current_qc = 1;
+  foreach ($data['resource_feedback'] as $feedback) {
+    if (!empty($fieldkey['type'])) {
+      if ($feedback->type == $fieldkey['type'] && 1 == $feedback->completed) {
+        if (!empty($fieldkey['qc_number']) && !empty($fieldkey['field'])) {
+          if ($fieldkey['qc_number'] == $current_qc) {
+            return $feedback->{$fieldkey['field']};
+          }
+        }
+        $current_qc++;
+      }
+    }
+  }
+}
+
+function sbac_report_get_total_reviews($fieldkey, $data, $resource){
+  return db_select('eck_review', 'r')
+    ->condition('r.node_id', $resource->nid->value())
+    ->fields('r', array('id'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+}
+
+function sbac_report_get_total_resource_flags($fieldkey, $data, $resource){
+  return db_select('eck_flag', 'f')
+    ->condition('f.type', 'resource')
+    ->condition('f.target_type', 'resource')
+    ->condition('f.nid', $resource->nid->value())
+    ->condition('f.resolved', 0)
+    ->fields('f', array('id'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+}
+
+function sbac_report_get_first_flag_date($fieldkey, $data, $resource){
+  $date = db_select('eck_flag', 'f')
+    ->condition('f.type', 'resource')
+    ->condition('f.target_type', 'resource')
+    ->condition('f.nid', $resource->nid->value())
+    ->condition('f.resolved', 0)
+    ->fields('f', array('created'))
+    ->orderBy('f.created', 'ASC')
+    ->range(0, 1)
+    ->execute()
+    ->fetchField();
+  if($date){
+    return date('m/d/y', $date);
+  }
+}
+
+function sbac_report_get_user_rating_flags($fieldkey, $data, $resource){
+  return db_select('eck_flag', 'f')
+    ->condition('f.type', 'review_end_use')
+    ->condition('f.target_type', 'review')
+    ->condition('f.nid', $resource->nid->value())
+    ->condition('f.resolved', 0)
+    ->fields('f', array('id'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+}
+
+function sbac_report_get_user_rating_flag_date($fieldkey, $data, $resource){
+  $date = db_select('eck_flag', 'f')
+    ->condition('f.type', 'review_end_use')
+    ->condition('f.target_type', 'review')
+    ->condition('f.nid', $resource->nid->value())
+    ->condition('f.resolved', 0)
+    ->fields('f', array('created'))
+    ->orderBy('f.created', 'ASC')
+    ->range(0, 1)
+    ->execute()
+    ->fetchField();
+  if($date){
+    return date('m/d/y', $date);
+  }
+}
+
+function sbac_report_get_average_rating($fieldkey, $data, $resource) {
+  if (!empty($fieldkey['type'])) {
+    $query = db_select('eck_review', 'r');
+    switch ($fieldkey['type']) {
+      case 'student_learning':
+        $query->leftJoin('field_data_field_student_learning', 'l', 'l.entity_id = r.id');
+        $query->addExpression('AVG(l.field_student_learning_rating)', 'rating');
+        break;
+      case 'professional_development':
+        $query->leftJoin('field_data_field_pro_dev', 'd', 'd.entity_id = r.id');
+        $query->addExpression('AVG(d.field_pro_dev_rating)', 'rating');
+        break;
+      case 'ease_of_use':
+        $query->leftJoin('field_data_field_ease_use', 'e', 'e.entity_id = r.id');
+        $query->addExpression('AVG(e.field_ease_use_rating)', 'rating');
+        break;
+    }
+    $query->condition('r.node_id', $resource->nid->value());
+    return $query->execute()->fetchField() * 4 / 100;
+  }
+}
+
+function sbac_report_get_publish_date($fieldkey, $data, $resource) {
+  if (_resource_access_node_has_state($resource->value(), array('published'))) {
+    $date = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'published')
+      ->condition('h.nid', $resource->nid->value())
+      ->fields('h', array('stamp'))
+      ->orderBy('h.stamp', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    if ($date) {
+      return date('m/d/y', $date);
+    }
+  }
+}
+
+
+function sbac_report_count_completed_reviews($fieldkey, $data, $resource) {
+  return _resource_access_count_feedback($resource->nid->value(), array('qc', 'gate_keeper', 'post'), FALSE, FALSE, 1);
+}
+
+function sbac_report_get_review_cycle($fieldkey, $data, $resource) {
+  return db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.nid', $resource->nid->value())
+    ->condition('h.state', 'rejected')
+    ->fields('h', array('hid'))
+    ->countQuery()
+    ->execute()
+    ->fetchField() + 1;
+}
+
+function sbac_report_get_submission_date($fieldkey, $data, $resource) {
+  $date = '';
+  $resubmit = _sbac_resource_resubmit_timestamp($resource->nid->value());
+  if ($resubmit) {
+    $date = date('m/d/y', $resubmit);
+  }
+  else {
+    $submit = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.from_state', 'draft')
+      ->condition('h.state', 'needs_review')
+      ->condition('h.nid', $resource->nid->value())
+      ->fields('h', array('stamp'))->execute()->fetchField();
+    if ($submit) {
+      $date = date('m/d/y', $submit);
+    }
+  }
+  return $date;
+}
+
+function sbac_report_get_clearance_forms($fieldkey, $data, $resource) {
+  $query = db_select('field_data_field_copyright_clearace_forms', 'forms');
+  $query->leftJoin('file_managed', 'file', 'forms.field_copyright_clearace_forms_fid = file.fid');
+  $query->condition('forms.entity_id', $resource->nid->value());
+  $query->fields('file', array('filename'));
+  $results = $query->orderBy('file.timestamp', 'ASC')->execute()->fetchCol();
+  return implode(', ', $results);
+}
+
+function sbac_report_get_materials($fieldkey, $data, $resource) {
+  $files = array();
+  $materials = db_select('eck_media', 'm')->condition('m.nid', $resource->nid->value())->fields('m', array('filename', 'embed_url'))->execute()->fetchAll();
+  foreach ($materials as $file) {
+    if (!empty($file->embed_url)) {
+      $type = '';
+      if (strpos($file->embed_url, 'schooltube') !== FALSE) {
+        $type = 'SchoolTube';
+      }
+      elseif (strpos($file->embed_url, 'teachertube') !== FALSE) {
+        $type = 'TeacherTube';
+      }
+      elseif (strpos($file->embed_url, 'slideshare') !== FALSE) {
+        $type = 'Slideshare';
+      }
+      elseif (strpos($file->embed_url, 'youtube') !== FALSE) {
+        $type = 'YouTube';
+      }
+      elseif (strpos($file->embed_url, 'vimeo') !== FALSE) {
+        $type = 'Vimeo';
+      }
+      if ($type != '') {
+        $type .= ': ';
+      }
+      $files[] = $type . $file->embed_url;
+    }
+    elseif (!empty($file->filename)) {
+      $files[] = $file->filename;
+    }
+  }
+  return implode(', ', $files);
+}
+
+function sbac_report_get_contributor_email($fieldkey, $data, $resource) {
+  return $resource->author->mail->value();
 }
 
 /**
@@ -1422,283 +1551,10 @@ function set_report_columns() {
     array(
       'node_schema' => array( // sheet 1
         'fieldkeys' => array( // row schema definition of the fields.
-          array(
-            '',
-            'URL',
-            'function' => 'get_node_url'
-          ),
-          array('field_publisher', 'Owner'),
-          array('field_author', 'Author'),
-          array('field_alt_body', 'Resource Summary'),
-          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
-          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
-          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
-          array('field_learning_goals', 'Learning Goal'),
-          array('field_success_criteria', 'Success Criteria'),
-          array('field_supporting_evidence', 'Supporting Evidence'),
-          array('field_principles', 'Principles Literature or Research'),
-          array('field_license', 'Specific License', 'accessor' => 'label'),
-          array('field_license_secondary', 'Secondary License', 'accessor' => 'label'),
-          array(
-            'foreign',
-            'License URL',
-            'field' => 'description',
-            'foreignkey' => array('field_license', '', 'accessor' => 'value'),
-          ),
-          array('field_student_agency', 'Student Engagement in the Formative Process'),
-          // property keys:
+          array('', 'URL', 'function' => 'get_node_url'),
           array('title', 'Title'),
-          //title
-          array('created', 'Contribution Date', 'fieldtype' => 'date'),
-          // foreign keys:
-          array('field_attributes', 'Attribute of Formative Assessment Process'),
-          array('field_focus', 'Resource Type'),
-          array(
-            'number_uploaded',
-            'Number of Uploaded Materials',
-            'datasource' => 'count_uploaded_materials',
-            'not_wrapper' => TRUE
-          ),
-          // gk
-
-          array('field_grades', 'Grade(s)'),
-          array('field_subject', 'Subjects and Domains'),
-          array('field_intended_end_user', 'Intended End User(s)'),
-          array('field_intended_student', 'Intended Student Population(s)'),
-          array('field_geographical_settings', 'Geographic Setting(s)'),
-          array('field_smarter_balanced_keyword', 'Module Type'),
-          array('field_digital_media_type', 'Media Type(s)'),
-          array('field_educational_use', 'Educational Use'),
-          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
-          array('field_alignment_term', 'Common Core State Standards', 'accessor' => 'label'),
-          // non-wrapper fields:
-          array('state', 'Status', 'datasource' => 'workbench_moderation', 'path' => array('state' => 'class',),),
-          // Gate Keeper
-          array(
-            'created',
-            'Gate-Keeper Approval Date',
-            'datasource' => 'resource_feedback',
-            'index' => 'gate_keeper',
-            'fieldtype' => 'date',
-          ),
-          // gk
-          array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date', 'not_wrapper' => TRUE),
-          // gk
-          // QC 1, 2,3
-          array(
-            'created',
-            'QC Review 1 Submission Date',
-            'fieldtype' => 'date',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc1'
-          ),
-          array(
-            'field_rec_options',
-            'QC Review 1 Recommendation',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc1',
-            'accessor' => 'label'
-          ),
-          array(
-            'field_rec_rationale',
-            'QC Review 1 Recommendation Rationale',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc1'
-          ),
-          array(
-            'created',
-            'QC Review 2 Submission Date',
-            'fieldtype' => 'date',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc2'
-          ),
-          array(
-            'field_rec_options',
-            'QC Review 2 Recommendation',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc2',
-            'accessor' => 'label'
-          ),
-          array(
-            'field_rec_rationale',
-            'QC Review 2 Recommendation Rationale',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc2'
-          ),
-          array(
-            'created',
-            'QC Review 3 Submission Date',
-            'fieldtype' => 'date',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc3'
-          ),
-          array(
-            'field_rec_options',
-            'QC Review 3 Recommendation',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc3',
-            'accessor' => 'label'
-          ),
-          array(
-            'field_rec_rationale',
-            'QC Review 3 Recommendation Rationale',
-            'datasource' => 'resource_feedback',
-            'index' => 'qc3'
-          ),
-          // poster
-          array(
-            'created',
-            'Poster Review Submission Date',
-            'fieldtype' => 'date',
-            'datasource' => 'resource_feedback',
-            'index' => 'post'
-          ),
-          array(
-            'field_to_reviewer_1',
-            'Poster Comment to Reviewer 1',
-            'datasource' => 'resource_feedback',
-            'index' => 'post'
-          ),
-          array(
-            'field_to_reviewer_2',
-            'Poster Comment to Reviewer 2',
-            'datasource' => 'resource_feedback',
-            'index' => 'post'
-          ),
-          array(
-            'field_to_reviewer_3',
-            'Poster Comment to Reviewer 3',
-            'datasource' => 'resource_feedback',
-            'index' => 'post'
-          ),
-          array(
-            'field_to_contributor',
-            'Poster Comment to Contributor',
-            'datasource' => 'resource_feedback',
-            'index' => 'post'
-          ),
-          array(
-            'changed',
-            'Post Date',
-            'fieldtype' => 'date',
-            'datasource' => 'resource_feedback',
-            'index' => 'post'
-          ),
-          array(
-            '',
-            'Removed Date',
-            'fieldtype' => 'date',
-            'datasource' => 'workbench_moderation',
-            'path' => array('removed_date' => 'class')
-          ),
-          array(
-            '',
-            'Removed By: User\'s Name',
-            'datasource' => 'workbench_moderation',
-            'path' => array('removed_name' => 'class')
-
-          ),
-          array(
-            '',
-            'Removed By: User\'s Email',
-            'datasource' => 'workbench_moderation',
-            'path' => array('removed_mail' => 'class')
-          ),
-          array(
-            '',
-            'Reason for Removal',
-            'datasource' => 'workbench_moderation',
-            'path' => array('removed_comment' => 'class')
-          ),
-          // users info
-          array(
-            'foreign',
-            'Reviewer 1 Name',
-            'field' => array(
-              array('field_first_name', 'und', 0, 'value',),
-              array('field_last_name', 'und', 0, 'value',),
-            ),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc1',),
-          ),
-          array(
-            'foreign',
-            'Reviewer 1 State',
-            'field' => 'name',
-            'foreignkey' => array(
-              'uid',
-              '',
-              'datasource' => 'resource_feedback',
-              'index' => 'qc1',
-              'wrapper' => 'user'
-            ),
-            'foreigndata' => array('field_state'),
-          ),
-          array(
-            'foreign',
-            'Reviewer 2 Name',
-            'field' => array(
-              array('field_first_name', 'und', 0, 'value',),
-              array('field_last_name', 'und', 0, 'value',),
-            ),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc2',),
-          ),
-          array(
-            'foreign',
-            'Reviewer 2 State',
-            'field' => 'name',
-            'foreignkey' => array(
-              'uid',
-              '',
-              'datasource' => 'resource_feedback',
-              'index' => 'qc2',
-              'wrapper' => 'user'
-            ),
-            'foreigndata' => array('field_state'),
-          ),
-          array(
-            'foreign',
-            'Reviewer 3 Name',
-            'field' => array(
-              array('field_first_name', 'und', 0, 'value',),
-              array('field_last_name', 'und', 0, 'value',),
-            ),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'qc3',),
-          ),
-          array(
-            'foreign',
-            'Reviewer 3 State',
-            'field' => 'name',
-            'foreignkey' => array(
-              'uid',
-              '',
-              'datasource' => 'resource_feedback',
-              'index' => 'qc3',
-              'wrapper' => 'user'
-            ),
-            'foreigndata' => array('field_state'),
-          ),
-          array(
-            'foreign',
-            'Poster Name',
-            'field' => array(
-              array('field_first_name', 'und', 0, 'value',),
-              array('field_last_name', 'und', 0, 'value',),
-            ),
-            'foreignkey' => array('uid', '', 'datasource' => 'resource_feedback', 'index' => 'post',),
-          ),
-          array(
-            'foreign',
-            'Poster State',
-            'field' => 'name',
-            'foreignkey' => array(
-              'uid',
-              '',
-              'datasource' => 'resource_feedback',
-              'index' => 'post',
-              'wrapper' => 'user'
-            ),
-            'foreigndata' => array('field_state'),
-          ),
+          array('created', 'Create Date', 'fieldtype' => 'date'),
+          array('', 'Status', 'function' => 'sbac_report_get_resource_status'),
           array(
             'author',
             'Contributor Name',
@@ -1707,20 +1563,15 @@ function set_report_columns() {
               array('field_last_name', 'und', 0, 'value',),
             ),
           ),
-          array(
-            'field_state',
-            'Contributor State',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
-          array(
-            'roles',
-            'Contributor Roles',
-            'accessor' => 'label',
-            'foreignkey' => array('author', 'wrapper' => 'user',),
-          ),
+          array('', 'Contributor Email Address', 'function' => 'sbac_report_get_contributor_email'),
           array(
             'field_position',
             'Contributor Title',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array(
+            'field_state',
+            'Contributor State',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
           array(
@@ -1743,58 +1594,102 @@ function set_report_columns() {
             'Contributor Student Population(s)',
             'foreignkey' => array('author', 'wrapper' => 'user',),
           ),
-          array('review_cycle', 'Review Cycle Number', 'datasource' => 'review_cycle', 'not_wrapper' => TRUE),
+          array(
+            'roles',
+            'Contributor Roles',
+            'accessor' => 'label',
+            'foreignkey' => array('author', 'wrapper' => 'user',),
+          ),
+          array('field_focus', 'Resource Type'),
+          array('field_intended_end_user', 'Intended End User(s)'),
+          array('field_attributes', 'Attribute of Formative Assessment Process'),
+          array('field_connection_to_fap', 'Specific Connection to the Formative Assessment Process'),
+          array('field_student_agency', 'Student Engagement in the Formative Process'),
+          array('field_alt_body', 'Resource Summary'),
+          array('', 'Materials', 'function' => 'sbac_report_get_materials'),
+          array('field_author', 'Author'),
+          array('field_publisher', 'Owner'),
+          array('field_license', 'Specific License', 'accessor' => 'label'),
+          array(
+            'foreign',
+            'License URL',
+            'field' => 'description',
+            'foreignkey' => array('field_license', '', 'accessor' => 'value'),
+          ),
+          array('', 'Copyright Clearance Forms', 'function' => 'sbac_report_get_clearance_forms'),
+          array('field_subject', 'Subjects and Domains'),
+          array('field_grades', 'Grade(s)'),
+          array('field_alignment_term', 'Common Core State Standards', 'accessor' => 'label'),
+          array('field_connection_to_ccss', 'Specific Connection to the Common Core State Standards'),
+          array('field_learning_goals', 'Learning Goal'),
+          array('field_success_criteria', 'Success Criteria'),
+          array('field_contexts', 'Context(s) Within Which the Resource Could be Used'),
+          array('field_supporting_evidence', 'Supporting Evidence'),
+          array('field_principles', 'Principles Literature or Research'),
+          array('field_digital_media_type', 'Media Type(s)'),
+          array('field_intended_student', 'Intended Student Population(s)'),
+          array('field_geographical_settings', 'Geographic Setting(s)'),
+          array('field_educational_use', 'Educational Use'),
+          array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
+          array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
+          array('', 'Submission Date', 'function' => 'sbac_report_get_submission_date'),
+          array('', 'Review Cycle Number', 'function' => 'sbac_report_get_review_cycle'),
+          array('', 'Total Reviews Completed', 'function' => 'sbac_report_count_completed_reviews'),
+          array('', 'GK Reviewer Name', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'reviewer_name', 'type' => 'gate_keeper'),
+          array('', 'GK Reviewer Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'mail', 'type' => 'gate_keeper'),
+          array('', 'GK Reviewer State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'name', 'type' => 'gate_keeper'),
+          array('', 'GK Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'changed', 'type' => 'gate_keeper'),
+          array('', 'GK Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'met_criteria', 'type' => 'gate_keeper'),
+          array('', 'QC 1: Reviewer Name', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'reviewer_name', 'type' => 'qc'),
+          array('', 'QC 1: Reviewer Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'mail', 'type' => 'qc'),
+          array('', 'QC 1: Reviewer State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'name', 'type' => 'qc'),
+          array('', 'QC 1: Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'changed', 'type' => 'qc'),
+          array('', 'QC 1: Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_rec_options_value', 'type' => 'qc'),
+          array('', 'QC 1: Recommendation Rationale', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_rec_rationale_value', 'type' => 'qc'),
+          array('', 'QC 2: Reviewer Name', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 2, 'field' => 'reviewer_name', 'type' => 'qc'),
+          array('', 'QC 2: Reviewer Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 2, 'field' => 'mail', 'type' => 'qc'),
+          array('', 'QC 2: Reviewer State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 2, 'field' => 'name', 'type' => 'qc'),
+          array('', 'QC 2: Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 2, 'field' => 'changed', 'type' => 'qc'),
+          array('', 'QC 2: Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 2, 'field' => 'field_rec_options_value', 'type' => 'qc'),
+          array('', 'QC 2: Recommendation Rationale', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 2, 'field' => 'field_rec_rationale_value', 'type' => 'qc'),
+          array('', 'QC 3: Reviewer Name', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 3, 'field' => 'reviewer_name', 'type' => 'qc'),
+          array('', 'QC 3: Reviewer Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 3, 'field' => 'mail', 'type' => 'qc'),
+          array('', 'QC 3: Reviewer State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 3, 'field' => 'name', 'type' => 'qc'),
+          array('', 'QC 3: Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 3, 'field' => 'changed', 'type' => 'qc'),
+          array('', 'QC 3: Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 3, 'field' => 'field_rec_options_value', 'type' => 'qc'),
+          array('', 'QC 3: Recommendation Rationale', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 3, 'field' => 'field_rec_rationale_value', 'type' => 'qc'),
+          array('', 'QC Poster Name', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'reviewer_name', 'type' => 'post'),
+          array('', 'QC Poster Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'mail', 'type' => 'post'),
+          array('', 'QC Poster State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'name', 'type' => 'post'),
+          array('', 'QC Poster Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'changed', 'type' => 'post'),
+          array('', 'QC Poster Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_posting_options_value', 'type' => 'post'),
+          array('', 'QC Poster Comment to Contributor', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_contributor_value', 'type' => 'post'),
+          array('', 'QC Poster Comment to Reviewer 1', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_1_value', 'type' => 'post'),
+          array('', 'QC Poster Comment to Reviewer 2', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_2_value', 'type' => 'post'),
+          array('', 'QC Poster Comment to Reviewer 3', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_3_value', 'type' => 'post'),
+          array('stamp', 'Return Date', 'datasource' => 'return_date', 'fieldtype' => 'date', 'not_wrapper' => TRUE),
+          array('', 'Post or Post With Distinction Date', 'function' => 'sbac_report_get_publish_date'),
           array('field_total_views', 'Views'),
           array('field_unique_views', 'Unique Views'),
           array('field_asset_downloads', 'Downloads'),
           array('field_unique_downloads', 'Unique Downloads'),
-          array(
-            '',
-            'Total Number of Tag(s)',
-            'function' => 'get_total_tags'
-          ),
           array('permanent_link_type', 'Type of Permanent Link', 'function' => 'get_share_data', 'field' => 'share'),
           array('permanent_links_copied', 'Permanent Links Copied', 'function' => 'get_share_data', 'field' => 'share'),
           array('temp_public_link_status', 'Temporary Public Link Status', 'function' => 'get_share_data', 'field' => 'share'),
           array('temp_public_link_expiration', 'Temporary Public Link Expirartion', 'function' => 'get_share_data', 'field' => 'share'),
           array('temp_public_links_generated', 'Temporary Public Links Generated', 'function' => 'get_share_data', 'field' => 'share'),
           array('temp_public_link_accesses', 'Temporary Public Link Accesses', 'function' => 'get_share_data', 'field' => 'share'),
-          array('is_flagged', 'Is Flagged', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('has_flagged_reviews', 'Has Flagged Reviews', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          // gk
-          array(
-            'average',
-            'Current Student Learning Rating',
-            'datasource' => 'student_learning_rating_average',
-            'not_wrapper' => TRUE
-          ),
-          // gk
-          array(
-            'average',
-            'Current Professional Development Rating',
-            'datasource' => 'pro_dev_rating_average',
-            'not_wrapper' => TRUE
-          ),
-          // gk
-          array(
-            'average',
-            'Current Ease of Use Rating',
-            'datasource' => 'ease_use_rating_average',
-            'not_wrapper' => TRUE
-          ),
-          // gk
+          array('', 'Current Student Learning Rating', 'function' => 'sbac_report_get_average_rating', 'type' => 'student_learning'),
+          array('', 'Current Professional Development Rating', 'function' => 'sbac_report_get_average_rating', 'type' => 'professional_development'),
+          array('', 'Current Ease of Use Rating', 'function' => 'sbac_report_get_average_rating', 'type' => 'ease_of_use'),
           array('top_three_appropriate_for_categories', 'Current Top Three "Appropriate For" Categories', 'function' => 'get_resource_review_data', 'field' => 'review'),
-          array('total_reviews', 'Total Reviews', 'datasource' => 'total_reviews_per_node', 'not_wrapper' => TRUE),
-          array('name', 'Reviewer/Rater Name', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
-          array('date', 'Reviewer/Rating Date', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
-          array('title', 'Reviewer/Rating Title', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
-          array('description', 'Reviewer/Rating Description', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
-          array('student_learning_rating', 'Student Learning Rating', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
-          array('professional_development_rating', 'Professional Development Rating', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
-          array('ease_of_use_rating', 'Ease of Use Rating', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
-          array('appropriate_for_categories', '"Appropriate For" Categories', 'function' => 'get_resource_review_data', 'field' => 'review', 'skip' => TRUE),
+          array('', 'Total # of Ratings', 'function'=>'sbac_report_get_total_reviews'),
+          array('', 'Number of Resource Flags', 'function'=>'sbac_report_get_total_resource_flags'),
+          array('', 'First Resource Flag Date', 'function'=>'sbac_report_get_first_flag_date'),
+          array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
+          array('', 'Number of Resource User Ratings Flagged', 'function'=>'sbac_report_get_user_rating_flags'),
+          array('', 'Date of Resource User Rating Flag', 'function'=>'sbac_report_get_user_rating_flag_date'),
+          array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
         ),
       ),
     );
