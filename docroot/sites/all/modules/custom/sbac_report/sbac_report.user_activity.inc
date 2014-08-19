@@ -28,16 +28,6 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
   );
   $user_group_options = sbac_report_user_group_options();
 
-  $form['user_group_dropdown'] = array(
-    '#type' => 'select',
-    '#title' => t('Choose User Groups'),
-    '#options' => $user_group_options,
-    '#attributes' => array('class' => array('chosen-widget')),
-    '#multiple' => TRUE,
-    '#default_value' => sbac_report_get_default_usergroup(),
-    '#required' => TRUE,
-  );
-
   $options = array(
     1 => 'All',
     2 => 'Neither SNE nor SLT',
@@ -45,15 +35,29 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     4 => 'SLT members only',
     5 => 'Combination SLT/SNE members',
   );
-  $form['sne_slt_filter'] = array(
+
+  $user_group_options_combination_array = array_merge($user_group_options, $options);
+
+  $form['user_group_dropdown'] = array(
     '#type' => 'select',
-    '#title' => t('Filter for SNE or SLT Members'),
-    '#options' => $options,
-    '#multiple' => TRUE,
+    '#title' => t('Choose User Groups'),
+    '#options' => $user_group_options_combination_array,
     '#attributes' => array('class' => array('chosen-widget')),
-    '#default_value' => sbac_report_get_default_sne_slt(),
+    '#multiple' => TRUE,
+    '#default_value' => sbac_report_get_default_usergroup(),
     '#required' => TRUE,
   );
+
+
+  // $form['sne_slt_filter'] = array(
+  //   '#type' => 'select',
+  //   '#title' => t('Filter for SNE or SLT Members'),
+  //   '#options' => $options,
+  //   '#multiple' => TRUE,
+  //   '#attributes' => array('class' => array('chosen-widget')),
+  //   '#default_value' => sbac_report_get_default_sne_slt(),
+  //   '#required' => TRUE,
+  // );
 
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
@@ -61,8 +65,8 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
   // If there was no date range stored in SESSION.
   // Default to the "Last 30 Days".
   if (empty($session_date_range) || $session_date_range = $date_options['Cumulative to date']) {
-    $session_date_range = $date_options['Last 30 Days'];
-    $date_display = t('Last 30 Days');
+    $session_date_range = $date_options['Cumulative to date'];
+    $date_display = t('Cumulative to date');
   }
   // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
   elseif ($key = array_search($session_date_range, $date_options)) {
