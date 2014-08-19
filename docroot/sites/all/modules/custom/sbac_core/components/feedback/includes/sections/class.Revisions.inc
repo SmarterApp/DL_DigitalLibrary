@@ -224,7 +224,7 @@ class Revisions extends Base {
       ->propertyCondition('current', 0)
       ->propertyCondition('archived', 1)
       ->propertyCondition('node_id', $this->_node->nid)
-      ->propertyOrderBy('id', 'ASC')
+      ->propertyOrderBy('changed', 'DESC')
       ->range(0, $num)
       ->execute();
     return $results['feedback'];
