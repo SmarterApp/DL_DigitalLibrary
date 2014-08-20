@@ -1966,7 +1966,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND completed = 1 AND changed > IFNULL((SELECT h.stamp FROM {workbench_moderation_node_history} h WHERE h.state = 'rejected' AND h.nid = :nid ORDER BY h.stamp DESC LIMIT 1, 1), 0) ORDER BY changed ASC LIMIT 0, 3", array(':nid' => $form['#node']->nid, ':created' => _sbac_resource_resubmit_timestamp($form['#node']->nid)))->fetchCol();
+          $qc_ids = db_query("SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND completed = 1 AND changed > IFNULL((SELECT max(h.stamp) FROM {workbench_moderation_node_history} h WHERE h.state = 'needs_review' AND h.nid = :nid), 0) ORDER BY changed ASC LIMIT 0, 3", array(':nid' => $form['#node']->nid, ':created' => _sbac_resource_resubmit_timestamp($form['#node']->nid)))->fetchCol();
 
           // check for QC feedbacks first
           $qc_entities = entity_load('feedback', $qc_ids);
