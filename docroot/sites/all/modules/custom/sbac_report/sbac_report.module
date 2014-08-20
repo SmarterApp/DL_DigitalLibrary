@@ -13,6 +13,7 @@
 define('SBAC_REPORT_TAB_INDIVIDUAL', 'individual');
 define('SBAC_REPORT_TAB_USER', 'user_activity');
 define('SBAC_REPORT_TAB_STATES', 'resource_states');
+define('SBAC_REPORT_TAB_FORUM', 'sbac_report_tab_forum');
 define('SBAC_REPORT_FILTER_ERROR', t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.'));
 define('SBAC_REPORT_RESOURCE_DETAILS_PAGER', 'sbac_report_resource_details_pager');
 
@@ -21,6 +22,7 @@ include_once('sbac_report.features.inc');
 include_once('sbac_report.individual.inc');
 include_once('sbac_report.user_activity.inc');
 include_once('sbac_report.resource_stats.inc');
+include_once('sbac_report.forum_stats.inc');
 include_once 'sbac_report.gk.inc';
 include_once 'sbac_report.rr.inc';
 include_once 'sbac_report.preprocess.inc';
@@ -260,6 +262,14 @@ function sbac_report_theme($existing, $type, $theme, $path) {
 
   $themes['sbac_csv_report_resource_stats'] = array(
     'template' => 'templates/sbac-csv-report-resource-stats',
+    'path' => $module_path,
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_csv_report_forum_stats'] = array(
+    'template' => 'templates/sbac-csv-report-forum-stats',
     'path' => $module_path,
     'preprocess functions' => array(
       'template_preprocess',
