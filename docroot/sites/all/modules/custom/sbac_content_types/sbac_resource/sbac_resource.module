@@ -2916,7 +2916,7 @@ function sbac_resource_node_access($node, $op, $account) {
 function sbac_resource_determine_access($node, $account, $op) {
   // state access
   $access = _sbac_resource_determine_state_access($node, $account);
-  if (($access || isset($_SERVER['HTTP_REFERER'])) && strpos($_SERVER['HTTP_REFERER'], 'resource-review') !== FALSE) {
+  if ($access) {
     // workflow access
     $access = _sbac_resource_determine_workflow_access($node, $account, $op);
   }
