@@ -2975,15 +2975,8 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
       case 'being_reviewed':
         // author has view
         // resource reviewer has view/edit
-        $all_condition = db_and()->condition('s.state', array('gk_needs_review', 'qc_needs_review'), 'IN')->condition('s.uid', 0);
-        $user_condition = db_and()->condition('s.state', array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed'), 'IN')->condition('s.uid', $account->uid);
-        $query->condition(db_or()->condition($all_condition)->condition($user_condition));
-        $result = $query->execute();
-        $count = $result->rowCount();
-        if ($count) {
-          if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
-            $access = TRUE;
-          }
+        if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
         }
         if ($account->uid == $node->uid && $op == 'view') {
           $access = TRUE;

@@ -143,9 +143,11 @@ function _resource_access_view_gate_keeper($node, $account) {
     }
     else {
       // it is not in gate keeping, but we'll allow the owner of the GK review to view (read-only) his review
-      $user_completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, FALSE, 1);
-      if ($user_completed_gk) {
-        $access = TRUE;
+      if (!_resource_access_node_has_state($node, array('published'))) {
+        $user_completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, FALSE, 1);
+        if ($user_completed_gk) {
+          $access = TRUE;
+        }
       }
     }
   }
@@ -219,9 +221,11 @@ function _resource_access_view_quality_criteria($node, $account) {
   }
   else {
     // it is not in QC, but we'll allow the owner of the QC review to view (read-only) his review
-    $user_completed_qc = _resource_access_count_feedback($node->nid, 'qc', $account->uid, FALSE, 1);
-    if ($user_completed_qc) {
-      $access = TRUE;
+    if (!_resource_access_node_has_state($node, array('published'))) {
+      $user_completed_qc = _resource_access_count_feedback($node->nid, 'qc', $account->uid, FALSE, 1);
+      if ($user_completed_qc) {
+        $access = TRUE;
+      }
     }
   }
   return $access;
