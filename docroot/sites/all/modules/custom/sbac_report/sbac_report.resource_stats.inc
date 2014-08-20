@@ -377,18 +377,23 @@ function sbac_report_default_resource_type_option($form_state = array()) {
 function sbac_report_resource_status_options() {
   // not a taxonomy term, these values come from the workbench moderation states.
   //$sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
-  $sql = "SELECT name AS tid, label AS name FROM workbench_moderation_states WHERE name <> 'creation'";
+  $sql = "SELECT name AS tid, label AS name FROM workbench_moderation_states WHERE name <> 'approved' AND name <> 'being_reviewed' AND name <> 'creation' AND name <> 'needs_review' AND name <> 'published' AND name <> 'removed'";
   $options = query_taxonomy_term($sql);
-  if (isset($options['published'])) {
-    $options['published'] = 'Posted';
-  }
+  // if (isset($options['published'])) {
+  //   $options['published'] = 'Posted';
+  // }
   if (isset($options['rejected'])) {
     $options['rejected'] = 'Returned';
   }
-  if (isset($options['approved'])) {
-    $options['approved'] = 'Needs Posting';
-  }
-  $options['posted_distinction'] = 'Posted with Distinction';
+  // if (isset($options['approved'])) {
+  //   $options['approved'] = 'Needs Posting';
+  // }
+  //$options['posted_distinction'] = 'Posted with Distinction';
+  $options['gate_keeping_review'] = 'Gate-Keeping Review';
+  $options['quality_criteria_review_1'] = 'Quality Criteria Review 1';
+  $options['quality_criteria_review_2'] = 'Quality Criteria Review 2';
+  $options['quality_criteria_review_3'] = 'Quality Criteria Review 3';
+  $options['arbitration_review'] = 'Arbitration Review';
   asort($options);
   return $options;
 }
