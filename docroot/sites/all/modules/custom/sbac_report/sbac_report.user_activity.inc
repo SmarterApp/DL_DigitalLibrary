@@ -29,11 +29,8 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
   $user_group_options = sbac_report_user_group_options();
 
   $options = array(
-    1 => 'All',
-    2 => 'Neither SNE nor SLT',
-    3 => 'SNE members only',
-    4 => 'SLT members only',
-    5 => 'Combination SLT/SNE members',
+    1 => 'SNE members only',
+    2 => 'SLT members only',
   );
 
   $user_group_options_combination_array = array_merge($user_group_options, $options);
@@ -314,25 +311,16 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
   $sql .= "WHERE ur.rid IN ($user_groups) ";
 
   if (!$look_for_all_users) {
-    if ($look_for_both_sne_and_slt) { // both
-      $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 1 ";
+    if ($look_for_slt) { // slt only.
+      $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
     }
     else {
-      if ($look_for_slt) { // slt only.
-        $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
-      }
-      else {
-        if ($look_for_sne) { // sne only.
-          $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
-        }
-        else {
-          if ($look_for_neither) { // niether.
-            $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 0 ";
-          }
-        }
+      if ($look_for_sne) { // sne only.
+        $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
       }
     }
   }
+  
 
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
