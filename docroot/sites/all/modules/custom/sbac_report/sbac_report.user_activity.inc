@@ -29,8 +29,8 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
   $user_group_options = sbac_report_user_group_options();
 
   $options = array(
-    1 => 'SNE members only',
-    2 => 'SLT members only',
+    1 => 'SNE members',
+    2 => 'SLT members',
   );
 
   $user_group_options_combination_array = array_merge($user_group_options, $options);
@@ -44,17 +44,6 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#default_value' => sbac_report_get_default_usergroup(),
     '#required' => TRUE,
   );
-
-
-  // $form['sne_slt_filter'] = array(
-  //   '#type' => 'select',
-  //   '#title' => t('Filter for SNE or SLT Members'),
-  //   '#options' => $options,
-  //   '#multiple' => TRUE,
-  //   '#attributes' => array('class' => array('chosen-widget')),
-  //   '#default_value' => sbac_report_get_default_sne_slt(),
-  //   '#required' => TRUE,
-  // );
 
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
@@ -113,12 +102,10 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     $_SESSION['sbac_report']['state']['tid'] = $form_state['values']['state'];
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
-    $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne_slt_filter'];
   }
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range1', 'range');
   $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
-  $sne_filter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
   if (count($user_groups) == 0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
@@ -126,7 +113,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     return; // report did not contain any data.
   }
 
-  $users = get_users_for_user_groups($sne_filter, $state_tid, $user_groups);
+  $users = get_users_for_user_groups($state_tid, $user_groups);
   if ($users) {
     batch_set(array(
         'title' => t('User Activity Report'),
@@ -270,7 +257,7 @@ function sbac_report_user_activity_finished_batch($success, $results, $operation
  * properly with Drupals perpared statement support.
  *
  */
-function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
+function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   // look for the aggregated admins option "admins"
   if (array_key_exists(1, $user_groups_ids)) {
     // get the admins:
@@ -294,33 +281,40 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
     }
   }
 
-  $user_groups = implode(',', $user_groups_ids);
-  $look_for_both_sne_and_slt = in_array(5, $sne_filter);
-  $look_for_slt = in_array(4, $sne_filter);
-  $look_for_sne = in_array(3, $sne_filter);
-  $look_for_neither = in_array(2, $sne_filter);
-  $look_for_all_users = in_array(1, $sne_filter);
+  $slt_filter = FALSE;
+  $sne_filter = FALSE;
+  if (in_array(11, $user_groups_ids)) { // 11 is SNE
+    $sne_filter = $user_groups_ids[11];
+    unset($user_groups_ids[11]);
+  }
+  if (in_array(12, $user_groups_ids)) { // 12 is SLT
+    $slt_filter = $user_groups_ids[12];
+    unset($user_groups_ids[12]);
+  }
 
+  $user_groups = implode(',', $user_groups_ids);
   $sql  = "SELECT u.uid FROM {users} AS u ";
   $sql .= "JOIN {users_roles} AS ur ON u.uid = ur.uid ";
-  if (!$look_for_all_users) {
+  if ($sne_filter) {
     $sql .= "JOIN {field_data_field_sne_member} AS sne ON u.uid = sne.entity_id ";
+  }
+  if ($slt_filter) {
     $sql .= "JOIN {field_data_field_slt_member} AS slt ON u.uid = slt.entity_id ";
   }
   $sql .= "JOIN {field_data_field_state} AS state ON u.uid = state.entity_id ";
-  $sql .= "WHERE ur.rid IN ($user_groups) ";
-
-  if (!$look_for_all_users) {
-    if ($look_for_slt) { // slt only.
-      $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
-    }
-    else {
-      if ($look_for_sne) { // sne only.
-        $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
-      }
-    }
+  $sql .= "WHERE ";
+  $and = '';
+  if ($user_groups) {
+    $sql .= "ur.rid IN ($user_groups) ";
+    $and = 'AND';
   }
-  
+  if ($sne_filter) {
+    $sql .= $and . " sne.field_sne_member_value = 1 ";
+    $and = 'AND';
+  }
+  if ($slt_filter) {
+    $sql .= $and . " slt.field_slt_member_value = 1 ";
+  }
 
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
@@ -796,11 +790,10 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
  * and by state, then gets the user activty statistics and legal terms of service data, then calls the routine
  * to create the report from the data.
  */
-function build_activity_report_csv($state_tid, $date_range, &$usergroups, $sne_slt_filter) {
+function build_activity_report_csv($state_tid, $date_range, &$usergroups) {
   $users = get_users_for_user_groups($usergroups);
 
   $user_profiles = user_load_multiple(array_keys($users));
-  $user_profiles = filter_users_by_sne_slt($user_profiles, $sne_slt_filter);
   $user_profiles = filter_users_by_state($user_profiles, $state_tid);
   if (count($user_profiles) == 0) {
     return NULL;
