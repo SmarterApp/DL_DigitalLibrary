@@ -27,18 +27,14 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
   $user_group_options = sbac_report_user_group_options();
-
-  $options = array(
-    1 => 'SNE members',
-    2 => 'SLT members',
-  );
-
-  $user_group_options_combination_array = array_merge($user_group_options, $options);
+  array_push($user_group_options, 'SNE Members');
+  array_push($user_group_options, 'SLT Members');
+  sbac_csv_report_prettify($user_group_options);
 
   $form['user_group_dropdown'] = array(
     '#type' => 'select',
     '#title' => t('Choose User Groups'),
-    '#options' => $user_group_options_combination_array,
+    '#options' => $user_group_options,
     '#attributes' => array('class' => array('chosen-widget')),
     '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_usergroup(),
@@ -252,6 +248,51 @@ function sbac_report_user_activity_finished_batch($success, $results, $operation
   drupal_set_message($message);
 }
 
+/**
+ * Prettify the drop down options.
+ *
+ * @param $user_group_options
+ */
+function sbac_csv_report_prettify(&$user_group_options) {
+  foreach ($user_group_options as $key => $value) {
+    switch ($value) {
+      case 'all':
+        $user_group_options[$key] = t('All Users');
+        break;
+      case 'basic end user':
+        unset($user_group_options[$key]);
+        break;
+      case 'advanced end user':
+        $user_group_options[$key] = t('End Users');
+        break;
+      case 'resource contributor':
+        $user_group_options[$key] = t('Contributors');
+        break;
+      case 'resource reviewer':
+        $user_group_options[$key] = t('Reviewers');
+        break;
+      case 'resource publisher':
+        $user_group_options[$key] = t('Posters');
+        break;
+      case 'facilitator':
+        $user_group_options[$key] = t('Facilitators');
+        break;
+      case 'moderator':
+        $user_group_options[$key] = t('Moderators');
+        break;
+      case 'DLRB member':
+        $user_group_options[$key] = t('DLRB Members');
+        break;
+      case 'guest':
+        unset($user_group_options[$key]);
+        break;
+      case 'admins':
+        $user_group_options[$key] = t('Admins');
+        break;
+    }
+  }
+}
+
 /*
  * Get the user groups for a given user group.  Note that a query with 'in (%s)' in the string doesn't work
  * properly with Drupals perpared statement support.
@@ -283,18 +324,20 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
 
   $slt_filter = FALSE;
   $sne_filter = FALSE;
-  if (in_array(11, $user_groups_ids)) { // 11 is SNE
-    $sne_filter = $user_groups_ids[11];
-    unset($user_groups_ids[11]);
+  if (in_array(32, $user_groups_ids)) { // 32 is SNE
+    $sne_filter = $user_groups_ids[32];
+    unset($user_groups_ids[32]);
   }
-  if (in_array(12, $user_groups_ids)) { // 12 is SLT
-    $slt_filter = $user_groups_ids[12];
-    unset($user_groups_ids[12]);
+  if (in_array(33, $user_groups_ids)) { // 33 is SLT
+    $slt_filter = $user_groups_ids[33];
+    unset($user_groups_ids[33]);
   }
 
   $user_groups = implode(',', $user_groups_ids);
   $sql  = "SELECT u.uid FROM {users} AS u ";
-  $sql .= "JOIN {users_roles} AS ur ON u.uid = ur.uid ";
+  if ($user_groups) {
+    $sql .= "JOIN {users_roles} AS ur ON u.uid = ur.uid ";
+  }
   if ($sne_filter) {
     $sql .= "JOIN {field_data_field_sne_member} AS sne ON u.uid = sne.entity_id ";
   }
