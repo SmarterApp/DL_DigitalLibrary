@@ -3547,7 +3547,7 @@ function _sbac_resource_is_recent_reviewers($resource_node, $account_uid) {
                     DISTINCT r.field_recent_reviewers_target_id
                 FROM {field_data_field_recent_reviewers} r
                 WHERE r.entity_id = :nid", array(':nid' => $resource_node->nid))->fetchCol();
-    if (_sbac_resource_is_in_quality_review($resource_node) && count($original_reviewers) < 3) {
+    if (_sbac_resource_is_in_quality_review($resource_node) && count($original_reviewers) < 4) {
       $result[$resource_node->nid][$account_uid] = TRUE;
     }
     else {
