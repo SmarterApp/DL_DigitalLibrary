@@ -94,8 +94,6 @@ function resource_access($op, $node, $account = NULL) {
           $qc_entities = entity_load('feedback', FALSE, array(
             'node_id' => $node->nid,
             'type' => 'qc',
-            'status' => 1,
-            'current' => 1,
             'completed' => 1,
           ));
           $perm = (bool) $qc_entities;
