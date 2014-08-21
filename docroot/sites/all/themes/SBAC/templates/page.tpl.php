@@ -3,7 +3,7 @@
 <nav class="top-bar main-top clearfix">
   <ul class="title-area">
     <li class="name"><h1>
-        <a title="Smarter Balanced Assessment Consortium2" href="<?php echo $home_url; ?>">
+        <a title="Smarter Balanced Assessment Consortium" href="<?php echo $home_url; ?>">
           <img src="<?php echo $logo; ?>" alt="Smarter Balanced Assessment Consortium Logo"/>
         </a>
       </h1></li>
