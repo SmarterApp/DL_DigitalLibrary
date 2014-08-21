@@ -169,7 +169,8 @@ FROM {eck_feedback} f
 WHERE f.node_id = :node_id
       AND f.created > :time_stamp
       AND f.completed = 1
-      AND f.type = 'qc'";
+      AND f.type = 'qc'
+    ORDER BY f.created ASC";
 
     $result = db_query($query, array(':node_id' => $this->_resource->nid, ':time_stamp' => _sbac_resource_resubmit_timestamp($this->_resource->nid)));
 

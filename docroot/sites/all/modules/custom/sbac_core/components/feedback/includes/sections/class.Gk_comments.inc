@@ -12,31 +12,34 @@ class Gk_Comments extends Base {
    */
   public function getContent() {
     // build GK output
-      $output_gk = '';
+    $output_gk = '';
 
-      $gk_entities = entity_load('feedback', FALSE, array(
-        'node_id' => $this->_node->nid,
-        'type' => 'gate_keeper',
-        'status' => 1,
-        'current' => 1,
-        'completed' => 1,
-      ));
+    $last_gk = db_select('eck_feedback', 'f')
+      ->condition('f.node_id', $this->_node->nid)
+      ->condition('f.type', 'gate_keeper')
+      ->condition('f.completed', 1)
+      ->fields('f', array('id'))
+      ->orderBy('f.changed', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
 
-      $entity = current($gk_entities);
+    $gk_entities = entity_load('feedback', array($last_gk));
 
-      $i = 1;
-      foreach (field_entity_value($entity, 'field_quality_set') as $question) {
-        $item_title = variable_get('resource_gate_keeper_criteria_' . $i . '_title');
-        $item_title = filter_text($item_title);
+    $entity = current($gk_entities);
+    $i = 1;
+    foreach (field_entity_value($entity, 'field_quality_set') as $question) {
+      $item_title = variable_get('resource_gate_keeper_criteria_' . $i . '_title');
+      $item_title = filter_text($item_title);
 
-        $item_desc = variable_get('resource_gate_keeper_criteria_' . $i . '_description');
-        $item_desc = filter_text($item_desc);
-        $item_desc = more_less_text($item_desc, 300);
+      $item_desc = variable_get('resource_gate_keeper_criteria_' . $i . '_description');
+      $item_desc = filter_text($item_desc);
+      $item_desc = more_less_text($item_desc, 300);
 
-        $level = field_entity_value($question, 'field_meets_criterion');
-        $level = $level ? t('Yes') : t('No');
+      $level = field_entity_value($question, 'field_meets_criterion');
+      $level = $level ? t('Yes') : t('No');
 
-        $output_gk .= '
+      $output_gk .= '
           <div class="feedback-item">
             <div class="criteria-set-title">
               ' . $i . '.' . strip_tags($item_title) . '
@@ -52,11 +55,11 @@ class Gk_Comments extends Base {
           </div>
         ';
 
-        $i++;
-      }
+      $i++;
+    }
 
     // finalize output
-      $output = '
+    $output = '
         <div class="feedback-wrap" id="feedback-wrap-gk-comments">
           <h2 class="main-title">' . t('Gate Keeping Criteria') . '</h2>
 
