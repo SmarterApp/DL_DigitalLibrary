@@ -569,31 +569,37 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     case 'dev':
       $conf['file_private_path'] = '/mnt/files/sbacdev/files-private';
       $conf['google_cdn_folder'] = 'dev';
+      $conf['apachesolr_read_only'] = "0";
       // do something on dev
       break;
     case 'test':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg/files-private';
       $conf['google_cdn_folder'] = 'stage';
+      $conf['apachesolr_read_only'] = "0";
       break;
     case 'stage2':
       // do something on staging2
       $conf['file_private_path'] = '/mnt/files/sbacstg2/files-private';
       $conf['google_cdn_folder'] = 'stage2';
+      $conf['apachesolr_read_only'] = "0";
       break;
     case 'stage3':
       // do something on staging3
       $conf['file_private_path'] = '/mnt/files/sbacstg3/files-private';
       $conf['google_cdn_folder'] = 'integration';
+      $conf['apachesolr_read_only'] = "0";
       break;
     case 'prod':
       // do something on prod
       $conf['file_private_path'] = '/mnt/files/sbac/files-private';
       $conf['google_cdn_folder'] = 'production';
+      $conf['apachesolr_read_only'] = "0";
       break;
     case 'loadtest':
       $conf['file_private_path'] = '/mnt/files/sbacloadtest/files-private';
       $conf['google_cdn_folder'] = 'performance';
+      $conf['apachesolr_read_only'] = "0";
       break;
   }
 }
