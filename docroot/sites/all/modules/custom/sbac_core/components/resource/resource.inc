@@ -222,7 +222,7 @@ function _resource_access_view_quality_criteria($node, $account) {
   else {
     // it is not in QC, but we'll allow the owner of the QC review to view (read-only) his review
     if (!_resource_access_node_has_state($node, array('published'))) {
-      $user_completed_qc = _resource_access_count_feedback($node->nid, 'qc', $account->uid, FALSE, 1);
+      $user_completed_qc = _resource_access_count_feedback($node->nid, 'qc', $account->uid, FALSE, 1, 1);
       if ($user_completed_qc) {
         $access = TRUE;
       }
@@ -370,7 +370,7 @@ function _resource_access_node_has_state($node, $states) {
  * @param bool $completed
  * @return int
  */
-function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FALSE, $completed = FALSE) {
+function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE) {
   $query = db_select('eck_feedback', 'f')
     ->condition('f.node_id', $nid)
     ->condition('f.type', $type)
@@ -383,6 +383,9 @@ function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FA
   }
   if ($completed !== FALSE) {
     $query->condition('f.completed', $completed);
+  }
+  if ($current !== FALSE) {
+    $query->condition('f.current', $current);
   }
   $query->fields('f', array('id'));
   return $query->countQuery()->execute()->fetchField();
