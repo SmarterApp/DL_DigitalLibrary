@@ -66,7 +66,7 @@ class Qc_Comments extends Base {
     }
 
 
-    $qc_entities = entity_load('feedback', array($qcs));
+    $qc_entities = entity_load('feedback', $qcs);
 
     $i = 1;
     foreach ($qc_entities as $entity) {
