@@ -45,7 +45,7 @@ class Qc_Comments extends Base {
       ->condition('f.completed',1)
       ->condition('f.node_id', $this->_node->nid)
       ->where('f.created > (SELECT h.stamp FROM workbench_moderation_node_history h WHERE h.nid = :nid AND h.state = \'needs_review\' ORDER BY h.hid DESC LIMIT 0, 1)', array(':nid' => $this->_node->nid))
-      ->fields('f', array(id))
+      ->fields('f', array('id'))
       ->orderBy('f.created', 'ASC')
       ->execute()
       ->fetchCol();
@@ -59,7 +59,7 @@ class Qc_Comments extends Base {
         ->condition('f.completed',1)
         ->condition('f.node_id', $this->_node->nid)
         ->where('f.created > (SELECT h.stamp FROM workbench_moderation_node_history h WHERE h.nid = :nid AND h.state = \'needs_review\' ORDER BY h.hid DESC LIMIT 1, 1)', array(':nid' => $this->_node->nid))
-        ->fields('f', array(id))
+        ->fields('f', array('id'))
         ->orderBy('f.created', 'ASC')
         ->execute()
         ->fetchCol();
