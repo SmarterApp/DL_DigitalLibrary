@@ -63,10 +63,10 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_view_tags($node, $account);
           break;
         case 'access quality criteria revisions':
-          $perm = _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node, $account->uid);
+          $perm = _sbac_resource_resubmit_timestamp($node->nid) && (_sbac_resource_is_recent_reviewers($node, $account->uid) || (_sbac_resource_is_recent_publishers($node, $account->uid)));
           break;
         case 'access quality criteria process':
-          $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles));
+          $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles)) || in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
           break;
         case 'view related resources':
           $perm = _resource_access_node_has_state($node, array('published'));
