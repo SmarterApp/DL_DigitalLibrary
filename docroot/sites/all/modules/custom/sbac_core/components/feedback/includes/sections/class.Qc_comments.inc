@@ -50,7 +50,7 @@ class Qc_Comments extends Base {
       ->execute()
       ->fetchCol();
 
-    if (empty($qc)){
+    if (empty($qcs)){
       // if there are no qc's, go back one more cycle.  This is because if the resource is returned from arbitration
       // upon resubmission, it will skip all the gk and qc and will go straight to arbitration again. In this case,
       // there will be no gk or qc for this cycle.
