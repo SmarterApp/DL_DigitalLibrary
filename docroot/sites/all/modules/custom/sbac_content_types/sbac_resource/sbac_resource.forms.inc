@@ -2007,7 +2007,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             $recommendations = '';
             $i = 1;
             foreach ($qc_entities as $entity) {
-              $created = format_date($entity->changed, 'full');
+              $created = format_date($entity->created, 'full');
               $options = field_allowed_values('field_rec_options');
               $headline = $options[field_entity_value($entity, 'field_rec_options')];
               $comments = field_entity_value($entity, 'field_rec_rationale');
