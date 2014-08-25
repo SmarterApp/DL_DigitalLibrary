@@ -349,32 +349,31 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
 function sbac_sso_consume() {
   $is_valid = FALSE;
   $saml_token = NULL;
-  //if (isset($_POST['SAMLResponse'])) {
-    $saml_token = base64_decode(sbac_sso_get_saml_token2());
-    //$saml_token = base64_decode($_POST['SAMLResponse']);
+  if (isset($_POST['SAMLResponse'])) {
+    $saml_token = base64_decode($_POST['SAMLResponse']);
     $is_valid = sbac_sso_validate_saml_assertion($saml_token);
-//  }
-//  else {
-//    // Destroy the current session, and reset $user to the anonymous user.
-//    if (user_is_logged_in()) {
-//      global $user;
-//      watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
-//      module_invoke_all('user_logout', $user);
-//      session_destroy();
-//    }
-//
-//    global $base_url;
-//    $original_access_url = $base_url;
-//    if (isset($_GET['destination'])) {
-//      $original_access_url = $base_url . '/' . $_GET['destination'];
-//    }
-//    // Record original access URL (URL Encoded) to the SAML request in the relayState variable
-//    // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
-//    $saml_assertion = sbac_sso_saml_assertion();
-//    $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
-//    header('Location: ' . $url, TRUE, 302);
-//    drupal_exit($url);
-//  }
+  }
+  else {
+    // Destroy the current session, and reset $user to the anonymous user.
+    if (user_is_logged_in()) {
+      global $user;
+      watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+      module_invoke_all('user_logout', $user);
+      session_destroy();
+    }
+
+    global $base_url;
+    $original_access_url = $base_url;
+    if (isset($_GET['destination'])) {
+      $original_access_url = $base_url . '/' . $_GET['destination'];
+    }
+    // Record original access URL (URL Encoded) to the SAML request in the relayState variable
+    // Direct user to SSO with relaystate pointing to SAML Assertion receiving endpoint.
+    $saml_assertion = sbac_sso_saml_assertion();
+    $url = SBAC_SSO_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate($saml_assertion))) . '&RelayState=' . urlencode($original_access_url);
+    header('Location: ' . $url, TRUE, 302);
+    drupal_exit($url);
+  }
 
   if ($is_valid) {
     // validate SAML.
