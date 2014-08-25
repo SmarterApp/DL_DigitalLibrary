@@ -675,27 +675,30 @@ function sbac_sso_create_user_attributes($response) {
  * @return array
  */
 function sbac_sso_program_management_api_request($user_attributes) {
-  //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
-  //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
-  //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
-  //  All of which are in the tenancy chains received in an SSO Assertion.
   $api_response = array();
+
+  // Check the cache table.
   $cached_results = variable_get('sbac_sso_pm_cached_results');
   if ($cached_results && isset($cached_results[$user_attributes['state_id']])) {
     $json = $cached_results[$user_attributes['state_id']];
-    $expiration_date = $json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'];
-    $expiration_date_epoch = strtotime($expiration_date);
-    $now = time();
-    if ($expiration_date_epoch < time()) {
-      unset($cached_results[$user_attributes['state_id']]);
-      variable_set('sbac_sso_pm_cached_results', $cached_results);
-    }
-    else {
-      $api_response = sbac_sso_parse_program_api_result($json, FALSE);
+    if (isset($json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'])) {
+      $expiration_date = $json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'];
+      $expiration_date_epoch = strtotime($expiration_date);
+      if ($expiration_date_epoch < time()) {
+        unset($cached_results[$user_attributes['state_id']]);
+        variable_set('sbac_sso_pm_cached_results', $cached_results);
+      }
+      else {
+        $api_response = sbac_sso_parse_program_api_result($json, FALSE);
+      }
     }
   }
 
   if (empty($api_response)) {
+    //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
+    //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
+    //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
+    //  All of which are in the tenancy chains received in an SSO Assertion.
     $query_string = '';
     $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
     foreach ($user_attributes as $index => $attribute) {
@@ -745,6 +748,7 @@ function sbac_sso_program_management_api_request($user_attributes) {
  * Parses the Program Management API response.
  *
  * @param $result
+ * @param $decode
  *
  * @return array
  */
