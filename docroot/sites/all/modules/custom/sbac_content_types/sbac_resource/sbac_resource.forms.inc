@@ -1966,7 +1966,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND completed = 1 AND changed > IFNULL((SELECT max(h.stamp) FROM {workbench_moderation_node_history} h WHERE h.state = 'needs_review' AND h.nid = :nid), 0) ORDER BY changed ASC LIMIT 0, 3", array(
+          $qc_ids = db_query("SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND completed = 1 AND changed > IFNULL((SELECT max(h.stamp) FROM {workbench_moderation_node_history} h WHERE h.state = 'needs_review' AND h.nid = :nid), 0) ORDER BY created ASC LIMIT 0, 3", array(
             ':nid' => $form['#node']->nid,
             ':created' => _sbac_resource_resubmit_timestamp($form['#node']->nid)
           ))->fetchCol();
@@ -2007,7 +2007,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             $recommendations = '';
             $i = 1;
             foreach ($qc_entities as $entity) {
-              $created = format_date($entity->changed, 'full');
+              $created = format_date($entity->created, 'full');
               $options = field_allowed_values('field_rec_options');
               $headline = $options[field_entity_value($entity, 'field_rec_options')];
               $comments = field_entity_value($entity, 'field_rec_rationale');
