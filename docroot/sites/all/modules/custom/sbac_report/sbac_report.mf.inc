@@ -66,7 +66,7 @@ function sbac_report_mf_batch_process($missing_files, &$context) {
     // Create the file and print the labels in the header row.
     $directory = "private://mf_reports/";
     $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-    $filename = 'RR_Report_' . date('M_d_Y_g_i_s') . '.csv';
+    $filename = 'MF_Report_' . date('M_d_Y_g_i_s') . '.csv';
     $directory .= $filename;
     $directory_real_path = drupal_realpath($directory);
     $handle = fopen($directory_real_path, 'w'); // Create the file.
