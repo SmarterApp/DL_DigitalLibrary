@@ -113,6 +113,14 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['reports/missing-files-report'] = array(
+    'title' => 'Missing Files Report',
+    'file' => 'sbac_report.mf.inc',
+    'page callback' => 'sbac_report_mf_report',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
