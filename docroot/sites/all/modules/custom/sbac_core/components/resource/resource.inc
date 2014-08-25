@@ -91,12 +91,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = TRUE;
           break;
         case 'access qc review comments':
-          $qc_entities = entity_load('feedback', FALSE, array(
-            'node_id' => $node->nid,
-            'type' => 'qc',
-            'completed' => 1,
-          ));
-          $perm = (bool) $qc_entities;
+          $perm = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
           break;
       }
       $access[$account->uid][$op] = $perm;
