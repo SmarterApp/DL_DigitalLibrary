@@ -63,10 +63,10 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_view_tags($node, $account);
           break;
         case 'access quality criteria revisions':
-          $perm = _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node, $account->uid);
+          $perm = _sbac_resource_resubmit_timestamp($node->nid) && (_sbac_resource_is_recent_reviewers($node, $account->uid) || (_sbac_resource_is_recent_publishers($node, $account->uid)));
           break;
         case 'access quality criteria process':
-          $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles));
+          $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles)) || in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
           break;
         case 'view related resources':
           $perm = _resource_access_node_has_state($node, array('published'));
@@ -91,14 +91,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = TRUE;
           break;
         case 'access qc review comments':
-          $qc_entities = entity_load('feedback', FALSE, array(
-            'node_id' => $node->nid,
-            'type' => 'qc',
-            'status' => 1,
-            'current' => 1,
-            'completed' => 1,
-          ));
-          $perm = (bool) $qc_entities;
+          $perm = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
           break;
       }
       $access[$account->uid][$op] = $perm;
@@ -143,9 +136,11 @@ function _resource_access_view_gate_keeper($node, $account) {
     }
     else {
       // it is not in gate keeping, but we'll allow the owner of the GK review to view (read-only) his review
-      $user_completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, FALSE, 1);
-      if ($user_completed_gk) {
-        $access = TRUE;
+      if (!_resource_access_node_has_state($node, array('published'))) {
+        $user_completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, FALSE, 1);
+        if ($user_completed_gk) {
+          $access = TRUE;
+        }
       }
     }
   }
@@ -214,6 +209,15 @@ function _resource_access_view_quality_criteria($node, $account) {
         elseif (2 == $completed_reviews && 0 == $in_progress_reviews) {
           $access = TRUE;
         }
+      }
+    }
+  }
+  else {
+    // it is not in QC, but we'll allow the owner of the QC review to view (read-only) his review
+    if (!_resource_access_node_has_state($node, array('published'))) {
+      $user_completed_qc = _resource_access_count_feedback($node->nid, 'qc', $account->uid, FALSE, 1, 1);
+      if ($user_completed_qc) {
+        $access = TRUE;
       }
     }
   }
@@ -359,7 +363,7 @@ function _resource_access_node_has_state($node, $states) {
  * @param bool $completed
  * @return int
  */
-function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FALSE, $completed = FALSE) {
+function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE) {
   $query = db_select('eck_feedback', 'f')
     ->condition('f.node_id', $nid)
     ->condition('f.type', $type)
@@ -372,6 +376,9 @@ function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FA
   }
   if ($completed !== FALSE) {
     $query->condition('f.completed', $completed);
+  }
+  if ($current !== FALSE) {
+    $query->condition('f.current', $current);
   }
   $query->fields('f', array('id'));
   return $query->countQuery()->execute()->fetchField();

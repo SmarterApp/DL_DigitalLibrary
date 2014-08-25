@@ -391,7 +391,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       $response = httprl_send_request();
       error_log(print_r($response));
       if ($response === FALSE) {
-        watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
+        watchdog('SBAC Media', 'Failed to start background tasks', NULL, WATCHDOG_ERROR);
       }
     }
     unset($_SESSION['file_attributes']);
@@ -1966,7 +1966,10 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY changed ASC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
+          $qc_ids = db_query("SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND completed = 1 AND changed > IFNULL((SELECT max(h.stamp) FROM {workbench_moderation_node_history} h WHERE h.state = 'needs_review' AND h.nid = :nid), 0) ORDER BY created ASC LIMIT 0, 3", array(
+            ':nid' => $form['#node']->nid,
+            ':created' => _sbac_resource_resubmit_timestamp($form['#node']->nid)
+          ))->fetchCol();
 
           // check for QC feedbacks first
           $qc_entities = entity_load('feedback', $qc_ids);
@@ -1985,13 +1988,15 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               '#prefix' => '<h2>',
               '#suffix' => '</h2>'
             );
-            $post_comment = field_entity_value($post, 'field_to_contributor');
-            if ($post_comment != '') {
-              $form['sbac_revisions']['post_comment'] = array(
-                '#markup' => field_entity_value($post, 'field_to_contributor'),
-                '#prefix' => '<h2>Posting comments</h2><p>',
-                '#suffix' => '</p>'
-              );
+            if ($post) {
+              $post_comment = field_entity_value($post, 'field_to_contributor');
+              if ($post_comment != '') {
+                $form['sbac_revisions']['post_comment'] = array(
+                  '#markup' => field_entity_value($post, 'field_to_contributor'),
+                  '#prefix' => '<h2>Posting comments</h2><p>',
+                  '#suffix' => '</p>'
+                );
+              }
             }
             $form['sbac_revisions']['sub_header'] = array(
               '#markup' => t("Reviewer's Resource Recommendation"),
@@ -2002,7 +2007,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             $recommendations = '';
             $i = 1;
             foreach ($qc_entities as $entity) {
-              $created = format_date($entity->changed, 'full');
+              $created = format_date($entity->created, 'full');
               $options = field_allowed_values('field_rec_options');
               $headline = $options[field_entity_value($entity, 'field_rec_options')];
               $comments = field_entity_value($entity, 'field_rec_rationale');

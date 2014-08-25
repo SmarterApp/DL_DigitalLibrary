@@ -2916,7 +2916,7 @@ function sbac_resource_node_access($node, $op, $account) {
 function sbac_resource_determine_access($node, $account, $op) {
   // state access
   $access = _sbac_resource_determine_state_access($node, $account);
-  if (($access || isset($_SERVER['HTTP_REFERER'])) && strpos($_SERVER['HTTP_REFERER'], 'resource-review') !== FALSE) {
+  if ($access) {
     // workflow access
     $access = _sbac_resource_determine_workflow_access($node, $account, $op);
   }
@@ -2975,15 +2975,8 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
       case 'being_reviewed':
         // author has view
         // resource reviewer has view/edit
-        $all_condition = db_and()->condition('s.state', array('gk_needs_review', 'qc_needs_review'), 'IN')->condition('s.uid', 0);
-        $user_condition = db_and()->condition('s.state', array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed'), 'IN')->condition('s.uid', $account->uid);
-        $query->condition(db_or()->condition($all_condition)->condition($user_condition));
-        $result = $query->execute();
-        $count = $result->rowCount();
-        if ($count) {
-          if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
-            $access = TRUE;
-          }
+        if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
         }
         if ($account->uid == $node->uid && $op == 'view') {
           $access = TRUE;
@@ -3554,7 +3547,7 @@ function _sbac_resource_is_recent_reviewers($resource_node, $account_uid) {
                     DISTINCT r.field_recent_reviewers_target_id
                 FROM {field_data_field_recent_reviewers} r
                 WHERE r.entity_id = :nid", array(':nid' => $resource_node->nid))->fetchCol();
-    if (_sbac_resource_is_in_quality_review($resource_node) && count($original_reviewers) < 3) {
+    if (_sbac_resource_is_in_quality_review($resource_node) && count($original_reviewers) < 4) {
       $result[$resource_node->nid][$account_uid] = TRUE;
     }
     else {
