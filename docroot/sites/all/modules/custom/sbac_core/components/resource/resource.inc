@@ -25,9 +25,10 @@ function resource_access($op, $node, $account = NULL) {
     }
   }
   if (isset($_GET['flag']) && in_array($_GET['flag'], array('view-resource-flags', 'view-resource-review-flags', 'resolve-resource-review-flags'))) {
-    if (!in_array($op, array('access about process', 'view about', 'access moderate flag', 'view moderate flag'))) {
-      return FALSE;
+    if (in_array($op, array('access about process', 'view about', 'access moderate flag', 'view moderate flag'))) {
+      return TRUE;
     }
+    return FALSE;
   }
 
   $access = & drupal_static(__FUNCTION__);
