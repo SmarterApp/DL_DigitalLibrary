@@ -2097,6 +2097,10 @@ function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description, $d
 function sbac_forum_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource' && $new_state == 'published') {
     sbac_forum_create_resource_forum($node->nid);
+    // this node is published through the review process, remove the auto favourite
+    // entry from this user
+    global $user;
+    db_delete('sbac_favorites')->condition('type', 'node')->condition('uid', $user->uid)->condition('id', $node->nid)->execute();
   }
 }
 

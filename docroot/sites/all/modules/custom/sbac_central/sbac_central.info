@@ -30,6 +30,7 @@ features[elysia_cron][] = sbac_core_cron
 features[elysia_cron][] = sbac_flag_cron
 features[elysia_cron][] = sbac_report_cron
 features[elysia_cron][] = sbac_share_cron
+features[elysia_cron][] = sbac_sso_cron
 features[elysia_cron][] = sbac_user_cron
 features[elysia_cron][] = search_cron
 features[elysia_cron][] = system_cron
