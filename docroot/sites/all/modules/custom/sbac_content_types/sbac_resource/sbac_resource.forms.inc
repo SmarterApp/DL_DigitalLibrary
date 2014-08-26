@@ -2483,7 +2483,7 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
     '#weight' => 0,
     '#attributes' => array('class' => array('sbac-cancel-blue', 'sbac-resource-cancel-button')),
     '#limit_validation_errors' => array(),
-    '#submit' => array('_sbac_resource_my_resource_redirect'),
+    '#submit' => array('sbac_media_widget_form_element_submit_handler', '_sbac_resource_my_resource_redirect'),
   );
 }
 
