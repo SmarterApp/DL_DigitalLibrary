@@ -23,6 +23,10 @@ define('SBAC_MEDIA_HTML5_ERROR', 2);
 define('SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION', 'html5_modules');
 define('SBAC_MEDIA_HTML5_GOOGLE_URL', '//storage.googleapis.com/html5_modules/');
 
+define('SBAC_MEDIA_TEMP_FILE_STATUS', 0);
+define('SBAC_MEDIA_PERMANENT_FILE_STATUS', 1);
+define('SBAC_MEDIA_DELETE_FILE_STATUS', 2);
+
 /**
  * Implements hook_init().
  */
@@ -880,20 +884,21 @@ function sbac_media_handle_temp_files($form, $form_state) {
   // need to handle HTML5 as well.
   if ($form_state['triggering_element']['#value'] == 'Close') {
     //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
-    $temp_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 0));
+    $temp_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => SBAC_MEDIA_TEMP_FILE_STATUS));
     foreach ($temp_files as $file) {
       if ($file->type != 'html5') {
         sbac_media_delete_media_record($file->id, $file->fid);
       }
     }
     // if status is 2, set back to 1, they didn't really want to delete it.
-    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 2));
+    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS, ':nid' => $form_state['node']->nid, ':status2' => SBAC_MEDIA_DELETE_FILE_STATUS));
   }
-  else {
+
+  if ($form_state['triggering_element']['#value'] == 'Save' || $form_state['triggering_element']['#value'] == 'Continue') {
     // temp file, they clicked save, permanently save the file now.
-    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => 1, ':nid' => $form_state['node']->nid, ':status2' => 0));
+    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS, ':nid' => $form_state['node']->nid, ':status2' => SBAC_MEDIA_TEMP_FILE_STATUS));
     // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
-    $remove_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => 2));
+    $remove_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => SBAC_MEDIA_DELETE_FILE_STATUS));
     foreach ($remove_files as $file) {
       if ($file->type != 'html5') {
         sbac_media_delete_media_record($file->id, $file->fid);
@@ -906,6 +911,8 @@ function sbac_media_handle_temp_files($form, $form_state) {
  * Creates the table list of media items.
  *
  * @param $media_items
+ * @param $form_state
+ *
  * @return string
  */
 function _sbac_media_create_list($media_items, $form_state) {
@@ -1103,7 +1110,7 @@ function sbac_media_save_media(&$form, &$form_state) {
         $media->file_size = $file->filesize;
         $media->file_hash = $file_hash;
         $media->weight = 100;
-        $media->status = 0;
+        $media->status = SBAC_MEDIA_TEMP_FILE_STATUS;
         entity_save('media', $media);
       }
     }
@@ -1547,19 +1554,9 @@ function sbac_media_save_html5_record(&$file_attributes, $form_state) {
   $media->file_size = $file->filesize;
   $media->file_hash = $file_hash;
   $media->weight = 100;
-  $media->status = 1;
+  $media->status = SBAC_MEDIA_PERMANENT_FILE_STATUS;
   $media->document_id = $file_attributes['unique_id'] . '::' . $file_attributes['folder_name'];
   $return = entity_save('media', $media);
-
-  // Delete old thumbnail image if any
-//  if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE])) {
-//    $thumbnail_uri = $node->field_thumbnail_uri[LANGUAGE_NONE][0]['value'];
-//    $thumbnail_pieces = explode('::', $thumbnail_uri);
-//    $uri = $thumbnail_pieces[0];
-//    $image_path = image_style_path('resource_image_grid', $uri);
-//    $real_path = drupal_realpath($image_path);
-//    file_unmanaged_delete($real_path);
-//  }
 
   return $return;
 }
@@ -1703,7 +1700,7 @@ function sbac_media_count_duplicates($media_items) {
 function sbac_media_load_items($nid) {
   $media_items = array();
   if ($nid) {
-    $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type <> :type AND status <> :status ORDER BY weight", array(':nid' => $nid, ':type' => 'html5', ':status' => 2));
+    $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type <> :type AND status <> :status ORDER BY weight", array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_DELETE_FILE_STATUS));
     foreach ($result as $row) {
       $media_item = new stdClass();
       $media_item->type = $row->type;
@@ -1739,12 +1736,12 @@ function sbac_media_load_html5_item($nid, $form = NULL) {
     $args[':type'] = 'html5';
     if ($form) {
       $sql .= 'AND (status = :status OR status = :status2) ';
-      $args[':status'] = 1;
-      $args[':status2'] = 0;
+      $args[':status'] = SBAC_MEDIA_PERMANENT_FILE_STATUS;
+      $args[':status2'] = SBAC_MEDIA_TEMP_FILE_STATUS;
     }
     else {
       $sql .= 'AND status = :status ';
-      $args[':status'] = 1;
+      $args[':status'] = SBAC_MEDIA_PERMANENT_FILE_STATUS;
     }
     $sql .= 'ORDER BY weight LIMIT 1';
     $html5_item = db_query($sql, $args)->fetchObject();
@@ -1760,7 +1757,7 @@ function sbac_media_load_html5_item($nid, $form = NULL) {
  */
 function sbac_media_temp_delete_media_record($id) {
   if ($id) {
-    db_query('UPDATE {eck_media} SET status = :status WHERE id = :id', array(':status' => 2, ':id' => $id));
+    db_query('UPDATE {eck_media} SET status = :status WHERE id = :id', array(':status' => SBAC_MEDIA_DELETE_FILE_STATUS, ':id' => $id));
   }
 }
 
@@ -2130,7 +2127,7 @@ function sbac_media_save_embedded_source($embedded_video_source, $nid) {
     $media->file_size = (isset($file->duration) ? $file->duration : 0);
     $media->weight = 100;
     $media->embed_url = $embedded_video_source;
-    $media->status = 0;
+    $media->status = SBAC_MEDIA_TEMP_FILE_STATUS;
     entity_save('media', $media);
   }
 }
