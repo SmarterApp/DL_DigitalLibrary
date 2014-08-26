@@ -56,6 +56,8 @@ function sbac_report_mf_batch_process($missing_files, &$context) {
       'Contributor Name',
       'Contributor State',
       'Contributor Email Address',
+      'Resource Contributed Date',
+      'Material Contributed Date',
       'Material Missing',
       'ECK Record',
       'File Managed Record',
@@ -109,6 +111,8 @@ function sbac_report_mf_batch_process($missing_files, &$context) {
           $state = taxonomy_term_load($account->field_state['und'][0]['tid']);
           $csv_column[] = $state->name;
           $csv_column[] = $account->mail;
+          $csv_column[] = date('M d, Y - g:i a', $node->created);
+          $csv_column[] = 'Unknown';
           $csv_column[] = $media->filename;
           $csv_column[] = 'Yes';
           $csv_column[] = 'No';
@@ -140,6 +144,8 @@ function sbac_report_mf_batch_process($missing_files, &$context) {
                 $state = taxonomy_term_load($account->field_state['und'][0]['tid']);
                 $csv_column[] = $state->name;
                 $csv_column[] = $account->mail;
+                $csv_column[] = date('M d, Y - g:i a', $node->created);
+                $csv_column[] = date('M d, Y - g:i a', $media->timestamp);
                 $csv_column[] = $media->filename;
                 $csv_column[] = 'No';
                 $csv_column[] = 'Yes';
