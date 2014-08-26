@@ -683,14 +683,18 @@ function sbac_sso_program_management_api_request($user_attributes) {
   $cached_results = variable_get('sbac_sso_pm_cached_results');
   if ($cached_results && isset($cached_results[$user_attributes['state_id']])) {
     $json = $cached_results[$user_attributes['state_id']];
+    // If there is no expiration date, force another API call.
     if (isset($json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'])) {
       $expiration_date = $json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'];
       $expiration_date_epoch = strtotime($expiration_date);
       if ($expiration_date_epoch < time()) {
+        // If its past the expiration date, delete this entry and
+        // force another API call.
         unset($cached_results[$user_attributes['state_id']]);
         variable_set('sbac_sso_pm_cached_results', $cached_results);
       }
       else {
+        // Verify structure with current cached result.
         $api_response = sbac_sso_parse_program_api_result($json, FALSE);
       }
     }
