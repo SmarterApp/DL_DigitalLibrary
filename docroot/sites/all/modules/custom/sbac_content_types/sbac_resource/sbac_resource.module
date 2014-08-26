@@ -1588,7 +1588,7 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     if ($load) {
-      $media_items = sbac_media_load_items($node->nid);
+      $media_items = sbac_media_load_items($node->nid, TRUE);
       $node->document = $media_items;
       if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
         $html5_item = sbac_media_load_html5_item($node->nid);
