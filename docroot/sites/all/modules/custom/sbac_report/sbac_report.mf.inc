@@ -11,16 +11,6 @@ function sbac_report_mf_report() {
   foreach ($results as $row) {
     $missing_files[$row->fid] = $row;
   }
-  unset($sql);
-  unset($row);
-  unset($results);
-
-//  // gets all files that don't exist in eck_media
-//  $sql = "select f.* from file_managed f LEFT JOIN eck_media e ON f.fid = e.fid where e.fid IS NULL AND f.uri like 'gs://%%'";
-//  $results = db_query($sql);
-//  foreach ($results as $row) {
-//    $missing_files[$row->fid] = $row;
-//  }
 
   if ($missing_files) {
     batch_set(array(
@@ -126,42 +116,6 @@ function sbac_report_mf_batch_process($missing_files, &$context) {
           }
         }
       }
-//      else { // file_managed row
-//        $account = user_load($media->uid);
-//        if ($account) {
-//          $uri = str_replace('/' . $media->filename, '', $media->uri);
-//          $pos = strrpos($uri, '/');
-//          if ($pos !== FALSE) {
-//            $nid = substr($uri, $pos + 1);
-//            if ($nid) {
-//              $node = node_load($nid);
-//              if ($node) {
-//                global $base_url;
-//                $csv_column[] = $base_url . '/node/' . $nid;
-//                $csv_column[] = $account->field_first_name['und'][0]['value'] . ' ' . $account->field_last_name['und'][0]['value'];
-//                $state = taxonomy_term_load($account->field_state['und'][0]['tid']);
-//                $csv_column[] = $state->name;
-//                $csv_column[] = $account->mail;
-//                $csv_column[] = date('M d, Y - g:i a', $node->created);
-//                $csv_column[] = date('M d, Y - g:i a', $media->timestamp);
-//                $csv_column[] = $media->filename;
-//                $csv_column[] = 'No';
-//                $csv_column[] = 'Yes';
-//                try {
-//                  $target = str_replace('gs://', '', $media->uri);
-//                  $response = $gcs['service']->objects->get($bucket, $folder . '/' . $target);
-//                  if ($response) {
-//                    $csv_column[] = 'Yes';
-//                  }
-//                }
-//                catch (Exception $e) {
-//                  $csv_column[] = 'No';
-//                }
-//              }
-//            }
-//          }
-//        }
-//      }
     }
 
     if ($csv_column) {
