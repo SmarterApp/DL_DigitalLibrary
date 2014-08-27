@@ -1957,6 +1957,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
       switch ($last_feedback_type) {
         case 'post':
         case 'qc':
+          $post = NULL;
           if ($last_feedback_type == 'post') {
             $post_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'post' AND completed = 1 ORDER BY changed DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
             $post_entities = entity_load('feedback', $post_id);
@@ -1988,7 +1989,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               '#prefix' => '<h2>',
               '#suffix' => '</h2>'
             );
-            if ($post) {
+            if (!empty($post)) {
               $post_comment = field_entity_value($post, 'field_to_contributor');
               if ($post_comment != '') {
                 $form['sbac_revisions']['post_comment'] = array(
@@ -2482,7 +2483,7 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
     '#weight' => 0,
     '#attributes' => array('class' => array('sbac-cancel-blue', 'sbac-resource-cancel-button')),
     '#limit_validation_errors' => array(),
-    '#submit' => array('_sbac_resource_my_resource_redirect'),
+    '#submit' => array('sbac_media_widget_form_element_submit_handler', '_sbac_resource_my_resource_redirect'),
   );
 }
 
@@ -2624,7 +2625,7 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
   $form['#group_children']['required_fields_summary'] = "group_summary";
 
   $form['required_fields_materials'] = array(
-    '#markup' => 'Required Information',
+    '#markup' => 'Required Information <br /> <strong>**</strong> Temporary Files are not displayed on the front end until save or continue is clicked. Clicking close will remove the file.',
     '#prefix' => '<p class="sbac-resource-required">',
     '#suffix' => '</p>',
     '#weight' => 150,
