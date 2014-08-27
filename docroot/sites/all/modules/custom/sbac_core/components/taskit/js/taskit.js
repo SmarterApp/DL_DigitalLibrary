@@ -24,7 +24,7 @@ Drupal.behaviors.sbac_taskit = {
       });
     });
 
-    $('.section-notifications').click(function(e) {
+    $('.section-notifications a').click(function(e) {
       Drupal.behaviors.sbac_taskit.mark_notifications_read();
     });
   },

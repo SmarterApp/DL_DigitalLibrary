@@ -67,7 +67,7 @@ function resource_feedback_page($node) {
       ),
       'access moderate flag' => array(
         'feedback' => array(
-          'moderate_flag' => FALSE,
+          'moderate_flag' => TRUE,
         )
       ),
     );

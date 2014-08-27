@@ -1588,7 +1588,7 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     if ($load) {
-      $media_items = sbac_media_load_items($node->nid);
+      $media_items = sbac_media_load_items($node->nid, TRUE);
       $node->document = $media_items;
       if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
         $html5_item = sbac_media_load_html5_item($node->nid);
@@ -1750,15 +1750,11 @@ function sbac_resource_save_current_state($node) {
         }
         unset($gate_keeper);
 
-        // delete all qc_reviewed if they exist.
-        sbac_resource_delete_resource_state_given_state($node, 'qc_reviewed');
-
-        $entity = NULL;
-        $new_record = sbac_resource_get_state($entity, $node->nid, $user->uid);
-        if ($new_record) {
-          $entity->state = 'gk_view_rejected';
-          sbac_resource_save_resource_state($entity, $new_record);
-        }
+        // All reviewers who have reviewed the resource, still get read only access
+        // to the node. So, update there existing records from old state to new state
+        // of "gk_view_rejected"
+        sbac_resource_update_resource_state_given_state($node, 'qc_being_reviewed', 'gk_view_rejected');
+        sbac_resource_update_resource_state_given_state($node, 'qc_reviewed', 'gk_view_rejected');
         _sbac_resource_save_reviewers($node, 'field_recent_reviewers', $user);
       }
 
@@ -2131,6 +2127,20 @@ function sbac_resource_delete_resource_state_given_state($node, $old_state) {
   }
 
   unset($entity);
+}
+
+/**
+ * Update the old state to the new state for the given nid.
+ *
+ * @param $node
+ * @param $old_state
+ * @param $new_state
+ */
+function sbac_resource_update_resource_state_given_state($node, $old_state, $new_state) {
+  db_update('sbac_node_resource_state')->fields(array('state' => $new_state))
+    ->condition('nid', $node->nid)
+    ->condition('state', $old_state)
+    ->execute();
 }
 
 /**
