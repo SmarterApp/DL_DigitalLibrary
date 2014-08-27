@@ -956,6 +956,9 @@ function _sbac_media_create_list($media_items, $form_state) {
 
       // Filename.
       $output .= '<td>' . $media_item->filename;
+      if ($media_item->status == SBAC_MEDIA_TEMP_FILE_STATUS) {
+        $output .= ' ** ';
+      }
       if (!$media_item->fid && $media_item->filesize) {
         if (strpos($media_item->embed_url, 'slideshare') !== FALSE) {
           $output .= ' (' . $media_item->filesize . ' total slides)';
@@ -1739,6 +1742,7 @@ function sbac_media_load_items($nid, $permanent_only = FALSE) {
       $media_item->document_id = $row->document_id;
       $media_item->embed_url = $row->embed_url;
       $media_item->transcript = $row->transcript;
+      $media_item->status = $row->status;
       $media_items[] = $media_item;
     }
   }

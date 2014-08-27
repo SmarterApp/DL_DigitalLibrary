@@ -1745,7 +1745,9 @@ function sbac_resource_save_current_state($node) {
           $entity = NULL;
           $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid'], 'gk_being_reviewed');
           if (!$new_record) {
-            sbac_resource_delete_resource_state($entity);
+            // update the existing record, set it to allow the user to still
+            // view the read only GK review.
+            sbac_resource_update_resource_state_given_state($node, 'gk_being_reviewed', 'gk_view_rejected');
           }
         }
         unset($gate_keeper);
