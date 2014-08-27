@@ -890,6 +890,19 @@ function sbac_media_handle_temp_files($form, $form_state) {
         sbac_media_delete_media_record($file->id, $file->fid);
       }
     }
+    unset($temp_files);
+    unset($file);
+
+    if (isset($_SESSION['new_files'])) {
+      $all_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => SBAC_MEDIA_DELETE_FILE_STATUS));
+      foreach ($all_files as $file) {
+        if (array_key_exists($file->id, $_SESSION['new_files'])) {
+          sbac_media_delete_media_record($file->id, $file->fid);
+        }
+      }
+      // clear this variable
+      unset($_SESSION['new_files']);
+    }
     // if status is 2, set back to 1, they didn't really want to delete it.
     db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS, ':nid' => $form_state['node']->nid, ':status2' => SBAC_MEDIA_DELETE_FILE_STATUS));
   }
@@ -903,6 +916,10 @@ function sbac_media_handle_temp_files($form, $form_state) {
       if ($file->type != 'html5') {
         sbac_media_delete_media_record($file->id, $file->fid);
       }
+    }
+    if (isset($_SESSION['new_files'])) {
+      // clear this variable
+      unset($_SESSION['new_files']);
     }
   }
 }
@@ -1112,6 +1129,7 @@ function sbac_media_save_media(&$form, &$form_state) {
         $media->weight = 100;
         $media->status = SBAC_MEDIA_TEMP_FILE_STATUS;
         entity_save('media', $media);
+        $_SESSION['new_files'][$media->id] = $media;
       }
     }
     else {
@@ -2029,7 +2047,7 @@ function sbac_media_internet_confirm($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         sbac_media_save_embedded_source($form_state['values']['embed'], $form_state['values']['nid']);
-        $media_items = sbac_media_load_items($form_state['values']['nid'], $form_state);
+        $media_items = sbac_media_load_items($form_state['values']['nid']);
         $media_list = _sbac_media_create_list($media_items, $form_state);
         $output[] = ajax_command_html('#sbac-media-list', $media_list);
       }
@@ -2136,6 +2154,7 @@ function sbac_media_save_embedded_source($embedded_video_source, $nid) {
     $media->embed_url = $embedded_video_source;
     $media->status = SBAC_MEDIA_TEMP_FILE_STATUS;
     entity_save('media', $media);
+    $_SESSION['new_files'][$media->id] = $media;
   }
 }
 
