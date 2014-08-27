@@ -2625,7 +2625,7 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
   $form['#group_children']['required_fields_summary'] = "group_summary";
 
   $form['required_fields_materials'] = array(
-    '#markup' => 'Required Information',
+    '#markup' => 'Required Information <br /> <strong>**</strong> Temporary Files are not displayed on the front end until save or continue is clicked. Clicking close will remove the file.',
     '#prefix' => '<p class="sbac-resource-required">',
     '#suffix' => '</p>',
     '#weight' => 150,

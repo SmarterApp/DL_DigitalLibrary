@@ -956,6 +956,9 @@ function _sbac_media_create_list($media_items, $form_state) {
 
       // Filename.
       $output .= '<td>' . $media_item->filename;
+      if ($media_item->status == SBAC_MEDIA_TEMP_FILE_STATUS) {
+        $output .= ' ** ';
+      }
       if (!$media_item->fid && $media_item->filesize) {
         if (strpos($media_item->embed_url, 'slideshare') !== FALSE) {
           $output .= ' (' . $media_item->filesize . ' total slides)';
@@ -1718,14 +1721,45 @@ function sbac_media_count_duplicates($media_items) {
  * @return array
  */
 function sbac_media_load_items($nid, $permanent_only = FALSE) {
+  $materials = sbac_media_load_materials($nid, $permanent_only);
+  $embedded_materials = sbac_media_load_embedded_materials($nid, $permanent_only);
+  $media_items = array_merge($materials, $embedded_materials);
+  return $media_items;
+}
+
+/**
+ * Load the local files.
+ *
+ * @param $nid
+ * @param bool $permanent_only
+ * @return array
+ */
+function sbac_media_load_materials($nid, $permanent_only = FALSE) {
   $media_items = array();
   if ($nid) {
     if ($permanent_only) {
-      $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type <> :type AND status = :status ORDER BY weight", array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS));
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              JOIN {file_managed} AS f
+                ON e.fid = f.fid
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status = :status
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS);
     }
     else {
-      $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid AND type <> :type AND status <> :status ORDER BY weight", array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_DELETE_FILE_STATUS));
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              JOIN {file_managed} AS f
+                ON e.fid = f.fid
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status <> :status
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_DELETE_FILE_STATUS);
     }
+    $result = db_query($sql, $args);
     foreach ($result as $row) {
       $media_item = new stdClass();
       $media_item->type = $row->type;
@@ -1739,6 +1773,58 @@ function sbac_media_load_items($nid, $permanent_only = FALSE) {
       $media_item->document_id = $row->document_id;
       $media_item->embed_url = $row->embed_url;
       $media_item->transcript = $row->transcript;
+      $media_item->status = $row->status;
+      $media_items[] = $media_item;
+    }
+  }
+  return $media_items;
+}
+
+/**
+ * Load the embedded files (youtube, vimeo etc).
+ *
+ * @param $nid
+ * @param bool $permanent_only
+ * @return array
+ */
+function sbac_media_load_embedded_materials($nid, $permanent_only = FALSE) {
+  $media_items = array();
+  if ($nid) {
+    if ($permanent_only) {
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status = :status
+                AND e.fid = 0
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS);
+    }
+    else {
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status <> :status
+                AND e.fid = 0
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_DELETE_FILE_STATUS);
+    }
+    $result = db_query($sql, $args);
+    foreach ($result as $row) {
+      $media_item = new stdClass();
+      $media_item->type = $row->type;
+      $media_item->id = $row->id;
+      $media_item->fid = $row->fid;
+      $media_item->nid = $row->nid;
+      $media_item->filename = $row->filename;
+      $media_item->filesize = $row->file_size;
+      $media_item->filehash = $row->file_hash;
+      $media_item->weight = $row->weight;
+      $media_item->document_id = $row->document_id;
+      $media_item->embed_url = $row->embed_url;
+      $media_item->transcript = $row->transcript;
+      $media_item->status = $row->status;
       $media_items[] = $media_item;
     }
   }
