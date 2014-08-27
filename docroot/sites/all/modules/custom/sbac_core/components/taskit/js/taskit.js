@@ -24,9 +24,9 @@ Drupal.behaviors.sbac_taskit = {
       });
     });
 
-    $('.section-notifications a').click(function(e) {
-      Drupal.behaviors.sbac_taskit.mark_notifications_read();
-    });
+//    $('.section-notifications a').click(function(e) {
+//      Drupal.behaviors.sbac_taskit.mark_notifications_read();
+//    });
   },
 
   /**
