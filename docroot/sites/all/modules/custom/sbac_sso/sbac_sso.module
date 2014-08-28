@@ -976,8 +976,7 @@ function sbac_sso_saml_assertion() {
   global $base_url;
   $string = user_password(10);
   $date = date('Y-m-d') . 'T' . date('H:i:s') . '.073Z';
-  error_log($base_url);
-  $saml_assertion = '<samlp:AuthnRequest ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" IssueInstant="' . $date . '" Destination="http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer><samlp:NameIDPolicy AllowCreate="true" /></samlp:AuthnRequest>';
+  $saml_assertion = '<samlp:AuthnRequest ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" IssueInstant="' . $date . '" Destination="' . SBAC_SSO_URL . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer><samlp:NameIDPolicy AllowCreate="true" /></samlp:AuthnRequest>';
   error_log($saml_assertion);
   return $saml_assertion;
 }
