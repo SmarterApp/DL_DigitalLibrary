@@ -19,6 +19,8 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     case 'stage2':
     case 'stage3':
     case 'loadtest':
+    case 'sbac-023-d':
+    case 'sbac-023-train':
       define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
