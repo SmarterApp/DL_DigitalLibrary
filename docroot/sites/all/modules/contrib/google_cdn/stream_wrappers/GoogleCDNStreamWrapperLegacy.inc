@@ -2,109 +2,108 @@
 
 /**
  * @file
- * Implements DrupalStreamWrapperInterface to provide a Google Cloud
- * stream wrapper.
+ * Implements DrupalStreamWrapperInterface.
  */
 
 class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
 
   /**
-   * @var Google Cloud Store connection object
+   * Google Cloud Store connection object.
    */
   protected $gcs = NULL;
 
   /**
-   * @var Google Cloud Store client object
+   * Google Cloud Store client object.
    */
   protected $client = NULL;
 
   /**
-   * @var Google Cloud Store credential object
+   * Google Cloud Store credential object.
    */
   protected $cred = NULL;
 
   /**
-   * @var Google Cloud Store API domain.
+   * Google Cloud Store API domain.
    */
   protected $domain = GOOGLE_CDN_API_DOMAIN;
 
   /**
-   * @var String Instance URI referenced as "gs://bucket/"
+   * String Instance URI referenced as "gs://bucket/".
    */
   protected $uri;
 
   /**
-   * @var string Google Cloud Storage client ID
+   * String Google Cloud Storage client ID.
    */
   protected $clientId;
 
   /**
-   * @var string Google Cloud Storage service account name
+   * String Google Cloud Storage service account name.
    */
   protected $serviceAccountName;
 
   /**
-   * @var string Google Cloud Store bucket name
+   * String Google Cloud Store bucket name.
    */
   protected $bucket;
 
   /**
-   * @var string Google Cloud Store folder name
+   * String Google Cloud Store folder name.
    */
   protected $folder;
 
   /**
-   * @var string Google Cloud Store allowed key.
+   * String Google Cloud Store allowed key.
    */
   protected $key;
 
   /**
-   * @var string Google Cloud Store allowed keyFilePath.
+   * String Google Cloud Store allowed keyFilePath.
    */
   protected $keyFilePath;
 
   /**
-   * @var string Google Cloud Store allowed pemFile.
+   * String Google Cloud Store allowed pemFile.
    */
   protected $pemFile;
 
   /**
-   * @var string Google Cloud Store allowed pemFid.
+   * String Google Cloud Store allowed pemFid.
    */
   protected $pemFid;
 
   /**
-   * A buffer for reading/wrting.
+   * Int A buffer for reading/wrting.
    */
   protected $object = NULL;
 
   /**
-   * @var int Current read/write position
+   * Int current read/write position.
    */
   protected $position = 0;
 
   /**
-   * @var int Total size of the object
+   * Int total size of the object.
    */
   protected $objectSize = 0;
 
   /**
-   * @var string buffer
+   * String buffer.
    */
   protected $buffer = NULL;
 
   /**
-   * @var boolean Whether $buffer is active as a write buffer
+   * Boolean Whether $buffer is active as a write buffer.
    */
   protected $bufferWrite = FALSE;
 
   /**
-   * @var int Buffer length
+   * Int Buffer length.
    */
   protected $bufferLength = 0;
 
   /**
-   * @var bool HTTPS flag
+   * Bool HTTPS flag.
    */
   protected $https = FALSE;
 
@@ -132,8 +131,8 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
    *
    * URIs are formatted as "gs://bucket/key"
    *
-   * @return string
-   *   Returns the current URI of the instance.
+   * @param string $uri
+   *   The URI of the file.
    */
   public function setUri($uri) {
     $this->uri = $uri;
@@ -878,7 +877,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
   /**
    * Get file status.
    *
-   * @param null $uri
+   * @param string $uri
    *   The uri to the file.
    *
    * @return array
