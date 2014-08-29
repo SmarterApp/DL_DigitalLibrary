@@ -101,7 +101,7 @@ class Hooks extends \devtools\Hooks {
       if (strpos($hook, 'form') !== FALSE) {
         // call workbench's code
         if (module_exists('workbench_email')) {
-          workbench_email_module_implements_alter($implementations, $hook);
+          // workbench_email_module_implements_alter($implementations, $hook);
         }
 
         // now move our hook to the end

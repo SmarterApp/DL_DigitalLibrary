@@ -2347,7 +2347,7 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   }
 
   $node->field_thumbnail_uri['und'][0]['value'] = $uri . '::' . $url;
-  if (isset($media->filehash) && $media->filehash) {
+  if ($uri != 'no_img' && $url != 'no_img' && isset($media->filehash) && $media->filehash) {
     $node->field_thumbnail_uri['und'][0]['value'] .= '::' . $media->filehash;
   }
 }
