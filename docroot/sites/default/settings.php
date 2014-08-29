@@ -563,6 +563,18 @@ if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/sbac/sbac-settings.inc');
 }
 
+// Local DB settings
+$file = __DIR__ . '/dev_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
+}
+
+// Local Environment settings
+$file = __DIR__ . '/local_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
+}
+
 // Sets the Apache Solr Environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {

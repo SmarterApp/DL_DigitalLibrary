@@ -19,6 +19,8 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     case 'stage2':
     case 'stage3':
     case 'loadtest':
+    case 'sbac-023-d':
+    case 'sbac-023-train':
       define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
@@ -974,11 +976,8 @@ function sbac_sso_saml_assertion() {
   global $base_url;
   $string = user_password(10);
   $date = date('Y-m-d') . 'T' . date('H:i:s') . '.073Z';
-  $saml_assertion = '
-    <samlp:AuthnRequest ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" IssueInstant="' . $date . '" Destination="http://drcamp-dev.opentestsystem.org:8080/auth/SSORedirect/metaAlias/sbac/idp" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
-        <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer>
-        <samlp:NameIDPolicy AllowCreate="true" />
-    </samlp:AuthnRequest>';
+  $saml_assertion = '<samlp:AuthnRequest ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" IssueInstant="' . $date . '" Destination="' . SBAC_SSO_URL . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer><samlp:NameIDPolicy AllowCreate="true" /></samlp:AuthnRequest>';
+  error_log($saml_assertion);
   return $saml_assertion;
 }
 

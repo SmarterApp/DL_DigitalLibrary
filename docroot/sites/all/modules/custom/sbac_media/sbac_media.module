@@ -129,10 +129,10 @@ function sbac_media_get_item($id) {
 }
 
 /**
->>>>>>> sbac_load_test
  * Function to check if there are any downloadable files.
  *
- * @param $files
+ * @param $documents
+ *
  * @return bool
  */
 function sbac_media_downloadable_scheme($documents) {
@@ -641,6 +641,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Upload (100MB Max)',
     '#sbac_embed_video' => FALSE,
+    '#attributes' => array('class' => array('sbac-file-upload-button')),
     '#ajax'=> array(
       'callback'=>'sbac_media_widget_form_element_upload',
       'wrapper'=> 'sbac-field-file-container',

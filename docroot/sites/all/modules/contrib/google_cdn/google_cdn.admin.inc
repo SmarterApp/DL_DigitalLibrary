@@ -229,7 +229,7 @@ function google_cdn_admin($form, &$form_state) {
  * @return mixed
  *   The message container.
  */
-function google_cdn_admin_form_callback($form, &$form_state) {
+function google_cdn_admin_form_callback(array $form, array &$form_state) {
   return $form['google_cdn_library_options']['message_container'];
 }
 
@@ -246,7 +246,7 @@ function google_cdn_admin_form_callback($form, &$form_state) {
  * @return mixed
  *   the form element.
  */
-function google_cdn_admin_public_key_file_element_process($element, &$form_state, $form) {
+function google_cdn_admin_public_key_file_element_process(array $element, array &$form_state, array $form) {
   $element = file_managed_file_process($element, $form_state, $form);
   $element['upload_button']['#access'] = FALSE;
   if (isset($element['remove_button']['#submit'])) {
@@ -265,7 +265,7 @@ function google_cdn_admin_public_key_file_element_process($element, &$form_state
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_admin_validate($form, &$form_state) {
+function google_cdn_admin_validate(array $form, array &$form_state) {
   if (isset($form_state['clicked_button']) && $form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
     $info = libraries_load('google-api-php-client');
     $version = variable_get('google_cdn_library_version');
@@ -275,7 +275,7 @@ function google_cdn_admin_validate($form, &$form_state) {
         form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Service Account Name, Key file and Bucket Name.'));
       }
       if ($response['access_token'] && $response['bucket']) {
-        drupal_set_message('Success authenticating! We were able to connect to your Google Cloud Storage App.');
+        drupal_set_message(t('Success authenticating! We were able to connect to your Google Cloud Storage App.'));
       }
     }
     else {
@@ -295,7 +295,7 @@ function google_cdn_admin_validate($form, &$form_state) {
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_admin_submit($form, &$form_state) {
+function google_cdn_admin_submit(array $form, array &$form_state) {
   if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_SUBMIT_BUTTON) {
     variable_set('google_cdn_bucket_name', $form_state['values']['google_cdn_bucket_name']);
     variable_set('google_cdn_folder', $form_state['values']['google_cdn_folder']);
@@ -315,7 +315,7 @@ function google_cdn_admin_submit($form, &$form_state) {
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_admin_save_key_file(&$form, &$form_state) {
+function google_cdn_admin_save_key_file(array &$form, array &$form_state) {
   // Load the file.
   $file = file_load($form_state['values']['google_cdn_public_key_file']);
   // Change status to permanent.
@@ -388,7 +388,7 @@ function google_cdn_admin_save_pem_file($file, $real_path) {
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_delete_key_file($form, &$form_state) {
+function google_cdn_delete_key_file(array $form, array &$form_state) {
   $pem_fid = variable_get('google_cdn_pem_fid');
   if ($pem_fid) {
     $file = file_load($pem_fid);
@@ -410,7 +410,7 @@ function google_cdn_delete_key_file($form, &$form_state) {
     }
     unset($file);
   }
-  // just in case, migrating sometimes leaves files behind
-  db_query('DELETE FROM {file_managed} WHERE filename = :filename', array(':filename' => '886355e5443f9575c7ddc9740191a7b43bafd5aa-privatekey.p12'));
-  db_query('DELETE FROM {file_managed} WHERE filename = :filename', array(':filename' => 'google_key.pem'));
+  // Just in case, migrating sometimes leaves files behind.
+  db_delete('file_managed')->condition('filename', '886355e5443f9575c7ddc9740191a7b43bafd5aa-privatekey.p12');
+  db_delete('file_managed')->condition('filename', 'google_key.pem');
 }
