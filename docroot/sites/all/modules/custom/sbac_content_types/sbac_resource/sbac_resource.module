@@ -1074,9 +1074,11 @@ function _sbac_resource_embed_vid_thumb_url($media) {
  * @param  array $urls [(Primary option), (Secondary option)]
  * @param  string $filename Filename or Title of ebmedded video
  * @param  int $nid Node ID.
+ * @param  object $media the eck_media object
+ *
  * @return string           uri::url
  */
-function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) {
+function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, $media) {
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
@@ -1085,7 +1087,6 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
 
   // If the resource has a thumbnail already defined, do not bother downloading.
   $haystack = array(
-    'no_img::no_img',
     $default_file . '::' . $default_file,
   );
 
@@ -1094,12 +1095,14 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
   $query->condition('entity_id', $nid, '=');
   $result = $query->execute()->fetchAssoc();
   $result = array_pop($result);
-  if (!in_array($result, $haystack)) {
+  if (strpos($haystack, $result) === FALSE) {
     $result_array = explode('::', $result);
-    return array(
-      'uri' => $result_array[0],
-      'url' => $result_array[1],
-    );
+    if (isset($result_array[2]) && $result_array[2] != $media->filehash) {
+      return array(
+        'uri' => $result_array[0],
+        'url' => $result_array[1],
+      );
+    }
   }
 
   foreach ($urls as $url) {
@@ -2320,19 +2323,19 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       $thumb_opts = _sbac_resource_determine_card_image($ext);
       $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
       if (!$exists || ($thumb_opts[0] == 'no_img')) {
-        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, NULL, $nid);
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, NULL, $nid, $media);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
       }
       else {
-        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid);
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid, $media);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
       }
     }
     elseif (isset($media->embed_url)) {
       $thumb_urls = _sbac_resource_embed_vid_thumb_url($media);
-      $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $media->filename, $nid);
+      $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $media->filename, $nid, $media);
       $url = $thumb_url['url'];
       $uri = $thumb_url['uri'];
     }
@@ -2347,6 +2350,9 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   }
 
   $node->field_thumbnail_uri['und'][0]['value'] = $uri . '::' . $url;
+  if (isset($media->filehash) && $media->filehash) {
+    $node->field_thumbnail_uri['und'][0]['value'] .= '::' . $media->filehash;
+  }
 }
 
 /**
