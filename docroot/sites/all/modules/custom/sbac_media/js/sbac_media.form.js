@@ -67,13 +67,13 @@
             element.form.clk = element;
           }
           var element_id = element.id;
-          if (element_id.indexOf('file-upload-button') > -1) {
+          if (typeof element_id == 'string' && element_id.indexOf('file-upload-button') > -1) {
             $('.video-embed-button').attr('disabled', 'disabled');
             $('#edit-cancel').attr('disabled', 'disabled');
             $('#sbac-resource-save-continue button').attr('disabled', 'disabled');
             $('#edit-save-continue').attr('disabled', 'disabled');
           }
-          if (element_id.indexOf('embed-video-button') > -1) {
+          if (typeof element_id == 'string' && element_id.indexOf('embed-video-button') > -1) {
             $('.sbac-file-upload-button').attr('disabled', 'disabled');
             $('#edit-cancel').attr('disabled', 'disabled');
             $('#sbac-resource-save-continue button').attr('disabled', 'disabled');
@@ -138,13 +138,13 @@
       this.settings = null;
 
       var element_id = this.selector;
-      if (element_id.indexOf('file-upload-button') > -1) {
+      if (typeof element_id == 'string' && element_id.indexOf('file-upload-button') > -1) {
         $('.video-embed-button').removeAttr('disabled');
         $('#edit-cancel').removeAttr('disabled');
         $('#sbac-resource-save-continue button').removeAttr('disabled');
         $('#edit-save-continue').removeAttr('disabled');
       }
-      if (element_id.indexOf('embed-video-button') > -1) {
+      if (typeof element_id == 'string' && element_id.indexOf('embed-video-button') > -1) {
         $('.sbac-file-upload-button').removeAttr('disabled');
         $('#edit-cancel').removeAttr('disabled');
         $('#sbac-resource-save-continue button').removeAttr('disabled');
