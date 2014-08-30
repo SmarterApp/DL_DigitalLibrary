@@ -1086,9 +1086,7 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
   $default_file = 'no_img';
 
   // If the resource has a thumbnail already defined, do not bother downloading.
-  $haystack = array(
-    $default_file . '::' . $default_file,
-  );
+  $haystack = $default_file . '::' . $default_file;
 
   $query = db_select('field_data_field_thumbnail_uri', 'ft');
   $query->fields('ft', array('field_thumbnail_uri_value'));
@@ -1126,7 +1124,6 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
             $uri_url['url'] = $url;
             $thumbnail_exists = TRUE;
             if (_sbac_resource_determine_file_type_icon($file_ext) == 'image') {
-              error_log('generate image');
               theme('image_style', array(
                 'style_name' => 'resource_profile',
                 'path' => $download->uri,
@@ -2350,7 +2347,7 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   }
 
   $node->field_thumbnail_uri['und'][0]['value'] = $uri . '::' . $url;
-  if (isset($media->filehash) && $media->filehash) {
+  if ($uri != 'no_img' && $url != 'no_img' && isset($media->filehash) && $media->filehash) {
     $node->field_thumbnail_uri['und'][0]['value'] .= '::' . $media->filehash;
   }
 }
