@@ -1130,6 +1130,7 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
                 'alt' => 'Resource preview"'
               ));
             }
+            return $uri_url;
           }
           else {
             watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
