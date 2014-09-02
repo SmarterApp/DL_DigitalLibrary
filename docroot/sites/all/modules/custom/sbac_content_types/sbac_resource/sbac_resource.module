@@ -1082,7 +1082,6 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
-  // $default_file = 'public://file.png';
   $default_file = 'no_img';
 
   // If the resource has a thumbnail already defined, do not bother downloading.
@@ -1118,7 +1117,6 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
         $filename = $filename . '.' . $ext;
         if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
           $download = sbac_resource_system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
-
           if ($download) {
             $uri_url['uri'] = $download->uri;
             $uri_url['url'] = $url;
