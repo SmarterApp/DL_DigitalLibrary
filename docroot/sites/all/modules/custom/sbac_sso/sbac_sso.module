@@ -22,6 +22,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     case 'sbac-023-d':
     case 'sbac-023-train':
       define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenants');
+      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
@@ -38,6 +41,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 }
 else {
   define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac');
+  define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenants');
+  define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
   define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
   define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
   define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
@@ -78,6 +84,13 @@ function sbac_sso_menu() {
     'page callback' => 'sbac_sso_session_expire_modal',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
+  );
+
+  $items['sbac-sso-cron'] = array(
+    'title' => 'SBAC Cron',
+    'page callback' => 'sbac_sso_test_cron',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -697,7 +710,7 @@ function sbac_sso_program_management_api_request($user_attributes) {
       }
       else {
         // Verify structure with current cached result.
-        $api_response = sbac_sso_parse_program_api_result($json, FALSE);
+        $api_response = sbac_sso_parse_program_api_response($json, FALSE);
       }
     }
   }
@@ -734,21 +747,74 @@ function sbac_sso_program_management_api_request($user_attributes) {
       }
     }
 
+    $api_response = sbac_sso_get_program_management_response($user_attributes, $query_string);
+  }
+  return $api_response;
+}
+
+/**
+ * Get the program management response.
+ *
+ * @param $user_attributes
+ * @param $query_string
+ * @return array
+ */
+function sbac_sso_get_program_management_response($user_attributes, $query_string) {
+  $api_response = array();
+  // POST to https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac
+  // with Content-Type = application/x-www-form-urlenocded
+  // and the following params:
+  // grant_type=client_credentials
+  // username=sbac.amp@example.com
+  // password=amplify12345
+  // client_id=pm
+  // client_secret=sbac12345
+  $request_creds = array(
+    'grant_type' => 'client_credentials',
+    'username' => 'sbac.amp@example.com',
+    'password' => 'amplify12345',
+    'client_id' => 'pm',
+    'client_secret' => 'sbac12345'
+  );
+  $post = SBAC_SSO_PROGRAM_REQUEST_AUTH;
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $post);
+  curl_setopt($curl, CURLOPT_POST, 1);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($request_creds));
+  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($curl, CURLOPT_SSLVERSION, 3);
+  $result = curl_exec($curl);
+  $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  curl_close($curl);
+  unset($curl);
+
+  $access_token = NULL;
+  $json_response = drupal_json_decode($result);
+  if ($http_status == 200 && $json_response) {
+    $access_token = $json_response['access_token'];
+  }
+
+  if ($access_token) {
     $data = http_build_query($query_string);
-    $post = SBAC_SSO_PROGRAM_API . '?' . $data;
+    $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $post);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Authorization: Bearer ' . $access_token,
+    ));
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($curl, CURLOPT_SSLVERSION,3);
     $result = curl_exec($curl);
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
-
     if ($result && $http_status == 200) {
-      $api_response = sbac_sso_parse_program_api_result($result, TRUE);
+      $api_response = sbac_sso_parse_program_api_response($result, TRUE);
     }
   }
+
   return $api_response;
 }
 
@@ -760,7 +826,7 @@ function sbac_sso_program_management_api_request($user_attributes) {
  *
  * @return array
  */
-function sbac_sso_parse_program_api_result($result, $decode = FALSE) {
+function sbac_sso_parse_program_api_response($result, $decode = FALSE) {
   $api_response = array();
   if ($decode) {
     $json = drupal_json_decode($result);
@@ -771,7 +837,7 @@ function sbac_sso_parse_program_api_result($result, $decode = FALSE) {
   $error = FALSE;
 
   if ($json) {
-    if (isset($json['searchInput']) === FALSE || isset($json['tenants']) === FALSE) {
+    if (isset($json['tenants']) === FALSE) {
       return $api_response;
     }
 
@@ -1130,26 +1196,64 @@ ZVN0YXRlbWVudD48L3NhbWw6QXNzZXJ0aW9uPjwvc2FtbHA6UmVzcG9uc2U+';
  * Used later to retrieve local copy vs API call each
  * user login attempt.
  */
-function sbac_sso_cron() {
-  $post = SBAC_SSO_PROGRAM_API_LIST;
+function sbac_sso_test_cron() {
+  // POST to https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac
+  // with Content-Type = application/x-www-form-urlenocded
+  // and the following params:
+  // grant_type=client_credentials
+  // username=sbac.amp@example.com
+  // password=amplify12345
+  // client_id=pm
+  // client_secret=sbac12345
+  $request_creds = array(
+    'grant_type' => 'client_credentials',
+    'username' => 'sbac.amp@example.com',
+    'password' => 'amplify12345',
+    'client_id' => 'pm',
+    'client_secret' => 'sbac12345'
+  );
+  $post = SBAC_SSO_PROGRAM_REQUEST_AUTH;
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, $post);
+  curl_setopt($curl, CURLOPT_POST, 1);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($request_creds));
+  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($curl, CURLOPT_SSLVERSION,3);
+  curl_setopt($curl, CURLOPT_SSLVERSION, 3);
   $result = curl_exec($curl);
   $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
   curl_close($curl);
+  unset($curl);
 
-  if ($result && $http_status == 200) {
-    $json_responses = drupal_json_decode($result);
-    $cached_results = variable_get('sbac_sso_pm_cached_results');
-    foreach ($json_responses as $json) {
-      $new_format = array();
-      $new_format['searchInput']['typeAndValues']['STATE'] = $json['name'];
-      $new_format['tenants'][] = $json;
-      $cached_results[$json['name']] = $new_format;
+  $access_token = NULL;
+  $json_response = drupal_json_decode($result);
+  if ($http_status == 200 && $json_response) {
+    $access_token = $json_response['access_token'];
+  }
+
+  if ($access_token) {
+    $post = SBAC_SSO_PROGRAM_OAUTH_API_LIST;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $post);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Authorization: Bearer ' . $access_token,
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($curl, CURLOPT_SSLVERSION,3);
+    $result = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+    if ($result && $http_status == 200) {
+      $json_responses = drupal_json_decode($result);
+      $cached_results = variable_get('sbac_sso_pm_cached_results');
+      foreach ($json_responses as $json) {
+        $new_format = array();
+        $new_format['tenants'][] = $json;
+        $cached_results[$json['name']] = $new_format;
+      }
+      variable_set('sbac_sso_pm_cached_results', $cached_results);
     }
-    variable_set('sbac_sso_pm_cached_results', $cached_results);
   }
 }
