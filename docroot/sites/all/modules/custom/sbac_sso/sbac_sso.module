@@ -369,6 +369,7 @@ function sbac_sso_consume() {
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = base64_decode($_POST['SAMLResponse']);
+    // $saml_token = base64_decode(sbac_sso_get_saml_token2());
     $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
@@ -692,62 +693,61 @@ function sbac_sso_create_user_attributes($response) {
  * @return array
  */
 function sbac_sso_program_management_api_request($user_attributes) {
-  $api_response = array();
-
-  // Check the cache table.
-  $cached_results = variable_get('sbac_sso_pm_cached_results');
-  if ($cached_results && isset($cached_results[$user_attributes['state_id']])) {
-    $json = $cached_results[$user_attributes['state_id']];
-    // If there is no expiration date, force another API call.
-    if (isset($json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'])) {
-      $expiration_date = $json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'];
-      $expiration_date_epoch = strtotime($expiration_date);
-      if ($expiration_date_epoch < time()) {
-        // If its past the expiration date, delete this entry and
-        // force another API call.
-        unset($cached_results[$user_attributes['state_id']]);
-        variable_set('sbac_sso_pm_cached_results', $cached_results);
-      }
-      else {
-        // Verify structure with current cached result.
-        $api_response = sbac_sso_parse_program_api_response($json, FALSE);
+  //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
+  //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
+  //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
+  //  All of which are in the tenancy chains received in an SSO Assertion.
+  $query_string = '';
+  $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
+  foreach ($user_attributes as $index => $attribute) {
+    if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
+      switch ($index) {
+        case 'group_of_states':
+          $query_string['STATE_GROUP'] = $attribute;
+          break;
+        case 'state_id':
+          $query_string['STATE'] = $attribute;
+          break;
+        case 'group_of_districts':
+          $query_string['DISTRICT_GROUP'] = $attribute;
+          break;
+        case 'district_id':
+          $query_string['DISTRICT'] = $attribute;
+          break;
+        case 'group_of_institutions':
+          $query_string['INSTITUTION_GROUP'] = $attribute;
+          break;
+        case 'institution_id':
+          $query_string['INSTITUTION'] = $attribute;
+          break;
       }
     }
   }
 
-  if (empty($api_response)) {
-    //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
-    //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
-    //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
-    //  All of which are in the tenancy chains received in an SSO Assertion.
-    $query_string = '';
-    $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
-    foreach ($user_attributes as $index => $attribute) {
-      if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
-        switch ($index) {
-          case 'group_of_states':
-            $query_string['STATE_GROUP'] = $attribute;
-            break;
-          case 'state_id':
-            $query_string['STATE'] = $attribute;
-            break;
-          case 'group_of_districts':
-            $query_string['DISTRICT_GROUP'] = $attribute;
-            break;
-          case 'district_id':
-            $query_string['DISTRICT'] = $attribute;
-            break;
-          case 'group_of_institutions':
-            $query_string['INSTITUTION_GROUP'] = $attribute;
-            break;
-          case 'institution_id':
-            $query_string['INSTITUTION'] = $attribute;
-            break;
+  // Check the cache table.
+  $cached_results = variable_get('sbac_sso_pm_cached_results');
+  if ($cached_results) {
+    $valid_cached_results = array();
+    foreach ($query_string as $type => $value) {
+      foreach ($cached_results[$type] as $cached_id => $cached_result) {
+        if ($cached_result['name'] == $value) {
+          $valid_cached_results['tenants'][] = $cached_result;
+          break;
         }
       }
     }
 
-    $api_response = sbac_sso_get_program_management_response($user_attributes, $query_string);
+    if ($valid_cached_results) {
+      // Verify structure with current cached result if found.
+      $api_response = sbac_sso_parse_program_api_response($valid_cached_results, FALSE);
+    }
+    else {
+      // Else request API to attempt to get new response.
+      $api_response = sbac_sso_get_program_management_response($query_string);
+    }
+  }
+  else {
+    $api_response = sbac_sso_get_program_management_response($query_string);
   }
   return $api_response;
 }
@@ -755,12 +755,42 @@ function sbac_sso_program_management_api_request($user_attributes) {
 /**
  * Get the program management response.
  *
- * @param $user_attributes
  * @param $query_string
  * @return array
  */
-function sbac_sso_get_program_management_response($user_attributes, $query_string) {
+function sbac_sso_get_program_management_response($query_string) {
   $api_response = array();
+  $access_token = sbac_sso_get_program_management_oauth_access_token();
+  if ($access_token) {
+    $query_string['DISTRICT'] = 'DC';
+    $query_string['INSTITUTION'] = 'Appnovation Institution';
+    $data = http_build_query($query_string);
+    $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $post);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Authorization: Bearer ' . $access_token,
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($curl, CURLOPT_SSLVERSION,3);
+    $result = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+    if ($result && $http_status == 200) {
+      $api_response = sbac_sso_parse_program_api_response($result, TRUE);
+    }
+  }
+
+  return $api_response;
+}
+
+/**
+ * Get the oauth access token.
+ *
+ * @return null
+ */
+function sbac_sso_get_program_management_oauth_access_token() {
   // POST to https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac
   // with Content-Type = application/x-www-form-urlenocded
   // and the following params:
@@ -791,31 +821,11 @@ function sbac_sso_get_program_management_response($user_attributes, $query_strin
   unset($curl);
 
   $access_token = NULL;
-  $json_response = drupal_json_decode($result);
-  if ($http_status == 200 && $json_response) {
+  if ($http_status == 200 && $result) {
+    $json_response = drupal_json_decode($result);
     $access_token = $json_response['access_token'];
   }
-
-  if ($access_token) {
-    $data = http_build_query($query_string);
-    $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $post);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-      'Authorization: Bearer ' . $access_token,
-    ));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($curl, CURLOPT_SSLVERSION,3);
-    $result = curl_exec($curl);
-    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
-    if ($result && $http_status == 200) {
-      $api_response = sbac_sso_parse_program_api_response($result, TRUE);
-    }
-  }
-
-  return $api_response;
+  return $access_token;
 }
 
 /**
@@ -828,16 +838,14 @@ function sbac_sso_get_program_management_response($user_attributes, $query_strin
  */
 function sbac_sso_parse_program_api_response($result, $decode = FALSE) {
   $api_response = array();
+  $json = $result;
   if ($decode) {
     $json = drupal_json_decode($result);
-  }
-  else {
-    $json = $result;
   }
   $error = FALSE;
 
   if ($json) {
-    if (isset($json['tenants']) === FALSE) {
+    if ($decode && isset($json['tenants']) === FALSE) {
       return $api_response;
     }
 
@@ -1197,41 +1205,7 @@ ZVN0YXRlbWVudD48L3NhbWw6QXNzZXJ0aW9uPjwvc2FtbHA6UmVzcG9uc2U+';
  * user login attempt.
  */
 function sbac_sso_test_cron() {
-  // POST to https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac
-  // with Content-Type = application/x-www-form-urlenocded
-  // and the following params:
-  // grant_type=client_credentials
-  // username=sbac.amp@example.com
-  // password=amplify12345
-  // client_id=pm
-  // client_secret=sbac12345
-  $request_creds = array(
-    'grant_type' => 'client_credentials',
-    'username' => 'sbac.amp@example.com',
-    'password' => 'amplify12345',
-    'client_id' => 'pm',
-    'client_secret' => 'sbac12345'
-  );
-  $post = SBAC_SSO_PROGRAM_REQUEST_AUTH;
-  $curl = curl_init();
-  curl_setopt($curl, CURLOPT_URL, $post);
-  curl_setopt($curl, CURLOPT_POST, 1);
-  curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($request_creds));
-  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($curl, CURLOPT_SSLVERSION, 3);
-  $result = curl_exec($curl);
-  $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-  curl_close($curl);
-  unset($curl);
-
-  $access_token = NULL;
-  $json_response = drupal_json_decode($result);
-  if ($http_status == 200 && $json_response) {
-    $access_token = $json_response['access_token'];
-  }
-
+  $access_token = sbac_sso_get_program_management_oauth_access_token();
   if ($access_token) {
     $post = SBAC_SSO_PROGRAM_OAUTH_API_LIST;
     $curl = curl_init();
@@ -1249,9 +1223,7 @@ function sbac_sso_test_cron() {
       $json_responses = drupal_json_decode($result);
       $cached_results = variable_get('sbac_sso_pm_cached_results');
       foreach ($json_responses as $json) {
-        $new_format = array();
-        $new_format['tenants'][] = $json;
-        $cached_results[$json['name']] = $new_format;
+        $cached_results[$json['type']][$json['id']] = $json;
       }
       variable_set('sbac_sso_pm_cached_results', $cached_results);
     }
