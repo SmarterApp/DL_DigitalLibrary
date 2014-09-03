@@ -704,6 +704,9 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
  * Returns the image icon.
  *
  * @param $fields
+ * @param $view_display
+ *
+ * @return string
  */
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
@@ -714,7 +717,6 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $class = 'list-image lazy';
     }
 
-    // $default_file = 'public://file.png';
     $default_file = 'no_img';
     $uri = NULL;
     $url = NULL;
@@ -744,14 +746,11 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     }
 
     if ($uri != 'no_img' && $url != 'no_img') {
-      $variables['image'] = theme('image_style', array(
-        'style_name' => 'resource_image_grid',
-        'path' => $uri,
-        'attributes' => array('class' => $class),
-        'alt' => 'Resource thumbnail image'
-      ));
+      $image_url = file_create_url($uri);
+      $image_tag = '<img class="' . $class . '" typeof="foaf:Image" src="' . $image_url . '" width="268" height="138" alt="Resource thumbnail image" />';
+      $variables['image'] = $image_tag;
       $variables['mime-type'] = file_get_mimetype($url);
-      $variables['file-type-icon'] = 'document'; //_sbac_resource_determine_file_type_icon($ext);
+      $variables['file-type-icon'] = 'document';
     }
   }
   if (count($thumbnail_pieces) && $uri != 'no_img' && $url != 'no_img') {
