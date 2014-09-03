@@ -1110,7 +1110,7 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
       if (_sbac_resource_determine_file_type_icon($ext) != 'image') {
         $ext = 'png';
       }
-      $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
+      $dir = 'public://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
       if ($filename) {
         $filename = $filename . '.' . $ext;
         if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
