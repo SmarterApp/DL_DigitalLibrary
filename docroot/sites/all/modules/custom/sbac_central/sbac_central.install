@@ -1320,3 +1320,13 @@ function sbac_central_update_7091() {
   );
   module_disable($modules);
 }
+
+/**
+ * Enable oscaddie_gcs.
+ */
+function sbac_central_update_7092() {
+  $modules = array(
+    'oscaddie_gcs',
+  );
+  module_enable($modules);
+}
