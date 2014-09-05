@@ -748,3 +748,10 @@ form[id*="sbac-report-ct-individual-modal-form"] button {
   float: right;
   margin-left: 20px;
 }
+
+/* line 790, ../sass/sbac_report.scss */
+.page-reports #user_activity p,
+.page-reports #sbac_report_tab_forum p {
+  font-size: 1rem;
+  margin-bottom: 0.25em;
+}
