@@ -2,35 +2,35 @@
 
 /**
  * @file
- * Provides Admin interface to Google CDN.
+ * Provides Admin interface to osCaddie GCS.
  */
 
 /**
  * Implements hook_admin().
  */
-function google_cdn_admin($form, &$form_state) {
+function oscaddie_gcs_admin($form, &$form_state) {
   $errors = FALSE;
   $form['#attached']['css'] = array(
-    drupal_get_path('module', 'google_cdn') . '/css/google_cdn.css',
+    drupal_get_path('module', 'oscaddie_gcs') . '/css/oscaddie_gcs.css',
   );
 
   $openssl = extension_loaded('openssl');
   $directory = 'private://';
   $private_directory = file_prepare_directory($directory, 'FILE_EXIST');
-  $version = variable_get('google_cdn_library_version');
+  $version = variable_get('oscaddie_gcs_library_version');
   if ($version) {
     $info = libraries_load('google-api-php-client');
   }
   if (!$openssl || !$private_directory || (isset($info['loaded']) && !$info['loaded'])) {
     $errors = TRUE;
-    $form['google_cdn_warning_details'] = array(
+    $form['oscaddie_gcs_warning_details'] = array(
       '#type' => 'fieldset',
       '#title' => t('Configuration Issues'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
     );
-    $documentation_link = l(t('documentation'), GOOGLE_CDN_ONLINE_DOCUMENTATION_LINK);
-    $form['google_cdn_warning_details']['general'] = array(
+    $documentation_link = l(t('documentation'), OSCADDIE_GCS_ONLINE_DOCUMENTATION_LINK);
+    $form['oscaddie_gcs_warning_details']['general'] = array(
       '#type' => 'item',
       '#markup' => t('We have detected issues with the requirements of the
         modules installation. Please fix the issues below before continuing
@@ -57,122 +57,122 @@ function google_cdn_admin($form, &$form_state) {
       'title' => t('Issues Found'),
       'type' => 'ul',
     ));
-    $form['google_cdn_warning_details']['errors'] = array(
+    $form['oscaddie_gcs_warning_details']['errors'] = array(
       '#type' => 'item',
       '#markup' => $list,
     );
   }
 
-  $form['google_cdn_connection_details'] = array(
+  $form['oscaddie_gcs_connection_details'] = array(
     '#type' => 'fieldset',
     '#title' => t('Connection Details'),
     '#collapsible' => TRUE,
     '#collapsed' => $errors,
   );
 
-  $form['google_cdn_connection_details']['google_cdn_public_key_file'] = array(
+  $form['oscaddie_gcs_connection_details']['oscaddie_gcs_public_key_file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Public Key'),
-    '#default_value' => variable_get('google_cdn_public_key'),
+    '#default_value' => variable_get('oscaddie_gcs_public_key'),
     '#description' => t('The public p12 key that allows access to
       your Google Cloud Storage account.'),
     '#required' => TRUE,
     '#upload_validators' => array(
       'file_validate_extensions' => array('p12'),
     ),
-    '#upload_location' => 'private://google_cdn/',
-    '#process' => array('google_cdn_admin_public_key_file_element_process'),
+    '#upload_location' => 'private://oscaddie_gcs/',
+    '#process' => array('oscaddie_gcs_admin_public_key_file_element_process'),
   );
 
-  $form['google_cdn_connection_details']['google_cdn_client_id'] = array(
+  $form['oscaddie_gcs_connection_details']['oscaddie_gcs_client_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Service Account Client ID'),
-    '#default_value' => variable_get('google_cdn_client_id'),
+    '#default_value' => variable_get('oscaddie_gcs_client_id'),
     '#description' => t('The service account client ID credential. Should
       follow this pattern "xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"'),
     '#required' => TRUE,
   );
 
-  $form['google_cdn_connection_details']['google_cdn_service_account_name'] = array(
+  $form['oscaddie_gcs_connection_details']['oscaddie_gcs_service_account_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Service Account Name'),
-    '#default_value' => variable_get('google_cdn_service_account_name'),
+    '#default_value' => variable_get('oscaddie_gcs_service_account_name'),
     '#description' => t('The service account name credential. This is the email
       address that should look like xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@developer.gserviceaccount.com'),
     '#required' => TRUE,
   );
 
-  $form['google_cdn_connection_details']['google_cdn_bucket_name'] = array(
+  $form['oscaddie_gcs_connection_details']['oscaddie_gcs_bucket_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Bucket Name'),
-    '#default_value' => variable_get('google_cdn_bucket_name'),
+    '#default_value' => variable_get('oscaddie_gcs_bucket_name'),
     '#description' => t('The bucket name within Google Cloud Storage. This
       module only supports one bucket currently.'),
     '#required' => TRUE,
   );
 
-  $form['google_cdn_connection_details']['google_cdn_folder'] = array(
+  $form['oscaddie_gcs_connection_details']['oscaddie_gcs_folder'] = array(
     '#type' => 'textfield',
     '#title' => t('Folder Name'),
-    '#default_value' => variable_get('google_cdn_folder'),
+    '#default_value' => variable_get('oscaddie_gcs_folder'),
     '#description' => t('The folder name within Google Cloud Storage.
       Required in order to separate out environments. For example, local,
       dev, staging, prod etc.'),
     '#required' => TRUE,
   );
 
-  $form['google_cdn_library_options'] = array(
+  $form['oscaddie_gcs_library_options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Library Options'),
     '#collapsible' => TRUE,
     '#collapsed' => $errors,
   );
 
-  $form['google_cdn_library_options']['google_cdn_signed_url_expiry'] = array(
+  $form['oscaddie_gcs_library_options']['oscaddie_gcs_signed_url_expiry'] = array(
     '#type' => 'textfield',
     '#title' => t('Expiry'),
-    '#default_value' => variable_get('google_cdn_signed_url_expiry'),
+    '#default_value' => variable_get('oscaddie_gcs_signed_url_expiry'),
     '#description' => t('The amount of time in seconds that the
       signed url will expire. (Example: 300 = 5 minutes)'),
     '#required' => TRUE,
   );
 
-  $versions = array(GOOGLE_CDN_LIBRARY_VERSION_067 => t('0.6.7'), GOOGLE_CDN_LIBRARY_VERSION_105BETA => t('1.0.5-beta'));
-  $form['google_cdn_library_options']['google_cdn_library_version'] = array(
+  $versions = array(OSCADDIE_GCS_LIBRARY_VERSION_067 => t('0.6.7'), OSCADDIE_GCS_LIBRARY_VERSION_105BETA => t('1.0.5-beta'));
+  $form['oscaddie_gcs_library_options']['oscaddie_gcs_library_version'] = array(
     '#type' => 'radios',
     '#title' => t('Library Version'),
-    '#default_value' => variable_get('google_cdn_library_version'),
+    '#default_value' => variable_get('oscaddie_gcs_library_version'),
     '#description' => t('The Google PHP API library version in use.'),
     '#required' => TRUE,
     '#options' => $versions,
     '#ajax' => array(
-      'callback' => 'google_cdn_admin_form_callback',
-      'wrapper' => 'google-cdn-message-container',
+      'callback' => 'oscaddie_gcs_admin_form_callback',
+      'wrapper' => 'oscaddie-gcs-message-container',
       'effect' => 'fade',
     ),
   );
 
   // Determine which has been selected.
   $version = 0;
-  if (isset($form_state['values']['google_cdn_library_version']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_067) {
-    $version = GOOGLE_CDN_LIBRARY_VERSION_067;
+  if (isset($form_state['values']['oscaddie_gcs_library_version']) && $form_state['values']['oscaddie_gcs_library_version'] == OSCADDIE_GCS_LIBRARY_VERSION_067) {
+    $version = OSCADDIE_GCS_LIBRARY_VERSION_067;
   }
-  elseif (isset($form_state['values']['google_cdn_library_version']) && $form_state['values']['google_cdn_library_version'] == GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
-    $version = GOOGLE_CDN_LIBRARY_VERSION_105BETA;
+  elseif (isset($form_state['values']['oscaddie_gcs_library_version']) && $form_state['values']['oscaddie_gcs_library_version'] == OSCADDIE_GCS_LIBRARY_VERSION_105BETA) {
+    $version = OSCADDIE_GCS_LIBRARY_VERSION_105BETA;
   }
-  elseif (variable_get('google_cdn_library_version') != NULL) {
-    $version = variable_get('google_cdn_library_version');
+  elseif (variable_get('oscaddie_gcs_library_version') != NULL) {
+    $version = variable_get('oscaddie_gcs_library_version');
   }
 
-  if ($version == GOOGLE_CDN_LIBRARY_VERSION_067) {
-    $link = l(t('link'), GOOGLE_CDN_GITHUB_LINK, array('external' => TRUE));
+  if ($version == OSCADDIE_GCS_LIBRARY_VERSION_067) {
+    $link = l(t('link'), OSCADDIE_GCS_GITHUB_LINK, array('external' => TRUE));
     $message = '<p>' . t('This version of the Google PHP API Client Library
       is deprecated and no longer supported by Google. This version does
       work however, and if you would like to use the old library, the
       choice is yours. We recommend upgrading your version to the latest
       using this !link', array('!link' => $link)) . '</p>';
   }
-  elseif ($version = GOOGLE_CDN_LIBRARY_VERSION_105BETA) {
+  elseif ($version = OSCADDIE_GCS_LIBRARY_VERSION_105BETA) {
     $is_installed = module_exists('xautoload');
     $x_auto_load_link = l(t('XAutoload'), 'https://drupal.org/project/xautoload', array('external' => TRUE));
     if (!$is_installed) {
@@ -194,24 +194,24 @@ function google_cdn_admin($form, &$form_state) {
     $message = '<p>' . t('Please select a library version.') . '</p>';
   }
 
-  $form['google_cdn_library_options']['message_container'] = array(
+  $form['oscaddie_gcs_library_options']['message_container'] = array(
     '#type' => 'item',
     '#markup' => $message,
-    '#prefix' => '<div id="google-cdn-message-container">',
+    '#prefix' => '<div id="oscaddie-gcs-message-container">',
     '#suffix' => '</div>',
   );
 
-  if (variable_get('google_cdn_public_key', NULL) != NULL) {
+  if (variable_get('oscaddie_gcs_public_key', NULL) != NULL) {
     $form['test_connection'] = array(
       '#type' => 'submit',
-      '#value' => t('@test', array('@test' => GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON)),
+      '#value' => t('@test', array('@test' => OSCADDIE_GCS_ADMIN_TEST_CONNECTION_BUTTON)),
     );
   }
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('@save', array('@save' => GOOGLE_CDN_ADMIN_SUBMIT_BUTTON)),
-    '#submit' => array('google_cdn_admin_submit'),
+    '#value' => t('@save', array('@save' => OSCADDIE_GCS_ADMIN_SUBMIT_BUTTON)),
+    '#submit' => array('oscaddie_gcs_admin_submit'),
   );
 
   return $form;
@@ -229,8 +229,8 @@ function google_cdn_admin($form, &$form_state) {
  * @return mixed
  *   The message container.
  */
-function google_cdn_admin_form_callback($form, &$form_state) {
-  return $form['google_cdn_library_options']['message_container'];
+function oscaddie_gcs_admin_form_callback(array $form, array &$form_state) {
+  return $form['oscaddie_gcs_library_options']['message_container'];
 }
 
 /**
@@ -246,11 +246,11 @@ function google_cdn_admin_form_callback($form, &$form_state) {
  * @return mixed
  *   the form element.
  */
-function google_cdn_admin_public_key_file_element_process($element, &$form_state, $form) {
+function oscaddie_gcs_admin_public_key_file_element_process(array $element, array &$form_state, array $form) {
   $element = file_managed_file_process($element, $form_state, $form);
   $element['upload_button']['#access'] = FALSE;
   if (isset($element['remove_button']['#submit'])) {
-    $element['remove_button']['#submit'][] = 'google_cdn_delete_key_file';
+    $element['remove_button']['#submit'][] = 'oscaddie_gcs_delete_key_file';
   }
   return $element;
 }
@@ -265,17 +265,17 @@ function google_cdn_admin_public_key_file_element_process($element, &$form_state
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_admin_validate($form, &$form_state) {
-  if (isset($form_state['clicked_button']) && $form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_TEST_CONNECTION_BUTTON) {
+function oscaddie_gcs_admin_validate(array $form, array &$form_state) {
+  if (isset($form_state['clicked_button']) && $form_state['clicked_button']['#value'] == OSCADDIE_GCS_ADMIN_TEST_CONNECTION_BUTTON) {
     $info = libraries_load('google-api-php-client');
-    $version = variable_get('google_cdn_library_version');
+    $version = variable_get('oscaddie_gcs_library_version');
     if ($version && $info['loaded']) {
-      $response = google_cdn_test_connection($version);
+      $response = oscaddie_gcs_test_connection($version);
       if (empty($response)) {
-        form_set_error('google_cdn_public_key_file', t('Error authenticating. Please check the Service Account Name, Key file and Bucket Name.'));
+        form_set_error('oscaddie_gcs_public_key_file', t('Error authenticating. Please check the Service Account Name, Key file and Bucket Name.'));
       }
       if ($response['access_token'] && $response['bucket']) {
-        drupal_set_message('Success authenticating! We were able to connect to your Google Cloud Storage App.');
+        drupal_set_message(t('Success authenticating! We were able to connect to your Google Cloud Storage App.'));
       }
     }
     else {
@@ -295,15 +295,15 @@ function google_cdn_admin_validate($form, &$form_state) {
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_admin_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == GOOGLE_CDN_ADMIN_SUBMIT_BUTTON) {
-    variable_set('google_cdn_bucket_name', $form_state['values']['google_cdn_bucket_name']);
-    variable_set('google_cdn_folder', $form_state['values']['google_cdn_folder']);
-    variable_set('google_cdn_client_id', $form_state['values']['google_cdn_client_id']);
-    variable_set('google_cdn_service_account_name', $form_state['values']['google_cdn_service_account_name']);
-    variable_set('google_cdn_signed_url_expiry', $form_state['values']['google_cdn_signed_url_expiry']);
-    variable_set('google_cdn_library_version', $form_state['values']['google_cdn_library_version']);
-    google_cdn_admin_save_key_file($form, $form_state);
+function oscaddie_gcs_admin_submit(array $form, array &$form_state) {
+  if ($form_state['clicked_button']['#value'] == OSCADDIE_GCS_ADMIN_SUBMIT_BUTTON) {
+    variable_set('oscaddie_gcs_bucket_name', $form_state['values']['oscaddie_gcs_bucket_name']);
+    variable_set('oscaddie_gcs_folder', $form_state['values']['oscaddie_gcs_folder']);
+    variable_set('oscaddie_gcs_client_id', $form_state['values']['oscaddie_gcs_client_id']);
+    variable_set('oscaddie_gcs_service_account_name', $form_state['values']['oscaddie_gcs_service_account_name']);
+    variable_set('oscaddie_gcs_signed_url_expiry', $form_state['values']['oscaddie_gcs_signed_url_expiry']);
+    variable_set('oscaddie_gcs_library_version', $form_state['values']['oscaddie_gcs_library_version']);
+    oscaddie_gcs_admin_save_key_file($form, $form_state);
   }
 }
 
@@ -315,9 +315,9 @@ function google_cdn_admin_submit($form, &$form_state) {
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_admin_save_key_file(&$form, &$form_state) {
+function oscaddie_gcs_admin_save_key_file(array &$form, array &$form_state) {
   // Load the file.
-  $file = file_load($form_state['values']['google_cdn_public_key_file']);
+  $file = file_load($form_state['values']['oscaddie_gcs_public_key_file']);
   // Change status to permanent.
   $file->status = FILE_STATUS_PERMANENT;
   $file->replace = FILE_EXISTS_REPLACE;
@@ -325,12 +325,12 @@ function google_cdn_admin_save_key_file(&$form, &$form_state) {
   global $user;
   $account = $user;
   // Record that the module is using the file.
-  file_usage_add($file, 'google_cdn', 'admin', $account->uid);
+  file_usage_add($file, 'oscaddie_gcs', 'admin', $account->uid);
   if ($uploaded) {
     $real_path = drupal_realpath($file->uri);
-    variable_set('google_cdn_public_key', $file->fid);
-    variable_set('google_cdn_public_key_file_path', $real_path);
-    google_cdn_admin_save_pem_file($file, $real_path);
+    variable_set('oscaddie_gcs_public_key', $file->fid);
+    variable_set('oscaddie_gcs_public_key_file_path', $real_path);
+    oscaddie_gcs_admin_save_pem_file($file, $real_path);
   }
 }
 
@@ -342,17 +342,17 @@ function google_cdn_admin_save_key_file(&$form, &$form_state) {
  * @param string $real_path
  *   The path to the file.
  */
-function google_cdn_admin_save_pem_file($file, $real_path) {
+function oscaddie_gcs_admin_save_pem_file($file, $real_path) {
   $path_to_pem = str_replace($file->filename, '', $real_path);
   $path_to_pem .= 'google_key.pem';
-  $uri_to_pem = "private://google_cdn/google_key.pem";
+  $uri_to_pem = "private://oscaddie_gcs/google_key.pem";
 
   if (!file_exists($path_to_pem)) {
-    $password = GOOGLE_CDN_PROVIDED_KEY;
+    $password = OSCADDIE_GCS_PROVIDED_KEY;
     $pkey_result = array();
     $pkcs12_read = openssl_pkcs12_read(file_get_contents($real_path), $pkey_result, $password);
     if ($pkcs12_read) {
-      $new_password = GOOGLE_CDN_PROVIDED_KEY;
+      $new_password = OSCADDIE_GCS_PROVIDED_KEY;
       $pem_result = NULL;
       $pem_export = openssl_pkey_export($pkey_result['pkey'], $pem_result, $new_password);
       if ($pem_export) {
@@ -373,8 +373,8 @@ function google_cdn_admin_save_pem_file($file, $real_path) {
         file_save($file);
 
         // Save information for later use.
-        variable_set('google_cdn_pem_file_path', $path_to_pem);
-        variable_set('google_cdn_pem_fid', $file->fid);
+        variable_set('oscaddie_gcs_pem_file_path', $path_to_pem);
+        variable_set('oscaddie_gcs_pem_fid', $file->fid);
       }
     }
   }
@@ -388,29 +388,29 @@ function google_cdn_admin_save_pem_file($file, $real_path) {
  * @param array $form_state
  *   The form_state array.
  */
-function google_cdn_delete_key_file($form, &$form_state) {
-  $pem_fid = variable_get('google_cdn_pem_fid');
+function oscaddie_gcs_delete_key_file(array $form, array &$form_state) {
+  $pem_fid = variable_get('oscaddie_gcs_pem_fid');
   if ($pem_fid) {
     $file = file_load($pem_fid);
     if ($file) {
       file_delete($file);
-      variable_del('google_cdn_pem_fid');
-      variable_del('google_cdn_pem_file_path');
+      variable_del('oscaddie_gcs_pem_fid');
+      variable_del('oscaddie_gcs_pem_file_path');
     }
     unset($file);
   }
-  $p12_fid = variable_get('google_cdn_public_key');
+  $p12_fid = variable_get('oscaddie_gcs_public_key');
   if ($p12_fid) {
     $file = file_load($p12_fid);
     if ($file) {
-      file_usage_delete($file, 'google_cdn');
+      file_usage_delete($file, 'oscaddie_gcs');
       file_delete($file);
-      variable_del('google_cdn_public_key');
-      variable_del('google_cdn_public_key_file_path');
+      variable_del('oscaddie_gcs_public_key');
+      variable_del('oscaddie_gcs_public_key_file_path');
     }
     unset($file);
   }
-  // just in case, migrating sometimes leaves files behind
-  db_query('DELETE FROM {file_managed} WHERE filename = :filename', array(':filename' => '886355e5443f9575c7ddc9740191a7b43bafd5aa-privatekey.p12'));
-  db_query('DELETE FROM {file_managed} WHERE filename = :filename', array(':filename' => 'google_key.pem'));
+  // Just in case, migrating sometimes leaves files behind.
+  db_delete('file_managed')->condition('filename', '886355e5443f9575c7ddc9740191a7b43bafd5aa-privatekey.p12');
+  db_delete('file_managed')->condition('filename', 'google_key.pem');
 }

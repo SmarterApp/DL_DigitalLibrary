@@ -432,5 +432,6 @@ function sbac_core_notifications_get_html_content() {
   $notifications_content .= '</div>';
   $notifications_content .= taskit_page($account);
   $notifications_content .= '</div>';
+  taskit_mark_all_read($user);
   return $notifications_content;
 }

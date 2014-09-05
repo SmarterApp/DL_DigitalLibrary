@@ -1074,32 +1074,30 @@ function _sbac_resource_embed_vid_thumb_url($media) {
  * @param  array $urls [(Primary option), (Secondary option)]
  * @param  string $filename Filename or Title of ebmedded video
  * @param  int $nid Node ID.
- * @return string           uri::url
+ * @param  object $media the eck_media object
+ *
+ * @return string uri::url
  */
-function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) {
+function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, $media) {
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
-  // $default_file = 'public://file.png';
   $default_file = 'no_img';
-
   // If the resource has a thumbnail already defined, do not bother downloading.
-  $haystack = array(
-    'no_img::no_img',
-    $default_file . '::' . $default_file,
-  );
-
+  $haystack = $default_file . '::' . $default_file;
   $query = db_select('field_data_field_thumbnail_uri', 'ft');
   $query->fields('ft', array('field_thumbnail_uri_value'));
   $query->condition('entity_id', $nid, '=');
   $result = $query->execute()->fetchAssoc();
   $result = array_pop($result);
-  if (!in_array($result, $haystack)) {
+  if (strpos($haystack, $result) === FALSE) {
     $result_array = explode('::', $result);
-    return array(
-      'uri' => $result_array[0],
-      'url' => $result_array[1],
-    );
+    if (isset($result_array[2]) && $result_array[2] == $media->filehash) {
+      return array(
+        'uri' => $result_array[0],
+        'url' => $result_array[1],
+      );
+    }
   }
 
   foreach ($urls as $url) {
@@ -1112,24 +1110,19 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
       if (_sbac_resource_determine_file_type_icon($ext) != 'image') {
         $ext = 'png';
       }
-      $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
+      $dir = 'public://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
       if ($filename) {
         $filename = $filename . '.' . $ext;
         if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
           $download = sbac_resource_system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
-
           if ($download) {
             $uri_url['uri'] = $download->uri;
             $uri_url['url'] = $url;
-            $thumbnail_exists = TRUE;
             if (_sbac_resource_determine_file_type_icon($file_ext) == 'image') {
-              error_log('generate image');
-              theme('image_style', array(
-                'style_name' => 'resource_profile',
-                'path' => $download->uri,
-                'alt' => 'Resource preview"'
-              ));
+              $image_styles = image_styles();
+              image_style_create_derivative($image_styles['resource_image_grid'], $download->uri, $download->uri);
             }
+            return $uri_url;
           }
           else {
             watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
@@ -1149,9 +1142,6 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid) 
       $uri_url['uri'] = $default_file;
       $uri_url['url'] = $default_file;
       $thumbnail_exists = TRUE;
-    }
-    elseif ($thumbnail_exists) {
-      break;
     }
   }
   return $uri_url;
@@ -1588,7 +1578,7 @@ function sbac_resource_node_load($nodes, $types) {
     }
 
     if ($load) {
-      $media_items = sbac_media_load_items($node->nid);
+      $media_items = sbac_media_load_items($node->nid, TRUE);
       $node->document = $media_items;
       if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
         $html5_item = sbac_media_load_html5_item($node->nid);
@@ -1745,20 +1735,18 @@ function sbac_resource_save_current_state($node) {
           $entity = NULL;
           $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid'], 'gk_being_reviewed');
           if (!$new_record) {
-            sbac_resource_delete_resource_state($entity);
+            // update the existing record, set it to allow the user to still
+            // view the read only GK review.
+            sbac_resource_update_resource_state_given_state($node, 'gk_being_reviewed', 'gk_view_rejected');
           }
         }
         unset($gate_keeper);
 
-        // delete all qc_reviewed if they exist.
-        sbac_resource_delete_resource_state_given_state($node, 'qc_reviewed');
-
-        $entity = NULL;
-        $new_record = sbac_resource_get_state($entity, $node->nid, $user->uid);
-        if ($new_record) {
-          $entity->state = 'gk_view_rejected';
-          sbac_resource_save_resource_state($entity, $new_record);
-        }
+        // All reviewers who have reviewed the resource, still get read only access
+        // to the node. So, update there existing records from old state to new state
+        // of "gk_view_rejected"
+        sbac_resource_update_resource_state_given_state($node, 'qc_being_reviewed', 'gk_view_rejected');
+        sbac_resource_update_resource_state_given_state($node, 'qc_reviewed', 'gk_view_rejected');
         _sbac_resource_save_reviewers($node, 'field_recent_reviewers', $user);
       }
 
@@ -2134,6 +2122,20 @@ function sbac_resource_delete_resource_state_given_state($node, $old_state) {
 }
 
 /**
+ * Update the old state to the new state for the given nid.
+ *
+ * @param $node
+ * @param $old_state
+ * @param $new_state
+ */
+function sbac_resource_update_resource_state_given_state($node, $old_state, $new_state) {
+  db_update('sbac_node_resource_state')->fields(array('state' => $new_state))
+    ->condition('nid', $node->nid)
+    ->condition('state', $old_state)
+    ->execute();
+}
+
+/**
  * Remove all resource states related to this NID except the given state.
  *
  * @param $nid
@@ -2265,7 +2267,6 @@ function sbac_resource_node_delete($node) {
  * @param $node
  */
 function sbac_resource_determine_thumbnail_uri(&$node) {
-  // $default_file = 'public://file.png';
   $default_file = 'no_img';
   $nid = $node->nid;
   $media_items = sbac_media_load_items($node->nid);
@@ -2308,19 +2309,19 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
       $thumb_opts = _sbac_resource_determine_card_image($ext);
       $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
       if (!$exists || ($thumb_opts[0] == 'no_img')) {
-        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, NULL, $nid);
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, NULL, $nid, $media);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
       }
       else {
-        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid);
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid, $media);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
       }
     }
     elseif (isset($media->embed_url)) {
       $thumb_urls = _sbac_resource_embed_vid_thumb_url($media);
-      $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $media->filename, $nid);
+      $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $media->filename, $nid, $media);
       $url = $thumb_url['url'];
       $uri = $thumb_url['uri'];
     }
@@ -2335,6 +2336,9 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
   }
 
   $node->field_thumbnail_uri['und'][0]['value'] = $uri . '::' . $url;
+  if ($uri != 'no_img' && $url != 'no_img' && isset($media->filehash) && $media->filehash) {
+    $node->field_thumbnail_uri['und'][0]['value'] .= '::' . $media->filehash;
+  }
 }
 
 /**
@@ -2916,7 +2920,7 @@ function sbac_resource_node_access($node, $op, $account) {
 function sbac_resource_determine_access($node, $account, $op) {
   // state access
   $access = _sbac_resource_determine_state_access($node, $account);
-  if (($access || isset($_SERVER['HTTP_REFERER'])) && strpos($_SERVER['HTTP_REFERER'], 'resource-review') !== FALSE) {
+  if ($access) {
     // workflow access
     $access = _sbac_resource_determine_workflow_access($node, $account, $op);
   }
@@ -2975,15 +2979,8 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
       case 'being_reviewed':
         // author has view
         // resource reviewer has view/edit
-        $all_condition = db_and()->condition('s.state', array('gk_needs_review', 'qc_needs_review'), 'IN')->condition('s.uid', 0);
-        $user_condition = db_and()->condition('s.state', array('gk_being_reviewed', 'qc_being_reviewed', 'qc_reviewed'), 'IN')->condition('s.uid', $account->uid);
-        $query->condition(db_or()->condition($all_condition)->condition($user_condition));
-        $result = $query->execute();
-        $count = $result->rowCount();
-        if ($count) {
-          if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
-            $access = TRUE;
-          }
+        if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
         }
         if ($account->uid == $node->uid && $op == 'view') {
           $access = TRUE;
@@ -3554,7 +3551,7 @@ function _sbac_resource_is_recent_reviewers($resource_node, $account_uid) {
                     DISTINCT r.field_recent_reviewers_target_id
                 FROM {field_data_field_recent_reviewers} r
                 WHERE r.entity_id = :nid", array(':nid' => $resource_node->nid))->fetchCol();
-    if (_sbac_resource_is_in_quality_review($resource_node) && count($original_reviewers) < 3) {
+    if (_sbac_resource_is_in_quality_review($resource_node) && count($original_reviewers) < 4) {
       $result[$resource_node->nid][$account_uid] = TRUE;
     }
     else {

@@ -3331,3 +3331,16 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .digital-library .view-filters {
   display: none;
 }
+
+/* close/save/continue button can't be clickable when uploading a material*/
+/* line 3230, ../sass/sbac_resource.scss */
+.node-type-resource .video-embed-button[disabled],
+.node-type-resource .sbac-resource-cancel-button[disabled],
+.node-type-resource #sbac-resource-save-continue .secondary[disabled],
+.node-type-resource #edit-save-continue[disabled],
+.page-node-add-resource .video-embed-button[disabled],
+.page-node-add-resource .sbac-resource-cancel-button[disabled],
+.page-node-add-resource #sbac-resource-save-continue .secondary[disabled],
+.page-node-add-resource #edit-save-continue[disabled] {
+  cursor: progress;
+}

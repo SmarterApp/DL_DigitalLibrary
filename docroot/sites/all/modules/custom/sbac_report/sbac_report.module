@@ -115,6 +115,14 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['reports/missing-files-report'] = array(
+    'title' => 'Missing Files Report',
+    'file' => 'sbac_report.mf.inc',
+    'page callback' => 'sbac_report_mf_report',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -379,6 +387,7 @@ function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $dat
         array(
           'which' => $which,
           'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+          'cumulative' => $date_options['Cumulative to date'],
           'ago_30' => $date_options['Last 30 Days'],
           'ago_60' => $date_options['Last 60 Days'],
           'ago_90' => $date_options['Last 90 Days'],

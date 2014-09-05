@@ -101,7 +101,7 @@ class Hooks extends \devtools\Hooks {
       if (strpos($hook, 'form') !== FALSE) {
         // call workbench's code
         if (module_exists('workbench_email')) {
-          workbench_email_module_implements_alter($implementations, $hook);
+          // workbench_email_module_implements_alter($implementations, $hook);
         }
 
         // now move our hook to the end
@@ -298,15 +298,21 @@ class Hooks extends \devtools\Hooks {
     }
     // resource node form on the main resource profile page (ie. edit tags)
     elseif ($form_id == 'resource_node_form' && isset($form_state['build_info']['args'][1]) && $form_state['build_info']['args'][1] == 'edit_tags') {
-      $data = entity_load('feedback', FALSE, array(
-        'type' => 'post',
-        'completed' => 0,
-        'status' => 1,
-      ));
+      $post_id = db_select('eck_feedback', 'f')
+        ->condition('f.type', 'post')
+        ->condition('f.node_id', $form_state['node']->nid)
+        ->condition('f.created', _sbac_resource_resubmit_timestamp($form_state['node']->nid), '>')
+        ->condition('f.status', 1)
+        ->condition('f.completed', 0)
+        ->condition('f.current', 1)
+        ->fields('f', array('id'))
+        ->orderBy('f.id', 'DESC')
+        ->range(0, 1)
+        ->execute()
+        ->fetchField();
+      $post = entity_load_single('feedback', $post_id);
 
-      if ($data) {
-        $post = array_shift($data);
-
+      if (!empty($post)) {
         // remove data we're not interested in
           $remove = array(
             'group_basic',

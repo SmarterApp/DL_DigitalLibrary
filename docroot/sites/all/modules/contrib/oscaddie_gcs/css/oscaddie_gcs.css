@@ -1,9 +1,9 @@
 /**
  * @file
- * CSS for Google CDN module.
+ * CSS for osCaddie GCS module.
  */
 
-#google-cdn-message-container {
+#oscaddie-gcs-message-container {
   background-color: #fdf2b1;
   color: #101010;
   border: 5px solid #ffffff;
@@ -14,11 +14,11 @@
   position: relative;
 }
 
-#google-cdn-message-container .form-item {
+#oscaddie-gcs-message-container .form-item {
   margin: 0;
 }
 
-#google-cdn-message-container p {
+#oscaddie-gcs-message-container p {
   margin-bottom: 0;
-	font-size: 13px;
+  font-size: 13px;
 }

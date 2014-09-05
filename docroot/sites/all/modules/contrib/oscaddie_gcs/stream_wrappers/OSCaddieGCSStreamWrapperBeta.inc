@@ -2,109 +2,108 @@
 
 /**
  * @file
- * Implements DrupalStreamWrapperInterface to provide a Google Cloud
- * stream wrapper.
+ * Implements DrupalStreamWrapperInterface.
  */
 
-class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
+class OSCaddieGCSStreamWrapperBeta implements DrupalStreamWrapperInterface {
 
   /**
-   * @var Google Cloud Store connection object
+   * Google Cloud Store connection object.
    */
   protected $gcs = NULL;
 
   /**
-   * @var Google Cloud Store client object
+   * Google Cloud Store client object.
    */
   protected $client = NULL;
 
   /**
-   * @var Google Cloud Store credential object
+   * Google Cloud Store credential object.
    */
   protected $cred = NULL;
 
   /**
-   * @var Google Cloud Store API domain.
+   * Google Cloud Store API domain.
    */
-  protected $domain = GOOGLE_CDN_API_DOMAIN;
+  protected $domain = OSCADDIE_GCS_API_DOMAIN;
 
   /**
-   * @var String Instance URI referenced as "gs://bucket/"
+   * String Instance URI referenced as "gs://bucket/".
    */
   protected $uri;
 
   /**
-   * @var string Google Cloud Storage client ID
+   * String Google Cloud Storage client ID.
    */
   protected $clientId;
 
   /**
-   * @var string Google Cloud Storage service account name
+   * String Google Cloud Storage service account name.
    */
   protected $serviceAccountName;
 
   /**
-   * @var string Google Cloud Store bucket name
+   * String Google Cloud Store bucket name.
    */
   protected $bucket;
 
   /**
-   * @var string Google Cloud Store folder name
+   * String Google Cloud Store folder name.
    */
   protected $folder;
 
   /**
-   * @var string Google Cloud Store allowed key.
+   * String Google Cloud Store allowed key.
    */
   protected $key;
 
   /**
-   * @var string Google Cloud Store allowed keyFilePath.
+   * String Google Cloud Store allowed keyFilePath.
    */
   protected $keyFilePath;
 
   /**
-   * @var string Google Cloud Store allowed pemFile.
+   * String Google Cloud Store allowed pemFile.
    */
   protected $pemFile;
 
   /**
-   * @var string Google Cloud Store allowed pemFid.
+   * String Google Cloud Store allowed pemFid.
    */
   protected $pemFid;
 
   /**
-   * A buffer for reading/wrting.
+   * Int A buffer for reading/wrting.
    */
   protected $object = NULL;
 
   /**
-   * @var int Current read/write position
+   * Int current read/write position.
    */
   protected $position = 0;
 
   /**
-   * @var int Total size of the object
+   * Int total size of the object.
    */
   protected $objectSize = 0;
 
   /**
-   * @var string buffer
+   * String buffer.
    */
   protected $buffer = NULL;
 
   /**
-   * @var boolean Whether $buffer is active as a write buffer
+   * Boolean Whether $buffer is active as a write buffer.
    */
   protected $bufferWrite = FALSE;
 
   /**
-   * @var int Buffer length
+   * Int Buffer length.
    */
   protected $bufferLength = 0;
 
   /**
-   * @var bool HTTPS flag
+   * Bool HTTPS flag.
    */
   protected $https = FALSE;
 
@@ -116,14 +115,14 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
       $this->https = TRUE;
     }
 
-    $this->clientId = variable_get('google_cdn_client_id');
-    $this->serviceAccountName = variable_get('google_cdn_service_account_name');
-    $this->bucket = variable_get('google_cdn_bucket_name');
-    $this->folder = variable_get('google_cdn_folder');
-    $this->key = variable_get('google_cdn_public_key');
-    $this->keyFilePath = variable_get('google_cdn_public_key_file_path');
-    $this->pemFile = variable_get('google_cdn_pem_file_path');
-    $this->pemFid = variable_get('google_cdn_pem_fid');
+    $this->clientId = variable_get('oscaddie_gcs_client_id');
+    $this->serviceAccountName = variable_get('oscaddie_gcs_service_account_name');
+    $this->bucket = variable_get('oscaddie_gcs_bucket_name');
+    $this->folder = variable_get('oscaddie_gcs_folder');
+    $this->key = variable_get('oscaddie_gcs_public_key');
+    $this->keyFilePath = variable_get('oscaddie_gcs_public_key_file_path');
+    $this->pemFile = variable_get('oscaddie_gcs_pem_file_path');
+    $this->pemFid = variable_get('oscaddie_gcs_pem_fid');
     $this->getGCS();
   }
 
@@ -132,8 +131,8 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
    *
    * URIs are formatted as "gs://bucket/key"
    *
-   * @return string
-   *   Returns the current URI of the instance.
+   * @param string $uri
+   *   The URI of the file.
    */
   public function setUri($uri) {
     $this->uri = $uri;
@@ -179,7 +178,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         $url = $this->generateSignedURL($local_path);
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getExternalUrl');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::getExternalUrl');
       }
     }
     return $url;
@@ -283,7 +282,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_open');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::stream_open');
       }
     }
 
@@ -355,7 +354,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
           }
         }
         catch (Exception $e) {
-          watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::stream_read');
+          watchdog_exception('gooogle_cdn', $e, 'OSCaddieGCSStreamWrapper::stream_read');
         }
       }
     }
@@ -453,7 +452,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         $local_path = $this->getLocalPath($this->uri);
         $file->setName($this->folder . '/' . $local_path);
         $post_body = array(
-          'mimeType' => GoogleCDNStreamWrapperBeta::getMimeType($this->uri),
+          'mimeType' => OSCaddieGCSStreamWrapperBeta::getMimeType($this->uri),
           'data' => $this->buffer,
         );
         $chunk_size_bytes = 1 * 1024 * 1024;
@@ -462,7 +461,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         $media = new Google_Http_MediaFileUpload(
           $this->client,
           $request,
-          GoogleCDNStreamWrapperBeta::getMimeType($this->uri),
+          OSCaddieGCSStreamWrapperBeta::getMimeType($this->uri),
           NULL,
           TRUE,
           $chunk_size_bytes
@@ -484,7 +483,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_flush');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::stream_flush');
       }
     }
     $this->clearBuffer();
@@ -538,7 +537,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exceception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::unlink');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::unlink');
       }
     }
     return FALSE;
@@ -576,7 +575,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::rename');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::rename');
       }
     }
     return FALSE;
@@ -793,10 +792,10 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
         drupal_set_message(t('Unable to load the Google API PHP library. Please check you have installed the library correctly.') . 'error');
       }
       elseif (!class_exists('Google_Client')) {
-        watchdog('Google CDN', 'Google Client class not defined.');
+        watchdog('osCaddie GCS', 'Google Client class not defined.');
       }
       elseif (empty($this->bucket)) {
-        watchdog('Google CDN', 'Bucket name not configured.');
+        watchdog('osCaddie GCS', 'Bucket name not configured.');
       }
       else {
         try {
@@ -827,7 +826,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
           $this->cred = $cred;
         }
         catch (Exception $e) {
-          watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getGCS');
+          watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::getGCS');
         }
       }
     }
@@ -845,7 +844,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
   protected function generateSignedURL($file_path) {
     // This policy is defined in
     // https://developers.google.com/storage/docs/accesscontrol#Signed-URLs.
-    $expiry = time() + variable_get('google_cdn_signed_url_expiry');
+    $expiry = time() + variable_get('oscaddie_gcs_signed_url_expiry');
     $file_info = explode('/', $file_path);
     $file_name = rawurlencode(array_pop($file_info));
     $file_path = implode('/', $file_info) . '/' . $file_name;
@@ -855,7 +854,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
     $fp = fopen($this->pemFile, 'r');
     $private_key = fread($fp, 8192);
     fclose($fp);
-    $pkeyid = openssl_get_privatekey($private_key, "notasecret");
+    $pkeyid = openssl_get_privatekey($private_key, OSCADDIE_GCS_PROVIDED_KEY);
     if (openssl_sign($string_policy, $signature, $pkeyid, 'sha256')) {
       $signature = urlencode(base64_encode($signature));
     }
@@ -875,7 +874,7 @@ class GoogleCDNStreamWrapperBeta implements DrupalStreamWrapperInterface {
   /**
    * Get file status.
    *
-   * @param null $uri
+   * @param string $uri
    *   The uri to the file.
    *
    * @return array

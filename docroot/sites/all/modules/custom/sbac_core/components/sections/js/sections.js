@@ -169,7 +169,10 @@ if (Drupal.ajax) {
           ajax.beforeSerialize(ajax.element, ajax.options);
           $.ajax(ajax.options);
           if ($('#main').find($(element)).length > 0) {
-            $(element).addClass('section-loaded');
+            var section_id = $(element).attr('section_id')
+            if (typeof section_id !== typeof undefined && section_id !== false) {
+              $(element).addClass('section-loaded');
+            }
           }
         }
       }

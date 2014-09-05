@@ -1427,9 +1427,11 @@ function sbac_forum_taxonomy_term_presave($term) {
     global $user;
 
     // Cleanup task to ensure that state list is unset if access is set to "all states";
-    $state_access = $term->field_forum_access_states[LANGUAGE_NONE][0]['value'];
+    if (isset($term->field_forum_access_states) && !empty($term->field_forum_access_states[LANGUAGE_NONE])) {
+      $state_access = $term->field_forum_access_states[LANGUAGE_NONE][0]['value'];
+    }
     $state_restrictions = array();
-    if ($state_access) {
+    if (!empty($state_access)) {
       $term->field_state[LANGUAGE_NONE] = array(); // Unset the selection for state lists.
     }
     else { // forum has been state restricted. Get states.
@@ -1442,9 +1444,11 @@ function sbac_forum_taxonomy_term_presave($term) {
     }
 
     // Cleanup task to ensure that role list is unset if access is set to "all roles"; AKA title
-    $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
+    if (isset($term->field_forum_access_user_roles) && !empty($term->field_forum_access_user_roles[LANGUAGE_NONE])) {
+      $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
+    }
     $role_restrictions = array();
-    if ($role_access) {
+    if (!empty($role_access)) {
       $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
     }
     else {
@@ -1458,10 +1462,10 @@ function sbac_forum_taxonomy_term_presave($term) {
 
     $people_to_notify = array();
     $entity_list = array();
-    $member_count = $term->field_forum_member_count[LANGUAGE_NONE][0]['value'];
-    $removed_member_count = $term->field_forum_removed_member_count[LANGUAGE_NONE][0]['value'];
-    if (((!empty($state_restrictions)) || (!empty($role_restrictions))) &&
-      ($member_count > 1)
+    if (isset($term->field_forum_member_count) && !empty($term->field_forum_member_count[LANGUAGE_NONE])) {
+      $member_count = $term->field_forum_member_count[LANGUAGE_NONE][0]['value'];
+    }
+    if (((!empty($state_restrictions)) || (!empty($role_restrictions))) && (!empty($member_count) && $member_count > 1)
     ) { // no need to run notify if there is only the creator as member.
 
       $term_data = entity_metadata_wrapper('taxonomy_term', $term);
@@ -1550,7 +1554,9 @@ function sbac_forum_taxonomy_term_presave($term) {
     }
 
     // Get all nodes tagged with this term / in this forum.
-    $nodes = taxonomy_select_nodes($term->tid, FALSE);
+    if (isset($term->tid)) {
+      $nodes = taxonomy_select_nodes($term->tid, FALSE);
+    }
     if (!empty($nodes)) {
       // All comments for all the nodes must be re-indexed.
       $query = new EntityFieldQuery();
@@ -2097,6 +2103,10 @@ function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description, $d
 function sbac_forum_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource' && $new_state == 'published') {
     sbac_forum_create_resource_forum($node->nid);
+    // this node is published through the review process, remove the auto favourite
+    // entry from this user
+    global $user;
+    db_delete('sbac_favorites')->condition('type', 'node')->condition('uid', $user->uid)->condition('id', $node->nid)->execute();
   }
 }
 
