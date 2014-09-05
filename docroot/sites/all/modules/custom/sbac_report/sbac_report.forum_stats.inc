@@ -172,6 +172,125 @@ function sbac_report_forum_get_forums($resource_filters) {
 }
 
 /**
+ * Forum Statistics report column configuration
+ *
+ * @return array
+ */
+function sbac_report_forum_get_columns() {
+  return array(
+    'Title' => array(
+      'function' => 'sbac_report_get_entity_wrapper_value',
+      'arguments' => array(
+        'field_name' => 'name',
+      )
+    ),
+    'Type' => array(
+      'function' => 'sbac_report_forum_get_type'
+    ),
+    'Description' => array(
+      'function' => 'sbac_report_get_entity_wrapper_value',
+      'arguments' => array(
+        'field_name' => 'field_forum_description',
+      )
+    ),
+    'Date Created' => array(
+      'function' => 'sbac_report_forum_get_date_created',
+    ),
+    'Created By Email' => array(
+      'function' => 'sbac_report_forum_get_created_by_email',
+    ),
+    'Created By Name' => array(
+      'function' => 'sbac_report_forum_get_created_by_name',
+    ),
+    'Created By State' => array(
+      'function' => 'sbac_report_forum_get_created_by_state',
+    ),
+    'Visibility: States' => array(
+      'function' => 'sbac_report_get_entity_wrapper_multi_value',
+      'arguments' => array(
+        'field_name' => 'field_state',
+        'default' => 'All',
+      )
+    ),
+    'Visibility: Users' => array(
+      'function' => 'sbac_report_forum_get_visibility_users',
+    ),
+    'Subjects/Domain' => array(
+      'function' => 'sbac_report_get_entity_wrapper_multi_value',
+      'arguments' => array(
+        'field_name' => 'field_subject',
+      )
+    ),
+    'Grades' => array(
+      'function' => 'sbac_report_get_entity_wrapper_multi_value',
+      'arguments' => array(
+        'field_name' => 'field_grades',
+      )
+    ),
+    'Attributes of the Formative Assessment Process' => array(
+      'function' => 'sbac_report_get_entity_wrapper_multi_value',
+      'arguments' => array(
+        'field_name' => 'field_attributes',
+      )
+    ),
+    'Intended Student Populations' => array(
+      'function' => 'sbac_report_get_entity_wrapper_multi_value',
+      'arguments' => array(
+        'field_name' => 'field_intended_student',
+      )
+    ),
+    'Intended Forum Participants' => array(
+      'function' => 'sbac_report_get_entity_wrapper_multi_value',
+      'arguments' => array(
+        'field_name' => 'field_intended_end_user',
+      )
+    ),
+    'Geographic Settings' => array(
+      'function' => 'sbac_report_get_entity_wrapper_multi_value',
+      'arguments' => array(
+        'field_name' => 'field_geographical_settings',
+      )
+    ),
+    'Number of Participants' => array(
+      'function' => 'sbac_report_get_entity_wrapper_value',
+      'arguments' => array(
+        'field_name' => 'field_forum_member_count',
+      )
+    ),
+    'Number of Unique Views' => array(
+      'function' => 'sbac_report_forum_get_unique_views'
+    ),
+    'Favorites: Total # Users' => array(
+      'function' => 'sbac_report_forum_get_favorite_count'
+    ),
+    'Number of Topics' => array(
+      'function' => 'sbac_report_get_entity_wrapper_value',
+      'arguments' => array(
+        'field_name' => 'field_forum_topic_count',
+      )
+    ),
+    'Number of Posts' => array(
+      'function' => 'sbac_report_get_entity_wrapper_value',
+      'arguments' => array(
+        'field_name' => 'field_forum_topic_comment_count',
+      )
+    ),
+    'Last Activity Date' => array(
+      'function' => 'sbac_report_forum_get_last_activity',
+    ),
+    'Number of Recommended Posts' => array(
+      'function' => 'sbac_report_forum_get_recommended_count'
+    ),
+    'Number of Flagged Topics' => array(
+      'function' => 'sbac_report_forum_get_flagged_topic_count'
+    ),
+    'Number of Flagged Posts' => array(
+      'function' => 'sbac_report_forum_get_flagged_post_count'
+    ),
+  );
+}
+
+/**
  * Batch function
  *
  * @param $forums
@@ -185,117 +304,7 @@ function sbac_report_forum_statistics_batch($forums, $forum_filters, &$context) 
 
   // First time through.
   if (!isset($context['sandbox']['file'])) {
-    $columns = array(
-      'Title' => array(
-        'function' => 'sbac_report_get_entity_wrapper_value',
-        'arguments' => array(
-          'field_name' => 'name',
-        )
-      ),
-      'Type' => array(
-        'function' => 'sbac_report_forum_get_type'
-      ),
-      'Description' => array(
-        'function' => 'sbac_report_get_entity_wrapper_value',
-        'arguments' => array(
-          'field_name' => 'field_forum_description',
-        )
-      ),
-      'Date Created' => array(
-        'function' => 'sbac_report_forum_get_date_created',
-      ),
-      'Created By Email' => array(
-        'function' => 'sbac_report_forum_get_created_by_email',
-      ),
-      'Created By Name' => array(
-        'function' => 'sbac_report_forum_get_created_by_name',
-      ),
-      'Created By State' => array(
-        'function' => 'sbac_report_forum_get_created_by_state',
-      ),
-      'Visibility: States' => array(
-        'function' => 'sbac_report_get_entity_wrapper_multi_value',
-        'arguments' => array(
-          'field_name' => 'field_state',
-          'default' => 'All',
-        )
-      ),
-      'Visibility: Users' => array(
-        'function' => 'sbac_report_forum_get_visibility_users',
-      ),
-      'Subjects/Domain' => array(
-        'function' => 'sbac_report_get_entity_wrapper_multi_value',
-        'arguments' => array(
-          'field_name' => 'field_subject',
-        )
-      ),
-      'Grades' => array(
-        'function' => 'sbac_report_get_entity_wrapper_multi_value',
-        'arguments' => array(
-          'field_name' => 'field_grades',
-        )
-      ),
-      'Attributes of the Formative Assessment Process' => array(
-        'function' => 'sbac_report_get_entity_wrapper_multi_value',
-        'arguments' => array(
-          'field_name' => 'field_attributes',
-        )
-      ),
-      'Intended Student Populations' => array(
-        'function' => 'sbac_report_get_entity_wrapper_multi_value',
-        'arguments' => array(
-          'field_name' => 'field_intended_student',
-        )
-      ),
-      'Intended Forum Participants' => array(
-        'function' => 'sbac_report_get_entity_wrapper_multi_value',
-        'arguments' => array(
-          'field_name' => 'field_intended_end_user',
-        )
-      ),
-      'Geographic Settings' => array(
-        'function' => 'sbac_report_get_entity_wrapper_multi_value',
-        'arguments' => array(
-          'field_name' => 'field_geographical_settings',
-        )
-      ),
-      'Number of Participants' => array(
-        'function' => 'sbac_report_get_entity_wrapper_value',
-        'arguments' => array(
-          'field_name' => 'field_forum_member_count',
-        )
-      ),
-      'Number of Unique Views' => array(
-        'function' => 'sbac_report_forum_get_unique_views'
-      ),
-      'Favorites: Total # Users' => array(
-        'function' => 'sbac_report_forum_get_favorite_count'
-      ),
-      'Number of Topics' => array(
-        'function' => 'sbac_report_get_entity_wrapper_value',
-        'arguments' => array(
-          'field_name' => 'field_forum_topic_count',
-        )
-      ),
-      'Number of Posts' => array(
-        'function' => 'sbac_report_get_entity_wrapper_value',
-        'arguments' => array(
-          'field_name' => 'field_forum_topic_comment_count',
-        )
-      ),
-      'Last Activity Date' => array(
-        'function' => 'sbac_report_forum_get_last_activity',
-      ),
-      'Number of Recommended Posts' => array(
-        'function' => 'sbac_report_forum_get_recommended_count'
-      ),
-      'Number of Flagged Topics' => array(
-        'function' => 'sbac_report_forum_get_flagged_topic_count'
-      ),
-      'Number of Flagged Posts' => array(
-        'function' => 'sbac_report_forum_get_flagged_post_count'
-      ),
-    );
+    $columns = sbac_report_forum_get_columns();
     $context['sandbox']['report_configuration'] = $columns;
 
     // CSV Headers.
