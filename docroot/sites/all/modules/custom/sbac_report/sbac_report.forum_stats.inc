@@ -1,4 +1,14 @@
 <?php
+/**
+ * @file
+ * Include file for Forum Statistics Report
+ *
+ * Provides:
+ *  - UI forms and handler
+ *  - Batch functions for running the report
+ *  - The column specifications for the report
+ *  - Functions necessary to retrieve the values of the report
+ */
 
 /**
  * Forum types
