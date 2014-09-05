@@ -1442,6 +1442,7 @@ function sbac_report_get_average_rating($fieldkey, $data, $resource) {
         break;
     }
     $query->condition('r.node_id', $resource->nid->value());
+    $query->condition('r.status', 1);
     return $query->execute()->fetchField() * 4 / 100;
   }
 }
