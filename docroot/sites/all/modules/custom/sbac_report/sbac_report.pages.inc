@@ -101,6 +101,12 @@ function sbac_report_individual() {
     )
   );
 
+  $csv_form3 = drupal_get_form('sbac_csv_report_forum_stats_form');
+  $csv_forum_stats_tab = theme('sbac_csv_report_forum_stats', array(
+      'form' => $csv_form3,
+    )
+  );
+
   $output = array(
     '#type' => 'vertical_tabs',
     '#attached' => array(
@@ -146,6 +152,18 @@ function sbac_report_individual() {
         '#markup' => $csv_resource_stats_tab,
       ),
     );
+
+    $output[SBAC_REPORT_TAB_FORUM] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('Forum Statistics Reprot (CSV Report)'),
+      '#attributes' => array(
+        'id' => SBAC_REPORT_TAB_FORUM,
+      ),
+      'content' => array(
+        '#markup' => $csv_forum_stats_tab,
+      ),
+    );
   }
 
   $default_tab = SBAC_REPORT_TAB_INDIVIDUAL;
@@ -159,6 +177,7 @@ function sbac_report_individual() {
         SBAC_REPORT_TAB_INDIVIDUAL,
         SBAC_REPORT_TAB_USER,
         SBAC_REPORT_TAB_STATES,
+        SBAC_REPORT_TAB_FORUM,
       ),
       'default_tab' => $default_tab,
     ),

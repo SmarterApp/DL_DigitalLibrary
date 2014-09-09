@@ -5,7 +5,7 @@
  */
 ?>
 <h2 class="report-title"><?php print t('User Activity (CSV Report)'); ?></h2>
-Includes site activity statistics for all users, including:
+<p>Includes site activity statistics for all users, including:</p>
 <ul>
   <li>Basic user information</li>
   <li>Activity in the Digital Library</li>

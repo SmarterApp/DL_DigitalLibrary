@@ -5,7 +5,7 @@
  * Implements DrupalStreamWrapperInterface.
  */
 
-class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
+class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
 
   /**
    * Google Cloud Store connection object.
@@ -25,7 +25,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
   /**
    * Google Cloud Store API domain.
    */
-  protected $domain = GOOGLE_CDN_API_DOMAIN;
+  protected $domain = OSCADDIE_GCS_API_DOMAIN;
 
   /**
    * String Instance URI referenced as "gs://bucket/".
@@ -115,14 +115,14 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
       $this->https = TRUE;
     }
 
-    $this->clientId = variable_get('google_cdn_client_id');
-    $this->serviceAccountName = variable_get('google_cdn_service_account_name');
-    $this->bucket = variable_get('google_cdn_bucket_name');
-    $this->folder = variable_get('google_cdn_folder');
-    $this->key = variable_get('google_cdn_public_key');
-    $this->keyFilePath = variable_get('google_cdn_public_key_file_path');
-    $this->pemFile = variable_get('google_cdn_pem_file_path');
-    $this->pemFid = variable_get('google_cdn_pem_fid');
+    $this->clientId = variable_get('oscaddie_gcs_client_id');
+    $this->serviceAccountName = variable_get('oscaddie_gcs_service_account_name');
+    $this->bucket = variable_get('oscaddie_gcs_bucket_name');
+    $this->folder = variable_get('oscaddie_gcs_folder');
+    $this->key = variable_get('oscaddie_gcs_public_key');
+    $this->keyFilePath = variable_get('oscaddie_gcs_public_key_file_path');
+    $this->pemFile = variable_get('oscaddie_gcs_pem_file_path');
+    $this->pemFid = variable_get('oscaddie_gcs_pem_fid');
     $this->getGCS();
   }
 
@@ -178,7 +178,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         $url = $this->generateSignedURL($local_path);
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getExternalUrl');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::getExternalUrl');
       }
     }
 
@@ -283,7 +283,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_open');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::stream_open');
       }
     }
 
@@ -354,7 +354,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
           }
         }
         catch (Exception $e) {
-          watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::stream_read');
+          watchdog_exception('gooogle_cdn', $e, 'OSCaddieGCSStreamWrapper::stream_read');
         }
       }
     }
@@ -450,9 +450,9 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
       try {
         $local_path = $this->getLocalPath();
         $chunk_size_bytes = 1 * 1024 * 1024;
-        $media = new Google_MediaFileUpload(GoogleCDNStreamWrapperLegacy::getMimeType($this->uri), $this->buffer, TRUE, $chunk_size_bytes);
+        $media = new Google_MediaFileUpload(OSCaddieGCSStreamWrapperLegacy::getMimeType($this->uri), $this->buffer, TRUE, $chunk_size_bytes);
         $postbody = array(
-          'mimeType' => GoogleCDNStreamWrapperLegacy::getMimeType($this->uri),
+          'mimeType' => OSCaddieGCSStreamWrapperLegacy::getMimeType($this->uri),
           'data' => $this->buffer,
           'mediaUpload' => $media,
         );
@@ -471,7 +471,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_flush');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::stream_flush');
       }
     }
     $this->clearBuffer();
@@ -525,7 +525,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exceception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::unlink');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::unlink');
       }
     }
     return FALSE;
@@ -563,7 +563,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::rename');
+        watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::rename');
       }
     }
     return FALSE;
@@ -629,7 +629,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
       }
     }
     catch (Exception $e) {
-      watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::stream_flush');
+      watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::stream_flush');
     }
 
     return FALSE;
@@ -796,10 +796,10 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         drupal_set_message(t('Unable to load the Google API PHP library. Please check you have installed the library correctly.') . 'error');
       }
       elseif (!class_exists('Google_Client')) {
-        watchdog('Google CDN', 'Google Client class not defined.');
+        watchdog('osCaddie GCS', 'Google Client class not defined.');
       }
       elseif (empty($this->bucket)) {
-        watchdog('Google CDN', 'Bucket name not configured.');
+        watchdog('osCaddie GCS', 'Bucket name not configured.');
       }
       else {
         try {
@@ -829,7 +829,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
           $this->cred = $cred;
         }
         catch (Exception $e) {
-          watchdog_exception('google_cdn', $e, 'GoogleCDNStreamWrapper::getGCS');
+          watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::getGCS');
         }
       }
     }
@@ -847,7 +847,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
   protected function generateSignedURL($file_path) {
     // This policy is defined in
     // https://developers.google.com/storage/docs/accesscontrol#Signed-URLs.
-    $expiry = time() + variable_get('google_cdn_signed_url_expiry');
+    $expiry = time() + variable_get('oscaddie_gcs_signed_url_expiry');
     $file_info = explode('/', $file_path);
     $file_name = rawurlencode(array_pop($file_info));
     $file_path = implode('/', $file_info) . '/' . $file_name;
@@ -857,7 +857,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
     $fp = fopen($this->pemFile, 'r');
     $private_key = fread($fp, 8192);
     fclose($fp);
-    $pkeyid = openssl_get_privatekey($private_key, "notasecret");
+    $pkeyid = openssl_get_privatekey($private_key, OSCADDIE_GCS_PROVIDED_KEY);
     if (openssl_sign($string_policy, $signature, $pkeyid, 'sha256')) {
       $signature = urlencode(base64_encode($signature));
     }
@@ -920,7 +920,7 @@ class GoogleCDNStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         }
       }
       catch (Exception $e) {
-        // watchdog_exception('google_cdn', $e);
+        // watchdog_exception('oscaddie_gcs', $e);
       }
     }
 

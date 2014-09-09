@@ -1076,18 +1076,15 @@ function _sbac_resource_embed_vid_thumb_url($media) {
  * @param  int $nid Node ID.
  * @param  object $media the eck_media object
  *
- * @return string           uri::url
+ * @return string uri::url
  */
 function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, $media) {
   $thumbnail_exists = FALSE;
   $uri_url = array();
   $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
-  // $default_file = 'public://file.png';
   $default_file = 'no_img';
-
   // If the resource has a thumbnail already defined, do not bother downloading.
   $haystack = $default_file . '::' . $default_file;
-
   $query = db_select('field_data_field_thumbnail_uri', 'ft');
   $query->fields('ft', array('field_thumbnail_uri_value'));
   $query->condition('entity_id', $nid, '=');
@@ -1095,7 +1092,7 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
   $result = array_pop($result);
   if (strpos($haystack, $result) === FALSE) {
     $result_array = explode('::', $result);
-    if (isset($result_array[2]) && $result_array[2] != $media->filehash) {
+    if (isset($result_array[2]) && $result_array[2] == $media->filehash) {
       return array(
         'uri' => $result_array[0],
         'url' => $result_array[1],
@@ -1113,23 +1110,19 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
       if (_sbac_resource_determine_file_type_icon($ext) != 'image') {
         $ext = 'png';
       }
-      $dir = 'private://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
+      $dir = 'public://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
       if ($filename) {
         $filename = $filename . '.' . $ext;
         if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
           $download = sbac_resource_system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
-
           if ($download) {
             $uri_url['uri'] = $download->uri;
             $uri_url['url'] = $url;
-            $thumbnail_exists = TRUE;
             if (_sbac_resource_determine_file_type_icon($file_ext) == 'image') {
-              theme('image_style', array(
-                'style_name' => 'resource_profile',
-                'path' => $download->uri,
-                'alt' => 'Resource preview"'
-              ));
+              $image_styles = image_styles();
+              image_style_create_derivative($image_styles['resource_image_grid'], $download->uri, $download->uri);
             }
+            return $uri_url;
           }
           else {
             watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
@@ -1149,9 +1142,6 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
       $uri_url['uri'] = $default_file;
       $uri_url['url'] = $default_file;
       $thumbnail_exists = TRUE;
-    }
-    elseif ($thumbnail_exists) {
-      break;
     }
   }
   return $uri_url;
@@ -2277,7 +2267,6 @@ function sbac_resource_node_delete($node) {
  * @param $node
  */
 function sbac_resource_determine_thumbnail_uri(&$node) {
-  // $default_file = 'public://file.png';
   $default_file = 'no_img';
   $nid = $node->nid;
   $media_items = sbac_media_load_items($node->nid);

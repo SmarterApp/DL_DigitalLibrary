@@ -1,9 +1,0 @@
-name = Google CDN
-description = Provides the ability to upload file contents to Google Cloud Storage
-package = Google
-core = 7.x
-files[] = stream_wrappers/GoogleCDNStreamWrapperLegacy.inc
-files[] = stream_wrappers/GoogleCDNStreamWrapperBeta.inc
-dependencies[] = libraries (2.x)
-dependencies[] = xautoload
-configure = admin/config/media/google_cdn

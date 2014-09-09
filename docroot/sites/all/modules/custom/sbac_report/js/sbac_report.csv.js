@@ -7,11 +7,9 @@
       Drupal.behaviors.sbac_report_csv.updateLabel('edit-state--2', 'edit_state__2_chzn');
       // Associate the "Choose User Groups" label with the text field so that screen readers speak the label.
       Drupal.behaviors.sbac_report_csv.updateLabel('edit-user-group-dropdown', 'edit_user_group_dropdown_chzn');
-      // Associate the "Filter for SNE or SLT Members" label with the text field so that screen readers speak the label.
-      Drupal.behaviors.sbac_report_csv.updateLabel('edit-sne-slt-filter', 'edit_sne_slt_filter_chzn');
 
       $.each([
-        '#edit_state__2_chzn', '#edit_user_group_dropdown_chzn', '#edit_sne_slt_filter_chzn',
+        '#edit_state__2_chzn', '#edit_user_group_dropdown_chzn',
         '#edit_resource_type_dropdown_chzn', '#edit_resource_status_dropdown_chzn',
         '#edit_resource_subject_dropdown_chzn',
         '#edit_resource_grade_dropdown_chzn', '#edit_resource_attribute_dropdown_chzn'
