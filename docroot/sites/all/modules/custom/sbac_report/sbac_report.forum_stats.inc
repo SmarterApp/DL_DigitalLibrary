@@ -387,6 +387,7 @@ function sbac_report_forum_statistics_batch($forums, $forum_filters, &$context) 
             }
             $row[] = $val;
           } catch (EntityMetadataWrapperException $e) {
+            $row[] = '';
           }
         }
         fputcsv($handle, $row);
@@ -494,8 +495,7 @@ function sbac_report_forum_get_created_by_email($term_wrapper) {
     $email = $term_wrapper->field_forum_resource_ref->author->mail->value();
   }
   else {
-    // TODO: Taxonomy terms don't have authors.
-    $email = 'We don\'t keep track of this';
+    $email = $term_wrapper->field_forum_facilitators[0]->mail->value();
   }
   return $email;
 }
@@ -511,8 +511,7 @@ function sbac_report_forum_get_created_by_name($term_wrapper) {
     $name = $term_wrapper->field_forum_resource_ref->author->field_first_name->value() . ' ' . $term_wrapper->field_forum_resource_ref->author->field_last_name->value();
   }
   else {
-    // TODO: Taxonomy terms don't have authors.
-    $name = 'We don\'t keep track of this';
+    $name = $term_wrapper->field_forum_facilitators[0]->field_first_name->value() . ' ' . $term_wrapper->field_forum_facilitators[0]->field_last_name->value();
   }
   return $name;
 }
@@ -534,7 +533,7 @@ function sbac_report_forum_get_created_by_state($term_wrapper) {
     }
   }
   else {
-    $state_terms[] = 'We don\'t keep track of this';
+    $state_terms[] = $term_wrapper->field_forum_facilitators[0]->author->field_state->value();
   }
   return implode(', ', $state_terms);
 }
@@ -567,7 +566,7 @@ function sbac_report_forum_get_visibility_users($term_wrapper) {
  * @return string
  */
 function sbac_report_forum_get_unique_views($term_wrapper) {
-  return 'We don\'t keep track of this';
+  return db_select('sbac_forum_views', 'v')->condition('tid', $term_wrapper->tid->value())->fields('v', array('uid'))->distinct()->countQuery()->execute()->fetchField();
 }
 
 /**
@@ -584,7 +583,7 @@ function sbac_report_forum_get_favorite_count($term_wrapper) {
   }
   else {
     $query->condition('f.type', 'term');
-    $query->condition('f.id', $term_wrapper->tid->value);
+    $query->condition('f.id', $term_wrapper->tid->value());
   }
   $query->condition('f.uid', 0, '>');
   return $query->fields('f', array('id'))->countQuery()->execute()->fetchField();
@@ -615,14 +614,16 @@ function sbac_report_forum_get_recommended_count($term_wrapper) {
 }
 
 /**
- * Get the number of topics in a forum
+ * Get the number of flagged topics in a forum
  *
  * @param $term_wrapper
  * @return string
  */
 function sbac_report_forum_get_flagged_topic_count($term_wrapper) {
-  // I don't think we can flag topics anymore.
-  return 'I don\'t think we have topic flagging anymore';
+  $query = db_select('eck_flag', 'f');
+  $query->innerJoin('field_data_field_topic_forum_parent', 'p', 'p.entity_id = f.target_id AND f.target_type = \'topic\'');
+  $query->condition('p.field_topic_forum_parent_tid', $term_wrapper->tid->value());
+  return $query->fields('f', array('id'))->countQuery()->execute()->fetchField();
 }
 
 /**

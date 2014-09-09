@@ -43,6 +43,41 @@ function sbac_forum_schema() {
     'primary key' => array('fdlid'),
   );
 
+  $schema['sbac_forum_views'] = array(
+    'description' => t('Stores data for forum hits by uid.'),
+    'fields' => array(
+      'tid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The tid of the forum'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who viewed the resource'),
+      ),
+      'hits' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('A counter by uid/nid for views of this tid'),
+      ),
+    ),
+    'primary key' => array('tid', 'uid'),
+    'indexes' => array(
+      'nid' => array('tid'),
+      'uid' => array('uid'),
+    ),
+  );
+
   return $schema;
 }
 
@@ -144,4 +179,16 @@ function sbac_forum_update_7007() {
 function sbac_forum_update_7008() {
   $instance = field_info_instance('taxonomy_term', 'field_alignment_term', 'forum');
   field_delete_instance($instance);
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Adds the new table.
+ */
+function sbac_forum_update_7009() {
+  $ret = array();
+  $schema = drupal_get_schema('sbac_forum_views', TRUE);
+  db_create_table('sbac_forum_views', $schema);
+  return $ret;
 }
