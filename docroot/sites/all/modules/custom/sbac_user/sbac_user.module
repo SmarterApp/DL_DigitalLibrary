@@ -124,6 +124,13 @@ function sbac_user_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-user/conflicting-profile'] = array(
+    'title' => 'Conflicting Profile Information',
+    'page callback' => 'sbac_users_conflicting_profile',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -1480,4 +1487,12 @@ function sbac_user_preprocess_notifications(&$vars, $user) {
     'fragment' => 'profile-notifications',
     'attributes' => array('title' => 'Notifications'),
   ));
+}
+
+/**
+ * Displays the conflicting profile page / form.
+ */
+function sbac_users_conflicting_profile() {
+  $output = '';
+  return $output;
 }
