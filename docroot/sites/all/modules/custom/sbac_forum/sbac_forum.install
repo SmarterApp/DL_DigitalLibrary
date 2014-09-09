@@ -188,7 +188,10 @@ function sbac_forum_update_7008() {
  */
 function sbac_forum_update_7009() {
   $ret = array();
-  $schema = drupal_get_schema('sbac_forum_views', TRUE);
-  db_create_table('sbac_forum_views', $schema);
+  $table = 'sbac_forum_views';
+  if (!db_table_exists($table)) {
+    $schema = drupal_get_schema($table, TRUE);
+    db_create_table($table, $schema);
+  }
   return $ret;
 }
