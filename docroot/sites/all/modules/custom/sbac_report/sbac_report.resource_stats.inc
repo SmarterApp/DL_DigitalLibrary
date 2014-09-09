@@ -519,12 +519,18 @@ function get_resources($resource_filters) {
   $query->condition('n.status', 1);
   $query->condition('f.field_focus_tid', array_keys($resource_filters['types']));
   if (!isset($resource_filters['status'][0])) {
-    if (in_array('posted_distinction', $resource_filters['status'])) {
+    if (in_array('posted_distinction', $resource_filters['status']) && in_array('published', $resource_filters['status'])) {
+      $query->condition(db_and()->condition('w.state', array('published'), 'IN')->condition('n.sticky', array(0, 1), 'IN'));
+    }
+    elseif (in_array('posted_distinction', $resource_filters['status'])) {
       // ensure published is brought back, since posted with distinction is a published state with sticky = 1;
       // $resource_filters['status']['published'] = 'Published';
       // remove the option that does not exist in the DB.
       // unset($resource_filters['status']['posted_distinction']);
       $query->condition(db_and()->condition('w.state', array('published'), 'IN')->condition('n.sticky', 1));
+    }
+    elseif(in_array('published', $resource_filters['status'])){
+      $query->condition(db_and()->condition('w.state', array('published'), 'IN')->condition('n.sticky', 0));
     }
     else {
       $query->condition('w.state', array_keys($resource_filters['status']), 'IN');
