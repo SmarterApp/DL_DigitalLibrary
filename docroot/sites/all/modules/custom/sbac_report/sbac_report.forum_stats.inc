@@ -545,16 +545,17 @@ function sbac_report_forum_get_created_by_state($term_wrapper) {
  * @return string
  */
 function sbac_report_forum_get_visibility_users($term_wrapper) {
-  $roles = $term_wrapper->field_forum_access_role_list->value();
   $output = array();
-  if (!empty($roles)) {
-    foreach ($roles as $role) {
-      $user_role = user_role_load($role);
-      $output[] = $user_role->name;
+  if (!$term_wrapper->field_forum_resource_ref->value()) {
+    $roles = $term_wrapper->field_forum_access_role_list->value();
+    if (!empty($roles)) {
+      foreach ($roles as $role) {
+        $user_role = user_role_load($role);
+        $output[] = $user_role->name;
+      }
+    } else {
+      $output[] = 'All';
     }
-  }
-  else {
-    $output[] = 'All';
   }
   return implode(', ', $output);
 }
