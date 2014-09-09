@@ -523,17 +523,17 @@ function sbac_report_forum_get_created_by_name($term_wrapper) {
  * @return string
  */
 function sbac_report_forum_get_created_by_state($term_wrapper) {
+  $state_terms = array();
   if ($term_wrapper->field_forum_resource_ref->value()) {
     $states = $term_wrapper->field_forum_resource_ref->author->field_state->value();
-    $state_terms = array();
-    if (!empty($states)) {
-      foreach ($states as $state) {
-        $state_terms[] = $state->name;
-      }
-    }
   }
   else {
-    $state_terms[] = $term_wrapper->field_forum_facilitators[0]->author->field_state->value();
+    $states = $term_wrapper->field_forum_facilitators[0]->field_state->value();
+  }
+  if (!empty($states)) {
+    foreach ($states as $state) {
+      $state_terms[] = $state->name;
+    }
   }
   return implode(', ', $state_terms);
 }
