@@ -1398,7 +1398,7 @@ function sbac_report_get_first_flag_date($fieldkey, $data, $resource) {
     ->execute()
     ->fetchField();
   if ($date) {
-    return date('m/d/y', $date);
+    return date('m/d/Y', $date);
   }
 }
 
@@ -1426,7 +1426,7 @@ function sbac_report_get_user_rating_flag_date($fieldkey, $data, $resource) {
     ->execute()
     ->fetchField();
   if ($date) {
-    return date('m/d/y', $date);
+    return date('m/d/Y', $date);
   }
 }
 
@@ -1464,7 +1464,7 @@ function sbac_report_get_publish_date($fieldkey, $data, $resource) {
       ->execute()
       ->fetchField();
     if ($date) {
-      return date('m/d/y', $date);
+      return date('m/d/Y', $date);
     }
   }
 }
@@ -1488,7 +1488,7 @@ function sbac_report_get_submission_date($fieldkey, $data, $resource) {
   $date = '';
   $resubmit = _sbac_resource_resubmit_timestamp($resource->nid->value());
   if ($resubmit) {
-    $date = date('m/d/y', $resubmit);
+    $date = date('m/d/Y', $resubmit);
   }
   else {
     $submit = db_select('workbench_moderation_node_history', 'h')
@@ -1497,7 +1497,7 @@ function sbac_report_get_submission_date($fieldkey, $data, $resource) {
       ->condition('h.nid', $resource->nid->value())
       ->fields('h', array('stamp'))->execute()->fetchField();
     if ($submit) {
-      $date = date('m/d/y', $submit);
+      $date = date('m/d/Y', $submit);
     }
   }
   return $date;
