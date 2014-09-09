@@ -762,8 +762,6 @@ function sbac_sso_get_program_management_response($query_string) {
   $api_response = array();
   $access_token = sbac_sso_get_program_management_oauth_access_token();
   if ($access_token) {
-    $query_string['DISTRICT'] = 'DC';
-    $query_string['INSTITUTION'] = 'Appnovation Institution';
     $data = http_build_query($query_string);
     $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
     $curl = curl_init();
@@ -856,7 +854,7 @@ function sbac_sso_parse_program_api_response($result, $decode = FALSE) {
         foreach ($tenant_subscriptions as $key => $subscription) {
           if (isset($subscription['component'])) {
             $component = $subscription['component'];
-            if (($component['name'] != 'Digital Library' && $component['name'] != 'DigitalLibrary' ) || $subscription['inGoodStanding'] != TRUE) {
+            if (($component['name'] == 'Digital Library' || $component['name'] == 'DigitalLibrary' ) && $subscription['inGoodStanding'] != TRUE) {
               $error = TRUE;
               break;
             }
