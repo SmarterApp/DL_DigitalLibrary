@@ -5,7 +5,7 @@
       var tabs = $('.vertical-tabs');
       if (tabs.length && Drupal.settings.sbac_report.default_tab.length) {
         var tab_index = 0;
-        $('.vertical-tabs-panes fieldset', tabs).each(function (i, el) {
+        $('.vertical-tabs-panes > fieldset', tabs).each(function (i, el) {
           el = $(el);
           if (el.attr('id') == Drupal.settings.sbac_report.default_tab) {
             tab_index = i;
