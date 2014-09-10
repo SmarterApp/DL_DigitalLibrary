@@ -355,6 +355,7 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   }
   if ($sne_filter) {
     $sql .= $and . " sne.field_sne_member_value = 1 ";
+    $and = 'AND';
   }
   if ($slt_filter) {
     $sql .= $and . " slt.field_slt_member_value = 1 ";
