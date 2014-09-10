@@ -1474,62 +1474,68 @@ function sbac_forum_taxonomy_term_presave($term) {
         if (!empty($fc_member_list)) {
           foreach ($fc_member_list as $fc_item) {
             $member_entity = entity_metadata_wrapper('field_collection_item', $fc_item);
-            try {
-              if (isset($member_entity->field_fc_forum_member)) {
+            if (isset($member_entity->field_fc_forum_member)) {
 
-                // Do state check first.
-                $has_state = array();
-                if (!empty($state_restrictions)) {
+              // Do state check first.
+              $has_state = array();
+              if (!empty($state_restrictions)) {
+                $members_states = array();
+                try {
                   $members_states_raw = $member_entity->field_fc_forum_member->field_state->value();
-                  $members_states = array();
                   if (!empty($members_states_raw)) {
                     foreach ($members_states_raw as $index => $state_element) {
                       $members_states[$state_element->tid] = $state_element->tid;
                     }
                   }
-                  $has_state = array_intersect($state_restrictions, $members_states);
-                } // end state check
+                } catch (EntityMetadataWrapperException $e) {
+                }
+                $has_state = array_intersect($state_restrictions, $members_states);
+              } // end state check
 
 
-                // Check position/title/role
-                $has_role = array();
-                if (!empty($role_restrictions)) {
+              // Check position/title/role
+              $has_role = array();
+              if (!empty($role_restrictions)) {
+                try {
                   $members_title_raw = $member_entity->field_fc_forum_member->field_position->value();
                   $members_title_tid = $members_title_raw->tid;
                   $has_role = in_array($members_title_tid, $role_restrictions);
-                } // end title check
-
-
-                // Bring it all together
-                $pass = 0; // Both need to match. Its an "AND", role AND state.
-                if (!empty($role_restrictions)) {
-                  if (!empty($has_role)) {
-                    $pass++;
-                  }
+                } catch (EntityMetadataWrapperException $e) {
                 }
-                else { // Forum isnt role restricted.
+              } // end title check
+
+
+              // Bring it all together
+              $pass = 0; // Both need to match. Its an "AND", role AND state.
+              if (!empty($role_restrictions)) {
+                if (!empty($has_role)) {
                   $pass++;
                 }
+              }
+              else { // Forum isnt role restricted.
+                $pass++;
+              }
 
-                if (!empty($state_restrictions)) { // Means check state
-                  if (!empty($has_state)) {
-                    $pass++;
-                  }
-                }
-                else {
+              if (!empty($state_restrictions)) { // Means check state
+                if (!empty($has_state)) {
                   $pass++;
                 }
+              }
+              else {
+                $pass++;
+              }
 
-                if ($pass != 2) {
+              if ($pass != 2) {
+                try {
                   $user_to_remove = $member_entity->field_fc_forum_member->uid->value();
                   $entity_id = $member_entity->item_id->value();
                   $entity_list[] = $entity_id;
-                  $fc_item->delete(); // Mimics "leaving" a forum. User is removed entirely.
-                  $member_count--;
                   $people_to_notify[] = $user_to_remove;
+                } catch (EntityMetadataWrapperException $e) {
                 }
+                $fc_item->delete(); // Mimics "leaving" a forum. User is removed entirely.
+                $member_count--;
               }
-            } catch (EntityMetadataWrapperException $e) {
             }
           }
         }
