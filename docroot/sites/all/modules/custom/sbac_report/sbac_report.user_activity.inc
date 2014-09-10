@@ -291,7 +291,7 @@ function sbac_csv_report_prettify(&$user_group_options) {
         break;
     }
   }
-  $res = &$user_group_options;
+  $res = $user_group_options;
   $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
 }
 
