@@ -84,8 +84,8 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   }
   // If session is set, change pager.
   else if (isset($_SESSION['load_more'][$view->name]['page'])) {
-    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
-  }
+      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+    }
   sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
   sbac_forum_listing_apply_sorts($view, $current_sorts, $default_sort);
   $view->pre_execute();
@@ -206,6 +206,12 @@ function sbac_forum_view_forum_page($term) {
   global $user;
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
+
+  $query = "INSERT INTO {sbac_forum_views} (uid, tid, hits) VALUES (:uid, :tid, 1) ON DUPLICATE KEY UPDATE hits = hits + 1";
+  db_query($query, array(
+    ':uid' => $user->uid,
+    ':tid' => $term->tid,
+  ));
 
   // Load up forum data.
   $forum_data = entity_metadata_wrapper('taxonomy_term', $term);

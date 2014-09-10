@@ -1,9 +1,9 @@
 /**
  * @file
- * README file for Google CDN.
+ * README file for osCaddie - Google Cloud Storage.
  */
 
-Google CDN
+osCaddie - Google Cloud Storage
 
 CONTENTS
 --------
@@ -18,12 +18,12 @@ CONTENTS
 ----
 1.  Introduction
 
-Google CDN
+osCaddie - Google Cloud Storage
 
 ----
 1.1  Concepts
 
-Google CDN allows you to replace the local file system with a cloud server via
+osCaddie - Google Cloud Storage allows you to replace the local file system with a cloud server via
 Google Cloud Storage, utilizing their unlimited storage and blazing fast edge
 caching. Files uploaded into Drupal will still be managed by Drupal, but
 instead of being stored on the local server that is running Drupal, actual
@@ -35,7 +35,7 @@ high performance network.
 Install the module and enable it according to Drupal standards.
 
 The module's configuration pages reside at:
-- admin/config/media/google_cdn
+- admin/config/media/oscaddie_gcs
 
 The module's permissions are found at:
 - admin/people/permissions
@@ -52,7 +52,7 @@ a .pem file is created from this p12 key that is stored here. This file
 is required for google's signing method.
 https://developers.google.com/storage/docs/accesscontrol#Signed-URLs.
 
-Google CDN requires:
+osCaddie - Google Cloud Storage requires:
 - Libraries API
 - XAutoLoad
 - Google API PHP Client Library
@@ -61,9 +61,9 @@ Google CDN requires:
 ----
 3.  Configuration
 
-Google CDN's configuration section is located at:
+osCaddie - Google Cloud Storage's configuration section is located at:
 
-- Admin > Configuration > Media > Google CDN
+- Admin > Configuration > Media > osCaddie - Google Cloud Storage
 
 This section allows the admin to configure settings that pertain to the
 connection details and configuration of the module.
@@ -77,25 +77,24 @@ sites/all/libraries/google-api-php-client/src/Google/Client.php.
 ----
 3.1  Checking permissions
 
-In order to configure the google cdn module the user must be given
+In order to configure the osCaddie GCS module the user must be given
 the appropriate permission. Navigate to admin/people/permissions and
-select Administer Google CDN under Google CDN for the
-appropriate role.
+select Administer osCaddie - Google Cloud Storage for the appropriate role.
 
 ----
 4.  Using the module
 
 Once the module is installed and permissions are configured, the administrator
-should configure the Google CDN. Once the configuration options are inputted,
+should configure the osCaddie GCS. Once the configuration options are inputted,
 the admin can test the connection to ensure that the site is able to connect
 to the Google bucket.
 
 If the connection succeeds, the administrator can then select the File System
-default download method to be the Google CDN. This makes the entire file system
+default download method to be the osCaddie GCS. This makes the entire file system
 upload and download all files to / from the Google Bucket.
 
 As well, the admin can set the default download option on each file and image
-field. This sets the specific field to use or not use the Google CDN as the
+field. This sets the specific field to use or not use the osCaddie GCS as the
 default upload and download method.
 
 ----

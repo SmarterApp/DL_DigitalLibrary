@@ -3219,3 +3219,16 @@ div[id*="edit-field-copyright-clearace-forms"] {
 .digital-library .view-filters {
   display: none;
 }
+
+
+/* close/save/continue button can't be clickable when uploading a material*/
+.node-type-resource,
+.page-node-add-resource {
+	.video-embed-button[disabled],
+	.sbac-resource-cancel-button[disabled], 
+	#sbac-resource-save-continue .secondary[disabled], 
+	#edit-save-continue[disabled] {
+		cursor: progress;
+	}
+	
+}

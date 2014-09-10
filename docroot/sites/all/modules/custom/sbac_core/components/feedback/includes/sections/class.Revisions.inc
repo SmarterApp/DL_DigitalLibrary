@@ -53,6 +53,7 @@ class Revisions extends Base {
     $feedbacks = array();
     // get the last 3 reviews
     $reviews = $this->getFeedbacks(3, 'qc');
+    asort($reviews);
     if (!empty($reviews)) {
       foreach ($reviews as $review) {
         $feedbacks[] = entity_load_single('feedback', $review->id);
@@ -224,7 +225,7 @@ class Revisions extends Base {
       ->propertyCondition('current', 0)
       ->propertyCondition('archived', 1)
       ->propertyCondition('node_id', $this->_node->nid)
-      ->propertyOrderBy('changed', 'DESC')
+      ->propertyOrderBy('created', 'DESC')
       ->range(0, $num)
       ->execute();
     return $results['feedback'];
