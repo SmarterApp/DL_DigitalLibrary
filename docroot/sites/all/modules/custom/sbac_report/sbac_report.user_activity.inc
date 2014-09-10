@@ -291,6 +291,8 @@ function sbac_csv_report_prettify(&$user_group_options) {
         break;
     }
   }
+  $res = &$user_group_options;
+  $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
 }
 
 /*
@@ -353,7 +355,6 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   }
   if ($sne_filter) {
     $sql .= $and . " sne.field_sne_member_value = 1 ";
-    $and = 'AND';
   }
   if ($slt_filter) {
     $sql .= $and . " slt.field_slt_member_value = 1 ";
