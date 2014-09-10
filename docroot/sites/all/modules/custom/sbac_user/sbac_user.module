@@ -1526,7 +1526,7 @@ function sbac_users_conflicting_profile_form($form, &$form_state) {
 
   $form['choices'] = array(
     '#type' => 'radios',
-    '#options' => array('CA', 'CA with district', 'WA'),
+    '#options' => array('<strong>State:</strong>CA', '<strong>State:</strong>CA with district', '<strong>State:</strong>WA'),
     '#attributes' => array('class' => array('sbac-user-conflict-choice')),
   );
 

@@ -22,9 +22,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     case 'sbac-023-d':
     case 'sbac-023-train':
       define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac');
-      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenants');
-      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
@@ -32,6 +32,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       break;
     case 'prod':
       define('SBAC_SSO_URL', 'https://sso.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso.smarterbalanced.org/auth/UI/Logout');
@@ -40,14 +43,12 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   }
 }
 else {
-  define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-  define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac');
-  define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenants');
-  define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain');
-  define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
-  define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
-  define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
-  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+  define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+  define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
+  define('SBAC_SSO_DESTROY_SESSION_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/UI/Logout');
+  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
 }
 
 /**
@@ -493,6 +494,9 @@ function sbac_sso_validate_saml_response($saml_token) {
   }
   $user = sbac_sso_determine_user($user_attributes, $response);
   $user->session_index = $response['session_index'];
+  // Determine if the user has multiple tenancy chains
+  $multiple = sbac_sso_determine_multiple_tenancy_chains($user_attributes, $user);
+
   return $user;
 }
 
@@ -725,6 +729,8 @@ function sbac_sso_program_management_api_request($user_attributes) {
   }
 
   // Check the cache table.
+  // TODO: Update so that checks cache table for ones on file but then also call
+  // the API for ones not on file.
   $cached_results = variable_get('sbac_sso_pm_cached_results');
   if ($cached_results) {
     $valid_cached_results = array();
@@ -1074,127 +1080,6 @@ function sbac_sso_logout_assertion() {
   return $logout_assertion;
 }
 
-
-function sbac_sso_get_saml_token2() {
-  $stuff = 'PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6
-cHJvdG9jb2wiIElEPSJzMmFiYzAxYzFkYWU5ZmIxNTY4MDBkM2QzNmU3YzNiNjgyZmE1NWM5NjQi
-IEluUmVzcG9uc2VUbz0iX2tYZ1BrSmk0Z2U1Mzg3OTE5MDAwYTYwMy44OTk0ODA1MSIgVmVyc2lv
-bj0iMi4wIiBJc3N1ZUluc3RhbnQ9IjIwMTQtMDUtMjlUMTk6NTk6MTZaIiBEZXN0aW5hdGlvbj0i
-aHR0cHM6Ly9kZXYuc21hcnRlcmJhbGFuY2VkbGlicmFyeS5vcmcvc2JhYy1zc28tY29uc3VtZSI+
-PHNhbWw6SXNzdWVyIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3Nl
-cnRpb24iPmh0dHBzOi8vc3NvLXVhdC5zbWFydGVyYmFsYW5jZWQub3JnOjQ0My9hdXRoPC9zYW1s
-Oklzc3Vlcj48c2FtbHA6U3RhdHVzIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FN
-TDoyLjA6cHJvdG9jb2wiPgo8c2FtbHA6U3RhdHVzQ29kZSAgeG1sbnM6c2FtbHA9InVybjpvYXNp
-czpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIKVmFsdWU9InVybjpvYXNpczpuYW1lczp0YzpT
-QU1MOjIuMDpzdGF0dXM6U3VjY2VzcyI+Cjwvc2FtbHA6U3RhdHVzQ29kZT4KPC9zYW1scDpTdGF0
-dXM+PHNhbWw6QXNzZXJ0aW9uIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIu
-MDphc3NlcnRpb24iIElEPSJzMjU5NjRmZmM4ZjE0YWE0Y2U2YjkyZGMzYzk5YjE0ZjRkNTUxYzI5
-OGUiIElzc3VlSW5zdGFudD0iMjAxNC0wNS0yOVQxOTo1OToxNloiIFZlcnNpb249IjIuMCI+Cjxz
-YW1sOklzc3Vlcj5odHRwczovL3Nzby11YXQuc21hcnRlcmJhbGFuY2VkLm9yZzo0NDMvYXV0aDwv
-c2FtbDpJc3N1ZXI+PGRzOlNpZ25hdHVyZSB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAw
-MC8wOS94bWxkc2lnIyI+CjxkczpTaWduZWRJbmZvIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9y
-Zy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOkNhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGht
-PSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiIHhtbG5zOmRzPSJodHRw
-Oi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIi8+CjxkczpTaWduYXR1cmVNZXRob2QgQWxn
-b3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjcnNhLXNoYTEiIHhtbG5z
-OmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIi8+CjxkczpSZWZlcmVuY2Ug
-VVJJPSIjczI1OTY0ZmZjOGYxNGFhNGNlNmI5MmRjM2M5OWIxNGY0ZDU1MWMyOThlIiB4bWxuczpk
-cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+CjxkczpUcmFuc2Zvcm1zIHht
-bG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOlRyYW5zZm9y
-bSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNlbnZlbG9wZWQt
-c2lnbmF0dXJlIiB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyIv
-Pgo8ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwt
-ZXhjLWMxNG4jIiB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyIv
-Pgo8L2RzOlRyYW5zZm9ybXM+CjxkczpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3
-LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjc2hhMSIgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3Jn
-LzIwMDAvMDkveG1sZHNpZyMiLz4KPGRzOkRpZ2VzdFZhbHVlIHhtbG5zOmRzPSJodHRwOi8vd3d3
-LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4ycWNpbys5cnpzZHJSaTZEQkdjWEVKTEJOdFk9PC9k
-czpEaWdlc3RWYWx1ZT4KPC9kczpSZWZlcmVuY2U+CjwvZHM6U2lnbmVkSW5mbz4KPGRzOlNpZ25h
-dHVyZVZhbHVlIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4K
-V1BmT016akxxMkJKVDV6enI4cmRYd3RSc0hTTHIyT3NXMEFkZXJLTWI5aWozTEpnd2F0TWY4UlRm
-WFZ1YXdHS2ltbCttWFBKYzFmTQpOcjlUV2ZJNXVCN1J2YysyWmZHRk5wUmNDaVdDemRySTdncE4z
-Q1M3OFNIakt3b0RQbkFlaVZKSnEzZkJNalBITjJLWVZkeWpNOW1JCnlxaUhxc1dIc3F3YlVPdGlZ
-TEZ5NFkzQzZCQW8rR29teUZ0NWNES2dBK2ZqcFdtc0hxMGI1MU16aHloVFJMOUVsdFBEVHhWcVZS
-N0IKSWZuZkEwcUUrb0VNNS9vSGFuRjJ5NEM1dTk5dXF3YWhnZkhTVWg2L1dxL05uSVdQTFpOTFlP
-S3FBYXdhMlJQL1cxWm4xQm5GcFhtcwpVejZjcHQ2b0VhNmphUktUa0hjUFNZTlpobkd4ZTg0cWt3
-Rm4ydz09CjwvZHM6U2lnbmF0dXJlVmFsdWU+CjxkczpLZXlJbmZvIHhtbG5zOmRzPSJodHRwOi8v
-d3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOlg1MDlEYXRhIHhtbG5zOmRzPSJodHRw
-Oi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOlg1MDlDZXJ0aWZpY2F0ZSB4bWxu
-czpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+Ck1JSURoekNDQW04Q0JG
-T0Y5WkV3RFFZSktvWklodmNOQVFFRUJRQXdnWWN4Q3pBSkJnTlZCQVlUQWxWVE1SQXdEZ1lEVlFR
-SURBZEcKYkc5eWFXUmhNUll3RkFZRFZRUUhEQTFYWlhOc1pYa2dRMmhoY0dWc01SNHdIQVlEVlFR
-S0RCVkpaR1Z1ZEdsMGVTQkdkWE5wYjI0cwpJRWx1WXk0eEVUQVBCZ05WQkFzTUNGTmxZM1Z5YVhS
-NU1Sc3dHUVlEVlFRRERCSmhiWEJzYVdaNVUybG5ibWx1WjBObGNuUXdIaGNOCk1UUXdOVEk0TVRR
-ME1USXhXaGNOTWpRd05USTFNVFEwTVRJeFdqQ0JoekVMTUFrR0ExVUVCaE1DVlZNeEVEQU9CZ05W
-QkFnTUIwWnMKYjNKcFpHRXhGakFVQmdOVkJBY01EVmRsYzJ4bGVTQkRhR0Z3Wld3eEhqQWNCZ05W
-QkFvTUZVbGtaVzUwYVhSNUlFWjFjMmx2Yml3ZwpTVzVqTGpFUk1BOEdBMVVFQ3d3SVUyVmpkWEpw
-ZEhreEd6QVpCZ05WQkFNTUVtRnRjR3hwWm5sVGFXZHVhVzVuUTJWeWREQ0NBU0l3CkRRWUpLb1pJ
-aHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFJZ1I0akRJeXpjaEEwdUVlaTUzdTF0Vi9CQUdj
-bnJQNUF2eWYvSGMKZ0RZeHFCU1pFbnZ2OXNpR2M1VzQ4cHpCZ1Z3SUgrMnVPVGhDaW1NM3R5bllU
-a0FVYmVYMHk4VVhiR1A1cWZiMGhQYzNTK0J1d3d5QQplSklLY3AzS29tb1d3ZzFPcDFMdEdZUkxt
-U1ZmRDBMUGsrUUhhTEpNRDVGU2h6aWc4d2pybUFLK3NjY3NKVitYTmcxajdzYmVYYy96ClZ6ZUZR
-L09FcE1WZ2NQUG9vQUwrK3Fzd0x5VGxob1RWZjNjUVJwZzM5NURpVVpxd3pKdnQrQXdHdVdDbThp
-a0FsQ2srMy9hVkh1VUQKZEo4NWZpbmhjU2FoQWNrZ1N6TUpWUXpVUDNHMEtSNzFMK0F4bnJaVENR
-QWxqRVlRcE9jZFpGNVpLT21SQWpyUFlZT2xhbDRieHZFQwpBd0VBQVRBTkJna3Foa2lHOXcwQkFR
-UUZBQU9DQVFFQVZSeDNWS3BTeFVPTEVrakt5dFhTWFVIdFpNUkFOMUs1OUwxNWZmOUh3UnFyCmhx
-TFVwOXh5WDZ6cWg5UTFUL0RoeVpuUTl2NVNlbTZXSnp3UC91ZzNsWVNjVlNvTmdsSmRmaEJTVjBO
-TjNwWjZWOTZSYi9NN1BtVXcKREFFNzZ0d1dMME5rSHg4TzhKeXErMWlibDVzRFdHKzExTTdvYnFh
-SHpWdm9kRUZvYkVDUTFERVFMVUY4TkVmZjA0dUppQm5kbjZBTApBci84c25UTlp6WER6MU94UmYx
-THc5dDZFQWRWSXc4L0RlOFkvSzhHNkszZHNIbHlFU3ZSWGp3NTJQRGhSaGFWbzdhTGV1dWJRTXNR
-CncyQy9lSTY2Q1BROVhaTDB0R0cyWUFoOEttSTRna0NHcWVoM2wxVExyRVFvYWNCaGVJRm9RZzJ3
-RGlNRmJwNDlEbE53MVE9PQo8L2RzOlg1MDlDZXJ0aWZpY2F0ZT4KPC9kczpYNTA5RGF0YT4KPC9k
-czpLZXlJbmZvPgo8L2RzOlNpZ25hdHVyZT48c2FtbDpTdWJqZWN0Pgo8c2FtbDpOYW1lSUQgRm9y
-bWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6bmFtZWlkLWZvcm1hdDp0cmFuc2llbnQi
-IE5hbWVRdWFsaWZpZXI9Imh0dHBzOi8vc3NvLXVhdC5zbWFydGVyYmFsYW5jZWQub3JnOjQ0My9h
-dXRoIj41R1pDN2dldTIwY1lxWXFPNTFNY2NJSndhMEF3PC9zYW1sOk5hbWVJRD48c2FtbDpTdWJq
-ZWN0Q29uZmlybWF0aW9uIE1ldGhvZD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmNtOmJl
-YXJlciI+CjxzYW1sOlN1YmplY3RDb25maXJtYXRpb25EYXRhIEluUmVzcG9uc2VUbz0iX2tYZ1Br
-Smk0Z2U1Mzg3OTE5MDAwYTYwMy44OTk0ODA1MSIgTm90T25PckFmdGVyPSIyMDE0LTA1LTI5VDIw
-OjA5OjE2WiIgUmVjaXBpZW50PSJodHRwczovL2Rldi5zbWFydGVyYmFsYW5jZWRsaWJyYXJ5Lm9y
-Zy9zYmFjLXNzby1jb25zdW1lIi8+PC9zYW1sOlN1YmplY3RDb25maXJtYXRpb24+Cjwvc2FtbDpT
-dWJqZWN0PjxzYW1sOkNvbmRpdGlvbnMgTm90QmVmb3JlPSIyMDE0LTA1LTI5VDE5OjQ5OjE2WiIg
-Tm90T25PckFmdGVyPSIyMDE0LTA1LTI5VDIwOjA5OjE2WiI+CjxzYW1sOkF1ZGllbmNlUmVzdHJp
-Y3Rpb24+CjxzYW1sOkF1ZGllbmNlPmh0dHBzOi8vZGV2LnNtYXJ0ZXJiYWxhbmNlZGxpYnJhcnku
-b3JnPC9zYW1sOkF1ZGllbmNlPgo8L3NhbWw6QXVkaWVuY2VSZXN0cmljdGlvbj4KPC9zYW1sOkNv
-bmRpdGlvbnM+CjxzYW1sOkF1dGhuU3RhdGVtZW50IEF1dGhuSW5zdGFudD0iMjAxNC0wNS0yOVQx
-OTo1OToxNloiIFNlc3Npb25JbmRleD0iczI4NmExYmFjNzc3NDExMjdlZTBmM2ZhMzNjYzJmOWQ5
-YTA5YjQ5NTAxIj48c2FtbDpBdXRobkNvbnRleHQ+PHNhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY+
-dXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFjOmNsYXNzZXM6UGFzc3dvcmRQcm90ZWN0ZWRU
-cmFuc3BvcnQ8L3NhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY+PC9zYW1sOkF1dGhuQ29udGV4dD48
-L3NhbWw6QXV0aG5TdGF0ZW1lbnQ+PHNhbWw6QXR0cmlidXRlU3RhdGVtZW50PjxzYW1sOkF0dHJp
-YnV0ZSBOYW1lPSJzYmFjVVVJRCI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6
-Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3Jn
-LzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5zbWFydGVyYmFs
-YW5jZWRsaWJyYXJ5QGFtcGxpZnkuY29tPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRy
-aWJ1dGU+PHNhbWw6QXR0cmlidXRlIE5hbWU9InNuIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4bWxu
-czp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDov
-L3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmci
-PkFkbWluMTwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJp
-YnV0ZSBOYW1lPSJlbWFpbCI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93
-d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIw
-MDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5zbWFydGVyYmFsYW5j
-ZWRsaWJyYXJ5QGFtcGxpZnkuY29tPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1
-dGU+PHNhbWw6QXR0cmlidXRlIE5hbWU9ImVudHJ5dXVpZCI+PHNhbWw6QXR0cmlidXRlVmFsdWUg
-eG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0
-dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3Ry
-aW5nIj43MzRkYjE5Yy02MTczLTQ1YzUtODU0ZS01M2RkZjQxNzhiOTc8L3NhbWw6QXR0cmlidXRl
-VmFsdWU+PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0iY24iPjxzYW1sOkF0
-dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIg
-eG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNp
-OnR5cGU9InhzOnN0cmluZyI+Q29uc29ydGl1bSBBZG1pbjE8L3NhbWw6QXR0cmlidXRlVmFsdWU+
-PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0ic2JhY1RlbmFuY3lDaGFpbiI+
-PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1M
-U2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3Rh
-bmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj58fERMX0VuZFVzZXJ8fHx8fHxUU3xUZXN0IFN0YXRl
-fHx8fHx8fHx8PC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1dGU+PHNhbWw6QXR0
-cmlidXRlIE5hbWU9ImdpdmVuTmFtZSI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0
-dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMu
-b3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5Db25zb3J0
-aXVtPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1dGU+PC9zYW1sOkF0dHJpYnV0
-ZVN0YXRlbWVudD48L3NhbWw6QXNzZXJ0aW9uPjwvc2FtbHA6UmVzcG9uc2U+';
-  return $stuff;
-}
-
 /**
  * Implements hook_cron().
  *
@@ -1226,4 +1111,18 @@ function sbac_sso_test_cron() {
       variable_set('sbac_sso_pm_cached_results', $cached_results);
     }
   }
+}
+
+/**
+ * Determines if the user has multiple tenancy chains or not.
+ *
+ * If there are multiple tenancy chains, check state, if there are
+ * duplicates, choose the first one and use that. Create a hash of the
+ * tenancy chains and save it in the user profile. 
+ *
+ * @param $user_attributes
+ * @param $user
+ */
+function sbac_sso_determine_multiple_tenancy_chains($user_attributes, $user) {
+
 }
