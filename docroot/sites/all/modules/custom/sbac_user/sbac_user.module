@@ -1373,6 +1373,12 @@ function sbac_user_preprocess_page(&$vars) {
     }
   }
 
+  $vars['conflicting_profile'] = FALSE;
+  if (isset($_SESSION['conflicting_profile']) && $_SESSION['conflicting_profile'] == TRUE) {
+    $vars['conflicting_profile'] = TRUE;
+    $vars['home_url'] = '#';
+  }
+
   global $user;
   if (!$user->uid || (!isset($_SESSION['user_setup']) && !isset($_SESSION['welcome-update']))) {
     return;
@@ -1413,6 +1419,7 @@ function sbac_user_preprocess_username(&$vars, $user) {
 
 /**
  * Implements hook_user_import_data().
+ *
  * @param  [type] $settings        [description]
  * @param  [type] $update_setting  [description]
  * @param  [type] $column_settings [description]
@@ -1420,6 +1427,7 @@ function sbac_user_preprocess_username(&$vars, $user) {
  * @param  [type] $field_id        [description]
  * @param  [type] $data            [description]
  * @param  [type] $column_id       [description]
+ *
  * @return
  */
 function sbac_user_user_import_data($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id) {
@@ -1493,6 +1501,41 @@ function sbac_user_preprocess_notifications(&$vars, $user) {
  * Displays the conflicting profile page / form.
  */
 function sbac_users_conflicting_profile() {
-  $output = '';
-  return $output;
+  $form = drupal_get_form('sbac_users_conflicting_profile_form');
+  return $form;
+}
+
+/**
+ *
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_users_conflicting_profile_form($form, &$form_state) {
+  $form = array();
+
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_user') . '/js/sbac_user.conflicting_profile.js',
+  );
+
+  $form['information'] = array(
+    '#prefix' => '<div class="sbac-conflict-wrapper">',
+    '#markup' => t('There is <strong>conflicting account information</strong> associated with your Smarter Balanced login. <strong>Please choose the profile below</strong> that accurately reflects your information.'),
+  );
+
+  $form['choices'] = array(
+    '#type' => 'radios',
+    '#options' => array('CA', 'CA with district', 'WA'),
+    '#attributes' => array('class' => array('sbac-user-conflict-choice')),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'OK',
+    '#attributes' => array('class' => array('sbac-user-conflict-submit')),
+    '#suffix' => '</div>',
+  );
+
+  return $form;
 }
