@@ -378,26 +378,20 @@ function sbac_report_default_resource_type_option($form_state = array()) {
  * Resource Status Dropdown options extracted from the taxonomy table.
  */
 function sbac_report_resource_status_options() {
-  // not a taxonomy term, these values come from the workbench moderation states.
-  //$sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
-  $sql = "SELECT name AS tid, label AS name FROM workbench_moderation_states WHERE name <> 'approved' AND name <> 'being_reviewed' AND name <> 'creation' AND name <> 'needs_review' AND name <> 'published' AND name <> 'removed'";
-  $options = query_taxonomy_term($sql);
-  // if (isset($options['published'])) {
-  //   $options['published'] = 'Posted';
-  // }
-  if (isset($options['rejected'])) {
-    $options['rejected'] = 'Returned';
-  }
-  // if (isset($options['approved'])) {
-  //   $options['approved'] = 'Needs Posting';
-  // }
-  //$options['posted_distinction'] = 'Posted with Distinction';
-  $options['gate_keeping_review'] = 'Gate-Keeping Review';
-  $options['quality_criteria_review_1'] = 'Quality Criteria Review 1';
-  $options['quality_criteria_review_2'] = 'Quality Criteria Review 2';
-  $options['quality_criteria_review_3'] = 'Quality Criteria Review 3';
-  $options['arbitration_review'] = 'Arbitration Review';
-  asort($options);
+  $options = array(
+    'All',
+    'Draft',
+    'Submitted',
+    'Gate-Keeping Review',
+    'Quality Criteria Review 1',
+    'Quality Criteria Review 2',
+    'Quality Criteria Review 3',
+    'Arbitration Review',
+    'Returned',
+    'Posted',
+    'Posted with Distinction',
+    'Removed',
+  );
   return $options;
 }
 
@@ -512,71 +506,142 @@ function sbac_report_default_resource_attribute_option($form_state = array()) {
  */
 function get_resources($resource_filters) {
   $query = db_select('node', 'n');
-  $query->fields('n', array('nid'));
-  $query->join('field_data_field_focus', 'f', 'n.nid = f.entity_id AND n.vid = f.revision_id');
-  $query->join('field_data_field_grades', 'g', 'n.nid = g.entity_id AND n.vid = g.revision_id');
-  $query->join('field_data_field_subject', 's', 'n.nid = s.entity_id AND n.vid = s.revision_id');
-  $query->join('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND n.vid = a.revision_id');
-  if (!isset($resource_filters['status'][0])) {
-    $query->join('workbench_moderation_node_history', 'w', 'n.nid = w.nid AND n.vid = w.vid');
-  }
   $query->condition('n.type', 'resource');
   $query->condition('n.status', 1);
-  $query->condition('f.field_focus_tid', array_keys($resource_filters['types']));
-  if (!isset($resource_filters['status'][0])) {
-    if (in_array('posted_distinction', $resource_filters['status']) && in_array('published', $resource_filters['status'])) {
-      $query->condition(db_and()->condition('w.state', array('published'), 'IN')->condition('n.sticky', array(0, 1), 'IN'));
-    }
-    elseif (in_array('posted_distinction', $resource_filters['status'])) {
-      // ensure published is brought back, since posted with distinction is a published state with sticky = 1;
-      // $resource_filters['status']['published'] = 'Published';
-      // remove the option that does not exist in the DB.
-      // unset($resource_filters['status']['posted_distinction']);
-      $query->condition(db_and()->condition('w.state', array('published'), 'IN')->condition('n.sticky', 1));
-    }
-    elseif(in_array('published', $resource_filters['status'])){
-      $query->condition(db_and()->condition('w.state', array('published'), 'IN')->condition('n.sticky', 0));
+
+  // Resource type filter
+  if (!empty($resource_filters['types'])) {
+    if (isset($resource_filters['types'][0])) {
+      // User selected 'All', do nothing
     }
     else {
-      $query->condition('w.state', array_keys($resource_filters['status']), 'IN');
+      $query->innerJoin('field_data_field_focus', 'f', 'n.nid = f.entity_id AND f.bundle = \'resource\'');
+      $query->condition('f.field_focus_tid', array_keys($resource_filters['types']));
     }
-    $query->condition('w.current', 1);
   }
-  set_field_condition_filter_restrictive($query, $resource_filters['subject'], 's.field_subject_tid');
-  set_field_condition_filter_restrictive($query, $resource_filters['grade'], 'g.field_grades_tid');
-  set_field_condition_filter_restrictive($query, $resource_filters['attribute'], 'a.field_attributes_tid');
-  $query->groupBy('n.nid');
+
+  // Subject filter
+  if (!empty($resource_filters['subject'])) {
+    if (isset($resource_filters['subject'][0])) {
+      // User selected 'All', do nothing
+    }
+    elseif (isset($resource_filters['subject'][1])) {
+      $query->innerJoin('field_data_field_subject', 's', 'n.nid = s.entity_id AND s.bundle = \'resource\'');
+      $query->isNull('s.field_subject_tid');
+    }
+    else {
+      $query->innerJoin('field_data_field_subject', 's', 'n.nid = s.entity_id AND s.bundle = \'resource\'');
+      $query->condition('s.field_subject_tid', array_keys($resource_filters['subject']));
+    }
+  }
+
+  // Status filter
+  if (!empty($resource_filters['status'])) {
+    if (isset($resource_filters['status'][0])) {
+      // User selected 'All', do nothing
+    }
+    else {
+      $query->innerJoin('workbench_moderation_node_history', 'h', 'h.nid = n.nid');
+      $query->condition('h.current', 1);
+      $status_condition = db_or();
+      $sub_condition = 'h.state = \'being_reviewed\' AND :completed_reviews = (
+            SELECT count(*)
+            FROM eck_feedback f3
+            WHERE f3.node_id = n.nid AND f3.completed = 1 AND f3.created > IFNULL((SELECT max(h4.stamp)
+                  FROM workbench_moderation_node_history h4
+                  WHERE h4.nid = n.nid AND h4.from_state = \'draft\' AND h4.state = \'needs_review\' AND h4.stamp > (
+                    SELECT max(h5.stamp)
+                    FROM workbench_moderation_node_history h5
+                    WHERE h5.state = \'rejected\' AND h5.nid = n.nid
+                  )), 0)
+            )';
+      // see sbac_report_resource_status_options() for the statuses
+      foreach ($resource_filters['status'] as $status) {
+        switch ($status) {
+          case 1:
+            // Draft
+            $status_condition->condition('h.state', 'draft');
+            break;
+          case 2:
+            // Submitted
+            $status_condition->condition('h.state', 'needs_review');
+            break;
+          case 3:
+            // GK
+            $status_condition->where(str_replace(':completed_reviews', 0, $sub_condition));
+            break;
+          case 4:
+            // QC1
+            $status_condition->where(str_replace(':completed_reviews', 1, $sub_condition));
+            break;
+          case 5:
+            // QC2
+            $status_condition->where(str_replace(':completed_reviews', 2, $sub_condition));
+            break;
+          case 6:
+            // QC3
+            $status_condition->where(str_replace(':completed_reviews', 3, $sub_condition));
+            break;
+          case 7:
+            // Arbitration Review
+            $status_condition->condition('h.state', 'approved');
+            break;
+          case 8:
+            // Returned
+            $status_condition->condition('h.state', 'rejected');
+            break;
+          case 9:
+            // Posted
+            $status_condition->condition(db_and()->condition('h.state', 'published')->condition('n.sticky', 0));
+            break;
+          case 10:
+            // Posted with Distinction
+            $status_condition->condition(db_and()->condition('h.state', 'published')->condition('n.sticky', 1));
+            break;
+          case 11:
+            // Removed
+            $status_condition->condition('h.state', 'removed');
+            break;
+        }
+      }
+      $query->condition($status_condition);
+    }
+  }
+
+  // Grade filter
+  if (!empty($resource_filters['grade'])) {
+    if (isset($resource_filters['grade'][0])) {
+      // User selected 'All', do nothing
+    }
+    elseif (isset($resource_filters['grade'][1])) {
+      // 'Not Yet Selected'
+      $query->innerJoin('field_data_field_grades', 'g', 'n.nid = g.entity_id AND g.bundle = \'resource\'');
+      $query->isNull('g.field_grades_tid');
+    }
+    else {
+      $query->innerJoin('field_data_field_grades', 'g', 'n.nid = g.entity_id AND g.bundle = \'resource\'');
+      $query->condition('g.field_grades_tid', array_keys($resource_filters['grade']));
+    }
+  }
+
+  // Attributes filter
+  if (!empty($resource_filters['attribute'])) {
+    if (isset($resource_filters['attribute'][0])) {
+      // User selected 'All', do nothing
+    }
+    elseif (isset($resource_filters['attribute'][1])) {
+      // 'Not Yet Selected'
+      $query->innerJoin('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND a.bundle = \'resource\'');
+      $query->isNull('a.field_attributes_tid');
+    }
+    else {
+      $query->innerJoin('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND a.bundle = \'resource\'');
+      $query->condition('a.field_attributes_tid', array_keys($resource_filters['attribute']));
+    }
+  }
+  $query->fields('n', array('nid'));
   $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
-  $result = $query->execute();
-  $nids = array();
-  foreach ($result as $row) {
-    $nids[] = $row->nid;
-  }
-
-  // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
-  if (isset($resource_filters['subject'][1]) || isset($resource_filters['grade'][1]) || isset($resource_filters['attribute'][1])) {
-    $query = db_select('node', 'n');
-    $query->fields('n', array('nid'));
-    $query->join('field_data_field_grades', 'g', 'n.nid = g.entity_id AND n.vid = g.revision_id');
-    $query->join('field_data_field_subject', 's', 'n.nid = s.entity_id AND n.vid = s.revision_id');
-    $query->join('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND n.vid = a.revision_id');
-    $query->condition('n.type', 'resource');
-    $query->condition('n.status', 1);
-    set_field_condition_niether_filter($query, $resource_filters['subject'], 's.field_subject_tid');
-    set_field_condition_niether_filter($query, $resource_filters['grade'], 'g.field_grades_tid');
-    set_field_condition_niether_filter($query, $resource_filters['attribute'], 'a.field_attributes_tid');
-    $query->groupBy('n.nid');
-    $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
-
-    $result = $query->execute();
-    $separate_nids = array();
-    foreach ($result as $row) {
-      $separate_nids[] = $row->nid;
-    }
-    $nids = array_merge($nids, $separate_nids);
-  }
-
-  return $nids;
+  return $query->execute()->fetchCol();
 }
 
 /**
