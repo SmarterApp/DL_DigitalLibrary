@@ -1519,6 +1519,10 @@ function sbac_users_conflicting_profile_form($form, &$form_state) {
     drupal_get_path('module', 'sbac_user') . '/js/sbac_user.conflicting_profile.js',
   );
 
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'sbac_user') . '/css/sbac_user.conflicting_profile.css',
+  );
+
   $form['information'] = array(
     '#prefix' => '<div class="sbac-conflict-wrapper">',
     '#markup' => t('There is <strong>conflicting account information</strong> associated with your Smarter Balanced login. <strong>Please choose the profile below</strong> that accurately reflects your information.'),
