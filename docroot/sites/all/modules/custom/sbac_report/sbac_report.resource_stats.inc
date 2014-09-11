@@ -1438,6 +1438,7 @@ function sbac_report_get_qc_info($fieldkey, $data, $resource) {
 function sbac_report_get_total_reviews($fieldkey, $data, $resource) {
   return db_select('eck_review', 'r')
     ->condition('r.node_id', $resource->nid->value())
+    ->condition('r.status', 1)
     ->fields('r', array('id'))
     ->countQuery()
     ->execute()
