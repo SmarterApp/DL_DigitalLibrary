@@ -349,13 +349,14 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   $sql .= "JOIN {field_data_field_state} AS state ON u.uid = state.entity_id ";
   $sql .= "WHERE ";
   $and = '';
+  $or = '';
   if ($user_groups) {
     $sql .= "ur.rid IN ($user_groups) ";
-    $and = 'AND';
+    $or = 'OR';
   }
   if ($sne_filter) {
     $sql .= $and . " sne.field_sne_member_value = 1 ";
-    $and = 'AND';
+    $or = 'OR';
   }
   if ($slt_filter) {
     $sql .= $and . " slt.field_slt_member_value = 1 ";
