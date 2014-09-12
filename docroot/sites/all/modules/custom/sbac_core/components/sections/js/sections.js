@@ -120,6 +120,11 @@ Drupal.behaviors.sections = {
       $('.specific-section').removeClass('active').css('padding-top', 0);
       $('section.section-quality-criteria-review').addClass('active').css('padding-top', '45px');
     }
+    else if (hash == '#review-Moderate_flag') {
+      $('section.section-1').css('width', '100%');
+      $('.specific-section').removeClass('active').css('padding-top', 0);
+      $('section.section-resource-flags').addClass('active').css('padding-top', '45px');
+    }
 
     var tab = $('a[href=' + hash + ']');
     if (tab.length) {

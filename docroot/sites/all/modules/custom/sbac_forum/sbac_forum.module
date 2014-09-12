@@ -1479,12 +1479,15 @@ function sbac_forum_taxonomy_term_presave($term) {
               // Do state check first.
               $has_state = array();
               if (!empty($state_restrictions)) {
-                $members_states_raw = $member_entity->field_fc_forum_member->field_state->value();
                 $members_states = array();
-                if (!empty($members_states_raw)) {
-                  foreach ($members_states_raw as $index => $state_element) {
-                    $members_states[$state_element->tid] = $state_element->tid;
+                try {
+                  $members_states_raw = $member_entity->field_fc_forum_member->field_state->value();
+                  if (!empty($members_states_raw)) {
+                    foreach ($members_states_raw as $index => $state_element) {
+                      $members_states[$state_element->tid] = $state_element->tid;
+                    }
                   }
+                } catch (EntityMetadataWrapperException $e) {
                 }
                 $has_state = array_intersect($state_restrictions, $members_states);
               } // end state check
@@ -1493,9 +1496,12 @@ function sbac_forum_taxonomy_term_presave($term) {
               // Check position/title/role
               $has_role = array();
               if (!empty($role_restrictions)) {
-                $members_title_raw = $member_entity->field_fc_forum_member->field_position->value();
-                $members_title_tid = $members_title_raw->tid;
-                $has_role = in_array($members_title_tid, $role_restrictions);
+                try {
+                  $members_title_raw = $member_entity->field_fc_forum_member->field_position->value();
+                  $members_title_tid = $members_title_raw->tid;
+                  $has_role = in_array($members_title_tid, $role_restrictions);
+                } catch (EntityMetadataWrapperException $e) {
+                }
               } // end title check
 
 
@@ -1520,12 +1526,15 @@ function sbac_forum_taxonomy_term_presave($term) {
               }
 
               if ($pass != 2) {
-                $user_to_remove = $member_entity->field_fc_forum_member->uid->value();
-                $entity_id = $member_entity->item_id->value();
-                $entity_list[] = $entity_id;
+                try {
+                  $user_to_remove = $member_entity->field_fc_forum_member->uid->value();
+                  $entity_id = $member_entity->item_id->value();
+                  $entity_list[] = $entity_id;
+                  $people_to_notify[] = $user_to_remove;
+                } catch (EntityMetadataWrapperException $e) {
+                }
                 $fc_item->delete(); // Mimics "leaving" a forum. User is removed entirely.
                 $member_count--;
-                $people_to_notify[] = $user_to_remove;
               }
             }
           }
