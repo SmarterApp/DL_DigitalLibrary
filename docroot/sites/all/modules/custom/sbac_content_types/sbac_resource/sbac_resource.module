@@ -3614,4 +3614,27 @@ function _sbac_resource_is_in_quality_review($node) {
   return $result[$node->nid];
 }
 
-
+/**
+ * Is the resource in the poster workflow
+ *
+ * A resource is in poster workflow if it has been rejected by the poster and resubmitted.
+ * It will go back to the poster again and skip all the reviewers.
+ *
+ * @param $nid
+ * @return bool
+ */
+function _sbac_resource_is_in_poster_workflow($nid) {
+  $in_workflow = FALSE;
+  $type = db_select('eck_feedback', 'f')
+    ->condition('f.completed', 1)
+    ->condition('f.node_id', $nid)
+    ->fields('f', array('type'))
+    ->range(0, 1)
+    ->orderBy('f.id', 'desc')
+    ->execute()
+    ->fetchField();
+  if ($type && $type == 'post') {
+    $in_workflow = TRUE;
+  }
+  return $in_workflow;
+}

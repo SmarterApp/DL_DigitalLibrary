@@ -21,13 +21,25 @@ class Post extends Base {
    * @return [type] [description]
    */
   public function process() {
+    $in_poster_workflow = _sbac_resource_is_in_poster_workflow($this->_form['node_id']['#value']);
+
     // add 'required field' asterisks
-    $required_fields = array(
-      'field_to_contributor',
-      'field_to_reviewer_1',
-      'field_to_reviewer_2',
-      'field_to_reviewer_3',
-    );
+    if ($in_poster_workflow) {
+      $this->_form['field_to_reviewer_1']['#access'] = FALSE;
+      $this->_form['field_to_reviewer_2']['#access'] = FALSE;
+      $this->_form['field_to_reviewer_3']['#access'] = FALSE;
+      $required_fields = array(
+        'field_to_contributor',
+      );
+    }
+    else {
+      $required_fields = array(
+        'field_to_contributor',
+        'field_to_reviewer_1',
+        'field_to_reviewer_2',
+        'field_to_reviewer_3',
+      );
+    }
 
     foreach ($required_fields as $field_name) {
       $this->_form[$field_name][$this->_lang]['#title'] .= $this->_required_marker;
@@ -50,26 +62,28 @@ class Post extends Base {
     if ($focus = field_entity_value($this->_resource, 'field_focus')) {
       $reviewUtil->setPrefix('qc_' . $focus->tid . '_');
       $total = $reviewUtil->getSetTotal();
-      
-      $items = array(); 
+
+      $items = array();
       for ($i = 1; $i <= $total; $i++) {
         $item = array();
         $item += $reviewUtil->getSetTitle($i);
         $item += $reviewUtil->getSetDescription($i);
-        $item += $this->getReviewersCommentsTitle();
+        if (!$in_poster_workflow) {
+          $item += $this->getReviewersCommentsTitle();
 
-        $item += $reviewUtil->getReviewTeaser(function($entity) use ($i) {
-          $reviews = field_entity_value($entity, 'field_review_set');
-          $review = $reviews[$i - 1];
+          $item += $reviewUtil->getReviewTeaser(function ($entity) use ($i) {
+            $reviews = field_entity_value($entity, 'field_review_set');
+            $review = $reviews[$i - 1];
 
-          $headline = t('Quality Criterion Level: !level', array(
-            '!level' => field_entity_value($review, 'field_level'),
-          ));
+            $headline = t('Quality Criterion Level: !level', array(
+              '!level' => field_entity_value($review, 'field_level'),
+            ));
 
-          $comments = field_entity_value($review, 'field_comments');
+            $comments = field_entity_value($review, 'field_comments');
 
-          return array($headline, $comments);
-        });
+            return array($headline, $comments);
+          });
+        }
 
         $this->wrapFapi($item, 'feedback-item feedback-item-' . $i);
         $this->setWeight($item);
@@ -77,22 +91,25 @@ class Post extends Base {
         $items['set_' . $i] = $item;
       }
 
-      // add reviewers' recommendation options
-      $item = array(
-        '#prefix' => '<div class="criteria-set-title"><p>' . t('Reviewers Resource Recommendation') . '</p></div>',
-      );
-      $item += $reviewUtil->getReviewTeaser(function($entity) {
-        $options = field_allowed_values('field_rec_options');
-        
-        $headline = $options[field_entity_value($entity, 'field_rec_options')];
-        $comments = field_entity_value($entity, 'field_rec_rationale');
-        
-        return array($headline, $comments);
-      });
+      if (!$in_poster_workflow) {
 
-      $this->setWeight($item);
-      $this->wrapFapi($item, 'feedback-item feedback-item-rec');
-      $items['rec_details'] = $item;
+        // add reviewers' recommendation options
+        $item = array(
+          '#prefix' => '<div class="criteria-set-title"><p>' . t('Reviewers Resource Recommendation') . '</p></div>',
+        );
+        $item += $reviewUtil->getReviewTeaser(function ($entity) {
+          $options = field_allowed_values('field_rec_options');
+
+          $headline = $options[field_entity_value($entity, 'field_rec_options')];
+          $comments = field_entity_value($entity, 'field_rec_rationale');
+
+          return array($headline, $comments);
+        });
+
+        $this->setWeight($item);
+        $this->wrapFapi($item, 'feedback-item feedback-item-rec');
+        $items['rec_details'] = $item;
+      }
 
       $this->wrapFapi($items, 'feedback-items');
       $this->setWeight($items);
@@ -175,6 +192,9 @@ class Post extends Base {
 
     // add custom submit handler
     $this->_form['#submit'][] = 'feedback_eck_post_form_submit';
+
+    $this->_form['field_contributor_comment']['#access'] = FALSE;
+    $this->_form['field_contributor_comment_date']['#access'] = FALSE;
 
     parent::postProcess();
   }
