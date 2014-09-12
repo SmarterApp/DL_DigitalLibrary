@@ -176,6 +176,9 @@ class Post extends Base {
     // add custom submit handler
     $this->_form['#submit'][] = 'feedback_eck_post_form_submit';
 
+    $this->_form['field_contributor_comment']['#access'] = false;
+    $this->_form['field_contributor_comment_date']['#access'] = false;
+
     parent::postProcess();
   }
 
