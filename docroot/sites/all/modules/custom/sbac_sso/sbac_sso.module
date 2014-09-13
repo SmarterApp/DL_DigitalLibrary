@@ -94,6 +94,13 @@ function sbac_sso_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-sso/conflicting-profile'] = array(
+    'title' => 'Conflicting Profile Information',
+    'page callback' => 'sbac_sso_conflicting_profile',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -284,6 +291,12 @@ function sbac_sso_preprocess_page(&$vars) {
   // Regenerate the user session per page.
   if (user_is_logged_in() && strpos($_GET['q'], 'ajax') === FALSE) {
     sbac_sso_session_regenerate();
+  }
+
+  $vars['conflicting_profile'] = FALSE;
+  if (isset($_SESSION['conflicting_profile']) && $_SESSION['conflicting_profile'] == TRUE) {
+    $vars['conflicting_profile'] = TRUE;
+    $vars['home_url'] = '#';
   }
 
   // If the page requested is a moderation page, do not include this timer. As there
@@ -481,7 +494,7 @@ function sbac_sso_validate_saml_response($saml_token) {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
   }
   // program manager api call.
-  $api_response = sbac_sso_program_management_api_request($user_attributes);
+  $api_response = sbac_sso_program_management_api_request($response);
   if (!$api_response) {
     // Kick the user to an error page with Smarter Balanced Contact information
     // and a custom error code ( do not include the details pertaining to what
@@ -489,10 +502,23 @@ function sbac_sso_validate_saml_response($saml_token) {
     // ERROR CODE 102: Program Management returned INVALID ACCESS
     drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
   }
-  $user = sbac_sso_determine_user($user_attributes, $response);
+  $user = sbac_sso_determine_user($response, $api_response);
   $user->session_index = $response['session_index'];
+
   // Determine if the user has multiple tenancy chains
-  $multiple = sbac_sso_determine_multiple_tenancy_chains($user_attributes, $user);
+  $multiple = sbac_sso_determine_multiple_tenancy_chains($response, $api_response);
+  if ($multiple) {
+    // log a temp user in when its a new user
+    // else log in current user
+    // Present conflicting profile screen.
+  }
+  else {
+    // programmatically submit the conflicting profile screen with
+    // state selected since there is only one, chooose that one.
+    // if its a new user, create a new one, else
+    // log existing one in.
+  }
+
 
   return $user;
 }
@@ -694,7 +720,7 @@ function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
     $parsed_chain = sbac_sso_create_user_attributes($chain);
     // Only keep tenancy chains with DL_EndUser.
     if (isset($parsed_chain['name']) && $parsed_chain['name'] == 'DL_EndUser') {
-      sbac_sso_merge_tenancy_chains($response['sbac_tenancy_chain'][$parsed_chain['state_id']], $parsed_chain);
+      sbac_sso_merge_tenancy_chains($response['sbac_tenancy_chains'][$parsed_chain['state_id']], $parsed_chain);
     }
   }
 }
@@ -785,45 +811,51 @@ function sbac_sso_create_user_attributes($chain) {
 /**
  * Get the response from Program Management API.
  *
- * @param $user_attributes
+ * Before presenting tenancy chains, please cross check those that have the DL_EndUser role
+ * against the cached Program Management tenant list and ones that don’t match against the PM
+ * API endpoint so as not to present options that may be on file but don’t refer to currently
+ * valid tenants.
+ *
+ * @param $response
  *
  * @return array
  */
-function sbac_sso_program_management_api_request($user_attributes) {
+function sbac_sso_program_management_api_request($response) {
   //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
   //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
   //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
   //  All of which are in the tenancy chains received in an SSO Assertion.
   $query_string = '';
   $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
-  foreach ($user_attributes as $index => $attribute) {
-    if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
-      switch ($index) {
-        case 'group_of_states':
-          $query_string['STATE_GROUP'] = $attribute;
-          break;
-        case 'state_id':
-          $query_string['STATE'] = $attribute;
-          break;
-        case 'group_of_districts':
-          $query_string['DISTRICT_GROUP'] = $attribute;
-          break;
-        case 'district_id':
-          $query_string['DISTRICT'] = $attribute;
-          break;
-        case 'group_of_institutions':
-          $query_string['INSTITUTION_GROUP'] = $attribute;
-          break;
-        case 'institution_id':
-          $query_string['INSTITUTION'] = $attribute;
-          break;
+  foreach ($response['sbac_tenancy_chains'] as $state => $tenancy_chain) {
+    foreach ($tenancy_chain as $index => $attribute) {
+      if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
+        switch ($index) {
+          case 'group_of_states':
+            $query_string[$state]['STATE_GROUP'] = $attribute;
+            break;
+          case 'state_id':
+            $query_string[$state]['STATE'] = $attribute;
+            break;
+          case 'group_of_districts':
+            $query_string[$state]['DISTRICT_GROUP'] = $attribute;
+            break;
+          case 'district_id':
+            $query_string[$state]['DISTRICT'] = $attribute;
+            break;
+          case 'group_of_institutions':
+            $query_string[$state]['INSTITUTION_GROUP'] = $attribute;
+            break;
+          case 'institution_id':
+            $query_string[$state]['INSTITUTION'] = $attribute;
+            break;
+        }
       }
     }
   }
 
   // Check the cache table.
-  // TODO: Update so that checks cache table for ones on file but then also call
-  // the API for ones not on file.
+  // TODO: Update so that checks cache table for ones on file but then also call the API for ones not on file.
   $cached_results = variable_get('sbac_sso_pm_cached_results');
   if ($cached_results) {
     $valid_cached_results = array();
@@ -842,11 +874,11 @@ function sbac_sso_program_management_api_request($user_attributes) {
     }
     else {
       // Else request API to attempt to get new response.
-      $api_response = sbac_sso_get_program_management_response($query_string);
+      $api_response = sbac_sso_get_program_management_response($response, $query_string);
     }
   }
   else {
-    $api_response = sbac_sso_get_program_management_response($query_string);
+    $api_response = sbac_sso_get_program_management_response($response, $query_string);
   }
   return $api_response;
 }
@@ -854,28 +886,42 @@ function sbac_sso_program_management_api_request($user_attributes) {
 /**
  * Get the program management response.
  *
+ * @param $response
  * @param $query_string
  * @return array
  */
-function sbac_sso_get_program_management_response($query_string) {
+function sbac_sso_get_program_management_response(&$response, $query_string) {
   $api_response = array();
+  // Get the OAuth token to make calls to Program Management.
   $access_token = sbac_sso_get_program_management_oauth_access_token();
   if ($access_token) {
-    $data = http_build_query($query_string);
-    $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $post);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-      'Authorization: Bearer ' . $access_token,
-    ));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($curl, CURLOPT_SSLVERSION,3);
-    $result = curl_exec($curl);
-    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
-    if ($result && $http_status == 200) {
-      $api_response = sbac_sso_parse_program_api_response($result, TRUE);
+    // Loop around all state query string and get the PM results for each one.
+    foreach ($query_string as $state => $query) {
+      $data = http_build_query($query);
+      $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, $post);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        'Authorization: Bearer ' . $access_token,
+      ));
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+      curl_setopt($curl, CURLOPT_SSLVERSION,3);
+      $result = curl_exec($curl);
+      $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+      curl_close($curl);
+      if ($result && $http_status == 200) {
+        $json = drupal_json_decode($result);
+        if (isset($json['tenants'])) {
+          $response['pm_api_results'][$state]['tenants'] = $json['tenants'];
+        }
+      }
+    }
+  }
+
+  if (isset($response['pm_api_results'])) {
+    foreach ($response['pm_api_results'] as $state => $json) {
+      $api_response[$state] = sbac_sso_parse_program_api_response($json);
     }
   }
 
@@ -928,21 +974,17 @@ function sbac_sso_get_program_management_oauth_access_token() {
 /**
  * Parses the Program Management API response.
  *
- * @param $result
+ * @param $json
  * @param $decode
  *
  * @return array
  */
-function sbac_sso_parse_program_api_response($result, $decode = FALSE) {
+function sbac_sso_parse_program_api_response($json, $decode = FALSE) {
   $api_response = array();
-  $json = $result;
-  if ($decode) {
-    $json = drupal_json_decode($result);
-  }
   $error = FALSE;
 
   if ($json) {
-    if ($decode && isset($json['tenants']) === FALSE) {
+    if (isset($json['tenants']) === FALSE) {
       return $api_response;
     }
 
@@ -964,8 +1006,8 @@ function sbac_sso_parse_program_api_response($result, $decode = FALSE) {
   }
 
   if (!$error) {
-    $api_response = $result;
-    if ($decode && isset($json['tenants'][0])) {
+    $api_response = $json;
+    if (isset($json['tenants'][0])) {
       $cached_results = variable_get('sbac_sso_pm_cached_results');
       $cached_results[$json['tenants'][0]['name']] = $json;
       variable_set('sbac_sso_pm_cached_results', $cached_results);
@@ -978,13 +1020,12 @@ function sbac_sso_parse_program_api_response($result, $decode = FALSE) {
 /**
  * Determine which path to take for the user.
  *
- * @param $user_attributes
- *
  * @param $response
+ * @param $api_response
  *
- * @return bool|mixed|stdClass
+ * @return object
  */
-function sbac_sso_determine_user($user_attributes, $response) {
+function sbac_sso_determine_user($response, $api_response) {
   if ($user = sbac_sso_load_user_by_uuid($response['entry_uuid'])) {
     // First Name = givenName
     // Last Name = sn
@@ -1213,9 +1254,66 @@ function sbac_sso_test_cron() {
  * duplicates, choose the first one and use that. Create a hash of the
  * tenancy chains and save it in the user profile. 
  *
- * @param $user_attributes
- * @param $user
+ * @param $response
+ * @param $api_response
  */
-function sbac_sso_determine_multiple_tenancy_chains($user_attributes, $user) {
+function sbac_sso_determine_multiple_tenancy_chains($response, $api_response) {
+  $var = '';
+}
+
+/**
+ * Displays the conflicting profile page / form.
+ */
+function sbac_sso_conflicting_profile() {
+  $form = drupal_get_form('sbac_sso_conflicting_profile_form');
+  return $form;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_sso_conflicting_profile_form($form, &$form_state) {
+  $form = array();
+
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.conflicting_profile.js',
+  );
+
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'sbac_sso') . '/css/sbac_sso.conflicting_profile.css',
+  );
+
+  $form['information'] = array(
+    '#prefix' => '<div class="sbac-conflict-wrapper">',
+    '#markup' => t('There is <strong>conflicting account information</strong> associated with your Smarter Balanced login. <strong>Please choose the profile below</strong> that accurately reflects your information.'),
+  );
+
+  $form['choices'] = array(
+    '#type' => 'radios',
+    '#options' => array('<strong>State:</strong>CA', '<strong>State:</strong>CA with district', '<strong>State:</strong>WA'),
+    '#attributes' => array('class' => array('sbac-user-conflict-choice')),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'OK',
+    '#attributes' => array('class' => array('sbac-user-conflict-submit')),
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_submit().
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_sso_conflicting_profile_form_submit($form, &$form_state) {
 
 }
