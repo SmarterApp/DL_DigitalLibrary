@@ -475,11 +475,8 @@ function sbac_sso_validate_saml_response($saml_token) {
     // ERROR CODE 100: Problem processing Assertion
     drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
   }
-  $user_attributes = sbac_sso_create_user_attributes($response);
-  // If SAML assertion does not match expected definition or signature:
-  if (!$user_attributes || !isset($user_attributes['name']) || $user_attributes['name'] == NULL || $user_attributes['name'] != 'DL_EndUser') {
-    // If you do not find a matching tenancy chain, kick the user to an error page
-    // with Smarter Balanced Contact information and a custom error code
+  // If there are no raw tenancy chains or if there are no tenancy chains with 'DL_EndUser' as the client
+  if (!isset($response['sbac_tenancy_chains_raw']) || !isset($response['sbac_tenancy_chains'])) {
     // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
     drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
   }
@@ -604,8 +601,8 @@ function sbac_sso_parse_saml_assertion($saml_token) {
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'cn');
     }
     if (strpos($row, '<saml:Attribute Name="sbacTenancyChain">') !== FALSE) {
-      $attribute = '<saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
-      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'sbac_tenancy_chain', TRUE);
+      $attribute = '<saml:Attribute Name="sbacTenancyChain">';
+      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:Attribute>', 'sbac_tenancy_chains_raw', TRUE);
     }
     if (strpos($row, '<saml:Attribute Name="givenName">') !== FALSE) {
       $attribute = '<saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
@@ -633,57 +630,153 @@ function sbac_sso_parse_saml_assertion_row(&$response, &$row, $attribute_start, 
   $value = substr($half_value, 0, $last_pos);
   if ($value) {
     if ($tenancy_chain) {
-      $length = strlen($value);
-      if ($value[$length -1] == '|') {
-        $value = substr($value, 0, $length -1);
-      }
-      if ($value[0] == '|') {
-        $value = substr($value, 1);
+      $tenancy_chains = sbac_sso_parse_tenancy_chain($value, $attribute_start, $attribute_end);
+      if ($tenancy_chains) {
+        $response[$response_name] = $tenancy_chains;
+        // Create clean tenancy chains with only DL_EndUser client.
+        sbac_sso_create_clean_tenancy_chains($tenancy_chains, $response);
       }
     }
-    $response[$response_name] = $value;
-    $value = NULL;
+    else {
+      $response[$response_name] = $value;
+      $value = NULL;
+    }
   }
 }
 
+/**
+ * Parse the tenancy chain(s).
+ *
+ * @param $value
+ * @param $attribute_start
+ * @param $attribute_end
+ *
+ * @return array
+ */
+function sbac_sso_parse_tenancy_chain(&$value, &$attribute_start, &$attribute_end) {
+  $tenancy_chains = array();
+  $tenancy_length = strlen($value);
+  $attribute_value_start = '<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+  $attribute_value_end = '</saml:AttributeValue>';
+  while ($tenancy_length > 0) {
+    $pos = strpos($value, $attribute_value_start);
+    $half_value = substr($value, $pos + strlen($attribute_value_start));
+    $last_pos = strpos($half_value, $attribute_value_end);
+    $value = substr($half_value, 0, $last_pos);
+    $length = strlen($value);
+    // Remove the beginning and end '|' characters.
+    if ($value[$length -1] == '|') {
+      $value = substr($value, 0, $length -1);
+    }
+    if ($value[0] == '|') {
+      $value = substr($value, 1);
+    }
+    $tenancy_chains[] = $value;
+    // Remove the string we just stored.
+    $value = substr_replace($half_value, '', 0, $last_pos + strlen($attribute_value_end));
+    $tenancy_length = strlen($value);
+  }
+  return $tenancy_chains;
+}
+
+/**
+ * Determine if there are duplicate states in this chain.
+ *
+ * If duplicate states, merge them into a single value
+ * and keep the most complete array. Only keep tenancy
+ * chains with DL_EndUser as the client.
+ *
+ * @param $tenancy_chains
+ * @param $response
+ */
+function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
+  foreach ($tenancy_chains as $chain) {
+    $parsed_chain = sbac_sso_create_user_attributes($chain);
+    // Only keep tenancy chains with DL_EndUser.
+    if (isset($parsed_chain['name']) && $parsed_chain['name'] == 'DL_EndUser') {
+      sbac_sso_merge_tenancy_chains($response['sbac_tenancy_chain'][$parsed_chain['state_id']], $parsed_chain);
+    }
+  }
+}
+
+/**
+ * Merge array2 into array1
+ *
+ * Take values of array2 into array1.
+ *
+ * @param $array1
+ * @param $array2
+ */
+function sbac_sso_merge_tenancy_chains(&$array1, &$array2) {
+  $instituion_keep_keys = array(
+    'institution_id' => 'institution_id',
+    'institution' => 'institution',
+  );
+  $district_keep_keys = array(
+    'district_id' => 'district_id',
+    'district' => 'district',
+  );
+  $state_keep_keys = array(
+    'name' => 'name',
+    'client_id' => 'client_id',
+    'client' => 'client',
+    'state_id' => 'state_id',
+    'state' => 'state',
+    'district_id' => 'district_id',
+    'district' => 'district',
+    'institution_id' => 'institution_id',
+    'institution' => 'institution',
+  );
+  foreach ($array2 as $key => $value) {
+    // Store the level always.
+    $level = $array2['level'];
+    if ($value !== NULL && !empty($value)) {
+      if ($level == 'STATE' && in_array($key, $state_keep_keys)) {
+        $array1[$key] = $value;
+      }
+      if ($level == 'DISTRICT' && in_array($key, $district_keep_keys)) {
+        $array1[$key] = $value;
+      }
+      if ($level == 'INSTITUTION' && in_array($key, $instituion_keep_keys)) {
+        $array1[$key] = $value;
+      }
+    }
+  }
+}
 
 /**
  * Create the user attributes array.
  *
- * @param $response
+ * @param $chain
  *
  * @return array
  */
-function sbac_sso_create_user_attributes($response) {
+function sbac_sso_create_user_attributes($chain) {
   $user_attributes = array();
-  if ($response && isset($response['sbac_tenancy_chain']) && $response['sbac_tenancy_chain']) {
-    $attributes = explode('|', $response['sbac_tenancy_chain']);
-    if ($attributes) {
-      $user_fields = array(
-        'role_id' => 'role_id',
-        'name' => 'name',
-        'level' => 'level',
-        'client_id' => 'client_id',
-        'client' => 'client',
-        'group_of_state_ids' => 'group_of_state_ids',
-        'group_of_states' => 'group_of_states',
-        'state_id' => 'state_id',
-        'state' => 'state',
-        'group_of_district_ids' => 'group_of_district_ids',
-        'group_of_districts' => 'group_of_districts',
-        'district_id' => 'district_id',
-        'district' => 'district',
-        'group_of_institution_ids' => 'group_of_institution_ids',
-        'group_of_institutions' => 'group_of_institutions',
-        'institution_id' => 'institution_id',
-        'institution' => 'institution',
-      );
+  $attributes = explode('|', $chain);
+  if ($attributes) {
+    $user_fields = array(
+      'role_id' => 'role_id',
+      'name' => 'name',
+      'level' => 'level',
+      'client_id' => 'client_id',
+      'client' => 'client',
+      'group_of_state_ids' => 'group_of_state_ids',
+      'group_of_states' => 'group_of_states',
+      'state_id' => 'state_id',
+      'state' => 'state',
+      'group_of_district_ids' => 'group_of_district_ids',
+      'group_of_districts' => 'group_of_districts',
+      'district_id' => 'district_id',
+      'district' => 'district',
+      'group_of_institution_ids' => 'group_of_institution_ids',
+      'group_of_institutions' => 'group_of_institutions',
+      'institution_id' => 'institution_id',
+      'institution' => 'institution',
+    );
 
-      if (count($user_fields) == count($attributes)) {
-        $user_attributes = array_combine($user_fields, $attributes);
-      }
-      unset($user_fields);
-      unset($attributes);
+    if (count($user_fields) == count($attributes)) {
+      $user_attributes = array_combine($user_fields, $attributes);
     }
   }
   return $user_attributes;
