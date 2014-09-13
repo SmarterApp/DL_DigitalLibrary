@@ -410,117 +410,11 @@ function sbac_sso_consume() {
 
   if ($is_valid) {
     // validate SAML.
-    $user = sbac_sso_validate_saml_response($saml_token);
-    if ($user) {
-      // If the user is marked as blocked.
-      if ($user->status == 0) {
-        // Kick the user to an error page with Smarter Balanced Contact information
-        // and a custom error code ( do not include the details pertaining to what
-        // the error code is connected to, just the ERROR CODE and NUMBER :
-        // ERROR CODE 200: Error updating user with user attributes that were passed.
-        drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
-      }
-
-      if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
-        global $base_url;
-        $relay_state = $_REQUEST['RelayState'];
-        $relay_state = str_replace($base_url, '', $relay_state);
-        $form_state['sbac_sso_relay'] = $relay_state;
-      }
-
-      // Log user in.
-      $form_state['uid'] = $user->uid;
-      $form_state['session_index'] = $user->session_index;
-      user_login_submit(array(), $form_state);
-    }
+    sbac_sso_validate_saml_response($saml_token);
   }
   else {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
   }
-}
-
-/**
- * Implements hook_user_login().
- *
- * @param $edit
- * @param $account
- */
-function sbac_sso_user_login(&$edit, $account) {
-  if (isset($edit['session_index'])) {
-    $account->data['session_index'] = $edit['session_index'];
-  }
-}
-
-/**
- * Custom logout callback.
- */
-function sbac_sso_logout() {
-  if (user_is_logged_in()) {
-    global $base_url;
-    global $user;
-    $logout_assertion = sbac_sso_logout_assertion();
-    // Destroy the current session, and reset $user to the anonymous user.
-    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
-    module_invoke_all('user_logout', $user);
-    session_destroy();
-    $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url . '/user';
-    drupal_goto($logout_url);
-  }
-  else {
-    drupal_goto('user');
-  }
-}
-
-/**
- * Validates the SAML response.
- *
- * @param string $saml_token
- *   The SAML assertion.
- *
- * @return bool
- */
-function sbac_sso_validate_saml_response($saml_token) {
-  $response = sbac_sso_parse_saml_assertion($saml_token);
-  // If SAML assertion does not match expected definition or signature:
-  if (!$response || !isset($response['session_index'])) {
-    // If you do not find a matching tenancy chain, kick the user to an error page
-    // with Smarter Balanced Contact information and a custom error code
-    // ERROR CODE 100: Problem processing Assertion
-    drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
-  }
-  // If there are no raw tenancy chains or if there are no tenancy chains with 'DL_EndUser' as the client
-  if (!isset($response['sbac_tenancy_chains_raw']) || !isset($response['sbac_tenancy_chains'])) {
-    // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
-    drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
-  }
-  // program manager api call.
-  $api_response = sbac_sso_program_management_api_request($response);
-  if (!$api_response) {
-    // Kick the user to an error page with Smarter Balanced Contact information
-    // and a custom error code ( do not include the details pertaining to what
-    // the error code is connected to, just the ERROR CODE and NUMBER :
-    // ERROR CODE 102: Program Management returned INVALID ACCESS
-    drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
-  }
-  $user = sbac_sso_determine_user($response, $api_response);
-  $user->session_index = $response['session_index'];
-
-  // Determine if the user has multiple tenancy chains
-  $multiple = sbac_sso_determine_multiple_tenancy_chains($response, $api_response);
-  if ($multiple) {
-    // log a temp user in when its a new user
-    // else log in current user
-    // Present conflicting profile screen.
-  }
-  else {
-    // programmatically submit the conflicting profile screen with
-    // state selected since there is only one, chooose that one.
-    // if its a new user, create a new one, else
-    // log existing one in.
-  }
-
-
-  return $user;
 }
 
 /**
@@ -564,6 +458,109 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   else {
     watchdog('sbac_sso', 'Key could not be verified.');
     return FALSE;
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * @param $edit
+ * @param $account
+ */
+function sbac_sso_user_login(&$edit, $account) {
+  if (isset($edit['session_index'])) {
+    $account->data['session_index'] = $edit['session_index'];
+  }
+}
+
+/**
+ * Custom logout callback.
+ */
+function sbac_sso_logout() {
+  if (user_is_logged_in()) {
+    global $base_url;
+    global $user;
+    $logout_assertion = sbac_sso_logout_assertion();
+    // Destroy the current session, and reset $user to the anonymous user.
+    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+    module_invoke_all('user_logout', $user);
+    session_destroy();
+    $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url . '/user';
+    drupal_goto($logout_url);
+  }
+  else {
+    drupal_goto('user');
+  }
+}
+
+/**
+ * Validates the SAML response.
+ *
+ * @param string $saml_token
+ *   The SAML assertion.
+ */
+function sbac_sso_validate_saml_response($saml_token) {
+  $response = sbac_sso_parse_saml_assertion($saml_token);
+  // If SAML assertion does not match expected definition or signature:
+  if (!$response || !isset($response['session_index'])) {
+    // If you do not find a matching tenancy chain, kick the user to an error page
+    // with Smarter Balanced Contact information and a custom error code
+    // ERROR CODE 100: Problem processing Assertion
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
+  }
+  // If there are no raw tenancy chains or if there are no tenancy chains with 'DL_EndUser' as the client
+  if (!isset($response['sbac_tenancy_chains_raw']) || !isset($response['sbac_tenancy_chains'])) {
+    // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
+  }
+  // program manager api call.
+  $api_response = sbac_sso_program_management_api_request($response);
+  if (!$api_response) {
+    // Kick the user to an error page with Smarter Balanced Contact information
+    // and a custom error code ( do not include the details pertaining to what
+    // the error code is connected to, just the ERROR CODE and NUMBER :
+    // ERROR CODE 102: Program Management returned INVALID ACCESS
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
+  }
+  // Determine if the user has multiple tenancy chains
+  $multiple = sbac_sso_determine_multiple_tenancy_chains($response, $api_response);
+  // Determine if user is new or existing
+  $user = sbac_sso_determine_user($response, $multiple);
+  $user->session_index = $response['session_index'];
+  if ($user) {
+    // If the user is marked as blocked.
+    if ($user->status == 0) {
+      // Kick the user to an error page with Smarter Balanced Contact information
+      // and a custom error code ( do not include the details pertaining to what
+      // the error code is connected to, just the ERROR CODE and NUMBER :
+      // ERROR CODE 200: Error updating user with user attributes that were passed.
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
+    }
+
+    if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
+      global $base_url;
+      $relay_state = $_REQUEST['RelayState'];
+      $relay_state = str_replace($base_url, '', $relay_state);
+      $_SESSION['sbac-sso']['relay'] = $relay_state;
+    }
+
+    // Log user in.
+    $form_state['uid'] = $user->uid;
+    $form_state['session_index'] = $user->session_index;
+    user_login_submit(array(), $form_state);
+  }
+
+  if ($multiple) {
+    $_SESSION['sbac-sso']['api_response'] = $api_response;
+    $_SESSION['sbac-sso']['response'] = $response;
+    // Present conflicting profile screen.
+    drupal_goto('sbac-sso/conflicting-profile');
+  }
+  else {
+    // Programmatically submit the conflicting profile screen with
+    // state selected since there is only one, chooose that one.
+    // if its a new user, create a new one, else
+    // log existing one in.
   }
 }
 
@@ -1021,76 +1018,96 @@ function sbac_sso_parse_program_api_response($json, $decode = FALSE) {
  * Determine which path to take for the user.
  *
  * @param $response
- * @param $api_response
+ * @param $multiple
  *
  * @return object
  */
-function sbac_sso_determine_user($response, $api_response) {
-  if ($user = sbac_sso_load_user_by_uuid($response['entry_uuid'])) {
-    // First Name = givenName
-    // Last Name = sn
-    // Email = email
-    // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
-    // The format of the sbacTenancyChain is as follows:
-    // |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
-    // Preform a string split on this pile delimited string, and grab the
-    // value from the positions for State, District, Insitution and update those
-    // on the user record. If any are blank, update the DL User record accordingly.
-    // If some error occurs in the data updating a user: Kick the user to an error
-    // page with Smarter Balanced Contact information and a custom error code
-    // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
-    $user->field_first_name['und'][0]['value'] = $response['given_name'];
-    $user->field_last_name['und'][0]['value'] = $response['sn'];
-    $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-      $term = current($valid);
-      $user->field_state['und'][0]['tid'] = $term->tid;
+function sbac_sso_determine_user($response, $multiple = FALSE) {
+  $user = sbac_sso_load_user_by_uuid($response['entry_uuid']);
+  if ($user == FALSE) {
+    $user = user_load_by_mail($response['email'])) {
+    if ($user == FALSE && $multiple == TRUE) {
+      $user = sbac_share_create_guest_user();
     }
-    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-    $user = user_save($user);
-    if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
-    }
-  }
-  elseif ($user = user_load_by_mail($response['email'])) {
-    // Record entryuuid to record for specified email address
-    // Update all other fields passed in SAML assertion as described
-    // in the first clause above. If some error occurs in the data updating a
-    // user: Kick the user to an error page with Smarter Balanced Contact
-    // information and a custom error code ( do not include the details pertaining
-    // to what the error code is connected to, just the ERROR CODE and NUMBER :
-    // ERROR CODE 103: Error updating user with user attributes that were passed.
-    $user->field_first_name['und'][0]['value'] = $response['given_name'];
-    $user->field_last_name['und'][0]['value'] = $response['sn'];
-    $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-      $term = current($valid);
-      $user->field_state['und'][0]['tid'] = $term->tid;
-    }
-    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-    $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
-    $user = user_save($user);
-    if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
-    }
-  }
-  else {
-    // Create a user record for this user with the end user role, and record
-    // their userUUID to that record. Use all attributes that were updated
-    // in first clause to create the record. If some error occurs in the data
-    // creating a user: Kick the user to an error page with Smarter Balanced
-    // Contact information and a custom error code ( do not include the details
-    // pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
-    // ERROR CODE 104: Error creating user with user attributes that were passed.
-    $user = sbac_sso_create_user_record($response, $user_attributes);
-    if (!$user) {
-      drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
+    else {
+      $user = sbac_sso_create_user_record($response);
+      if (!$user) {
+        drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
+      }
     }
   }
   return $user;
 }
+
+/**
+ * function sbac_sso_determine_user($response) {
+if ($user = sbac_sso_load_user_by_uuid($response['entry_uuid'])) {
+// First Name = givenName
+// Last Name = sn
+// Email = email
+// Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
+// The format of the sbacTenancyChain is as follows:
+// |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
+// Preform a string split on this pile delimited string, and grab the
+// value from the positions for State, District, Insitution and update those
+// on the user record. If any are blank, update the DL User record accordingly.
+// If some error occurs in the data updating a user: Kick the user to an error
+// page with Smarter Balanced Contact information and a custom error code
+// (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
+//    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+//    $user->field_last_name['und'][0]['value'] = $response['sn'];
+//    $user->mail = $response['email'];
+//    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+//      $term = current($valid);
+//      $user->field_state['und'][0]['tid'] = $term->tid;
+//    }
+//    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+//    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+//    $user = user_save($user);
+//    if (!$user) {
+//      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
+//    }
+}
+elseif ($user = user_load_by_mail($response['email'])) {
+// Record entryuuid to record for specified email address
+// Update all other fields passed in SAML assertion as described
+// in the first clause above. If some error occurs in the data updating a
+// user: Kick the user to an error page with Smarter Balanced Contact
+// information and a custom error code ( do not include the details pertaining
+// to what the error code is connected to, just the ERROR CODE and NUMBER :
+// ERROR CODE 103: Error updating user with user attributes that were passed.
+//    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+//    $user->field_last_name['und'][0]['value'] = $response['sn'];
+//    $user->mail = $response['email'];
+//    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+//      $term = current($valid);
+//      $user->field_state['und'][0]['tid'] = $term->tid;
+//    }
+//    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+//    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+//    $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
+//    $user = user_save($user);
+//    if (!$user) {
+//      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
+//    }
+}
+else {
+// Create a user record for this user with the end user role, and record
+// their userUUID to that record. Use all attributes that were updated
+// in first clause to create the record. If some error occurs in the data
+// creating a user: Kick the user to an error page with Smarter Balanced
+// Contact information and a custom error code ( do not include the details
+// pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
+// ERROR CODE 104: Error creating user with user attributes that were passed.
+//    $user = sbac_sso_create_user_record($response, $user_attributes);
+//    if (!$user) {
+//      drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
+//    }
+$user = new stdClass();
+}
+return $user;
+}
+ */
 
 /**
  * Validates the state id.
@@ -1129,12 +1146,12 @@ function sbac_sso_validate_state_by_name($state_name) {
  *
  * @param array $response
  *   The response from SAML.
- * @param array $user_attributes
- *   The response from the tenancy chain.
  *
  * @return bool|stdClass
  */
-function sbac_sso_create_user_record($response, $user_attributes) {
+function sbac_sso_create_user_record($response) {
+  // TODO: Update to use response variable now.
+
   $new_user = new stdClass();
   $new_user->uid = 0;
   $new_user->cache = 0;
@@ -1315,5 +1332,16 @@ function sbac_sso_conflicting_profile_form($form, &$form_state) {
  * @param $form_state
  */
 function sbac_sso_conflicting_profile_form_submit($form, &$form_state) {
-
+//  if ($multiple) {
+//    // log a temp user in when its a new user
+//    // else log in current user
+//    // Present conflicting profile screen.
+//  }
+//  else {
+//    // programmatically submit the conflicting profile screen with
+//    // state selected since there is only one, chooose that one.
+//    // if its a new user, create a new one, else
+//    // log existing one in.
+//  }
+  // on submit, update user profile and perform below logic
 }
