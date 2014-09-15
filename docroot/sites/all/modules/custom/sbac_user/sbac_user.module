@@ -978,6 +978,19 @@ function sbac_user_user_login(&$edit, $account) {
     }
   }
 
+  // Update user information.
+  sbac_user_update_data($account, $edit);
+  // Redirect the user.
+  sbac_user_redirect_on_login($edit);
+}
+
+/**
+ * Update user information on login.
+ *
+ * @param $account
+ * @param array $edit
+ */
+function sbac_user_update_data($account, $edit = array()) {
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -1003,11 +1016,19 @@ function sbac_user_user_login(&$edit, $account) {
   $data = $account->data;
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
+}
 
+/**
+ * Redirect the user on login to the correct page.
+ *
+ * @param array $edit
+ */
+function sbac_user_redirect_on_login($edit = array()) {
   if (!isset($edit['sbac-share'])) {
-    if (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
-      $relay = $edit['sbac_sso_relay'];
+    if (isset($_SESSION['sbac-sso']['relay']) && $_SESSION['sbac-sso']['relay'] != NULL) {
+      $relay = $_SESSION['sbac-sso']['relay'];
       $path = drupal_valid_path($relay);
+      unset($_SESSION['sbac-sso']['relay']);
       if ($path) {
         drupal_goto($relay);
       }

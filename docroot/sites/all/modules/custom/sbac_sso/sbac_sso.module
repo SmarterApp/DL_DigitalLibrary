@@ -477,6 +477,7 @@ function sbac_sso_user_login(&$edit, $account) {
   if (isset($edit['sbac-sso'])) {
     $sbac_sso_vars = $edit['sbac-sso'];
     if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
+      $_SESSION['sbac-sso'] = $edit['sbac-sso'];
       // If the user does not have the hash field set and has multiple chains, present form
       if (empty($account->field_sso_tenancy_hash)) {
         $_SESSION['sbac-sso']['conflicting_profile'] = TRUE;
@@ -563,7 +564,7 @@ function sbac_sso_validate_saml_response($saml_token) {
       global $base_url;
       $relay_state = $_REQUEST['RelayState'];
       $relay_state = str_replace($base_url, '', $relay_state);
-      $form_state['sbac-sso']['relay'] = $relay_state;
+      $_SESSION['sbac-sso']['relay'] = $relay_state;
     }
 
     // Log user in.
@@ -1050,19 +1051,19 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
       // If some error occurs in the data updating a user: Kick the user to an error
       // page with Smarter Balanced Contact information and a custom error code
       // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
-      $user->field_first_name['und'][0]['value'] = $response['given_name'];
-      $user->field_last_name['und'][0]['value'] = $response['sn'];
-      $user->mail = $response['email'];
       if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
       $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
       $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-      $user = user_save($user);
-      if (!$user) {
-        drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
-      }
+    }
+    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+    $user->field_last_name['und'][0]['value'] = $response['sn'];
+    $user->mail = $response['email'];
+    $user = user_save($user);
+    if (!$user) {
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
     }
   }
   elseif ($user = user_load_by_mail($response['email'])) {
@@ -1074,20 +1075,21 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
       // information and a custom error code ( do not include the details pertaining
       // to what the error code is connected to, just the ERROR CODE and NUMBER :
       // ERROR CODE 103: Error updating user with user attributes that were passed.
-      $user->field_first_name['und'][0]['value'] = $response['given_name'];
-      $user->field_last_name['und'][0]['value'] = $response['sn'];
-      $user->mail = $response['email'];
+
       if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
       $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
       $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-      $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
-      $user = user_save($user);
-      if (!$user) {
-        drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
-      }
+    }
+    $user->field_first_name['und'][0]['value'] = $response['given_name'];
+    $user->field_last_name['und'][0]['value'] = $response['sn'];
+    $user->mail = $response['email'];
+    $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
+    $user = user_save($user);
+    if (!$user) {
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
     }
   }
   else {
@@ -1324,12 +1326,25 @@ function sbac_sso_conflicting_profile_form($form, &$form_state) {
 
   $form['information'] = array(
     '#prefix' => '<div class="sbac-conflict-wrapper">',
-    '#markup' => t('There is <strong>conflicting account information</strong> associated with your Smarter Balanced login. <strong>Please choose the profile below</strong> that accurately reflects your information.'),
+    '#markup' => t('Your account is associated to multiple states. Please choose the profile below that accurately reflects your information for the Digital Library.'),
   );
+
+  $choices = array();
+  $tenancy_chains = $_SESSION['sbac-sso']['response']['sbac_tenancy_chains_validated'];
+  foreach ($tenancy_chains as $state => $chain) {
+    $text = '<strong>State:</strong>' . strtoupper($state);
+    if ($chain['district'] != NULL) {
+      $text .= ', <strong>District:</strong>' . ucwords(strtolower($chain['district']));
+    }
+    if ($chain['institution'] != NULL) {
+      $text .= ', <strong>Institution:</strong>' .  ucwords(strtolower($chain['institution']));
+    }
+    $choices[$state] = $text;
+  }
 
   $form['choices'] = array(
     '#type' => 'radios',
-    '#options' => array('<strong>State:</strong>CA', '<strong>State:</strong>CA with district', '<strong>State:</strong>WA'),
+    '#options' => $choices,
     '#attributes' => array('class' => array('sbac-sso-conflict-choice')),
   );
 
@@ -1350,53 +1365,47 @@ function sbac_sso_conflicting_profile_form($form, &$form_state) {
  * @param $form_state
  */
 function sbac_sso_conflicting_profile_form_submit($form, &$form_state) {
-//  if ($multiple) {
-//    // log a temp user in when its a new user
-//    // else log in current user
-//    // Present conflicting profile screen.
-//  }
-//  else {
-//    // programmatically submit the conflicting profile screen with
-//    // state selected since there is only one, chooose that one.
-//    // if its a new user, create a new one, else
-//    // log existing one in.
-//  }
-  // on submit, update user profile and perform below logic
-}
+  global $user;
+  $account = user_load($user->uid);
+  // on submit, update user profile and direct to next step in workflow.
+  $tenancy_chains = $_SESSION['sbac-sso']['response']['sbac_tenancy_chains_validated'];
+  foreach ($tenancy_chains as $state => $chain) {
+    if (strtoupper($state) == $form_state['values']['choices']) {
+      if ($valid = sbac_sso_validate_state_by_name($chain['state'])) {
+        $term = current($valid);
+        $account->field_state['und'][0]['tid'] = $term->tid;
+      }
+      if (isset($chain['district']) && $chain['district'] != NULL) {
+        $account->field_district_name['und'][0]['value'] = $chain['district'];
+      }
+      if (isset($chain['institution']) && $chain['institution'] != NULL) {
+        $account->field_school_name['und'][0]['value'] = $chain['institution'];
+      }
+      $account->field_tenancy_chain_hash['und'][0]['value'] = $_SESSION['sbac-sso']['hash'];
 
-/**
- * Implements hook_module_implements_alter();
- *
- * This hook is needed to change the ordering of the hooks
- * based on dynamic information from the incoming user during
- * login.
- *
- */
-//function sbac_sso_module_implements_alter(&$implementations, $hook) {
-//  if ($hook == 'user_login') {
-//    if (isset($_SESSION['sbac-sso'])) {
-//      $sbac_sso_vars = $_SESSION['sbac-sso'];
-//      if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
-//        // If the user does not have the hash field set and has multiple chains, present form
-//        $user = $sbac_sso_vars['user'];
-//        if (empty($user->field_sso_tenancy_hash)) {
-//          unset($implementations['legal']);
-//          unset($implementations['sbac_user']);
-//          unset($implementations['system']);
-//          $implementations['legal'] = FALSE;
-//          $implementations['sbac_user'] = FALSE;
-//          $implementations['system'] = FALSE;
-//        }
-//        // If the user has the hash field set but is different from stored value, present form
-//        if ($user->field_sso_tenancy_hash['und'][0]['value'] != $sbac_sso_vars['hash']) {
-//          unset($implementations['legal']);
-//          unset($implementations['sbac_user']);
-//          unset($implementations['system']);
-//          $implementations['legal'] = FALSE;
-//          $implementations['sbac_user'] = FALSE;
-//          $implementations['system'] = FALSE;
-//        }
-//      }
-//    }
-//  }
-//}
+      break;
+    }
+  }
+  $user_setup = FALSE;
+  if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+    $user_setup = TRUE;
+  }
+  if (!$user_setup) {
+    // If they are not going to user-setup, then update login information.
+    sbac_user_update_data($account, $edit);
+  }
+  // Save the updates.
+  user_save($account);
+  // Remove the SESSION variables.
+  unset($_SESSION['sbac-sso']['multiple']);
+  unset($_SESSION['sbac-sso']['response']);
+  unset($_SESSION['sbac-sso']['hash']);
+  unset($_SESSION['sbac-sso']['conflicting_profile']);
+  // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
+  if ($user_setup) {
+    drupal_goto('sbac-user/setup');
+  }
+  else {
+    sbac_user_redirect_on_login();
+  }
+}
