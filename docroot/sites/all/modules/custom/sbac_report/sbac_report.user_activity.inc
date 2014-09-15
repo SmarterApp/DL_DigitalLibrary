@@ -353,13 +353,16 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
     $sql .= "ur.rid IN ($user_groups) ";
     $or = 'OR';
   }
-  if ($sne_filter) {
-    $sql .= $or . " sne.field_sne_member_value = 1 ";
-    $or = 'OR';
+  if($sne_filter == TRUE && $slt_filter == TRUE) {
+    $sql .= "(sne.field_sne_member_value = 1 OR slt.field_slt_member_value = 1) ";
   }
-  if ($slt_filter) {
+   else if ($sne_filter) {
+    $sql .= $or . " sne.field_sne_member_value = 1 ";
+  }
+  else if ($slt_filter) {
     $sql .= $or . " slt.field_slt_member_value = 1 ";
   }
+
 
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
