@@ -196,6 +196,9 @@ class Post extends Base {
     $this->_form['field_contributor_comment']['#access'] = FALSE;
     $this->_form['field_contributor_comment_date']['#access'] = FALSE;
 
+    $this->_form['field_contributor_comment']['#access'] = false;
+    $this->_form['field_contributor_comment_date']['#access'] = false;
+
     parent::postProcess();
   }
 
