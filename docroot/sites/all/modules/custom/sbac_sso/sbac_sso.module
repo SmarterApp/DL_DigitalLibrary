@@ -541,26 +541,16 @@ function sbac_sso_validate_saml_response($saml_token) {
       global $base_url;
       $relay_state = $_REQUEST['RelayState'];
       $relay_state = str_replace($base_url, '', $relay_state);
-      $_SESSION['sbac-sso']['relay'] = $relay_state;
+      $form_state['sbac-sso']['relay'] = $relay_state;
     }
 
     // Log user in.
     $form_state['uid'] = $user->uid;
     $form_state['session_index'] = $user->session_index;
+    $form_state['sbac-sso']['multiple'] = $multiple;
+    $form_state['sbac-sso']['api_response'] = $api_response;
+    $form_state['sbac-sso']['response'] = $response;
     user_login_submit(array(), $form_state);
-  }
-
-  if ($multiple) {
-    $_SESSION['sbac-sso']['api_response'] = $api_response;
-    $_SESSION['sbac-sso']['response'] = $response;
-    // Present conflicting profile screen.
-    drupal_goto('sbac-sso/conflicting-profile');
-  }
-  else {
-    // Programmatically submit the conflicting profile screen with
-    // state selected since there is only one, chooose that one.
-    // if its a new user, create a new one, else
-    // log existing one in.
   }
 }
 
@@ -1015,99 +1005,83 @@ function sbac_sso_parse_program_api_response($json, $decode = FALSE) {
 }
 
 /**
- * Determine which path to take for the user.
+ * Try to load the user.
  *
  * @param $response
- * @param $multiple
- *
- * @return object
+ * @param bool $multiple
+ * @return bool|mixed|stdClass
  */
 function sbac_sso_determine_user($response, $multiple = FALSE) {
-  $user = sbac_sso_load_user_by_uuid($response['entry_uuid']);
-  if ($user == FALSE) {
-    $user = user_load_by_mail($response['email'])) {
-    if ($user == FALSE && $multiple == TRUE) {
-      $user = sbac_share_create_guest_user();
-    }
-    else {
-      $user = sbac_sso_create_user_record($response);
+  if ($user = sbac_sso_load_user_by_uuid($response['entry_uuid'])) {
+    if (!$multiple) {
+      // First Name = givenName
+      // Last Name = sn
+      // Email = email
+      // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
+      // The format of the sbacTenancyChain is as follows:
+      // |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
+      // Preform a string split on this pile delimited string, and grab the
+      // value from the positions for State, District, Insitution and update those
+      // on the user record. If any are blank, update the DL User record accordingly.
+      // If some error occurs in the data updating a user: Kick the user to an error
+      // page with Smarter Balanced Contact information and a custom error code
+      // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
+      $user->field_first_name['und'][0]['value'] = $response['given_name'];
+      $user->field_last_name['und'][0]['value'] = $response['sn'];
+      $user->mail = $response['email'];
+      if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+        $term = current($valid);
+        $user->field_state['und'][0]['tid'] = $term->tid;
+      }
+      $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+      $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+      $user = user_save($user);
       if (!$user) {
-        drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
+        drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
       }
     }
   }
+  elseif ($user = user_load_by_mail($response['email'])) {
+    if (!$multiple) {
+      // Record entryuuid to record for specified email address
+      // Update all other fields passed in SAML assertion as described
+      // in the first clause above. If some error occurs in the data updating a
+      // user: Kick the user to an error page with Smarter Balanced Contact
+      // information and a custom error code ( do not include the details pertaining
+      // to what the error code is connected to, just the ERROR CODE and NUMBER :
+      // ERROR CODE 103: Error updating user with user attributes that were passed.
+      $user->field_first_name['und'][0]['value'] = $response['given_name'];
+      $user->field_last_name['und'][0]['value'] = $response['sn'];
+      $user->mail = $response['email'];
+      if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+        $term = current($valid);
+        $user->field_state['und'][0]['tid'] = $term->tid;
+      }
+      $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
+      $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+      $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
+      $user = user_save($user);
+      if (!$user) {
+        drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
+      }
+    }
+  }
+  else {
+    // Create a user record for this user with the end user role, and record
+    // their userUUID to that record. Use all attributes that were updated
+    // in first clause to create the record. If some error occurs in the data
+    // creating a user: Kick the user to an error page with Smarter Balanced
+    // Contact information and a custom error code ( do not include the details
+    // pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
+    // ERROR CODE 104: Error creating user with user attributes that were passed.
+    $user = sbac_sso_create_user_record($response, $multiple);
+    if (!$user) {
+      drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
+    }
+    $user = new stdClass();
+  }
   return $user;
 }
-
-/**
- * function sbac_sso_determine_user($response) {
-if ($user = sbac_sso_load_user_by_uuid($response['entry_uuid'])) {
-// First Name = givenName
-// Last Name = sn
-// Email = email
-// Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
-// The format of the sbacTenancyChain is as follows:
-// |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
-// Preform a string split on this pile delimited string, and grab the
-// value from the positions for State, District, Insitution and update those
-// on the user record. If any are blank, update the DL User record accordingly.
-// If some error occurs in the data updating a user: Kick the user to an error
-// page with Smarter Balanced Contact information and a custom error code
-// (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
-//    $user->field_first_name['und'][0]['value'] = $response['given_name'];
-//    $user->field_last_name['und'][0]['value'] = $response['sn'];
-//    $user->mail = $response['email'];
-//    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-//      $term = current($valid);
-//      $user->field_state['und'][0]['tid'] = $term->tid;
-//    }
-//    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-//    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-//    $user = user_save($user);
-//    if (!$user) {
-//      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
-//    }
-}
-elseif ($user = user_load_by_mail($response['email'])) {
-// Record entryuuid to record for specified email address
-// Update all other fields passed in SAML assertion as described
-// in the first clause above. If some error occurs in the data updating a
-// user: Kick the user to an error page with Smarter Balanced Contact
-// information and a custom error code ( do not include the details pertaining
-// to what the error code is connected to, just the ERROR CODE and NUMBER :
-// ERROR CODE 103: Error updating user with user attributes that were passed.
-//    $user->field_first_name['und'][0]['value'] = $response['given_name'];
-//    $user->field_last_name['und'][0]['value'] = $response['sn'];
-//    $user->mail = $response['email'];
-//    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-//      $term = current($valid);
-//      $user->field_state['und'][0]['tid'] = $term->tid;
-//    }
-//    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-//    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
-//    $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
-//    $user = user_save($user);
-//    if (!$user) {
-//      drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
-//    }
-}
-else {
-// Create a user record for this user with the end user role, and record
-// their userUUID to that record. Use all attributes that were updated
-// in first clause to create the record. If some error occurs in the data
-// creating a user: Kick the user to an error page with Smarter Balanced
-// Contact information and a custom error code ( do not include the details
-// pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
-// ERROR CODE 104: Error creating user with user attributes that were passed.
-//    $user = sbac_sso_create_user_record($response, $user_attributes);
-//    if (!$user) {
-//      drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
-//    }
-$user = new stdClass();
-}
-return $user;
-}
- */
 
 /**
  * Validates the state id.
@@ -1151,27 +1125,28 @@ function sbac_sso_validate_state_by_name($state_name) {
  */
 function sbac_sso_create_user_record($response) {
   // TODO: Update to use response variable now.
-
   $new_user = new stdClass();
   $new_user->uid = 0;
   $new_user->cache = 0;
-
   $edit['name'] = $response['email'];
   $edit['pass'] = user_password(10);
   $edit['mail'] = $response['email'];
   $edit['init'] = $response['email'];
   $edit['timezone'] = date_default_timezone(TRUE);
   $edit['status'] = 1;
+  if (!$multiple) {
+    // Only create these fields if there is a single tenancy chain.
+    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+      $term = current($valid);
+      $edit['field_state']['und'][0]['tid'] = $term->tid;
+    }
+    $edit['field_district']['und'][0]['value'] = $user_attributes['district'];
+    $edit['field_institution']['und'][0]['value'] = $user_attributes['institution'];
+  }
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
   $edit['field_last_name']['und'][0]['value'] = $response['sn'];
-  if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-    $term = current($valid);
-    $edit['field_state']['und'][0]['tid'] = $term->tid;
-  }
   $role_id = user_role_load_by_name('basic end user');
   $edit['roles'] = array(DRUPAL_AUTHENTICATED_RID => 'Authenticated User', $role_id->rid => $role_id->name);
-  $edit['field_district']['und'][0]['value'] = $user_attributes['district'];
-  $edit['field_institution']['und'][0]['value'] = $user_attributes['institution'];
   $edit['field_sso_uuid']['und'][0]['value'] = $response['entry_uuid'];
   return user_save($new_user, $edit);
 }
@@ -1276,6 +1251,7 @@ function sbac_sso_test_cron() {
  */
 function sbac_sso_determine_multiple_tenancy_chains($response, $api_response) {
   $var = '';
+  return FALSE;
 }
 
 /**
