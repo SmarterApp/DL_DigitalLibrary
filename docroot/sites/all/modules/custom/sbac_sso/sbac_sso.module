@@ -335,28 +335,49 @@ function sbac_sso_preprocess_page(&$vars) {
  */
 function sbac_sso_error() {
   (!isset($_GET['code']) ? $code = 100 : $code = $_GET['code']);
-  $possible_titles = array(t('Access to the Digital Library is Denied'), t('Something went wrong. Please try again.'));
+  $possible_titles = array(
+    t('Access to the Digital Library is Denied'),
+    t('We are unable to create your Digital Library profile.'),
+    t('There appears to be a problem.'),
+  );
+  $possible_error_codes = array(
+    100 => t("Error code 100"),
+    101 => t("Error code 101"),
+    102 => t("Error code 102"),
+    103 => t("Error code 103"),
+    104 => t("Error code 104"),
+    105 => t("Error code 105"),
+    200 => t("Error code 200"),
+  );
   $possible_messages = array(
-    100 => t('Error code 100'),
-    101 => t('Error code 101'),
-    102 => t('Error code 102'),
-    103 => t('Error code 103'),
-    104 => t('Error code 104'),
-    200 => t('Error code 200'),
+    t("You don't have permission to view this with your credentials. Please contact your local district administrator for assistance."),
+    t("There is missing or invalid information that is required to create your Digital Library profile. Please contact your local district administrator for assistance."),
+    t("Please contact your local district administrator for assistance."),
   );
 
   switch ($code) {
     case 102:
     case 200:
       $title = 0;
+      $message = 0;
+      break;
+    case 100:
+    case 101:
+    case 103:
+    case 104:
+    case 105:
+      $title = 1;
+      $message = 1;
       break;
     default:
-      $title = 1;
+      $title = 2;
+      $message = 2;
       break;
   }
 
   drupal_set_title($possible_titles[$title]);
-  $output = $possible_messages[$code];
+  $output = $possible_messages[$message];
+  $output .= '<br />' . $possible_error_codes[$code];
   return $output;
 }
 
@@ -729,8 +750,8 @@ function sbac_sso_parse_tenancy_chain(&$value, &$attribute_start, &$attribute_en
 function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
   foreach ($tenancy_chains as $chain) {
     $parsed_chain = sbac_sso_create_user_attributes($chain);
-    // Only keep tenancy chains with DL_EndUser.
-    if (isset($parsed_chain['name']) && $parsed_chain['name'] == 'DL_EndUser') {
+    // Only keep tenancy chains with DL_EndUser and a state attribute.
+    if (isset($parsed_chain['name']) && $parsed_chain['name'] == 'DL_EndUser' && isset($parsed_chain['state_id']) && $parsed_chain['state_id'] != NULL) {
       sbac_sso_merge_tenancy_chains($response['sbac_tenancy_chains_unvalidated'][$parsed_chain['state_id']], $parsed_chain);
     }
   }
