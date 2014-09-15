@@ -293,6 +293,8 @@ function sbac_sso_preprocess_page(&$vars) {
     sbac_sso_session_regenerate();
   }
 
+  // If the user is being presented with the conflicting profile screen
+  // remove the menu bar, user menu etc.
   $vars['conflicting_profile'] = FALSE;
   if (isset($_SESSION['sbac-sso']['conflicting_profile']) && $_SESSION['sbac-sso']['conflicting_profile'] == TRUE) {
     $vars['conflicting_profile'] = TRUE;
