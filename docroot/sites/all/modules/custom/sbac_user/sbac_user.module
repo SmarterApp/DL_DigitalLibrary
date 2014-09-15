@@ -358,6 +358,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['legal']['#access'] = FALSE;
       $form['field_sso_uuid']['#access'] = FALSE;
       $form['field_login_count']['#access'] = FALSE;
+      $form['field_sso_tenancy_hash']['#access'] = FALSE;
 
       // remove user_profile_submit handler and then re-add so we can re-order the submit handlers
       $form['#submit'] = array_diff($form['#submit'], array('user_profile_form_submit'));

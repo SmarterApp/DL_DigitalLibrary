@@ -470,14 +470,14 @@ function sbac_sso_validate_saml_assertion($saml_token) {
  * @param $account
  */
 function sbac_sso_user_login(&$edit, $account) {
-  if (isset($edit['session_index'])) {
-    $account->data['session_index'] = $edit['session_index'];
+  if (isset($_SESSION['session_index'])) {
+    $account->data['session_index'] = $_SESSION['session_index'];
+    unset($_SESSION['session_index']);
   }
 
-  if (isset($edit['sbac-sso'])) {
-    $sbac_sso_vars = $edit['sbac-sso'];
+  if (isset($_SESSION['sbac-sso'])) {
+    $sbac_sso_vars = $_SESSION['sbac-sso'];
     if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
-      $_SESSION['sbac-sso'] = $edit['sbac-sso'];
       // If the user does not have the hash field set and has multiple chains, present form
       if (empty($account->field_sso_tenancy_hash)) {
         $_SESSION['sbac-sso']['conflicting_profile'] = TRUE;
@@ -569,10 +569,11 @@ function sbac_sso_validate_saml_response($saml_token) {
 
     // Log user in.
     $form_state['uid'] = $user->uid;
-    $form_state['session_index'] = $user->session_index;
-    $form_state['sbac-sso']['multiple'] = $multiple;
-    $form_state['sbac-sso']['response'] = $response;
-    $form_state['sbac-sso']['hash'] = $hash;
+    $_SESSION['uid'] = $user->uid;
+    $_SESSION['session_index'] = $user->session_index;
+    $_SESSION['sbac-sso']['multiple'] = $multiple;
+    $_SESSION['sbac-sso']['response'] = $response;
+    $_SESSION['sbac-sso']['hash'] = $hash;
     user_login_submit(array(), $form_state);
   }
 }
@@ -1375,17 +1376,25 @@ function sbac_sso_conflicting_profile_form_submit($form, &$form_state) {
         $term = current($valid);
         $account->field_state['und'][0]['tid'] = $term->tid;
       }
+      // Update the district.
       if (isset($chain['district']) && $chain['district'] != NULL) {
-        $account->field_district_name['und'][0]['value'] = $chain['district'];
+        $account->field_district_name['und'][0]['value'] = ucwords(strtolower($chain['district']));
       }
+      else {
+        $account->field_district_name['und'][0]['value'] = NULL;
+      }
+      // Update the institution.
       if (isset($chain['institution']) && $chain['institution'] != NULL) {
-        $account->field_school_name['und'][0]['value'] = $chain['institution'];
+        $account->field_school_name['und'][0]['value'] = ucwords(strtolower($chain['institution']));
       }
-      $account->field_tenancy_chain_hash['und'][0]['value'] = $_SESSION['sbac-sso']['hash'];
-
+      else {
+        $account->field_school_name['und'][0]['value'] = NULL;
+      }
+      $account->field_sso_tenancy_hash['und'][0]['value'] = $_SESSION['sbac-sso']['hash'];
       break;
     }
   }
+  // Determine if they need to go to user-setup page.
   $user_setup = FALSE;
   if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
     $user_setup = TRUE;
