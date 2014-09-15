@@ -471,6 +471,20 @@ function sbac_sso_user_login(&$edit, $account) {
   if (isset($edit['session_index'])) {
     $account->data['session_index'] = $edit['session_index'];
   }
+
+  if (isset($edit['sbac-sso'])) {
+    $sbac_sso_vars = $edit['sbac-sso'];
+    if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
+      // If the user does not have the hash field set and has multiple chains, present form
+      if (empty($account->field_sso_tenancy_hash)) {
+        drupal_goto('sbac-sso/conflicting-profile');
+      }
+      // If the user has the hash field set but is different from stored value, present form
+      if ($account->field_sso_tenancy_hash['und'][0]['value'] != $sbac_sso_vars['hash']) {
+        drupal_goto('sbac-sso/conflicting-profile');
+      }
+    }
+  }
 }
 
 /**
@@ -509,7 +523,7 @@ function sbac_sso_validate_saml_response($saml_token) {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
   }
   // If there are no raw tenancy chains or if there are no tenancy chains with 'DL_EndUser' as the client
-  if (!isset($response['sbac_tenancy_chains_raw']) || !isset($response['sbac_tenancy_chains'])) {
+  if (!isset($response['sbac_tenancy_chains_raw']) || !isset($response['sbac_tenancy_chains_unvalidated'])) {
     // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
     drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
   }
@@ -523,10 +537,14 @@ function sbac_sso_validate_saml_response($saml_token) {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
   }
   // Determine if the user has multiple tenancy chains
-  $multiple = sbac_sso_determine_multiple_tenancy_chains($response, $api_response);
+  $multiple = sbac_sso_determine_multiple_tenancy_chains($response);
   // Determine if user is new or existing
   $user = sbac_sso_determine_user($response, $multiple);
   $user->session_index = $response['session_index'];
+  // If multiple tenancy chains and the tenancy chain hash does not match
+  // one on user proflie, display conflicting profile screen
+  // or if new user and multiple tenancy chains
+  $hash = sbac_sso_generate_tenancy_chain_hash($response);
   if ($user) {
     // If the user is marked as blocked.
     if ($user->status == 0) {
@@ -548,8 +566,8 @@ function sbac_sso_validate_saml_response($saml_token) {
     $form_state['uid'] = $user->uid;
     $form_state['session_index'] = $user->session_index;
     $form_state['sbac-sso']['multiple'] = $multiple;
-    $form_state['sbac-sso']['api_response'] = $api_response;
     $form_state['sbac-sso']['response'] = $response;
+    $form_state['sbac-sso']['hash'] = $hash;
     user_login_submit(array(), $form_state);
   }
 }
@@ -605,8 +623,8 @@ function sbac_sso_parse_saml_assertion($saml_token) {
       $attribute = '<saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'entry_uuid');
     }
-    if (strpos($row, '<saml:Attribute Name="email">') !== FALSE) {
-      $attribute = '<saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+    if (strpos($row, '<saml:Attribute Name="mail">') !== FALSE) {
+      $attribute = '<saml:Attribute Name="mail"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'email');
     }
     if (strpos($row, '<saml:Attribute Name="cn">') !== FALSE) {
@@ -707,7 +725,7 @@ function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
     $parsed_chain = sbac_sso_create_user_attributes($chain);
     // Only keep tenancy chains with DL_EndUser.
     if (isset($parsed_chain['name']) && $parsed_chain['name'] == 'DL_EndUser') {
-      sbac_sso_merge_tenancy_chains($response['sbac_tenancy_chains'][$parsed_chain['state_id']], $parsed_chain);
+      sbac_sso_merge_tenancy_chains($response['sbac_tenancy_chains_unvalidated'][$parsed_chain['state_id']], $parsed_chain);
     }
   }
 }
@@ -807,14 +825,14 @@ function sbac_sso_create_user_attributes($chain) {
  *
  * @return array
  */
-function sbac_sso_program_management_api_request($response) {
+function sbac_sso_program_management_api_request(&$response) {
   //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
   //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
   //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
   //  All of which are in the tenancy chains received in an SSO Assertion.
   $query_string = '';
   $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
-  foreach ($response['sbac_tenancy_chains'] as $state => $tenancy_chain) {
+  foreach ($response['sbac_tenancy_chains_unvalidated'] as $state => $tenancy_chain) {
     foreach ($tenancy_chain as $index => $attribute) {
       if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
         switch ($index) {
@@ -844,29 +862,29 @@ function sbac_sso_program_management_api_request($response) {
   // Check the cache table.
   // TODO: Update so that checks cache table for ones on file but then also call the API for ones not on file.
   $cached_results = variable_get('sbac_sso_pm_cached_results');
-  if ($cached_results) {
-    $valid_cached_results = array();
-    foreach ($query_string as $type => $value) {
-      foreach ($cached_results[$type] as $cached_id => $cached_result) {
-        if ($cached_result['name'] == $value) {
-          $valid_cached_results['tenants'][] = $cached_result;
-          break;
-        }
-      }
-    }
-
-    if ($valid_cached_results) {
-      // Verify structure with current cached result if found.
-      $api_response = sbac_sso_parse_program_api_response($valid_cached_results, FALSE);
-    }
-    else {
-      // Else request API to attempt to get new response.
-      $api_response = sbac_sso_get_program_management_response($response, $query_string);
-    }
-  }
-  else {
+//  if ($cached_results) {
+//    $valid_cached_results = array();
+//    foreach ($query_string as $type => $value) {
+//      foreach ($cached_results[$type] as $cached_id => $cached_result) {
+//        if ($cached_result['name'] == $value) {
+//          $valid_cached_results['tenants'][] = $cached_result;
+//          break;
+//        }
+//      }
+//    }
+//
+//    if ($valid_cached_results) {
+//      // Verify structure with current cached result if found.
+//      $api_response = sbac_sso_parse_program_api_response($valid_cached_results, FALSE);
+//    }
+//    else {
+//      // Else request API to attempt to get new response.
+//      $api_response = sbac_sso_get_program_management_response($response, $query_string);
+//    }
+//  }
+//  else {
     $api_response = sbac_sso_get_program_management_response($response, $query_string);
-  }
+//  }
   return $api_response;
 }
 
@@ -909,6 +927,7 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
   if (isset($response['pm_api_results'])) {
     foreach ($response['pm_api_results'] as $state => $json) {
       $api_response[$state] = sbac_sso_parse_program_api_response($json);
+      $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
     }
   }
 
@@ -1009,6 +1028,7 @@ function sbac_sso_parse_program_api_response($json, $decode = FALSE) {
  *
  * @param $response
  * @param bool $multiple
+ *
  * @return bool|mixed|stdClass
  */
 function sbac_sso_determine_user($response, $multiple = FALSE) {
@@ -1078,7 +1098,6 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
     if (!$user) {
       drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
     }
-    $user = new stdClass();
   }
   return $user;
 }
@@ -1120,11 +1139,12 @@ function sbac_sso_validate_state_by_name($state_name) {
  *
  * @param array $response
  *   The response from SAML.
+ * @param bool $multiple
+ *   Flag for if user has multiple tenancy chains
  *
  * @return bool|stdClass
  */
-function sbac_sso_create_user_record($response) {
-  // TODO: Update to use response variable now.
+function sbac_sso_create_user_record($response, $multiple) {
   $new_user = new stdClass();
   $new_user->uid = 0;
   $new_user->cache = 0;
@@ -1135,13 +1155,14 @@ function sbac_sso_create_user_record($response) {
   $edit['timezone'] = date_default_timezone(TRUE);
   $edit['status'] = 1;
   if (!$multiple) {
+    $tenancy_chain = array_shift($response['sbac_tenancy_chains_validated']);
     // Only create these fields if there is a single tenancy chain.
-    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+    if ($valid = sbac_sso_validate_state_by_name($tenancy_chain['state'])) {
       $term = current($valid);
       $edit['field_state']['und'][0]['tid'] = $term->tid;
     }
-    $edit['field_district']['und'][0]['value'] = $user_attributes['district'];
-    $edit['field_institution']['und'][0]['value'] = $user_attributes['institution'];
+    $edit['field_district']['und'][0]['value'] = $tenancy_chain['district'];
+    $edit['field_institution']['und'][0]['value'] = $tenancy_chain['institution'];
   }
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
   $edit['field_last_name']['und'][0]['value'] = $response['sn'];
@@ -1169,6 +1190,23 @@ function sbac_sso_load_user_by_uuid($uuid) {
     $user = user_load($result->uid);
   }
   return $user;
+}
+
+/**
+ * Generate the tenancy chain hash.
+ *
+ * @param $response
+ *
+ * @return string
+ */
+function sbac_sso_generate_tenancy_chain_hash($response) {
+  $hash_array = array();
+  foreach ($response['sbac_tenancy_chains_validated'] as $state => $chain) {
+    $hash_array[] = implode(',', $chain);
+  }
+  $hash = implode(',', $hash_array);
+  $md5_hash = md5($hash);
+  return $md5_hash;
 }
 
 /**
@@ -1242,16 +1280,16 @@ function sbac_sso_test_cron() {
 /**
  * Determines if the user has multiple tenancy chains or not.
  *
- * If there are multiple tenancy chains, check state, if there are
- * duplicates, choose the first one and use that. Create a hash of the
- * tenancy chains and save it in the user profile. 
- *
  * @param $response
- * @param $api_response
+ *
+ * @return bool
  */
-function sbac_sso_determine_multiple_tenancy_chains($response, $api_response) {
-  $var = '';
-  return FALSE;
+function sbac_sso_determine_multiple_tenancy_chains($response) {
+  $multiple = FALSE;
+  if (count($response['sbac_tenancy_chains_validated']) > 1) {
+    $multiple = TRUE;
+  }
+  return $multiple;
 }
 
 /**
@@ -1288,13 +1326,13 @@ function sbac_sso_conflicting_profile_form($form, &$form_state) {
   $form['choices'] = array(
     '#type' => 'radios',
     '#options' => array('<strong>State:</strong>CA', '<strong>State:</strong>CA with district', '<strong>State:</strong>WA'),
-    '#attributes' => array('class' => array('sbac-user-conflict-choice')),
+    '#attributes' => array('class' => array('sbac-sso-conflict-choice')),
   );
 
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'OK',
-    '#attributes' => array('class' => array('sbac-user-conflict-submit')),
+    '#attributes' => array('class' => array('sbac-sso-conflict-submit')),
     '#suffix' => '</div>',
   );
 
@@ -1321,3 +1359,40 @@ function sbac_sso_conflicting_profile_form_submit($form, &$form_state) {
 //  }
   // on submit, update user profile and perform below logic
 }
+
+/**
+ * Implements hook_module_implements_alter();
+ *
+ * This hook is needed to change the ordering of the hooks
+ * based on dynamic information from the incoming user during
+ * login.
+ *
+ */
+//function sbac_sso_module_implements_alter(&$implementations, $hook) {
+//  if ($hook == 'user_login') {
+//    if (isset($_SESSION['sbac-sso'])) {
+//      $sbac_sso_vars = $_SESSION['sbac-sso'];
+//      if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
+//        // If the user does not have the hash field set and has multiple chains, present form
+//        $user = $sbac_sso_vars['user'];
+//        if (empty($user->field_sso_tenancy_hash)) {
+//          unset($implementations['legal']);
+//          unset($implementations['sbac_user']);
+//          unset($implementations['system']);
+//          $implementations['legal'] = FALSE;
+//          $implementations['sbac_user'] = FALSE;
+//          $implementations['system'] = FALSE;
+//        }
+//        // If the user has the hash field set but is different from stored value, present form
+//        if ($user->field_sso_tenancy_hash['und'][0]['value'] != $sbac_sso_vars['hash']) {
+//          unset($implementations['legal']);
+//          unset($implementations['sbac_user']);
+//          unset($implementations['system']);
+//          $implementations['legal'] = FALSE;
+//          $implementations['sbac_user'] = FALSE;
+//          $implementations['system'] = FALSE;
+//        }
+//      }
+//    }
+//  }
+//}
