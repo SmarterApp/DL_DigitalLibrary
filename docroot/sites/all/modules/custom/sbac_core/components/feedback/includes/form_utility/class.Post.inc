@@ -21,10 +21,21 @@ class Post extends Base {
    * @return [type] [description]
    */
   public function process() {
-    $in_poster_workflow = _sbac_resource_is_in_poster_workflow($this->_form['node_id']['#value']);
+    $last_feedback_type = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.node_id', $this->_form['node_id']['#value'])
+      ->fields('f', array('type'))
+      ->orderBy('f.id', 'desc')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    $poster_rejected = FALSE;
+    if ($last_feedback_type && $last_feedback_type == 'post') {
+      $poster_rejected = TRUE;
+    }
 
     // add 'required field' asterisks
-    if ($in_poster_workflow) {
+    if ($poster_rejected) {
       $this->_form['field_to_reviewer_1']['#access'] = FALSE;
       $this->_form['field_to_reviewer_2']['#access'] = FALSE;
       $this->_form['field_to_reviewer_3']['#access'] = FALSE;
@@ -68,7 +79,7 @@ class Post extends Base {
         $item = array();
         $item += $reviewUtil->getSetTitle($i);
         $item += $reviewUtil->getSetDescription($i);
-        if (!$in_poster_workflow) {
+        if (!$poster_rejected) {
           $item += $this->getReviewersCommentsTitle();
 
           $item += $reviewUtil->getReviewTeaser(function ($entity) use ($i) {
@@ -91,7 +102,7 @@ class Post extends Base {
         $items['set_' . $i] = $item;
       }
 
-      if (!$in_poster_workflow) {
+      if (!$poster_rejected) {
 
         // add reviewers' recommendation options
         $item = array(
@@ -196,8 +207,8 @@ class Post extends Base {
     $this->_form['field_contributor_comment']['#access'] = FALSE;
     $this->_form['field_contributor_comment_date']['#access'] = FALSE;
 
-    $this->_form['field_contributor_comment']['#access'] = false;
-    $this->_form['field_contributor_comment_date']['#access'] = false;
+    $this->_form['field_contributor_comment']['#access'] = FALSE;
+    $this->_form['field_contributor_comment_date']['#access'] = FALSE;
 
     parent::postProcess();
   }

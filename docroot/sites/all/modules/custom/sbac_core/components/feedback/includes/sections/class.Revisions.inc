@@ -43,53 +43,60 @@ class Revisions extends Base {
               ' . t('Posting Comments') . '
             </div>
             <div class="comments">' . field_entity_value($publisher_feedback, 'field_to_contributor') . '</div>
+            <div class="contributor-comment">
+              <div class="contributor-comment-title">Contributor\'s Comment</div>
+              <div class="contributor-comment-date">'.format_date(field_entity_value($publisher_feedback, 'field_contributor_comment_date'), 'full').'</div>
+              <div class="contributor-comment-comment">'.field_entity_value($publisher_feedback, 'field_contributor_comment').'</div>
+            </div>
           </div>
         ';
   }
 
   private function getReviewerContent($publisher_html = '') {
-    $recommendations_html = '';
-    $questions_and_comments_html = '';
-    $feedbacks = array();
-    // get the last 3 reviews
-    $reviews = $this->getFeedbacks(3, 'qc');
-    asort($reviews);
-    if (!empty($reviews)) {
-      foreach ($reviews as $review) {
-        $feedbacks[] = entity_load_single('feedback', $review->id);
+    if (!_sbac_resource_is_in_poster_workflow($this->_node->nid)) {
+
+      $recommendations_html = '';
+      $questions_and_comments_html = '';
+      $feedbacks = array();
+      // get the last 3 reviews
+      $reviews = $this->getFeedbacks(3, 'qc');
+      asort($reviews);
+      if (!empty($reviews)) {
+        foreach ($reviews as $review) {
+          $feedbacks[] = entity_load_single('feedback', $review->id);
+        }
       }
-    }
 
-    // recommendations
-    $i = 1;
-    foreach($feedbacks as $entity){
-      $created = format_date($entity->created, 'full');
-      $options = field_allowed_values('field_rec_options');
-      $headline = $options[field_entity_value($entity, 'field_rec_options')];
-      $publisher_comment = field_entity_value($entity, 'field_rec_rationale');
-      $recommendations_html .= theme('qc_teaser', array(
-        'id' => $entity->id,
-        'author' => t('Reviewer !count', array('!count' => $i)),
-        'created' => $created,
-        'headline' => $headline,
-        'comments' => more_less_text($publisher_comment, 140),
-      ));
-      $i++;
-    }
-    $recommendations_html .= '<div class="clear"></div>';
+      // recommendations
+      $i = 1;
+      foreach ($feedbacks as $entity) {
+        $created = format_date($entity->created, 'full');
+        $options = field_allowed_values('field_rec_options');
+        $headline = $options[field_entity_value($entity, 'field_rec_options')];
+        $publisher_comment = field_entity_value($entity, 'field_rec_rationale');
+        $recommendations_html .= theme('qc_teaser', array(
+          'id' => $entity->id,
+          'author' => t('Reviewer !count', array('!count' => $i)),
+          'created' => $created,
+          'headline' => $headline,
+          'comments' => more_less_text($publisher_comment, 140),
+        ));
+        $i++;
+      }
+      $recommendations_html .= '<div class="clear"></div>';
 
-    // QC questions
-    $focus = field_get_value($this->_node, 'field_focus', 'tid');
-    $questions_count = sizeof(field_entity_value(reset($feedbacks), 'field_review_set'));
-    for ($i = 0; $i < $questions_count; $i++) {
-      $question_title = variable_get('qc_' . $focus . '_criteria_' . ($i + 1) . '_title');
-      $question_title = filter_text($question_title);
+      // QC questions
+      $focus = field_get_value($this->_node, 'field_focus', 'tid');
+      $questions_count = sizeof(field_entity_value(reset($feedbacks), 'field_review_set'));
+      for ($i = 0; $i < $questions_count; $i++) {
+        $question_title = variable_get('qc_' . $focus . '_criteria_' . ($i + 1) . '_title');
+        $question_title = filter_text($question_title);
 
-      $question_desc = variable_get('qc_' . $focus . '_criteria_' . ($i + 1) . '_description');
-      $question_desc = filter_text($question_desc);
-      $question_desc = more_less_text($question_desc, 300);
+        $question_desc = variable_get('qc_' . $focus . '_criteria_' . ($i + 1) . '_description');
+        $question_desc = filter_text($question_desc);
+        $question_desc = more_less_text($question_desc, 300);
 
-      $question_html = '
+        $question_html = '
         <div class="criteria-set-title-question">
           ' . ($i + 1) . '. ' . strip_tags($question_title) . '
         </div>
@@ -100,26 +107,26 @@ class Revisions extends Base {
           ' . t("Reviewer's Comments") . '
         </div>
      ';
-      $j = 1;
-      $question_html .= '<div class="feedback-item-triplet">';
+        $j = 1;
+        $question_html .= '<div class="feedback-item-triplet">';
 
-      $contributor_comment = '';
-      $contributor_comment_date = '';
+        $contributor_comment = '';
+        $contributor_comment_date = '';
 
-      foreach ($feedbacks as $entity) {
-        $questions = field_entity_value($entity, 'field_review_set');
+        foreach ($feedbacks as $entity) {
+          $questions = field_entity_value($entity, 'field_review_set');
 
-        $level = field_entity_value($questions[$i], 'field_level');
-        $comments = field_entity_value($questions[$i], 'field_comments');
-        $comments = more_less_text($comments, 140);
+          $level = field_entity_value($questions[$i], 'field_level');
+          $comments = field_entity_value($questions[$i], 'field_comments');
+          $comments = more_less_text($comments, 140);
 
-        // the contributor's comment is the same for all 3 reviewers, so we only need to get one
-        if ($contributor_comment == '') {
-          $contributor_comment = field_entity_value($questions[$i], 'field_contributor_comment');
-          $contributor_comment_date = format_date(field_entity_value($questions[$i], 'field_contributor_comment_date'), 'full');
-        }
+          // the contributor's comment is the same for all 3 reviewers, so we only need to get one
+          if ($contributor_comment == '') {
+            $contributor_comment = field_entity_value($questions[$i], 'field_contributor_comment');
+            $contributor_comment_date = format_date(field_entity_value($questions[$i], 'field_contributor_comment_date'), 'full');
+          }
 
-        $question_html .= '
+          $question_html .= '
           <div class="feedback-review">
             <div class="author">' . t('Reviewer !j', array('!j' => $j)) . '</div>
             <div class="created">' . format_date($entity->created, 'full') . '</div>
@@ -127,12 +134,12 @@ class Revisions extends Base {
             <div class="comments-content">' . $comments . '</div>
           </div>
         ';
-        $j++;
-      }
-      $question_html .= '</div>';
+          $j++;
+        }
+        $question_html .= '</div>';
 
-      // contributor's comment
-      $question_html .= '
+        // contributor's comment
+        $question_html .= '
         <div class="comments-title-contributor">
             ' . t("Contributor's Comment") . '
         </div>
@@ -144,11 +151,11 @@ class Revisions extends Base {
         </div>
       ';
 
-      $questions_and_comments_html .= '<div class="feedback-item">' . $question_html . '<div class="clear"></div></div>';
-    }
+        $questions_and_comments_html .= '<div class="feedback-item">' . $question_html . '<div class="clear"></div></div>';
+      }
 
-    // finalize output
-    return '
+      // finalize output
+      return '
           <div class="feedback-wrap" id="feedback-wrap-qc-comments">
             <h2>' . t('Quality Criteria') . '</h2>
             ' . $publisher_html . '
@@ -163,6 +170,16 @@ class Revisions extends Base {
             </div>
           </div>
         ';
+    }
+    else {
+      return '
+          <div class="feedback-wrap" id="feedback-wrap-qc-comments">
+            <h2>' . t('Quality Criteria') . '</h2>
+            ' . $publisher_html . '
+          </div>
+        ';
+
+    }
   }
 
   private function getGateKeeperContent($feedback) {

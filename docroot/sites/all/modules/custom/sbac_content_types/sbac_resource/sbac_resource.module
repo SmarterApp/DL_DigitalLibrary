@@ -3629,11 +3629,11 @@ function _sbac_resource_is_in_poster_workflow($nid) {
     ->condition('f.completed', 1)
     ->condition('f.node_id', $nid)
     ->fields('f', array('type'))
-    ->range(0, 1)
+    ->range(0, 2)
     ->orderBy('f.id', 'desc')
     ->execute()
-    ->fetchField();
-  if ($type && $type == 'post') {
+    ->fetchCol();
+  if (!empty($type) && 'post' == $type[0] && 'post' == $type[1]) {
     $in_workflow = TRUE;
   }
   return $in_workflow;
