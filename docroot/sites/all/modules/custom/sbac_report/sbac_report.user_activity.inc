@@ -335,44 +335,35 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
     unset($user_groups_ids[33]);
   }
 
-  $user_groups = implode(',', $user_groups_ids);
-  $sql  = "SELECT u.uid FROM {users} AS u ";
-  if ($user_groups) {
-    $sql .= "JOIN {users_roles} AS ur ON u.uid = ur.uid ";
+  $query = db_select('users', 'u');
+  $query->fields('u', array('uid'));
+  if ($user_groups_ids) {
+    $query->join('users_roles', 'ur', 'u.uid = ur.uid');
+    $query->condition('ur.rid', $user_groups_ids, 'IN');
   }
-  if ($sne_filter) {
-    $sql .= "JOIN {field_data_field_sne_member} AS sne ON u.uid = sne.entity_id ";
+  if ($sne_filter && $slt_filter) {
+    $query->join('field_data_field_sne_member', 'sne', 'u.uid = sne.entity_id');
+    $query->join('field_data_field_slt_member', 'slt', 'u.uid = slt.entity_id');
+    $or = db_or()->condition('sne.field_sne_member_value', 1)->condition('slt.field_slt_member_value', 1);
+    $query->condition($or);
   }
-  if ($slt_filter) {
-    $sql .= "JOIN {field_data_field_slt_member} AS slt ON u.uid = slt.entity_id ";
-  }
-  $sql .= "JOIN {field_data_field_state} AS state ON u.uid = state.entity_id ";
-  $sql .= "WHERE ";
-  $or = '';
-  if ($user_groups) {
-    $sql .= "ur.rid IN ($user_groups) ";
-    $or = 'OR';
-  }
-  if($sne_filter == TRUE && $slt_filter == TRUE) {
-    $sql .= "(sne.field_sne_member_value = 1 OR slt.field_slt_member_value = 1) ";
-  }
-   else if ($sne_filter) {
-    $sql .= $or . " sne.field_sne_member_value = 1 ";
+  else if ($sne_filter) {
+    $query->join('field_data_field_sne_member', 'sne', 'u.uid = sne.entity_id');
+    $query->condition('sne.field_sne_member_value', 1);
   }
   else if ($slt_filter) {
-    $sql .= $or . " slt.field_slt_member_value = 1 ";
+    $query->join('field_data_field_slt_member', 'slt', 'u.uid = slt.entity_id');
+    $query->condition('slt.field_slt_member_value', 1);
   }
-
-
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
   }
   else {
-    $states = implode(',', $state_tid);
-    $sql .= "AND state.field_state_tid IN ($states) ";
+    $query->join('field_data_field_state', 'state', 'u.uid = state.entity_id');
+    $query->condition('state.field_state_tid', $state_tid, 'IN');
   }
 
-  $result = db_query($sql);
+  $result = $query->execute();
   $users = array();
   foreach ($result as $record) {
     $users[$record->uid] = $record;
