@@ -106,13 +106,22 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       switch ($values['action']) {
         case 'validate':
 
-          $fields = array(
-            'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
-            'field_to_reviewer_1' => 'You must enter a comment for Reviewer 1 to continue',
-            'field_to_reviewer_2' => 'You must enter a comment for Reviewer 2 to continue',
-            'field_to_reviewer_3' => 'You must enter a comment for Reviewer 3 to continue',
-            'field_post_options' => 'You must select a Post Option to continue',
-          );
+          if (!_sbac_resource_is_in_poster_workflow($values['node_id'])) {
+
+            $fields = array(
+              'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
+              'field_to_reviewer_1' => 'You must enter a comment for Reviewer 1 to continue',
+              'field_to_reviewer_2' => 'You must enter a comment for Reviewer 2 to continue',
+              'field_to_reviewer_3' => 'You must enter a comment for Reviewer 3 to continue',
+              'field_post_options' => 'You must select a Post Option to continue',
+            );
+          }
+          else {
+            $fields = array(
+              'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
+              'field_post_options' => 'You must select a Post Option to continue',
+            );
+          }
 
           form_check_fields($fields, $form_state['values'], $lang);
 
