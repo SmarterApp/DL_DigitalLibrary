@@ -294,7 +294,7 @@ function sbac_sso_preprocess_page(&$vars) {
   }
 
   $vars['conflicting_profile'] = FALSE;
-  if (isset($_SESSION['conflicting_profile']) && $_SESSION['conflicting_profile'] == TRUE) {
+  if (isset($_SESSION['sbac-sso']['conflicting_profile']) && $_SESSION['sbac-sso']['conflicting_profile'] == TRUE) {
     $vars['conflicting_profile'] = TRUE;
     $vars['home_url'] = '#';
   }
@@ -477,10 +477,12 @@ function sbac_sso_user_login(&$edit, $account) {
     if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
       // If the user does not have the hash field set and has multiple chains, present form
       if (empty($account->field_sso_tenancy_hash)) {
+        $_SESSION['sbac-sso']['conflicting_profile'] = TRUE;
         drupal_goto('sbac-sso/conflicting-profile');
       }
       // If the user has the hash field set but is different from stored value, present form
       if ($account->field_sso_tenancy_hash['und'][0]['value'] != $sbac_sso_vars['hash']) {
+        $_SESSION['sbac-sso']['conflicting_profile'] = TRUE;
         drupal_goto('sbac-sso/conflicting-profile');
       }
     }
