@@ -109,7 +109,7 @@ function sbac_sso_menu() {
  */
 function sbac_sso_menu_alter(&$items) {
 // If you wish to disable this module from overriding Drupal login / logout.
-//  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
+  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
     if (isset($items['user'])) {
       $items['user']['page callback'] = 'sbac_sso_consume';
       $items['user']['module'] = 'sbac_sso';
@@ -120,7 +120,7 @@ function sbac_sso_menu_alter(&$items) {
       $items['user/logout']['module'] = 'sbac_sso';
       $items['user/logout']['file'] = NULL;
     }
-//  }
+  }
 }
 
 /**
@@ -537,7 +537,7 @@ function sbac_sso_logout() {
  *
  * Parses the SAML response and grabs all the values. Then
  * parses the tenancy chain and validates the tenants against
- * the program management service. 
+ * the program management service.
  *
  * @param string $saml_token
  *   The SAML assertion.
@@ -588,7 +588,9 @@ function sbac_sso_validate_saml_response($saml_token) {
       global $base_url;
       $relay_state = $_REQUEST['RelayState'];
       $relay_state = str_replace($base_url, '', $relay_state);
-      $_SESSION['sbac-sso']['relay'] = $relay_state;
+      if ($relay_state) {
+        $_SESSION['sbac-sso']['relay'] = $relay_state;
+      }
     }
 
     // Log user in.
@@ -792,7 +794,7 @@ function sbac_sso_merge_tenancy_chains(&$array1, &$array2) {
     // Store the level always.
     $level = $array2['level'];
     if ($value !== NULL && !empty($value)) {
-      if ($level == 'STATE' && in_array($key, $state_keep_keys)) {
+      if (($level == 'STATE' || $level == NULL) && in_array($key, $state_keep_keys)) {
         $array1[$key] = $value;
       }
       if ($level == 'DISTRICT' && in_array($key, $district_keep_keys)) {
@@ -892,16 +894,18 @@ function sbac_sso_program_management_api_request(&$response) {
   // Check the cache table.
   $cached_results = variable_get('sbac_sso_pm_cached_results');
   if ($cached_results) {
-    foreach ($query_string as $type => $value) {
-      foreach ($cached_results[$type] as $cached_id => $cached_result) {
-        $cached_result = array_shift($cached_result);
-        $query_string[$value['STATE']]['cache'] = FALSE;
-        // If we have a valid cache result, we assume its good since
-        // the cache is rebuilt every 3 hours.
-        if ($cached_result['name'] == $value['STATE']) {
-          $query_string[$value['STATE']]['cache']['cache_valid'] = TRUE;
-          $query_string[$value['STATE']]['cache']['cache_result'] = $cached_result;
-          break;
+    foreach ($query_string as $state => $query_params) {
+      foreach ($query_params as $type => $state_id) {
+        foreach ($cached_results[$type] as $cached_id => $cached_result) {
+          if ($cached_result['name'] == $state_id) {
+            $json['tenants'][0] = $cached_result;
+            $in_good_standing = sbac_sso_parse_program_api_response($json, TRUE);
+            if ($in_good_standing) {
+              $query_string[$state]['cache']['cache_valid'] = TRUE;
+              $query_string[$state]['cache']['cache_result'] = $cached_result;
+            }
+            break;
+          }
         }
       }
     }
@@ -949,7 +953,7 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
       }
       else {
         $api_response[$state] = $cache['cache_result'];
-        $response['sbac_tenancy_chains_validated'][$state] = $cache['cache_result'];
+        $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
       }
     }
   }
@@ -1011,11 +1015,11 @@ function sbac_sso_get_program_management_oauth_access_token() {
  * Parses the Program Management API response.
  *
  * @param $json
- * @param $decode
+ * @param $cache
  *
  * @return array
  */
-function sbac_sso_parse_program_api_response($json, $decode = FALSE) {
+function sbac_sso_parse_program_api_response($json, $cache = FALSE) {
   $api_response = array();
   $error = FALSE;
 
@@ -1043,7 +1047,7 @@ function sbac_sso_parse_program_api_response($json, $decode = FALSE) {
 
   if (!$error) {
     $api_response = $json;
-    if (isset($json['tenants'][0])) {
+    if (!$cache && isset($json['tenants'][0])) {
       $cached_results = variable_get('sbac_sso_pm_cached_results');
       $cached_results[$json['tenants'][0]['name']] = $json;
       variable_set('sbac_sso_pm_cached_results', $cached_results);

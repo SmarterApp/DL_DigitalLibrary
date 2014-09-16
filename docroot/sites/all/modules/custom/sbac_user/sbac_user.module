@@ -1008,6 +1008,7 @@ function sbac_user_update_data($account, $edit = array()) {
   }
   // Disable feedback flag.
   if(!isset($account->field_feedback_flag['und'][0])) {
+    db_query('UPDATE {field_data_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
     db_query('UPDATE {field_revision_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
   }
   // guest account
@@ -1017,6 +1018,33 @@ function sbac_user_update_data($account, $edit = array()) {
   $data = $account->data;
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
+
+  // In the case where the user has not seen the conflicting profile screen where we save the hash on submit,
+  // we need to insert or update the hash.
+  if (isset($_SESSION['sbac-sso']['multiple']) && $_SESSION['sbac-sso']['multiple'] == FALSE) {
+    $hash = $_SESSION['sbac-sso']['hash'];
+    if (empty($account->field_sso_tenancy_hash)) {
+      db_insert('field_data_field_sso_tenancy_hash')
+        ->fields(array(
+            'entity_type' => 'user',
+            'bundle' => 'user',
+            'deleted' => 0,
+            'entity_id' => $account->uid,
+            'revision_id' => $account->uid,
+            'language' => 'und',
+            'delta' => 0,
+            'field_sso_tenancy_hash_value' => $hash,
+            'field_sso_tenancy_hash_format' => NULL
+          ))
+        ->execute();
+    }
+    else {
+      db_update('field_data_field_sso_tenancy_hash')
+        ->fields(array('field_sso_tenancy_hash_value' => $hash))
+        ->condition('entity_id', $account->uid)
+        ->execute();
+    }
+  }
 }
 
 /**
