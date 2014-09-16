@@ -37,17 +37,22 @@ class Revisions extends Base {
 
   private function getPostContent($feedback) {
     $publisher_feedback = entity_load_single('feedback', $feedback->id);
+    $contributor_comment = field_entity_value($publisher_feedback, 'field_contributor_comment');
+    $comment = '';
+    if($contributor_comment != ''){
+      $comment= '<div class="contributor-comment">
+              <div class="contributor-comment-title">Contributor\'s Comment</div>
+              <div class="contributor-comment-date">'.format_date(field_entity_value($publisher_feedback, 'field_contributor_comment_date'), 'full').'</div>
+              <div class="contributor-comment-comment">'.field_entity_value($publisher_feedback, 'field_contributor_comment').'</div>
+            </div>';
+    }
     return '
           <div class="feedback-item">
             <div class="criteria-set-title-post">
               ' . t('Posting Comments') . '
             </div>
             <div class="comments">' . field_entity_value($publisher_feedback, 'field_to_contributor') . '</div>
-            <div class="contributor-comment">
-              <div class="contributor-comment-title">Contributor\'s Comment</div>
-              <div class="contributor-comment-date">'.format_date(field_entity_value($publisher_feedback, 'field_contributor_comment_date'), 'full').'</div>
-              <div class="contributor-comment-comment">'.field_entity_value($publisher_feedback, 'field_contributor_comment').'</div>
-            </div>
+            '.$comment.'
           </div>
         ';
   }
