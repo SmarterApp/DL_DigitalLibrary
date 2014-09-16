@@ -668,15 +668,21 @@
   color: #A2A2A2;
 }
 
+/*Gate keeping criteria review tab*/
+/* line 685, ../sass/feedback.scss */
+.section-gate-keeping-criteria-review .form-item textarea.error, .section-gate-keeping-criteria-review .form-item input.error {
+  width: 100%;
+}
+
 @media all and (max-width: 980px) {
-  /* line 684, ../sass/feedback.scss */
+  /* line 692, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 510px;
   }
 }
 @media all and (max-width: 670px) {
-  /* line 691, ../sass/feedback.scss */
+  /* line 699, ../sass/feedback.scss */
   .field-name-resource-slideshow .flexslider {
     margin: 0 auto;
     width: 250px;

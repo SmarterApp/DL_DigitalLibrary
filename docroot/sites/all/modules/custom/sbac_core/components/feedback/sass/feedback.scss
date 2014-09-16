@@ -680,6 +680,14 @@
 	}
 }
 
+/*Gate keeping criteria review tab*/
+.section-gate-keeping-criteria-review {
+	.form-item textarea.error, .form-item input.error  {
+		width: 100%;
+	}
+}
+
+
 @media all and (max-width: 980px) {
   .field-name-resource-slideshow .flexslider  {
      margin: 0 auto;
