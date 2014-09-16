@@ -1037,9 +1037,26 @@ function sbac_user_update_data($account, $edit = array()) {
             'field_sso_tenancy_hash_format' => NULL
           ))
         ->execute();
+      db_insert('field_revision_field_sso_tenancy_hash')
+        ->fields(array(
+          'entity_type' => 'user',
+          'bundle' => 'user',
+          'deleted' => 0,
+          'entity_id' => $account->uid,
+          'revision_id' => $account->uid,
+          'language' => 'und',
+          'delta' => 0,
+          'field_sso_tenancy_hash_value' => $hash,
+          'field_sso_tenancy_hash_format' => NULL
+        ))
+        ->execute();
     }
     else {
       db_update('field_data_field_sso_tenancy_hash')
+        ->fields(array('field_sso_tenancy_hash_value' => $hash))
+        ->condition('entity_id', $account->uid)
+        ->execute();
+      db_update('field_revision_field_sso_tenancy_hash')
         ->fields(array('field_sso_tenancy_hash_value' => $hash))
         ->condition('entity_id', $account->uid)
         ->execute();

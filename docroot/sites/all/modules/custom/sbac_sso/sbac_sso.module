@@ -887,6 +887,8 @@ function sbac_sso_program_management_api_request(&$response) {
             $query_string[$state]['INSTITUTION'] = $attribute;
             break;
         }
+        $query_string[$state]['cache']['cache_valid'] = FALSE;
+        $query_string[$state]['cache']['cache_result'] = FALSE;
       }
     }
   }
@@ -896,15 +898,17 @@ function sbac_sso_program_management_api_request(&$response) {
   if ($cached_results) {
     foreach ($query_string as $state => $query_params) {
       foreach ($query_params as $type => $state_id) {
-        foreach ($cached_results[$type] as $cached_id => $cached_result) {
-          if ($cached_result['name'] == $state_id) {
-            $json['tenants'][0] = $cached_result;
-            $in_good_standing = sbac_sso_parse_program_api_response($json, TRUE);
-            if ($in_good_standing) {
-              $query_string[$state]['cache']['cache_valid'] = TRUE;
-              $query_string[$state]['cache']['cache_result'] = $cached_result;
+        if ($type != 'cache') {
+          foreach ($cached_results[$type] as $cached_id => $cached_result) {
+            if ($cached_result['id'] == $cached_id) {
+              $json['tenants'][0] = $cached_result;
+              $in_good_standing = sbac_sso_parse_program_api_response($json, TRUE);
+              if ($in_good_standing) {
+                $query_string[$state]['cache']['cache_valid'] = TRUE;
+                $query_string[$state]['cache']['cache_result'] = $cached_result;
+              }
+              break;
             }
-            break;
           }
         }
       }
@@ -929,8 +933,12 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
   if ($access_token) {
     // Loop around all state query string and get the PM results for each one.
     foreach ($query_string as $state => $query) {
-      $cache = array_pop($query);
-      if ($cache['cache_valid'] == FALSE) {
+      $cache = NULL;
+      if (isset($query['cache'])) {
+        $cache = $query['cache'];
+        unset($query['cache']);
+      }
+      if ($cache == NULL || $cache['cache_valid'] == FALSE) {
         $data = http_build_query($query);
         $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
         $curl = curl_init();
@@ -1049,7 +1057,9 @@ function sbac_sso_parse_program_api_response($json, $cache = FALSE) {
     $api_response = $json;
     if (!$cache && isset($json['tenants'][0])) {
       $cached_results = variable_get('sbac_sso_pm_cached_results');
-      $cached_results[$json['tenants'][0]['name']] = $json;
+      foreach ($json['tenants'] as $key => $result_set) {
+        $cached_results[$result_set['type']][$result_set['id']] = $result_set;
+      }
       variable_set('sbac_sso_pm_cached_results', $cached_results);
     }
   }
