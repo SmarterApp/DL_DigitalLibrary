@@ -450,7 +450,8 @@ function sbac_report_state_options() {
   if ($user->uid == 1 ||
     in_array('DLRB member', $roles) ||
     in_array('digital library administrator', $roles) ||
-    in_array('system administrator', $roles)) {
+    in_array('system administrator', $roles) ||
+    in_array('administrator', $roles)) {
 
     $options['all'] = t('All');
     // Return if we only want the first one.
