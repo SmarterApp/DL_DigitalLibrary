@@ -2233,6 +2233,28 @@ function sbac_resource_node_update($node) {
       $node->workbench_moderation['published']->vid = $node->vid;
     }
     sbac_resource_determine_thumbnail_uri($node);
+
+    // update the states setting of the resource forums
+    $forum_ids = db_select('field_data_field_forum_resource_ref', 'r')
+      ->condition('r.field_forum_resource_ref_target_id', $node->nid)
+      ->condition('r.bundle', 'forum')
+      ->fields('r', array('entity_id'))
+      ->execute()
+      ->fetchCol();
+    if (!empty($forum_ids)) {
+      foreach ($forum_ids as $tid) {
+        $forum = taxonomy_term_load($tid);
+        if ($node->field_view_permissions['und'][0]['value'] == 1) {
+          $forum->field_forum_access_states['und'][0]['value'] = 0;
+          $forum->field_state = $node->field_view_permissions_per_state;
+        }
+        else {
+          $forum->field_forum_access_states['und'][0]['value'] = 1;
+          $forum->field_state = array();
+        }
+        taxonomy_term_save($forum);
+      }
+    }
   }
 }
 
