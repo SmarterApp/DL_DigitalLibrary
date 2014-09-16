@@ -56,6 +56,108 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'feedback-post-field_contributor_comment'
+  $field_instances['feedback-post-field_contributor_comment'] = array(
+    'bundle' => 'post',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'feedback',
+    'field_name' => 'field_contributor_comment',
+    'label' => 'Contributor\'s comment',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 6,
+    ),
+    'xss' => 0,
+  );
+
+  // Exported field_instance: 'feedback-post-field_contributor_comment_date'
+  $field_instances['feedback-post-field_contributor_comment_date'] = array(
+    'bundle' => 'post',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+        ),
+        'type' => 'date_default',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'feedback',
+    'field_name' => 'field_contributor_comment_date',
+    'label' => 'Contributor\'s comment date',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_help_description' => '',
+        'label_position' => 'above',
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_text',
+      'weight' => 8,
+    ),
+  );
+
   // Exported field_instance: 'feedback-post-field_post_options'
   $field_instances['feedback-post-field_post_options'] = array(
     'bundle' => 'post',
@@ -317,7 +419,6 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        // 'label_help_description' => 'Based on your evaluation of the Quality Criteria, decide if the resource is to be Returned, Posted, or Posted With Distinction.',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
@@ -957,6 +1058,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_details',
     'label' => 'Add some details',
     'profanity' => 1,
+    'required' => FALSE,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,

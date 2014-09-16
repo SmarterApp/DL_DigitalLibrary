@@ -1014,7 +1014,7 @@ function sbac_resource_validate_revisions(&$form, &$form_state) {
           $error = "Please remove any inappropriate language from question $i.";
         }
       }
-      if ($error) {
+      if (isset($error)) {
         form_set_error('sbac_revisions][' . $index . '][contributor_comment', $error);
         _sbac_resource_remove_error_message($error);
         drupal_set_message('revisions:field_contributor_comment_' . $index . ':single:' . $error, 'sbac_resource_error');
