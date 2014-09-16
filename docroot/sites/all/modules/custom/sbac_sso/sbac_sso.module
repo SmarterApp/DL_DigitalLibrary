@@ -886,31 +886,24 @@ function sbac_sso_program_management_api_request(&$response) {
   }
 
   // Check the cache table.
-  // TODO: Update so that checks cache table for ones on file but then also call the API for ones not on file.
   $cached_results = variable_get('sbac_sso_pm_cached_results');
-//  if ($cached_results) {
-//    $valid_cached_results = array();
-//    foreach ($query_string as $type => $value) {
-//      foreach ($cached_results[$type] as $cached_id => $cached_result) {
-//        if ($cached_result['name'] == $value) {
-//          $valid_cached_results['tenants'][] = $cached_result;
-//          break;
-//        }
-//      }
-//    }
-//
-//    if ($valid_cached_results) {
-//      // Verify structure with current cached result if found.
-//      $api_response = sbac_sso_parse_program_api_response($valid_cached_results, FALSE);
-//    }
-//    else {
-//      // Else request API to attempt to get new response.
-//      $api_response = sbac_sso_get_program_management_response($response, $query_string);
-//    }
-//  }
-//  else {
-    $api_response = sbac_sso_get_program_management_response($response, $query_string);
-//  }
+  if ($cached_results) {
+    foreach ($query_string as $type => $value) {
+      foreach ($cached_results[$type] as $cached_id => $cached_result) {
+        $cached_result = array_shift($cached_result);
+        $query_string[$value['STATE']]['cache'] = FALSE;
+        // If we have a valid cache result, we assume its good since
+        // the cache is rebuilt every 3 hours.
+        if ($cached_result['name'] == $value['STATE']) {
+          $query_string[$value['STATE']]['cache']['cache_valid'] = TRUE;
+          $query_string[$value['STATE']]['cache']['cache_result'] = $cached_result;
+          break;
+        }
+      }
+    }
+  }
+
+  $api_response = sbac_sso_get_program_management_response($response, $query_string);
   return $api_response;
 }
 
@@ -928,24 +921,31 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
   if ($access_token) {
     // Loop around all state query string and get the PM results for each one.
     foreach ($query_string as $state => $query) {
-      $data = http_build_query($query);
-      $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
-      $curl = curl_init();
-      curl_setopt($curl, CURLOPT_URL, $post);
-      curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-        'Authorization: Bearer ' . $access_token,
-      ));
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-      curl_setopt($curl, CURLOPT_SSLVERSION,3);
-      $result = curl_exec($curl);
-      $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-      curl_close($curl);
-      if ($result && $http_status == 200) {
-        $json = drupal_json_decode($result);
-        if (isset($json['tenants'])) {
-          $response['pm_api_results'][$state]['tenants'] = $json['tenants'];
+      $cache = array_pop($query);
+      if ($cache['cache_valid'] == FALSE) {
+        $data = http_build_query($query);
+        $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $post);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+          'Authorization: Bearer ' . $access_token,
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curl, CURLOPT_SSLVERSION,3);
+        $result = curl_exec($curl);
+        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        if ($result && $http_status == 200) {
+          $json = drupal_json_decode($result);
+          if (isset($json['tenants'])) {
+            $response['pm_api_results'][$state]['tenants'] = $json['tenants'];
+          }
         }
+      }
+      else {
+        $api_response[$state] = $cache['cache_result'];
+        $response['sbac_tenancy_chains_validated'][$state] = $cache['cache_result'];
       }
     }
   }
