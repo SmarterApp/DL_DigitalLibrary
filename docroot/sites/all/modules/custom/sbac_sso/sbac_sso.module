@@ -1317,7 +1317,7 @@ function sbac_sso_logout_assertion() {
  * Used later to retrieve local copy vs API call each
  * user login attempt.
  */
-function sbac_sso_test_cron() {
+function sbac_sso_cron() {
   $access_token = sbac_sso_get_program_management_oauth_access_token();
   if ($access_token) {
     $post = SBAC_SSO_PROGRAM_OAUTH_API_LIST;
