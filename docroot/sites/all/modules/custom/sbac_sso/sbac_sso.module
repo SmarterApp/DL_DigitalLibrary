@@ -535,6 +535,10 @@ function sbac_sso_logout() {
 /**
  * Validates the SAML response.
  *
+ * Parses the SAML response and grabs all the values. Then
+ * parses the tenancy chain and validates the tenants against
+ * the program management service. 
+ *
  * @param string $saml_token
  *   The SAML assertion.
  */
