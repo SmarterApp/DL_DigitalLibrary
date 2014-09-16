@@ -358,6 +358,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['legal']['#access'] = FALSE;
       $form['field_sso_uuid']['#access'] = FALSE;
       $form['field_login_count']['#access'] = FALSE;
+      $form['field_sso_tenancy_hash']['#access'] = FALSE;
 
       // remove user_profile_submit handler and then re-add so we can re-order the submit handlers
       $form['#submit'] = array_diff($form['#submit'], array('user_profile_form_submit'));
@@ -978,6 +979,19 @@ function sbac_user_user_login(&$edit, $account) {
     }
   }
 
+  // Update user information.
+  sbac_user_update_data($account, $edit);
+  // Redirect the user.
+  sbac_user_redirect_on_login($edit);
+}
+
+/**
+ * Update user information on login.
+ *
+ * @param $account
+ * @param array $edit
+ */
+function sbac_user_update_data($account, $edit = array()) {
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -994,6 +1008,7 @@ function sbac_user_user_login(&$edit, $account) {
   }
   // Disable feedback flag.
   if(!isset($account->field_feedback_flag['und'][0])) {
+    db_query('UPDATE {field_data_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
     db_query('UPDATE {field_revision_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
   }
   // guest account
@@ -1004,10 +1019,62 @@ function sbac_user_user_login(&$edit, $account) {
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
+  // In the case where the user has not seen the conflicting profile screen where we save the hash on submit,
+  // we need to insert or update the hash.
+  if (isset($_SESSION['sbac-sso']['multiple']) && $_SESSION['sbac-sso']['multiple'] == FALSE) {
+    $hash = $_SESSION['sbac-sso']['hash'];
+    if (empty($account->field_sso_tenancy_hash)) {
+      db_insert('field_data_field_sso_tenancy_hash')
+        ->fields(array(
+            'entity_type' => 'user',
+            'bundle' => 'user',
+            'deleted' => 0,
+            'entity_id' => $account->uid,
+            'revision_id' => $account->uid,
+            'language' => 'und',
+            'delta' => 0,
+            'field_sso_tenancy_hash_value' => $hash,
+            'field_sso_tenancy_hash_format' => NULL
+          ))
+        ->execute();
+      db_insert('field_revision_field_sso_tenancy_hash')
+        ->fields(array(
+          'entity_type' => 'user',
+          'bundle' => 'user',
+          'deleted' => 0,
+          'entity_id' => $account->uid,
+          'revision_id' => $account->uid,
+          'language' => 'und',
+          'delta' => 0,
+          'field_sso_tenancy_hash_value' => $hash,
+          'field_sso_tenancy_hash_format' => NULL
+        ))
+        ->execute();
+    }
+    else {
+      db_update('field_data_field_sso_tenancy_hash')
+        ->fields(array('field_sso_tenancy_hash_value' => $hash))
+        ->condition('entity_id', $account->uid)
+        ->execute();
+      db_update('field_revision_field_sso_tenancy_hash')
+        ->fields(array('field_sso_tenancy_hash_value' => $hash))
+        ->condition('entity_id', $account->uid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Redirect the user on login to the correct page.
+ *
+ * @param array $edit
+ */
+function sbac_user_redirect_on_login($edit = array()) {
   if (!isset($edit['sbac-share'])) {
-    if (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
-      $relay = $edit['sbac_sso_relay'];
+    if (isset($_SESSION['sbac-sso']['relay']) && $_SESSION['sbac-sso']['relay'] != NULL) {
+      $relay = $_SESSION['sbac-sso']['relay'];
       $path = drupal_valid_path($relay);
+      unset($_SESSION['sbac-sso']['relay']);
       if ($path) {
         drupal_goto($relay);
       }
@@ -1406,6 +1473,7 @@ function sbac_user_preprocess_username(&$vars, $user) {
 
 /**
  * Implements hook_user_import_data().
+ *
  * @param  [type] $settings        [description]
  * @param  [type] $update_setting  [description]
  * @param  [type] $column_settings [description]
@@ -1413,6 +1481,7 @@ function sbac_user_preprocess_username(&$vars, $user) {
  * @param  [type] $field_id        [description]
  * @param  [type] $data            [description]
  * @param  [type] $column_id       [description]
+ *
  * @return
  */
 function sbac_user_user_import_data($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id) {

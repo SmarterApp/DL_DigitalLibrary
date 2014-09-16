@@ -677,6 +677,53 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_sso_tenancy_hash'
+  $field_instances['user-user-field_sso_tenancy_hash'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 31,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_sso_tenancy_hash',
+    'label' => 'SSO Tenancy Hash',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => '',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 30,
+    ),
+    'xss' => 0,
+  );
+
   // Exported field_instance: 'user-user-field_sso_uuid'
   $field_instances['user-user-field_sso_uuid'] = array(
     'bundle' => 'user',
@@ -821,6 +868,7 @@ function sbac_user_field_default_field_instances() {
   t('Retired');
   t('SLT Member');
   t('SNE Member');
+  t('SSO Tenancy Hash');
   t('SSO UUID');
   t('School Name');
   t('Select the personal information and expertise you’d like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown at the top of this page. Note that no educators can access your full account and no information will be displayed publicly.');
