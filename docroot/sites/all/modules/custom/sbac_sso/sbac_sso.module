@@ -120,7 +120,6 @@ function sbac_sso_boot() {
       $path = $base_url . '/sbac-sso/conflicting-profile';
       header('Location: ' . $path, TRUE, 302);
       drupal_exit($path);
-    }
   }
 }
 
