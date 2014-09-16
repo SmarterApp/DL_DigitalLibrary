@@ -4036,3 +4036,30 @@ button.radius, .button.radius {
 form#sbac-user-filter-form #edit-email {
   clear: both;
 }
+
+/* -----------------------------------------
+  SSO error messages
+  ------------------------------------------ */
+.page-sbac-sso-error {
+	#main.columns {
+		float: none;
+		padding-bottom: 20px;
+	}
+	
+	#main.large-9 {
+		margin: 0 auto;
+		
+		p {
+			font-size: 1rem;
+		}
+	}
+	
+	#main.push-3 {
+		left: auto;
+	}
+	
+	.error-code {
+		margin-top: 20px;
+		clear: left;
+	}
+}

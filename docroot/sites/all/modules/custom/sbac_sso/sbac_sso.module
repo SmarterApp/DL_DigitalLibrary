@@ -396,8 +396,8 @@ function sbac_sso_error() {
   }
 
   drupal_set_title($possible_titles[$title]);
-  $output = $possible_messages[$message];
-  $output .= '<br />' . $possible_error_codes[$code];
+  $output = '<p>' .$possible_messages[$message]. '</p>';
+  $output .= '<span class="error-code">' . $possible_error_codes[$code] . '</span>';
   return $output;
 }
 
