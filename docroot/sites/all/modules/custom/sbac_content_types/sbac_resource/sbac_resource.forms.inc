@@ -2136,7 +2136,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $post_comment = field_entity_value($post, 'field_to_contributor');
               if ($post_comment != '') {
                 $form['sbac_revisions']['post_comment'] = array(
-                  '#markup' => field_entity_value($post, 'field_to_contributor'),
+                  '#markup' => $post_comment,
                   '#prefix' => '<h2>Posting comments</h2><p>',
                   '#suffix' => '</p>'
                 );
