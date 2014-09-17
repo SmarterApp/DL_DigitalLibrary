@@ -58,6 +58,7 @@
 
   .created {
     font-style: italic;
+		margin-bottom: 10px;
   }
 
   /* intro form elements */
@@ -274,11 +275,12 @@
   /* retionale for recommedation */
     .field-name-field-rec-rationale {
       position: relative;
+			max-width: 584px;
 
       .counter {
         position: absolute;
         right: 0;
-        top: 10px;
+        top: 0;
         font-size: 12px;
       }
 
@@ -435,6 +437,7 @@
       border-bottom: 1px #ccc solid;
       margin: 0 0 1em 0;
       padding: 0 0 1em 0;
+			clear: both;
 
       label {
         margin: 0 0 0.5em 0;
@@ -662,6 +665,25 @@
 			margin-left: 0;
 			margin-right: 15px;
 		}
+	}
+}
+
+/*Revisions tab*/
+.section-revisions {
+	.contributor-comment-title {
+		font-weight: bold;
+	}
+	.contributor-comment-date {
+		font-style: italic;
+		margin-bottom: 10px;
+		color: #A2A2A2;
+	}
+}
+
+/*Gate keeping criteria review tab*/
+.section-gate-keeping-criteria-review {
+	.form-item textarea.error, .form-item input.error  {
+		width: 100%;
 	}
 }
 

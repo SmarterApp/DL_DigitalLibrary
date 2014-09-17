@@ -1014,7 +1014,7 @@ function sbac_resource_validate_revisions(&$form, &$form_state) {
           $error = "Please remove any inappropriate language from question $i.";
         }
       }
-      if ($error) {
+      if (isset($error)) {
         form_set_error('sbac_revisions][' . $index . '][contributor_comment', $error);
         _sbac_resource_remove_error_message($error);
         drupal_set_message('revisions:field_contributor_comment_' . $index . ':single:' . $error, 'sbac_resource_error');
@@ -2115,6 +2115,40 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
                 '#type' => 'hidden',
                 '#value' => implode('::', $question_ids),
+              );
+            }
+          } else {
+            $form['sbac_revisions'] = array(
+              '#type' => 'fieldset',
+              '#title' => t('Revisions'),
+              '#tree' => TRUE,
+              '#group' => 'additional_settings',
+              '#attributes' => array(
+                'id' => 'sbac-revisions-tab',
+              )
+            );
+            $form['sbac_revisions']['header'] = array(
+              '#markup' => t('Quality Criteria'),
+              '#prefix' => '<h2>',
+              '#suffix' => '</h2>'
+            );
+            if (!empty($post)) {
+              $post_comment = field_entity_value($post, 'field_to_contributor');
+              if ($post_comment != '') {
+                $form['sbac_revisions']['post_comment'] = array(
+                  '#markup' => $post_comment,
+                  '#prefix' => '<h2>Posting comments</h2><p>',
+                  '#suffix' => '</p>'
+                );
+              }
+              $form['sbac_revisions']['feedback']['contributor_comment'] = array(
+                '#type' => 'textarea',
+                '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
+                '#default_value' => field_entity_value($post, 'field_contributor_comment') ? field_entity_value($post, 'field_contributor_comment') : ''
+              );
+              $form['sbac_revisions']['feedback']['post_id'] = array(
+                '#type' => 'hidden',
+                '#value' => $post->id,
               );
             }
           }
@@ -3731,15 +3765,24 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
   // Save the contributor's comments
   if (!empty($form_state['values']['sbac_revisions'])) {
     foreach ($form_state['values']['sbac_revisions'] as $feedback) {
-      $question_ids = explode('::', $feedback['question_id']);
-      foreach ($question_ids as $item_id) {
-        $question = field_collection_item_load($item_id);
-        if ($question) {
-          $question_wrapper = entity_metadata_wrapper('field_collection_item', $question);
-          $question_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
-          $question_wrapper->field_contributor_comment_date->set(time());
-          $question_wrapper->save();
+      if (!empty($feedback['question_id'])) {
+        $question_ids = explode('::', $feedback['question_id']);
+        foreach ($question_ids as $item_id) {
+          $question = field_collection_item_load($item_id);
+          if ($question) {
+            $question_wrapper = entity_metadata_wrapper('field_collection_item', $question);
+            $question_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
+            $question_wrapper->field_contributor_comment_date->set(time());
+            $question_wrapper->save();
+          }
         }
+      }
+      if(!empty($feedback['post_id'])){
+        $post = entity_load_single('feedback', $feedback['post_id']);
+        $post_wrapper = entity_metadata_wrapper('feedback', $post);
+        $post_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
+        $post_wrapper->field_contributor_comment_date->set(time());
+        $post_wrapper->save();
       }
     }
   }
