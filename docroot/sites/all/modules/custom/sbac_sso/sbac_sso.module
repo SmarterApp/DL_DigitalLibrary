@@ -354,7 +354,7 @@ function sbac_sso_preprocess_page(&$vars) {
  * @return mixed
  */
 function sbac_sso_error() {
-  (!isset($_GET['code']) ? $code = 100 : $code = $_GET['code']);
+  (!isset($_GET['code']) ? $code = NULL : $code = $_GET['code']);
   $possible_titles = array(
     t('Access to the Digital Library is Denied'),
     t('We are unable to create your Digital Library profile.'),
@@ -590,32 +590,11 @@ function sbac_sso_validate_saml_response($saml_token) {
   // or if new user and multiple tenancy chains
   $hash = sbac_sso_generate_tenancy_chain_hash($response);
   if ($user) {
-    // If the user is marked as blocked.
-    if ($user->status == 0) {
-      // Kick the user to an error page with Smarter Balanced Contact information
-      // and a custom error code ( do not include the details pertaining to what
-      // the error code is connected to, just the ERROR CODE and NUMBER :
-      // ERROR CODE 200: Error updating user with user attributes that were passed.
-      drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
-    }
-
-    if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
-      global $base_url;
-      $relay_state = $_REQUEST['RelayState'];
-      $relay_state = str_replace($base_url, '', $relay_state);
-      if ($relay_state) {
-        $_SESSION['sbac-sso']['relay'] = $relay_state;
-      }
-    }
-
-    // Log user in.
-    $form_state['uid'] = $user->uid;
-    $_SESSION['uid'] = $user->uid;
-    $_SESSION['session_index'] = $user->session_index;
-    $_SESSION['sbac-sso']['multiple'] = $multiple;
-    $_SESSION['sbac-sso']['response'] = $response;
-    $_SESSION['sbac-sso']['hash'] = $hash;
-    user_login_submit(array(), $form_state);
+    sbac_sso_log_user_in($user, $multiple, $response, $hash);
+  }
+  else {
+    // If all else failed, send them to the default error page.
+    drupal_goto('sbac-sso-error');
   }
 }
 
@@ -1272,6 +1251,43 @@ function sbac_sso_generate_tenancy_chain_hash($response) {
   $hash = implode(',', $hash_array);
   $md5_hash = md5($hash);
   return $md5_hash;
+}
+
+/**
+ *
+ *
+ * @param $user
+ * @param $multiple
+ * @param $response
+ * @param $hash
+ */
+function sbac_sso_log_user_in($user, $multiple, $response, $hash) {
+  // If the user is marked as blocked.
+  if ($user->status == 0) {
+    // Kick the user to an error page with Smarter Balanced Contact information
+    // and a custom error code ( do not include the details pertaining to what
+    // the error code is connected to, just the ERROR CODE and NUMBER :
+    // ERROR CODE 200: Error updating user with user attributes that were passed.
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
+  }
+
+  if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
+    global $base_url;
+    $relay_state = $_REQUEST['RelayState'];
+    $relay_state = str_replace($base_url, '', $relay_state);
+    if ($relay_state) {
+      $_SESSION['sbac-sso']['relay'] = $relay_state;
+    }
+  }
+
+  // Log user in.
+  $form_state['uid'] = $user->uid;
+  $_SESSION['uid'] = $user->uid;
+  $_SESSION['session_index'] = $user->session_index;
+  $_SESSION['sbac-sso']['multiple'] = $multiple;
+  $_SESSION['sbac-sso']['response'] = $response;
+  $_SESSION['sbac-sso']['hash'] = $hash;
+  user_login_submit(array(), $form_state);
 }
 
 /**
