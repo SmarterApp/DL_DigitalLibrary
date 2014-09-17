@@ -751,53 +751,24 @@ function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
     $parsed_chain = sbac_sso_create_user_attributes($chain);
     // Only keep tenancy chains with DL_EndUser and a state attribute.
     if (isset($parsed_chain['name']) && $parsed_chain['name'] == 'DL_EndUser' && isset($parsed_chain['state_id']) && $parsed_chain['state_id'] != NULL) {
-      sbac_sso_merge_tenancy_chains($response['sbac_tenancy_chains_unvalidated'][$parsed_chain['state_id']], $parsed_chain);
+      $response['sbac_tenancy_chains_unvalidated'][$parsed_chain['state_id']][] = $parsed_chain;
     }
   }
-}
 
-/**
- * Merge array2 into array1
- *
- * Take values of array2 into array1.
- *
- * @param $array1
- * @param $array2
- */
-function sbac_sso_merge_tenancy_chains(&$array1, &$array2) {
-  $instituion_keep_keys = array(
-    'institution_id' => 'institution_id',
-    'institution' => 'institution',
-  );
-  $district_keep_keys = array(
-    'district_id' => 'district_id',
-    'district' => 'district',
-  );
-  $state_keep_keys = array(
-    'name' => 'name',
-    'client_id' => 'client_id',
-    'client' => 'client',
-    'state_id' => 'state_id',
-    'state' => 'state',
-    'district_id' => 'district_id',
-    'district' => 'district',
-    'institution_id' => 'institution_id',
-    'institution' => 'institution',
-  );
-  foreach ($array2 as $key => $value) {
-    // Store the level always.
-    $level = $array2['level'];
-    if ($value !== NULL && !empty($value)) {
-      if (($level == 'STATE' || $level == NULL) && in_array($key, $state_keep_keys)) {
-        $array1[$key] = $value;
-      }
-      if ($level == 'DISTRICT' && in_array($key, $district_keep_keys)) {
-        $array1[$key] = $value;
-      }
-      if ($level == 'INSTITUTION' && in_array($key, $instituion_keep_keys)) {
-        $array1[$key] = $value;
+  if ($response['sbac_tenancy_chains_unvalidated']) {
+    $keep_chain = array();
+    foreach ($response['sbac_tenancy_chains_unvalidated'] as $state_id => $unvalidated_tenancy_chains) {
+      foreach ($unvalidated_tenancy_chains as $key => $chain) {
+        // Keep the chain with the highest weight, if the same weight, just choose the first one.
+        // Meaning, if chain includes state/district/institution keep that one, if the
+        // chain includes state/district and state/institution, keep the first one since the
+        // weight (number of items) is the same.
+        if (count($chain) > count($keep_chain[$state_id]) || !isset($keep_chain[$state_id])) {
+          $keep_chain[$state_id] = $chain;
+        }
       }
     }
+    $response['sbac_tenancy_chains_unvalidated'] = $keep_chain;
   }
 }
 
@@ -834,6 +805,12 @@ function sbac_sso_create_user_attributes($chain) {
 
     if (count($user_fields) == count($attributes)) {
       $user_attributes = array_combine($user_fields, $attributes);
+    }
+
+    foreach ($user_attributes as $key => $value) {
+      if ($value == '' || $value == NULL) {
+        unset($user_attributes[$key]);
+      }
     }
   }
   return $user_attributes;
