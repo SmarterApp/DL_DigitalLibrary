@@ -112,26 +112,12 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
  * Filter out resources that don't match a criteria
  */
 function set_resource_filter(&$resource_filters, $key, $form_value, $all_values) {
-  if (isset($all_values['published'])) {
-    $all_values['published'] = 'Published';
-  }
-  if (isset($all_values['rejected'])) {
-    $all_values['rejected'] = 'Rejected';
-  }
-  if (isset($all_values['approved'])) {
-    $all_values['approved'] = 'Approved';
-  }
-  if (in_array('0', $form_value)) { // all.
+  if (in_array('1', $form_value) && $key != 'status') { // not yet assigned
     $resource_filters[$key] = $all_values;
+    unset($resource_filters[$key][0]); // remove 'All'.
   }
   else {
-    if (in_array('1', $form_value)) { // not yet assigned
-      $resource_filters[$key] = $all_values;
-      unset($resource_filters[$key][0]); // remove 'All'.
-    }
-    else {
-      $resource_filters[$key] = $form_value;
-    }
+    $resource_filters[$key] = $form_value;
   }
 }
 
