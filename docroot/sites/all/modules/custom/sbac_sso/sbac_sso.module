@@ -100,7 +100,7 @@ function sbac_sso_menu() {
   );
 
   $items['sbac-sso/conflicting-profile'] = array(
-    'title' => 'Conflicting Profile Information',
+    'title' => 'Please confirm your profile information',
     'page callback' => 'sbac_sso_conflicting_profile',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
