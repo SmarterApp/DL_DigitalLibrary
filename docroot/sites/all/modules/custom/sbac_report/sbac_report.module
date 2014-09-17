@@ -149,6 +149,7 @@ function sbac_report_user_access() {
     'administrator',
     'digital library administrator',
     'system administrator',
+    'DLRB member'
   );
 
   if (array_intersect($user->roles, $allowed_roles)) {
