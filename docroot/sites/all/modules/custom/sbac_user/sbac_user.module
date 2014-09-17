@@ -996,10 +996,6 @@ function sbac_user_update_data($account, $edit = array()) {
   if (!$account->data) { // initialize for new users
     $account->data = array();
   }
-  if (isset($_SESSION['session_index'])) {
-    $account->data['session_index'] = $_SESSION['session_index'];
-    unset($_SESSION['session_index']);
-  }
   // Increment login count.
   if (!isset($account->data['login_count'])) {
     $account->data['login_count'] = 1;
