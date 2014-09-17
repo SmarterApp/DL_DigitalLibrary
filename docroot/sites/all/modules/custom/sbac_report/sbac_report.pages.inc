@@ -156,7 +156,7 @@ function sbac_report_individual() {
     $output[SBAC_REPORT_TAB_FORUM] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
-      '#title' => t('Forum Statistics Reprot (CSV Report)'),
+      '#title' => t('Forum Statistics Report (CSV Report)'),
       '#attributes' => array(
         'id' => SBAC_REPORT_TAB_FORUM,
       ),
