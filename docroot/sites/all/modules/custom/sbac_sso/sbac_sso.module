@@ -511,11 +511,6 @@ function sbac_sso_validate_saml_assertion($saml_token) {
  * @param $account
  */
 function sbac_sso_user_login(&$edit, $account) {
-  if (isset($_SESSION['session_index'])) {
-    $account->data['session_index'] = $_SESSION['session_index'];
-    unset($_SESSION['session_index']);
-  }
-
   if (isset($_SESSION['sbac-sso'])) {
     $sbac_sso_vars = $_SESSION['sbac-sso'];
     if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
@@ -590,7 +585,6 @@ function sbac_sso_validate_saml_response($saml_token) {
   $multiple = sbac_sso_determine_multiple_tenancy_chains($response);
   // Determine if user is new or existing
   $user = sbac_sso_determine_user($response, $multiple);
-  $user->session_index = $response['session_index'];
   // If multiple tenancy chains and the tenancy chain hash does not match
   // one on user proflie, display conflicting profile screen
   // or if new user and multiple tenancy chains
@@ -1111,12 +1105,13 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
       // If some error occurs in the data updating a user: Kick the user to an error
       // page with Smarter Balanced Contact information and a custom error code
       // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
-      if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+      $tenancy_chain = array_shift($response['sbac_tenancy_chains_validated']);
+      if ($valid = sbac_sso_validate_state_by_name($tenancy_chain['state'])) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-      $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+      $user->field_district_name['und'][0]['value'] = ucwords(strtolower($tenancy_chain['district']));
+      $user->field_school_name['und'][0]['value'] = ucwords(strtolower($tenancy_chain['institution']));
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1135,13 +1130,13 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
       // information and a custom error code ( do not include the details pertaining
       // to what the error code is connected to, just the ERROR CODE and NUMBER :
       // ERROR CODE 103: Error updating user with user attributes that were passed.
-
-      if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
+      $tenancy_chain = array_shift($response['sbac_tenancy_chains_validated']);
+      if ($valid = sbac_sso_validate_state_by_name($tenancy_chain['state'])) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-      $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+      $user->field_district_name['und'][0]['value'] = ucwords(strtolower($tenancy_chain['district']));
+      $user->field_school_name['und'][0]['value'] = ucwords(strtolower($tenancy_chain['institution']));
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1227,8 +1222,12 @@ function sbac_sso_create_user_record($response, $multiple) {
       $term = current($valid);
       $edit['field_state']['und'][0]['tid'] = $term->tid;
     }
-    $edit['field_district']['und'][0]['value'] = $tenancy_chain['district'];
-    $edit['field_institution']['und'][0]['value'] = $tenancy_chain['institution'];
+    if (isset($tenancy_chain['district'])) {
+      $edit['field_district_name']['und'][0]['value'] = ucwords(strtolower($tenancy_chain['district']));
+    }
+    if (isset($tenancy_chain['institution'])) {
+      $edit['field_school_name']['und'][0]['value'] = ucwords(strtolower($tenancy_chain['institution']));
+    }
   }
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
   $edit['field_last_name']['und'][0]['value'] = $response['sn'];

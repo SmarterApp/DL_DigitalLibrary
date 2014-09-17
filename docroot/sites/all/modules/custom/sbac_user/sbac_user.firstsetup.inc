@@ -683,7 +683,7 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     $updates['field_introduction']['und'][0]['value'] = $_SESSION['user_setup']['about_me'];
 
     // Update user information.
-    sbac_user_update_data($account, $edit);
+    sbac_user_update_data($account);
     $account = user_save($account, $updates);
     if ($account !== FALSE) {
       if (isset($_SESSION['user_setup']['temp_profile_image'])) {
