@@ -7581,9 +7581,9 @@ button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-sear
 }
 /* line 272, ../sass/custom.scss */
 button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus, #edit-cancel:hover, #edit-cancel:focus, #edit-tags-cancel:hover, #edit-tags-cancel:focus, #sbac-search-close-button:hover, #sbac-search-close-button:focus, button.sbac-cancel-blue:hover, button.sbac-cancel-blue:focus, .button.devtools-dialog-close:hover, .button.devtools-dialog-close:focus, #gate-keeper-cancel:hover, #gate-keeper-cancel:focus, #review-cancel:hover, #review-cancel:focus, #edit-delete-overlay:hover, #edit-delete-overlay:focus, #edit-cancel-overlay:hover, #edit-cancel-overlay:focus, #post-cancel:hover, #post-cancel:focus, div.ctools-modal-content a.close:hover, div.ctools-modal-content a.close:focus, a.remove:hover, a.remove:focus, a.fake-cancel:hover, a.fake-cancel:focus {
-  -webkit-box-shadow: inset 0px 1px 0px 0px #006184;
-  -moz-box-shadow: inset 0px 1px 0px 0px #006184;
-  box-shadow: inset 0px 1px 0px 0px #006184;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  -moz-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  box-shadow: inset 0px 1px 0px 0px #22b3e3;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(30%, rgba(0, 0, 0, 0.075)), color-stop(100%, rgba(0, 0, 0, 0.1)));
   background-image: -webkit-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
@@ -10717,7 +10717,7 @@ a.tabledrag-handle .handle {
 /* line 3168, ../sass/custom.scss */
 #edit-submit--3 {
   color: white;
-  background: #2aa549;
+  /*background: #2aa549;*/
 }
 /* line 3173, ../sass/custom.scss */
 #edit-submit--3:hover, #edit-submit--3:focus {
