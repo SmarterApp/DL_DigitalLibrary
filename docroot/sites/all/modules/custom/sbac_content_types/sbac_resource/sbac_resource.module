@@ -3553,9 +3553,20 @@ function _sbac_resource_resubmit_timestamp($resource_nid) {
               FROM {workbench_moderation_node_history} h2
               WHERE h2.nid = :nid
                     AND h2.state = 'rejected'
+                    AND h2.current = 0
 	)", array(':nid' => $resource_nid))->fetchField();
     if (!$result) {
-      $result = 0;
+      $result = db_select('workbench_moderation_node_history', 'h')
+        ->condition('h.state', 'needs_review')
+        ->condition('h.nid', $resource_nid)
+        ->fields('h', array('stamp'))
+        ->range(0, 1)
+        ->orderBy('h.stamp', 'desc')
+        ->execute()
+        ->fetchField();
+      if(!$result){
+        $result = 0;
+      }
     }
     $timestamp[$resource_nid] = $result;
   }
