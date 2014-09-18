@@ -426,7 +426,6 @@ function sbac_sso_consume() {
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = base64_decode($_POST['SAMLResponse']);
-    // $saml_token = base64_decode(sbac_sso_get_saml_token2());
     $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
@@ -1066,8 +1065,8 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
-      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", htmlspecialchars_decode($tenancy_chain['district']))));
+      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", htmlspecialchars_decode($tenancy_chain['institution']))));
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1092,8 +1091,8 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
-      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", htmlspecialchars_decode($tenancy_chain['district']))));
+      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", htmlspecialchars_decode($tenancy_chain['institution']))));
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1181,10 +1180,10 @@ function sbac_sso_create_user_record($response, $multiple) {
       $edit['field_state']['und'][0]['tid'] = $term->tid;
     }
     if (isset($tenancy_chain['district'])) {
-      $edit['field_district_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
+      $edit['field_district_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", htmlspecialchars_decode($tenancy_chain['district']))));
     }
     if (isset($tenancy_chain['institution'])) {
-      $edit['field_school_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $edit['field_school_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", htmlspecialchars_decode($tenancy_chain['institution']))));
     }
   }
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
