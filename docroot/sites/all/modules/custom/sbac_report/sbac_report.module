@@ -62,7 +62,7 @@ function sbac_report_menu() {
     'title' => 'Autocomplete SNE Names',
     'file' => 'sbac_report.pages.inc',
     'page callback' => 'sbac_report_sne_autocomplete',
-    'access arguments' => array('access content'),
+    'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );
 
@@ -95,7 +95,7 @@ function sbac_report_menu() {
     'title' => 'GK Report',
     'file' => 'sbac_report.gk.inc',
     'page callback' => 'sbac_report_gk_report',
-    'access callback' => TRUE,
+    'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );
 
@@ -103,7 +103,7 @@ function sbac_report_menu() {
     'title' => 'RR Report',
     'file' => 'sbac_report.rr.inc',
     'page callback' => 'sbac_report_rr_report',
-    'access callback' => TRUE,
+    'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );
 
@@ -111,7 +111,7 @@ function sbac_report_menu() {
     'title' => 'PMR Report',
     'file' => 'sbac_report.pmr.inc',
     'page callback' => 'sbac_report_pmr_report',
-    'access callback' => TRUE,
+    'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );
 
@@ -119,7 +119,7 @@ function sbac_report_menu() {
     'title' => 'Missing Files Report',
     'file' => 'sbac_report.mf.inc',
     'page callback' => 'sbac_report_mf_report',
-    'access callback' => TRUE,
+    'access callback' => 'sbac_report_user_access',
     'type' => MENU_CALLBACK,
   );
 
