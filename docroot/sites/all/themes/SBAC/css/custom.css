@@ -11699,3 +11699,43 @@ form#sbac-user-filter-form #edit-email {
   margin-top: 20px;
   clear: left;
 }
+
+/* -----------------------------------------
+  Terms of Service page
+  ------------------------------------------ */
+/* line 4072, ../sass/custom.scss */
+#legal-login #cancel-button .button.secondary {
+  background-color: #0084b0;
+}
+/* line 4076, ../sass/custom.scss */
+#legal-login #cancel-button h3 {
+  font-size: 18px;
+  font-family: Arial,sans-serif;
+}
+/* line 4081, ../sass/custom.scss */
+#legal-login #cancel-button p {
+  font-size: 16px;
+}
+/* line 4083, ../sass/custom.scss */
+#legal-login #cancel-button h5 {
+  font-size: 16px;
+  font-family: Arial,sans-serif;
+}
+/* line 4088, ../sass/custom.scss */
+#legal-login #cancel-button #decision {
+  margin-top: 15px;
+  line-height: 34px;
+}
+/* line 4092, ../sass/custom.scss */
+#legal-login #cancel-button #decision a {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 5px;
+  line-height: 34px;
+  color: #fff;
+  font-weight: bold;
+}
+/* line 4101, ../sass/custom.scss */
+#legal-login #cancel-button #decision a.secondary {
+  margin-left: 10px;
+}
