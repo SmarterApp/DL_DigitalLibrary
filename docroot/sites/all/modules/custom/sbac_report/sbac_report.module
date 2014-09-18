@@ -170,12 +170,13 @@ function sbac_report_user_access_all($account = NULL) {
   }
 
   $allowed_roles = array(
-    3   => 'administrator',
-    8   => 'digital library administrator',
-    23  => 'system administrator',
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+    'DLRB member',
   );
 
-  return (bool) array_intersect(array_keys($account->roles), array_keys($allowed_roles));
+  return (bool) array_intersect($account->roles, $allowed_roles);
 }
 
 /**
@@ -193,6 +194,7 @@ function sbac_report_select_other_users($account) {
     'administrator',
     'digital library administrator',
     'system administrator',
+    'DLRB member',
   );
 
   return array_intersect($account->roles, $allowed_roles);
