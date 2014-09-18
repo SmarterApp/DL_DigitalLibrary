@@ -1316,20 +1316,22 @@ SQL;
 /**
  * Implements hook_cron().
  *
- * Scan the CSV directory and delete
- * any files older then one day.
+ * Load files found in these directories. If older then two days, delete them.
  */
 function sbac_report_cron() {
-  $directory = "private://resource_stats_csv/";
-  if ($handle = opendir($directory)) {
-    while (false !== ($file = readdir($handle))) {
-      if ($file != '.' && $file != '..' && file_exists($file)) {
-        $file_last_modified = filemtime($file);
-        if((time() - $file_last_modified) > 24*3600 && is_file($file)) { //24*3600 = 24 hours.
-          unlink($file);
-        }
+  $reports = array('resource_stats_csv', 'user_activity_stats_csv', 'forum_stats_csv');
+  foreach ($reports as $uri) {
+    $query = db_select('file_managed', 'f');
+    $query->fields('f');
+    $query->condition('f.uri', '%' . db_like($uri) . '%', 'LIKE');
+    $query->range(0, 10);
+    $result = $query->execute();
+    $two_days_ago = strtotime('-2 days');
+    foreach ($result as $file) {
+      if ($file->timestamp < $two_days_ago) {
+        $file_obj = file_load($file->fid);
+        file_delete($file_obj);
       }
     }
-    closedir($handle);
   }
 }
