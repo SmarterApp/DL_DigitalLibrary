@@ -422,6 +422,14 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
+  // If the user is already logged in, lets not try to log them in again.
+  if (user_is_logged_in()) {
+    // Remove any stored paths.
+    unset($_GET['q']);
+    unset($_GET['destination']);
+    drupal_goto('digital-library-resources');
+  }
+
   $is_valid = FALSE;
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {

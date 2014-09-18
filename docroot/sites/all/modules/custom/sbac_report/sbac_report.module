@@ -161,7 +161,10 @@ function sbac_report_user_access() {
 
 /**
  * User access callback for the tabs on the /report page.
- * @return [type] [description]
+ *
+ * @param $account
+ *
+ * @return bool
  */
 function sbac_report_user_access_all($account = NULL) {
   if (is_null($account)) {
