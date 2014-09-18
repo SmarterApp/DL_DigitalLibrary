@@ -3553,9 +3553,20 @@ function _sbac_resource_resubmit_timestamp($resource_nid) {
               FROM {workbench_moderation_node_history} h2
               WHERE h2.nid = :nid
                     AND h2.state = 'rejected'
+                    AND h2.current = 0
 	)", array(':nid' => $resource_nid))->fetchField();
     if (!$result) {
-      $result = 0;
+      $result = db_select('workbench_moderation_node_history', 'h')
+        ->condition('h.state', 'needs_review')
+        ->condition('h.nid', $resource_nid)
+        ->fields('h', array('stamp'))
+        ->range(0, 1)
+        ->orderBy('h.stamp', 'desc')
+        ->execute()
+        ->fetchField();
+      if(!$result){
+        $result = 0;
+      }
     }
     $timestamp[$resource_nid] = $result;
   }
@@ -3636,4 +3647,27 @@ function _sbac_resource_is_in_quality_review($node) {
   return $result[$node->nid];
 }
 
-
+/**
+ * Is the resource in the poster workflow
+ *
+ * A resource is in poster workflow if it has been rejected by the poster and resubmitted.
+ * It will go back to the poster again and skip all the reviewers.
+ *
+ * @param $nid
+ * @return bool
+ */
+function _sbac_resource_is_in_poster_workflow($nid) {
+  $in_workflow = FALSE;
+  $type = db_select('eck_feedback', 'f')
+    ->condition('f.completed', 1)
+    ->condition('f.node_id', $nid)
+    ->fields('f', array('type'))
+    ->range(0, 2)
+    ->orderBy('f.id', 'desc')
+    ->execute()
+    ->fetchCol();
+  if (!empty($type) && 'post' == $type[0] && 'post' == $type[1]) {
+    $in_workflow = TRUE;
+  }
+  return $in_workflow;
+}

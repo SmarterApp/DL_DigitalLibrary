@@ -14,21 +14,32 @@
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
-    case 'test':
-    case 'stage':
     case 'stage2':
     case 'stage3':
-    case 'loadtest':
     case 'sbac-023-d':
+      define('SBAC_SSO_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
+      define('SBAC_SSO_DESTROY_SESSION_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/UI/Logout');
+      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+      break;
+    case 'test':
+    case 'stage':
+    case 'loadtest':
     case 'sbac-023-train':
-      define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-      define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
-      define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
-      define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
-      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
+      define('SBAC_SSO_DESTROY_SESSION_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/UI/Logout');
+      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
       break;
     case 'prod':
       define('SBAC_SSO_URL', 'https://sso.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
       define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso.smarterbalanced.org/auth/UI/Logout');
@@ -37,11 +48,12 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   }
 }
 else {
-  define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-  define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
-  define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
-  define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
-  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+  define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+  define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
+  define('SBAC_SSO_DESTROY_SESSION_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/UI/Logout');
+  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
 }
 
 /**
@@ -80,7 +92,35 @@ function sbac_sso_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-sso-cron'] = array(
+    'title' => 'SBAC Cron',
+    'page callback' => 'sbac_sso_test_cron',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-sso/conflicting-profile'] = array(
+    'title' => 'Please confirm your profile information',
+    'page callback' => 'sbac_sso_conflicting_profile',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Implements hook_boot().
+ */
+function sbac_sso_boot() {
+  // If the conflicting profile variable is set, go to that page, since it
+  // gets cleared on submit of that form.
+  if (isset($_SESSION['sbac-sso']['conflicting_profile']) && $_SESSION['sbac-sso']['conflicting_profile'] == TRUE && arg(0) != 'sbac-sso' && arg(1) != 'conflicting-profile') {
+      global $base_url;
+      $path = $base_url . '/sbac-sso/conflicting-profile';
+      header('Location: ' . $path, TRUE, 302);
+      drupal_exit($path);
+  }
 }
 
 /**
@@ -89,7 +129,8 @@ function sbac_sso_menu() {
  * @param $items
  */
 function sbac_sso_menu_alter(&$items) {
-  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
+// If you wish to disable this module from overriding Drupal login / logout.
+//  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
     if (isset($items['user'])) {
       $items['user']['page callback'] = 'sbac_sso_consume';
       $items['user']['module'] = 'sbac_sso';
@@ -100,7 +141,7 @@ function sbac_sso_menu_alter(&$items) {
       $items['user/logout']['module'] = 'sbac_sso';
       $items['user/logout']['file'] = NULL;
     }
-  }
+//  }
 }
 
 /**
@@ -272,6 +313,14 @@ function sbac_sso_preprocess_page(&$vars) {
     sbac_sso_session_regenerate();
   }
 
+  // If the user is being presented with the conflicting profile screen
+  // remove the menu bar, user menu etc.
+  $vars['conflicting_profile'] = FALSE;
+  if (isset($_SESSION['sbac-sso']['conflicting_profile']) && $_SESSION['sbac-sso']['conflicting_profile'] == TRUE) {
+    $vars['conflicting_profile'] = TRUE;
+    $vars['home_url'] = '#';
+  }
+
   // If the page requested is a moderation page, do not include this timer. As there
   // is already a timer for the moderation functionality. Look at sbac_flag module.
   if (isset($_GET['flag']) && ($_GET['flag'] == 'resolve-resource-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
@@ -305,29 +354,50 @@ function sbac_sso_preprocess_page(&$vars) {
  * @return mixed
  */
 function sbac_sso_error() {
-  (!isset($_GET['code']) ? $code = 100 : $code = $_GET['code']);
-  $possible_titles = array(t('Access to the Digital Library is Denied'), t('Something went wrong. Please try again.'));
+  (!isset($_GET['code']) ? $code = NULL : $code = $_GET['code']);
+  $possible_titles = array(
+    t('Access to the Digital Library is Denied'),
+    t('We are unable to create your Digital Library profile.'),
+    t('There appears to be a problem.'),
+  );
+  $possible_error_codes = array(
+    100 => t("Error code 100"),
+    101 => t("Error code 101"),
+    102 => t("Error code 102"),
+    103 => t("Error code 103"),
+    104 => t("Error code 104"),
+    105 => t("Error code 105"),
+    200 => t("Error code 200"),
+  );
   $possible_messages = array(
-    100 => t('Error code 100'),
-    101 => t('Error code 101'),
-    102 => t('Error code 102'),
-    103 => t('Error code 103'),
-    104 => t('Error code 104'),
-    200 => t('Error code 200'),
+    t("You don't have permission to view this with your credentials. Please contact your local district administrator for assistance."),
+    t("There is missing or invalid information that is required to create your Digital Library profile. Please contact your local district administrator for assistance."),
+    t("Please contact your local district administrator for assistance."),
   );
 
   switch ($code) {
     case 102:
     case 200:
       $title = 0;
+      $message = 0;
+      break;
+    case 100:
+    case 101:
+    case 103:
+    case 104:
+    case 105:
+      $title = 1;
+      $message = 1;
       break;
     default:
-      $title = 1;
+      $title = 2;
+      $message = 2;
       break;
   }
 
   drupal_set_title($possible_titles[$title]);
-  $output = $possible_messages[$code];
+  $output = '<p>' .$possible_messages[$message]. '</p>';
+  $output .= '<span class="error-code">' . $possible_error_codes[$code] . '</span>';
   return $output;
 }
 
@@ -356,6 +426,7 @@ function sbac_sso_consume() {
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = base64_decode($_POST['SAMLResponse']);
+    // $saml_token = base64_decode(sbac_sso_get_saml_token2());
     $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
@@ -382,104 +453,11 @@ function sbac_sso_consume() {
 
   if ($is_valid) {
     // validate SAML.
-    $user = sbac_sso_validate_saml_response($saml_token);
-    if ($user) {
-      // If the user is marked as blocked.
-      if ($user->status == 0) {
-        // Kick the user to an error page with Smarter Balanced Contact information
-        // and a custom error code ( do not include the details pertaining to what
-        // the error code is connected to, just the ERROR CODE and NUMBER :
-        // ERROR CODE 200: Error updating user with user attributes that were passed.
-        drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
-      }
-
-      if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
-        global $base_url;
-        $relay_state = $_REQUEST['RelayState'];
-        $relay_state = str_replace($base_url, '', $relay_state);
-        $form_state['sbac_sso_relay'] = $relay_state;
-      }
-
-      // Log user in.
-      $form_state['uid'] = $user->uid;
-      $form_state['session_index'] = $user->session_index;
-      user_login_submit(array(), $form_state);
-    }
+    sbac_sso_validate_saml_response($saml_token);
   }
   else {
     drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
   }
-}
-
-/**
- * Implements hook_user_login().
- *
- * @param $edit
- * @param $account
- */
-function sbac_sso_user_login(&$edit, $account) {
-  if (isset($edit['session_index'])) {
-    $account->data['session_index'] = $edit['session_index'];
-  }
-}
-
-/**
- * Custom logout callback.
- */
-function sbac_sso_logout() {
-  if (user_is_logged_in()) {
-    global $base_url;
-    global $user;
-    $logout_assertion = sbac_sso_logout_assertion();
-    // Destroy the current session, and reset $user to the anonymous user.
-    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
-    module_invoke_all('user_logout', $user);
-    session_destroy();
-    $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url . '/user';
-    drupal_goto($logout_url);
-  }
-  else {
-    drupal_goto('user');
-  }
-}
-
-/**
- * Validates the SAML response.
- *
- * @param string $saml_token
- *   The SAML assertion.
- *
- * @return bool
- */
-function sbac_sso_validate_saml_response($saml_token) {
-  $response = sbac_sso_parse_saml_assertion($saml_token);
-  // If SAML assertion does not match expected definition or signature:
-  if (!$response || !isset($response['session_index'])) {
-    // If you do not find a matching tenancy chain, kick the user to an error page
-    // with Smarter Balanced Contact information and a custom error code
-    // ERROR CODE 100: Problem processing Assertion
-    drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
-  }
-  $user_attributes = sbac_sso_create_user_attributes($response);
-  // If SAML assertion does not match expected definition or signature:
-  if (!$user_attributes || !isset($user_attributes['name']) || $user_attributes['name'] == NULL || $user_attributes['name'] != 'DL_EndUser') {
-    // If you do not find a matching tenancy chain, kick the user to an error page
-    // with Smarter Balanced Contact information and a custom error code
-    // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
-    drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
-  }
-  // program manager api call.
-  $api_response = sbac_sso_program_management_api_request($user_attributes);
-  if (!$api_response) {
-    // Kick the user to an error page with Smarter Balanced Contact information
-    // and a custom error code ( do not include the details pertaining to what
-    // the error code is connected to, just the ERROR CODE and NUMBER :
-    // ERROR CODE 102: Program Management returned INVALID ACCESS
-    drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
-  }
-  $user = sbac_sso_determine_user($user_attributes, $response);
-  $user->session_index = $response['session_index'];
-  return $user;
 }
 
 /**
@@ -523,6 +501,100 @@ function sbac_sso_validate_saml_assertion($saml_token) {
   else {
     watchdog('sbac_sso', 'Key could not be verified.');
     return FALSE;
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * @param $edit
+ * @param $account
+ */
+function sbac_sso_user_login(&$edit, $account) {
+  if (isset($_SESSION['sbac-sso'])) {
+    $sbac_sso_vars = $_SESSION['sbac-sso'];
+    if (isset($sbac_sso_vars['multiple']) && $sbac_sso_vars['multiple'] == TRUE) {
+      // If the user does not have the hash field set and has multiple chains, present form
+      if (empty($account->field_sso_tenancy_hash)) {
+        $_SESSION['sbac-sso']['conflicting_profile'] = TRUE;
+        drupal_goto('sbac-sso/conflicting-profile');
+      }
+      // If the user has the hash field set but is different from stored value, present form
+      if ($account->field_sso_tenancy_hash['und'][0]['value'] != $sbac_sso_vars['hash']) {
+        $_SESSION['sbac-sso']['conflicting_profile'] = TRUE;
+        drupal_goto('sbac-sso/conflicting-profile');
+      }
+    }
+  }
+}
+
+/**
+ * Custom logout callback.
+ */
+function sbac_sso_logout() {
+  if (user_is_logged_in()) {
+    global $base_url;
+    global $user;
+    $logout_assertion = sbac_sso_logout_assertion();
+    // Destroy the current session, and reset $user to the anonymous user.
+    watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+    module_invoke_all('user_logout', $user);
+    session_destroy();
+    $logout_url = SBAC_SSO_LOGOUT_REDIRECT_URL . '?SAMLRequest=' . urlencode(base64_encode(gzdeflate(stripslashes($logout_assertion)))) . '&RelayState=' . $base_url . '/user';
+    drupal_goto($logout_url);
+  }
+  else {
+    drupal_goto('user');
+  }
+}
+
+/**
+ * Validates the SAML response.
+ *
+ * Parses the SAML response and grabs all the values. Then
+ * parses the tenancy chain and validates the tenants against
+ * the program management service.
+ *
+ * @param string $saml_token
+ *   The SAML assertion.
+ */
+function sbac_sso_validate_saml_response($saml_token) {
+  $response = sbac_sso_parse_saml_assertion($saml_token);
+  // If SAML assertion does not match expected definition or signature:
+  if (!$response || !isset($response['session_index'])) {
+    // If you do not find a matching tenancy chain, kick the user to an error page
+    // with Smarter Balanced Contact information and a custom error code
+    // ERROR CODE 100: Problem processing Assertion
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 100)));
+  }
+  // If there are no raw tenancy chains or if there are no tenancy chains with 'DL_EndUser' as the client
+  if (!isset($response['sbac_tenancy_chains_raw']) || !isset($response['sbac_tenancy_chains_unvalidated'])) {
+    // ERROR CODE 101: Assertion did not contain tenancy chain with DL_EndUser role
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 101)));
+  }
+  // program manager api call.
+  $api_response = sbac_sso_program_management_api_request($response);
+  if (!$api_response) {
+    // Kick the user to an error page with Smarter Balanced Contact information
+    // and a custom error code ( do not include the details pertaining to what
+    // the error code is connected to, just the ERROR CODE and NUMBER :
+    // ERROR CODE 102: Program Management returned INVALID ACCESS
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 102)));
+  }
+  // Determine if the user has multiple tenancy chains
+  $multiple = sbac_sso_determine_multiple_tenancy_chains($response);
+  // Determine if user is new or existing
+  $user = sbac_sso_determine_user($response, $multiple);
+  // If multiple tenancy chains and the tenancy chain hash does not match
+  // one on user proflie, display conflicting profile screen
+  // or if new user and multiple tenancy chains
+  $hash = sbac_sso_generate_tenancy_chain_hash($response);
+  if ($user) {
+    sbac_sso_log_user_in($user, $multiple, $response, $hash);
+  }
+  else {
+    // If all else failed, send them to the default error page.
+    drupal_goto('sbac-sso-error');
   }
 }
 
@@ -577,8 +649,8 @@ function sbac_sso_parse_saml_assertion($saml_token) {
       $attribute = '<saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'entry_uuid');
     }
-    if (strpos($row, '<saml:Attribute Name="email">') !== FALSE) {
-      $attribute = '<saml:Attribute Name="email"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+    if (strpos($row, '<saml:Attribute Name="mail">') !== FALSE) {
+      $attribute = '<saml:Attribute Name="mail"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'email');
     }
     if (strpos($row, '<saml:Attribute Name="cn">') !== FALSE) {
@@ -586,8 +658,8 @@ function sbac_sso_parse_saml_assertion($saml_token) {
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'cn');
     }
     if (strpos($row, '<saml:Attribute Name="sbacTenancyChain">') !== FALSE) {
-      $attribute = '<saml:Attribute Name="sbacTenancyChain"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
-      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'sbac_tenancy_chain', TRUE);
+      $attribute = '<saml:Attribute Name="sbacTenancyChain">';
+      sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:Attribute>', 'sbac_tenancy_chains_raw', TRUE);
     }
     if (strpos($row, '<saml:Attribute Name="givenName">') !== FALSE) {
       $attribute = '<saml:Attribute Name="givenName"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
@@ -615,57 +687,130 @@ function sbac_sso_parse_saml_assertion_row(&$response, &$row, $attribute_start, 
   $value = substr($half_value, 0, $last_pos);
   if ($value) {
     if ($tenancy_chain) {
-      $length = strlen($value);
-      if ($value[$length -1] == '|') {
-        $value = substr($value, 0, $length -1);
-      }
-      if ($value[0] == '|') {
-        $value = substr($value, 1);
+      $tenancy_chains = sbac_sso_parse_tenancy_chain($value, $attribute_start, $attribute_end);
+      if ($tenancy_chains) {
+        $response[$response_name] = $tenancy_chains;
+        // Create clean tenancy chains with only DL_EndUser client.
+        sbac_sso_create_clean_tenancy_chains($tenancy_chains, $response);
       }
     }
-    $response[$response_name] = $value;
-    $value = NULL;
+    else {
+      $response[$response_name] = $value;
+      $value = NULL;
+    }
   }
 }
 
+/**
+ * Parse the tenancy chain(s).
+ *
+ * @param $value
+ * @param $attribute_start
+ * @param $attribute_end
+ *
+ * @return array
+ */
+function sbac_sso_parse_tenancy_chain(&$value, &$attribute_start, &$attribute_end) {
+  $tenancy_chains = array();
+  $tenancy_length = strlen($value);
+  $attribute_value_start = '<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+  $attribute_value_end = '</saml:AttributeValue>';
+  while ($tenancy_length > 0) {
+    $pos = strpos($value, $attribute_value_start);
+    $half_value = substr($value, $pos + strlen($attribute_value_start));
+    $last_pos = strpos($half_value, $attribute_value_end);
+    $value = substr($half_value, 0, $last_pos);
+    $length = strlen($value);
+    // Remove the beginning and end '|' characters.
+    if ($value[$length -1] == '|') {
+      $value = substr($value, 0, $length -1);
+    }
+    if ($value[0] == '|') {
+      $value = substr($value, 1);
+    }
+    $tenancy_chains[] = $value;
+    // Remove the string we just stored.
+    $value = substr_replace($half_value, '', 0, $last_pos + strlen($attribute_value_end));
+    $tenancy_length = strlen($value);
+  }
+  return $tenancy_chains;
+}
+
+/**
+ * Determine if there are duplicate states in this chain.
+ *
+ * If duplicate states, merge them into a single value
+ * and keep the most complete array. Only keep tenancy
+ * chains with DL_EndUser as the client.
+ *
+ * @param $tenancy_chains
+ * @param $response
+ */
+function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
+  foreach ($tenancy_chains as $chain) {
+    $parsed_chain = sbac_sso_create_user_attributes($chain);
+    // Only keep tenancy chains with DL_EndUser and a state attribute.
+    if (isset($parsed_chain['name']) && $parsed_chain['name'] == 'DL_EndUser' && isset($parsed_chain['state_id']) && $parsed_chain['state_id'] != NULL) {
+      $response['sbac_tenancy_chains_unvalidated'][$parsed_chain['state_id']][] = $parsed_chain;
+    }
+  }
+
+  if ($response['sbac_tenancy_chains_unvalidated']) {
+    $keep_chain = array();
+    foreach ($response['sbac_tenancy_chains_unvalidated'] as $state_id => $unvalidated_tenancy_chains) {
+      foreach ($unvalidated_tenancy_chains as $key => $chain) {
+        // Keep the chain with the highest weight, if the same weight, just choose the first one.
+        // Meaning, if chain includes state/district/institution keep that one, if the
+        // chain includes state/district and state/institution, keep the first one since the
+        // weight (number of items) is the same.
+        if (count($chain) > count($keep_chain[$state_id]) || !isset($keep_chain[$state_id])) {
+          $keep_chain[$state_id] = $chain;
+        }
+      }
+    }
+    $response['sbac_tenancy_chains_unvalidated'] = $keep_chain;
+  }
+}
 
 /**
  * Create the user attributes array.
  *
- * @param $response
+ * @param $chain
  *
  * @return array
  */
-function sbac_sso_create_user_attributes($response) {
+function sbac_sso_create_user_attributes($chain) {
   $user_attributes = array();
-  if ($response && isset($response['sbac_tenancy_chain']) && $response['sbac_tenancy_chain']) {
-    $attributes = explode('|', $response['sbac_tenancy_chain']);
-    if ($attributes) {
-      $user_fields = array(
-        'role_id' => 'role_id',
-        'name' => 'name',
-        'level' => 'level',
-        'client_id' => 'client_id',
-        'client' => 'client',
-        'group_of_state_ids' => 'group_of_state_ids',
-        'group_of_states' => 'group_of_states',
-        'state_id' => 'state_id',
-        'state' => 'state',
-        'group_of_district_ids' => 'group_of_district_ids',
-        'group_of_districts' => 'group_of_districts',
-        'district_id' => 'district_id',
-        'district' => 'district',
-        'group_of_institution_ids' => 'group_of_institution_ids',
-        'group_of_institutions' => 'group_of_institutions',
-        'institution_id' => 'institution_id',
-        'institution' => 'institution',
-      );
+  $attributes = explode('|', $chain);
+  if ($attributes) {
+    $user_fields = array(
+      'role_id' => 'role_id',
+      'name' => 'name',
+      'level' => 'level',
+      'client_id' => 'client_id',
+      'client' => 'client',
+      'group_of_state_ids' => 'group_of_state_ids',
+      'group_of_states' => 'group_of_states',
+      'state_id' => 'state_id',
+      'state' => 'state',
+      'group_of_district_ids' => 'group_of_district_ids',
+      'group_of_districts' => 'group_of_districts',
+      'district_id' => 'district_id',
+      'district' => 'district',
+      'group_of_institution_ids' => 'group_of_institution_ids',
+      'group_of_institutions' => 'group_of_institutions',
+      'institution_id' => 'institution_id',
+      'institution' => 'institution',
+    );
 
-      if (count($user_fields) == count($attributes)) {
-        $user_attributes = array_combine($user_fields, $attributes);
+    if (count($user_fields) == count($attributes)) {
+      $user_attributes = array_combine($user_fields, $attributes);
+    }
+
+    foreach ($user_attributes as $key => $value) {
+      if ($value == '' || $value == NULL) {
+        unset($user_attributes[$key]);
       }
-      unset($user_fields);
-      unset($attributes);
     }
   }
   return $user_attributes;
@@ -674,104 +819,191 @@ function sbac_sso_create_user_attributes($response) {
 /**
  * Get the response from Program Management API.
  *
- * @param $user_attributes
+ * Before presenting tenancy chains, please cross check those that have the DL_EndUser role
+ * against the cached Program Management tenant list and ones that don’t match against the PM
+ * API endpoint so as not to present options that may be on file but don’t refer to currently
+ * valid tenants.
+ *
+ * @param $response
  *
  * @return array
  */
-function sbac_sso_program_management_api_request($user_attributes) {
-  $api_response = array();
-
-  // Check the cache table.
-  $cached_results = variable_get('sbac_sso_pm_cached_results');
-  if ($cached_results && isset($cached_results[$user_attributes['state_id']])) {
-    $json = $cached_results[$user_attributes['state_id']];
-    // If there is no expiration date, force another API call.
-    if (isset($json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'])) {
-      $expiration_date = $json['tenants'][0]['tenantSubscriptions'][0]['expirationDate'];
-      $expiration_date_epoch = strtotime($expiration_date);
-      if ($expiration_date_epoch < time()) {
-        // If its past the expiration date, delete this entry and
-        // force another API call.
-        unset($cached_results[$user_attributes['state_id']]);
-        variable_set('sbac_sso_pm_cached_results', $cached_results);
-      }
-      else {
-        // Verify structure with current cached result.
-        $api_response = sbac_sso_parse_program_api_result($json, FALSE);
-      }
-    }
-  }
-
-  if (empty($api_response)) {
-    //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
-    //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
-    //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
-    //  All of which are in the tenancy chains received in an SSO Assertion.
-    $query_string = '';
-    $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
-    foreach ($user_attributes as $index => $attribute) {
+function sbac_sso_program_management_api_request(&$response) {
+  //  https://pm-dev.opentestsystem.org:8443/programmanagement.rest/tenantchain?STATE_GROUP=SBAC&DISTRICT=Foo
+  //  As you can see in the above request, I’m sending it a STATE_GROUP and DISTRICT. A full tenancy chain will contain more than that so you’d send it:
+  //  "CLIENT", "STATE_GROUP", "STATE", "DISTRICT_GROUP", "DISTRICT", "INSTITUTION_GROUP", "INSTITUTION"
+  //  All of which are in the tenancy chains received in an SSO Assertion.
+  $query_string = '';
+  $valid_tenancy_chain_indexes = array('client', 'group_of_states', 'state_id', 'group_of_districts', 'district', 'group_of_institutions', 'institution');
+  foreach ($response['sbac_tenancy_chains_unvalidated'] as $state => $tenancy_chain) {
+    foreach ($tenancy_chain as $index => $attribute) {
       if (in_array($index, $valid_tenancy_chain_indexes) && $attribute) {
         switch ($index) {
           case 'group_of_states':
-            $query_string['STATE_GROUP'] = $attribute;
+            $query_string[$state]['STATE_GROUP'] = $attribute;
             break;
           case 'state_id':
-            $query_string['STATE'] = $attribute;
+            $query_string[$state]['STATE'] = $attribute;
             break;
           case 'group_of_districts':
-            $query_string['DISTRICT_GROUP'] = $attribute;
+            $query_string[$state]['DISTRICT_GROUP'] = $attribute;
             break;
           case 'district_id':
-            $query_string['DISTRICT'] = $attribute;
+            $query_string[$state]['DISTRICT'] = $attribute;
             break;
           case 'group_of_institutions':
-            $query_string['INSTITUTION_GROUP'] = $attribute;
+            $query_string[$state]['INSTITUTION_GROUP'] = $attribute;
             break;
           case 'institution_id':
-            $query_string['INSTITUTION'] = $attribute;
+            $query_string[$state]['INSTITUTION'] = $attribute;
             break;
+        }
+        $query_string[$state]['cache']['cache_valid'] = FALSE;
+        $query_string[$state]['cache']['cache_result'] = FALSE;
+      }
+    }
+  }
+
+  // Check the cache table.
+  $cached_results = variable_get('sbac_sso_pm_cached_results');
+  if ($cached_results) {
+    foreach ($query_string as $state => $query_params) {
+      foreach ($query_params as $type => $state_id) {
+        if ($type != 'cache') {
+          foreach ($cached_results[$type] as $cached_id => $cached_result) {
+            if ($cached_result['id'] == $cached_id) {
+              $json['tenants'][0] = $cached_result;
+              $in_good_standing = sbac_sso_parse_program_api_response($json, TRUE);
+              if ($in_good_standing) {
+                $query_string[$state]['cache']['cache_valid'] = TRUE;
+                $query_string[$state]['cache']['cache_result'] = $cached_result;
+              }
+              break;
+            }
+          }
         }
       }
     }
+  }
 
-    $data = http_build_query($query_string);
-    $post = SBAC_SSO_PROGRAM_API . '?' . $data;
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $post);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($curl, CURLOPT_SSLVERSION,3);
-    $result = curl_exec($curl);
-    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
+  $api_response = sbac_sso_get_program_management_response($response, $query_string);
+  return $api_response;
+}
 
-    if ($result && $http_status == 200) {
-      $api_response = sbac_sso_parse_program_api_result($result, TRUE);
+/**
+ * Get the program management response.
+ *
+ * @param $response
+ * @param $query_string
+ * @return array
+ */
+function sbac_sso_get_program_management_response(&$response, $query_string) {
+  $api_response = array();
+  // Get the OAuth token to make calls to Program Management.
+  $access_token = sbac_sso_get_program_management_oauth_access_token();
+  if ($access_token) {
+    // Loop around all state query string and get the PM results for each one.
+    foreach ($query_string as $state => $query) {
+      $cache = NULL;
+      if (isset($query['cache'])) {
+        $cache = $query['cache'];
+        unset($query['cache']);
+      }
+      if ($cache == NULL || $cache['cache_valid'] == FALSE) {
+        $data = http_build_query($query);
+        $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $post);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+          'Authorization: Bearer ' . $access_token,
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curl, CURLOPT_SSLVERSION,3);
+        $result = curl_exec($curl);
+        $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        if ($result && $http_status == 200) {
+          $json = drupal_json_decode($result);
+          if (isset($json['tenants'])) {
+            $response['pm_api_results'][$state]['tenants'] = $json['tenants'];
+          }
+        }
+      }
+      else {
+        $api_response[$state] = $cache['cache_result'];
+        $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+      }
     }
   }
+
+  if (isset($response['pm_api_results'])) {
+    foreach ($response['pm_api_results'] as $state => $json) {
+      $api_response[$state] = sbac_sso_parse_program_api_response($json);
+      $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+    }
+  }
+
   return $api_response;
+}
+
+/**
+ * Get the oauth access token.
+ *
+ * @return null
+ */
+function sbac_sso_get_program_management_oauth_access_token() {
+  // POST to https://drc-dev-secure.opentestsystem.org/auth/oauth2/access_token?realm=/sbac
+  // with Content-Type = application/x-www-form-urlenocded
+  // and the following params:
+  // grant_type=client_credentials
+  // username=sbac.amp@example.com
+  // password=amplify12345
+  // client_id=pm
+  // client_secret=sbac12345
+  $request_creds = array(
+    'grant_type' => 'client_credentials',
+    'username' => 'sbac.amp@example.com',
+    'password' => 'amplify12345',
+    'client_id' => 'pm',
+    'client_secret' => 'sbac12345'
+  );
+  $post = SBAC_SSO_PROGRAM_REQUEST_AUTH;
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $post);
+  curl_setopt($curl, CURLOPT_POST, 1);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($request_creds));
+  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($curl, CURLOPT_SSLVERSION, 3);
+  $result = curl_exec($curl);
+  $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  curl_close($curl);
+  unset($curl);
+
+  $access_token = NULL;
+  if ($http_status == 200 && $result) {
+    $json_response = drupal_json_decode($result);
+    $access_token = $json_response['access_token'];
+  }
+  return $access_token;
 }
 
 /**
  * Parses the Program Management API response.
  *
- * @param $result
- * @param $decode
+ * @param $json
+ * @param $cache
  *
  * @return array
  */
-function sbac_sso_parse_program_api_result($result, $decode = FALSE) {
+function sbac_sso_parse_program_api_response($json, $cache = FALSE) {
   $api_response = array();
-  if ($decode) {
-    $json = drupal_json_decode($result);
-  }
-  else {
-    $json = $result;
-  }
   $error = FALSE;
 
   if ($json) {
-    if (isset($json['searchInput']) === FALSE || isset($json['tenants']) === FALSE) {
+    if (isset($json['tenants']) === FALSE) {
       return $api_response;
     }
 
@@ -782,7 +1014,7 @@ function sbac_sso_parse_program_api_result($result, $decode = FALSE) {
         foreach ($tenant_subscriptions as $key => $subscription) {
           if (isset($subscription['component'])) {
             $component = $subscription['component'];
-            if (($component['name'] != 'Digital Library' && $component['name'] != 'DigitalLibrary' ) || $subscription['inGoodStanding'] != TRUE) {
+            if (($component['name'] == 'Digital Library' || $component['name'] == 'DigitalLibrary' ) && $subscription['inGoodStanding'] != TRUE) {
               $error = TRUE;
               break;
             }
@@ -793,10 +1025,12 @@ function sbac_sso_parse_program_api_result($result, $decode = FALSE) {
   }
 
   if (!$error) {
-    $api_response = $result;
-    if ($decode && isset($json['tenants'][0])) {
+    $api_response = $json;
+    if (!$cache && isset($json['tenants'][0])) {
       $cached_results = variable_get('sbac_sso_pm_cached_results');
-      $cached_results[$json['tenants'][0]['name']] = $json;
+      foreach ($json['tenants'] as $key => $result_set) {
+        $cached_results[$result_set['type']][$result_set['id']] = $result_set;
+      }
       variable_set('sbac_sso_pm_cached_results', $cached_results);
     }
   }
@@ -805,60 +1039,67 @@ function sbac_sso_parse_program_api_result($result, $decode = FALSE) {
 }
 
 /**
- * Determine which path to take for the user.
- *
- * @param $user_attributes
+ * Try to load the user.
  *
  * @param $response
+ * @param bool $multiple
  *
  * @return bool|mixed|stdClass
  */
-function sbac_sso_determine_user($user_attributes, $response) {
+function sbac_sso_determine_user($response, $multiple = FALSE) {
   if ($user = sbac_sso_load_user_by_uuid($response['entry_uuid'])) {
-    // First Name = givenName
-    // Last Name = sn
-    // Email = email
-    // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
-    // The format of the sbacTenancyChain is as follows:
-    // |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
-    // Preform a string split on this pile delimited string, and grab the
-    // value from the positions for State, District, Insitution and update those
-    // on the user record. If any are blank, update the DL User record accordingly.
-    // If some error occurs in the data updating a user: Kick the user to an error
-    // page with Smarter Balanced Contact information and a custom error code
-    // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
+    if (!$multiple) {
+      // First Name = givenName
+      // Last Name = sn
+      // Email = email
+      // Take the tenancy chain you found |232093420|DL_EndUser|INSTITUTION|Amplify|SmarterBalanced|||cat|NC|||229|Daybreak School District|||942|Daybreak Central High|
+      // The format of the sbacTenancyChain is as follows:
+      // |RoleID|Name|Level|ClientID|Client|GroupOfStatesID|GroupOfStates|StateID|State|GroupOfDistrictsID|GroupOfDistricts|DistrictID|District|GroupOfInstitutionsID|GroupOfInstitutions|InstitutionID|Institution|
+      // Preform a string split on this pile delimited string, and grab the
+      // value from the positions for State, District, Insitution and update those
+      // on the user record. If any are blank, update the DL User record accordingly.
+      // If some error occurs in the data updating a user: Kick the user to an error
+      // page with Smarter Balanced Contact information and a custom error code
+      // (do not include the details pertaining to what the error code is connected to, just the ERROR CODE and NUMBER)
+      $tenancy_chain = array_shift($response['sbac_tenancy_chains_validated']);
+      if ($valid = sbac_sso_validate_state_by_name($tenancy_chain['state'])) {
+        $term = current($valid);
+        $user->field_state['und'][0]['tid'] = $term->tid;
+      }
+      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
+      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+    }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
     $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-      $term = current($valid);
-      $user->field_state['und'][0]['tid'] = $term->tid;
-    }
-    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
+    $user->data['session_index'] = $response['session_index'];
     $user = user_save($user);
     if (!$user) {
       drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
     }
   }
   elseif ($user = user_load_by_mail($response['email'])) {
-    // Record entryuuid to record for specified email address
-    // Update all other fields passed in SAML assertion as described
-    // in the first clause above. If some error occurs in the data updating a
-    // user: Kick the user to an error page with Smarter Balanced Contact
-    // information and a custom error code ( do not include the details pertaining
-    // to what the error code is connected to, just the ERROR CODE and NUMBER :
-    // ERROR CODE 103: Error updating user with user attributes that were passed.
+    if (!$multiple) {
+      // Record entryuuid to record for specified email address
+      // Update all other fields passed in SAML assertion as described
+      // in the first clause above. If some error occurs in the data updating a
+      // user: Kick the user to an error page with Smarter Balanced Contact
+      // information and a custom error code ( do not include the details pertaining
+      // to what the error code is connected to, just the ERROR CODE and NUMBER :
+      // ERROR CODE 103: Error updating user with user attributes that were passed.
+      $tenancy_chain = array_shift($response['sbac_tenancy_chains_validated']);
+      if ($valid = sbac_sso_validate_state_by_name($tenancy_chain['state'])) {
+        $term = current($valid);
+        $user->field_state['und'][0]['tid'] = $term->tid;
+      }
+      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
+      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+    }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
     $user->mail = $response['email'];
-    if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-      $term = current($valid);
-      $user->field_state['und'][0]['tid'] = $term->tid;
-    }
-    $user->field_district_name['und'][0]['value'] = $user_attributes['district'];
-    $user->field_school_name['und'][0]['value'] = $user_attributes['institution'];
     $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
+    $user->data['session_index'] = $response['session_index'];
     $user = user_save($user);
     if (!$user) {
       drupal_goto('sbac-sso-error', array('query' => array('code' => 103)));
@@ -872,7 +1113,7 @@ function sbac_sso_determine_user($user_attributes, $response) {
     // Contact information and a custom error code ( do not include the details
     // pertaining to what the error code is connected to, just the ERROR CODE and NUMBER :
     // ERROR CODE 104: Error creating user with user attributes that were passed.
-    $user = sbac_sso_create_user_record($response, $user_attributes);
+    $user = sbac_sso_create_user_record($response, $multiple);
     if (!$user) {
       drupal_goto('sbac-sso-error', array('query' => array('code' => 104)));
     }
@@ -917,33 +1158,41 @@ function sbac_sso_validate_state_by_name($state_name) {
  *
  * @param array $response
  *   The response from SAML.
- * @param array $user_attributes
- *   The response from the tenancy chain.
+ * @param bool $multiple
+ *   Flag for if user has multiple tenancy chains
  *
  * @return bool|stdClass
  */
-function sbac_sso_create_user_record($response, $user_attributes) {
+function sbac_sso_create_user_record($response, $multiple) {
   $new_user = new stdClass();
   $new_user->uid = 0;
   $new_user->cache = 0;
-
   $edit['name'] = $response['email'];
   $edit['pass'] = user_password(10);
   $edit['mail'] = $response['email'];
   $edit['init'] = $response['email'];
   $edit['timezone'] = date_default_timezone(TRUE);
   $edit['status'] = 1;
+  if (!$multiple) {
+    $tenancy_chain = array_shift($response['sbac_tenancy_chains_validated']);
+    // Only create these fields if there is a single tenancy chain.
+    if ($valid = sbac_sso_validate_state_by_name($tenancy_chain['state'])) {
+      $term = current($valid);
+      $edit['field_state']['und'][0]['tid'] = $term->tid;
+    }
+    if (isset($tenancy_chain['district'])) {
+      $edit['field_district_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
+    }
+    if (isset($tenancy_chain['institution'])) {
+      $edit['field_school_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+    }
+  }
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
   $edit['field_last_name']['und'][0]['value'] = $response['sn'];
-  if ($valid = sbac_sso_validate_state_by_name($user_attributes['state'])) {
-    $term = current($valid);
-    $edit['field_state']['und'][0]['tid'] = $term->tid;
-  }
   $role_id = user_role_load_by_name('basic end user');
   $edit['roles'] = array(DRUPAL_AUTHENTICATED_RID => 'Authenticated User', $role_id->rid => $role_id->name);
-  $edit['field_district']['und'][0]['value'] = $user_attributes['district'];
-  $edit['field_institution']['und'][0]['value'] = $user_attributes['institution'];
   $edit['field_sso_uuid']['und'][0]['value'] = $response['entry_uuid'];
+  $edit['data']['session_index'] = $response['session_index'];
   return user_save($new_user, $edit);
 }
 
@@ -965,6 +1214,59 @@ function sbac_sso_load_user_by_uuid($uuid) {
     $user = user_load($result->uid);
   }
   return $user;
+}
+
+/**
+ * Generate the tenancy chain hash.
+ *
+ * @param $response
+ *
+ * @return string
+ */
+function sbac_sso_generate_tenancy_chain_hash($response) {
+  $hash_array = array();
+  foreach ($response['sbac_tenancy_chains_validated'] as $state => $chain) {
+    $hash_array[] = implode(',', $chain);
+  }
+  $hash = implode(',', $hash_array);
+  $md5_hash = md5($hash);
+  return $md5_hash;
+}
+
+/**
+ *
+ *
+ * @param $user
+ * @param $multiple
+ * @param $response
+ * @param $hash
+ */
+function sbac_sso_log_user_in($user, $multiple, $response, $hash) {
+  // If the user is marked as blocked.
+  if ($user->status == 0) {
+    // Kick the user to an error page with Smarter Balanced Contact information
+    // and a custom error code ( do not include the details pertaining to what
+    // the error code is connected to, just the ERROR CODE and NUMBER :
+    // ERROR CODE 200: Error updating user with user attributes that were passed.
+    drupal_goto('sbac-sso-error', array('query' => array('code' => 200)));
+  }
+
+  if (isset($_REQUEST['RelayState']) && $_REQUEST['RelayState'] != NULL) {
+    global $base_url;
+    $relay_state = $_REQUEST['RelayState'];
+    $relay_state = str_replace($base_url, '', $relay_state);
+    if ($relay_state) {
+      $_SESSION['sbac-sso']['relay'] = $relay_state;
+    }
+  }
+
+  // Log user in.
+  $form_state['uid'] = $user->uid;
+  $_SESSION['uid'] = $user->uid;
+  $_SESSION['sbac-sso']['multiple'] = $multiple;
+  $_SESSION['sbac-sso']['response'] = $response;
+  $_SESSION['sbac-sso']['hash'] = $hash;
+  user_login_submit(array(), $form_state);
 }
 
 /**
@@ -1002,127 +1304,6 @@ function sbac_sso_logout_assertion() {
   return $logout_assertion;
 }
 
-
-function sbac_sso_get_saml_token2() {
-  $stuff = 'PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6
-cHJvdG9jb2wiIElEPSJzMmFiYzAxYzFkYWU5ZmIxNTY4MDBkM2QzNmU3YzNiNjgyZmE1NWM5NjQi
-IEluUmVzcG9uc2VUbz0iX2tYZ1BrSmk0Z2U1Mzg3OTE5MDAwYTYwMy44OTk0ODA1MSIgVmVyc2lv
-bj0iMi4wIiBJc3N1ZUluc3RhbnQ9IjIwMTQtMDUtMjlUMTk6NTk6MTZaIiBEZXN0aW5hdGlvbj0i
-aHR0cHM6Ly9kZXYuc21hcnRlcmJhbGFuY2VkbGlicmFyeS5vcmcvc2JhYy1zc28tY29uc3VtZSI+
-PHNhbWw6SXNzdWVyIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3Nl
-cnRpb24iPmh0dHBzOi8vc3NvLXVhdC5zbWFydGVyYmFsYW5jZWQub3JnOjQ0My9hdXRoPC9zYW1s
-Oklzc3Vlcj48c2FtbHA6U3RhdHVzIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FN
-TDoyLjA6cHJvdG9jb2wiPgo8c2FtbHA6U3RhdHVzQ29kZSAgeG1sbnM6c2FtbHA9InVybjpvYXNp
-czpuYW1lczp0YzpTQU1MOjIuMDpwcm90b2NvbCIKVmFsdWU9InVybjpvYXNpczpuYW1lczp0YzpT
-QU1MOjIuMDpzdGF0dXM6U3VjY2VzcyI+Cjwvc2FtbHA6U3RhdHVzQ29kZT4KPC9zYW1scDpTdGF0
-dXM+PHNhbWw6QXNzZXJ0aW9uIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIu
-MDphc3NlcnRpb24iIElEPSJzMjU5NjRmZmM4ZjE0YWE0Y2U2YjkyZGMzYzk5YjE0ZjRkNTUxYzI5
-OGUiIElzc3VlSW5zdGFudD0iMjAxNC0wNS0yOVQxOTo1OToxNloiIFZlcnNpb249IjIuMCI+Cjxz
-YW1sOklzc3Vlcj5odHRwczovL3Nzby11YXQuc21hcnRlcmJhbGFuY2VkLm9yZzo0NDMvYXV0aDwv
-c2FtbDpJc3N1ZXI+PGRzOlNpZ25hdHVyZSB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAw
-MC8wOS94bWxkc2lnIyI+CjxkczpTaWduZWRJbmZvIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9y
-Zy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOkNhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGht
-PSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiIHhtbG5zOmRzPSJodHRw
-Oi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIi8+CjxkczpTaWduYXR1cmVNZXRob2QgQWxn
-b3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjcnNhLXNoYTEiIHhtbG5z
-OmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIi8+CjxkczpSZWZlcmVuY2Ug
-VVJJPSIjczI1OTY0ZmZjOGYxNGFhNGNlNmI5MmRjM2M5OWIxNGY0ZDU1MWMyOThlIiB4bWxuczpk
-cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+CjxkczpUcmFuc2Zvcm1zIHht
-bG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOlRyYW5zZm9y
-bSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNlbnZlbG9wZWQt
-c2lnbmF0dXJlIiB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyIv
-Pgo8ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwt
-ZXhjLWMxNG4jIiB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyIv
-Pgo8L2RzOlRyYW5zZm9ybXM+CjxkczpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3
-LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjc2hhMSIgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3Jn
-LzIwMDAvMDkveG1sZHNpZyMiLz4KPGRzOkRpZ2VzdFZhbHVlIHhtbG5zOmRzPSJodHRwOi8vd3d3
-LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4ycWNpbys5cnpzZHJSaTZEQkdjWEVKTEJOdFk9PC9k
-czpEaWdlc3RWYWx1ZT4KPC9kczpSZWZlcmVuY2U+CjwvZHM6U2lnbmVkSW5mbz4KPGRzOlNpZ25h
-dHVyZVZhbHVlIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4K
-V1BmT016akxxMkJKVDV6enI4cmRYd3RSc0hTTHIyT3NXMEFkZXJLTWI5aWozTEpnd2F0TWY4UlRm
-WFZ1YXdHS2ltbCttWFBKYzFmTQpOcjlUV2ZJNXVCN1J2YysyWmZHRk5wUmNDaVdDemRySTdncE4z
-Q1M3OFNIakt3b0RQbkFlaVZKSnEzZkJNalBITjJLWVZkeWpNOW1JCnlxaUhxc1dIc3F3YlVPdGlZ
-TEZ5NFkzQzZCQW8rR29teUZ0NWNES2dBK2ZqcFdtc0hxMGI1MU16aHloVFJMOUVsdFBEVHhWcVZS
-N0IKSWZuZkEwcUUrb0VNNS9vSGFuRjJ5NEM1dTk5dXF3YWhnZkhTVWg2L1dxL05uSVdQTFpOTFlP
-S3FBYXdhMlJQL1cxWm4xQm5GcFhtcwpVejZjcHQ2b0VhNmphUktUa0hjUFNZTlpobkd4ZTg0cWt3
-Rm4ydz09CjwvZHM6U2lnbmF0dXJlVmFsdWU+CjxkczpLZXlJbmZvIHhtbG5zOmRzPSJodHRwOi8v
-d3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOlg1MDlEYXRhIHhtbG5zOmRzPSJodHRw
-Oi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4KPGRzOlg1MDlDZXJ0aWZpY2F0ZSB4bWxu
-czpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+Ck1JSURoekNDQW04Q0JG
-T0Y5WkV3RFFZSktvWklodmNOQVFFRUJRQXdnWWN4Q3pBSkJnTlZCQVlUQWxWVE1SQXdEZ1lEVlFR
-SURBZEcKYkc5eWFXUmhNUll3RkFZRFZRUUhEQTFYWlhOc1pYa2dRMmhoY0dWc01SNHdIQVlEVlFR
-S0RCVkpaR1Z1ZEdsMGVTQkdkWE5wYjI0cwpJRWx1WXk0eEVUQVBCZ05WQkFzTUNGTmxZM1Z5YVhS
-NU1Sc3dHUVlEVlFRRERCSmhiWEJzYVdaNVUybG5ibWx1WjBObGNuUXdIaGNOCk1UUXdOVEk0TVRR
-ME1USXhXaGNOTWpRd05USTFNVFEwTVRJeFdqQ0JoekVMTUFrR0ExVUVCaE1DVlZNeEVEQU9CZ05W
-QkFnTUIwWnMKYjNKcFpHRXhGakFVQmdOVkJBY01EVmRsYzJ4bGVTQkRhR0Z3Wld3eEhqQWNCZ05W
-QkFvTUZVbGtaVzUwYVhSNUlFWjFjMmx2Yml3ZwpTVzVqTGpFUk1BOEdBMVVFQ3d3SVUyVmpkWEpw
-ZEhreEd6QVpCZ05WQkFNTUVtRnRjR3hwWm5sVGFXZHVhVzVuUTJWeWREQ0NBU0l3CkRRWUpLb1pJ
-aHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFJZ1I0akRJeXpjaEEwdUVlaTUzdTF0Vi9CQUdj
-bnJQNUF2eWYvSGMKZ0RZeHFCU1pFbnZ2OXNpR2M1VzQ4cHpCZ1Z3SUgrMnVPVGhDaW1NM3R5bllU
-a0FVYmVYMHk4VVhiR1A1cWZiMGhQYzNTK0J1d3d5QQplSklLY3AzS29tb1d3ZzFPcDFMdEdZUkxt
-U1ZmRDBMUGsrUUhhTEpNRDVGU2h6aWc4d2pybUFLK3NjY3NKVitYTmcxajdzYmVYYy96ClZ6ZUZR
-L09FcE1WZ2NQUG9vQUwrK3Fzd0x5VGxob1RWZjNjUVJwZzM5NURpVVpxd3pKdnQrQXdHdVdDbThp
-a0FsQ2srMy9hVkh1VUQKZEo4NWZpbmhjU2FoQWNrZ1N6TUpWUXpVUDNHMEtSNzFMK0F4bnJaVENR
-QWxqRVlRcE9jZFpGNVpLT21SQWpyUFlZT2xhbDRieHZFQwpBd0VBQVRBTkJna3Foa2lHOXcwQkFR
-UUZBQU9DQVFFQVZSeDNWS3BTeFVPTEVrakt5dFhTWFVIdFpNUkFOMUs1OUwxNWZmOUh3UnFyCmhx
-TFVwOXh5WDZ6cWg5UTFUL0RoeVpuUTl2NVNlbTZXSnp3UC91ZzNsWVNjVlNvTmdsSmRmaEJTVjBO
-TjNwWjZWOTZSYi9NN1BtVXcKREFFNzZ0d1dMME5rSHg4TzhKeXErMWlibDVzRFdHKzExTTdvYnFh
-SHpWdm9kRUZvYkVDUTFERVFMVUY4TkVmZjA0dUppQm5kbjZBTApBci84c25UTlp6WER6MU94UmYx
-THc5dDZFQWRWSXc4L0RlOFkvSzhHNkszZHNIbHlFU3ZSWGp3NTJQRGhSaGFWbzdhTGV1dWJRTXNR
-CncyQy9lSTY2Q1BROVhaTDB0R0cyWUFoOEttSTRna0NHcWVoM2wxVExyRVFvYWNCaGVJRm9RZzJ3
-RGlNRmJwNDlEbE53MVE9PQo8L2RzOlg1MDlDZXJ0aWZpY2F0ZT4KPC9kczpYNTA5RGF0YT4KPC9k
-czpLZXlJbmZvPgo8L2RzOlNpZ25hdHVyZT48c2FtbDpTdWJqZWN0Pgo8c2FtbDpOYW1lSUQgRm9y
-bWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6bmFtZWlkLWZvcm1hdDp0cmFuc2llbnQi
-IE5hbWVRdWFsaWZpZXI9Imh0dHBzOi8vc3NvLXVhdC5zbWFydGVyYmFsYW5jZWQub3JnOjQ0My9h
-dXRoIj41R1pDN2dldTIwY1lxWXFPNTFNY2NJSndhMEF3PC9zYW1sOk5hbWVJRD48c2FtbDpTdWJq
-ZWN0Q29uZmlybWF0aW9uIE1ldGhvZD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmNtOmJl
-YXJlciI+CjxzYW1sOlN1YmplY3RDb25maXJtYXRpb25EYXRhIEluUmVzcG9uc2VUbz0iX2tYZ1Br
-Smk0Z2U1Mzg3OTE5MDAwYTYwMy44OTk0ODA1MSIgTm90T25PckFmdGVyPSIyMDE0LTA1LTI5VDIw
-OjA5OjE2WiIgUmVjaXBpZW50PSJodHRwczovL2Rldi5zbWFydGVyYmFsYW5jZWRsaWJyYXJ5Lm9y
-Zy9zYmFjLXNzby1jb25zdW1lIi8+PC9zYW1sOlN1YmplY3RDb25maXJtYXRpb24+Cjwvc2FtbDpT
-dWJqZWN0PjxzYW1sOkNvbmRpdGlvbnMgTm90QmVmb3JlPSIyMDE0LTA1LTI5VDE5OjQ5OjE2WiIg
-Tm90T25PckFmdGVyPSIyMDE0LTA1LTI5VDIwOjA5OjE2WiI+CjxzYW1sOkF1ZGllbmNlUmVzdHJp
-Y3Rpb24+CjxzYW1sOkF1ZGllbmNlPmh0dHBzOi8vZGV2LnNtYXJ0ZXJiYWxhbmNlZGxpYnJhcnku
-b3JnPC9zYW1sOkF1ZGllbmNlPgo8L3NhbWw6QXVkaWVuY2VSZXN0cmljdGlvbj4KPC9zYW1sOkNv
-bmRpdGlvbnM+CjxzYW1sOkF1dGhuU3RhdGVtZW50IEF1dGhuSW5zdGFudD0iMjAxNC0wNS0yOVQx
-OTo1OToxNloiIFNlc3Npb25JbmRleD0iczI4NmExYmFjNzc3NDExMjdlZTBmM2ZhMzNjYzJmOWQ5
-YTA5YjQ5NTAxIj48c2FtbDpBdXRobkNvbnRleHQ+PHNhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY+
-dXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFjOmNsYXNzZXM6UGFzc3dvcmRQcm90ZWN0ZWRU
-cmFuc3BvcnQ8L3NhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY+PC9zYW1sOkF1dGhuQ29udGV4dD48
-L3NhbWw6QXV0aG5TdGF0ZW1lbnQ+PHNhbWw6QXR0cmlidXRlU3RhdGVtZW50PjxzYW1sOkF0dHJp
-YnV0ZSBOYW1lPSJzYmFjVVVJRCI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6
-Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3Jn
-LzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5zbWFydGVyYmFs
-YW5jZWRsaWJyYXJ5QGFtcGxpZnkuY29tPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRy
-aWJ1dGU+PHNhbWw6QXR0cmlidXRlIE5hbWU9InNuIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4bWxu
-czp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDov
-L3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhzaTp0eXBlPSJ4czpzdHJpbmci
-PkFkbWluMTwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJp
-YnV0ZSBOYW1lPSJlbWFpbCI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93
-d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIw
-MDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5zbWFydGVyYmFsYW5j
-ZWRsaWJyYXJ5QGFtcGxpZnkuY29tPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1
-dGU+PHNhbWw6QXR0cmlidXRlIE5hbWU9ImVudHJ5dXVpZCI+PHNhbWw6QXR0cmlidXRlVmFsdWUg
-eG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0
-dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3Ry
-aW5nIj43MzRkYjE5Yy02MTczLTQ1YzUtODU0ZS01M2RkZjQxNzhiOTc8L3NhbWw6QXR0cmlidXRl
-VmFsdWU+PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0iY24iPjxzYW1sOkF0
-dHJpYnV0ZVZhbHVlIHhtbG5zOnhzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYSIg
-eG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNp
-OnR5cGU9InhzOnN0cmluZyI+Q29uc29ydGl1bSBBZG1pbjE8L3NhbWw6QXR0cmlidXRlVmFsdWU+
-PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0ic2JhY1RlbmFuY3lDaGFpbiI+
-PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1M
-U2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3Rh
-bmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj58fERMX0VuZFVzZXJ8fHx8fHxUU3xUZXN0IFN0YXRl
-fHx8fHx8fHx8PC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1dGU+PHNhbWw6QXR0
-cmlidXRlIE5hbWU9ImdpdmVuTmFtZSI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeG1sbnM6eHM9Imh0
-dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMu
-b3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4c2k6dHlwZT0ieHM6c3RyaW5nIj5Db25zb3J0
-aXVtPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1dGU+PC9zYW1sOkF0dHJpYnV0
-ZVN0YXRlbWVudD48L3NhbWw6QXNzZXJ0aW9uPjwvc2FtbHA6UmVzcG9uc2U+';
-  return $stuff;
-}
-
 /**
  * Implements hook_cron().
  *
@@ -1131,25 +1312,162 @@ ZVN0YXRlbWVudD48L3NhbWw6QXNzZXJ0aW9uPjwvc2FtbHA6UmVzcG9uc2U+';
  * user login attempt.
  */
 function sbac_sso_cron() {
-  $post = SBAC_SSO_PROGRAM_API_LIST;
-  $curl = curl_init();
-  curl_setopt($curl, CURLOPT_URL, $post);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-  curl_setopt($curl, CURLOPT_SSLVERSION,3);
-  $result = curl_exec($curl);
-  $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-  curl_close($curl);
-
-  if ($result && $http_status == 200) {
-    $json_responses = drupal_json_decode($result);
-    $cached_results = variable_get('sbac_sso_pm_cached_results');
-    foreach ($json_responses as $json) {
-      $new_format = array();
-      $new_format['searchInput']['typeAndValues']['STATE'] = $json['name'];
-      $new_format['tenants'][] = $json;
-      $cached_results[$json['name']] = $new_format;
+  $access_token = sbac_sso_get_program_management_oauth_access_token();
+  if ($access_token) {
+    $post = SBAC_SSO_PROGRAM_OAUTH_API_LIST;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $post);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'Authorization: Bearer ' . $access_token,
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($curl, CURLOPT_SSLVERSION,3);
+    $result = curl_exec($curl);
+    $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+    if ($result && $http_status == 200) {
+      $json_responses = drupal_json_decode($result);
+      $cached_results = variable_get('sbac_sso_pm_cached_results');
+      foreach ($json_responses as $json) {
+        $cached_results[$json['type']][$json['id']] = $json;
+      }
+      variable_set('sbac_sso_pm_cached_results', $cached_results);
     }
-    variable_set('sbac_sso_pm_cached_results', $cached_results);
+  }
+}
+
+/**
+ * Determines if the user has multiple tenancy chains or not.
+ *
+ * @param $response
+ *
+ * @return bool
+ */
+function sbac_sso_determine_multiple_tenancy_chains($response) {
+  $multiple = FALSE;
+  if (count($response['sbac_tenancy_chains_validated']) > 1) {
+    $multiple = TRUE;
+  }
+  return $multiple;
+}
+
+/**
+ * Displays the conflicting profile page / form.
+ */
+function sbac_sso_conflicting_profile() {
+  $form = drupal_get_form('sbac_sso_conflicting_profile_form');
+  return $form;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_sso_conflicting_profile_form($form, &$form_state) {
+  $form = array();
+
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_sso') . '/js/sbac_sso.conflicting_profile.js',
+  );
+
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'sbac_sso') . '/css/sbac_sso.conflicting_profile.css',
+  );
+
+  $form['information'] = array(
+    '#prefix' => '<div class="sbac-conflict-wrapper">',
+    '#markup' => t('Your account is associated to multiple states. Please choose the profile below that accurately reflects your information for the Digital Library.'),
+  );
+
+  $choices = array();
+  $tenancy_chains = $_SESSION['sbac-sso']['response']['sbac_tenancy_chains_validated'];
+  foreach ($tenancy_chains as $state => $chain) {
+    $text = '<strong>State:</strong>' . strtoupper($state);
+    if ($chain['district'] != NULL) {
+      $text .= ', <strong>District:</strong>' . ucwords(strtolower($chain['district']));
+    }
+    if ($chain['institution'] != NULL) {
+      $text .= ', <strong>Institution:</strong>' .  ucwords(strtolower($chain['institution']));
+    }
+    $choices[$state] = $text;
+  }
+
+  $form['choices'] = array(
+    '#type' => 'radios',
+    '#options' => $choices,
+    '#attributes' => array('class' => array('sbac-sso-conflict-choice')),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'OK',
+    '#attributes' => array('class' => array('sbac-sso-conflict-submit')),
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_submit().
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_sso_conflicting_profile_form_submit($form, &$form_state) {
+  global $user;
+  $account = user_load($user->uid);
+  // on submit, update user profile and direct to next step in workflow.
+  $tenancy_chains = $_SESSION['sbac-sso']['response']['sbac_tenancy_chains_validated'];
+  foreach ($tenancy_chains as $state => $chain) {
+    if (strtoupper($state) == $form_state['values']['choices']) {
+      if ($valid = sbac_sso_validate_state_by_name($chain['state'])) {
+        $term = current($valid);
+        $account->field_state['und'][0]['tid'] = $term->tid;
+      }
+      // Update the district.
+      if (isset($chain['district']) && $chain['district'] != NULL) {
+        $account->field_district_name['und'][0]['value'] = ucwords(strtolower($chain['district']));
+      }
+      else {
+        $account->field_district_name['und'][0]['value'] = NULL;
+      }
+      // Update the institution.
+      if (isset($chain['institution']) && $chain['institution'] != NULL) {
+        $account->field_school_name['und'][0]['value'] = ucwords(strtolower($chain['institution']));
+      }
+      else {
+        $account->field_school_name['und'][0]['value'] = NULL;
+      }
+      $account->field_sso_tenancy_hash['und'][0]['value'] = $_SESSION['sbac-sso']['hash'];
+      break;
+    }
+  }
+  // Determine if they need to go to user-setup page.
+  $user_setup = FALSE;
+  if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+    $user_setup = TRUE;
+  }
+  if (!$user_setup) {
+    // If they are not going to user-setup, then update login information.
+    sbac_user_update_data($account, $edit);
+  }
+  // Save the updates.
+  user_save($account);
+  // Remove the SESSION variables.
+  unset($_SESSION['sbac-sso']['multiple']);
+  unset($_SESSION['sbac-sso']['response']);
+  unset($_SESSION['sbac-sso']['hash']);
+  unset($_SESSION['sbac-sso']['conflicting_profile']);
+  // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
+  if ($user_setup) {
+    drupal_goto('sbac-user/setup');
+  }
+  else {
+    sbac_user_redirect_on_login();
   }
 }

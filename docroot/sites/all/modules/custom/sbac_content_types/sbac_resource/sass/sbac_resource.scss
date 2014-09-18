@@ -2354,6 +2354,24 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 			float: left;
 		}
 	}
+	
+	
+	.feedback-review {
+		
+		.headline {
+			height: 58px;
+			display: table-cell;
+			vertical-align: top;
+			border-bottom: none !important;
+			margin-bottom: 0;
+		}
+		
+		.comments-content {
+			padding-top: 10px;
+			padding-bottom: 15px;
+			border-top: 1px #CECECE solid;
+		}
+	}
 
 	/*Return Revisions*/
 	.feedback-review,
@@ -2402,6 +2420,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 			line-height: 1.4;
 		}
 	}
+	
 
 	.feedback-review + .feedback-review,
 	.col.form-wrapper + .col.form-wrapper {

@@ -11290,7 +11290,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form select {
   box-shadow: none;
   color: #FFFFFF;
   margin: 0;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
   margin: 0 0 0 25px;
   padding: 0 18px;
@@ -11672,4 +11672,30 @@ button.radius, .button.radius {
 /* line 4036, ../sass/custom.scss */
 form#sbac-user-filter-form #edit-email {
   clear: both;
+}
+
+/* -----------------------------------------
+  SSO error messages
+  ------------------------------------------ */
+/* line 4044, ../sass/custom.scss */
+.page-sbac-sso-error #main.columns {
+  float: none;
+  padding-bottom: 20px;
+}
+/* line 4049, ../sass/custom.scss */
+.page-sbac-sso-error #main.large-9 {
+  margin: 0 auto;
+}
+/* line 4052, ../sass/custom.scss */
+.page-sbac-sso-error #main.large-9 p {
+  font-size: 1rem;
+}
+/* line 4057, ../sass/custom.scss */
+.page-sbac-sso-error #main.push-3 {
+  left: auto;
+}
+/* line 4061, ../sass/custom.scss */
+.page-sbac-sso-error .error-code {
+  margin-top: 20px;
+  clear: left;
 }

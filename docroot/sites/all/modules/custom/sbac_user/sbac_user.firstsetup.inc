@@ -682,6 +682,8 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     $updates['field_special_populations']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['student_population_options']);
     $updates['field_introduction']['und'][0]['value'] = $_SESSION['user_setup']['about_me'];
 
+    // Update user information.
+    sbac_user_update_data($account);
     $account = user_save($account, $updates);
     if ($account !== FALSE) {
       if (isset($_SESSION['user_setup']['temp_profile_image'])) {
@@ -689,7 +691,7 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
       }
       $_SESSION['welcome-update'] = TRUE;
       unset($_SESSION['user_setup']);
-      drupal_goto('');
+      sbac_user_redirect_on_login();
     }
   }
 }

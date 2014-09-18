@@ -3647,7 +3647,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		box-shadow: none;
 		color: #FFFFFF;
 		margin: 0;
-		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 		margin: 0 0 0 25px;
 		padding: 0 18px;
@@ -4035,4 +4035,31 @@ button.radius, .button.radius {
 // Admin fix input email
 form#sbac-user-filter-form #edit-email {
   clear: both;
+}
+
+/* -----------------------------------------
+  SSO error messages
+  ------------------------------------------ */
+.page-sbac-sso-error {
+	#main.columns {
+		float: none;
+		padding-bottom: 20px;
+	}
+	
+	#main.large-9 {
+		margin: 0 auto;
+		
+		p {
+			font-size: 1rem;
+		}
+	}
+	
+	#main.push-3 {
+		left: auto;
+	}
+	
+	.error-code {
+		margin-top: 20px;
+		clear: left;
+	}
 }

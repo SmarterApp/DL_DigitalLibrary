@@ -81,7 +81,7 @@ $items = array(
       'behavior' => 'textfield',
     ),
     'transcript' => array(
-      'label' => 'Transcript',
+      'label' => 'transcript',
       'type' => 'text',
       'behavior' => 'textfield',
     ),
