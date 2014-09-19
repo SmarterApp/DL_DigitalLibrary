@@ -11703,39 +11703,41 @@ form#sbac-user-filter-form #edit-email {
 /* -----------------------------------------
   Terms of Service page
   ------------------------------------------ */
-/* line 4072, ../sass/custom.scss */
-#legal-login #cancel-button .button.secondary {
-  background-color: #0084b0;
+/* line 4071, ../sass/custom.scss */
+.page-legal-accept #modal-content {
+  overflow-y: hidden !important;
 }
-/* line 4076, ../sass/custom.scss */
-#legal-login #cancel-button h3 {
-  font-size: 18px;
+
+/* line 4077, ../sass/custom.scss */
+#legal-login #cancel-button .ajax-progress-throbber {
+  display: none;
+}
+/* line 4082, ../sass/custom.scss */
+#legal-login #sbac-user-disagree-tos {
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+}
+/* line 4085, ../sass/custom.scss */
+#legal-login #sbac-user-disagree-tos:focus, #legal-login #sbac-user-disagree-tos:active {
+  background-color: #8A1538;
+}
+
+/* line 4091, ../sass/custom.scss */
+#sbac-user-disagree-tos-form {
+  margin-bottom: 0;
+}
+/* line 4094, ../sass/custom.scss */
+#sbac-user-disagree-tos-form h5 {
+  font-size: 16px;
+  margin-bottom: 15px;
   font-family: Arial,sans-serif;
 }
-/* line 4081, ../sass/custom.scss */
-#legal-login #cancel-button p {
-  font-size: 16px;
+/* line 4100, ../sass/custom.scss */
+#sbac-user-disagree-tos-form #edit-continue {
+  margin-right: 10px;
+  margin-bottom: 0;
 }
-/* line 4083, ../sass/custom.scss */
-#legal-login #cancel-button h5 {
-  font-size: 16px;
-  font-family: Arial,sans-serif;
-}
-/* line 4088, ../sass/custom.scss */
-#legal-login #cancel-button #decision {
-  margin-top: 15px;
-  line-height: 34px;
-}
-/* line 4092, ../sass/custom.scss */
-#legal-login #cancel-button #decision a {
-  display: inline-block;
-  vertical-align: top;
-  margin-bottom: 5px;
-  line-height: 34px;
-  color: #fff;
-  font-weight: bold;
-}
-/* line 4101, ../sass/custom.scss */
-#legal-login #cancel-button #decision a.secondary {
+/* line 4105, ../sass/custom.scss */
+#sbac-user-disagree-tos-form #edit-cancel {
   margin-left: 10px;
+  margin-bottom: 0;
 }

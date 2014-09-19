@@ -4067,40 +4067,43 @@ form#sbac-user-filter-form #edit-email {
 /* -----------------------------------------
   Terms of Service page
   ------------------------------------------ */
+.page-legal-accept {
+	#modal-content {overflow-y: hidden !important;}
+}
+
 #legal-login {
+	
 	#cancel-button {
-		.button.secondary {
-			background-color: #0084b0;
+		.ajax-progress-throbber {
+			display: none;
 		}
+	}
+	
+	#sbac-user-disagree-tos {
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 		
-		h3 {
-			font-size: 18px;
-			font-family: Arial,sans-serif;
+		&:focus, &:active {
+			background-color: #8A1538;
 		}
-		
-		p {font-size: 16px;}
-		
-		h5 {
-			font-size: 16px;
-			font-family: Arial,sans-serif;
-		}
-		
-		#decision {
-			margin-top: 15px;
-			line-height: 34px;
-			
-			a {
-				display: inline-block;
-				vertical-align: top;
-				margin-bottom: 5px;
-				line-height: 34px;
-				color: #fff;
-				font-weight: bold;
-			}
-			
-			a.secondary {
-				margin-left: 10px;
-			}
-		}
+	}
+}	
+
+#sbac-user-disagree-tos-form {
+	margin-bottom: 0;
+
+	h5 {
+		font-size: 16px;
+		margin-bottom: 15px;
+		font-family: Arial,sans-serif;
+	}
+
+	#edit-continue {
+		margin-right: 10px;
+		margin-bottom: 0;
+	}
+
+	#edit-cancel {
+		margin-left: 10px;
+		margin-bottom: 0;
 	}
 }

@@ -534,6 +534,7 @@ function sbac_sso_logout() {
   if (user_is_logged_in()) {
     global $base_url;
     global $user;
+    unset($_GET['q']);
     $logout_assertion = sbac_sso_logout_assertion();
     // Destroy the current session, and reset $user to the anonymous user.
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
