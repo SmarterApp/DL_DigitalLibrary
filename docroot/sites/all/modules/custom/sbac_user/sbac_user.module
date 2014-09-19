@@ -1596,6 +1596,9 @@ function sbac_user_disagree_tos_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Yes, log me out') {
+        // The current global user is actually an anonymous user
+        // as created by legal module. So have to make the global user
+        // the right one, for the SAML assertion on logout.
         global $user;
         $user = user_load($form_state['uid']);
         $output[] = ctools_ajax_command_redirect('sbac-sso-logout');
@@ -1636,26 +1639,4 @@ function sbac_user_disagree_tos_form($form, &$form_state) {
     '#attributes' => array('class' => array('button', 'small', 'secondary'))
   );
   return $form;
-}
-
-/*
- * Overlay to leave Digital Library if disagree with T & C
- */
-function sbac_user_login_overlay() {
-  $output = '<a href="#" class="left button secondary medium" data-reveal-id="overlay">I disagree</a>
-
-            <div id="overlay" class="reveal-modal">
-              <h3>You are about to leave the Digital Library</h3>
-              <p>If you do not agree to the Terms of Service, you will be unable to access the Digital Library.</p>
-
-              <h5> Are you sure you want to leave?  </h5>
-              <div id="decision">
-                <a class="button small close-reveal-modal">No, return to Terms of Service</a>
-                 or
-                <a class="button small secondary" href="/user/logout"> Yes, log me out </a>
-              </div>
-            </div>';
-
-
-  return $output;
 }
