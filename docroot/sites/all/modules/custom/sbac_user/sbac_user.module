@@ -508,7 +508,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 180
+          'height' => 220
         )
       )
     );
