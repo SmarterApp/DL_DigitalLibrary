@@ -626,6 +626,7 @@ function get_resources($resource_filters) {
     }
   }
   $query->fields('n', array('nid'));
+  $query->groupBy('n.nid');
   $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
   return $query->execute()->fetchCol();
 }
