@@ -734,8 +734,7 @@ function fitler_resource_status($node, $statuses) {
 
 /**
  * Get the entities related to resource nodes (review, feedback, etc).
- * @param $resources
- * @param $entity_type
+ * @param $nid
  * @return array
  */
 function get_entities_for_resources($nid) {
@@ -754,7 +753,7 @@ function get_entities_for_resources($nid) {
   $query->leftJoin('field_data_field_to_reviewer_3', 'rv3', 'rv3.entity_id = f.id AND rv3.entity_type = \'feedback\' AND rv3.bundle = \'post\'');
   $query->condition('f.node_id', $nid)
     ->condition('f.status', 1)
-    ->condition('f.created', _sbac_resource_resubmit_timestamp($nid), '>');
+    ->condition('f.current', 1);
   $query->fields('u', array('mail'))
     ->fields('f', array('status', 'completed', 'type'))
     ->fields('o', array('field_rec_options_value'))
@@ -772,7 +771,8 @@ function get_entities_for_resources($nid) {
     WHEN f.met_criteria = 1 THEN \'Met all Criteria\'
     WHEN f.met_criteria = 0 THEN \'Does not Meet all Criteria\'
   END', 'met_criteria');
-  return $query->orderBy('f.changed', 'ASC')->execute()->fetchAll();
+  $query->groupBy('f.uid')->groupBy('f.type')->orderBy('f.created', 'ASC');
+  return $query->execute()->fetchAll();
 }
 
 /**
@@ -1410,7 +1410,7 @@ function sbac_report_get_qc_info($fieldkey, $data, $resource) {
   $current_qc = 1;
   foreach ($data['resource_feedback'] as $feedback) {
     if (!empty($fieldkey['type'])) {
-      if ($feedback->type == $fieldkey['type'] && 1 == $feedback->completed) {
+      if ($feedback->type == $fieldkey['type']) {
         if (!empty($fieldkey['qc_number']) && !empty($fieldkey['field'])) {
           if ($fieldkey['qc_number'] == $current_qc) {
             return $feedback->{$fieldkey['field']};
@@ -1537,12 +1537,11 @@ function sbac_report_get_publish_date($fieldkey, $data, $resource) {
  * @return int
  */
 function sbac_report_count_completed_reviews($fieldkey, $data, $resource) {
-  if ('draft' == $resource->value()->workbench_moderation['current']->state) {
-    return '0';
+  $count = count($data['resource_feedback']);
+  if (0 == $count) {
+    $count = '0';
   }
-  else {
-    return _resource_access_count_feedback($resource->nid->value(), array('qc', 'gate_keeper', 'post'), FALSE, FALSE, 1);
-  }
+  return $count;
 }
 
 function sbac_report_get_review_cycle($fieldkey, $data, $resource) {
