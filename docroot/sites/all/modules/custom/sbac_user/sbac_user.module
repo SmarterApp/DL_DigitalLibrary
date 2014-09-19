@@ -128,23 +128,10 @@ function sbac_user_menu() {
     'title' => 'Disagree TOS',
     'page callback' => 'sbac_user_disagree_tos_modal',
     'page arguments' => array(1),
-    'access callback' => 'sbac_user_disagree_tos_access'
+    'access callback' => TRUE,
   );
 
   return $items;
-}
-
-/**
- * Required to override the check on user_access
- * that occurs even when you pass TRUE or ('access content')
- * because legal module logs the user out and puts an
- * anonymous user into the system while TOS are being
- * accepted / rejected.
- *
- * @return bool
- */
-function sbac_user_disagree_tos_access() {
-  return TRUE;
 }
 
 /**
