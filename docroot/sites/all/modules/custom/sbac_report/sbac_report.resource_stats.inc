@@ -1528,8 +1528,21 @@ function sbac_report_get_publish_date($fieldkey, $data, $resource) {
 }
 
 
+/**
+ * Get the total completed review count
+ *
+ * @param $fieldkey
+ * @param $data
+ * @param $resource
+ * @return int
+ */
 function sbac_report_count_completed_reviews($fieldkey, $data, $resource) {
-  return _resource_access_count_feedback($resource->nid->value(), array('qc', 'gate_keeper', 'post'), FALSE, FALSE, 1);
+  if ('draft' == $resource->value()->workbench_moderation['current']->state) {
+    return '0';
+  }
+  else {
+    return _resource_access_count_feedback($resource->nid->value(), array('qc', 'gate_keeper', 'post'), FALSE, FALSE, 1);
+  }
 }
 
 function sbac_report_get_review_cycle($fieldkey, $data, $resource) {
