@@ -426,7 +426,6 @@ function sbac_sso_consume() {
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = base64_decode($_POST['SAMLResponse']);
-    // $saml_token = base64_decode(sbac_sso_get_saml_token2());
     $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
@@ -535,6 +534,7 @@ function sbac_sso_logout() {
   if (user_is_logged_in()) {
     global $base_url;
     global $user;
+    unset($_GET['q']);
     $logout_assertion = sbac_sso_logout_assertion();
     // Destroy the current session, and reset $user to the anonymous user.
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
@@ -811,6 +811,9 @@ function sbac_sso_create_user_attributes($chain) {
       if ($value == '' || $value == NULL) {
         unset($user_attributes[$key]);
       }
+      if ($key == 'institution' || $key == 'district') {
+        $user_attributes[$key] = ucwords(strtolower(htmlspecialchars_decode(str_replace("&amp;apos;", "'", $value))));
+      }
     }
   }
   return $user_attributes;
@@ -871,7 +874,7 @@ function sbac_sso_program_management_api_request(&$response) {
       foreach ($query_params as $type => $state_id) {
         if ($type != 'cache') {
           foreach ($cached_results[$type] as $cached_id => $cached_result) {
-            if ($cached_result['id'] == $cached_id) {
+            if ($cached_result['type'] == 'STATE' && $cached_result['name'] == $query_params['STATE']) {
               $json['tenants'][0] = $cached_result;
               $in_good_standing = sbac_sso_parse_program_api_response($json, TRUE);
               if ($in_good_standing) {
@@ -939,8 +942,11 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
 
   if (isset($response['pm_api_results'])) {
     foreach ($response['pm_api_results'] as $state => $json) {
-      $api_response[$state] = sbac_sso_parse_program_api_response($json);
-      $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+      $api_response = sbac_sso_parse_program_api_response($json);
+      if ($api_response) {
+        $api_response[$state] = $api_response;
+        $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+      }
     }
   }
 
@@ -962,9 +968,9 @@ function sbac_sso_get_program_management_oauth_access_token() {
   // client_id=pm
   // client_secret=sbac12345
   $request_creds = array(
-    'grant_type' => 'client_credentials',
-    'username' => 'sbac.amp@example.com',
-    'password' => 'amplify12345',
+    'grant_type' => 'password',
+    'username' => 'pm.client@example.com',
+    'password' => 'sbac12345',
     'client_id' => 'pm',
     'client_secret' => 'sbac12345'
   );
@@ -1066,8 +1072,8 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
-      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $user->field_district_name['und'][0]['value'] = $tenancy_chain['district'];
+      $user->field_school_name['und'][0]['value'] = $tenancy_chain['institution'];
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1092,8 +1098,8 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
-      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $user->field_district_name['und'][0]['value'] = $tenancy_chain['district'];
+      $user->field_school_name['und'][0]['value'] = $tenancy_chain['institution'];
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1181,10 +1187,10 @@ function sbac_sso_create_user_record($response, $multiple) {
       $edit['field_state']['und'][0]['tid'] = $term->tid;
     }
     if (isset($tenancy_chain['district'])) {
-      $edit['field_district_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
+      $edit['field_district_name']['und'][0]['value'] = $tenancy_chain['district'];
     }
     if (isset($tenancy_chain['institution'])) {
-      $edit['field_school_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $edit['field_school_name']['und'][0]['value'] = $tenancy_chain['institution'];
     }
   }
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];

@@ -270,7 +270,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   font-family: $body-font-family;
 
   &:hover, &:focus  {
-    @include box-shadow(inset 0px 1px 0px 0px #006184);
+    @include box-shadow(inset 0px 1px 0px 0px #22B3E3);
 		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
   }
 }
@@ -3168,7 +3168,7 @@ a.tabledrag-handle .handle {
 #edit-submit--3 {
   //float: right;
   color: white;
-  background: #2aa549;
+  /*background: #2aa549;*/
 
   &:hover, &:focus {
 	/*	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
@@ -4061,5 +4061,49 @@ form#sbac-user-filter-form #edit-email {
 	.error-code {
 		margin-top: 20px;
 		clear: left;
+	}
+}
+
+/* -----------------------------------------
+  Terms of Service page
+  ------------------------------------------ */
+.page-legal-accept {
+	#modal-content {overflow-y: hidden !important;}
+}
+
+#legal-login {
+	
+	#cancel-button {
+		.ajax-progress-throbber {
+			display: none;
+		}
+	}
+	
+	#sbac-user-disagree-tos {
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+		
+		&:focus, &:active {
+			background-color: #8A1538;
+		}
+	}
+}	
+
+#sbac-user-disagree-tos-form {
+	margin-bottom: 0;
+
+	h5 {
+		font-size: 16px;
+		margin-bottom: 15px;
+		font-family: Arial,sans-serif;
+	}
+
+	#edit-continue {
+		margin-right: 10px;
+		margin-bottom: 0;
+	}
+
+	#edit-cancel {
+		margin-left: 10px;
+		margin-bottom: 0;
 	}
 }

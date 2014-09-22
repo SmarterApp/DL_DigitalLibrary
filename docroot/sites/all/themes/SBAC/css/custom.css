@@ -7581,9 +7581,9 @@ button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-sear
 }
 /* line 272, ../sass/custom.scss */
 button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus, #edit-cancel:hover, #edit-cancel:focus, #edit-tags-cancel:hover, #edit-tags-cancel:focus, #sbac-search-close-button:hover, #sbac-search-close-button:focus, button.sbac-cancel-blue:hover, button.sbac-cancel-blue:focus, .button.devtools-dialog-close:hover, .button.devtools-dialog-close:focus, #gate-keeper-cancel:hover, #gate-keeper-cancel:focus, #review-cancel:hover, #review-cancel:focus, #edit-delete-overlay:hover, #edit-delete-overlay:focus, #edit-cancel-overlay:hover, #edit-cancel-overlay:focus, #post-cancel:hover, #post-cancel:focus, div.ctools-modal-content a.close:hover, div.ctools-modal-content a.close:focus, a.remove:hover, a.remove:focus, a.fake-cancel:hover, a.fake-cancel:focus {
-  -webkit-box-shadow: inset 0px 1px 0px 0px #006184;
-  -moz-box-shadow: inset 0px 1px 0px 0px #006184;
-  box-shadow: inset 0px 1px 0px 0px #006184;
+  -webkit-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  -moz-box-shadow: inset 0px 1px 0px 0px #22b3e3;
+  box-shadow: inset 0px 1px 0px 0px #22b3e3;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(30%, rgba(0, 0, 0, 0.075)), color-stop(100%, rgba(0, 0, 0, 0.1)));
   background-image: -webkit-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
@@ -10717,7 +10717,7 @@ a.tabledrag-handle .handle {
 /* line 3168, ../sass/custom.scss */
 #edit-submit--3 {
   color: white;
-  background: #2aa549;
+  /*background: #2aa549;*/
 }
 /* line 3173, ../sass/custom.scss */
 #edit-submit--3:hover, #edit-submit--3:focus {
@@ -11698,4 +11698,46 @@ form#sbac-user-filter-form #edit-email {
 .page-sbac-sso-error .error-code {
   margin-top: 20px;
   clear: left;
+}
+
+/* -----------------------------------------
+  Terms of Service page
+  ------------------------------------------ */
+/* line 4071, ../sass/custom.scss */
+.page-legal-accept #modal-content {
+  overflow-y: hidden !important;
+}
+
+/* line 4077, ../sass/custom.scss */
+#legal-login #cancel-button .ajax-progress-throbber {
+  display: none;
+}
+/* line 4082, ../sass/custom.scss */
+#legal-login #sbac-user-disagree-tos {
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+}
+/* line 4085, ../sass/custom.scss */
+#legal-login #sbac-user-disagree-tos:focus, #legal-login #sbac-user-disagree-tos:active {
+  background-color: #8A1538;
+}
+
+/* line 4091, ../sass/custom.scss */
+#sbac-user-disagree-tos-form {
+  margin-bottom: 0;
+}
+/* line 4094, ../sass/custom.scss */
+#sbac-user-disagree-tos-form h5 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-family: Arial,sans-serif;
+}
+/* line 4100, ../sass/custom.scss */
+#sbac-user-disagree-tos-form #edit-continue {
+  margin-right: 10px;
+  margin-bottom: 0;
+}
+/* line 4105, ../sass/custom.scss */
+#sbac-user-disagree-tos-form #edit-cancel {
+  margin-left: 10px;
+  margin-bottom: 0;
 }
