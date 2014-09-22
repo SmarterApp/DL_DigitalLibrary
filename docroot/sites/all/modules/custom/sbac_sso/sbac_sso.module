@@ -874,7 +874,7 @@ function sbac_sso_program_management_api_request(&$response) {
       foreach ($query_params as $type => $state_id) {
         if ($type != 'cache') {
           foreach ($cached_results[$type] as $cached_id => $cached_result) {
-            if ($cached_result['id'] == $cached_id) {
+            if ($cached_result['type'] == 'STATE' && $cached_result['name'] == $query_params['STATE']) {
               $json['tenants'][0] = $cached_result;
               $in_good_standing = sbac_sso_parse_program_api_response($json, TRUE);
               if ($in_good_standing) {
