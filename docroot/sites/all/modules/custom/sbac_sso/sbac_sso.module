@@ -942,8 +942,11 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
 
   if (isset($response['pm_api_results'])) {
     foreach ($response['pm_api_results'] as $state => $json) {
-      $api_response[$state] = sbac_sso_parse_program_api_response($json);
-      $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+      $api_response = sbac_sso_parse_program_api_response($json);
+      if ($api_response) {
+        $api_response[$state] = $api_response;
+        $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+      }
     }
   }
 
