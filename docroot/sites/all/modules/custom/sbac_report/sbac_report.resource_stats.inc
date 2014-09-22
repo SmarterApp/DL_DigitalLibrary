@@ -753,24 +753,32 @@ function get_entities_for_resources($nid) {
   $query->leftJoin('field_data_field_to_reviewer_3', 'rv3', 'rv3.entity_id = f.id AND rv3.entity_type = \'feedback\' AND rv3.bundle = \'post\'');
   $query->condition('f.node_id', $nid)
     ->condition('f.status', 1)
-    ->condition('f.completed', 1)
     ->condition('f.current', 1);
   $query->fields('u', array('mail'))
     ->fields('f', array('status', 'completed', 'type'))
     ->fields('o', array('field_rec_options_value'))
     ->fields('r', array('field_rec_rationale_value'))
-    ->fields('p', array('field_posting_options_value'))
     ->fields('c', array('field_to_contributor_value'))
     ->fields('rv1', array('field_to_reviewer_1_value'))
     ->fields('rv2', array('field_to_reviewer_2_value'))
     ->fields('rv3', array('field_to_reviewer_3_value'))
     ->fields('t', array('name'));
-  $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
-  $query->addExpression('FROM_UNIXTIME(f.changed, \'%c/%d/%Y\')', 'changed');
   $query->addExpression('
   CASE
-    WHEN f.met_criteria = 1 THEN \'Met all Criteria\'
-    WHEN f.met_criteria = 0 THEN \'Does not Meet all Criteria\'
+    WHEN f.completed = 1 THEN p.field_posting_options_value
+    ELSE \'\'
+  END', 'field_posting_options_value');
+  $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
+  $query->addExpression('
+  CASE
+    WHEN f.completed = 1 THEN FROM_UNIXTIME(f.changed, \'%c/%d/%Y\')
+    ELSE \'\'
+  END', 'changed');
+  $query->addExpression('
+  CASE
+    WHEN f.met_criteria = 1 AND f.completed = 1 THEN \'Met all Criteria\'
+    WHEN f.met_criteria = 0 AND f.completed = 1 THEN \'Does not Meet all Criteria\'
+    ELSE \'\'
   END', 'met_criteria');
   $query->groupBy('f.uid')->groupBy('f.type')->orderBy('f.created', 'ASC');
   return $query->execute()->fetchAll();
@@ -1538,7 +1546,15 @@ function sbac_report_get_publish_date($fieldkey, $data, $resource) {
  * @return int
  */
 function sbac_report_count_completed_reviews($fieldkey, $data, $resource) {
-  $count = count($data['resource_feedback']);
+  $count = db_select('eck_feedback', 'f')
+    ->condition('f.completed', 1)
+    ->condition('f.node_id', $resource->nid->value())
+    ->condition('f.status', 1)
+    ->condition('f.current', 1)
+    ->fields('f', array('id'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
   if (0 == $count) {
     $count = '0';
   }
