@@ -965,9 +965,9 @@ function sbac_sso_get_program_management_oauth_access_token() {
   // client_id=pm
   // client_secret=sbac12345
   $request_creds = array(
-    'grant_type' => 'client_credentials',
-    'username' => 'sbac.amp@example.com',
-    'password' => 'amplify12345',
+    'grant_type' => 'password',
+    'username' => 'pm.client@example.com',
+    'password' => 'sbac12345',
     'client_id' => 'pm',
     'client_secret' => 'sbac12345'
   );
