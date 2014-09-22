@@ -753,6 +753,7 @@ function get_entities_for_resources($nid) {
   $query->leftJoin('field_data_field_to_reviewer_3', 'rv3', 'rv3.entity_id = f.id AND rv3.entity_type = \'feedback\' AND rv3.bundle = \'post\'');
   $query->condition('f.node_id', $nid)
     ->condition('f.status', 1)
+    ->condition('f.completed', 1)
     ->condition('f.current', 1);
   $query->fields('u', array('mail'))
     ->fields('f', array('status', 'completed', 'type'))
