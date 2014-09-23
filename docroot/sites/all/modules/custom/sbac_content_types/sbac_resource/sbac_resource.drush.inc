@@ -72,6 +72,14 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_move_private_to_public',
   );
 
+  $items['sbac-resource-move-html5-thumbnails'] = array(
+    'description' => 'Move html5 thumbnails',
+    'examples' => array(
+      'drush sbac-resource-move-html5-thumbnails',
+    ),
+    'callback' => 'drush_sbac_resource_move_html5_thumbnails',
+  );
+
   return $items;
 }
 
@@ -375,5 +383,19 @@ function drush_sbac_resource_move_private_to_public() {
       }
       unset($node);
     }
+  }
+}
+
+/**
+ * Move the HTML5 thumbnails.
+ */
+function drush_sbac_resource_move_html5_thumbnails() {
+  $result = db_query("SELECT n.nid FROM {node} n JOIN {field_data_field_html5} f ON n.nid = f.entity_id WHERE  n.type = 'resource' AND f.field_html5_value = 1");
+  foreach ($result as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      sbac_resource_move_html5_thumbnail($node);
+    }
+    drush_print($node->nid . ' updated.');
   }
 }
