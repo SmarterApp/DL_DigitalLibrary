@@ -803,16 +803,15 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   if ($current_filters) {
     _sbac_resource_resource_review_apply_state_filter($view, $current_filters, $roles);
   }
+  if (isset($roles['both']) && $roles['both']) {
+    _sbac_resource_resource_review_apply_stock_both_role($view);
+  }
   else {
-    // apply stock
     if (isset($roles['rp']) && $roles['rp']) {
       _sbac_resource_resource_review_apply_stock_rp_role($view);
     }
     if (isset($roles['rr']) && $roles['rr']) {
       _sbac_resource_resource_review_apply_stock_rr_role($view);
-    }
-    if (isset($roles['both']) && $roles['both']) {
-      _sbac_resource_resource_review_apply_stock_both_role($view);
     }
   }
   if (isset($view->resubmission_only) && $view->resubmission_only === TRUE) {
@@ -833,7 +832,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
   global $user;
   // apply filters
   $values = array();
-  $needs_stock_filter = TRUE;
   foreach ($current_filters as $filter) {
     $filter_info = explode(':', $filter);
     if ($filter_info && sizeof($filter_info) == 2) {
@@ -855,7 +853,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
                       ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
-                    $needs_stock_filter = FALSE;
                   }
                   break;
                 case 'Being Reviewed':
@@ -864,7 +861,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $user_states = array('post_being_reviewed');
                     $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
                     $view->query->add_where('AND', $user_condition);
-                    $needs_stock_filter = FALSE;
                   }
                   break;
               }
@@ -881,7 +877,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
                       ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
-                    $needs_stock_filter = FALSE;
                   }
                   break;
                 case 'Being Reviewed':
@@ -891,7 +886,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $user_states = array('gk_being_reviewed', 'qc_being_reviewed');
                     $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
                     $view->query->add_where('AND', $user_condition);
-                    $needs_stock_filter = FALSE;
                   }
                   break;
               }
@@ -907,7 +901,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
                       ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
-                    $needs_stock_filter = FALSE;
                   }
                   break;
                 case 'Being Reviewed':
@@ -916,7 +909,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'post_being_reviewed');
                     $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
                     $view->query->add_where('AND', $user_condition);
-                    $needs_stock_filter = FALSE;
                   }
                   break;
                 case 'Needs Posting':
@@ -927,7 +919,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)
                       ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
                     $view->query->add_where('AND', $all_condition);
-                    $needs_stock_filter = FALSE;
                   }
                   break;
               }
@@ -935,17 +926,6 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
           }
         }
       }
-    }
-  }
-  if ($needs_stock_filter) {
-    if (isset($roles['rp']) && $roles['rp']) {
-      _sbac_resource_resource_review_apply_stock_rp_role($view);
-    }
-    if (isset($roles['rr']) && $roles['rr']) {
-      _sbac_resource_resource_review_apply_stock_rr_role($view);
-    }
-    if (isset($roles['both']) && $roles['both']) {
-      _sbac_resource_resource_review_apply_stock_both_role($view);
     }
   }
 }
