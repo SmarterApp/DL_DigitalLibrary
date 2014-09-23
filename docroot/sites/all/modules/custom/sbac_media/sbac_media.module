@@ -1393,7 +1393,7 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
 function sbac_media_move_html5_thumbnail($file_attributes) {
   $zip_contents_path = $file_attributes['full_html5_temp_path'];
   $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
-  $thumbnail_move_path = 'private://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
+  $thumbnail_move_path = 'public://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
   if (file_prepare_directory($thumbnail_move_path, FILE_CREATE_DIRECTORY)) {
     $thumbnail_move_path .= '/thumbnail.png';
     $real_path = drupal_realpath($thumbnail_move_path);
@@ -2055,7 +2055,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
  * @param $nid
  */
 function sbac_media_html5_delete_thumbnail($nid) {
-  $thumbnail_dir = 'private://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
+  $thumbnail_dir = 'public://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
   if (file_exists($thumbnail_dir)) {
     file_unmanaged_delete_recursive($thumbnail_dir);
   }

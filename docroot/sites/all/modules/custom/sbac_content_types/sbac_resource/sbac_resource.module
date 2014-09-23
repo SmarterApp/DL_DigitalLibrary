@@ -2298,7 +2298,7 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
     $node->document['html5'] = $html5_item;
     $default_file = 'public://no-preview-html5.png';
     if (isset($node->document['html5'])) {
-      $directory = "private://html5_thumbnails/" . floor($nid / 32000) . "/" . $nid;
+      $directory = "public://html5_thumbnails/" . floor($nid / 32000) . "/" . $nid;
       $directory_thumbnail_uri = $directory . '/thumbnail.png';
       $directory_thumbnail_path = drupal_realpath($directory) . '/thumbnail.png';
       if (file_exists($directory_thumbnail_path)) {
@@ -3674,6 +3674,40 @@ function sbac_resource_move_private_to_public($node) {
   $locations = explode('::', $node->field_thumbnail_uri['und'][0]['value']);
   $private_uri = $locations[0];
   $public_uri = str_replace('private://resource_thumbnails', 'public://resource_thumbnails', $private_uri);
+
+  // Trim to directory path, remove filename
+  $pos = strrpos($public_uri, '/');
+  $public_directory_uri = substr($public_uri, 0, $pos);
+
+  // Create the directory
+  file_prepare_directory($public_directory_uri, FILE_CREATE_DIRECTORY);
+
+  // Get the file with this URI
+  $query = db_select('file_managed', 'f');
+  $query->fields('f', array('fid'));
+  $query->condition('f.uri', $private_uri, '=');
+  $fid = $query->execute()->fetchField();
+  if ($fid) {
+    // Load and move the file.
+    $file = file_load($fid);
+    $file = file_move($file, $public_directory_uri, FILE_EXISTS_REPLACE);
+    if ($file) {
+      // Update node with new path.
+      $locations[0] = $public_uri;
+      $value = implode('::', $locations);
+      $node->field_thumbnail_uri['und'][0]['value'] = $value;
+      $node->field_thumbnail_uri['und'][0]['safe_value'] = $value;
+      entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+    }
+    unset($file);
+  }
+  unset($fid);
+}
+
+function sbac_resource_move_html5_thumbnail($node) {
+  $locations = explode('::', $node->field_thumbnail_uri['und'][0]['value']);
+  $private_uri = $locations[0];
+  $public_uri = str_replace('private://html5_thumbnails/', 'public://html5_thumbnails', $private_uri);
 
   // Trim to directory path, remove filename
   $pos = strrpos($public_uri, '/');
