@@ -220,6 +220,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
  * @param null $page
  * @param bool $ajax
  * @param bool $resubmission_only
+ * @param bool $apply_filter
  * @return array
  */
 function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $ajax = FALSE, $resubmission_only = FALSE, $apply_filter = TRUE) {

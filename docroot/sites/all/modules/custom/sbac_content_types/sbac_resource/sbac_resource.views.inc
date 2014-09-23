@@ -964,7 +964,7 @@ function _sbac_resource_resource_review_apply_stock_rp_role(&$view) {
     ->isNull('field_data_field_recent_publishers.field_recent_publishers_target_id')
     // or i'm the original publisher
     ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid)
-    // or 2 weeks have elapsed since the resource was resubmitted
+    // or FEEDBACK_RESUBMISSION_TIMEOUT have elapsed since the resource was resubmitted
     ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
   $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition($publisher_condition);
   $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
@@ -991,7 +991,7 @@ function _sbac_resource_resource_review_apply_stock_rr_role(&$view) {
     ->where("sbac_node_resource_state.state = 'qc_needs_review' AND (SELECT count(user.uid) FROM field_data_field_recent_reviewers reviewer LEFT JOIN users user ON reviewer.field_recent_reviewers_target_id = user.uid WHERE reviewer.entity_id = node.nid and user.status = 1) < :max", array(':max' => FEEDBACK_MAX_REVIEW))
     // or the orginal reviewers have already re-reviewed the resource
     ->where("sbac_node_resource_state.state = 'qc_needs_review' AND 1 > (SELECT count(*) FROM field_data_field_recent_reviewers reviewer left join sbac_node_resource_state state on reviewer.entity_id = state.nid where reviewer.entity_id = node.nid and state.state = 'qc_reviewed' and reviewer.field_recent_reviewers_target_id <> state.uid)")
-    // or 2 weeks have elapsed since the resource was resubmitted
+    // or FEEDBACK_RESUBMISSION_TIMEOUT have elapsed since the resource was resubmitted
     ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
   $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE')
     ->condition($reviewer_condition);
@@ -1006,10 +1006,29 @@ function _sbac_resource_resource_review_apply_stock_rr_role(&$view) {
  */
 function _sbac_resource_resource_review_apply_stock_both_role(&$view) {
   global $user;
+
   $not_like = 'qc_reviewed::' . $user->uid;
   $all_states = array('gk_needs_review', 'qc_needs_review', 'post_needs_review');
+  $dual_role_condition = db_or()
+    // there are no original publishers
+    ->where("field_data_field_recent_publishers.field_recent_publishers_target_id IS NULL AND sbac_node_resource_state.state = 'post_needs_review'")
+    // or I'm the original publisher
+    ->where("field_data_field_recent_publishers.field_recent_publishers_target_id = :uid AND sbac_node_resource_state.state = 'post_needs_review'", array(':uid' => $user->uid))
+    // there are no original reviewers
+    ->where("field_data_field_recent_reviewers.field_recent_reviewers_target_id IS NULL AND sbac_node_resource_state.state IN ('gk_needs_review', 'qc_needs_review')")
+    // or I'm the original reviewer
+    ->where("field_data_field_recent_reviewers.field_recent_reviewers_target_id = :uid AND sbac_node_resource_state.state IN ('gk_needs_review', 'qc_needs_review')", array(':uid' => $user->uid))
+    // or the orginal reviewers have already re-reviewed the resource
+    ->where("sbac_node_resource_state.state = 'qc_needs_review' AND 1 > (SELECT count(*) FROM field_data_field_recent_reviewers reviewer left join sbac_node_resource_state state on reviewer.entity_id = state.nid where reviewer.entity_id = node.nid and state.state = 'qc_reviewed' and reviewer.field_recent_reviewers_target_id <> state.uid)")
+    // or there's still room for another reviewer. If a user is deleted, that opens up room for another reviewer
+    ->where("sbac_node_resource_state.state = 'qc_needs_review' AND (SELECT count(user.uid) FROM field_data_field_recent_reviewers reviewer LEFT JOIN users user ON reviewer.field_recent_reviewers_target_id = user.uid WHERE reviewer.entity_id = node.nid and user.status = 1) < :max", array(':max' => FEEDBACK_MAX_REVIEW))
+    // or FEEDBACK_RESUBMISSION_TIMEOUT have elapsed since the resource was resubmitted
+    ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
+  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE')
+    ->condition($dual_role_condition);
+
   $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed', 'post_view_rejected');
-  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE');
   $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+
   $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
 }
