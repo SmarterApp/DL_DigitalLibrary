@@ -198,6 +198,12 @@ function sbac_resource_menu() {
     'access arguments' => array('configure sbac'),
   );
 
+  $items['sbac-resource/test-script'] = array(
+    'title' => 'Test Script',
+    'page callback' => 'sbac_resource_test_script',
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -3660,4 +3666,76 @@ function _sbac_resource_is_in_poster_workflow($nid) {
     $in_workflow = TRUE;
   }
   return $in_workflow;
+}
+
+function sbac_resource_test_script() {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'))
+    ->condition('n.type', 'resource', '=')
+    ->orderBy('n.nid')
+    ->range(0, 100);
+  $nids = $query->execute()->fetchCol();
+  foreach ($nids as $nid) {
+    $node = node_load($nid);
+    if ($node) {
+      if (isset($node->field_thumbnail_uri['und'][0]['value']) && $node->field_thumbnail_uri['und'][0]['value'] != NULL) {
+        $location = $node->field_thumbnail_uri['und'][0]['value'];
+        if (strpos($location, 'x-empty') !== FALSE) {
+          sbac_resource_determine_thumbnail_uri($node);
+          entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+        }
+        else if (strpos($location, 'private://resource_thumbnails') !== FALSE) {
+          // Get the private location.
+          sbac_resource_move_private_to_public($node);
+        }
+        else if (strpos($location, 'public://resource_thumbnails') === FALSE && strpos($location, 'no_img::no_img') === FALSE) {
+          sbac_resource_determine_thumbnail_uri($node);
+          entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+        }
+      }
+    }
+    unset($node);
+  }
+}
+
+/**
+ * Since we already have the thumbnail and its the correct size,
+ * lets just move it to the correct location instead of re-downloading
+ * and creating the image.
+ *
+ * @param $node
+ */
+function sbac_resource_move_private_to_public($node) {
+  // Get Locations
+  $locations = explode('::', $node->field_thumbnail_uri['und'][0]['value']);
+  $private_uri = $locations[0];
+  $public_uri = str_replace('private://resource_thumbnails', 'public://resource_thumbnails', $private_uri);
+
+  // Trim to directory path, remove filename
+  $pos = strrpos($public_uri, '/');
+  $public_directory_uri = substr($public_uri, 0, $pos);
+
+  // Create the directory
+  file_prepare_directory($public_directory_uri, FILE_CREATE_DIRECTORY);
+
+  // Get the file with this URI
+  $query = db_select('file_managed', 'f');
+  $query->fields('f', array('fid'));
+  $query->condition('f.uri', $private_uri, '=');
+  $fid = $query->execute()->fetchField();
+  if ($fid) {
+    // Load and move the file.
+    $file = file_load($fid);
+    $file = file_move($file, $public_directory_uri, FILE_EXISTS_REPLACE);
+    if ($file) {
+      // Update node with new path.
+      $locations[0] = $public_uri;
+      $value = implode('::', $locations);
+      $node->field_thumbnail_uri['und'][0]['value'] = $value;
+      $node->field_thumbnail_uri['und'][0]['safe_value'] = $value;
+      entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+    }
+    unset($file);
+  }
+  unset($fid);
 }
