@@ -1422,7 +1422,19 @@ function sbac_report_get_qc_info($fieldkey, $data, $resource) {
       if ($feedback->type == $fieldkey['type']) {
         if (!empty($fieldkey['qc_number']) && !empty($fieldkey['field'])) {
           if ($fieldkey['qc_number'] == $current_qc) {
-            return $feedback->{$fieldkey['field']};
+            if ('field_rec_options_value' == $fieldkey['field']) {
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_rec_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            elseif ('field_posting_options_value' == $fieldkey['field']){
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_posting_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            else {
+              return $feedback->{$fieldkey['field']};
+            }
           }
         }
         $current_qc++;
