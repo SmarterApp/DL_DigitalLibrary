@@ -553,9 +553,16 @@ function sbac_resource_create_resource_card(&$related_resources) {
       $fields['sticky']->raw = $node->sticky;
       $fields['title'] = new stdClass;
       $fields['title']->content = l($node->title, $node->path['alias']);
-      $variables = _sbac_resource_grid_image($fields);
-      $fields['image'] = $variables['image'];
-      $fields['file-type-icon'] = $variables['file-type-icon'];
+      if (isset($node->field_thumbnail_uri['und'][0]['value'])) {
+        $fields['field_thumbnail_uri']->content = $node->field_thumbnail_uri['und'][0]['value'];
+        $variables = _sbac_resource_grid_image($fields);
+        $fields['image'] = $variables['image'];
+        $fields['file-type-icon'] = $variables['file-type-icon'];
+      }
+      else {
+        $fields['image'] = NULL;
+        $fields['file-type-icon'] = NULL;
+      }
       $fields['field_alt_body'] = new stdClass;
       $body = (isset($node->field_alt_body['und'][0]['value']) ? $node->field_alt_body['und'][0]['value'] : '');
       $fields['field_alt_body']->content = sbac_resource_truncate($body, 140);
