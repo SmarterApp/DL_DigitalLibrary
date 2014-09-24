@@ -861,8 +861,8 @@ function sbac_sso_program_management_api_request(&$response) {
             $query_string[$state]['INSTITUTION'] = $attribute;
             break;
         }
-        $query_string[$state]['cache']['cache_valid'] = FALSE;
-        $query_string[$state]['cache']['cache_result'] = FALSE;
+        $query_string[$state]['cache']['cache_valid'] = NULL;
+        $query_string[$state]['cache']['cache_result'] = NULL;
       }
     }
   }
@@ -880,6 +880,10 @@ function sbac_sso_program_management_api_request(&$response) {
               if ($in_good_standing) {
                 $query_string[$state]['cache']['cache_valid'] = TRUE;
                 $query_string[$state]['cache']['cache_result'] = $cached_result;
+              }
+              else {
+                $query_string[$state]['cache']['cache_valid'] = FALSE;
+                $query_string[$state]['cache']['cache_result'] = FALSE;
               }
               break;
             }
@@ -912,7 +916,7 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
         $cache = $query['cache'];
         unset($query['cache']);
       }
-      if ($cache == NULL || $cache['cache_valid'] == FALSE) {
+      if ($cache == NULL || ($cache['cache_valid'] == FALSE || $cache['cache_valid'] == NULL)) {
         $data = http_build_query($query);
         $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
         $curl = curl_init();
@@ -942,9 +946,9 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
 
   if (isset($response['pm_api_results'])) {
     foreach ($response['pm_api_results'] as $state => $json) {
-      $api_response = sbac_sso_parse_program_api_response($json);
-      if ($api_response) {
-        $api_response[$state] = $api_response;
+      $pm_api_response = sbac_sso_parse_program_api_response($json);
+      if ($pm_api_response) {
+        $api_response[$state] = $pm_api_response;
         $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
       }
     }
