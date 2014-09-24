@@ -255,8 +255,8 @@ function sbac_media_get_google_cloud_storage() {
 
   try {
     if (libraries_load('google-api-php-client')) {
-      $service_account_name = variable_get('google_cdn_service_account_name');
-      $key_file_path = variable_get('google_cdn_public_key_file_path');
+      $service_account_name = variable_get('oscaddie_gcs_service_account_name');
+      $key_file_path = variable_get('oscaddie_gcs_public_key_file_path');
 
       $client = new Google_Client();
       // Replace this with your application name.
@@ -283,7 +283,7 @@ function sbac_media_get_google_cloud_storage() {
     }
   }
   catch (Exception $e) {
-    watchdog_exception('google_cdn', $e);
+    watchdog_exception('oscaddie_gcs', $e);
   }
 
   return $services;
@@ -338,7 +338,7 @@ function sbac_media_download_contents($node) {
                       $target_path = explode('/', $target);
                       $target_file = rawurlencode(array_pop($target_path));
                       $target = implode('/', $target_path) . '/' . $target_file;
-                      $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+                      $download_url = 'https://' . OSCADDIE_GCS_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
                       $request = new Google_Http_Request($download_url, 'GET');
                       $signed_request = $services['client']->getAuth()->sign($request);
                       $httpRequest = $services['client']->getIo()->makeRequest($signed_request);
@@ -348,7 +348,7 @@ function sbac_media_download_contents($node) {
                       }
                     }
                   } catch (Exception $e) {
-                    watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::stream_read');
+                    watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::sbac_media_download_contents');
                   }
                 }
               }
