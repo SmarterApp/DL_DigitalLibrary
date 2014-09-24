@@ -773,7 +773,7 @@ function _sbac_resource_preview_content(&$vars) {
       $media = $vars['document']['html5'];
       $file = file_load($media->fid);
       $path_variables = explode('::', $media->document_id);
-      $folder = variable_get('google_cdn_folder');
+      $folder = variable_get('oscaddie_gcs_folder');
 
       // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
       $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid'] / 32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
