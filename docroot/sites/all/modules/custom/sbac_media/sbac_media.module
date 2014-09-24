@@ -303,8 +303,8 @@ function sbac_media_download_contents($node) {
         mkdir($destination);
       }
       $result = sbac_media_determine_download_access($node);
-      $bucket = variable_get('google_cdn_bucket_name');
-      $folder = variable_get('google_cdn_folder');
+      $bucket = variable_get('oscaddie_gcs_bucket_name');
+      $folder = variable_get('oscaddie_gcs_folder');
 
       $zip = new ZipArchive;
       $archive_uri = 'public://resource_zips/';
@@ -1332,7 +1332,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
 function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
   try {
     $bucket = SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION;
-    $folder = variable_get('google_cdn_folder');
+    $folder = variable_get('oscaddie_gcs_folder');
     $buffer = file_get_contents($file_to_upload);
 
     // Create the Storage Object
@@ -1379,8 +1379,8 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
     }
   }
   catch (Exception $e) {
-    watchdog_exception('google_cdn', $e, 'HTML5 Upload Exception');
-    watchdog('google_cdn', 'Unable to upload file: ' . $folder . '/' . $path);
+    watchdog_exception('oscaddie_gcs', $e, 'HTML5 Upload Exception');
+    watchdog('oscaddie_gcs', 'Unable to upload file: ' . $folder . '/' . $path);
     return FALSE;
   }
 }
@@ -2035,7 +2035,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
   $google_directory = str_replace('private://', '', $directory);
   $gcs = sbac_media_get_google_cloud_storage();
   if ($gcs) {
-    $folder = variable_get('google_cdn_folder');
+    $folder = variable_get('oscaddie_gcs_folder');
     $response = $gcs['service']->objects->listObjects(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, array('prefix' => $folder . '/' . $google_directory));
     if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
       foreach ($response['modelData']['items'] as $object) {
