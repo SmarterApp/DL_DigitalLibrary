@@ -34,13 +34,10 @@ function sbac_forum__api__set_active_subnav($value = NULL) {
  * @return Boolean True or False if user has access to view forum based on criteria.
  */
 function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
-  $role_access = 0; // Set default just in case. 0 = closed forum
-  $state_access = 0; // Set default just in case.
 
   // Load up forum data.
   $forum_data = entity_metadata_wrapper('taxonomy_term', $forum);
   $user_profile = user_load($user_obj->uid); // Load up profile.
-  $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
 
   // Check to see if forum is role restricted.
   $validate_user_role = FALSE; // default to all roles have access
@@ -61,13 +58,7 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
     (!empty($user_obj)) &&
     (!empty($allowed_roles))
   ) {
-    if (isset($user_profile_wrapper->field_position)) {
-      $title_terms = $user_profile_wrapper->field_position->value();
-      if (!empty($title_terms)) {
-        $users_title = $title_terms->tid;
-        $has_role = in_array($users_title, $allowed_roles);
-      }
-    }
+    $has_role = array_intersect($allowed_roles, array_keys($user_obj->roles));
   }
 
 
