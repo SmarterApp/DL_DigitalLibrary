@@ -746,7 +746,7 @@ function get_entities_for_resources($nid) {
   $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
   $query->leftJoin('field_data_field_rec_options', 'o', 'o.entity_id = f.id');
   $query->leftJoin('field_data_field_rec_rationale', 'r', 'r.entity_id = f.id');
-  $query->leftJoin('field_data_field_posting_options', 'p', 'p.entity_id = f.node_id');
+  $query->leftJoin('field_data_field_post_options', 'p', 'p.entity_id = f.id');
   $query->leftJoin('field_data_field_to_contributor', 'c', 'c.entity_id = f.id AND c.entity_type = \'feedback\' AND c.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_1', 'rv1', 'rv1.entity_id = f.id AND rv1.entity_type = \'feedback\' AND rv1.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_2', 'rv2', 'rv2.entity_id = f.id AND rv2.entity_type = \'feedback\' AND rv2.bundle = \'post\'');
@@ -765,9 +765,9 @@ function get_entities_for_resources($nid) {
     ->fields('t', array('name'));
   $query->addExpression('
   CASE
-    WHEN f.completed = 1 THEN p.field_posting_options_value
+    WHEN f.completed = 1 THEN p.field_post_options_value
     ELSE \'\'
-  END', 'field_posting_options_value');
+  END', 'field_post_options_value');
   $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
   $query->addExpression('
   CASE
@@ -1422,7 +1422,19 @@ function sbac_report_get_qc_info($fieldkey, $data, $resource) {
       if ($feedback->type == $fieldkey['type']) {
         if (!empty($fieldkey['qc_number']) && !empty($fieldkey['field'])) {
           if ($fieldkey['qc_number'] == $current_qc) {
-            return $feedback->{$fieldkey['field']};
+            if ('field_rec_options_value' == $fieldkey['field']) {
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_rec_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            elseif ('field_post_options_value' == $fieldkey['field']){
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_post_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            else {
+              return $feedback->{$fieldkey['field']};
+            }
           }
         }
         $current_qc++;
@@ -1759,7 +1771,7 @@ function set_report_columns() {
           array('', 'QC Poster Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'mail', 'type' => 'post'),
           array('', 'QC Poster State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'name', 'type' => 'post'),
           array('', 'QC Poster Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'changed', 'type' => 'post'),
-          array('', 'QC Poster Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_posting_options_value', 'type' => 'post'),
+          array('', 'QC Poster Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_post_options_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Contributor', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_contributor_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Reviewer 1', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_1_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Reviewer 2', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_2_value', 'type' => 'post'),

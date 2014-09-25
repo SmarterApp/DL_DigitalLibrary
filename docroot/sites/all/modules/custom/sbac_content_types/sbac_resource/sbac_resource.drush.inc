@@ -64,6 +64,22 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_update_failed_thumbnails',
   );
 
+  $items['sbac-resource-move-private-to-public'] = array(
+    'description' => 'Moves private thumbnails to public.',
+    'examples' => array(
+      'drush sbac-resource-move-private-to-public',
+    ),
+    'callback' => 'drush_sbac_resource_move_private_to_public',
+  );
+
+  $items['sbac-resource-move-html5-thumbnails'] = array(
+    'description' => 'Move html5 thumbnails',
+    'examples' => array(
+      'drush sbac-resource-move-html5-thumbnails',
+    ),
+    'callback' => 'drush_sbac_resource_move_html5_thumbnails',
+  );
+
   return $items;
 }
 
@@ -291,8 +307,12 @@ function drush_sbac_resource_update_failed_thumbnails() {
 
   while ($current_nid <= $max_nid) {
 
-    $db_or = db_or()->condition('ft.field_thumbnail_uri_value', array('::', 'public://file.png::public://file.png', 'no_img::no_img'), 'IN')
-                    ->condition('ft.field_thumbnail_uri_value', '%x-empty%', 'LIKE');
+    $db_or = db_or()->condition('ft.field_thumbnail_uri_value', array(
+        '::',
+        'public://file.png::public://file.png',
+        'no_img::no_img'
+      ), 'IN')
+      ->condition('ft.field_thumbnail_uri_value', '%x-empty%', 'LIKE');
 
     $query = db_select('field_data_field_thumbnail_uri', 'ft');
     $query->fields('ft', array('entity_id'))
@@ -313,7 +333,69 @@ function drush_sbac_resource_update_failed_thumbnails() {
       unset($node);
     }
   }
-
-
   ini_set('memory_limit', $current_limit);
+}
+
+/**
+ * Moves the already generated thumbnail from private
+ * to a public directory, else tries to re-create the thumbnail
+ * and place in public directory.
+ */
+function drush_sbac_resource_move_private_to_public() {
+  ini_set('memory_limit', '1048M');
+
+  $max_nid = db_query("SELECT MAX(n.nid)
+                       FROM   {node} n
+                       WHERE  n.type = 'resource'
+                      ")->fetchField();
+
+  $current_nid = 0;
+  $chunk_size = drush_get_option('chunk-size', 300);
+  while ($current_nid <= $max_nid) {
+    $query = db_select('node', 'n');
+    $query->fields('n', array('nid'))
+      ->condition('n.nid', $current_nid, '>')
+      ->condition('n.type', 'resource', '=')
+      ->orderBy('n.nid')
+      ->range(0, $chunk_size);
+    $nids = $query->execute()->fetchCol();
+
+    foreach ($nids as $nid) {
+      $node = node_load($nid);
+      if ($node) {
+        $current_nid = $nid;
+        if (isset($node->field_thumbnail_uri['und'][0]['value']) && $node->field_thumbnail_uri['und'][0]['value'] != NULL) {
+          $location = $node->field_thumbnail_uri['und'][0]['value'];
+          if (strpos($location, 'x-empty') !== FALSE) {
+            sbac_resource_determine_thumbnail_uri($node);
+            entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+          }
+          else if (strpos($location, 'private://resource_thumbnails') !== FALSE) {
+            // Get the private location.
+            sbac_resource_move_private_to_public($node);
+          }
+          else if (strpos($location, 'public://resource_thumbnails') === FALSE && strpos($location, 'no_img::no_img') === FALSE) {
+            sbac_resource_determine_thumbnail_uri($node);
+            entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+          }
+          drush_print($node->nid . ' updated.');
+        }
+      }
+      unset($node);
+    }
+  }
+}
+
+/**
+ * Move the HTML5 thumbnails.
+ */
+function drush_sbac_resource_move_html5_thumbnails() {
+  $result = db_query("SELECT n.nid FROM {node} n JOIN {field_data_field_html5} f ON n.nid = f.entity_id WHERE  n.type = 'resource' AND f.field_html5_value = 1");
+  foreach ($result as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      sbac_resource_move_html5_thumbnail($node);
+    }
+    drush_print($node->nid . ' updated.');
+  }
 }

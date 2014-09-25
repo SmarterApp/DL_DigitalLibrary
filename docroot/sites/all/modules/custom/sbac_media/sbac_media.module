@@ -255,8 +255,8 @@ function sbac_media_get_google_cloud_storage() {
 
   try {
     if (libraries_load('google-api-php-client')) {
-      $service_account_name = variable_get('google_cdn_service_account_name');
-      $key_file_path = variable_get('google_cdn_public_key_file_path');
+      $service_account_name = variable_get('oscaddie_gcs_service_account_name');
+      $key_file_path = variable_get('oscaddie_gcs_public_key_file_path');
 
       $client = new Google_Client();
       // Replace this with your application name.
@@ -283,7 +283,7 @@ function sbac_media_get_google_cloud_storage() {
     }
   }
   catch (Exception $e) {
-    watchdog_exception('google_cdn', $e);
+    watchdog_exception('oscaddie_gcs', $e);
   }
 
   return $services;
@@ -303,8 +303,8 @@ function sbac_media_download_contents($node) {
         mkdir($destination);
       }
       $result = sbac_media_determine_download_access($node);
-      $bucket = variable_get('google_cdn_bucket_name');
-      $folder = variable_get('google_cdn_folder');
+      $bucket = variable_get('oscaddie_gcs_bucket_name');
+      $folder = variable_get('oscaddie_gcs_folder');
 
       $zip = new ZipArchive;
       $archive_uri = 'public://resource_zips/';
@@ -338,7 +338,7 @@ function sbac_media_download_contents($node) {
                       $target_path = explode('/', $target);
                       $target_file = rawurlencode(array_pop($target_path));
                       $target = implode('/', $target_path) . '/' . $target_file;
-                      $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+                      $download_url = 'https://' . OSCADDIE_GCS_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
                       $request = new Google_Http_Request($download_url, 'GET');
                       $signed_request = $services['client']->getAuth()->sign($request);
                       $httpRequest = $services['client']->getIo()->makeRequest($signed_request);
@@ -348,7 +348,7 @@ function sbac_media_download_contents($node) {
                       }
                     }
                   } catch (Exception $e) {
-                    watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::stream_read');
+                    watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::sbac_media_download_contents');
                   }
                 }
               }
@@ -1332,7 +1332,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
 function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
   try {
     $bucket = SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION;
-    $folder = variable_get('google_cdn_folder');
+    $folder = variable_get('oscaddie_gcs_folder');
     $buffer = file_get_contents($file_to_upload);
 
     // Create the Storage Object
@@ -1379,8 +1379,8 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
     }
   }
   catch (Exception $e) {
-    watchdog_exception('google_cdn', $e, 'HTML5 Upload Exception');
-    watchdog('google_cdn', 'Unable to upload file: ' . $folder . '/' . $path);
+    watchdog_exception('oscaddie_gcs', $e, 'HTML5 Upload Exception');
+    watchdog('oscaddie_gcs', 'Unable to upload file: ' . $folder . '/' . $path);
     return FALSE;
   }
 }
@@ -1393,7 +1393,7 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
 function sbac_media_move_html5_thumbnail($file_attributes) {
   $zip_contents_path = $file_attributes['full_html5_temp_path'];
   $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
-  $thumbnail_move_path = 'private://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
+  $thumbnail_move_path = 'public://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
   if (file_prepare_directory($thumbnail_move_path, FILE_CREATE_DIRECTORY)) {
     $thumbnail_move_path .= '/thumbnail.png';
     $real_path = drupal_realpath($thumbnail_move_path);
@@ -2035,7 +2035,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
   $google_directory = str_replace('private://', '', $directory);
   $gcs = sbac_media_get_google_cloud_storage();
   if ($gcs) {
-    $folder = variable_get('google_cdn_folder');
+    $folder = variable_get('oscaddie_gcs_folder');
     $response = $gcs['service']->objects->listObjects(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, array('prefix' => $folder . '/' . $google_directory));
     if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
       foreach ($response['modelData']['items'] as $object) {
@@ -2055,7 +2055,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
  * @param $nid
  */
 function sbac_media_html5_delete_thumbnail($nid) {
-  $thumbnail_dir = 'private://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
+  $thumbnail_dir = 'public://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
   if (file_exists($thumbnail_dir)) {
     file_unmanaged_delete_recursive($thumbnail_dir);
   }
