@@ -1315,6 +1315,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     // Set resource to draft state.
     $node = node_load($file_attributes['nid']);
     workbench_moderation_moderate($node, 'draft');
+    sbac_resource_save_current_state($node);
   }
 }
 
