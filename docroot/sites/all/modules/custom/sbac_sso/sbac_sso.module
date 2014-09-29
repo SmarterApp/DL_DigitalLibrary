@@ -904,17 +904,23 @@ function sbac_sso_program_management_api_request(&$response) {
  */
 function sbac_sso_get_program_management_response(&$response, $query_string) {
   $api_response = array();
-  // Get the OAuth token to make calls to Program Management.
-  $access_token = sbac_sso_get_program_management_oauth_access_token();
-  if ($access_token) {
-    // Loop around all state query string and get the PM results for each one.
-    foreach ($query_string as $state => $query) {
-      $cache = NULL;
-      if (isset($query['cache'])) {
-        $cache = $query['cache'];
-        unset($query['cache']);
+  $access_token = NULL;
+  // Loop around all state query string and get the PM results for each one.
+  foreach ($query_string as $state => $query) {
+    // Get the cache result for each query.
+    $cache = NULL;
+    if (isset($query['cache'])) {
+      $cache = $query['cache'];
+      unset($query['cache']);
+    }
+    // Check if its cached, if not, get from API.
+    if ($cache == NULL || ($cache['cache_valid'] == FALSE || $cache['cache_valid'] == NULL)) {
+      // Get the OAuth token to make calls to Program Management.
+      if ($access_token == NULL) {
+        $access_token = sbac_sso_get_program_management_oauth_access_token();
       }
-      if ($cache == NULL || ($cache['cache_valid'] == FALSE || $cache['cache_valid'] == NULL)) {
+
+      if ($access_token) {
         $data = http_build_query($query);
         $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
         $curl = curl_init();
@@ -924,7 +930,7 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
         ));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($curl, CURLOPT_SSLVERSION,3);
+        curl_setopt($curl, CURLOPT_SSLVERSION, 3);
         $result = curl_exec($curl);
         $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
@@ -935,13 +941,14 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
           }
         }
       }
-      else {
-        $api_response[$state] = $cache['cache_result'];
-        $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
-      }
+    }
+    else {
+      $api_response[$state] = $cache['cache_result'];
+      $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
     }
   }
 
+  // Parse the API results, or cached results to check if valid.
   if (isset($response['pm_api_results'])) {
     foreach ($response['pm_api_results'] as $state => $json) {
       $pm_api_response = sbac_sso_parse_program_api_response($json);
