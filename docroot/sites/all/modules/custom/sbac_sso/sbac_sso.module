@@ -572,7 +572,6 @@ function sbac_sso_validate_saml_response($saml_token) {
   }
   // program manager api call.
   $api_response = sbac_sso_program_management_api_request($response);
-  error_log("RESPONSE ARRAY1: " . $response);
   if (!$api_response) {
     // Kick the user to an error page with Smarter Balanced Contact information
     // and a custom error code ( do not include the details pertaining to what
@@ -907,7 +906,6 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
   $api_response = array();
   // Get the OAuth token to make calls to Program Management.
   $access_token = sbac_sso_get_program_management_oauth_access_token();
-  error_log("ACCESS TOKEN: " . $access_token);
   if ($access_token) {
     // Loop around all state query string and get the PM results for each one.
     foreach ($query_string as $state => $query) {
@@ -930,8 +928,6 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
         $result = curl_exec($curl);
         $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        error_log("RESULT: " . $result);
-        error_log("HTTP STATUS: " . $http_status);
         if ($result && $http_status == 200) {
           $json = drupal_json_decode($result);
           if (isset($json['tenants'])) {
@@ -991,8 +987,6 @@ function sbac_sso_get_program_management_oauth_access_token() {
   curl_setopt($curl, CURLOPT_SSLVERSION, 3);
   $result = curl_exec($curl);
   $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-  error_log("TOKEN RESULT: " . $result);
-  error_log("TOKEN HTTP STATUS: " . $http_status);
   curl_close($curl);
   unset($curl);
 
@@ -1293,7 +1287,6 @@ function sbac_sso_saml_assertion() {
   $string = user_password(10);
   $date = date('Y-m-d') . 'T' . date('H:i:s') . '.073Z';
   $saml_assertion = '<samlp:AuthnRequest ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" IssueInstant="' . $date . '" Destination="' . SBAC_SSO_URL . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer><samlp:NameIDPolicy AllowCreate="true" /></samlp:AuthnRequest>';
-  error_log($saml_assertion);
   return $saml_assertion;
 }
 
