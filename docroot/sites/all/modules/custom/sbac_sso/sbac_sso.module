@@ -761,7 +761,7 @@ function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
         // Meaning, if chain includes state/district/institution keep that one, if the
         // chain includes state/district and state/institution, keep the first one since the
         // weight (number of items) is the same.
-        if (count($chain) > count($keep_chain[$state_id]) || !isset($keep_chain[$state_id])) {
+        if (!isset($keep_chain[$state_id]) || count($chain) > count($keep_chain[$state_id])) {
           $keep_chain[$state_id] = $chain;
         }
       }
@@ -906,6 +906,7 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
   $api_response = array();
   // Get the OAuth token to make calls to Program Management.
   $access_token = sbac_sso_get_program_management_oauth_access_token();
+  error_log("ACCESS TOKEN: " . $access_token);
   if ($access_token) {
     // Loop around all state query string and get the PM results for each one.
     foreach ($query_string as $state => $query) {
@@ -928,6 +929,8 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
         $result = curl_exec($curl);
         $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
+        error_log("RESULT: " . $result);
+        error_log("HTTP STATUS: " . $http_status);
         if ($result && $http_status == 200) {
           $json = drupal_json_decode($result);
           if (isset($json['tenants'])) {
@@ -987,6 +990,8 @@ function sbac_sso_get_program_management_oauth_access_token() {
   curl_setopt($curl, CURLOPT_SSLVERSION, 3);
   $result = curl_exec($curl);
   $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  error_log("TOKEN RESULT: " . $result);
+  error_log("TOKEN HTTP STATUS: " . $http_status);
   curl_close($curl);
   unset($curl);
 
