@@ -1255,53 +1255,72 @@ function sbac_media_html5_element_upload($form, $form_state) {
  * @param $file_attributes
  */
 function sbac_media_html5_upload_asynchronous($file_attributes) {
-  error_log('here we are');
-  $error_uploading = FALSE;
-  sbac_media_html5_start_progress($file_attributes['nid']);
-  $temp_path = $file_attributes['html5_temp_path'];
-  // Generate unique path for HTML5 module.
-  $gcs_location = $file_attributes['gcs_location'];
-  $gcs = sbac_media_get_google_cloud_storage();
-
-  // Create recursive dir iterator which skips dot folders
-  $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
-  // Flatten the recursive iterator, folders come before their files
-  $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
-  // Basic loop displaying different messages based on file or folder
-  foreach ($it as $fileinfo) {
-    // Don't try to upload directories, Google just creates a place holder.
-    // When the folder has content underneath it, Google will then create
-    // an actual foler.
-    if (!$fileinfo->isDir()) {
-      $full_path = $fileinfo->getPathname();
-      if (strpos($full_path, 'Thumbs.db') !== FALSE || strpos($full_path, '.DS_Store') !== FALSE) {
-        continue;
-      }
-      $path = str_replace($temp_path, '', $full_path);
-      error_log($gcs_location . $path);
-      $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
-      error_log('Bytes Written: ' . $bytes_written);
-      if ($bytes_written == NULL || $bytes_written == FALSE) {
-        $error_uploading = TRUE;
-        break;
+  try {
+    $error_uploading = FALSE;
+    // Insert new DB record for tracking purposes.
+    sbac_media_html5_start_progress($file_attributes['nid']);
+    $temp_path = $file_attributes['html5_temp_path'];
+    // Generate unique path for HTML5 module.
+    $gcs_location = $file_attributes['gcs_location'];
+    // Get Google Cloud Storage service / client.
+    $gcs = sbac_media_get_google_cloud_storage();
+    // Create recursive dir iterator which skips dot folders
+    $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
+    // Flatten the recursive iterator, folders come before their files
+    $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+    // Basic loop displaying different messages based on file or folder
+    foreach ($it as $fileinfo) {
+      // Don't try to upload directories, Google just creates a place holder.
+      // When the folder has content underneath it, Google will then create
+      // an actual foler.
+      if (!$fileinfo->isDir()) {
+        $full_path = $fileinfo->getPathname();
+        if (strpos($full_path, 'Thumbs.db') !== FALSE || strpos($full_path, '.DS_Store') !== FALSE) {
+          continue;
+        }
+        $path = str_replace($temp_path, '', $full_path);
+        error_log($gcs_location . $path);
+        $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
+        error_log('Bytes Written: ' . $bytes_written);
+        if ($bytes_written == NULL || $bytes_written == FALSE) {
+          $error_uploading = TRUE;
+          break;
+        }
       }
     }
-  }
 
-  error_log("COMPLETED SOMETHING");
-  if (!$error_uploading) {
-    error_log("VALID");
-    // Finish the progress indicator
-    error_log(print_r($file_attributes, TRUE));
-    sbac_media_html5_finish_progress($file_attributes['nid']);
-    // Remove local HTML5 directory
-    $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
-    if (file_exists($local_directory)) {
-      file_unmanaged_delete_recursive($local_directory);
+    error_log("COMPLETED SOMETHING");
+    if (!$error_uploading) {
+      error_log("VALID");
+      // Finish the progress indicator
+      error_log(print_r($file_attributes, TRUE));
+      sbac_media_html5_finish_progress($file_attributes['nid']);
+      // Remove local HTML5 directory
+      $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
+      if (file_exists($local_directory)) {
+        file_unmanaged_delete_recursive($local_directory);
+      }
+    }
+    else {
+      error_log("BAD UPLOAD");
+      // Set an error on the progress
+      sbac_media_html5_error_progress($file_attributes['nid']);
+      // Send notication to user who submitted HTML5 module
+      // and needs to know about the problem.
+      if ($task = taskit_get_object('html5_upload_error')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $file_attributes['nid']);
+        $task->addOwningUser($file_attributes['uid']);
+        $task->save();
+      }
+      // Set resource to draft state.
+      $node = node_load($file_attributes['nid']);
+      workbench_moderation_moderate($node, 'draft');
     }
   }
-  else {
-    error_log("BAD UPLOAD");
+  catch (Exception $e) {
+    error_log("BAD UPLOAD EXCEPTION");
+    watchdog_exception('SBAC Media', $e, 'sbac_media_html5_upload_asynchronous');
     // Set an error on the progress
     sbac_media_html5_error_progress($file_attributes['nid']);
     // Send notication to user who submitted HTML5 module
