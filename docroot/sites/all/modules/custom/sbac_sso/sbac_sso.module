@@ -572,7 +572,7 @@ function sbac_sso_validate_saml_response($saml_token) {
   }
   // program manager api call.
   $api_response = sbac_sso_program_management_api_request($response);
-  error_log("RESPONSE ARRAY: " . $response);
+  error_log("RESPONSE ARRAY1: " . $response);
   if (!$api_response) {
     // Kick the user to an error page with Smarter Balanced Contact information
     // and a custom error code ( do not include the details pertaining to what
