@@ -130,18 +130,18 @@ function sbac_sso_boot() {
  */
 function sbac_sso_menu_alter(&$items) {
   // If you wish to disable this module from overriding Drupal login / logout.
-  if (!isset($_ENV['AH_SITE_ENVIRONMENT']) || $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
-    if (isset($items['user'])) {
-      $items['user']['page callback'] = 'sbac_sso_consume';
-      $items['user']['module'] = 'sbac_sso';
-      $items['user']['file'] = NULL;
-    }
-    if (isset($items['user/logout'])) {
-      $items['user/logout']['page callback'] = 'sbac_sso_logout';
-      $items['user/logout']['module'] = 'sbac_sso';
-      $items['user/logout']['file'] = NULL;
-    }
-  }
+//  if (!isset($_ENV['AH_SITE_ENVIRONMENT']) || $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
+//    if (isset($items['user'])) {
+//      $items['user']['page callback'] = 'sbac_sso_consume';
+//      $items['user']['module'] = 'sbac_sso';
+//      $items['user']['file'] = NULL;
+//    }
+//    if (isset($items['user/logout'])) {
+//      $items['user/logout']['page callback'] = 'sbac_sso_logout';
+//      $items['user/logout']['module'] = 'sbac_sso';
+//      $items['user/logout']['file'] = NULL;
+//    }
+//  }
 }
 
 /**
