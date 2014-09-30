@@ -1303,43 +1303,40 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     }
     else {
       error_log("BAD UPLOAD");
-      // Set an error on the progress
-      sbac_media_html5_error_progress($file_attributes['nid']);
-      // Send notication to user who submitted HTML5 module
-      // and needs to know about the problem.
-      if ($task = taskit_get_object('html5_upload_error')) {
-        $task->addVisibility($task::VISIBILITY_USER);
-        $task->addEntity('node', $file_attributes['nid']);
-        $task->addOwningUser($file_attributes['uid']);
-        $task->save();
-      }
-      // Set resource to draft state.
-      $node = node_load($file_attributes['nid']);
-      workbench_moderation_moderate($node, 'draft');
+      sbac_media_html5_fail_upload($file_attributes);
     }
   }
   catch (Exception $e) {
     error_log("BAD UPLOAD EXCEPTION");
     watchdog_exception('SBAC Media', $e, 'sbac_media_html5_upload_asynchronous');
-    // Set an error on the progress
-    sbac_media_html5_error_progress($file_attributes['nid']);
-    // Send notication to user who submitted HTML5 module
-    // and needs to know about the problem.
-    if ($task = taskit_get_object('html5_upload_error')) {
-      $task->addVisibility($task::VISIBILITY_USER);
-      $task->addEntity('node', $file_attributes['nid']);
-      $task->addOwningUser($file_attributes['uid']);
-      $task->save();
-    }
-    // Set resource to draft state.
-    $node = node_load($file_attributes['nid']);
-    // Load the admin roles, set it to the global user
-    $account = user_load(1);
-    global $user;
-    $user = $account;
-    workbench_moderation_moderate($node, 'draft');
-    sbac_resource_save_current_state($node);
+    sbac_media_html5_fail_upload($file_attributes);
   }
+}
+
+/**
+ * Fail the HTML5 upload and set the node back to draft.
+ *
+ * @param $file_attributes
+ */
+function sbac_media_html5_fail_upload($file_attributes) {
+  // Set an error on the progress
+  sbac_media_html5_error_progress($file_attributes['nid']);
+  // Send notication to user who submitted HTML5 module
+  // and needs to know about the problem.
+  if ($task = taskit_get_object('html5_upload_error')) {
+    $task->addVisibility($task::VISIBILITY_USER);
+    $task->addEntity('node', $file_attributes['nid']);
+    $task->addOwningUser($file_attributes['uid']);
+    $task->save();
+  }
+  // Set resource to draft state.
+  $node = node_load($file_attributes['nid']);
+  // Load the admin roles, set it to the global user
+  $account = user_load(1);
+  global $user;
+  $user = $account;
+  workbench_moderation_moderate($node, 'draft');
+  sbac_resource_save_current_state($node);
 }
 
 /**
