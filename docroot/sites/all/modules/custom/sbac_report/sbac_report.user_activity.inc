@@ -123,8 +123,8 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   }
   else {
     if (count($user_groups) == 0) {
+      drupal_set_message(SBAC_REPORT_FILTER_ERROR, 'error');
       $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
-      $_SESSION['sbac_report']['active_tab'] = 1;
       return;
     }
   }
