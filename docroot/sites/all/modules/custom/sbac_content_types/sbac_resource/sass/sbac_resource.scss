@@ -1000,13 +1000,13 @@ a.sbac-grid-layout {
 
 /*Resource Dropdown*/
 html.js .category-hide.js-hide {
-    display: block;
-		visibility: hidden;
+  display: block;
+	visibility: hidden;
 }
 
 html.js .category-hide {
-    display: block;
-		visibility: visible;
+  display: block;
+	visibility: visible;
 }
 
 .filters {
@@ -1018,7 +1018,7 @@ html.js .category-hide {
   position: relative;
 
   &.active{
-    overflow: visible !important;
+    overflow: visible !important; 
   }
 
 	&:hover, &:focus {
