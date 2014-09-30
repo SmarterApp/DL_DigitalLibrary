@@ -884,6 +884,8 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       // Hide the description field that comes with the taxonomy term entity.
       //   Use our own descrition field, more control.
       $form['description']['#access'] = FALSE;
+      $form['relations']['#access'] = FALSE;
+      $form['path']['#access'] = FALSE;
 
       $form['field_forum_resource_ref']['#access'] = FALSE;
       $form['field_digital_media_type']['#access'] = FALSE;
