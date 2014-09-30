@@ -1189,3 +1189,18 @@ function sbac_resource_update_7052() {
 function sbac_resource_update_7053(){
   db_create_table('sbac_resource_download_stats', drupal_get_schema_unprocessed('sbac_resource', 'sbac_resource_download_stats'));
 }
+
+/**
+ * Clean up the notification table
+ */
+function sbac_resource_update_7054(){
+  db_query("
+DELETE
+	t1, t2
+FROM taskit_entity t1
+	LEFT JOIN taskit t2
+		ON t1.task_id = t2.task_id
+	LEFT JOIN node n
+		ON t1.entity_id = n.nid
+WHERE t1.entity_type = 'node' AND n.nid IS null");
+}

@@ -2287,6 +2287,9 @@ function sbac_resource_node_delete($node) {
     }
     // Delete favorite
     db_delete('sbac_favorites')->condition('type', 'node')->condition('id', $node->nid)->execute();
+
+    // Delete notifications
+    db_query("delete t1, t2 from {taskit_entity} t1 left join {taskit} t2 on t1.task_id = t2.task_id where t1.entity_type = 'node' and t1.entity_id = :nid", array(':nid' => $node->nid));
   }
 }
 
