@@ -1334,9 +1334,11 @@ function sbac_media_html5_fail_upload($file_attributes) {
   // Load the admin roles, set it to the global user
   $account = user_load(1);
   global $user;
+  $temp_user = $user;
   $user = $account;
   workbench_moderation_moderate($node, 'draft');
   sbac_resource_save_current_state($node);
+  $user = $temp_user;
 }
 
 /**
