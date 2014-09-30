@@ -516,6 +516,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   }
 
   // Attach JS / CSS.
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.ctools.js';
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/jquery-ui.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/jquery-ui.css';
@@ -709,6 +710,8 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
   // Check for default value.
   $html5_content = FALSE;
   if (isset($form['#node']->nid)) {
+    $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.ctools.js';
+
     $html5_media_item = sbac_media_load_html5_item($form['#node']->nid, TRUE);
     if ($html5_media_item) {
       $html5_content = TRUE;
@@ -762,6 +765,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
               'width' => 600,
               'height' => 160,
             ),
+            'modalTheme' => 'CtoolSbacMediaDeleteMaterial'
           ),
         );
         drupal_add_js($js_settings, 'setting');
@@ -1010,6 +1014,7 @@ function _sbac_media_create_list($media_items, $form_state) {
             'width' => 600,
             'height' => 160,
           ),
+          'modalTheme' => 'CtoolSbacMediaDeleteMaterial'
         ),
       );
       drupal_add_js($js_settings, 'setting');
