@@ -1314,7 +1314,12 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
     }
     // Set resource to draft state.
     $node = node_load($file_attributes['nid']);
+    // Load the admin roles, set it to the global user
+    $account = user_load(1);
+    global $user;
+    $user = $account;
     workbench_moderation_moderate($node, 'draft');
+    sbac_resource_save_current_state($node);
   }
 }
 
