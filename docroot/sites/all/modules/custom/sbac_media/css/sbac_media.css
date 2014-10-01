@@ -162,3 +162,17 @@
 .dup-btns {
   text-align: right;
 }
+
+/* line 165, ../sass/sbac_media.scss */
+.page-node-edit.node-type-resource #modalContent .ctools-modal-content.small,
+.node-type-resource.section-content #modalContent .ctools-modal-content.small {
+  height: auto !important;
+  width: 620px !important;
+  padding: 5px 0 0;
+}
+
+/* line 172, ../sass/sbac_media.scss */
+.page-node-edit.node-type-resource #modalContent .ctools-modal-content .modal-content,
+.node-type-resource.section-content #modalContent .ctools-modal-content .modal-content {
+  height: auto !important;
+}
