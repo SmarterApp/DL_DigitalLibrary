@@ -1,3 +1,7 @@
+<?php if ($smart_search_welcome) : ?>
+  <?php print $smart_search_welcome; ?>
+<?php endif; ?>
+
 <?php if (!$pwd && $pwd_highlights): ?>
   <div class="pwd-highlights-container">
     <div class="pwd-highlights-header">
@@ -21,9 +25,6 @@
   </div>
 <?php endif; ?>
 <div class='row digital-library <?php echo $pwd; ?>'>
-  <?php if ($smart_search_welcome) : ?>
-    <?php print $smart_search_welcome; ?>
-  <?php endif; ?>
   <?php if ($no_results) : ?>
   <div class="no-results">
     <?php echo $no_results; ?>
