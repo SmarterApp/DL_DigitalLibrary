@@ -369,8 +369,10 @@ function sbac_search_my_resources_form() {
   $should_hide_categories = sbac_search_hide_category_style();
 
   $current_filters = NULL;
+  $hide_a_tag = '';
   if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS])) {
     $current_filters = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS];
+    $hide_a_tag = 'style="display:none;"';
   }
 
   if ($should_hide_categories) {
@@ -379,7 +381,7 @@ function sbac_search_my_resources_form() {
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a>',
+    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#" ' . $hide_a_tag . '>' . $hide_categories_text . '</a>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
@@ -450,8 +452,10 @@ function sbac_search_resource_review_form() {
   $should_hide_categories = sbac_search_hide_category_style();
 
   $current_filters = NULL;
+  $hide_a_tag = '';
   if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS])) {
     $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
+    $hide_a_tag = 'style="display:none;"';
   }
 
   if ($should_hide_categories) {
@@ -460,7 +464,7 @@ function sbac_search_resource_review_form() {
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a>',
+    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#" ' . $hide_a_tag . '>' . $hide_categories_text . '</a>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
@@ -531,8 +535,10 @@ function sbac_search_digital_library_resources_form() {
   $should_hide_categories = sbac_search_hide_category_style();
 
   $current_filters = NULL;
+  $hide_a_tag = '';
   if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS])) {
     $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS];
+    $hide_a_tag = 'style="display:none;"';
   }
 
   if ($should_hide_categories) {
@@ -541,7 +547,7 @@ function sbac_search_digital_library_resources_form() {
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a>',
+    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#" ' . $hide_a_tag . '>' . $hide_categories_text . '</a>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),

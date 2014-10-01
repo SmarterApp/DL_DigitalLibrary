@@ -999,17 +999,31 @@ a.sbac-grid-layout {
 }
 
 /*Resource Dropdown*/
+html.js .category-hide.js-hide {
+  display: block;
+	visibility: hidden;
+}
+
+html.js .category-hide {
+  display: block;
+	visibility: visible;
+}
+
 .filters {
   background: #c9eaf8;
   color: #0684ad;
-  padding: 45px 0 0;
+  padding: 0;
   border-bottom: 1px solid #056382;
 
   position: relative;
 
   &.active{
-    overflow:visible !important;
+    overflow: visible !important; 
   }
+
+	&:hover, &:focus {
+		outline: none;
+	}
 
   .column {
     &:first-child {
@@ -1097,6 +1111,10 @@ a.sbac-grid-layout {
   }
 }
 
+.categories-filter {
+	padding-bottom: 10px;
+}
+
 .categories-filter-choices {
   position: absolute;
   top: 100px;
@@ -1169,7 +1187,7 @@ a.sbac-grid-layout {
       display: none;
     }
 
-    margin: 10px 20px 5px;
+    margin: 0 20px 5px;
     padding: 10px 0 0;
     /*color: white;
         border: 1px solid white;
@@ -2004,11 +2022,14 @@ a.sbac-grid-layout {
 }
 
 a.category-hide {
-		position: absolute;
-		right: 20px;
-		top: -30px;
-		font-size: 13px;
+		font-size: 13px; 
 	 	color: #006082;
+		height: 45px;
+		width: 100%;
+		text-align: right;
+		display: block;
+		line-height: 45px;
+		padding-right: 20px;
 }
 
 /*For Chrome*/
