@@ -160,3 +160,15 @@
 .dup-btns{
 	text-align:right;
 }
+
+.page-node-edit.node-type-resource #modalContent .ctools-modal-content.small, 
+.node-type-resource.section-content #modalContent .ctools-modal-content.small {
+  height: auto !important;
+  width: 620px !important;
+	padding: 5px 0 0;
+}
+
+.page-node-edit.node-type-resource #modalContent .ctools-modal-content .modal-content, 
+.node-type-resource.section-content #modalContent .ctools-modal-content .modal-content{
+  height: auto !important;
+}

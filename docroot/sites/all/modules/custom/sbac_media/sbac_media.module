@@ -2121,16 +2121,16 @@ function sbac_media_delete_media_form() {
     '#markup' => '<p>' . t('If you continue, the material will be removed from this resource.') . '</p>',
   );
 
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('id' => array('edit-cancel-media-overlay'))
-  );
-
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete',
-    '#attributes' => array('id' => array('edit-delete-media-overlay'))
+    '#attributes' => array('class' => array('red'), 'id' => array('edit-delete-media-overlay'))
+  );
+
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('gray cancel'), 'id' => array('edit-cancel-media-overlay'))
   );
 
   return $form;
