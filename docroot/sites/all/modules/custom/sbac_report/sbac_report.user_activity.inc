@@ -122,7 +122,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     batch_process('reports');
   }
   else {
-    if (count($user_groups) == 0) {
+    if (count($users) == 0) {
       drupal_set_message(SBAC_REPORT_FILTER_ERROR, 'error');
       $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
       return;
