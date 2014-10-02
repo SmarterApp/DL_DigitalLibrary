@@ -904,23 +904,17 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
           return $stat;
         }
 
-        $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
-        $request = new Google_HttpRequest($download_url, 'GET');
-        $http_response = $this->client->getIo()->authenticatedRequest($request);
-        $code = FALSE;
-        if ($http_response) {
-          $code = $http_response->getResponseHttpCode();
-        }
-        if ($code == 200) {
+        // Check to see if the file exists.
+        $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+        if ($response && isset($response->size) && $response->size != NULL) {
           $mode = 0100000;
-          $size = strlen($http_response->getResponseBody());
+          $size = $response->size;
           $mode |= 0777;
           $stat = $this->createFileMode($mode, $size);
           return $stat;
         }
       }
       catch (Exception $e) {
-        // watchdog_exception('oscaddie_gcs', $e);
       }
     }
 
