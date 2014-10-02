@@ -1028,7 +1028,7 @@ function sbac_report_get_in_reviews($uid, $date_range) {
   WHERE
     type = :type AND
     uid = :uid AND
-    ((status = :status) OR (status = 0 AND archived = 1)) AND
+    (status = :status) AND
     completed = :completed AND
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
 

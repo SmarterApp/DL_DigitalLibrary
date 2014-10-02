@@ -903,19 +903,14 @@ class OSCaddieGCSStreamWrapperBeta implements DrupalStreamWrapperInterface {
           return $stat;
         }
 
-        $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
-        $request = new Google_Http_Request($download_url, 'GET');
-        $signed_request = $this->client->getAuth()->sign($request);
-        $http_request = $this->client->getIo()->makeRequest($signed_request);
-        if ($http_request) {
-          $code = $http_request->getResponseHttpCode();
-          if ($code == 200) {
-            $mode = 0100000;
-            $size = strlen($http_request->getResponseBody());
-            $mode |= 0777;
-            $stat = $this->createFileMode($mode, $size);
-            return $stat;
-          }
+        // Check to see if the file exists.
+        $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+        if ($response && isset($response->size) && $response->size != NULL) {
+          $mode = 0100000;
+          $size = $response->size;
+          $mode |= 0777;
+          $stat = $this->createFileMode($mode, $size);
+          return $stat;
         }
       }
       catch (Exception $e) {
