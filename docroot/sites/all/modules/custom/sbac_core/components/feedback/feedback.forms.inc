@@ -223,6 +223,8 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
       '#markup' => '<script>Drupal.settings.feedback.form_error = ' . $form_error . ';</script>',
     );
 
+  sbac_resource_remove_default_status_messages();
+
   return $form;
 }
 
@@ -314,6 +316,8 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
     $task->addTriggeringUser(1);
     $task->save();
   }
+
+  sbac_resource_remove_default_status_messages();
 }
 
 /**
@@ -451,6 +455,8 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
   $form_state['redirect'] = array(
     'resource-review'
   );
+
+  sbac_resource_remove_default_status_messages();
 }
 
 /**
@@ -546,6 +552,8 @@ function feedback_eck_post_form_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = 'node/' . $node->nid;
+
+  sbac_resource_remove_default_status_messages();
 }
 
 /*----------------------------------------------------------------------------

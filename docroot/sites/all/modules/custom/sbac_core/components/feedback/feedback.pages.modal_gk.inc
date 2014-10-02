@@ -41,7 +41,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
     $form['state_cancel']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t('If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '
+                      ' . t('If you continue, you will no longer be able to review this resource. All of your responses and comments will be lost.') . '
                     </div>
                    ',
     );
@@ -55,7 +55,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
     $form['state_not_meet']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t("You’ve indicated that this resource does not meet all the Gate-Keeping Criteria. If you wish to continue, the resource will be returned to the resource contributor with your comments. Be sure to provide actionable feedback.") . '
+                      ' . t("You’ve indicated that this resource does not meet all the Gate Keeper Criteria. If you continue, the resource will be returned to the Resource Contributor with your comments for editing or deletion. Please be sure you've provided actionable feedback.") . '
                     </div>
                    ',
     );
@@ -69,7 +69,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
     $form['state_meet']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t("You’ve indicated that this resource meets all the Gate-Keeping Criteria. If you continue, you will review the resource using the Quality Criteria.") . '
+                      ' . t("You’ve indicated that this resource meets all the Gate-Keeping Criteria. If you continue, you will be able to review it against the Quality Criteria.") . '
                     </div>
                    ',
     );
@@ -113,12 +113,12 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
         ) + $state_common_options,
 
         'cancel' => array(
-          'dialog' => array('title' => t('You are about to cancel the review')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to cancel the Review')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_cancel']['submit'])),
         ) + $state_common_options + $state_redirect_options,
 
         'not_meet' => array(
-          'dialog' => array('title' => t('This resource does not meet all Gate-Keeping criteria')) + $dialog_common_options,
+          'dialog' => array('title' => t('This resource does not meet all Gate Keeper criteria')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_not_meet']['submit'])),
           'submit_js_callback' => array(
             'behavior' => 'feedback',
@@ -127,7 +127,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
         ) + $state_common_options,
 
         'meet' => array(
-          'dialog' => array('title' => t('This resource meets all Gate-Keeping criteria.')) + $dialog_common_options,
+          'dialog' => array('title' => t('This resource meets all Gate Keeper criteria')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_meet']['submit'])),
           'submit_js_callback' => array(
             'behavior' => 'feedback',
