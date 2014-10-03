@@ -3747,3 +3747,17 @@ function sbac_resource_move_html5_thumbnail($node) {
   }
   unset($fid);
 }
+
+/**
+ * Remove the default Drupal messages when you save an entity
+ */
+function sbac_resource_remove_default_status_messages(){
+  if(!empty($_SESSION['messages']['status'])){
+    foreach($_SESSION['messages']['status'] as $index => $message){
+      if (preg_match('/^Entity.*(?=has been saved)/i', $message)) {
+        // Remove "Entity....has been saved" messages
+        array_splice($_SESSION['messages']['status'], $index, 1);
+      }
+    }
+  }
+}

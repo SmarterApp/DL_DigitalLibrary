@@ -40,7 +40,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
     $form['state_cancel']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t('If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '
+                      ' . t('If you continue, you will no longer be able to review this resource. All of your comments and answers will be lost.') . '
                     </div>
                    ',
     );
@@ -52,7 +52,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
   // reject state
     $form['state_reject']['intro'] = array(
-      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Returning this resource will send it and your comments back to the contributor for revision. It will also send a message to each of the reviewers. Be sure you’ve included actionable feedback.')  . '</div>',
+      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Rejecting this resource will send it back to the Resource Contributor for editing or deletion with your included message. It will also send a message to each of the Resource Reviewers.')  . '</div>',
     );
 
     $form['state_reject']['submit'] =  array(
@@ -62,7 +62,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
   // recommend state
     $form['state_post']['intro'] = array(
-      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Posting this resource will update its status and make it available to the Smart Balanced Digital Library community.')  . '</div>',
+      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Publishing this resource will make it available to the Smart Balanced Digital Library community.')  . '</div>',
     );
 
     $form['state_post']['submit'] =  array(
@@ -72,7 +72,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
   // post_distinction state
     $form['state_post_distinction']['intro'] = array(
-      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Posting this resource will update its status and make it available to the Smarter Balanced Digital Library community. It will also be identified as having been posted with distinction.')  . '</div>',
+      '#markup' => '<div class="gate-keeper-modal-intro">' . t('Publishing this resource will make it available to the Smart Balanced Digital Library community.')  . '</div>',
     );
 
     $form['state_post_distinction']['submit'] =  array(
@@ -82,7 +82,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
   // dialog configuration
     $dialog_common_options = array(
-      'width' => '700px',
+      'width' => '710px',
       'position' => 'center',
     );
 
@@ -114,12 +114,12 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
         ) + $state_common_options,
 
         'cancel' => array(
-          'dialog' => array('title' => t('You are about to cancel the review')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to cancel the Review')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_cancel']['submit'])),
         ) + $state_common_options + $state_redirect_options,
 
         'reject' => array(
-          'dialog' => array('title' => t('You are about to return this resource')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to reject this resource')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_reject']['submit'])),
           'submit_js_callback' => array(
             'behavior' => 'feedback',
@@ -128,7 +128,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
         ) + $state_common_options,
 
         'post' => array(
-          'dialog' => array('title' => t('You are about to post this resource')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to publish this resource')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_post']['submit'])),
           'submit_js_callback' => array(
             'behavior' => 'feedback',
@@ -137,7 +137,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
         ) + $state_common_options,
 
         'post_distinction' => array(
-          'dialog' => array('title' => t('You are about to post this resource with distinction')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to publish this resource with distinction')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_post_distinction']['submit'])),
           'submit_js_callback' => array(
             'behavior' => 'feedback',
