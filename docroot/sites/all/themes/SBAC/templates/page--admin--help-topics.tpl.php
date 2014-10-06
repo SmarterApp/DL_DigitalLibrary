@@ -100,7 +100,7 @@
   <div class="main-container clearfix">
     <?php
     global $user;
-    if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) {
+    if ($user->uid == 1 || array_intersect(array('DLRB member', 'help desk', 'administrator'), $user->roles)) {
         $sections = array();
 
         $view_help = views_get_view('help_topics');
