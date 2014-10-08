@@ -228,8 +228,7 @@ function sbac_flag_start_resource_moderation_modal($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
         // button to the Flag tab
-        $node = node_load($form_state['nid']);
-        $output[] = ctools_ajax_command_redirect('node/' . $node->nid . '/edit', 0, array('query' => array('flag' => 'resolve-resource-flags'), 'fragment' => 'review-Moderate_flag'));
+        $output[] = ctools_ajax_command_reload();
       }
 
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
