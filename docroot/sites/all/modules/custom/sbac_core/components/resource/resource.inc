@@ -64,7 +64,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_view_tags($node, $account);
           break;
         case 'access quality criteria revisions':
-          $perm = _sbac_resource_resubmit_timestamp($node->nid) && (_sbac_resource_is_recent_reviewers($node, $account->uid) || (_sbac_resource_is_recent_publishers($node, $account->uid)));
+          $perm = _resource_access_access_quality_criteria_revisions($node, $account);
           break;
         case 'access quality criteria process':
           $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles)) || in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
@@ -362,6 +362,7 @@ function _resource_access_node_has_state($node, $states) {
  * @param bool $uid
  * @param bool $status
  * @param bool $completed
+ * @param bool $current
  * @return int
  */
 function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE) {
@@ -383,4 +384,41 @@ function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FA
   }
   $query->fields('f', array('id'));
   return $query->countQuery()->execute()->fetchField();
+}
+
+/**
+ * 'access quality criteria revisions' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_access_quality_criteria_revisions($node, $account) {
+  // Check for in progress reviews
+  $in_progress_reviewers = db_select('eck_feedback', 'f')
+    ->condition('f.status', 1)
+    ->condition('f.completed', 0)
+    ->condition('f.current', 1)
+    ->condition('f.node_id', $node->nid)
+    ->fields('f', array('uid'))
+    ->execute()
+    ->fetchCol();
+  if (in_array($account->uid, $in_progress_reviewers)) {
+    // I have an in progress review
+    $access = TRUE;
+  }
+  elseif (!empty($in_progress_reviewers)) {
+    // Someone else has an in progress review
+    $access = FALSE;
+  }
+  else {
+    // There are no in progress reviews
+    $timestamp = _sbac_resource_resubmit_timestamp($node->nid);
+    $access = $timestamp
+      && _resource_access_node_has_state($node, array('needs_review', 'being_reviewed', 'approved'))
+      && array_intersect(array(FEEDBACK_REVIEWER_RID, FEEDBACK_PUBLISHER_RID), array_keys($account->roles))
+      && $node->uid != $account->uid
+      && (_resource_access_resubmission_reviewer_access($node, $account, $timestamp) || _resource_access_resubmission_publisher_access($node, $account, $timestamp));
+  }
+  return $access;
 }
