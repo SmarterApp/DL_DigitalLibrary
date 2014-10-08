@@ -122,9 +122,9 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     batch_process('reports');
   }
   else {
-    if (count($user_groups) == 0) {
+    if (count($users) == 0) {
+      drupal_set_message(SBAC_REPORT_FILTER_ERROR, 'error');
       $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
-      $_SESSION['sbac_report']['active_tab'] = 1;
       return;
     }
   }
@@ -438,10 +438,8 @@ function get_user_activity($user, $date_range) {
   $user_activity['resources_contributed'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # Resources Viewed:
-  $sql = "select count(id) as count, uid,created from eck_feedback where
-    type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1 and uid in (%s) and
-    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
-  $user_activity['resources_viewed'] = count_with_users_query($sql, $user, $from_date, $to_date);
+  $sql = "select count(n.nid) as count, n.uid from node_user_paradata n where n.uid in (%s) group by n.uid";
+  $user_activity['resources_viewed'] = count_with_users_query($sql, $user);
 
   # GK Reviews completed:
   $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and ((status = 1) OR (status = 0 AND archived = 1)) and completed = 1 and

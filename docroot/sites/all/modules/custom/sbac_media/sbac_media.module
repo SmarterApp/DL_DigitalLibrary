@@ -255,8 +255,8 @@ function sbac_media_get_google_cloud_storage() {
 
   try {
     if (libraries_load('google-api-php-client')) {
-      $service_account_name = variable_get('google_cdn_service_account_name');
-      $key_file_path = variable_get('google_cdn_public_key_file_path');
+      $service_account_name = variable_get('oscaddie_gcs_service_account_name');
+      $key_file_path = variable_get('oscaddie_gcs_public_key_file_path');
 
       $client = new Google_Client();
       // Replace this with your application name.
@@ -283,7 +283,7 @@ function sbac_media_get_google_cloud_storage() {
     }
   }
   catch (Exception $e) {
-    watchdog_exception('google_cdn', $e);
+    watchdog_exception('oscaddie_gcs', $e);
   }
 
   return $services;
@@ -303,8 +303,8 @@ function sbac_media_download_contents($node) {
         mkdir($destination);
       }
       $result = sbac_media_determine_download_access($node);
-      $bucket = variable_get('google_cdn_bucket_name');
-      $folder = variable_get('google_cdn_folder');
+      $bucket = variable_get('oscaddie_gcs_bucket_name');
+      $folder = variable_get('oscaddie_gcs_folder');
 
       $zip = new ZipArchive;
       $archive_uri = 'public://resource_zips/';
@@ -338,7 +338,7 @@ function sbac_media_download_contents($node) {
                       $target_path = explode('/', $target);
                       $target_file = rawurlencode(array_pop($target_path));
                       $target = implode('/', $target_path) . '/' . $target_file;
-                      $download_url = 'https://' . GOOGLE_CDN_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+                      $download_url = 'https://' . OSCADDIE_GCS_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
                       $request = new Google_Http_Request($download_url, 'GET');
                       $signed_request = $services['client']->getAuth()->sign($request);
                       $httpRequest = $services['client']->getIo()->makeRequest($signed_request);
@@ -348,7 +348,7 @@ function sbac_media_download_contents($node) {
                       }
                     }
                   } catch (Exception $e) {
-                    watchdog_exception('gooogle_cdn', $e, 'GoogleCDNStreamWrapper::stream_read');
+                    watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::sbac_media_download_contents');
                   }
                 }
               }
@@ -528,6 +528,7 @@ function sbac_media_widget_form_element(&$form, &$form_state) {
   }
 
   // Attach JS / CSS.
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.ctools.js';
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/jquery-ui.js';
   $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/jquery-ui.css';
@@ -721,6 +722,8 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
   // Check for default value.
   $html5_content = FALSE;
   if (isset($form['#node']->nid)) {
+    $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.ctools.js';
+
     $html5_media_item = sbac_media_load_html5_item($form['#node']->nid, TRUE);
     if ($html5_media_item) {
       $html5_content = TRUE;
@@ -774,6 +777,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
               'width' => 600,
               'height' => 160,
             ),
+            'modalTheme' => 'CtoolSbacMediaDeleteMaterial'
           ),
         );
         drupal_add_js($js_settings, 'setting');
@@ -1022,6 +1026,7 @@ function _sbac_media_create_list($media_items, $form_state) {
             'width' => 600,
             'height' => 160,
           ),
+          'modalTheme' => 'CtoolSbacMediaDeleteMaterial'
         ),
       );
       drupal_add_js($js_settings, 'setting');
@@ -1267,67 +1272,90 @@ function sbac_media_html5_element_upload($form, $form_state) {
  * @param $file_attributes
  */
 function sbac_media_html5_upload_asynchronous($file_attributes) {
-  error_log('here we are');
-  $error_uploading = FALSE;
-  sbac_media_html5_start_progress($file_attributes['nid']);
-  $temp_path = $file_attributes['html5_temp_path'];
-  // Generate unique path for HTML5 module.
-  $gcs_location = $file_attributes['gcs_location'];
-  $gcs = sbac_media_get_google_cloud_storage();
-
-  // Create recursive dir iterator which skips dot folders
-  $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
-  // Flatten the recursive iterator, folders come before their files
-  $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
-  // Basic loop displaying different messages based on file or folder
-  foreach ($it as $fileinfo) {
-    // Don't try to upload directories, Google just creates a place holder.
-    // When the folder has content underneath it, Google will then create
-    // an actual foler.
-    if (!$fileinfo->isDir()) {
-      $full_path = $fileinfo->getPathname();
-      if (strpos($full_path, 'Thumbs.db') !== FALSE || strpos($full_path, '.DS_Store') !== FALSE) {
-        continue;
+  try {
+    $error_uploading = FALSE;
+    // Insert new DB record for tracking purposes.
+    sbac_media_html5_start_progress($file_attributes['nid']);
+    $temp_path = $file_attributes['html5_temp_path'];
+    // Generate unique path for HTML5 module.
+    $gcs_location = $file_attributes['gcs_location'];
+    // Get Google Cloud Storage service / client.
+    $gcs = sbac_media_get_google_cloud_storage();
+    // Create recursive dir iterator which skips dot folders
+    $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
+    // Flatten the recursive iterator, folders come before their files
+    $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+    // Basic loop displaying different messages based on file or folder
+    foreach ($it as $fileinfo) {
+      // Don't try to upload directories, Google just creates a place holder.
+      // When the folder has content underneath it, Google will then create
+      // an actual foler.
+      if (!$fileinfo->isDir()) {
+        $full_path = $fileinfo->getPathname();
+        if (strpos($full_path, 'Thumbs.db') !== FALSE || strpos($full_path, '.DS_Store') !== FALSE) {
+          continue;
+        }
+        $path = str_replace($temp_path, '', $full_path);
+        error_log($gcs_location . $path);
+        $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
+        error_log('Bytes Written: ' . $bytes_written);
+        if ($bytes_written == NULL || $bytes_written == FALSE) {
+          $error_uploading = TRUE;
+          break;
+        }
       }
-      $path = str_replace($temp_path, '', $full_path);
-      error_log($gcs_location . $path);
-      $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
-      error_log('Bytes Written: ' . $bytes_written);
-      if ($bytes_written == NULL || $bytes_written == FALSE) {
-        $error_uploading = TRUE;
-        break;
+    }
+
+    error_log("COMPLETED SOMETHING");
+    if (!$error_uploading) {
+      error_log("VALID");
+      // Finish the progress indicator
+      error_log(print_r($file_attributes, TRUE));
+      sbac_media_html5_finish_progress($file_attributes['nid']);
+      // Remove local HTML5 directory
+      $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
+      if (file_exists($local_directory)) {
+        file_unmanaged_delete_recursive($local_directory);
       }
     }
+    else {
+      error_log("BAD UPLOAD");
+      sbac_media_html5_fail_upload($file_attributes);
+    }
   }
+  catch (Exception $e) {
+    error_log("BAD UPLOAD EXCEPTION");
+    watchdog_exception('SBAC Media', $e, 'sbac_media_html5_upload_asynchronous');
+    sbac_media_html5_fail_upload($file_attributes);
+  }
+}
 
-  error_log("COMPLETED SOMETHING");
-  if (!$error_uploading) {
-    error_log("VALID");
-    // Finish the progress indicator
-    error_log(print_r($file_attributes, TRUE));
-    sbac_media_html5_finish_progress($file_attributes['nid']);
-    // Remove local HTML5 directory
-    $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
-    if (file_exists($local_directory)) {
-      file_unmanaged_delete_recursive($local_directory);
-    }
+/**
+ * Fail the HTML5 upload and set the node back to draft.
+ *
+ * @param $file_attributes
+ */
+function sbac_media_html5_fail_upload($file_attributes) {
+  // Set an error on the progress
+  sbac_media_html5_error_progress($file_attributes['nid']);
+  // Send notication to user who submitted HTML5 module
+  // and needs to know about the problem.
+  if ($task = taskit_get_object('html5_upload_error')) {
+    $task->addVisibility($task::VISIBILITY_USER);
+    $task->addEntity('node', $file_attributes['nid']);
+    $task->addOwningUser($file_attributes['uid']);
+    $task->save();
   }
-  else {
-    error_log("BAD UPLOAD");
-    // Set an error on the progress
-    sbac_media_html5_error_progress($file_attributes['nid']);
-    // Send notication to user who submitted HTML5 module
-    // and needs to know about the problem.
-    if ($task = taskit_get_object('html5_upload_error')) {
-      $task->addVisibility($task::VISIBILITY_USER);
-      $task->addEntity('node', $file_attributes['nid']);
-      $task->addOwningUser($file_attributes['uid']);
-      $task->save();
-    }
-    // Set resource to draft state.
-    $node = node_load($file_attributes['nid']);
-    workbench_moderation_moderate($node, 'draft');
-  }
+  // Set resource to draft state.
+  $node = node_load($file_attributes['nid']);
+  // Load the admin roles, set it to the global user
+  $account = user_load(1);
+  global $user;
+  $temp_user = $user;
+  $user = $account;
+  workbench_moderation_moderate($node, 'draft');
+  sbac_resource_save_current_state($node);
+  $user = $temp_user;
 }
 
 /**
@@ -1344,7 +1372,7 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
 function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
   try {
     $bucket = SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION;
-    $folder = variable_get('google_cdn_folder');
+    $folder = variable_get('oscaddie_gcs_folder');
     $buffer = file_get_contents($file_to_upload);
 
     // Create the Storage Object
@@ -1391,8 +1419,8 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
     }
   }
   catch (Exception $e) {
-    watchdog_exception('google_cdn', $e, 'HTML5 Upload Exception');
-    watchdog('google_cdn', 'Unable to upload file: ' . $folder . '/' . $path);
+    watchdog_exception('oscaddie_gcs', $e, 'HTML5 Upload Exception');
+    watchdog('oscaddie_gcs', 'Unable to upload file: ' . $folder . '/' . $path);
     return FALSE;
   }
 }
@@ -1405,7 +1433,7 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
 function sbac_media_move_html5_thumbnail($file_attributes) {
   $zip_contents_path = $file_attributes['full_html5_temp_path'];
   $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
-  $thumbnail_move_path = 'private://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
+  $thumbnail_move_path = 'public://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
   if (file_prepare_directory($thumbnail_move_path, FILE_CREATE_DIRECTORY)) {
     $thumbnail_move_path .= '/thumbnail.png';
     $real_path = drupal_realpath($thumbnail_move_path);
@@ -2047,7 +2075,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
   $google_directory = str_replace('private://', '', $directory);
   $gcs = sbac_media_get_google_cloud_storage();
   if ($gcs) {
-    $folder = variable_get('google_cdn_folder');
+    $folder = variable_get('oscaddie_gcs_folder');
     $response = $gcs['service']->objects->listObjects(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, array('prefix' => $folder . '/' . $google_directory));
     if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
       foreach ($response['modelData']['items'] as $object) {
@@ -2067,7 +2095,7 @@ function sbac_media_html5_delete_asynchronous($directory) {
  * @param $nid
  */
 function sbac_media_html5_delete_thumbnail($nid) {
-  $thumbnail_dir = 'private://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
+  $thumbnail_dir = 'public://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
   if (file_exists($thumbnail_dir)) {
     file_unmanaged_delete_recursive($thumbnail_dir);
   }
@@ -2105,16 +2133,16 @@ function sbac_media_delete_media_form() {
     '#markup' => '<p>' . t('If you continue, the material will be removed from this resource.') . '</p>',
   );
 
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel',
-    '#attributes' => array('id' => array('edit-cancel-media-overlay'))
-  );
-
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Delete',
-    '#attributes' => array('id' => array('edit-delete-media-overlay'))
+    '#attributes' => array('class' => array('red'), 'id' => array('edit-delete-media-overlay'))
+  );
+
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('gray cancel'), 'id' => array('edit-cancel-media-overlay'))
   );
 
   return $form;

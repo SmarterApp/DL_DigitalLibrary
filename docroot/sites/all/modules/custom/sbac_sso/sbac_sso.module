@@ -17,43 +17,41 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     case 'stage2':
     case 'stage3':
     case 'sbac-023-d':
-      define('SBAC_SSO_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
-      define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
-      define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
-      define('SBAC_SSO_DESTROY_SESSION_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/UI/Logout');
-      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+    define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+    define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+    define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
+    define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
+    define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
+    define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
       break;
     case 'test':
     case 'stage':
     case 'loadtest':
     case 'sbac-023-train':
-      define('SBAC_SSO_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
       define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
       define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
-      define('SBAC_SSO_DESTROY_SESSION_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/UI/Logout');
-      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+      define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
+      define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
       break;
     case 'prod':
       define('SBAC_SSO_URL', 'https://sso.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+      define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
       define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
       define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
-      define('SBAC_SSO_PROGRAM_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
-      define('SBAC_SSO_PROGRAM_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
       define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso.smarterbalanced.org/auth/UI/Logout');
       define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
       break;
   }
 }
 else {
-  define('SBAC_SSO_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
-  define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://amp-dev-secure.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+  define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
   define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm-sso.opentestsystem.org:8443/rest/tenants');
   define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm-sso.opentestsystem.org:8443/rest/tenantchain');
-  define('SBAC_SSO_DESTROY_SESSION_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/UI/Logout');
-  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://amp-dev-secure.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
+  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
 }
 
 /**
@@ -129,8 +127,8 @@ function sbac_sso_boot() {
  * @param $items
  */
 function sbac_sso_menu_alter(&$items) {
-// If you wish to disable this module from overriding Drupal login / logout.
-//  if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
+  // If you wish to disable this module from overriding Drupal login / logout.
+  if (!isset($_ENV['AH_SITE_ENVIRONMENT']) || $_ENV['AH_SITE_ENVIRONMENT'] != 'loadtest') {
     if (isset($items['user'])) {
       $items['user']['page callback'] = 'sbac_sso_consume';
       $items['user']['module'] = 'sbac_sso';
@@ -141,7 +139,7 @@ function sbac_sso_menu_alter(&$items) {
       $items['user/logout']['module'] = 'sbac_sso';
       $items['user/logout']['file'] = NULL;
     }
-//  }
+  }
 }
 
 /**
@@ -434,7 +432,6 @@ function sbac_sso_consume() {
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
     $saml_token = base64_decode($_POST['SAMLResponse']);
-    // $saml_token = base64_decode(sbac_sso_get_saml_token2());
     $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
@@ -543,6 +540,7 @@ function sbac_sso_logout() {
   if (user_is_logged_in()) {
     global $base_url;
     global $user;
+    unset($_GET['q']);
     $logout_assertion = sbac_sso_logout_assertion();
     // Destroy the current session, and reset $user to the anonymous user.
     watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
@@ -819,6 +817,9 @@ function sbac_sso_create_user_attributes($chain) {
       if ($value == '' || $value == NULL) {
         unset($user_attributes[$key]);
       }
+      if ($key == 'institution' || $key == 'district') {
+        $user_attributes[$key] = ucwords(strtolower(htmlspecialchars_decode(str_replace("&amp;apos;", "'", $value))));
+      }
     }
   }
   return $user_attributes;
@@ -866,8 +867,8 @@ function sbac_sso_program_management_api_request(&$response) {
             $query_string[$state]['INSTITUTION'] = $attribute;
             break;
         }
-        $query_string[$state]['cache']['cache_valid'] = FALSE;
-        $query_string[$state]['cache']['cache_result'] = FALSE;
+        $query_string[$state]['cache']['cache_valid'] = NULL;
+        $query_string[$state]['cache']['cache_result'] = NULL;
       }
     }
   }
@@ -879,12 +880,16 @@ function sbac_sso_program_management_api_request(&$response) {
       foreach ($query_params as $type => $state_id) {
         if ($type != 'cache') {
           foreach ($cached_results[$type] as $cached_id => $cached_result) {
-            if ($cached_result['id'] == $cached_id) {
+            if ($cached_result['type'] == 'STATE' && $cached_result['name'] == $query_params['STATE']) {
               $json['tenants'][0] = $cached_result;
               $in_good_standing = sbac_sso_parse_program_api_response($json, TRUE);
               if ($in_good_standing) {
                 $query_string[$state]['cache']['cache_valid'] = TRUE;
                 $query_string[$state]['cache']['cache_result'] = $cached_result;
+              }
+              else {
+                $query_string[$state]['cache']['cache_valid'] = FALSE;
+                $query_string[$state]['cache']['cache_result'] = FALSE;
               }
               break;
             }
@@ -907,17 +912,23 @@ function sbac_sso_program_management_api_request(&$response) {
  */
 function sbac_sso_get_program_management_response(&$response, $query_string) {
   $api_response = array();
-  // Get the OAuth token to make calls to Program Management.
-  $access_token = sbac_sso_get_program_management_oauth_access_token();
-  if ($access_token) {
-    // Loop around all state query string and get the PM results for each one.
-    foreach ($query_string as $state => $query) {
-      $cache = NULL;
-      if (isset($query['cache'])) {
-        $cache = $query['cache'];
-        unset($query['cache']);
+  $access_token = NULL;
+  // Loop around all state query string and get the PM results for each one.
+  foreach ($query_string as $state => $query) {
+    // Get the cache result for each query.
+    $cache = NULL;
+    if (isset($query['cache'])) {
+      $cache = $query['cache'];
+      unset($query['cache']);
+    }
+    // Check if its cached, if not, get from API.
+    if ($cache == NULL || ($cache['cache_valid'] == FALSE || $cache['cache_valid'] == NULL)) {
+      // Get the OAuth token to make calls to Program Management.
+      if ($access_token == NULL) {
+        $access_token = sbac_sso_get_program_management_oauth_access_token();
       }
-      if ($cache == NULL || $cache['cache_valid'] == FALSE) {
+
+      if ($access_token) {
         $data = http_build_query($query);
         $post = SBAC_SSO_PROGRAM_OAUTH_API . '?' . $data;
         $curl = curl_init();
@@ -927,7 +938,7 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
         ));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($curl, CURLOPT_SSLVERSION,3);
+        curl_setopt($curl, CURLOPT_SSLVERSION, 3);
         $result = curl_exec($curl);
         $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
@@ -938,17 +949,21 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
           }
         }
       }
-      else {
-        $api_response[$state] = $cache['cache_result'];
-        $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
-      }
+    }
+    else {
+      $api_response[$state] = $cache['cache_result'];
+      $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
     }
   }
 
+  // Parse the API results, or cached results to check if valid.
   if (isset($response['pm_api_results'])) {
     foreach ($response['pm_api_results'] as $state => $json) {
-      $api_response[$state] = sbac_sso_parse_program_api_response($json);
-      $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+      $pm_api_response = sbac_sso_parse_program_api_response($json);
+      if ($pm_api_response) {
+        $api_response[$state] = $pm_api_response;
+        $response['sbac_tenancy_chains_validated'][$state] = $response['sbac_tenancy_chains_unvalidated'][$state];
+      }
     }
   }
 
@@ -970,9 +985,9 @@ function sbac_sso_get_program_management_oauth_access_token() {
   // client_id=pm
   // client_secret=sbac12345
   $request_creds = array(
-    'grant_type' => 'client_credentials',
-    'username' => 'sbac.amp@example.com',
-    'password' => 'amplify12345',
+    'grant_type' => 'password',
+    'username' => 'pm.client@example.com',
+    'password' => 'sbac12345',
     'client_id' => 'pm',
     'client_secret' => 'sbac12345'
   );
@@ -1074,8 +1089,8 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
-      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $user->field_district_name['und'][0]['value'] = $tenancy_chain['district'];
+      $user->field_school_name['und'][0]['value'] = $tenancy_chain['institution'];
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1100,8 +1115,8 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
         $term = current($valid);
         $user->field_state['und'][0]['tid'] = $term->tid;
       }
-      $user->field_district_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
-      $user->field_school_name['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $user->field_district_name['und'][0]['value'] = $tenancy_chain['district'];
+      $user->field_school_name['und'][0]['value'] = $tenancy_chain['institution'];
     }
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
@@ -1189,10 +1204,10 @@ function sbac_sso_create_user_record($response, $multiple) {
       $edit['field_state']['und'][0]['tid'] = $term->tid;
     }
     if (isset($tenancy_chain['district'])) {
-      $edit['field_district_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['district'])));
+      $edit['field_district_name']['und'][0]['value'] = $tenancy_chain['district'];
     }
     if (isset($tenancy_chain['institution'])) {
-      $edit['field_school_name']['und'][0]['value'] = ucwords(strtolower(str_replace("&amp;apos;", "'", $tenancy_chain['institution'])));
+      $edit['field_school_name']['und'][0]['value'] = $tenancy_chain['institution'];
     }
   }
   $edit['field_first_name']['und'][0]['value'] = $response['given_name'];
@@ -1287,7 +1302,6 @@ function sbac_sso_saml_assertion() {
   $string = user_password(10);
   $date = date('Y-m-d') . 'T' . date('H:i:s') . '.073Z';
   $saml_assertion = '<samlp:AuthnRequest ID="' . uniqid('_' . $string, TRUE) . '" Version="2.0" IssueInstant="' . $date . '" Destination="' . SBAC_SSO_URL . '" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="' . $base_url . '/sbac-sso-consume" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">' . $base_url . '</saml:Issuer><samlp:NameIDPolicy AllowCreate="true" /></samlp:AuthnRequest>';
-  error_log($saml_assertion);
   return $saml_assertion;
 }
 

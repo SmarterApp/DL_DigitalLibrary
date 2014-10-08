@@ -41,7 +41,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
     $form['state_cancel']['intro'] = array(
       '#markup' => '
                     <div class="gate-keeper-modal-intro">
-                      ' . t('If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '
+                      ' . t('If you continue, you will no longer be able to view this resource. All of your comments and answers will be lost.') . '
                     </div>
                    ',
     );
@@ -53,7 +53,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
   // elements common to recommendation states
     $reco_desc = t("If you continue, you will no longer be able to adjust your Quality Criteria levels.
-                    Your comments will be saved and provided either to the poster for use during the final review or directly to the contributor for use in revision. Be sure you've provided actionable feedback.");
+                    Comments you have entered will be saved and provided either to the publisher for use during the final review or directly to the contributor for use in revising the resource. Be sure you've provided actionable feedback.");
 
     $reco_submit = array('submit' => array(
       '#type' => 'submit',
@@ -118,13 +118,13 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
         ) + $state_common_options,
 
         'cancel' => array(
-          'dialog' => array('title' => t('You are about to cancel the review')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to cancel the Review')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_cancel']['submit'])),
           'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-qc', array('absolute' => TRUE)),
         ) + $state_common_options,
 
         'not_recommend' => array(
-          'dialog' => array('title' => t('You do not recommend this resource')) + $dialog_common_options,
+          'dialog' => array('title' => t('You do not recommend this Resource')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_not_recommend']['submit'])),
           'submit_js_callback' => array(
             'behavior' => 'feedback',

@@ -180,7 +180,9 @@ function sbac_flag_start_resource_review_moderation_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
-        // button acts like cancel
+        // button to the Flag tab
+        $node = node_load($form_state['nid']);
+         $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review']), 'fragment' => 'review-Moderate_flag'));
       }
 
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
@@ -225,7 +227,8 @@ function sbac_flag_start_resource_moderation_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
-        // button acts like cancel
+        // button to the Flag tab
+        $output[] = ctools_ajax_command_reload();
       }
 
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {

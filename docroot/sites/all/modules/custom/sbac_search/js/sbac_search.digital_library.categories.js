@@ -37,11 +37,13 @@
           // The button is in edit state.
           if (isEdit) {
             $('.categories-filter.slideable').slideDown('fast');
+            $('.category-hide').show();
             $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
             Drupal.settings.sbac_search.isEdit = 0;
             return false;
           }
           else {
+            $('.category-hide').hide();
             $('.categories-filter.slideable').slideUp('slow');
             $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
             Drupal.settings.sbac_search.isEdit = 1;
@@ -55,6 +57,7 @@
       }
       else {
         $('.category-hide').removeClass('js-hide');
+        $('.category-hide').show();
       }
 
       // Add filter to current filters. Wrap in 'once' so ctools modal dosnt attach click handler multiple times.
@@ -293,6 +296,7 @@
       $('#sbac-search-filter-button').hide();
       $('#edit-reset-filters').hide();
       $('.slideable').hide();
+      $('.category-hide').hide();
       Drupal.settings.sbac_search.isEdit = 0;
       $('#sbac-search-digital-library-resources-form').submit();
       return false;

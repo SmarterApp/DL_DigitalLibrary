@@ -37,7 +37,7 @@ function sbac_report_mf_batch_process($missing_files, &$context) {
   $context['sandbox']['finished'] = 0;
   $limit = 200;
   $gcs = sbac_media_get_google_cloud_storage();
-  $bucket = variable_get('google_cdn_bucket_name');
+  $bucket = variable_get('oscaddie_gcs_bucket_name');
   $folder = 'production';
 
   if (!isset($context['sandbox']['file'])) {

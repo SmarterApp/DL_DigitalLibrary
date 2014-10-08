@@ -48,12 +48,14 @@
           // The button is in edit state.
           if (isEdit) {
             $('.categories-filter.slideable').slideDown('fast');
+            $('.category-hide').show();
             $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
             Drupal.settings.sbac_search.isEdit = 0;
             return false;
           }
           else {
             $('.categories-filter.slideable').slideUp('slow');
+            $('.category-hide').hide();
             $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
             Drupal.settings.sbac_search.isEdit = 1;
           }
@@ -66,6 +68,7 @@
       }
       else {
         $('.category-hide').removeClass('js-hide');
+        $('.category-hide').show();
       }
 
       // Add filter to current filters
@@ -310,6 +313,7 @@
       $('.categories-current-filters').addClass('noshow');
       current_filters.val('');
       $('.slideable').hide();
+      $('.category-hide').hide();
       Drupal.settings.sbac_search.isEdit = 0;
       $('#sbac-search-my-resources-form').submit();
       return false;

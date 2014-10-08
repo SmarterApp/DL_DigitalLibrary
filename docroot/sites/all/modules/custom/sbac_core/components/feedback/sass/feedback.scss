@@ -449,6 +449,11 @@
       }
     }
 
+		button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus {
+		  /*background-color: #608a00;*/
+			background-color: #0084b0;
+		}
+
 }
 
 /* description */

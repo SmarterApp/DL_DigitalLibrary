@@ -626,6 +626,7 @@ function get_resources($resource_filters) {
     }
   }
   $query->fields('n', array('nid'));
+  $query->groupBy('n.nid');
   $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
   return $query->execute()->fetchCol();
 }
@@ -733,8 +734,7 @@ function fitler_resource_status($node, $statuses) {
 
 /**
  * Get the entities related to resource nodes (review, feedback, etc).
- * @param $resources
- * @param $entity_type
+ * @param $nid
  * @return array
  */
 function get_entities_for_resources($nid) {
@@ -746,32 +746,42 @@ function get_entities_for_resources($nid) {
   $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
   $query->leftJoin('field_data_field_rec_options', 'o', 'o.entity_id = f.id');
   $query->leftJoin('field_data_field_rec_rationale', 'r', 'r.entity_id = f.id');
-  $query->leftJoin('field_data_field_posting_options', 'p', 'p.entity_id = f.node_id');
+  $query->leftJoin('field_data_field_post_options', 'p', 'p.entity_id = f.id');
   $query->leftJoin('field_data_field_to_contributor', 'c', 'c.entity_id = f.id AND c.entity_type = \'feedback\' AND c.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_1', 'rv1', 'rv1.entity_id = f.id AND rv1.entity_type = \'feedback\' AND rv1.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_2', 'rv2', 'rv2.entity_id = f.id AND rv2.entity_type = \'feedback\' AND rv2.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_3', 'rv3', 'rv3.entity_id = f.id AND rv3.entity_type = \'feedback\' AND rv3.bundle = \'post\'');
   $query->condition('f.node_id', $nid)
     ->condition('f.status', 1)
-    ->condition('f.created', _sbac_resource_resubmit_timestamp($nid), '>');
+    ->condition('f.current', 1);
   $query->fields('u', array('mail'))
     ->fields('f', array('status', 'completed', 'type'))
     ->fields('o', array('field_rec_options_value'))
     ->fields('r', array('field_rec_rationale_value'))
-    ->fields('p', array('field_posting_options_value'))
     ->fields('c', array('field_to_contributor_value'))
     ->fields('rv1', array('field_to_reviewer_1_value'))
     ->fields('rv2', array('field_to_reviewer_2_value'))
     ->fields('rv3', array('field_to_reviewer_3_value'))
     ->fields('t', array('name'));
-  $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
-  $query->addExpression('FROM_UNIXTIME(f.changed, \'%c/%d/%Y\')', 'changed');
   $query->addExpression('
   CASE
-    WHEN f.met_criteria = 1 THEN \'Met all Criteria\'
-    WHEN f.met_criteria = 0 THEN \'Does not Meet all Criteria\'
+    WHEN f.completed = 1 THEN p.field_post_options_value
+    ELSE \'\'
+  END', 'field_post_options_value');
+  $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
+  $query->addExpression('
+  CASE
+    WHEN f.completed = 1 THEN FROM_UNIXTIME(f.changed, \'%c/%d/%Y\')
+    ELSE \'\'
+  END', 'changed');
+  $query->addExpression('
+  CASE
+    WHEN f.met_criteria = 1 AND f.completed = 1 THEN \'Met all Criteria\'
+    WHEN f.met_criteria = 0 AND f.completed = 1 THEN \'Does not Meet all Criteria\'
+    ELSE \'\'
   END', 'met_criteria');
-  return $query->orderBy('f.changed', 'ASC')->execute()->fetchAll();
+  $query->groupBy('f.uid')->groupBy('f.type')->orderBy('f.created', 'ASC');
+  return $query->execute()->fetchAll();
 }
 
 /**
@@ -1409,10 +1419,22 @@ function sbac_report_get_qc_info($fieldkey, $data, $resource) {
   $current_qc = 1;
   foreach ($data['resource_feedback'] as $feedback) {
     if (!empty($fieldkey['type'])) {
-      if ($feedback->type == $fieldkey['type'] && 1 == $feedback->completed) {
+      if ($feedback->type == $fieldkey['type']) {
         if (!empty($fieldkey['qc_number']) && !empty($fieldkey['field'])) {
           if ($fieldkey['qc_number'] == $current_qc) {
-            return $feedback->{$fieldkey['field']};
+            if ('field_rec_options_value' == $fieldkey['field']) {
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_rec_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            elseif ('field_post_options_value' == $fieldkey['field']){
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_post_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            else {
+              return $feedback->{$fieldkey['field']};
+            }
           }
         }
         $current_qc++;
@@ -1527,8 +1549,28 @@ function sbac_report_get_publish_date($fieldkey, $data, $resource) {
 }
 
 
+/**
+ * Get the total completed review count
+ *
+ * @param $fieldkey
+ * @param $data
+ * @param $resource
+ * @return int
+ */
 function sbac_report_count_completed_reviews($fieldkey, $data, $resource) {
-  return _resource_access_count_feedback($resource->nid->value(), array('qc', 'gate_keeper', 'post'), FALSE, FALSE, 1);
+  $count = db_select('eck_feedback', 'f')
+    ->condition('f.completed', 1)
+    ->condition('f.node_id', $resource->nid->value())
+    ->condition('f.status', 1)
+    ->condition('f.current', 1)
+    ->fields('f', array('id'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if (0 == $count) {
+    $count = '0';
+  }
+  return $count;
 }
 
 function sbac_report_get_review_cycle($fieldkey, $data, $resource) {
@@ -1729,7 +1771,7 @@ function set_report_columns() {
           array('', 'QC Poster Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'mail', 'type' => 'post'),
           array('', 'QC Poster State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'name', 'type' => 'post'),
           array('', 'QC Poster Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'changed', 'type' => 'post'),
-          array('', 'QC Poster Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_posting_options_value', 'type' => 'post'),
+          array('', 'QC Poster Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_post_options_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Contributor', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_contributor_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Reviewer 1', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_1_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Reviewer 2', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_2_value', 'type' => 'post'),

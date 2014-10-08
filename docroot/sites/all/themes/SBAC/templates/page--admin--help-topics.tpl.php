@@ -100,7 +100,7 @@
   <div class="main-container clearfix">
     <?php
     global $user;
-    if (user_access('administrator') || $user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) {
+    if ($user->uid == 1 || array_intersect(array('DLRB member', 'help desk', 'administrator'), $user->roles)) {
         $sections = array();
 
         $view_help = views_get_view('help_topics');
@@ -112,6 +112,8 @@
           'content' => '<div id="tab1">' . $view_help->render(). '</div>',
           'disabled' => FALSE,
           'class' => 'tab1 class',
+          'no-ajax' => TRUE,
+          'section_loaded' => 'section-loaded',
         );
 
         $welcome_block = "<div id='admin-welcome-tab-message'><h3>Helpful Information
@@ -127,6 +129,8 @@
           'content' => '<div id="tab2">' . $welcome_block . $view_welcome->render() . '</div>',
           'disabled' => FALSE,
           'class' => 'tab2 class',
+          'no-ajax' => TRUE,
+          'section_loaded' => 'section-loaded',
         );
         print theme('sections', array(
           'sections' => $sections,
