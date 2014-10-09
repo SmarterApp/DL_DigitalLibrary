@@ -1338,3 +1338,21 @@ function sbac_report_cron() {
     }
   }
 }
+
+/**
+ * Implements hook_file_download
+ */
+function sbac_report_file_download($uri) {
+  global $user;
+// Only provide access to report URL's if you had perms to run the report
+  // in the first place.
+  $report_urls = array('user_activity_stats_csv', 'forum_stats_csv', 'resource_stats_csv');
+  foreach ($report_urls as $url) {
+    if (strpos($uri, $url) !== FALSE) {
+      if (!sbac_report_user_access_all($user)) {
+        drupal_set_message(t("You do not have access to that URL"));
+        return -1;
+      }
+    }
+  }
+}
