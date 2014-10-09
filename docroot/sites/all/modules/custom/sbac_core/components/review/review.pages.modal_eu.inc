@@ -85,7 +85,7 @@ function review_end_use_form($form, &$form_state, $node, $state, $trigger_id, $i
       'states' => array(
 
         'cancel' => array(
-          'dialog' => array('title' => t('You are about to cancel the Review')) + $dialog_common_options,
+          'dialog' => array('title' => t('You are about to cancel the review')) + $dialog_common_options,
           'submit' => array('submit' => array('element' => &$form['state_cancel']['submit'])),
           'submit_autoclose' => TRUE,
           'submit_redirect' => url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE)),
