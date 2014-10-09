@@ -105,7 +105,12 @@ function sbac_favorites_get_entity_by_type($id, $type) {
  * Adds or deletes the entry from the custom table.
  */
 function sbac_favorites_ajax_click() {
+  global $user;
   if (!$_POST['id'] || !$_POST['uid'] || !$_POST['type']) {
+    exit;
+  }
+  // Ensure the user making the ajax request is the user who is logged in.
+  if ($user->uid != $_POST['uid']) {
     exit;
   }
 
@@ -148,8 +153,13 @@ function sbac_favorites_ajax_click() {
  * @return string
  */
 function sbac_favorites_ajax_delete() {
+  global $user;
   if (!$_POST['id'] || !$_POST['uid'] || !$_POST['type']) {
-    return;
+    exit;
+  }
+  // Ensure the user making the ajax request is the user who is logged in.
+  if ($user->uid != $_POST['uid']) {
+    exit;
   }
 
   db_delete('sbac_favorites')

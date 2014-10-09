@@ -427,12 +427,12 @@ function sbac_sso_consume() {
     $is_valid = sbac_sso_validate_saml_assertion($saml_token);
   }
   else {
-    // Destroy the current session, and reset $user to the anonymous user.
+    // If the user is already logged in, lets not try to log them in again.
     if (user_is_logged_in()) {
-      global $user;
-      watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
-      module_invoke_all('user_logout', $user);
-      session_destroy();
+      // Remove any stored paths.
+      unset($_GET['q']);
+      unset($_GET['destination']);
+      drupal_goto('digital-library-resources');
     }
 
     global $base_url;

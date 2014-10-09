@@ -53,10 +53,8 @@ function sbac_report_individual_form($form, &$form_state) {
     $date_display = sbac_report_format_date_range($session_date_range);
   }
 
-
   $see_others = sbac_report_select_other_users($account);
   $name_value = sbac_user_format_username($user);
-
   $form['sne'] = array(
     '#type' => 'textfield',
     '#title' => t('Choose a SNE'),
