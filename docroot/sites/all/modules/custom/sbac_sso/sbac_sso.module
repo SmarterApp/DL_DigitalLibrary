@@ -420,7 +420,6 @@ function sbac_sso_form_alter(&$form, &$form_state, $form_id) {
  * Consumes the SAML Assertion.
  */
 function sbac_sso_consume() {
-
   $is_valid = FALSE;
   $saml_token = NULL;
   if (isset($_POST['SAMLResponse'])) {
