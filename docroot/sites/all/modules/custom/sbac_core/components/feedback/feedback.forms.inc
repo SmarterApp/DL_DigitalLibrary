@@ -242,6 +242,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
 
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
+  drupal_set_message(t('@title - Gate Keeping Review has been saved', array('@title' => $node->title)));
   global $user;
 
   $task = FALSE;
@@ -290,7 +291,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       $qc->current = 1;
       $qc->node_id = $node->nid;
 
-      drupal_set_message(t('Quality Criteria Review process started.'));
+      drupal_set_message(t('Quality Criteria Review has started.'));
       entity_save('feedback', $qc);
       sbac_resource_save_current_state($node);
 
@@ -330,6 +331,8 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
 
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
+  drupal_set_message(t('@title - Quality Criteria Review has been saved', array('@title' => $node->title)));
+
   global $user;
 
   $task = FALSE;
@@ -469,6 +472,8 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
+  drupal_set_message(t('@title - Posting Review has been saved', array('@title' => $node->title)));
+
   global $user;
 
   // find the associated reviews
