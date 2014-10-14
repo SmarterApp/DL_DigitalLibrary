@@ -710,6 +710,15 @@ function sbac_report_build_sne_output($user) {
  * Ajax for the autocomplete SNE textfield.
  */
 function sbac_report_sne_autocomplete($string = '') {
+  global $user;
+  // Individual report hides the autocomplete to some users, check if this
+  // user can see more users or not.
+  $see_others = sbac_report_select_other_users($user);
+  if (!$see_others) {
+    print drupal_json_encode(array());
+    exit;
+  }
+
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
 
   $args = array(

@@ -565,6 +565,7 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
       'administrator',
       'digital library administrator',
       'system administrator',
+      'DLRB member'
     );
     if (array_intersect($user->roles, $admin_roles)) {
       $form['edit_topics'] = array(

@@ -430,6 +430,7 @@ function sbac_media_file_download($uri) {
   if (!$user->uid) {
     return -1;
   }
+
   $files = file_load_multiple(array(), array('uri' => $uri));
   if (count($files)) {
     $file = reset($files);
