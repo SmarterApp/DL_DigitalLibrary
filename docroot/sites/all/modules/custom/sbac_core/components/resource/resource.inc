@@ -3,8 +3,7 @@
 define('FEEDBACK_DEFAULT_SET_COUNT', 2); // default number of gate keeper items;
 define('FEEDBACK_REVIEW_TIMEOUT', 72); // value in hours;
 define('FEEDBACK_REVIEW_REMINDER', 24); // value in hours
-//define('FEEDBACK_RESUBMISSION_TIMEOUT', 432000); // 5 days in seconds
-define('FEEDBACK_RESUBMISSION_TIMEOUT', 7200); // 2 hours in seconds
+define('FEEDBACK_RESUBMISSION_TIMEOUT', 432000); // 5 days in seconds
 define('FEEDBACK_MAX_REVIEW', 3); // number of reviews before publishing
 define('FEEDBACK_REVIEW_NOTIFICATION', 48); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
 define('FEEDBACK_REVIEWER_RID', 17); // id of the 'resource reviewer' role;
