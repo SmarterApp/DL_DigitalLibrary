@@ -68,7 +68,7 @@ function user_pass_validate($form, &$form_state) {
     form_set_value(array('#parents' => array('account')), $account, $form_state);
   }
   else {
-    form_set_error('name', t('Sorry, %name is not recognized as a registered e-mail address', array('%name' => $name)));
+    form_set_error('name', t('Sorry, %name is not recognized as a user name or an e-mail address.', array('%name' => $name)));
   }
 }
 
@@ -177,7 +177,7 @@ function user_logout() {
   // Destroy the current session, and reset $user to the anonymous user.
   session_destroy();
 
-  drupal_goto('user');
+  drupal_goto();
 }
 
 /**
@@ -329,7 +329,7 @@ function user_profile_form_submit($form, &$form_state) {
     unset($_SESSION['pass_reset_'. $account->uid]);
   }
   // Clear the page cache because pages can contain usernames and/or profile information:
-  // cache_clear_all();
+  cache_clear_all();
 
   drupal_set_message(t('The changes have been saved.'));
 }

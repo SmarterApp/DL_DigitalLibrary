@@ -1,5 +1,5 @@
 
-CONTENTS OF THIS FILE 7.30
+CONTENTS OF THIS FILE
 ---------------------
 
  * About Drupal
