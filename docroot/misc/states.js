@@ -67,6 +67,20 @@ states.Dependent.comparisons = {
     // The "reference" variable is a comparison function.
     return reference(value);
   },
+  'Array': function (reference, value) {
+    // Make sure value is an array.
+    if (!(typeof(value) === 'object' && (value instanceof Array))) {
+      return false;
+    }
+    // We iterate through each value provided in the reference. If all of them
+    // exist in value array, we return true. Otherwise return false.
+    for (var key in reference) {
+      if (reference.hasOwnProperty(key) && value.indexOf(reference[key]) === -1) {
+        return false;
+      }
+    }
+    return true;
+  },
   'Number': function (reference, value) {
     // If "reference" is a number and "value" is a string, then cast reference
     // as a string before applying the strict comparison in compare(). Otherwise
