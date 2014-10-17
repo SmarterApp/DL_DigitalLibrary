@@ -796,7 +796,7 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   }
 
   $current_filters = array();
-  if ($view->apply_filter === TRUE && isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
+  if ((!isset($view->apply_filter) || $view->apply_filter === TRUE) && isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] != '') {
     $current_filters = explode('::', $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]);
   }
 
