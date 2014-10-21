@@ -80,6 +80,10 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_move_html5_thumbnails',
   );
 
+  $items['sbac-resource-find-affected-resources'] = array(
+    'description' => 'Find resources that are affected by the workflow bug. See 81058166',
+  );
+
   return $items;
 }
 
@@ -397,5 +401,65 @@ function drush_sbac_resource_move_html5_thumbnails() {
       sbac_resource_move_html5_thumbnail($node);
     }
     drush_print($node->nid . ' updated.');
+  }
+}
+
+/**
+ * Find resources that are affected by the workflow bug
+ */
+function drush_sbac_resource_find_affected_resources() {
+  // Get all resources that haven't been published yet
+  $resources = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.current', 1)
+    ->condition('h.state', 'published', '<>')
+    ->fields('h', array('nid'))
+    ->execute()
+    ->fetchCol();
+  foreach ($resources as $resource) {
+    $str = array();
+    $current_state = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.nid', $resource)
+      ->condition('h.current', 1)
+      ->fields('h', array('state'))
+      ->execute()
+      ->fetchField();
+    $submit_timestamp = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'needs_review')
+      ->condition('h.from_state', 'draft')
+      ->condition('h.nid', $resource)
+      ->fields('h', array('stamp'))
+      ->orderBy('h.stamp', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    // Find resources with 2 GK
+    $gk = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'gate_keeper')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($gk > 1) {
+      $str[] = $gk . ' GKs';
+    }
+    // Find resources with 4 QC
+    $qc = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'qc')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($qc > 3) {
+      $str[] = $qc . ' QCs';
+    }
+    if (!empty($str)) {
+      drush_print($resource . ' ' . $submit_timestamp . ' ' . implode(' and ', $str) . ' '  . $current_state);
+    }
   }
 }
