@@ -219,8 +219,13 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
     $errors = form_get_errors();
     $form_error = (int) !empty($errors);
 
+  // Redirect to resource-review page on save and close
+  $redirect_js = '';
+  if($form_state['values']['action'] == 'save_close'){
+    $redirect_js = 'window.location.href = "/resource-review"';
+  }
     $form['run_js'] = array(
-      '#markup' => '<script>Drupal.settings.feedback.form_error = ' . $form_error . ';</script>',
+      '#markup' => '<script>Drupal.settings.feedback.form_error = ' . $form_error . ';' . $redirect_js . ';</script>',
     );
 
   sbac_resource_remove_default_status_messages();
