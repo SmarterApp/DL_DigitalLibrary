@@ -80,7 +80,7 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_move_html5_thumbnails',
   );
 
-  $items['sbac-resource-find-affected-resources'] = array(
+  $items['sbac-resource-find-extra-reviews'] = array(
     'description' => 'Find resources that are affected by the workflow bug. See 81058166',
   );
 
@@ -407,7 +407,7 @@ function drush_sbac_resource_move_html5_thumbnails() {
 /**
  * Find resources that are affected by the workflow bug
  */
-function drush_sbac_resource_find_affected_resources() {
+function drush_sbac_resource_find_extra_reviews() {
   // Get all resources that haven't been published yet
   $resources = db_select('workbench_moderation_node_history', 'h')
     ->condition('h.current', 1)
@@ -416,13 +416,8 @@ function drush_sbac_resource_find_affected_resources() {
     ->execute()
     ->fetchCol();
   foreach ($resources as $resource) {
+    $output = array();
     $str = array();
-    $current_state = db_select('workbench_moderation_node_history', 'h')
-      ->condition('h.nid', $resource)
-      ->condition('h.current', 1)
-      ->fields('h', array('state'))
-      ->execute()
-      ->fetchField();
     $submit_timestamp = db_select('workbench_moderation_node_history', 'h')
       ->condition('h.state', 'needs_review')
       ->condition('h.from_state', 'draft')
@@ -459,7 +454,26 @@ function drush_sbac_resource_find_affected_resources() {
       $str[] = $qc . ' QCs';
     }
     if (!empty($str)) {
-      drush_print($resource . ' ' . $submit_timestamp . ' ' . implode(' and ', $str) . ' '  . $current_state);
+      $output[] = $resource;
+      $output[] = implode(' and ', $str);
+      $query = db_select('node', 'n');
+      $query->leftJoin('users', 'u', 'u.uid = n.uid');
+      $query->leftJoin('workbench_moderation_node_history', 'h',
+        'h.nid = n.nid');
+      $query->leftJoin('field_data_field_state', 's', 's.entity_id = n.nid');
+      $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
+      $query->condition('n.nid', $resource);
+      $query->fields('h', array('state'))
+        ->fields('n', array('title'))
+        ->fields('u', array('name', 'mail'))
+        ->fields('t', array('name'));
+      $info = $query->execute()->fetchAll();
+      foreach ($info as $r) {
+        $output = array_merge($output, (array) $r);
+      }
+    }
+    if (!empty($output)) {
+      drush_print(implode(' | ', $output));
     }
   }
 }
