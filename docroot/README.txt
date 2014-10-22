@@ -2,6 +2,7 @@
 CONTENTS OF THIS FILE
 ---------------------
 
+ * Random Change
  * About Drupal
  * Configuration and features
  * Installation profiles
