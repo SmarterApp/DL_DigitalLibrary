@@ -1120,7 +1120,7 @@ function sbac_media_save_media(&$form, &$form_state) {
     );
     $temp_uri = $_FILES['files']['tmp_name']['field_file_upload'];
     $file_hash = md5_file($temp_uri);
-    $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_REPLACE);
+    $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_RENAME);
     if ($file) {
       $file->status = FILE_STATUS_PERMANENT;
       file_save($file);
