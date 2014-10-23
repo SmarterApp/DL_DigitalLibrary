@@ -80,6 +80,14 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_move_html5_thumbnails',
   );
 
+  $items['sbac-resource-find-resources-with-missing-reviewers'] = array(
+    'description' => 'Find resources that have no original reviewers/publishers'
+  );
+
+  $items['sbac-resource-find-extra-reviews'] = array(
+    'description' => 'Find resources that are affected by the workflow bug. See 81058166',
+  );
+
   return $items;
 }
 
@@ -397,5 +405,156 @@ function drush_sbac_resource_move_html5_thumbnails() {
       sbac_resource_move_html5_thumbnail($node);
     }
     drush_print($node->nid . ' updated.');
+  }
+}
+
+/**
+ * Find resources with missing original reviewers/publishers
+ */
+function drush_sbac_resource_find_resources_with_missing_reviewers() {
+  // Get all resources that haven't been published yet
+  $resources = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.current', 1)
+    ->condition('h.state', 'published', '<>')
+    ->fields('h', array('nid', 'state'))
+    ->orderBy('h.state')
+    ->orderBy('h.nid')
+    ->execute()
+    ->fetchAll();
+  foreach ($resources as $resource) {
+    $row = array();
+    $rejected = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'rejected')
+      ->condition('h.nid', $resource->nid)
+      ->fields('h')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($rejected) {
+      $reviewers = db_select('field_data_field_recent_reviewers', 'r')
+        ->condition('r.entity_id', $resource->nid)
+        ->condition('r.field_recent_reviewers_target_id', 0, '>')
+        ->fields('r', array())
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if (!$reviewers) {
+        $row[] = $resource->nid;
+        $row[] = 'no reviewers';
+      }
+    }
+    $approve = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'approve')
+      ->condition('h.nid', $resource->nid)
+      ->condition('h.current', 0)
+      ->fields('h')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if($approve){
+      $publishers = db_select('field_data_field_recent_publishers', 'r')
+        ->condition('r.entity_id', $resource->nid)
+        ->condition('r.field_recent_publishers_target_id', 0, '>')
+        ->fields('r', array())
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if (!$publishers) {
+        $row[] = $resource->nid;
+        $row[] = 'no publishers';
+      }
+    }
+    if (!empty($row)) {
+      $query = db_select('node', 'n');
+      $query->leftJoin('users', 'u', 'u.uid = n.uid');
+      $query->leftJoin('workbench_moderation_node_history', 'h',
+        'h.nid = n.nid');
+      $query->leftJoin('field_data_field_state', 's', 's.entity_id = n.nid');
+      $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
+      $query->condition('n.nid', $resource->nid);
+      $query->fields('h', array('state'))
+        ->fields('n', array('title'))
+        ->fields('u', array('name', 'mail'))
+        ->fields('t', array('name'));
+      $info = $query->execute()->fetchAll();
+      foreach ($info as $r) {
+        $row = array_merge($row, (array) $r);
+      }
+      drush_print(implode(' | ', $row));
+    }
+  }
+}
+
+/**
+ * Find resources that are affected by the workflow bug
+ */
+function drush_sbac_resource_find_extra_reviews() {
+  // Get all resources that haven't been published yet
+  $resources = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.current', 1)
+    ->condition('h.state', 'published', '<>')
+    ->fields('h', array('nid'))
+    ->execute()
+    ->fetchCol();
+  foreach ($resources as $resource) {
+    $output = array();
+    $str = array();
+    $submit_timestamp = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'needs_review')
+      ->condition('h.from_state', 'draft')
+      ->condition('h.nid', $resource)
+      ->fields('h', array('stamp'))
+      ->orderBy('h.stamp', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    // Find resources with 2 GK
+    $gk = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'gate_keeper')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($gk > 1) {
+      $str[] = $gk . ' GKs';
+    }
+    // Find resources with 4 QC
+    $qc = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'qc')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($qc > 3) {
+      $str[] = $qc . ' QCs';
+    }
+    if (!empty($str)) {
+      $output[] = $resource;
+      $output[] = implode(' and ', $str);
+      $query = db_select('node', 'n');
+      $query->leftJoin('users', 'u', 'u.uid = n.uid');
+      $query->leftJoin('workbench_moderation_node_history', 'h',
+        'h.nid = n.nid');
+      $query->leftJoin('field_data_field_state', 's', 's.entity_id = n.nid');
+      $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
+      $query->condition('n.nid', $resource);
+      $query->fields('h', array('state'))
+        ->fields('n', array('title'))
+        ->fields('u', array('name', 'mail'))
+        ->fields('t', array('name'));
+      $info = $query->execute()->fetchAll();
+      foreach ($info as $r) {
+        $output = array_merge($output, (array) $r);
+      }
+    }
+    if (!empty($output)) {
+      drush_print(implode(' | ', $output));
+    }
   }
 }
