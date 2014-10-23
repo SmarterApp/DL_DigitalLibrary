@@ -1285,12 +1285,14 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
           continue;
         }
         $path = str_replace($temp_path, '', $full_path);
-        error_log($gcs_location . $path);
-        $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
-        error_log('Bytes Written: ' . $bytes_written);
-        if ($bytes_written == NULL || $bytes_written == FALSE) {
-          $error_uploading = TRUE;
-          break;
+        if (filesize($full_path) > 0) {
+          error_log($gcs_location . $path);
+          $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
+          error_log('Bytes Written: ' . $bytes_written);
+          if ($bytes_written == NULL || $bytes_written == FALSE) {
+            $error_uploading = TRUE;
+            break;
+          }
         }
       }
     }
