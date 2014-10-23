@@ -1251,10 +1251,10 @@ function _sbac_resource_resource_review_links($fields, $row) {
           $variables['text'] = t('Needs Review');
         }
         elseif ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_flag != 'qc_being_reviewed') {
-          $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc', 'query' => array('destination' => arg(0))));
-          $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-          $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
+          $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
+          $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE));
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
           $variables['text'] = t('Being Reviewed');
         }
         elseif ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_flag == 'gk_being_reviewed') {
