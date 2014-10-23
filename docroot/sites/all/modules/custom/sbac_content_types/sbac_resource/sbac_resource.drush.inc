@@ -84,6 +84,10 @@ function sbac_resource_drush_command() {
     'description' => 'Find resources that have no original reviewers/publishers'
   );
 
+  $items['sbac-resource-find-extra-reviews'] = array(
+    'description' => 'Find resources that are affected by the workflow bug. See 81058166',
+  );
+
   return $items;
 }
 
