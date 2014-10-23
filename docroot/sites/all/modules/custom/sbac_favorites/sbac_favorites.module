@@ -174,8 +174,7 @@ function sbac_favorites_ajax_delete() {
   }
   else {
     $output['total'] = 0;
-    // No need to add a theme.
-    // $output['no_results'] = theme('sbac_favorites_no_favorites');
+    $output['no_results'] = sbac_favorites_get_html_content();
   }
   print drupal_json_encode($output);
   exit;
@@ -510,6 +509,7 @@ function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
  * @param $vars
  */
 function sbac_favorites_preprocess_page(&$vars) {
+  drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
   if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources') {
     drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
     drupal_add_css(drupal_get_path('module', 'sbac_favorites') . '/css/sbac_favorites.css');

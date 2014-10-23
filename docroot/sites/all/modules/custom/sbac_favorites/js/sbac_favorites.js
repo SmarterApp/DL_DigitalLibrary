@@ -92,10 +92,8 @@
           $('.sbac-favorites-menu span').html(response.total);
         }
         else {
-          $('.sbac-favorites-menu span').html(0);
-          $('.favorites-helpful-info').remove();
-          // This removes the tab.
-          // $('#favorites-table').empty().append(response.no_results);
+          $('#favorites-table').empty().append(response.no_results);
+          Drupal.attachBehaviors();
         }
       },
       error: function(data) {
