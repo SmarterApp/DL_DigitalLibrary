@@ -94,7 +94,8 @@
         else {
           $('.sbac-favorites-menu span').html(0);
           $('.favorites-helpful-info').remove();
-          $('#favorites-table').empty().append(response.no_results);
+          // This removes the tab.
+          // $('#favorites-table').empty().append(response.no_results);
         }
       },
       error: function(data) {

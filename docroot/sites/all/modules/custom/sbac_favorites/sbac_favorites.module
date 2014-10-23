@@ -174,7 +174,8 @@ function sbac_favorites_ajax_delete() {
   }
   else {
     $output['total'] = 0;
-    $output['no_results'] = theme('sbac_favorites_no_favorites');
+    // No need to add a theme.
+    // $output['no_results'] = theme('sbac_favorites_no_favorites');
   }
   print drupal_json_encode($output);
   exit;
