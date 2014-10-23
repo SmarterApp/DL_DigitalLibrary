@@ -484,3 +484,77 @@ function drush_sbac_resource_find_resources_with_missing_reviewers() {
     }
   }
 }
+
+/**
+ * Find resources that are affected by the workflow bug
+ */
+function drush_sbac_resource_find_extra_reviews() {
+  // Get all resources that haven't been published yet
+  $resources = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.current', 1)
+    ->condition('h.state', 'published', '<>')
+    ->fields('h', array('nid'))
+    ->execute()
+    ->fetchCol();
+  foreach ($resources as $resource) {
+    $output = array();
+    $str = array();
+    $submit_timestamp = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'needs_review')
+      ->condition('h.from_state', 'draft')
+      ->condition('h.nid', $resource)
+      ->fields('h', array('stamp'))
+      ->orderBy('h.stamp', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    // Find resources with 2 GK
+    $gk = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'gate_keeper')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($gk > 1) {
+      $str[] = $gk . ' GKs';
+    }
+    // Find resources with 4 QC
+    $qc = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'qc')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($qc > 3) {
+      $str[] = $qc . ' QCs';
+    }
+    if (!empty($str)) {
+      $output[] = $resource;
+      $output[] = implode(' and ', $str);
+      $query = db_select('node', 'n');
+      $query->leftJoin('users', 'u', 'u.uid = n.uid');
+      $query->leftJoin('workbench_moderation_node_history', 'h',
+        'h.nid = n.nid');
+      $query->leftJoin('field_data_field_state', 's', 's.entity_id = n.nid');
+      $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
+      $query->condition('n.nid', $resource);
+      $query->fields('h', array('state'))
+        ->fields('n', array('title'))
+        ->fields('u', array('name', 'mail'))
+        ->fields('t', array('name'));
+      $info = $query->execute()->fetchAll();
+      foreach ($info as $r) {
+        $output = array_merge($output, (array) $r);
+      }
+    }
+    if (!empty($output)) {
+      drush_print(implode(' | ', $output));
+    }
+  }
+}
