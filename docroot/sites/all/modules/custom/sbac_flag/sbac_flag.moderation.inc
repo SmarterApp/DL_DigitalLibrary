@@ -272,13 +272,16 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
 
   if ($row->type == 'comment') {
     $post = entity_metadata_wrapper('comment', $row->target_id);
-    $user_tooltip = sbac_forum__api__get_authpane_hoverover($post->author->uid->value());
-    $account = user_load($post->author->uid->value());
-    $account_renderable = user_view($account, 'tooltip');
+    try {
+      $user_tooltip = sbac_forum__api__get_authpane_hoverover($post->author->uid->value());
+      $account = user_load($post->author->uid->value());
+      $account_renderable = user_view($account, 'tooltip');
 
-    $variables['eck_post']['topic_author'] = $user_tooltip;
-    $variables['eck_post']['topic_author_picture'] = render($account_renderable['user_picture']);
-    $variables['eck_post']['post_body'] = $post->comment_body->value();
+      $variables['eck_post']['topic_author'] = $user_tooltip;
+      $variables['eck_post']['topic_author_picture'] = render($account_renderable['user_picture']);
+      $variables['eck_post']['post_body'] = $post->comment_body->value();
+    } catch (EntityMetadataWrapperException $e) {
+    }
   }
 
   if ($variables['eck_flag']['urgent']) {

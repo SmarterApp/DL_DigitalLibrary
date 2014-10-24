@@ -1312,7 +1312,7 @@ function sbac_flag_collaboration_resolve_callback($js = FALSE, $type, $nid, $cid
   if (!empty($form_state['executed'])) {
 
     if ($form_state['triggering_element']['#value'] == 'Resolve Flags') {
-      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
       sbac_flag_collaboration_resolve_forum($nid, $cid);
       $url = drupal_get_path_alias('node/' . $nid);
       $output[] = ctools_ajax_command_redirect($url);
@@ -1432,7 +1432,7 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
 
   if (!empty($form_state['executed'])) {
     if ($form_state['triggering_element']['#value'] == 'Remove Topic') {
-      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
       sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
 
       // Notify poster
@@ -1478,7 +1478,7 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
       $output[] = ctools_ajax_command_redirect('moderation');
     }
     elseif ($form_state['triggering_element']['#value'] == 'Remove Post') {
-      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
       sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
       $comment = entity_metadata_wrapper('comment', $cid);
       $forum_poster = $comment->author->uid->value();
