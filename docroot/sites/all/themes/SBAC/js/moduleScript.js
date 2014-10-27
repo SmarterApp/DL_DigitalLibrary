@@ -12,13 +12,20 @@ jQuery( document ).ready(function( $ ) {
     click: function() {
 		runModule();
     } }).appendTo('body');
+	var loadURL = window.location.protocol + jQuery('#contentIframe').attr('src').replace('CoverPage.html','frameScale.html');    
+        jQuery('<a/>', {
+          id: 'lauchModuleLink',
+          alt: 'Launch Accessible Module',
+          style: 'position: absolute; left: -999em; width: 1em; overflow: hidden;',
+          href: loadURL,
+          target: '_blank' }).appendTo('body');
 	divLoaded = true;
 });
 
 jQuery( window ).resize(function() {
 	if(divLoaded)
 	{
-		var iframeOffset = jQuery('#contentIframe').offset();		
+		var iframeOffset = jQuery('#contentIframe').offset();
 		var iframeWidth = jQuery('#contentIframe').width();
 		var iframeHeight = jQuery('#contentIframe').height();
 		jQuery('#clickDiv').css({width:iframeWidth,height:iframeHeight,top:iframeOffset.top,left:iframeOffset.left});
@@ -35,11 +42,12 @@ function runModule() {
 		{
 			alert("It appears you are using an iPhone to attempt to access this module. \n\nIn order to access this module, please revisit while using a desktop or tablet computer.");
 			return;
-		}		
+		}
 		if(bowser.name.indexOf("Firefox") >= 0)
 		{
-			alert("It appears you are using Mozilla Firefox. While you can access this module using Firefox, due to browser limitations you may experience challenges which degrade visuals presentation and user interactivity.\n\nFor an optimal user experience, please consider closing the module and revisiting while using Internet Exporer 9.0+, Safari 5+ or Google Chrome.");
-		}				
+			if(!confirm("It appears you are using Mozilla Firefox. While you can access this module using Firefox, due to browser limitations you may experience challenges which degrade visuals presentation and user interactivity.\n\nFor an optimal user experience, please consider closing the module and revisiting while using Internet Exporer 9.0+, Safari 5+ or Google Chrome."))
+                          return;
+		}
 		var pQuery = window.jQuery;
 		var moduleWidth=1600,
 		moduleHeight=900,
@@ -49,7 +57,7 @@ function runModule() {
 		var widthRatio = ((availableWindowWidth/moduleWidth) >= 1) ? 1 : (availableWindowWidth/moduleWidth);
 		var resizeRatio = (heightRatio <= widthRatio) ? heightRatio : widthRatio;
 		window.firstLoad = true;
-		var loadURL = window.location.protocol + jQuery('#contentIframe').attr('src').replace('CoverPage.html','frameScale.html');		
+		var loadURL = window.location.protocol + jQuery('#contentIframe').attr('src').replace('CoverPage.html','frameScale.html');
 		pQuery.fancybox.open({
 			padding:0,
 			href:loadURL,
