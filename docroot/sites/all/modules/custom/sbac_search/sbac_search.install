@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Enable jqmulti module
+ */
+function sbac_search_update_7001(){
+  module_enable(array('jqmulti'));
+}
