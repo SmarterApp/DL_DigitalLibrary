@@ -1208,12 +1208,25 @@ WHERE t1.entity_type = 'node' AND n.nid IS null");
 /**
  * Fix a resource with missing db entry
  */
-function sbac_resource_update_7055(){
-  db_insert('sbac_node_resource_state')
-    ->fields(array(
-      'nid' => 53526,
-      'uid' => 0,
-      'state' => 'post_needs_review'
-    ))
-    ->execute();
+function sbac_resource_update_7055() {
+  $nid = 53526;
+  $query = db_select('workbench_moderation_node_history', 'h');
+  $query->leftJoin('sbac_node_resource_state', 's', 's.nid = h.nid');
+  $exists = $query->condition('h.current', 1)
+    ->condition('h.state', 'approved')
+    ->condition('h.nid', $nid)
+    ->condition('s.state', 'post_needs_review')
+    ->fields('h')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if (!$exists) {
+    db_insert('sbac_node_resource_state')
+      ->fields(array(
+        'nid' => $nid,
+        'uid' => 0,
+        'state' => 'post_needs_review'
+      ))
+      ->execute();
+  }
 }
