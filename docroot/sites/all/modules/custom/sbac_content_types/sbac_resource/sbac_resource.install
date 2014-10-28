@@ -1204,3 +1204,16 @@ FROM taskit_entity t1
 		ON t1.entity_id = n.nid
 WHERE t1.entity_type = 'node' AND n.nid IS null");
 }
+
+/**
+ * Fix a resource with missing db entry
+ */
+function sbac_resource_update_7055(){
+  db_insert('sbac_node_resource_state')
+    ->fields(array(
+      'nid' => 53526,
+      'uid' => 0,
+      'state' => 'post_needs_review'
+    ))
+    ->execute();
+}
