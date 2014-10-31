@@ -262,8 +262,12 @@ function sbac_resource_print_about_this_tab($node) {
  */
 function sbac_resource_node_save($node) {
   global $user;
-  if ($node->type == 'resource' && in_array('resource contributor', $user->roles) && $node->workbench_moderation['current']->state == 'needs_review') {
-    sbac_resource_print_about_this_tab($node);
+  if ($node->type == 'resource') {
+    if (((in_array('resource contributor', $user->roles) && ($node->workbench_moderation['current']->state == 'needs_review')) ||
+    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles)) &&
+    (($node->workbench_moderation['current']->state == 'published') || ($node->workbench_moderation['current']->state == 'published' && $node->sticky == 1))))) {
+      sbac_resource_print_about_this_tab($node);
+    }
   }
 }
 
