@@ -258,20 +258,6 @@ function sbac_resource_print_about_this_tab($node) {
 }
 
 /**
- * Implements hook_node_save.
- */
-function sbac_resource_node_save($node) {
-  global $user;
-  if ($node->type == 'resource') {
-    if (((in_array('resource contributor', $user->roles) && ($node->workbench_moderation['current']->state == 'needs_review')) ||
-    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles)) &&
-    (($node->workbench_moderation['current']->state == 'published') || ($node->workbench_moderation['current']->state == 'published' && $node->sticky == 1))))) {
-      sbac_resource_print_about_this_tab($node);
-    }
-  }
-}
-
-/**
  * Outputs the profile fields.
  *
  * @param $node
@@ -2347,6 +2333,14 @@ function sbac_resource_node_update($node) {
         }
         taxonomy_term_save($forum);
       }
+    }
+  }
+  global $user;
+  if ($node->type == 'resource') {
+    if (((in_array('resource contributor', $user->roles) && ($node->workbench_moderation['current']->state == 'needs_review')) ||
+    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles)) &&
+    (($node->workbench_moderation['current']->state == 'published') || ($node->workbench_moderation['current']->state == 'published' && $node->sticky == 1))))) {
+      sbac_resource_print_about_this_tab($node);
     }
   }
 }
