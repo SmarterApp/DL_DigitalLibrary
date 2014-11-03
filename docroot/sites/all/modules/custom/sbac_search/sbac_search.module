@@ -1084,6 +1084,7 @@ function theme_sbac_filter_item_list($variables) {
         $data = $item;
       }
       if (count($children) > 0) {
+        $attributes['class'][] = 'has-children';
         // Render nested list.
         $data .= theme_sbac_filter_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
       }
