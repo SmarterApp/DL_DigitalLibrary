@@ -315,6 +315,8 @@ function sbac_media_download_contents($node) {
       if ($open === TRUE) {
         $services = sbac_media_get_google_cloud_storage();
         if ($services) {
+          $primary_add = FALSE;
+          $secondary_add = FALSE;
           foreach ($node->document as $key => $media) {
             $add_file = FALSE;
             if (is_numeric($key) && $media->fid) {
@@ -322,9 +324,11 @@ function sbac_media_download_contents($node) {
               if ($file) {
                 if ($key == 0 && $result['primary'] == TRUE) {
                   $add_file = TRUE;
+                  $primary_add = TRUE;
                 }
                 if ($key > 0 && $result['secondary'] == TRUE) {
                   $add_file = TRUE;
+                  $secondary_add = TRUE;
                 }
                 if ($add_file) {
                   ini_set('memory_limit', '1024M');
@@ -355,7 +359,7 @@ function sbac_media_download_contents($node) {
             }
           }
         }
-        if ($zip->open($real_path) === TRUE) {
+        if ($zip->open($real_path) === TRUE && ($primary_add || $secondary_add)) {
           $destination = variable_get('file_private_path', conf_path() . '/files') . '/resource_pdfs/';
           $about_this_resource_directory = $destination . floor($node->nid / 32000) . '/' . $node->nid . '/';
           $zip->addFile($about_this_resource_directory . 'about_this_resource.pdf', 'about_this_resource.pdf');
