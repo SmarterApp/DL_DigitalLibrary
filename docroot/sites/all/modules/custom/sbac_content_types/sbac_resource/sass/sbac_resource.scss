@@ -1025,21 +1025,6 @@ html.js .category-hide {
 		outline: none;
 	}
 
-  /*.column {
-      &:first-child {
-        .categories-filter-choices {
-          left:20px;
-        }
-      }
-
-      &:last-child {
-        .categories-filter-choices {
-          left:auto;
-          right: 20px;
-        }
-      }
-  }*/
-
   ul {
     font-size: 1em;
     list-style-type: none;
@@ -1056,7 +1041,7 @@ html.js .category-hide {
   li {
     @include border-radius(3px);
     background: #FFF url('../images/icon-drop.png') no-repeat 96% center;
-    padding: 5px 0;
+    padding: 3px 0;
     margin:0 0 10px;
     font-size: 12px;
     cursor: pointer;
@@ -1125,7 +1110,7 @@ html.js .category-hide {
 
 .categories-filter-choices {
   position: absolute;
-  top: 26px;
+  top: 22px;
   left: 0;
   margin:0;
   width: 100%;
@@ -1161,6 +1146,10 @@ html.js .category-hide {
 	    margin-bottom: 0;
 	  }
   }
+  
+  .jstree .jstree-open > .jstree-children {
+    margin-left: 20px;
+  }
 
   .jstree-node,
   .jstree-anchor {
@@ -1175,11 +1164,11 @@ html.js .category-hide {
   }
 
   .jstree-default .jstree-node.jstree-closed {
-    background: url(../images/filter/icon-plus-sign.png) no-repeat 0 10px;
+    background: url(../images/filter/icon-plus-sign.png) no-repeat 0 8px;
   }
   
   .jstree-default .jstree-node.jstree-open {
-    background: url(../images/filter/icon-minus-sign.png) no-repeat 0 10px;
+    background: url(../images/filter/icon-minus-sign.png) no-repeat 0 8px;
   }
   
   .jstree-default .jstree-checkbox {
@@ -1195,8 +1184,18 @@ html.js .category-hide {
     background: none;
   }
   
+  .jstree-default .jstree-node {
+    margin-left: 20px;
+  }
+  
   .jstree-default .jstree-anchor {
     padding-right: 10px;
+    height: auto;
+    line-height: 20px;
+  }
+  
+  .jstree-default .jstree-icon:empty {
+    width: 20px;
   }
   
   .jstree-default .jstree-leaf > .jstree-ocl  {
