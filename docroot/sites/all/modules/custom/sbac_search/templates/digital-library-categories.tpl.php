@@ -19,10 +19,12 @@
         echo '<li><div class="sbac-search-filter-custom-link">' . $category['link'] . '</div></li>';
       }
       else {
-        echo '<li><div class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid . '">' . $category['display_name'];
+        $category_vid = $category['vocabulary']->vid;
+        echo '<li id="filter-header-' . $category_vid . '" class="collapsed"><div class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid .
+          '">' .
+          $category['display_name'];
         // The choices per vocabulary.
         echo '<div class="categories-filter-choices">';
-        $category_vid = $category['vocabulary']->vid;
         $display_name = strtolower($category['display_name']);
         echo "<div vid='$category_vid' class='jstree clearfix category-filter-list category-filter-list-$category_vid $display_name'
  id='filter-$category_vid'>";
