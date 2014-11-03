@@ -198,7 +198,63 @@ function sbac_resource_menu() {
     'access arguments' => array('configure sbac'),
   );
 
+  $items['sbac-resource/print-about-tab/%node'] = array(
+    'title' => 'Print about this tab',
+    'page callback' => 'sbac_resource_print_about_this_tab',
+    'access arguments' => array('access content'),
+    'page arguments' => array(2),
+  );
+
   return $items;
+}
+
+
+/**
+ * Create pdf for contributors.
+ */
+function sbac_resource_print_about_this_tab($node) {
+  drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_about.js');
+
+  $array['node'] = $node;
+  sbac_resource_profile_fields($array);
+  $node = $array['node'];
+  $output = theme('sbac_resource_profile', array('node' => $node));
+
+  global $base_url;
+  $query = $_GET;
+  $cid = NULL;
+  module_load_include('inc', 'print', 'print.pages');
+  $print = print_controller('node/' . $node->nid, $query, $cid, PRINT_PDF_FORMAT);
+  if ($print === FALSE) {
+    return;
+  }
+
+  $print['content'] = $output;
+  // Img elements must be set to absolute.
+  $pattern = '!<(img\s[^>]*?)>!is';
+  $print['content'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['content']);
+  $print['logo'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['logo']);
+  $print['footer_message'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['footer_message']);
+  $print['sendtoprinter'] = '';
+  $html = theme('print', array(
+      'print' => $print,
+      'type' => PRINT_PDF_FORMAT,
+      'node' => $node
+    ));
+
+  // Convert the a href elements, to make sure no relative links remain.
+  $pattern = '!<(a\s[^>]*?)>!is';
+  $html = preg_replace_callback($pattern, '_print_rewrite_urls', $html);
+  // And make anchor links relative again, to permit in-PDF navigation.
+  $html = preg_replace("!${base_url}/" . PRINTPDF_PATH . '/.*?#!', '#', $html);
+  module_load_include('inc', 'print_pdf', 'print_pdf.pages');
+  $content = print_pdf_generate_html($print, $html);
+  $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/';
+  $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+  if ($writable) {
+    file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_RENAME);
+  }
+  return '';
 }
 
 /**
@@ -290,17 +346,33 @@ function sbac_resource_profile_fields(&$node) {
 }
 
 /**
+ * Load the taxonomy terms and get there names.
+ *
  * @param $field
+ * @param $ccss
+ *
  * @return string
  */
 function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
   $terms = array();
   foreach ($field['und'] as $key => $term) {
     if ($ccss) {
-      $terms[] = $term['taxonomy_term']->field_alignment_shortname['und'][0]['value'];
+      if (isset($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'])){
+        $terms[] = $term['taxonomy_term']->field_alignment_shortname['und'][0]['value'];
+      }
+      else {
+        $temp_term = taxonomy_term_load($term['tid']);
+        $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+      }
     }
     else {
-      $terms[] = $term['taxonomy_term']->name;
+      if (isset($term['taxonomy_term']->name)){
+        $terms[] = $term['taxonomy_term']->name;
+      }
+      else {
+        $temp_term = taxonomy_term_load($term['tid']);
+        $terms[] = $temp_term->name;
+      }
     }
   }
 
@@ -2261,6 +2333,14 @@ function sbac_resource_node_update($node) {
         }
         taxonomy_term_save($forum);
       }
+    }
+  }
+  global $user;
+  if ($node->type == 'resource') {
+    if (((in_array('resource contributor', $user->roles) && ($node->workbench_moderation['current']->state == 'needs_review')) ||
+    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles)) &&
+    (($node->workbench_moderation['current']->state == 'published') || ($node->workbench_moderation['current']->state == 'published' && $node->sticky == 1))))) {
+      sbac_resource_print_about_this_tab($node);
     }
   }
 }
