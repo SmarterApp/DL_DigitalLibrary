@@ -1037,10 +1037,12 @@ html.js .category-hide {
       position: relative;
     }
   }
-
-  li {
+  
+  li,
+  li.collapsed,
+  li.expanded {
     @include border-radius(3px);
-    background: #FFF url('../images/icon-drop.png') no-repeat 96% center;
+    background: #FFF url('../images/icon-arrow-up.png') no-repeat 96% center;
     padding: 3px 0;
     margin:0 0 10px;
     font-size: 12px;
@@ -1054,8 +1056,8 @@ html.js .category-hide {
       color: $white;
     }
 
-  .sbac-search-filter-name,
-  .sbac-search-filter-custom-link {
+    .sbac-search-filter-name,
+    .sbac-search-filter-custom-link {
       margin: 0;
       font-weight: bold;
       font-size: 1.1em;
@@ -1084,6 +1086,10 @@ html.js .category-hide {
     span {
       margin-right: 10px;
     }
+  }
+  
+  li.collapsed {
+    background: #FFF url('../images/icon-arrow-down.png') no-repeat 96% center;
   }
 
   form{
@@ -1173,6 +1179,8 @@ html.js .category-hide {
   
   .jstree-default .jstree-checkbox {
     background: url(../images/filter/icon-checkbox.png) no-repeat 0 3px !important;
+    position: absolute;
+    left: -20px;
   }
   
   .jstree-default .jstree-clicked .jstree-checkbox {
@@ -1192,6 +1200,8 @@ html.js .category-hide {
     padding-right: 10px;
     height: auto;
     line-height: 20px;
+    position: relative;
+    margin-left: 20px;
   }
   
   .jstree-default .jstree-icon:empty {
@@ -1207,10 +1217,13 @@ html.js .category-hide {
     width: 0 !important;
   }
   
-  .jstree-default .jstree-open > .jstree-ocl,
-  .jstree-default .jstree-closed > .jstree-ocl,
-  .jstree-default .jstree-leaf > .jstree-ocl  {
-    background: none;
+  .jstree-default li.jstree-node.jstree-leaf .jstree-ocl  {
+     width: 20px;
+   }
+   
+  .jstree-default .jstree-open li.jstree-node.jstree-leaf > .jstree-ocl,
+  .jstree-default .jstree-closed li.jstree-node.jstree-leaf > .jstree-ocl {
+   width: 0;
   }
 }
 
