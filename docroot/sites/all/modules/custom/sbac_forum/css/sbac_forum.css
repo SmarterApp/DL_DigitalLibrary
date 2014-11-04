@@ -4723,16 +4723,20 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
 .categories-filter-choices .jstree-default .jstree-clicked .jstree-checkbox {
   background: url(../images/filter/icon-check-mark.png) no-repeat 0 3px !important;
 }
-/* line 4218, ../sass/sbac_forum.scss */
+/* line 4217, ../sass/sbac_forum.scss */
+.categories-filter-choices .jstree-default .jstree-anchor > .jstree-undetermined {
+  background: url(../images/filter/icon-undetermined.png) no-repeat 0 3px !important;
+}
+/* line 4222, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-node,
 .categories-filter-choices .jstree-default .jstree-icon {
   background: none;
 }
-/* line 4222, ../sass/sbac_forum.scss */
+/* line 4226, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-node {
   margin-left: 20px;
 }
-/* line 4226, ../sass/sbac_forum.scss */
+/* line 4230, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-anchor {
   padding-right: 10px;
   height: auto;
@@ -4740,31 +4744,31 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
   position: relative;
   margin-left: 20px;
 }
-/* line 4234, ../sass/sbac_forum.scss */
+/* line 4238, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-icon:empty {
   width: 20px;
 }
-/* line 4238, ../sass/sbac_forum.scss */
+/* line 4242, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-leaf > .jstree-ocl {
   width: 0;
 }
-/* line 4242, ../sass/sbac_forum.scss */
+/* line 4246, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-themeicon {
   background: none;
   width: 0 !important;
 }
-/* line 4247, ../sass/sbac_forum.scss */
+/* line 4251, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default li.jstree-node.jstree-leaf .jstree-ocl {
   width: 20px;
 }
-/* line 4252, ../sass/sbac_forum.scss */
+/* line 4256, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-open li.jstree-node.jstree-leaf > .jstree-ocl,
 .categories-filter-choices .jstree-default .jstree-closed li.jstree-node.jstree-leaf > .jstree-ocl {
   width: 0;
 }
 
 @media screen and (max-width: 1350px) {
-  /* line 4258, ../sass/sbac_forum.scss */
+  /* line 4262, ../sass/sbac_forum.scss */
   .jstree-default li.jstree-node.jstree-leaf .jstree-anchor {
     width: 80%;
   }

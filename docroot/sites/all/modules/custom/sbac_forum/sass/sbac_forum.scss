@@ -4213,6 +4213,10 @@ a.sbac-favorites-link {
   .jstree-default .jstree-clicked .jstree-checkbox {
     background: url(../images/filter/icon-check-mark.png) no-repeat 0 3px !important;
   }
+  
+  .jstree-default .jstree-anchor > .jstree-undetermined {
+    background: url(../images/filter/icon-undetermined.png) no-repeat 0 3px !important;
+  }
    
   .jstree-default .jstree-node, 
   .jstree-default .jstree-icon {
