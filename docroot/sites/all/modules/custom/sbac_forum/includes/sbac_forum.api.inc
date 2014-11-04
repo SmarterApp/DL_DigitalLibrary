@@ -215,7 +215,7 @@ function sbac_forum__api__create_start_new_topic_link($forum_id) {
     ),
     'query' => array('target-forum' => $forum_id),
   );
-  $link = l('Start a Topic', 'node/add/topic', $link_ops);
+  $link = l('Start a Discussion', 'node/add/topic', $link_ops);
   $link_text = '<div class="join-forum-start-topic-wrapper">' . $link . '</div>';
 
   return $link_text;
