@@ -366,18 +366,27 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
     }
     else {
-      if (isset($term['taxonomy_term']->name)){
-        $terms[] = $term['taxonomy_term']->name;
-      }
-      else {
-        $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->name;
-      }
+      $terms[] = sbac_resource_term_concat_parents($term['taxonomy_term']->tid);
     }
   }
 
   $list = theme('item_list', array('items' => $terms, 'title' => '', 'type' => 'ul', 'attributes' => array('class' => 'field-content')));
   return $list;
+}
+
+/**
+ * Concatenate the term name with the parents term names
+ * @param $tid
+ * @return string
+ */
+function sbac_resource_term_concat_parents($tid) {
+  $parents = taxonomy_get_parents_all($tid);
+  $names = array();
+  foreach($parents as $p){
+    $names[] = $p->name;
+  }
+  $names = array_reverse($names);
+  return implode(' - ', $names);
 }
 
 /**

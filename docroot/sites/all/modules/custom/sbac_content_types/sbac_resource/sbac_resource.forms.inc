@@ -37,7 +37,26 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
     _sbac_resource_form_finalize($form, $form_state);
+    _sbac_resource_form_flatten_term_tree($form, $form_state);
   }
+}
+
+/**
+ * Flatten the taxonomy term tree.  Only show the children concatenated with parents
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_flatten_term_tree(&$form, &$form_state){
+  // Subject vocab
+  $subject_vocab = taxonomy_vocabulary_machine_name_load('subject');
+  $options = array();
+  $terms = taxonomy_get_tree($subject_vocab->vid);
+  foreach($terms as $term){
+    if(empty(taxonomy_get_children($term->tid))){
+      $options[$term->tid] = sbac_resource_term_concat_parents($term->tid);
+    }
+  }
+  $form['field_subject']['und']['#options'] = $options;
 }
 
 /**
@@ -3557,7 +3576,9 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     $vocab_terms = array();
     $vocab_tree = taxonomy_get_tree($vocab_entity->vid);
     foreach ($vocab_tree as $term) {
-      $vocab_terms[$term->tid] = $term->name;
+      if (empty(taxonomy_get_children($term->tid))) {
+        $vocab_terms[$term->tid] = sbac_resource_term_concat_parents($term->tid);
+      }
     }
     $form[$machine_name][$machine_name . '_terms'] = array(
       '#type' => 'checkboxes',
