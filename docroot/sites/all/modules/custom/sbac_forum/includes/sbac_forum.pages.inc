@@ -133,6 +133,19 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   if (!$ajax) {
     $output .= drupal_render($subnav);
     $output .= '<div class="sbac-forum-main-container">';
+    switch ($active_tab) {
+      case SBAC_FORUM_SUBNAV_RESOURCE:
+        $output .= t('Resource Forums provide opportunities to discuss specific resources in the Digital Library. The title of the forum is the title of the resource. View the <a href="@help-topics"> Help Topics</a> to learn more about Resource Forums.' , array(
+        '@help-topics' => '/help-topics',
+        ));
+        break;
+
+      case SBAC_FORUM_SUBNAV_TOPIC:
+        $output .= t('Topic Forums provide opportunities to discuss the formative assessment process, standards, curriculum, summative and interim assessments, professional development, and other topics with colleagues across the country. The title reflects the focus of the discussion. View the <a href="@help-topics"> Help Topics</a> to learn more about Topic Forums.' , array(
+        '@help-topics' => '/help-topics',
+        ));
+        break;
+    }
     $output .= $forum_list_output;
     $output .= '</div>';
     return $output;
@@ -331,7 +344,7 @@ function sbac_forum_view_forum_page($term) {
     'vid' => 'forum_topic_list',
     'display' => 'block',
     'args' => $term->tid,
-    'title' => t('Topics') . $topic_count_text,
+    'title' => t('Discussions') . $topic_count_text,
     'weight' => -99,
     'type' => 'view',
   );
