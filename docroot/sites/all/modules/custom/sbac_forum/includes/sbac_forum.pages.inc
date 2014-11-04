@@ -344,7 +344,7 @@ function sbac_forum_view_forum_page($term) {
     'vid' => 'forum_topic_list',
     'display' => 'block',
     'args' => $term->tid,
-    'title' => t('Topics') . $topic_count_text,
+    'title' => t('Discussions') . $topic_count_text,
     'weight' => -99,
     'type' => 'view',
   );

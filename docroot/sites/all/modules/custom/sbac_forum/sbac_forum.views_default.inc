@@ -131,9 +131,9 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_topic_count']['field'] = 'field_forum_topic_count';
   $handler->display->display_options['fields']['field_forum_topic_count']['label'] = '';
   $handler->display->display_options['fields']['field_forum_topic_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_forum_topic_count']['alter']['text'] = '[field_forum_topic_count]<div class="forum-listing-suffix-label">Topics</div>';
+  $handler->display->display_options['fields']['field_forum_topic_count']['alter']['text'] = '[field_forum_topic_count]<div class="forum-listing-suffix-label">Discussions</div>';
   $handler->display->display_options['fields']['field_forum_topic_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_forum_topic_count']['empty'] = '0<div class="forum-listing-suffix-label">Topics</div>';
+  $handler->display->display_options['fields']['field_forum_topic_count']['empty'] = '0<div class="forum-listing-suffix-label">Discussions</div>';
   $handler->display->display_options['fields']['field_forum_topic_count']['settings'] = array(
     'thousand_separator' => ',',
     'prefix_suffix' => 1,
@@ -979,9 +979,9 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_forum_topic_count']['field'] = 'field_forum_topic_count';
   $handler->display->display_options['fields']['field_forum_topic_count']['label'] = '';
   $handler->display->display_options['fields']['field_forum_topic_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_forum_topic_count']['alter']['text'] = '[field_forum_topic_count]<div class="forum-listing-suffix-label">Topics</div>';
+  $handler->display->display_options['fields']['field_forum_topic_count']['alter']['text'] = '[field_forum_topic_count]<div class="forum-listing-suffix-label">Discussions</div>';
   $handler->display->display_options['fields']['field_forum_topic_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_forum_topic_count']['empty'] = '0<div class="forum-listing-suffix-label">Topics</div>';
+  $handler->display->display_options['fields']['field_forum_topic_count']['empty'] = '0<div class="forum-listing-suffix-label">Discussions</div>';
   $handler->display->display_options['fields']['field_forum_topic_count']['settings'] = array(
     'thousand_separator' => ',',
     'prefix_suffix' => 1,
@@ -1218,10 +1218,10 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['field'] = 'field_fc_forum_member_tpic_count';
   $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['label'] = '';
   $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['alter']['text'] = '[field_fc_forum_member_tpic_count] <div class="forum-member-topic-count">Topics</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['alter']['text'] = '[field_fc_forum_member_tpic_count] <div class="forum-member-topic-count">Discussions</div>';
   $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['element_type'] = 'div';
   $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['empty'] = '0<div class="forum-member-topic-count">Topics</div>';
+  $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['empty'] = '0<div class="forum-member-topic-count">Discussions</div>';
   $handler->display->display_options['fields']['field_fc_forum_member_tpic_count']['settings'] = array(
     'thousand_separator' => ',',
     'prefix_suffix' => 0,
