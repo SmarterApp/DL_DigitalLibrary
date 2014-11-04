@@ -36,6 +36,24 @@ function sbac_forum_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the forum was deleted.',
+        'type' => 'int',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The uid of the user who deleted',
+        'type' => 'int',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'forum_type' => array(
+        'description' => 'Topic or resource forum.',
+        'type' => 'varchar',
+        'length' => 150,
+        'default' => '',
+      ),
     ),
     'indexes' => array(
       'entity' => array('entity_id', 'entity_type'),
@@ -194,4 +212,34 @@ function sbac_forum_update_7009() {
     db_create_table($table, $schema);
   }
   return $ret;
+}
+
+/**
+ * Update the schema
+ */
+function sbac_forum_update_7010() {
+  db_add_field('sbac_forum_deleted_log', 'created', array(
+    'description' => 'The Unix timestamp when the forum was deleted.',
+    'type' => 'int',
+    'default' => 0,
+    'not null' => TRUE,
+  ));
+  db_add_field('sbac_forum_deleted_log', 'uid', array(
+    'description' => 'The uid of the user who deleted',
+    'type' => 'int',
+    'default' => 0,
+    'not null' => TRUE,
+  ));
+}
+
+/**
+ * Update the schema
+ */
+function sbac_forum_update_7011() {
+  db_add_field('sbac_forum_deleted_log', 'forum_type', array(
+    'description' => 'Topic or resource forum.',
+    'type' => 'varchar',
+    'length' => 150,
+    'default' => '',
+  ));
 }
