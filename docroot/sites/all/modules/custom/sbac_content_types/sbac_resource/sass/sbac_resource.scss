@@ -1227,6 +1227,17 @@ html.js .category-hide {
   }
 }
 
+@media screen and (max-width: 1350px) {
+   .jstree-default li.jstree-node.jstree-leaf .jstree-anchor  {
+      width: 80%;
+    }
+
+   .jstree-default .jstree-open li.jstree-node.jstree-leaf > .jstree-anchor,
+   .jstree-default .jstree-closed li.jstree-node.jstree-leaf > .jstree-anchor {
+    width: 100%;
+   }
+}
+   
 .categories-current-filters {
     &.noshow {
       display: none;
