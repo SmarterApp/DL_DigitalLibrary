@@ -22,7 +22,25 @@ $gray: #464B54;
 
 .sbac-forum-main-container {
   float:left;
-  width:100%
+  width:100%;
+  
+  p.recource-forums,
+  p.topic-forums {
+    color: #fff;
+    
+    a {
+      color: #fff;
+      text-decoration: underline;
+    }
+    
+    a:hover {
+      text-decoration: none;
+    }
+  }
+  
+  p.recource-forums {
+    width: 70%;
+  }
 }
 
 .page-forums-forum-add,
