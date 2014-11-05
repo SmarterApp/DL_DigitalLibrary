@@ -248,7 +248,10 @@ function sbac_resource_print_about_this_tab($node) {
   // And make anchor links relative again, to permit in-PDF navigation.
   $html = preg_replace("!${base_url}/" . PRINTPDF_PATH . '/.*?#!', '#', $html);
   module_load_include('inc', 'print_pdf', 'print_pdf.pages');
+  $print_pdf_pdf_tool = variable_get('print_pdf_pdf_tool', PRINT_PDF_PDF_TOOL_DEFAULT);
+  variable_set('print_pdf_pdf_tol', 'dompdf_config.inc.php');
   $content = print_pdf_generate_html($print, $html);
+  variable_set('print_pdf_pdf_tol', $print_pdf_pdf_tool);
   $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/';
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   if ($writable) {
