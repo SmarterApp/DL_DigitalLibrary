@@ -1,5 +1,4 @@
 <div id="profile-wrap">
-	<link rel="stylesheet" type="text/css" href="/sites/all/modules/custom/sbac_content_types/sbac_resource/css/print_style.css" media="screen">
 	<div class="left-column">
     <?php if (isset($node->resource_profile_left)) { ?>
       <?php foreach($node->resource_profile_left as $profile_field) { ?>
