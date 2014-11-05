@@ -143,6 +143,26 @@ function sbac_search_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'jqmulti_libraries';
+  $strongarm->value = array(
+    'jstree' => 'jstree',
+    'chosen' => 0,
+    'flexslider' => 0,
+    'fpdi' => 0,
+    'google-api-php-client' => 0,
+    'joyride' => 0,
+    'jquery.more' => 0,
+    'jwplayer' => 0,
+    'simplehtmldom' => 0,
+    'tcpdf' => 0,
+    'tinymce' => 0,
+    'zeroclipboard' => 0,
+  );
+  $export['jqmulti_libraries'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'search_active_modules';
   $strongarm->value = array(
     'apachesolr_search' => 'apachesolr_search',
