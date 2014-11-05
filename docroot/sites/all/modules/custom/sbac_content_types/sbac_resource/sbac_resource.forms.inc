@@ -46,18 +46,36 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
  * @param $form
  * @param $form_state
  */
-function _sbac_resource_form_flatten_term_tree(&$form, &$form_state){
-  // Subject vocab
-  $subject_vocab = taxonomy_vocabulary_machine_name_load('subject');
-  $options = array();
-  $terms = taxonomy_get_tree($subject_vocab->vid);
-  foreach($terms as $term){
-    $children = taxonomy_get_children($term->tid);
-    if(empty($children)){
-      $options[$term->tid] = sbac_resource_term_concat_parents($term->tid);
+function _sbac_resource_form_flatten_term_tree(&$form, &$form_state) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject', 'wrapper' => ''),
+    array('vid' => 'grades', 'field' => 'field_grades', 'wrapper' => ''),
+    array('vid' => 'digital_media_type', 'field' => 'field_digital_media_type', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_intended_student', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'geographical_settings', 'field' => 'field_geographical_settings', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'educational_use', 'field' => 'field_educational_use', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'technologies_for_classroom_use', 'field' => 'field_classroom_technologies', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'smarter_balanced_keyword', 'field' => 'field_smarter_balanced_keyword', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'intended_end_user', 'field' => 'field_intended_end_user', 'wrapper' => ''),
+  );
+  foreach ($configs as $config) {
+    // Subject vocab
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    if (!empty($config['wrapper'])) {
+      $form[$config['wrapper']][$config['field']]['und']['#options'] = $options;
+    }
+    else {
+      $form[$config['field']]['und']['#options'] = $options;
     }
   }
-  $form['field_subject']['und']['#options'] = $options;
 }
 
 /**
@@ -3579,7 +3597,7 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     foreach ($vocab_tree as $term) {
       $children = taxonomy_get_children($term->tid);
       if (empty($children)) {
-        $vocab_terms[$term->tid] = sbac_resource_term_concat_parents($term->tid);
+        $vocab_terms[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
       }
     }
     $form[$machine_name][$machine_name . '_terms'] = array(

@@ -341,11 +341,7 @@ function sbac_resource_views_view_fields__resources__grid_view__preprocess(&$var
     $vars['fields']['downloads'] = $variables['downloads'];
   }
   if (isset($variables['subject'])) {
-    $subjects = array();
-    foreach($vars['row']->field_field_subject as $subject){
-      $subjects[] = sbac_resource_term_concat_parents($subject['raw']['tid']);
-    }
-    $vars['fields']['subject'] = implode(', ', $subjects);
+    $vars['fields']['subject'] = $variables['subject'];
   }
   if (isset($variables['grades'])) {
     $vars['fields']['grades'] = $variables['grades'];
@@ -498,11 +494,7 @@ function sbac_resource_views_view_fields__my_resources__grid_view__preprocess(&$
     $vars['fields']['downloads'] = $variables['downloads'];
   }
   if (isset($variables['subject'])) {
-    $subjects = array();
-    foreach($vars['row']->field_field_subject as $subject){
-      $subjects[] = sbac_resource_term_concat_parents($subject['raw']['tid']);
-    }
-    $vars['fields']['subject'] = implode(', ', $subjects);
+    $vars['fields']['subject'] = $variables['subject'];
   }
   if (isset($variables['grades'])) {
     $vars['fields']['grades'] = $variables['grades'];
