@@ -52,7 +52,8 @@ function _sbac_resource_form_flatten_term_tree(&$form, &$form_state){
   $options = array();
   $terms = taxonomy_get_tree($subject_vocab->vid);
   foreach($terms as $term){
-    if(empty(taxonomy_get_children($term->tid))){
+    $children = taxonomy_get_children($term->tid);
+    if(empty($children)){
       $options[$term->tid] = sbac_resource_term_concat_parents($term->tid);
     }
   }
@@ -3576,7 +3577,8 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     $vocab_terms = array();
     $vocab_tree = taxonomy_get_tree($vocab_entity->vid);
     foreach ($vocab_tree as $term) {
-      if (empty(taxonomy_get_children($term->tid))) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
         $vocab_terms[$term->tid] = sbac_resource_term_concat_parents($term->tid);
       }
     }
