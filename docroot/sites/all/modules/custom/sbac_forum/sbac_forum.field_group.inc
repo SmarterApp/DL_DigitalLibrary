@@ -221,7 +221,7 @@ function sbac_forum_field_group_info() {
       'instance_settings' => array(
         'required_fields' => 1,
         'classes' => 'group-topic-comments-materials field-group-fieldset',
-        'description' => '',
+        'description' => 'Please make sure attachments meet all policies related to copyright and Personally Identifiable Information (PII). <a href="/help-topics"> Click for more information.</a>',
       ),
       'formatter' => 'collapsed',
     ),

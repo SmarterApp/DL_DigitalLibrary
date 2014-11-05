@@ -218,7 +218,7 @@ function sbac_resource_print_about_this_tab($node) {
   $array['node'] = $node;
   sbac_resource_profile_fields($array);
   $node = $array['node'];
-  $output = theme('sbac_resource_profile', array('node' => $node));
+  $output = theme('sbac_resource_profile_print', array('node' => $node));
 
   global $base_url;
   $query = $_GET;
@@ -366,18 +366,36 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
     }
     else {
-      if (isset($term['taxonomy_term']->name)){
-        $terms[] = $term['taxonomy_term']->name;
-      }
-      else {
-        $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->name;
-      }
+      $terms[] = sbac_resource_term_concat_parents($term['taxonomy_term']->tid, $term['taxonomy_term']->name);
     }
   }
 
   $list = theme('item_list', array('items' => $terms, 'title' => '', 'type' => 'ul', 'attributes' => array('class' => 'field-content')));
   return $list;
+}
+
+/**
+ * Concatenate the term name with the parents term names
+ * @param $tid
+ * @return string
+ */
+function sbac_resource_term_concat_parents($tid, $term_name) {
+  $parents = array();
+  $parents[] = (object) array(
+    'tid' => $tid,
+    'name' => $term_name,
+  );
+  $n = 0;
+  while ($parent = _sbac_resource_taxonomy_get_parents($parents[$n]->tid)) {
+    $parents = array_merge($parents, $parent);
+    $n++;
+  }
+  $names = array();
+  foreach ($parents as $p) {
+    $names[] = $p->name;
+  }
+  $names = array_reverse($names);
+  return implode(' - ', $names);
 }
 
 /**
@@ -3839,5 +3857,42 @@ function sbac_resource_remove_default_status_messages(){
         array_splice($_SESSION['messages']['status'], $index, 1);
       }
     }
+  }
+}
+
+/**
+ * Mimic taxonomy get parent but we don't want to trigger the load hook
+ */
+function _sbac_resource_taxonomy_get_parents($tid){
+  $query = db_select('taxonomy_term_data', 't');
+  $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
+  $query->fields('t', array('tid', 'name'));
+  $query->condition('h.tid', $tid);
+  $query->addTag('term_access');
+  $query->orderBy('t.weight');
+  $query->orderBy('t.name');
+  return $query->execute()->fetchAll();
+}
+
+/**
+ *  Implements hook_taxonomy_term_load().
+ */
+function sbac_resource_taxonomy_term_load($terms) {
+
+  foreach ($terms as $index => $term) {
+    // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
+    $query = db_select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
+    $query->addField('t', 'tid');
+    $query->condition('h.parent', $term->tid);
+    $query->addTag('term_access');
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    $children = $query->execute()->fetchCol();
+    if (!empty($children)) {
+      unset($terms[$index]);
+    }
+    // concatenate the children name with parents. We're using our own get parent function because we don't want to trigger this hook again.
+    $terms[$index]->name = sbac_resource_term_concat_parents($term->tid, $term->name);
   }
 }
