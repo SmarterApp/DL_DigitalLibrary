@@ -1,5 +1,6 @@
 <div id="profile-wrap">
-	<div class="col narrow">
+	<link rel="stylesheet" type="text/css" href="/sites/all/modules/custom/sbac_content_types/sbac_resource/css/print_style.css" media="screen">
+	<div class="left-column">
     <?php if (isset($node->resource_profile_left)) { ?>
       <?php foreach($node->resource_profile_left as $profile_field) { ?>
         <div class="title-tags"><?php echo $profile_field['title'] ?></div>
@@ -8,7 +9,7 @@
     <?php } ?>
 	</div>
 
-	<div class="col wide">
+	<div class="right-column">
 	  <?php if (isset($node->field_alt_body['und'][0])): ?>
 	    <h2 class="about">Summary</h2>
 	    <div class="item-list"><?php echo $node->field_alt_body['und'][0]['value']; ?></div>
