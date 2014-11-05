@@ -45,9 +45,7 @@
 }
 
 #profile-wrap	ul li {
-  list-style-position: inside !important;
   background-color: transparent;
-  display: block;
   font-size: 12px;
   line-height: 24px;
 	margin: 7px 4px 0 0;
@@ -73,3 +71,6 @@
 
 @page { margin: 1cm /* or 0, if you want */ }
 
+ul, li {
+  margin-left: 0;
+}
