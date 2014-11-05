@@ -198,7 +198,7 @@ function sbac_user_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_pdf_pdf_tool';
-  $strongarm->value = 'sites/all/libraries/tcpdf/tcpdf.php';
+  $strongarm->value = 'sites/all/libraries/dompdf/dompdf_config.inc.php';
   $export['print_pdf_pdf_tool'] = $strongarm;
 
   $strongarm = new stdClass();

@@ -26,6 +26,9 @@
       $(document).click(function () {
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
+          var vid = selectedDiv.attr('vid');
+          $('#filter-header-' + vid).removeClass('expanded');
+          $('#filter-header-' + vid).addClass('collapsed');
           selectedDiv.hide();
           selectedDiv.removeClass('selectedDiv');
         }
@@ -61,83 +64,6 @@
         $('.category-hide').show();
       }
 
-      // Add filter to current filters. Wrap in 'once' so ctools modal dosnt attach click handler multiple times.
-      $('.category-filter').each(function () {
-        $(this).once('cmod-catfilter', function () {
-          $(this).click(function () {
-            var filter_name = $(this).children('.filter-name');
-            var current_filters = $('#sbac-search-current-filters');
-            var reset_filters = $('#edit-reset-filters');
-            var search_button = $('#sbac-search-filter-button');
-            if (!filter_name.hasClass('current')) {
-              var last_filter = $('.categories-current-filters');
-              last_filter.append('<div class="current-filter"><span vid="' + filter_name.attr('vid') + '" tid="' + filter_name.attr('tid') + '" class="filter-name">' + filter_name.html() + '</span></div>');
-              filter_name.addClass('current');
-              filter_name.parent().addClass('current');
-              Drupal.behaviors.sbac_resource_review_remove.attach(context, settings);
-              // Add the tid to the filter list
-              if (current_filters.val() == '') {
-                last_filter.removeClass('noshow');
-                current_filters.val(filter_name.attr('vid') + ':' + filter_name.attr('tid'));
-              }
-              else {
-                var filter_tids = current_filters.val();
-                filter_tids += '::' + filter_name.attr('vid') + ':' + filter_name.attr('tid');
-                current_filters.val(filter_tids);
-              }
-              reset_filters.removeClass('js-hide');
-              search_button.removeClass('js-hide');
-              $('.category-hide').addClass('js-hide');
-            }
-            else {
-              var filters = current_filters.val();
-              var filters_array = filters.split('::');
-              var filters_length = filters_array.length;
-
-              var target_filter = filter_name.attr('vid') + ':' + filter_name.attr('tid');
-              var array_pos = filters_array.indexOf(target_filter);
-
-              if (array_pos == 0) {
-                var last_filter = $('.categories-current-filters .current-filter:first');
-                if (filters_length > 1) {
-                  target_filter = target_filter + '::';
-                }
-              }
-              else {
-                if (array_pos != 0 && array_pos != (filters_length - 1)) {
-                  var last_filter = $('.categories-current-filters .current-filter:nth-child(' + (array_pos + 1) + ')');
-                  target_filter = '::' + target_filter;
-                }
-                else {
-                  if (array_pos == (filters_length - 1)) {
-                    var last_filter = $('.categories-current-filters .current-filter:last');
-                    if (filters_length > 1) {
-                      target_filter = '::' + target_filter;
-                    }
-                  }
-                }
-              }
-              last_filter.remove();
-
-              filter_name.removeClass('current');
-              filter_name.parent().removeClass('current');
-
-              if (array_pos != -1) {
-                var new_filters = filters.replace(target_filter, '');
-                current_filters.val(new_filters);
-              }
-              else {
-                $('.categories-current-filters').addClass('noshow');
-                reset_filters.addClass('js-hide');
-                search_button.addClass('js-hide');
-                current_filters.val('');
-              }
-            }
-            return false;
-          });
-        });
-      });
-
       // Close the individual filter list.
       $('.category-filter-header').once('cmod-catfilterheader', function () {
         $('.category-filter-header').click(function () {
@@ -151,6 +77,8 @@
       $('.sbac-search-filter-name').once('cmod-searchfiltername', function () {
         $('.sbac-search-filter-name').click(function (e) {
           var vid = $(this).attr('vid');
+          $('#filter-header-' + vid).removeClass('collapsed');
+          $('#filter-header-' + vid).addClass('expanded');
           $('.category-filter-list').hide();
           $('.category-filter-list-' + vid).show();
           $('.category-filter-list-' + vid).addClass('selectedDiv');
@@ -158,7 +86,6 @@
           var style = $('.categories-filter.slideable').attr('style');
           if (style !== undefined) {
             style = style.replace('overflow: hidden');
-            console.log(style);
             $('.categories-filter.slideable').attr('style', style);
           }
           e.stopPropagation();
@@ -166,7 +93,6 @@
         });
       });
 
-      // Open / Close the filter list.
       // Open / Close the filter list.
       $('#sbac-search-cat-button').once('cmod-searchcatbutton', function () {
         $('#sbac-search-cat-button').click(function () {
@@ -219,66 +145,6 @@
           $('.sbac-filter-cat-area').addClass("active");
         }
       }
-    }
-  };
-
-
-  /**
-   * When the user removes the filter from the current filters.
-   *
-   * @type {{attach: Function}}
-   */
-  Drupal.behaviors.sbac_resource_review_remove = {
-    attach: function (context, settings) {
-      // Remove's the individual filters.
-      $('#sbac-category-current-filters .current-filter').once('cmod-cathide', function() {
-        $('#sbac-category-current-filters .current-filter').click(function () {
-          $('.selectedDiv').hide();
-          var reset_filters = $('#edit-reset-filters');
-          var search_button = $('#sbac-search-filter-button');
-          var current_filters = $('#sbac-search-current-filters');
-          var vid = $(this).children().attr('vid');
-          var tid = $(this).children().attr('tid');
-          var first_try = '::' + vid + ':' + tid;
-          var second_try = vid + ':' + tid;
-          if (current_filters.val() != '') {
-            var current_filters_string = current_filters.val();
-            var pos = current_filters_string.indexOf(first_try);
-
-            if (pos >= 0) {
-              var newvalue = current_filters_string.replace(first_try, '');
-              current_filters.val(newvalue);
-              $(this).remove();
-              $('.category-filter-' + vid + '-' + tid).removeClass('current');
-            }
-            else {
-              var pos2 = current_filters_string.indexOf(second_try);
-              if (pos2 >= 0) {
-                var newvalue = current_filters_string.replace(second_try, '');
-                current_filters.val(newvalue);
-                $(this).remove();
-                $('.category-filter-' + vid + '-' + tid).removeClass('current');
-              }
-              $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
-              Drupal.settings.sbac_search.isEdit = 0;
-            }
-
-            if (current_filters.val() == '') {
-              $('.categories-current-filters').addClass('noshow');
-              reset_filters.addClass('js-hide');
-              search_button.addClass('js-hide');
-              $('.category-hide').text(Drupal.t('Show Categories'));
-              $('.category-hide').removeClass('active');
-              $('.category-hide').removeClass('js-hide');
-              $('.slideable').hide();
-              Drupal.settings.sbac_search.isEdit = 0;
-              $('#sbac-search-filter-button').removeClass('is-edit').text(Drupal.t('Apply Filters'));
-              $('#sbac-search-resource-review-form').submit();
-            }
-          }
-          return false;
-        });
-      });
     }
   };
 
@@ -480,3 +346,106 @@
   };
 
 })(jQuery);
+
+/**
+ * jstree requires jQuery 1.9 and above so we are using jQuery 1.9.0 here
+ */
+(function ($) {
+  Drupal.behaviors.sbac_search_filters = {
+    attach: function (context, settings) {
+      current_filter_clicked = function () {
+        var tid = $(this).attr('tid');
+        var vid = $(this).attr('vid');
+        $.jstree.reference('filter-' + vid).deselect_node(vid + ':' + tid);
+        build_current_filters();
+      };
+
+      // build the current filter list
+      build_current_filters = function () {
+        var $current_filter_div = $('.categories-current-filters');
+        var $reset_filters = $('#edit-reset-filters');
+        var $search_button = $('#sbac-search-filter-button');
+        var $hidden_filters = $('#sbac-search-current-filters');
+        $current_filter_div.empty();
+        // Get all the trees
+        var filters = [];
+        $('.jstree').each(function (i, element) {
+          var $tree = $.jstree.reference(element.id);
+          // get selected terms
+          var selected = $tree.get_selected();
+          if (selected.length > 0) {
+            // Show the buttons
+            $reset_filters.removeClass('js-hide');
+            $search_button.removeClass('js-hide');
+            $current_filter_div.removeClass('noshow');
+            $.each(selected, function (i, selected_id) {
+              filters.push(selected_id);
+              var parent_id = $tree.get_parent(selected_id);
+              if ($tree.is_selected(parent_id)) {
+                // the parent node is fully (NOT partially) selected, don't print this child node because we will print just the parent node later
+              }
+              else {
+                var this_node = $tree.get_node(selected_id);
+                var $new_filter = $('<div class="current-filter" vid="' + this_node.li_attr.vid + '" tid="' + this_node.li_attr.tid + '">' + this_node.li_attr.term + '</div>').click(current_filter_clicked);
+                $current_filter_div.append($new_filter);
+              }
+            });
+          }
+        });
+        // save the selected filters to the hidden field
+        $('#sbac-search-current-filters').val(filters.join('::'));
+      };
+
+      // initialize all the jstrees
+      $('.jstree')
+        .on('changed.jstree', build_current_filters)
+        .jstree({
+          "plugins": ["checkbox"]
+        });
+
+      // look at the current filters and select the jstree values (because initially the tree will be empty, we are just repopulating according to the current filters)
+      $('#sbac-category-current-filters .current-filter').each(function(i, value) {
+        var vid = $(value).attr('vid');
+        var tid = $(value).attr('tid');
+        var node_id = vid + ':' + tid;
+        var this_tree = $.jstree.reference('filter-' + vid);
+        var name = $(value).text();
+        var node = {
+          'text': name,
+          'id': node_id,
+          'li_attr': {
+            'tid': tid,
+            'vid': vid,
+            'term': name
+          },
+          'state': {
+            'selected': true
+          }
+        };
+        if (this_tree) {
+          // if the tree exists then select the node
+          this_tree.select_node(node_id);
+          if (!this_tree.is_selected(node_id)) {
+            // if the node doesn't exist, then create it and select it
+            this_tree.create_node('#', node);
+          }
+        }
+        else {
+          // if the tree doesn't exist then create it
+          var tree_id = 'filter-' + vid;
+          var $temp = $('#' + tree_id).length ? $('#' + tree_id) : $('<div id="' + tree_id + '" class="jstree js-hide"></div>');
+          $('.categories-container').append($temp);
+          $temp
+            .on('changed.jstree', build_current_filters)
+            .jstree({'core': {'check_callback': true}, "plugins": ["checkbox"]});
+          // and create the node
+          $.jstree.reference(tree_id).create_node('#', node)
+        }
+      });
+
+      build_current_filters();
+
+    }
+  };
+
+})(jq190);

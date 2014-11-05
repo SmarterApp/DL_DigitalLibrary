@@ -24,6 +24,15 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['sbac_resource_profile_print'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates',
+    'template' => 'resource-profile-print',
+    'variables' => array('node' => NULL),
+    'preprocess functions' => array(
+      'sbac_resource_profile_fields',
+    ),
+  );
+
   $items['sbac_resource_related_resources_header'] = array(
     'path' => drupal_get_path('module', 'sbac_resource') . '/templates/related_resources',
     'template' => 'related-resources-header',

@@ -59,6 +59,28 @@ function sbac_search_apachesolr_environments_alter(&$environments) {
 }
 
 /**
+ *  Implements hook_libraries_info().
+ */
+function sbac_resource_libraries_info() {
+  $libraries['jstree'] = array(
+    'name' => 'jsTree',
+    'vendor url' => 'http://www.jstree.com//',
+    'download url' => 'https://github.com/vakata/jstree/zipball/3.0.8',
+    'version' => '3.0.8',
+    'files' => array(
+      'js' => array(
+        'dist/jstree.js',
+      ),
+      'css' => array(
+        'dist/themes/default/style.css',
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Implements hook_menu().
  *
  * @return mixed
@@ -632,6 +654,7 @@ function sbac_search_my_resources_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.my_resources.categories.js');
+  libraries_load('jstree');
 
   $allowed_states = array(
     'draft' => 'Draft',
@@ -654,7 +677,18 @@ function sbac_search_my_resources_categories() {
       'tid' => $tid,
       'name' => $display_name,
     );
+    $item = array(
+      'data' => $display_name,
+      'term' => (object) array(
+        'tid' => $tid,
+        'vid' => 'resource-status',
+        'name' => $display_name,
+      )
+    );
+    $categories['resource_states']['tree']['#items'][] = $item;
   }
+  $categories['resource_states']['tree']['#theme'] = 'sbac_filter_item_list';
+
   _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
   _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
   _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
@@ -673,12 +707,12 @@ function sbac_search_my_resources_categories() {
             $tid = $filter_info[1];
             if ($vid && $tid) {
               if ($vid == 'resource-status') {
-                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $allowed_states[$tid] . '</span></div>';
+                $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $allowed_states[$tid] . '</div>';
               }
               else {
                 $term = taxonomy_term_load($tid);
                 if ($term) {
-                  $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+                  $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $term->name . '</div>';
                 }
               }
             }
@@ -705,6 +739,8 @@ function sbac_search_resource_review_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
+  libraries_load('jstree');
+
 
   $both_roles = $rr = $rp = FALSE;
   if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
@@ -724,30 +760,32 @@ function sbac_search_resource_review_categories() {
   $allowed_both_states = array('Being Reviewed', 'Needs Review', 'Needs Posting');
   $allowed_rr_states = array('Being Reviewed', 'Needs Review');
   $allowed_rp_states = array('Being Reviewed', 'Needs Posting');
-  foreach ($resource_states_terms as $key => $resource_state_term) {
+  $categories['resource_states']['display_name'] = 'Resource Status';
+  $categories['resource_states']['vocabulary'] = $resource_states;
+  $categories['resource_states']['terms'] = $resource_states_terms;
+  $tree = taxonomy_get_nested_tree($resource_states->vid);
+  $categories['resource_states']['tree'] = taxonomy_nested_tree_render($tree);
+  foreach($categories['resource_states']['tree']['#items'] as $index => $item){
     if ($both_roles) {
-      if (!in_array($resource_state_term->name, $allowed_both_states)) {
-        unset($resource_states_terms[$key]);
+      if (!in_array($item['data'], $allowed_both_states)) {
+        unset($categories['resource_states']['tree']['#items'][$index]);
       }
     }
     else {
       if ($rr) {
-        if (!in_array($resource_state_term->name, $allowed_rr_states)) {
-          unset($resource_states_terms[$key]);
+        if (!in_array($item['data'], $allowed_rr_states)) {
+          unset($categories['resource_states']['tree']['#items'][$index]);
         }
       }
       else {
         if ($rp) {
-          if (!in_array($resource_state_term->name, $allowed_rp_states)) {
-            unset($resource_states_terms[$key]);
+          if (!in_array($item['data'], $allowed_rp_states)) {
+            unset($categories['resource_states']['tree']['#items'][$index]);
           }
         }
       }
     }
   }
-  $categories['resource_states']['display_name'] = 'Resource Status';
-  $categories['resource_states']['vocabulary'] = $resource_states;
-  $categories['resource_states']['terms'] = $resource_states_terms;
 
   _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
   _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
@@ -769,7 +807,7 @@ function sbac_search_resource_review_categories() {
             if ($vid && $tid) {
               $term = taxonomy_term_load($tid);
               if ($term) {
-                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+                $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $term->name . '</div>';
               }
             }
           }
@@ -790,6 +828,54 @@ function _sbac_search_create_taxonomy_filter(&$categories, $vocab_name, $display
   $categories[$vocab_name]['display_name'] = $display_name;
   $categories[$vocab_name]['vocabulary'] = $vocab;
   $categories[$vocab_name]['terms'] = taxonomy_get_tree($vocab->vid);
+
+  $tree = taxonomy_get_nested_tree($vocab->vid);
+  $categories[$vocab_name]['tree'] = taxonomy_nested_tree_render($tree);
+}
+
+function taxonomy_get_nested_tree($vid_or_terms = array(), $max_depth = NULL, $parent = 0, $parents_index = array(), $depth = 0) {
+  if (!is_array($vid_or_terms)) {
+    $vid_or_terms = taxonomy_get_tree($vid_or_terms);
+  }
+  foreach ($vid_or_terms as $term) {
+    foreach ($term->parents as $term_parent) {
+      if ($term_parent == $parent) {
+        $return[$term->tid] = $term;
+      }
+      else {
+        $parents_index[$term_parent][$term->tid] = $term;
+      }
+    }
+  }
+  foreach ($return as &$term) {
+    if (isset($parents_index[$term->tid]) && (is_null($max_depth) || $depth < $max_depth)) {
+      $term->children = taxonomy_get_nested_tree($parents_index[$term->tid], $max_depth, $term->tid, $parents_index, $depth + 1);
+    }
+  }
+  return $return;
+}
+
+function taxonomy_nested_tree_render($tree, $recurring = FALSE) {
+  $items = array();
+  if (count($tree)) {
+    foreach ($tree as $term) {
+      $item = array('data' => $term->name);
+      if (isset($term->children)) {
+        $item["children"] = taxonomy_nested_tree_render($term->children, TRUE);
+      }
+      $item['term'] = $term;
+      $items[] = $item;
+    }
+  }
+
+  if ($recurring) {
+    return $items;
+  }
+
+  return array(
+    '#theme' => 'sbac_filter_item_list',
+    '#items' => $items,
+  );
 }
 
 /**
@@ -801,6 +887,7 @@ function sbac_search_digital_library_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
+  libraries_load('jstree');
 
   _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
   _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
@@ -846,7 +933,7 @@ function sbac_search_digital_library_categories() {
                   $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
                   $term_label = $term_wrapper->field_alignment_shortname->value();
                 }
-                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term_label . '</span></div>';
+                $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $term_label . '</div>';
               }
             }
           }
@@ -929,5 +1016,87 @@ function sbac_search_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['sbac_filter_item_list'] = array(
+    'variables' => array(
+      'items' => array(),
+      'title' => NULL,
+      'type' => 'ul',
+      'attributes' => array()
+    ),
+  );
+
   return $items;
+}
+
+/**
+ * Default theme implementation for sbac_filter_item_list
+ *
+ * Borrowed from theme_item_list() but we don't want the wrapping div around the ul element.
+ * We also add in our custom classes so our Javascript can target them.
+ */
+function theme_sbac_filter_item_list($variables) {
+  $items = $variables['items'];
+  $title = $variables['title'];
+  $type = $variables['type'];
+  $attributes = $variables['attributes'];
+
+  // Only output the list container and title, if there are any list items.
+  // Check to see whether the block title exists before adding a header.
+  // Empty headers are not semantic and present accessibility challenges.
+  $output = '';
+  if (isset($title) && $title !== '') {
+    $output .= '<h3>' . $title . '</h3>';
+  }
+
+  if (!empty($items)) {
+    $output .= "<$type" . drupal_attributes($attributes) . '>';
+    $num_items = count($items);
+    $i = 0;
+    foreach ($items as $item) {
+      $attributes = array(
+        'class' => array(
+          'category-filter',
+          'category-filter-' . $item['term']->vid . '-' . $item['term']->tid
+        ),
+        'vid' => $item['term']->vid,
+        'tid' => $item['term']->tid,
+        'term' => $item['term']->name,
+        'id' => $item['term']->vid . ':' . $item['term']->tid,
+      );
+      unset($item['term']);
+      $children = array();
+      $data = '';
+      $i++;
+      if (is_array($item)) {
+        foreach ($item as $key => $value) {
+          if ($key == 'data') {
+            $data = $value;
+          }
+          elseif ($key == 'children') {
+            $children = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $data = $item;
+      }
+      if (count($children) > 0) {
+        $attributes['class'][] = 'has-children';
+        // Render nested list.
+        $data .= theme_sbac_filter_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
+      }
+      if ($i == 1) {
+        $attributes['class'][] = 'first';
+      }
+      if ($i == $num_items) {
+        $attributes['class'][] = 'last';
+      }
+      $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";
+    }
+    $output .= "</$type>";
+  }
+  return $output;
 }
