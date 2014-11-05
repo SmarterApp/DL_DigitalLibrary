@@ -218,7 +218,7 @@ function sbac_resource_print_about_this_tab($node) {
   $array['node'] = $node;
   sbac_resource_profile_fields($array);
   $node = $array['node'];
-  $output = theme('sbac_resource_profile', array('node' => $node));
+  $output = theme('sbac_resource_profile_print', array('node' => $node));
 
   global $base_url;
   $query = $_GET;
