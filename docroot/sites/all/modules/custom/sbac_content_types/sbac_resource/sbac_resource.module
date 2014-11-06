@@ -215,9 +215,6 @@ function sbac_resource_menu() {
 function sbac_resource_print_about_this_tab($node) {
   drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_about.js');
 
-  $array['node'] = $node;
-  sbac_resource_profile_fields($array);
-  $node = $array['node'];
   $output = theme('sbac_resource_profile_print', array('node' => $node));
 
   global $base_url;
@@ -370,7 +367,13 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
     }
     else {
-      $terms[] = $term['taxonomy_term']->name;
+      if (isset($term['taxonomy_term']->name)) {
+        $terms[] = $term['taxonomy_term']->name;
+      }
+      else {
+        $temp_term = taxonomy_term_load($term['tid']);
+        $terms[] = $temp_term->name;
+      }
     }
   }
 
