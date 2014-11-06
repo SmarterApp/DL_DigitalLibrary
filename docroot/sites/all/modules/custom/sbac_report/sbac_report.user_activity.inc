@@ -469,7 +469,7 @@ function get_user_activity($user, $date_range) {
   $sql = "select count(distinct s.resource_id) as count, s.uid from
 	(select r.field_forum_resource_ref_target_id as resource_id, n.uid, n.created from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id  where n.type = 'topic' and r.field_forum_resource_ref_target_id is not null
 UNION
-select r.field_forum_resource_ref_target_id as resource_id, c.uid, c.created from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where c.uid = 172081 and r.field_forum_resource_ref_target_id is not null) s
+select r.field_forum_resource_ref_target_id as resource_id, c.uid, c.created from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where r.field_forum_resource_ref_target_id is not null) s
 where s.uid in (%s) and DATE_FORMAT((DATE_ADD('19700101', INTERVAL s.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
 group by s.uid";
   $user_activity['resource_forum_participated'] = count_with_users_query($sql, $user, $from_date, $to_date);
