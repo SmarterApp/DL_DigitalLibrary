@@ -153,7 +153,7 @@
       <div class="topic-node-main-content-materials-wrapper">
         <?php if ($main_content['has_materials']): ?>
           <div class="topic-node-main-content-materials-label">Material(s)</div>
-         <div class="topic-node-main-content-warning"> <p> Note: Attached materials have not been reviewed by Smarter Balanced.</p> </div>
+         <div class="topic-node-main-content-warning"> <p> <span>Note:</span> Attached materials have not been reviewed by Smarter Balanced.</p> </div>
           <?php
           print render($content['field_topic_files']);
           print render($content['field_topic_links']);

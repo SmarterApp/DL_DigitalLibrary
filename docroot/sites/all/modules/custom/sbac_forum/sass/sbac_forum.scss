@@ -2902,6 +2902,18 @@ View Topic Page, Comment Page
 	fieldset.collapsed {
 		border: none !important;
 	}
+	
+	fieldset.group-topic-comments-materials {
+	  .fieldset-description {
+	    color: #8a1538;
+	    line-height: 1.4;
+	    
+	    a{
+	      color: #0583ac;
+	      text-decoration: underline;
+	    }
+	  }
+	}
 
 	.fieldset-wrapper {
 		width: 100%;
@@ -4281,4 +4293,16 @@ a.sbac-favorites-link {
    .jstree-default li.jstree-node.jstree-leaf .jstree-anchor  {
       width: 80%;
     }
+}
+
+
+
+.topic-node-main-content-warning p {
+  font-size: 13px;
+  color: #999;
+  
+  span {
+    font-weight: bold;
+    color: #5a5a5a;
+  }
 }
