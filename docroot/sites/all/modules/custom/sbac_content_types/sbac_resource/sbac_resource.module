@@ -214,10 +214,7 @@ function sbac_resource_menu() {
  */
 function sbac_resource_print_about_this_tab($node) {
   drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_about.js');
-
   $output = theme('sbac_resource_profile_print', array('node' => $node));
-
-  global $base_url;
   $query = $_GET;
   $cid = NULL;
   module_load_include('inc', 'print', 'print.pages');
@@ -227,8 +224,8 @@ function sbac_resource_print_about_this_tab($node) {
   }
 
   $print['content'] = $output;
-  $print['source_url'] = '';
-  $print['pdf_links'] = '';
+  $print['author_owner'] = '
+      <div class="print-author"><span class="print-author-title">Author: </span>' . $node->field_author['und'][0]['safe_value'] . '</div><div class="print-owner"><span class="print-owner-title">Owner: </span>' . $node->field_publisher['und'][0]['safe_value'] . '</div>';
   global $base_url;
   $print['css'] = '<link rel="stylesheet" type="text/css" href="' . $base_url . '/' . drupal_get_path('module', 'sbac_resource') . '/css/print_style.css' . '">';
   // Img elements must be set to absolute.
@@ -237,7 +234,7 @@ function sbac_resource_print_about_this_tab($node) {
   $print['logo'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['logo']);
   $print['footer_message'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['footer_message']);
   $print['sendtoprinter'] = '';
-  $html = theme('print', array(
+  $html = theme('sbac_resource_print', array(
       'print' => $print,
       'type' => PRINT_PDF_FORMAT,
       'node' => $node
