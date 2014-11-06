@@ -1025,6 +1025,7 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
   array_push($uidcountkeys, array('qc_reviews_completed', '# of QC Reviews Completed by User'));
   array_push($uidcountkeys, array('poster_reviews_completed', '# of Arbitration Reviews Completed by User'));
   array_push($uidcountkeys, array('contributed_resources_posted', '# of Resources Contributed by User that are Posted'));
+  array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', '# of Resources Contributed by User that are Posted with Distinction'));
   array_push($uidcountkeys, array('resources_flagged_by_others', '# of  Resources Contributed by User that were Flagged'));
   array_push($uidcountkeys, array('topic_forums_created', '# of Topic Forums Created by User'));
   array_push($uidcountkeys, array('topic_discussions_deleted_by_user', '# of Topic Forum Discussions Deleted by User'));
@@ -1188,6 +1189,7 @@ function set_user_activity_report_columns() {
     '# of Arbitration Reviews Completed by User',
     '# of Resources Contributed by User',
     '# of Resources Contributed by User that are Posted',
+    '# of Resources Contributed by User that are Posted with Distinction',
     '# of Flagged Resources Removed by User through Moderation',
     '# of Flagged Resources Resolved by User through Moderation',
     '# of Flagged Resource Reviews Removed by User through moderation',
