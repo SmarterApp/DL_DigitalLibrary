@@ -20,21 +20,17 @@
       }
       else {
         $category_vid = $category['vocabulary']->vid;
-        echo '<li id="filter-header-' . $category_vid . '" class="collapsed"><div class="sbac-search-filter-name" vid="' . $category['vocabulary']->vid .
-          '">' .
-          $category['display_name'];
+        $display_name = $category['display_name'];
+        echo "<li id='filter-header-$category_vid' class='collapsed'><div class='sbac-search-filter-name' id='sbac-search-filter-name-$category_vid' vid='$category_vid'>" . $display_name;
         // The choices per vocabulary.
         echo '<div class="categories-filter-choices">';
-        $display_name = strtolower($category['display_name']);
-        echo "<div vid='$category_vid' class='jstree clearfix category-filter-list category-filter-list-$category_vid $display_name'
- id='filter-$category_vid'>";
-        echo '<h2 class="category-filter-header">' . $category['display_name'] . '<i class="gen-enclosed foundicon-remove right"></i></h2>';
+        echo "<div vid='$category_vid' class='jstree clearfix category-filter-list category-filter-list-$category_vid " . strtolower($display_name) . "' id='filter-$category_vid'>";
+        echo "<h2 class='category-filter-header'>$display_name<i class='gen-enclosed foundicon-remove right'></i></h2>";
         print render($category['tree']);
         echo '</div>';
         echo '</div>';
         echo '</div></li>';
       }
-
 
       // Close of the loop.
       if ($count == $mod) {
@@ -54,7 +50,6 @@
         $category_count--;
       }
     }
-
     ?>
   </div>
   <?php ($cf_value ? $class = '' : $class = 'noshow'); ?>
