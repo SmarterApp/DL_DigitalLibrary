@@ -273,7 +273,7 @@ function sbac_report_forum_get_columns() {
     'Favorites: Total # Users' => array(
       'function' => 'sbac_report_forum_get_favorite_count'
     ),
-    'Number of Topics' => array(
+    'Number of Discussion Threads' => array(
       'function' => 'sbac_report_get_entity_wrapper_value',
       'arguments' => array(
         'field_name' => 'field_forum_topic_count',
