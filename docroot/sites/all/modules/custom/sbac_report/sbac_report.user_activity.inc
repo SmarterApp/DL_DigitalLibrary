@@ -469,7 +469,7 @@ function get_user_activity($user, $date_range) {
   $sql = "select count(distinct s.resource_id) as count, s.uid from
 	(select r.field_forum_resource_ref_target_id as resource_id, n.uid, n.created from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id  where n.type = 'topic' and r.field_forum_resource_ref_target_id is not null
 UNION
-select r.field_forum_resource_ref_target_id as resource_id, c.uid, c.created from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where c.uid = 172081 and r.field_forum_resource_ref_target_id is not null) s
+select r.field_forum_resource_ref_target_id as resource_id, c.uid, c.created from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where r.field_forum_resource_ref_target_id is not null) s
 where s.uid in (%s) and DATE_FORMAT((DATE_ADD('19700101', INTERVAL s.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
 group by s.uid";
   $user_activity['resource_forum_participated'] = count_with_users_query($sql, $user, $from_date, $to_date);
@@ -1025,6 +1025,7 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
   array_push($uidcountkeys, array('qc_reviews_completed', '# of QC Reviews Completed by User'));
   array_push($uidcountkeys, array('poster_reviews_completed', '# of Arbitration Reviews Completed by User'));
   array_push($uidcountkeys, array('contributed_resources_posted', '# of Resources Contributed by User that are Posted'));
+  array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', '# of Resources Contributed by User that are Posted with Distinction'));
   array_push($uidcountkeys, array('resources_flagged_by_others', '# of  Resources Contributed by User that were Flagged'));
   array_push($uidcountkeys, array('topic_forums_created', '# of Topic Forums Created by User'));
   array_push($uidcountkeys, array('topic_discussions_deleted_by_user', '# of Topic Forum Discussions Deleted by User'));
@@ -1188,6 +1189,7 @@ function set_user_activity_report_columns() {
     '# of Arbitration Reviews Completed by User',
     '# of Resources Contributed by User',
     '# of Resources Contributed by User that are Posted',
+    '# of Resources Contributed by User that are Posted with Distinction',
     '# of Flagged Resources Removed by User through Moderation',
     '# of Flagged Resources Resolved by User through Moderation',
     '# of Flagged Resource Reviews Removed by User through moderation',
