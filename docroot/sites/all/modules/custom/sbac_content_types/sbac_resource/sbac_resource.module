@@ -366,7 +366,7 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
     }
     else {
-      $terms[] = sbac_resource_term_concat_parents($term['taxonomy_term']->tid, $term['taxonomy_term']->name);
+      $terms[] = $term['taxonomy_term']->name;
     }
   }
 
