@@ -1,3 +1,4 @@
+<hr>
 <div id="profile-wrap">
 	<table cellpadding="10">
 		<tr>

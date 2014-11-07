@@ -12,7 +12,7 @@
 <head>
   <?php print $print['head']; ?>
   <?php print $print['base_href']; ?>
-  <title><?php print $print['title']; ?></title>
+  <title></title>
   <?php print $print['scripts']; ?>
   <?php print $print['sendtoprinter']; ?>
   <?php print $print['robots_meta']; ?>
@@ -20,6 +20,7 @@
   <?php print $print['css']; ?>
 </head>
 <body>
+<h1><?php print $print['title']; ?></h1>
 <?php print $print['author_owner'] ?>
 <hr class="print-hr" />
 <div class="print-content"><?php print $print['content']; ?></div>
