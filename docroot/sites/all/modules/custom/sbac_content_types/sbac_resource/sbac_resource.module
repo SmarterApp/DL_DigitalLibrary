@@ -3104,6 +3104,16 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
             $access = TRUE;
           }
         }
+        // Resource posters in the same state as contributor can view it
+        if (!$access) {
+          $query = db_select('node', 'n');
+          $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+          $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+          $query->condition('n.nid', $node->nid);
+          $query->where('s1.field_state_tid = s2.field_state_tid');
+          $query->fields('n', array('nid'));
+          $access = (bool) $query->countQuery()->execute()->fetchField();
+        }
         break;
       case 'needs_review':
         // author has view

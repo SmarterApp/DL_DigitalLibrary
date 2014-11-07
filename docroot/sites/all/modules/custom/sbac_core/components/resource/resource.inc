@@ -442,7 +442,18 @@ function _resource_access_access_qc_review_comment($node, $account) {
       ->countQuery()
       ->execute()
       ->fetchField();
+    // contributor can see it
     $access = $rejected && $node->uid == $account->uid;
+    if (!$access) {
+      // posters in the same state as contributor can see it
+      $query = db_select('node', 'n');
+      $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+      $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+      $query->condition('n.nid', $node->nid);
+      $query->where('s1.field_state_tid = s2.field_state_tid');
+      $query->fields('n', array('nid'));
+      $access = (bool) $query->countQuery()->execute()->fetchField();
+    }
   }
   elseif (_resource_access_node_has_state($node, array('rejected'))) {
     $access = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
