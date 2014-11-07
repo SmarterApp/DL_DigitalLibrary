@@ -795,6 +795,17 @@ function sbac_resource_preprocess_node(&$vars) {
     }
     if ($vars['uid'] == $user->uid && $vars['workbench_moderation']['current']->state == 'rejected' && in_array('resource contributor', $user->roles)) {
       $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+    } elseif ($vars['uid'] == $user->uid && $vars['workbench_moderation']['current']->state == 'draft' && in_array('resource contributor', $user->roles)){
+      $rejected = db_select('workbench_moderation_node_history', 'h')
+        ->condition('h.state', 'rejected')
+        ->condition('h.nid', $vars['nid'])
+        ->fields('h', array('hid'))
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if ($rejected && $vars['uid'] == $user->uid) {
+        $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+      }
     }
 
     // Documents

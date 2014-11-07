@@ -29,6 +29,10 @@ function resource_feedback_page($node) {
       'access review comments' => array(
         'feedback' => array(
           'gk_comments' => TRUE,
+        ),
+      ),
+      'access qc review comments' => array(
+        'feedback' => array(
           'qc_comments' => TRUE,
         ),
       ),
