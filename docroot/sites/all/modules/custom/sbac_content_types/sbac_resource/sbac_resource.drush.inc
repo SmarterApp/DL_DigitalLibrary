@@ -571,6 +571,7 @@ function drush_sbac_resource_find_extra_reviews() {
  * Find resources that are affected by the workflow bug
  */
 function drush_sbac_resource_generate_pdfs() {
+  ini_set('memory_limit', '1048M');
   $results = db_query("SELECT nid FROM {node} WHERE type = 'resource'");
   foreach ($results as $nid) {
     $node = node_load($nid->nid);
