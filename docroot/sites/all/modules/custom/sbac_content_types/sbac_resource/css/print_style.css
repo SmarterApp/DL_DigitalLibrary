@@ -1,0 +1,76 @@
+
+#profile-wrap {
+  margin: 0;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+#profile-wrap	h2 {
+	color: #000000;
+	display: block;
+  /*font-size: 18px;*/
+	font-size: 1.1em;
+  font-weight: bold;
+  margin: 0;
+  max-width: 560px;
+  padding: 0 0 10px;
+  /*text-transform: capitalize;*/
+}
+
+#profile-wrap .title-tags {
+	display:block;
+	margin:0;
+	padding:5px 0 3px 0;
+	border-radius:0;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	line-height:normal;
+	background:transparent;
+	color:#04384e;
+	text-transform:uppercase;
+	letter-spacing:1px;
+	border-bottom:1px solid #CECECE;
+}
+
+#profile-wrap	.item-list {
+	clear: both;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+#profile-wrap	ul {
+	margin: 0;
+	list-style-type: disc !important;
+}
+
+#profile-wrap	ul li {
+  background-color: transparent;
+  font-size: 12px;
+  line-height: 24px;
+	margin: 7px 4px 0 0;
+  padding: 0 7px;
+}
+
+#profile-wrap .left-column {
+  width: 250px; 
+  display: inline-block;
+  float: left;
+}
+
+#profile-wrap .right-column {
+  width: 350px; 
+  display: block;
+  float: right; 
+  font-size: 12px; 
+  vertical-align: top;
+  position:relative;
+  left: 270px;
+  top: 0;
+}
+
+@page { margin: 1cm /* or 0, if you want */ }
+
+ul, li {
+  margin-left: 0;
+}

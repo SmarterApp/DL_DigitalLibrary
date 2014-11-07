@@ -107,6 +107,7 @@
         <div class="topic-node-comment-materials-wrapper">
           <?php if ($has_materials): ?>
             <div class="topic-node-comment-materials-label">Material(s)</div>
+            <div class="topic-node-main-content-warning"> <p> <span>Note:</span> Attached materials have not been reviewed by Smarter Balanced.</p> </div>
             <?php
             print render($content['field_topic_comment_files']);
             print render($content['field_topic_comment_links']);

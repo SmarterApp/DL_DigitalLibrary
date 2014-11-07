@@ -1712,12 +1712,16 @@ function sbac_forum_node_insert($node) {
  */
 function sbac_forum_node_delete($node) {
   if ($node->type == 'topic') {
+    $forum_type = 'topic';
     $node_wrapper = entity_metadata_wrapper('node', $node);
     if (isset($node_wrapper->field_topic_forum_parent)) {
       $forum_obj = $node_wrapper->field_topic_forum_parent->value();
       if (!empty($forum_obj)) {
         // Update topic counter field on forum.
         $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $forum_obj);
+        if($forum_wrapper->field_forum_resource_ref->value()){
+          $forum_type = 'resource';
+        }
         if (isset($forum_wrapper->field_forum_topic_count)) {
           $current_count = $forum_wrapper->field_forum_topic_count->value();
           $current_count--;
@@ -1751,10 +1755,14 @@ function sbac_forum_node_delete($node) {
         }
       }
     }
+    global $user;
     $edit = array(
       'entity_type' => 'node',
       'entity_id' => $node->nid,
       'title' => $node->title,
+      'created' => time(),
+      'uid' => $user->uid,
+      'forum_type' => $forum_type,
     );
     drupal_write_record('sbac_forum_deleted_log', $edit);
   }

@@ -66,7 +66,7 @@
           </a>
         </th>
         <th class="views-field views-field-topics">
-          <a href="<?php echo $data['table_topics_query']; ?>" title="sort by Number of Topics" class="active">Forum Topics
+          <a href="<?php echo $data['table_topics_query']; ?>" title="sort by Number of Discussions" class="active">Forum Discussions
             <?php
             if (isset($data['topics_image'])) {
               echo $data['topics_image'];

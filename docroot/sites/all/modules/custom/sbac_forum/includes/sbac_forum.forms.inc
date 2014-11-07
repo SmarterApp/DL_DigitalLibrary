@@ -111,6 +111,7 @@ function sbac_forum_category_forum_form($form, &$form_state) {
 function _sbac_forum_filter_categories() {
   $categories = array();
   drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.filter_categories.js');
+  libraries_load('jstree');
 
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
@@ -140,11 +141,28 @@ function _sbac_forum_filter_categories() {
       'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
       'name' => 'Posted with Distinction',
     );
+    $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
+      'data' => 'Posted with Distinction',
+      'term' => (object) array(
+        'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
+        'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
+        'name' => 'Posted with Distinction',
+      )
+    );
   }
   $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
     'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
     'name' => 'Favorited',
   );
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
+    'data' => 'Favorited',
+    'term' => (object) array(
+      'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
+      'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
+      'name' => 'Favorited',
+    )
+  );
+  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#theme'] = 'sbac_filter_item_list';
 
   $cf_value = NULL;
   $cf_html = array();
@@ -177,12 +195,12 @@ function _sbac_forum_filter_categories() {
           $tid = $filter_info[1];
           if ($vid && $tid) {
             if ($vid == 'distinctions') {
-              $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $tid . '</span></div>';
+              $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $tid . '</div>';
             }
             else {
               $term = taxonomy_term_load($tid);
               if ($term) {
-                $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . $term->name . '</span></div>';
+                $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $term->name . '</div>';
               }
             }
           }
