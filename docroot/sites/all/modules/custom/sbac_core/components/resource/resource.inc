@@ -31,7 +31,7 @@ function resource_access($op, $node, $account = NULL) {
     return FALSE;
   }
 
-  $access = & drupal_static(__FUNCTION__);
+  $access = &drupal_static(__FUNCTION__);
   if (empty($access) || empty($access[$account->uid]) || !isset($access[$account->uid][$op])) {
     if ('resource' == $node->type) {
       $perm = FALSE;
@@ -92,7 +92,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = TRUE;
           break;
         case 'access qc review comments':
-          $perm = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
+          $perm = _resource_access_access_qc_review_comment($node, $account);
           break;
       }
       $access[$account->uid][$op] = $perm;
@@ -421,6 +421,31 @@ function _resource_access_access_quality_criteria_revisions($node, $account) {
         && $node->uid != $account->uid
         && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
     }
+  }
+  return $access;
+}
+
+/**
+ * 'access qc review comment' access control.
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_access_qc_review_comment($node, $account) {
+  $access = FALSE;
+  if (_resource_access_node_has_state($node, array('draft'))) {
+    $rejected = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'rejected')
+      ->condition('h.nid', $node->nid)
+      ->fields('h', array('hid'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $access = $rejected && $node->uid == $account->uid;
+  }
+  elseif (_resource_access_node_has_state($node, array('rejected'))) {
+    $access = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
   }
   return $access;
 }
