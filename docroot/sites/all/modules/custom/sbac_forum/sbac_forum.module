@@ -1099,7 +1099,7 @@ function _sbac_forum__forum_form__access_field_validate($form, &$form_state) {
 function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['#node'])) {
     if (!isset($form['#node']->nid)) { // Add new topic form.
-      drupal_set_title('Start a Topic');
+      drupal_set_title('Start a Discussion');
 
       if (!($form_state['executed'])) { // Only set this on non-ajax requests. Basically on page load. You lose the GET var after ajax callback.
         $default_forum_parent = $_GET['target-forum'];
@@ -1110,7 +1110,7 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
         );
       }
 
-      $form['actions']['submit']['#value'] = 'Start Topic';
+      $form['actions']['submit']['#value'] = 'Start Discussion';
 
       // Do access checks and validation to ensure topic relates to correct forum.
       $form['#validate'][] = '_sbac_forum__topic_form__default_parent_term_validate';
