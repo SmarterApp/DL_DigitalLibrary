@@ -1168,10 +1168,10 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
    * 73847886 - Creating forum topic as an admin is displaying extra fields
    * Steps to Reproduce:
    * 1.  Log into DL as an admin
-   * 2.  Navigate to a resource collaboration tab and click to start a topic
+   * 2.  Navigate to a resource collaboration tab and click to start a discussion
    *
    * Expected Results:
-   * Start a Topic should only display topic title and description
+   * Start a Discussion should only display topic title and description
    *
    * Actual Results:
    * See attached image
