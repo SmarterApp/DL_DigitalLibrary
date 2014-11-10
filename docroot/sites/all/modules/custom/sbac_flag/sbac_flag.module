@@ -1364,11 +1364,13 @@ function sbac_flag_resource_profile_view($flags) {
       $user_name = $account->name;
       if (!empty($account->field_first_name)) {
         $user_name = $account->field_first_name['und'][0]['value'];
+        $user_email = $account->mail;
+        $user_state = taxonomy_term_load($account->field_state['und'][0]['tid'])->name;
         if (!empty($account->field_last_name)) {
           $user_name .= ' ' . $account->field_last_name['und'][0]['value'];
         }
       }
-      $list_output .= theme('flag_category_row', array('username' => $user_name, 'created' => $created, 'flag_comment' => $flag_comment));
+      $list_output .= theme('flag_category_row', array('username' => $user_name, 'created' => $created, 'flag_comment' => $flag_comment, 'user_email' => $user_email, 'user_state' => $user_state));
     }
     $list_output .= '</div>';
   }
