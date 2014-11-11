@@ -1155,7 +1155,7 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
     $form['actions']['submit']['#prefix'] = '<div class="sbac-forum-add-topic-buttons">';
   }
       if($form_id == 'topic_node_form') {
-        $form['#after_build'][] = 'sbac_forum_after_build';
+        $form['#after_build'][] = 'sbac_forum_form_topic_node_after_build';
       }
 
   // Hide fields
@@ -1196,9 +1196,9 @@ function sbac_forum_form_topic_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implements after_build for topic form.
+ * after_build for topic form.
  */
-function sbac_forum_after_build($form, &$form_state){
+function sbac_forum_form_topic_node_after_build($form, &$form_state){
     drupal_set_title('Start a Discussion');
     return $form;
 }
