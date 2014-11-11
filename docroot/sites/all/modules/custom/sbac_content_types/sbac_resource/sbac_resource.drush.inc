@@ -576,7 +576,11 @@ function drush_sbac_resource_generate_pdfs() {
   foreach ($results as $nid) {
     $node = node_load($nid->nid);
     if ($node) {
-      sbac_resource_print_about_this_tab($node);
+      $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/about_this_resource.pdf';
+      if (!file_exists($directory)) {
+        sbac_resource_print_about_this_tab($node);
+        drush_print($node->nid . ' updated.');
+      }
     }
     unset($node);
   }
