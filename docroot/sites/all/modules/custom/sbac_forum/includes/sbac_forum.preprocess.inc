@@ -514,10 +514,10 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
           $moderation_post_content .= 'By <span class="sbac-forum-report-author">' . $flag_auth->field_first_name->value() . ' ' . $flag_auth->field_last_name->value() . '</span>';
           $moderation_post_content .= ' on ' . date('M d, Y', $flag_report['created']);
           if ($auth_email) {
-            $moderation_topic_content .= '<div class="sbac-forum-author-email"><a href = "mailto:' . $auth_email  . '">' . $auth_email . '</a>,</div>';
+            $moderation_post_content .= '<div class="sbac-forum-author-email"><a href = "mailto:' . $auth_email  . '">' . $auth_email . '</a></div>';
           }
           if ($auth_state) {
-            $moderation_topic_content .= '<div class="sbac-forum-author-state">' . $auth_state . '</div>';
+            $moderation_post_content .= '<div class="sbac-forum-author-state">,' . $auth_state . '</div>';
           }
           $moderation_post_content .= '</div>';
           $moderation_post_content .= '<div class="sbac-forum-report-content">' . $flag_report['flag_comment'] . '</div>';
