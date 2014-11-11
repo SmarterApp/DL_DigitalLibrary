@@ -1362,10 +1362,10 @@ function sbac_flag_resource_profile_view($flags) {
       }
       //create each flag row
       $user_name = $account->name;
+      $user_email = $account->mail;
+      $user_state = taxonomy_term_load($account->field_state['und'][0]['tid'])->name;
       if (!empty($account->field_first_name)) {
         $user_name = $account->field_first_name['und'][0]['value'];
-        $user_email = $account->mail;
-        $user_state = taxonomy_term_load($account->field_state['und'][0]['tid'])->name;
         if (!empty($account->field_last_name)) {
           $user_name .= ' ' . $account->field_last_name['und'][0]['value'];
         }
