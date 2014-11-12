@@ -378,6 +378,8 @@
         var $clear_all_div = $('<div id="clear-all">Active Filters</div>');
         $clear_all_div.append($clear_all_link);
         $current_filter_div.append($clear_all_div);
+        var $filter_item = $('<div class="filter-type-item"></div>');
+        $current_filter_div.append($filter_item);
         // Get all the trees
         var current_filters_array = [];
         $('.jstree').each(function (i, element) {
@@ -411,7 +413,7 @@
                 }
                 var $new_filter = $('<div class="current-filter ' + changed_class + '" vid="' + vid + '" tid="' + selected_node.li_attr.tid + '">' + selected_node.li_attr.term + '</div>').click(current_filter_clicked);
                 $current_search_filter_group_div.append($new_filter);
-                $current_filter_div.append($current_search_filter_group_div);
+                $filter_item.append($current_search_filter_group_div);
               }
             });
           }
