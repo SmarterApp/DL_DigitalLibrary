@@ -2300,8 +2300,21 @@ form[id*='sbac-flag-collaboration-form']{
 			padding: 0;
 			border: none !important;
 			clear: both;
-		}
+			
+			.fieldset-description {
+  	    color: #8a1538;
+  	    font-size: 13px;
+  	    line-height: 1.4;
+  	    margin-left: 20px;
+  	    margin-top: 5px;
 
+  	    a{
+  	      color: #0583ac;
+  	      text-decoration: underline;
+  	    }
+  	  }
+		}
+  
 		fieldset.collapsed {
 			border: none !important;
 		}
