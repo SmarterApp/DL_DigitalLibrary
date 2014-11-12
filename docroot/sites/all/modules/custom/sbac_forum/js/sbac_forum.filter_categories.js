@@ -15,8 +15,6 @@
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
           var vid = selectedDiv.attr('vid');
-          $('#filter-header-' + vid).removeClass('expanded');
-          $('#filter-header-' + vid).addClass('collapsed');
           selectedDiv.hide();
           selectedDiv.removeClass('selectedDiv');
         }
@@ -128,10 +126,10 @@
       });
 
       // Close the individual filter list.
-      $('.category-filter-header').once('category-filter-header-click', function () {
-        $(this).click( function () {
-          $(this).hide();
-          $(this).removeClass('selectedDiv');
+      $('.category-filter-header').once('cmod-catfilterheader', function() {
+        $('.category-filter-header').click( function () {
+          $('.category-filter-list').hide();
+          $('.category-filter-list').removeClass('selectedDiv');
           return false;
         });
       });
@@ -140,8 +138,6 @@
       $('.sbac-forum-filter-name').once('sbac-forum-filter-name-click', function () {
         $(this).click( function (e) {
           var vid = $(this).attr('vid');
-          $('#filter-header-' + vid).removeClass('collapsed');
-          $('#filter-header-' + vid).addClass('expanded');
           $('.category-filter-list').hide();
           $('.category-filter-list-' + vid).show();
           $('.category-filter-list-' + vid).addClass('selectedDiv');

@@ -27,8 +27,6 @@
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
           var vid = selectedDiv.attr('vid');
-          $('#filter-header-' + vid).removeClass('expanded');
-          $('#filter-header-' + vid).addClass('collapsed');
           selectedDiv.hide();
           selectedDiv.removeClass('selectedDiv');
         }
@@ -77,8 +75,6 @@
       $('.sbac-search-filter-name').once('cmod-searchfiltername', function () {
         $('.sbac-search-filter-name').click(function (e) {
           var vid = $(this).attr('vid');
-          $('#filter-header-' + vid).removeClass('collapsed');
-          $('#filter-header-' + vid).addClass('expanded');
           $('.category-filter-list').hide();
           $('.category-filter-list-' + vid).show();
           $('.category-filter-list-' + vid).addClass('selectedDiv');

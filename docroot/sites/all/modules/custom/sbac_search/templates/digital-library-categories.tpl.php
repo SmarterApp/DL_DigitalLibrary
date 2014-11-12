@@ -26,10 +26,11 @@
         // The choices per vocabulary.
         echo '<div class="categories-filter-choices">';
         $display_name = strtolower($category['display_name']);
-        echo "<div vid='$category_vid' class='jstree clearfix category-filter-list category-filter-list-$category_vid $display_name'
- id='filter-$category_vid'>";
+        echo "<div class='category-filter-list category-filter-list-$category_vid'>";
         echo '<h2 class="category-filter-header">' . $category['display_name'] . '<i class="gen-enclosed foundicon-remove right"></i></h2>';
+        echo "<div vid='$category_vid' class='jstree clearfix $display_name' id='filter-$category_vid'>";
         print render($category['tree']);
+        echo '</div>';
         echo '</div>';
         echo '</div>';
         echo '</div></li>';
