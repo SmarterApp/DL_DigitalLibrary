@@ -383,8 +383,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
-  $handler->display->display_options['filters']['field_grades_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_grades_tid']['value'] = '';
   $handler->display->display_options['filters']['field_grades_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_grades_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
@@ -411,13 +409,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
   /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['value'] = '';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_intended_end_user_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator_id'] = 'field_intended_end_user_tid_op';
@@ -444,13 +441,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_intended_end_user_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['vocabulary'] = 'intended_end_user';
   /* Filter criterion: Field: Student Populations (field_intended_student) */
   $handler->display->display_options['filters']['field_intended_student_tid']['id'] = 'field_intended_student_tid';
   $handler->display->display_options['filters']['field_intended_student_tid']['table'] = 'field_data_field_intended_student';
   $handler->display->display_options['filters']['field_intended_student_tid']['field'] = 'field_intended_student_tid';
-  $handler->display->display_options['filters']['field_intended_student_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_intended_student_tid']['value'] = '';
   $handler->display->display_options['filters']['field_intended_student_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_intended_student_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator_id'] = 'field_intended_student_tid_op';
@@ -477,13 +473,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_intended_student_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_intended_student_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_student_tid']['vocabulary'] = 'intended_student_populations';
   /* Filter criterion: Field: Subjects and Domains (field_subject) */
   $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
   $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
-  $handler->display->display_options['filters']['field_subject_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_subject_tid']['value'] = '';
   $handler->display->display_options['filters']['field_subject_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_subject_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['expose']['operator_id'] = 'field_subject_tid_op';
@@ -510,6 +505,7 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
   /* Filter criterion: Taxonomy term: Forum resource ref (field_forum_resource_ref) */
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['id'] = 'field_forum_resource_ref_target_id';
@@ -520,8 +516,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_attributes_tid']['id'] = 'field_attributes_tid';
   $handler->display->display_options['filters']['field_attributes_tid']['table'] = 'field_data_field_attributes';
   $handler->display->display_options['filters']['field_attributes_tid']['field'] = 'field_attributes_tid';
-  $handler->display->display_options['filters']['field_attributes_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_attributes_tid']['value'] = '';
   $handler->display->display_options['filters']['field_attributes_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_attributes_tid']['expose']['operator_id'] = 'field_attributes_tid_op';
   $handler->display->display_options['filters']['field_attributes_tid']['expose']['label'] = 'Attributes of the Formative Assessment Process (field_attributes)';
@@ -547,13 +541,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_attributes_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_attributes_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
   /* Filter criterion: Field: Geographic Settings (field_geographical_settings) */
   $handler->display->display_options['filters']['field_geographical_settings_tid']['id'] = 'field_geographical_settings_tid';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['table'] = 'field_data_field_geographical_settings';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['field'] = 'field_geographical_settings_tid';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['value'] = '';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['operator_id'] = 'field_geographical_settings_tid_op';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['label'] = 'Geographic Settings (field_geographical_settings)';
@@ -579,13 +572,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_geographical_settings_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_geographical_settings_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['vocabulary'] = 'geographical_settings';
   /* Filter criterion: Field: Media Types (field_digital_media_type) */
   $handler->display->display_options['filters']['field_digital_media_type_tid']['id'] = 'field_digital_media_type_tid';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['field'] = 'field_digital_media_type_tid';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_digital_media_type_tid']['value'] = '';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_digital_media_type_tid']['expose']['operator_id'] = 'field_digital_media_type_tid_op';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['expose']['label'] = 'Media Types (field_digital_media_type)';
@@ -611,13 +603,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_digital_media_type_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_digital_media_type_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['vocabulary'] = 'digital_media_type';
   /* Filter criterion: Field: Resource Type (field_focus) */
   $handler->display->display_options['filters']['field_focus_tid']['id'] = 'field_focus_tid';
   $handler->display->display_options['filters']['field_focus_tid']['table'] = 'field_data_field_focus';
   $handler->display->display_options['filters']['field_focus_tid']['field'] = 'field_focus_tid';
-  $handler->display->display_options['filters']['field_focus_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_focus_tid']['value'] = '';
   $handler->display->display_options['filters']['field_focus_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['expose']['operator_id'] = 'field_focus_tid_op';
   $handler->display->display_options['filters']['field_focus_tid']['expose']['label'] = 'Resource Type (field_focus)';
@@ -643,13 +634,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_focus_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
   /* Filter criterion: Field: Educational Use (field_educational_use) */
   $handler->display->display_options['filters']['field_educational_use_tid']['id'] = 'field_educational_use_tid';
   $handler->display->display_options['filters']['field_educational_use_tid']['table'] = 'field_data_field_educational_use';
   $handler->display->display_options['filters']['field_educational_use_tid']['field'] = 'field_educational_use_tid';
-  $handler->display->display_options['filters']['field_educational_use_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_educational_use_tid']['value'] = '';
   $handler->display->display_options['filters']['field_educational_use_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_educational_use_tid']['expose']['operator_id'] = 'field_educational_use_tid_op';
   $handler->display->display_options['filters']['field_educational_use_tid']['expose']['label'] = 'Educational Use (field_educational_use)';
@@ -675,13 +665,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
-  /* Filter criterion: Field: Smarter Balanced Keyword(s) (field_smarter_balanced_keyword) */
+  /* Filter criterion: Field: Module Type (field_smarter_balanced_keyword) */
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['id'] = 'field_smarter_balanced_keyword_tid';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['table'] = 'field_data_field_smarter_balanced_keyword';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['field'] = 'field_smarter_balanced_keyword_tid';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['value'] = '';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['expose']['operator_id'] = 'field_smarter_balanced_keyword_tid_op';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['expose']['label'] = 'Smarter Balanced Keyword(s) (field_smarter_balanced_keyword)';
@@ -707,6 +696,7 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['vocabulary'] = 'smarter_balanced_keyword';
 
   /* Display: Topic Forums */
@@ -746,8 +736,6 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
-  $handler->display->display_options['filters']['field_grades_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_grades_tid']['value'] = '';
   $handler->display->display_options['filters']['field_grades_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_grades_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['expose']['operator_id'] = 'field_grades_tid_op';
@@ -774,13 +762,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
   /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_intended_end_user_tid']['value'] = '';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_intended_end_user_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_intended_end_user_tid']['expose']['operator_id'] = 'field_intended_end_user_tid_op';
@@ -807,13 +794,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_intended_end_user_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_intended_end_user_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['vocabulary'] = 'intended_end_user';
   /* Filter criterion: Field: Student Populations (field_intended_student) */
   $handler->display->display_options['filters']['field_intended_student_tid']['id'] = 'field_intended_student_tid';
   $handler->display->display_options['filters']['field_intended_student_tid']['table'] = 'field_data_field_intended_student';
   $handler->display->display_options['filters']['field_intended_student_tid']['field'] = 'field_intended_student_tid';
-  $handler->display->display_options['filters']['field_intended_student_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_intended_student_tid']['value'] = '';
   $handler->display->display_options['filters']['field_intended_student_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_intended_student_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_intended_student_tid']['expose']['operator_id'] = 'field_intended_student_tid_op';
@@ -840,13 +826,12 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_intended_student_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_intended_student_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_student_tid']['vocabulary'] = 'intended_student_populations';
   /* Filter criterion: Field: Subjects and Domains (field_subject) */
   $handler->display->display_options['filters']['field_subject_tid']['id'] = 'field_subject_tid';
   $handler->display->display_options['filters']['field_subject_tid']['table'] = 'field_data_field_subject';
   $handler->display->display_options['filters']['field_subject_tid']['field'] = 'field_subject_tid';
-  $handler->display->display_options['filters']['field_subject_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_subject_tid']['value'] = '';
   $handler->display->display_options['filters']['field_subject_tid']['group'] = 1;
   $handler->display->display_options['filters']['field_subject_tid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['expose']['operator_id'] = 'field_subject_tid_op';
@@ -873,6 +858,7 @@ function sbac_forum_views_default_views() {
     31 => 0,
   );
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
+  $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
   /* Filter criterion: Taxonomy term: Forum resource ref (field_forum_resource_ref) */
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['id'] = 'field_forum_resource_ref_target_id';

@@ -3882,7 +3882,7 @@ function _sbac_resource_taxonomy_get_parents($tid){
  *  Implements hook_taxonomy_term_load().
  */
 function sbac_resource_taxonomy_term_load($terms) {
-  foreach ($terms as $index => $term) {
+  foreach ($terms as $term) {
     // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
@@ -3893,10 +3893,10 @@ function sbac_resource_taxonomy_term_load($terms) {
     $query->orderBy('t.name');
     $children = $query->execute()->fetchCol();
     if (!empty($children)) {
-      unset($terms[$index]);
+      unset($terms[$term->tid]);
     }
     // concatenate the children name with parents. We're using our own get parent function because we don't want to trigger this hook again.
-    $terms[$index]->name = sbac_resource_term_concat_parents($term->tid, $term->name);
+    $term->name = sbac_resource_term_concat_parents($term->tid, $term->name);
   }
 }
 

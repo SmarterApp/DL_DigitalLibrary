@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'sbac';
-	src:url('../fonts/sbac.eot');
-	src:url('../fonts/sbac.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/sbac.woff') format('woff'),
-		url('../fonts/sbac.ttf') format('truetype'),
-		url('../fonts/sbac.svg#sbac') format('svg');
+	src:url('../fonts/sbac.eot?-h8o9za');
+	src:url('../fonts/sbac.eot?#iefix-h8o9za') format('embedded-opentype'),
+		url('../fonts/sbac.woff?-h8o9za') format('woff'),
+		url('../fonts/sbac.ttf?-h8o9za') format('truetype'),
+		url('../fonts/sbac.svg?-h8o9za#vicons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -178,3 +178,19 @@
 .icon-thumbs-up:before {
 	content: "\e635";
 }
+.icon-cancel:before {
+	content: "\e636";
+}
+.icon-triangle-down:before {
+	content: "\f05b";
+}
+.icon-triangle-left:before {
+	content: "\f044";
+}
+.icon-triangle-right:before {
+	content: "\f05a";
+}
+.icon-triangle-up:before {
+	content: "\f0aa";
+}
+
