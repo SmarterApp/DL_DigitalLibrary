@@ -361,7 +361,7 @@
 (function ($) {
   Drupal.behaviors.sbac_search_filters = {
     attach: function (context, settings) {
-      var original_filters = $('#sbac-search-current-filters').val();
+      var original_filters = $('#sbac-search-original-filters').val();
       current_filter_clicked = function () {
         var tid = $(this).attr('tid');
         var vid = $(this).attr('vid');
@@ -406,6 +406,9 @@
                 var filter_name = $('#sbac-search-filter-name-' + vid).contents().filter(function () {
                   return this.nodeType == 3;
                 }).text();
+                if (filter_name == ''){
+                  filter_name = $('#sbac-search-filter-name-' + vid).text();
+                }
                 var current_search_filter_group_id = 'current-search-filter-name-' + vid;
                 if($('#' + current_search_filter_group_id).length){
                   var $current_search_filter_group_div = $('#' + current_search_filter_group_id);

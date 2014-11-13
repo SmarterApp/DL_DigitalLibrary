@@ -15,8 +15,8 @@
       }
 
       // Added a different type of entry.
-      if (isset($category['link']) && empty($category['vocabulary'])) {
-        echo '<li><div class="sbac-search-filter-custom-link">' . $category['link'] . '</div></li>';
+      if (isset($category['link']) && !empty($category['vocabulary'])) {
+        echo "<li><div class='sbac-search-filter-custom-link' id='sbac-search-filter-name-{$category['vocabulary']->vid}'>" . $category['link'] . '</div></li>';
       }
       else {
         $category_vid = $category['vocabulary']->vid;

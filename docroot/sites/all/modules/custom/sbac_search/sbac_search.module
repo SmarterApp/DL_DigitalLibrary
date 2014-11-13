@@ -559,6 +559,13 @@ function sbac_search_digital_library_resources_form() {
     '#attributes' => array('id' => 'sbac-search-current-filters'),
   );
 
+  $form['original_filters'] = array(
+    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#" ' . $hide_a_tag . '>' . $hide_categories_text . '</a>',
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-original-filters'),
+  );
+
   $form['search_categories'] = array(
     '#markup' => sbac_search_digital_library_categories(),
   );
@@ -885,7 +892,8 @@ function sbac_search_digital_library_categories() {
   );
   $link = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
   $categories['education_alignment']['display_name'] = 'Common Core State Standards';
-  $categories['education_alignment']['vocabulary'] = array();
+  $vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
+  $categories['education_alignment']['vocabulary'] = $vocab;
   $categories['education_alignment']['terms'] = array();
   $categories['education_alignment']['link'] = $link;
 
