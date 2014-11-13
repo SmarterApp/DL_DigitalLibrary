@@ -1978,11 +1978,12 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 			.views-field-field-fc-forum-member-reco-count {
 				width: 180px;
-				right: 190px;
+				right: 235px;
 			}
 
 			.views-field-field-fc-forum-member-tpic-count {
 				right: 95px;
+				width: 140px;
 			}
 		}
 	}
@@ -2381,8 +2382,21 @@ form[id*='sbac-flag-collaboration-form']{
 			padding: 0;
 			border: none !important;
 			clear: both;
-		}
+			
+			.fieldset-description {
+  	    color: #8a1538;
+  	    font-size: 13px;
+  	    line-height: 1.4;
+  	    margin-left: 20px;
+  	    margin-top: 5px;
 
+  	    a{
+  	      color: #0583ac;
+  	      text-decoration: underline;
+  	    }
+  	  }
+		}
+  
 		fieldset.collapsed {
 			border: none !important;
 		}
@@ -2988,8 +3002,11 @@ View Topic Page, Comment Page
 	fieldset.group-topic-comments-materials {
 	  .fieldset-description {
 	    color: #8a1538;
+	    font-size: 13px;
 	    line-height: 1.4;
-	    
+	    margin-left: 20px;
+	    margin-top: 5px;
+	    	    
 	    a{
 	      color: #0583ac;
 	      text-decoration: underline;

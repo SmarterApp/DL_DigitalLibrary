@@ -1042,7 +1042,7 @@ html.js .category-hide {
   li.collapsed,
   li.expanded {
     @include border-radius(3px);
-    background: #FFF url('../images/icon-arrow-up.png') no-repeat 96% center;
+    background: #FFF url('../images/icon-arrow-down.png') no-repeat 96% center;
     padding: 3px 0;
     margin:0 0 10px;
     font-size: 12px;
@@ -1070,11 +1070,7 @@ html.js .category-hide {
       }
 
       a {
-        color: #000;
-        &:hover {
-          color:#0684AD;
-          text-decoration: underline;
-        }
+        color: #0684AD;
       }
 
 			a.ctools-use-modal {
@@ -1088,8 +1084,8 @@ html.js .category-hide {
     }
   }
   
-  li.collapsed {
-    background: #FFF url('../images/icon-arrow-down.png') no-repeat 96% center;
+  li.expanded  {
+    background: #FFF url('../images/icon-arrow-up.png') no-repeat 96% center;
   }
 
   form{

@@ -17,6 +17,7 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/inc
 include_once 'sbac_media.features.inc';
 
 define('SBAC_MEDIA_100MB', 104857600);
+define('SBAC_MEDIA_250MB', 262144000);
 define('SBAC_MEDIA_HTML5_IN_PROGRESS', 1);
 define('SBAC_MEDIA_HTML5_FINISHED', 0);
 define('SBAC_MEDIA_HTML5_ERROR', 2);
@@ -817,7 +818,7 @@ function sbac_media_build_html5_section(&$form, &$form_state) {
   // Content Module Upload Button.
   $form['field_content_module_container']['field_display']['field_content_module_upload'] = array(
     '#type' => 'submit',
-    '#value' => 'Upload (25MB Max)',
+    '#value' => 'Upload (250MB Max)',
     '#sbac_embed_video' => FALSE,
     '#weight' => -95,
     '#attributes' => array('class' => array('sbac-html5-uploader'), 'id' => 'edit-field-content-module-upload'),
@@ -1169,7 +1170,7 @@ function sbac_media_file_validate($file) {
     global $user;
     $file_limit = SBAC_MEDIA_100MB;
     if ($file->source == 'field_content_module_picker') { // HTML5 field.
-      $file_limit = SBAC_MEDIA_100MB;
+      $file_limit = SBAC_MEDIA_250MB;
     }
     // Have to create custom validator for user1. Standard file_validate_size exempts user1.
     if ($user->uid == 1) {
