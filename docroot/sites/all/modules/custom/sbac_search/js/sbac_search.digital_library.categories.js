@@ -411,7 +411,7 @@
                   var $current_search_filter_group_div = $('#' + current_search_filter_group_id);
                 }
                 else {
-                  var $current_search_filter_group_div = $('<div id="' + current_search_filter_group_id + '">' + filter_name + '</div>');
+                  var $current_search_filter_group_div = $('<div id="' + current_search_filter_group_id + '"><h5>' + filter_name + '</h5></div>');
                 }
                 var changed_class = 'original';
                 if (original_filters.indexOf(selected_id) == -1){

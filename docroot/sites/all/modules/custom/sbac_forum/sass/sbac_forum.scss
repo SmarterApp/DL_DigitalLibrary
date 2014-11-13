@@ -113,12 +113,8 @@ $gray: #464B54;
     display: none;
   }
 
-  margin: 10px 20px 5px;
-  padding: 10px 0 0;
-  /*color: white;
-      border: 1px solid white;
-      border-width: 0 0 1px;
-  */
+  margin: 0 0.9375em;
+  padding: 10px 0 5px;
   border-top: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
 
@@ -127,18 +123,99 @@ $gray: #464B54;
     font-size: 18px;
   }
 
-  .current-filter {
-    @include border-radius(50px);
-    cursor:pointer;
-    float: left;
-    margin:10px 10px 10px 0;
-    font-size: 0.8em;
-    padding: 10px 40px 10px 10px;
-    background: #fff url('../images/icon-close.png') no-repeat right center;
-    border-right: 10px solid transparent;
-    color: #7d8a95;
+  /*Active Filters*/
+  #clear-all {
+    color: #000;
+    margin-top: 10px;
+    height: 30px;
+    clear: both;
+    
+    a {
+      background-color: #aac5d1;
+			@include background-image(linear-gradient(center top , rgba(255, 255, 255, 0.5) 30%, rgba(168, 196, 208, 0.1) 100%));        
+      border-radius: 3px;
+  		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+  		margin-left: 20px;
+  		padding: 5px 15px 5px 18px;
+  		border: 1px solid #88a8b6;
+  		color: #146281;
+  		font-size: 12px;
+  		line-height: 1.2;
+  		
+  		&:before {
+  		  content: "\e636";
+  		  font-family: 'sbac';
+  		  font-size: 16px;
+  		  color: #146281;
+  		  width: 12px;
+  		  height: 12px;
+  		  margin-right: 5px;
+  		  position: relative;
+  		  top: 3px;
+  		  left: -2px;
+  		}
+    }
   }
+  
+  [id*="current-search-filter-name"] {
+    width: 19%;
+    float: left;
+    margin-right: 1.25%;
+    margin-top: 12px;
+    @include border-radius(3px);
+    background-color: #f4fbfe;
+    padding-bottom: 7px;
+    
+    h5 {
+      font-family: Arial,Helvetica,sans-serif;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 10px 15px 8px; 
+      margin-bottom: 10px;
+      border-bottom: 2px solid #c9eaf8;
+    }
+    
+    .current-filter {
+      @include border-radius(0);
+      cursor:pointer;
+      font-size: 0.8em;
+      padding: 10px 40px 10px 10px;
+  		border-right: 10px solid transparent;
+      color: #464b54;
+      background-color: #f5d4c2;
+      padding: 10px 15px 8px;
+      margin-bottom: 1px;
+      font-style: italic;
+      position: relative;
+    }
+  }
+
+  .current-filter:after {
+    content: "\e636";
+	  font-family: 'sbac';
+	  font-size: 18px;
+	  font-style: normal;
+	  color: #838989;
+	  width: 12px;
+	  height: 12px;
+	  margin-right: 5px;
+	  position: absolute;
+	  top: 8px;
+	  right: 0;
+	}
+	
+	[id*="current-search-filter-name"]:nth-child(5n) {
+	  margin-right: 0;
+	}
+	
+	[id*="current-search-filter-name"]:nth-child(5n+1){
+    clear:left;
+  }
+   
 }
+  
 
 // --------- Hide Categories and Show Categories link toggle. -------------
 
@@ -202,6 +279,11 @@ select {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	height: 34px;
+}
+
+#sbac-forum-filter-button {
+  background-color: #fd7d30;
+  border: 1px solid #be5e24;
 }
 
 #sbac-forum-filter-button:before {
@@ -4158,9 +4240,10 @@ a.sbac-favorites-link {
   }
 
   .category-buttons {
-    padding-right: 5px;
-		padding-bottom: 10px;
-    text-align: right;
+    border-top: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
+    text-align: center;
+    margin: 1em 0.875em 0;
 
     button {
       margin: 10px;
