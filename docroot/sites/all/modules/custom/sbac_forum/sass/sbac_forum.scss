@@ -4116,10 +4116,9 @@ a.sbac-favorites-link {
   }
   
   li,
-  li.collapsed,
-  li.expanded {
+  li.collapsed {
     @include border-radius(3px);
-    background: #FFF url('../images/icon-arrowup.png') no-repeat 96% center;
+    background: #FFF url('../images/icon-arrowdown.png') no-repeat 96% center;
     padding: 3px 0;
     margin:0 0 10px;
     font-size: 12px;
@@ -4165,8 +4164,8 @@ a.sbac-favorites-link {
     }
   }
   
-  li.collapsed {
-    background: #FFF url('../images/icon-arrowdown.png') no-repeat 96% center;
+  li.expanded {
+    background-image: none;
   }
 
   form{
@@ -4214,7 +4213,7 @@ a.sbac-favorites-link {
     
     [class*="enclosed foundicon-"]:before {
       position: absolute;
-      top: 7px;
+      top: -21px;
       right: 15px;
     }
   }

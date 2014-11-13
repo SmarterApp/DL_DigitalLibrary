@@ -1039,8 +1039,7 @@ html.js .category-hide {
   }
   
   li,
-  li.collapsed,
-  li.expanded {
+  li.collapsed {
     @include border-radius(3px);
     background: #FFF url('../images/icon-arrow-down.png') no-repeat 96% center;
     padding: 3px 0;
@@ -1084,8 +1083,8 @@ html.js .category-hide {
     }
   }
   
-  li.expanded  {
-    background: #FFF url('../images/icon-arrow-up.png') no-repeat 96% center;
+  li.expanded {
+    background-image: none;
   }
 
   form{
@@ -1135,7 +1134,7 @@ html.js .category-hide {
     
     [class*="enclosed foundicon-"]:before {
       position: absolute;
-      top: 7px;
+      top: -21px;
       right: 15px;
     }
     
