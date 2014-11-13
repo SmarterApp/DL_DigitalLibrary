@@ -206,10 +206,19 @@ function sbac_forum_preprocess_node__topic(&$vars) {
         $moderation_topic_content .= '<div class="sbac-forum-flagged-num">' . $num_flags . ' ' . ($num_flags == 1 ? 'flag' : 'flags') . '</div>';
         foreach ($flag_reports as $flag_report) {
           $flag_auth = entity_metadata_wrapper('user', $flag_report['uid']);
+          $auth_state_wrapper = $flag_auth->field_state->value();
+          $auth_state = $auth_state_wrapper[0]->name;
+          $auth_email = $flag_auth->mail->value();
           $moderation_topic_content .= '<div class="sbac-forum-report-header">';
           $moderation_topic_content .= '<div class="sbac-forum-report-details">';
           $moderation_topic_content .= 'By <span class="sbac-forum-report-author">' . $flag_auth->field_first_name->value() . ' ' . $flag_auth->field_last_name->value() . '</span>';
           $moderation_topic_content .= ' on ' . date('M d, Y', $flag_report['created']);
+           if ($auth_email) {
+            $moderation_topic_content .= '<div class="sbac-forum-author-email"><a href = "mailto:' . $auth_email  . '">' . $auth_email . '</a>,</div>';
+          }
+          if ($auth_state) {
+            $moderation_topic_content .= '<div class="sbac-forum-author-state">' . $auth_state . '</div>';
+          }
           $moderation_topic_content .= '</div>';
           $moderation_topic_content .= '<div class="sbac-forum-report-content">' . $flag_report['flag_comment'] . '</div>';
           $moderation_topic_content .= '</div>';
@@ -497,10 +506,19 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
 
         foreach ($flag_reports as $flag_report) {
           $flag_auth = entity_metadata_wrapper('user', $flag_report['uid']);
+          $auth_state_wrapper = $flag_auth->field_state->value();
+          $auth_state = $auth_state_wrapper[0]->name;
+          $auth_email = $flag_auth->mail->value();
           $moderation_post_content .= '<div class"Ssbac-forum-report-header">';
           $moderation_post_content .= '<div class="sbac-forum-report-details">';
           $moderation_post_content .= 'By <span class="sbac-forum-report-author">' . $flag_auth->field_first_name->value() . ' ' . $flag_auth->field_last_name->value() . '</span>';
           $moderation_post_content .= ' on ' . date('M d, Y', $flag_report['created']);
+          if ($auth_email) {
+            $moderation_post_content .= '<div class="sbac-forum-author-email"><a href = "mailto:' . $auth_email  . '">' . $auth_email . '</a></div>';
+          }
+          if ($auth_state) {
+            $moderation_post_content .= '<div class="sbac-forum-author-state">,' . $auth_state . '</div>';
+          }
           $moderation_post_content .= '</div>';
           $moderation_post_content .= '<div class="sbac-forum-report-content">' . $flag_report['flag_comment'] . '</div>';
         }
