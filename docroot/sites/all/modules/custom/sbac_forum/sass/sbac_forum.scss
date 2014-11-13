@@ -3908,6 +3908,8 @@ a.sbac-favorites-link {
 			padding-bottom: 5px;
 			margin-bottom: 10px;
 			font-weight: bold;
+			line-height: 1.6;
+			padding-top: 10px;
 		}
 
 		.sbac-forum-flagged-type:before {
@@ -3926,7 +3928,7 @@ a.sbac-favorites-link {
 		.sbac-forum-flagged-num {
 			position: absolute;
 			right: 0;
-			top: 4px;
+			top: 2px;
 			font-style: italic;
 		}
 
@@ -3934,6 +3936,24 @@ a.sbac-favorites-link {
 			margin-top: 5px;
 			padding-top: 5px;
 			border-top: 1px #CECECE solid;
+			
+			.sbac-forum-report-author {
+			  display: block;
+			  clear: both;
+			  margin-bottom: 5px;
+			}
+			
+			.sbac-forum-author-email,
+			.sbac-forum-author-state {
+			  display: inline-block;
+			  margin-bottom: 15px;
+			  
+			  a {
+			    color:#0684ad;
+			    text-decoration: underline;
+			  }
+			}
+			
 		}
 
 		.sbac-forum-report-details:first-child {
