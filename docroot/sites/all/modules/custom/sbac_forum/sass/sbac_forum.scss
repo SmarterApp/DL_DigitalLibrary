@@ -4204,15 +4204,18 @@ a.sbac-favorites-link {
     border-top: 1px solid #cecece; // stroke
     border-bottom: 1px solid #cecece; // stroke
     padding-bottom: 10px;
-    
+    position: relative;
 
     h2 {
-      @include border-radius(6px 6px 0 0); // border radius
-      background-color: white;
-      padding: 5px;
-      margin: 0;
       cursor: pointer;
       font-weight: normal;
+      margin: 0;
+    }
+    
+    [class*="enclosed foundicon-"]:before {
+      position: absolute;
+      top: 7px;
+      right: 15px;
     }
   }
   
@@ -4316,7 +4319,6 @@ a.sbac-favorites-link {
 
 .topic-node-main-content-warning p {
   font-size: 13px;
-  color: #999;
   
   span {
     font-weight: bold;
