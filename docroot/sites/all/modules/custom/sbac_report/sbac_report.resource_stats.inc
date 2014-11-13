@@ -55,6 +55,18 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
+  $form['resource_state_dropdown'] = array(
+    '#type' => 'select',
+    '#title' => t('Choose contributor state'),
+    '#options' => sbac_report_state_options(),
+    '#multiple' => TRUE,
+    '#default_value' => sbac_report_get_default_state_tid(),
+    '#attributes' => array('class' => array('chosen-widget')),
+    '#ajax' => array(
+      'callback' => 'sbac_report_state_ajax',
+    ),
+    '#required' => TRUE,
+  );
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -87,6 +99,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
     set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_grade_dropdown'], sbac_report_resource_grade_options());
     set_resource_filter($resource_filters, 'status', $form_state['values']['resource_status_dropdown'], sbac_report_resource_status_options());
     set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_attribute_dropdown'], sbac_report_resource_attribute_options());
+    set_resource_filter($resource_filters, 'state', $form_state['values']['resource_state_dropdown'], sbac_report_state_options());
   }
 
   $_SESSION['report_chosen_filters'] = $resource_filters;
@@ -623,6 +636,17 @@ function get_resources($resource_filters) {
     else {
       $query->innerJoin('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND a.bundle = \'resource\'');
       $query->condition('a.field_attributes_tid', array_keys($resource_filters['attribute']));
+    }
+  }
+
+  // State filter
+  if (!empty($resource_filters['state'])) {
+    if (isset($resource_filters['state']['all'])) {
+      // do nothing
+    }
+    else {
+      $query->innerJoin('field_data_field_state', 's', 'n.uid = s.entity_id AND s.entity_type = \'user\'');
+      $query->condition('s.field_state_tid', array_keys($resource_filters['state']));
     }
   }
   $query->fields('n', array('nid'));
