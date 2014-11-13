@@ -3882,7 +3882,6 @@ function _sbac_resource_taxonomy_get_parents($tid){
  *  Implements hook_taxonomy_term_load().
  */
 function sbac_resource_taxonomy_term_load($terms) {
-
   foreach ($terms as $term) {
     // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
     $query = db_select('taxonomy_term_data', 't');
@@ -3899,4 +3898,16 @@ function sbac_resource_taxonomy_term_load($terms) {
     // concatenate the children name with parents. We're using our own get parent function because we don't want to trigger this hook again.
     $term->name = sbac_resource_term_concat_parents($term->tid, $term->name);
   }
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
+  // because we concatenate the term name in sbac_resource_taxonomy_term_load, we don't want to show this concatenated name in the term edit form
+  $form['name']['#default_value'] = db_select('taxonomy_term_data', 't')
+    ->condition('t.tid', $form['#term']['tid'])
+    ->fields('t', array('name'))
+    ->execute()
+    ->fetchField();
 }
