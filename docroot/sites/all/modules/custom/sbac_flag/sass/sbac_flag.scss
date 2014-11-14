@@ -174,7 +174,16 @@
 			margin-bottom: 20px;
 
 			.flag-user {
-				padding-bottom: 15px;
+				padding-bottom: 5px;
+			}
+			
+			.flag-email-state {
+			  padding-bottom: 15px;
+			  
+			  a {
+			    color:#0684ad;
+			    text-decoration: underline;
+			  }
 			}
 		}
 	}
