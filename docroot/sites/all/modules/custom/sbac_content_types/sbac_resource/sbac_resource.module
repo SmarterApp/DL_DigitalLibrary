@@ -360,7 +360,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        if ($temp_term) {
+          $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        }
       }
     }
     else {
@@ -369,7 +371,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->name;
+        if ($temp_term) {
+          $terms[] = $temp_term->name;
+        }
       }
     }
   }
