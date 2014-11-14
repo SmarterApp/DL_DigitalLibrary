@@ -190,6 +190,14 @@ $gray: #464B54;
       font-style: italic;
       position: relative;
     }
+        
+    .current-filter.original {
+      background-color: #f4fbfe;
+    }
+    
+    .current-filter.changed {
+      background-color: #f5d4c2;
+    }
   }
 
   .current-filter:after {
@@ -4292,6 +4300,7 @@ a.sbac-favorites-link {
       cursor: pointer;
       font-weight: normal;
       margin: 0;
+      color: #0684ad;
     }
     
     [class*="enclosed foundicon-"]:before {

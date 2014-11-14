@@ -1014,7 +1014,6 @@ html.js .category-hide {
   color: #0684ad;
   padding: 0;
   border-bottom: 1px solid #056382;
-
   position: relative;
 
   &.active{
@@ -1131,6 +1130,7 @@ html.js .category-hide {
       cursor: pointer;
       font-weight: normal;
       margin: 0;
+      color: #0684ad;
     }
     
     [class*="enclosed foundicon-"]:before {
@@ -1321,6 +1321,10 @@ html.js .category-hide {
       margin-bottom: 1px;
       font-style: italic;
       position: relative;
+    }
+    
+    .current-filter.original {
+      background-color: #f4fbfe;
     }
     
     .current-filter.changed {
