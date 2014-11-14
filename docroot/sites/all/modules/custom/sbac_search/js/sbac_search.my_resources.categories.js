@@ -458,10 +458,7 @@
         var $search_button = $('#sbac-search-filter-button');
         $current_filter_div.empty();
         var $clear_all_link = $('<a href="#">Clear All</a>').click(function(){
-          // Clear the current filters
-          $current_filter_div.empty();
-          $('#sbac-search-current-filters').val('');
-          $('#sbac-search-my-resources-form').submit();
+          window.location.href = 'sbac-search/clear-all?location=my-resources';
         });
         var $clear_all_div = $('<div id="clear-all">Active Filters</div>');
         $clear_all_div.append($clear_all_link);

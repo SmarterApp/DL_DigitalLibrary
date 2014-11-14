@@ -88,11 +88,10 @@
 <article id="node-<?php echo $node->nid; ?>" class="<?php echo $classes; ?>"<?php echo $attributes; ?>>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>
-      <p><span class="author">Author: </span><?php echo $author; ?></p>
+      <p><span class="author">Author: </span class="publisher"><?php echo $author; ?> | Owner: <?php print $owner; ?></p>
     <?php endif; ?>
-
-    <?php if (isset($field_publisher[0]['safe_value']) && $field_publisher[0]['safe_value']): ?>
-      <p class="divider"><span class="publisher">Owner: </span><?php echo $field_publisher[0]['safe_value']; ?></p>
+    <?php if (isset($contributor)): ?>
+      <p class="divider"><span class="contributor">Contributor: </span><?php echo $contributor; ?></p>
     <?php endif; ?>
 
     <?php if (isset($edit_link) && $edit_link): ?>
