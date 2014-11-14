@@ -211,8 +211,8 @@ function sbac_forum_preprocess_node__topic(&$vars) {
           $auth_email = $flag_auth->mail->value();
           $moderation_topic_content .= '<div class="sbac-forum-report-header">';
           $moderation_topic_content .= '<div class="sbac-forum-report-details">';
-          $moderation_topic_content .= 'By <span class="sbac-forum-report-author">' . $flag_auth->field_first_name->value() . ' ' . $flag_auth->field_last_name->value() . '</span>';
-          $moderation_topic_content .= ' on ' . date('M d, Y', $flag_report['created']);
+          $moderation_topic_content .= '<span class="sbac-forum-report-author">By ' . $flag_auth->field_first_name->value() . ' ' . $flag_auth->field_last_name->value() . ' ';
+          $moderation_topic_content .= ' on ' . date('M d, Y', $flag_report['created']). '</span>';
            if ($auth_email) {
             $moderation_topic_content .= '<div class="sbac-forum-author-email"><a href = "mailto:' . $auth_email  . '">' . $auth_email . '</a>,</div>';
           }

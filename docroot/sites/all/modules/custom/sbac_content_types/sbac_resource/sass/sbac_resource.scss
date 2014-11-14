@@ -1014,7 +1014,6 @@ html.js .category-hide {
   color: #0684ad;
   padding: 0;
   border-bottom: 1px solid #056382;
-
   position: relative;
 
   &.active{
@@ -1039,8 +1038,7 @@ html.js .category-hide {
   }
   
   li,
-  li.collapsed,
-  li.expanded {
+  li.collapsed {
     @include border-radius(3px);
     background: #FFF url('../images/icon-arrow-down.png') no-repeat 96% center;
     padding: 3px 0;
@@ -1084,8 +1082,8 @@ html.js .category-hide {
     }
   }
   
-  li.expanded  {
-    background: #FFF url('../images/icon-arrow-up.png') no-repeat 96% center;
+  li.expanded {
+    background-image: none;
   }
 
   form{
@@ -1094,9 +1092,10 @@ html.js .category-hide {
   }
 
   .category-buttons {
-    padding-right: 5px;
-		padding-bottom: 10px;
-    text-align: right;
+  	border-top: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
+    text-align: center;
+    margin: 1em 0.875em 0;
 
     button {
       margin: 10px;
@@ -1125,15 +1124,24 @@ html.js .category-hide {
     border-top: 1px solid #cecece; // stroke
     border-bottom: 1px solid #cecece; // stroke
     padding-bottom: 10px;
-    
+    position: relative;
 
     h2 {
-      @include border-radius(6px 6px 0 0); // border radius
-      background-color: white;
-      padding: 5px;
-      margin: 0;
       cursor: pointer;
       font-weight: normal;
+      margin: 0;
+      color: #0684ad;
+    }
+    
+    [class*="enclosed foundicon-"]:before {
+      position: absolute;
+      top: -21px;
+      right: 15px;
+    }
+    
+    div.status {//override of system style
+      background-color: transparent;
+      background-image: none;
     }
   }
   
@@ -1228,38 +1236,125 @@ html.js .category-hide {
 }
 
 @media screen and (max-width: 1350px) {
-   .jstree-default li.jstree-node.jstree-leaf .jstree-anchor  {
-      width: 80%;
-    }
+  .jstree-default li.jstree-node.jstree-leaf .jstree-anchor  {
+    width: 80%;
+  }
 }
    
 .categories-current-filters {
-    &.noshow {
-      display: none;
-    }
+   &.noshow {
+    display: none;
+  }
 
-    margin: 0 20px 5px;
-    padding: 10px 0 0;
-		border-top: 1px solid rgba(255, 255, 255, 0.9);
-	  box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
+  margin: 0 0.9375em;
+  padding: 10px 0 5px;
+	border-top: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
 
-    h3 {
-      color: #063e5f;
-      font-size: 18px;
-    }
-
-    .current-filter {
-      @include border-radius(50px);
-      cursor:pointer;
-      float: left;
-      margin:10px 10px 10px 0;
-      font-size: 0.8em;
-      padding: 10px 40px 10px 10px;
-      background: #fff url('../images/icon-close.png') no-repeat right center;
-			border-right: 10px solid transparent;
-      color: #7d8a95;
+  h3 {
+    color: #063e5f;
+    font-size: 18px;
+  }
+  
+  /*Active Filters*/
+  #clear-all {
+    color: #000;
+    margin-top: 10px;
+    height: 30px;
+    clear: both;
+    
+    a {
+      background-color: #aac5d1;
+			@include background-image(linear-gradient(center top , rgba(255, 255, 255, 0.5) 30%, rgba(168, 196, 208, 0.1) 100%));        
+      border-radius: 3px;
+  		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+  		margin-left: 20px;
+  		padding: 5px 15px 5px 18px;
+  		border: 1px solid #88a8b6;
+  		color: #146281;
+  		font-size: 12px;
+  		line-height: 1.2;
+  		
+  		&:before {
+  		  content: "\e636";
+  		  font-family: 'sbac';
+  		  font-size: 16px;
+  		  color: #146281;
+  		  width: 12px;
+  		  height: 12px;
+  		  margin-right: 5px;
+  		  position: relative;
+  		  top: 3px;
+  		  left: -2px;
+  		}
     }
   }
+  
+  [id*="current-search-filter-name"] {
+    width: 19%;
+    float: left;
+    margin-right: 1.25%;
+    margin-top: 12px;
+    @include border-radius(3px);
+    background-color: #f4fbfe;
+    padding-bottom: 7px;
+    
+    h5 {
+      font-family: $body-font-family;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 10px 15px 8px; 
+      margin-bottom: 10px;
+      border-bottom: 2px solid #c9eaf8;
+    }
+    
+    .current-filter {
+      @include border-radius(0);
+      cursor:pointer;
+      font-size: 0.8em;
+      padding: 10px 40px 10px 10px;
+  		border-right: 10px solid transparent;
+      color: #464b54;
+      padding: 10px 15px 8px;
+      margin-bottom: 1px;
+      font-style: italic;
+      position: relative;
+    }
+    
+    .current-filter.original {
+      background-color: #f4fbfe;
+    }
+    
+    .current-filter.changed {
+      background-color: #f5d4c2;
+    }
+  }
+
+  .current-filter:after {
+    content: "\e636";
+	  font-family: 'sbac';
+	  font-size: 18px;
+	  font-style: normal;
+	  color: #838989;
+	  width: 12px;
+	  height: 12px;
+	  margin-right: 5px;
+	  position: absolute;
+	  top: 8px;
+	  right: 0;
+	}
+	
+	[id*="current-search-filter-name"]:nth-child(5n) {
+	  margin-right: 0;
+	}
+	
+	[id*="current-search-filter-name"]:nth-child(5n+1){
+    clear:left;
+  }
+   
+}
 
 .block-sbac-search-sbac-search-categories {
   .block-title {
@@ -1993,6 +2088,11 @@ html.js .category-hide {
 }
 
 /*Resources search filter button*/
+#sbac-search-filter-button {
+  background-color: #fd7d30;
+  border: 1px solid #be5e24;
+}
+
 #sbac-search-filter-button:before {
     background-image: url("../images/icon-buttonAccept.png");
     background-position: center center;
