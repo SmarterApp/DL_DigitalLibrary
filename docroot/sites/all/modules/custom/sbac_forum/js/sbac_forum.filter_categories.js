@@ -128,10 +128,13 @@
       });
 
       // Close the individual filter list.
-      $('.category-filter-header').once('category-filter-header-click', function () {
-        $(this).click( function () {
-          $(this).hide();
-          $(this).removeClass('selectedDiv');
+      $('.category-filter-header').once('cmod-catfilterheader', function() {
+        $('.category-filter-header').click( function () {
+          var vid = $(this).attr('vid');
+          $('.category-filter-list').hide();
+          $('.category-filter-list').removeClass('selectedDiv');
+          $('#filter-header-' + vid).removeClass('expanded');
+          $('#filter-header-' + vid).addClass('collapsed');
           return false;
         });
       });
