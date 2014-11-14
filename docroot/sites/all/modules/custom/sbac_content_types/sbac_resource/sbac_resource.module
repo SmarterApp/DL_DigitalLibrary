@@ -250,7 +250,7 @@ function sbac_resource_print_about_this_tab($node) {
   $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/';
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   if ($writable) {
-    file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_RENAME);
+    file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_REPLACE);
   }
   return '';
 }
@@ -360,7 +360,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        if ($temp_term) {
+          $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        }
       }
     }
     else {
@@ -369,7 +371,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->name;
+        if ($temp_term) {
+          $terms[] = $temp_term->name;
+        }
       }
     }
   }
@@ -3882,8 +3886,7 @@ function _sbac_resource_taxonomy_get_parents($tid){
  *  Implements hook_taxonomy_term_load().
  */
 function sbac_resource_taxonomy_term_load($terms) {
-
-  foreach ($terms as $index => $term) {
+  foreach ($terms as $term) {
     // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
@@ -3894,9 +3897,44 @@ function sbac_resource_taxonomy_term_load($terms) {
     $query->orderBy('t.name');
     $children = $query->execute()->fetchCol();
     if (!empty($children)) {
-      unset($terms[$index]);
+      unset($terms[$term->tid]);
     }
     // concatenate the children name with parents. We're using our own get parent function because we don't want to trigger this hook again.
-    $terms[$index]->name = sbac_resource_term_concat_parents($term->tid, $term->name);
+    $term->name = sbac_resource_term_concat_parents($term->tid, $term->name);
+  }
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
+  // because we concatenate the term name in sbac_resource_taxonomy_term_load, we don't want to show this concatenated name in the term edit form
+  $form['name']['#default_value'] = db_select('taxonomy_term_data', 't')
+    ->condition('t.tid', $form['#term']['tid'])
+    ->fields('t', array('name'))
+    ->execute()
+    ->fetchField();
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject_s_'),
+    array('vid' => 'grades', 'field' => 'field_grade_level_s_'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_special_populations'),
+  );
+  foreach ($configs as $config) {
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    $form[$config['field']]['und']['#options'] = $options;
   }
 }

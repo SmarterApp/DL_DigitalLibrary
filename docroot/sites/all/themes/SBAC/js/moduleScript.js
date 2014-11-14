@@ -4,11 +4,12 @@ var divLoaded = false;
 
 jQuery( document ).ready(function( $ ) {
 	var iframeOffset = jQuery('#contentIframe').offset();
+	jQuery('#contentIframe').width(jQuery('#resource-element-wrapper').width());
 	var iframeWidth = jQuery('#contentIframe').width();
 	var iframeHeight = jQuery('#contentIframe').height();
 	jQuery('<div/>', {
     id: 'clickDiv',
-	style: 'width:' +  iframeWidth +'px;height:' + iframeHeight + 'px;position:absolute;cursor:pointer;top:' + iframeOffset.top + 'px;left:' + iframeOffset.left + 'px;',
+	style: '-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter: alpha(opacity=0);-moz-opacity: 0.0;-khtml-opacity: 0.0;opacity: 0.0;background:#000;width:' +  iframeWidth +'px;height:' + iframeHeight + 'px;position:absolute;cursor:pointer;top:' + iframeOffset.top + 'px;left:' + iframeOffset.left + 'px;',
     click: function() {
 		runModule();
     } }).appendTo('body');
@@ -35,17 +36,22 @@ jQuery( window ).resize(function() {
 function runModule() {
 		if(bowser.name.indexOf("Internet Explorer") >= 0 && Number(bowser.version) < 9)
 		{
-			alert("It appears you are using a version of Internet Explorer earlier than 9.0. \n\nIn order to access this module, please revisit while using a current web browser such as: Internet Explorer 9.0+, Safari 5+, Google Chrome.");
+			alert("It appears you are using a version of Internet Explorer earlier than 9.0.\n\nIn order to access this module, please revisit while using a current web browser such as: Internet Explorer 9.0+, Safari 5+, Google Chrome.");
 			return;
 		}
 		if(bowser.name.toLowerCase().indexOf("iphone") >= 0)
 		{
-			alert("It appears you are using an iPhone to attempt to access this module. \n\nIn order to access this module, please revisit while using a desktop or tablet computer.");
+			confirm("It appears you are using an iPhone to attempt to access this module.\n\nIn order to access this module, please revisit while using a desktop computer.");
 			return;
 		}
+		if(bowser.name.toLowerCase().indexOf("ipad") >= 0)
+		{
+			if(!confirm("It appears you are using an iPad. While you can access this module from an iPad, due to browser limitations you may experience challenges which degrade visuals presentation and user interactivity.\n\nFor an optimal user experience, please consider revisiting from a desktop computer while using Internet Exporer 9.0+, Safari 5+ or Google Chrome."))
+				return;
+		}		
 		if(bowser.name.indexOf("Firefox") >= 0)
 		{
-			if(!confirm("It appears you are using Mozilla Firefox. While you can access this module using Firefox, due to browser limitations you may experience challenges which degrade visuals presentation and user interactivity.\n\nFor an optimal user experience, please consider closing the module and revisiting while using Internet Exporer 9.0+, Safari 5+ or Google Chrome."))
+			if(!confirm("It appears you are using Mozilla Firefox. While you can access this module using Firefox, due to browser limitations you may experience challenges which degrade visuals presentation and user interactivity.\n\nFor an optimal user experience, please consider revisiting while using Internet Exporer 9.0+, Safari 5+ or Google Chrome."))
                           return;
 		}
 		var pQuery = window.jQuery;
@@ -65,7 +71,10 @@ function runModule() {
 			width: Math.round(moduleWidth*resizeRatio),
 			height: Math.round(moduleHeight*resizeRatio),
 			autoSize: false,
-			beforeClose: function() { return confirm('Are you sure you want to close the module?'); },
+			beforeShow: function(){ jQuery("body").css({'overflow-y':'hidden'}); },
+			afterClose: function(){ jQuery("body").css({'overflow-y':'visible'}); },			
+			scrolling: false,
+			beforeClose: function() { return confirm('Your answers will not be saved when you close this module.\n\nAre you sure you want to close the module?'); },
 			onUpdate: function() { 
 					if (!window.firstLoad)
 					{
