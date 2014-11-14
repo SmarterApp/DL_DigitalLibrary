@@ -38,8 +38,7 @@
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
           var vid = selectedDiv.attr('vid');
-          $('#filter-header-' + vid).removeClass('expanded');
-          $('#filter-header-' + vid).addClass('collapsed');
+          $('.expanded').removeClass('expanded').addClass('collapsed');
           selectedDiv.hide();
           selectedDiv.removeClass('selectedDiv');
         }
@@ -167,23 +166,23 @@
       });
 
       // Open / Close the individual filter lists.
-      $('.sbac-search-filter-name').once('cmod-searchfiltername', function() {
-        $('.sbac-search-filter-name').click( function (e) {
-        var vid = $(this).attr('vid');
-          $('#filter-header-' + vid).removeClass('collapsed');
-          $('#filter-header-' + vid).addClass('expanded');
-        $('.category-filter-list').hide();
-        $('.category-filter-list-' + vid).show();
-        $('.category-filter-list-' + vid).addClass('selectedDiv');
-        // Added to remove the overflow issue on Chrome and Safari.
-        var style = $('.categories-filter.slideable').attr('style');
-        if (style !== undefined) {
-          style = style.replace('overflow: hidden');
-          console.log(style);
-          $('.categories-filter.slideable').attr('style', style);
-        }
-        e.stopPropagation();
-        return false;
+      $('.sbac-search-filter-name').once('cmod-searchfiltername', function () {
+        $('.sbac-search-filter-name').click(function (e) {
+          var vid = $(this).attr('vid');
+          $('.expanded').removeClass('expanded').addClass('collapsed');
+          $('#filter-header-' + vid).removeClass('collapsed').addClass('expanded');
+          $('.category-filter-list').hide();
+          $('.category-filter-list-' + vid).show();
+          $('.category-filter-list-' + vid).addClass('selectedDiv');
+          // Added to remove the overflow issue on Chrome and Safari.
+          var style = $('.categories-filter.slideable').attr('style');
+          if (style !== undefined) {
+            style = style.replace('overflow: hidden');
+            console.log(style);
+            $('.categories-filter.slideable').attr('style', style);
+          }
+          e.stopPropagation();
+          return false;
         });
       });
 
@@ -209,20 +208,21 @@
 
 
       // Close the filter list.
-      $('.category-hide').once('cmod-cathide', function() {
-        $('.category-hide').click( function () {
-        var slideableItems = $('.slideable');
-        if (slideableItems.is(':visible')) {
-          $(this).text(Drupal.t('Show Categories'));
-          $(this).toggleClass('active');
-        }
-        else {
-          $(this).text(Drupal.t('Hide Categories'));
-          $(this).toggleClass('active');
-        }
-        close_categories_list();
-        $('.selectedDiv').hide();
-        return false;
+      $('.category-hide').once('cmod-cathide', function () {
+        $('.category-hide').click(function () {
+          $('.expanded').removeClass('expanded').addClass('collapsed');
+          var slideableItems = $('.slideable');
+          if (slideableItems.is(':visible')) {
+            $(this).text(Drupal.t('Show Categories'));
+            $(this).toggleClass('active');
+          }
+          else {
+            $(this).text(Drupal.t('Hide Categories'));
+            $(this).toggleClass('active');
+          }
+          close_categories_list();
+          $('.selectedDiv').hide();
+          return false;
         });
       });
 
