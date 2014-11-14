@@ -360,7 +360,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        if ($temp_term) {
+          $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        }
       }
     }
     else {
@@ -369,7 +371,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->name;
+        if ($temp_term) {
+          $terms[] = $temp_term->name;
+        }
       }
     }
   }
@@ -3910,4 +3914,27 @@ function sbac_resource_form_taxonomy_form_term_alter(&$form, &$form_state, $form
     ->fields('t', array('name'))
     ->execute()
     ->fetchField();
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject_s_'),
+    array('vid' => 'grades', 'field' => 'field_grade_level_s_'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_special_populations'),
+  );
+  foreach ($configs as $config) {
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    $form[$config['field']]['und']['#options'] = $options;
+  }
 }
