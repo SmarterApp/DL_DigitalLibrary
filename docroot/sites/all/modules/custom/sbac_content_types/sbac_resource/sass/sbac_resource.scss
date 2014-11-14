@@ -1048,14 +1048,6 @@ html.js .category-hide {
     font-size: 12px;
     cursor: pointer;
 
-    &.active {
-      background: $teal;
-    }
-
-    a {
-      color: $white;
-    }
-
     .sbac-search-filter-name,
     .sbac-search-filter-custom-link {
       margin: 0;
@@ -1068,11 +1060,15 @@ html.js .category-hide {
         font-weight: normal;
         margin-bottom: 0;
       }
-
+      
       a {
-        color: #0684AD;
+        color: #464b54;
+        &:hover {
+          color: #0684AD;
+          text-decoration: underline;
+        }
       }
-
+      
 			a.ctools-use-modal {
 				width: 100%;
 				display: block;

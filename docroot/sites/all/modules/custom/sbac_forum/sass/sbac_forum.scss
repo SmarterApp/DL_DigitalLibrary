@@ -4207,14 +4207,6 @@ a.sbac-favorites-link {
     font-size: 12px;
     cursor: pointer;
 
-    &.active {
-      background: $teal;
-    }
-
-    a {
-      color: $white;
-    }
-
     .sbac-forum-filter-name,
     .sbac-forum-filter-custom-link {
       margin: 0;
@@ -4229,7 +4221,7 @@ a.sbac-favorites-link {
       }
 
       a {
-        color: #000;
+        color: #464b54;
         &:hover {
           color:#0684AD;
           text-decoration: underline;
