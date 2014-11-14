@@ -435,3 +435,71 @@ function sbac_core_notifications_get_html_content() {
   taskit_mark_all_read($user);
   return $notifications_content;
 }
+
+/**
+ * @param $form
+ * @param $form_state
+ * @return $form
+ * Implements hook_form_form_id_alter().
+ */
+function sbac_core_form_system_site_maintenance_mode_alter(&$form, &$form_state) {
+    //die(var_dump($form));
+    $timepicker = date_popup_get_preferred_timepicker();
+    $today = date('Y-m-d');
+    $hour_options = array();
+    for ($h = 0; $h < 24; $h++){
+        for ($m = 0; $m < 60 ; $m += 1){
+            $time = sprintf('%02d:%02d', $h, $m);
+            $hour_options["$time"] = "$time";
+        }
+    }
+
+    $form['critical_message_on_off'] = array(
+      '#title' => t('Critical Message'),
+      '#description' => t('Displays important message to all users each time they log in (new session).'),
+      '#type' => 'checkboxes',
+      '#options' => drupal_map_assoc(array(t('Critical Message ON'), t('Critical Message OFF')))
+    );
+    $form['critical_message_start_date'] = array(
+        '#title' => t('Start'),
+        '#type' => 'date_popup', // Provided by the date_popup module
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#default_value' => $today,
+        '#date_format' => variable_get('date_format_short', 'm/d/Y - H:i'),
+        '#required' => TRUE
+    );
+    $form['critical_message_add_time_start_checkbox'] = array(
+        '#title' => t('Add Time'),
+        '#type' => 'checkbox',
+        '#description' => 'Note: time is in Eastern Time zone'
+    );
+    $form['critical_message_end_date'] = array(
+        '#title' => t('End'),
+        '#type' => 'date_popup', // Provided by the date_popup module
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#date_format' => variable_get('date_format_short', 'm/d/Y - H:i'),
+        '#required' => TRUE
+    );
+    $form['critical_message_add_time_end_checkbox'] = array(
+        '#title' => t('Add Time'),
+        '#type' => 'checkbox',
+        '#description' => 'Note: time is in Eastern Time zone'
+    );
+
+//    $critical_message_date_time_hour_state = array(
+//        'visible' => array(
+//            ':input[name="critical_message_date_time_hour"]' => array('checked' => FALSE),
+//        ),
+//    );
+
+    //$form['critical_message_date_time_hour']['#states'] = $critical_message_date_time_hour_state;
+
+
+
+    $form['critical_message_textbox'] = array(
+        '#title' => t('Message'),
+        '#type' => 'textarea',
+        '#required' => TRUE
+    );
+    return $form;
+}
