@@ -95,6 +95,10 @@
       <p class="divider"><span class="publisher">Owner: </span><?php echo $field_publisher[0]['safe_value']; ?></p>
     <?php endif; ?>
 
+    <?php if (isset($user->full_name) && $user->full_name): ?>
+      <p class="contributed_by"><span class="contributor">Contributed By: </span><?php echo $user->full_name; ?></p>
+    <?php endif; ?>
+
     <?php if (isset($edit_link) && $edit_link): ?>
       <p><span class="edit-link"><?php echo $edit_link; ?></span></p>
     <?php endif; ?>
