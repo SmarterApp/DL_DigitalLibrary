@@ -96,9 +96,9 @@ function sbac_report_individual_form($form, &$form_state) {
  */
 function sbac_report_individual_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
-  
+
+  global $user;
   if (empty($form_state['values']['uid']) || !is_numeric($form_state['values']['uid'])) {
-    global $user;
     $account = user_load($user->uid);
     if (!sbac_report_select_other_users($account)) {
       $form_state['values']['uid'] = $user->uid;
@@ -110,6 +110,12 @@ function sbac_report_individual_form_validate($form, &$form_state) {
 
   if (empty($form_state['values']['date_range'])) {
     form_set_error('date_range', t('Choose a time period field is required.'));
+  }
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    if ($form_state['values']['state'] != sbac_report_get_default_state_tid()) {
+      form_set_error('state', t('You\'re only allowed to select your own state'));
+    }
   }
 }
 
