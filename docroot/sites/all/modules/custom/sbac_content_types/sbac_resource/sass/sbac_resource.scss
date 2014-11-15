@@ -1068,7 +1068,11 @@ html.js .category-hide {
       }
 
       a {
-        color: #0684AD;
+        color: #000;
+        &:hover {
+          color:#0684AD;
+          text-decoration: underline;
+        }
       }
 
 			a.ctools-use-modal {
@@ -1079,6 +1083,10 @@ html.js .category-hide {
 
     span {
       margin-right: 10px;
+    }
+    
+    .sbac-search-filter-custom-link a {
+      color: #0684AD;
     }
   }
   
