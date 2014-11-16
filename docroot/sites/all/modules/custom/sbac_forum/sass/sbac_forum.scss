@@ -190,6 +190,14 @@ $gray: #464B54;
       font-style: italic;
       position: relative;
     }
+        
+    .current-filter.original {
+      background-color: #f4fbfe;
+    }
+    
+    .current-filter.changed {
+      background-color: #f5d4c2;
+    }
   }
 
   .current-filter:after {
@@ -3901,12 +3909,11 @@ a.sbac-favorites-link {
 		color: #0c84ad;
 	}
 }
-
+ 
 
 /*Flag section*/
 .topic-node-comment-region-right-bottm-comment {
 	clear: both;
-	float: left;
 }
 .flag-section {
 	background-color: #f2f2f2;
@@ -3917,12 +3924,12 @@ a.sbac-favorites-link {
 	.tertiary-flag-head {
 		color: #333;
 		font-weight: bold;
-	}
+	} 
 
 	.tertiary-flag-head:before {
 	  content:"\e62b";
     display: inline-block;
-    font-family: 'sbac';
+    font-family: 'sbac'; 
     font-size: 16px;
     font-weight: normal;
     margin-right: 7px;
@@ -3990,6 +3997,8 @@ a.sbac-favorites-link {
 			padding-bottom: 5px;
 			margin-bottom: 10px;
 			font-weight: bold;
+			line-height: 1.6;
+			padding-top: 10px;
 		}
 
 		.sbac-forum-flagged-type:before {
@@ -4008,7 +4017,7 @@ a.sbac-favorites-link {
 		.sbac-forum-flagged-num {
 			position: absolute;
 			right: 0;
-			top: 4px;
+			top: 2px;
 			font-style: italic;
 		}
 
@@ -4016,6 +4025,24 @@ a.sbac-favorites-link {
 			margin-top: 5px;
 			padding-top: 5px;
 			border-top: 1px #CECECE solid;
+			
+			.sbac-forum-report-author {
+			  display: block;
+			  clear: both;
+			  margin-bottom: 5px;
+			}
+			
+			.sbac-forum-author-email,
+			.sbac-forum-author-state {
+			  display: inline-block;
+			  margin-bottom: 15px;
+			  
+			  a {
+			    color:#0684ad;
+			    text-decoration: underline;
+			  }
+			}
+			
 		}
 
 		.sbac-forum-report-details:first-child {
@@ -4198,14 +4225,21 @@ a.sbac-favorites-link {
   }
   
   li,
-  li.collapsed,
-  li.expanded {
+  li.collapsed {
     @include border-radius(3px);
-    background: #FFF url('../images/icon-arrowup.png') no-repeat 96% center;
+    background: #FFF url('../images/icon-arrowdown.png') no-repeat 96% center;
     padding: 3px 0;
     margin:0 0 10px;
     font-size: 12px;
     cursor: pointer;
+
+    &.active {
+      background: $teal;
+    }
+
+    a {
+      color: $white;
+    }
 
     .sbac-forum-filter-name,
     .sbac-forum-filter-custom-link {
@@ -4221,7 +4255,7 @@ a.sbac-favorites-link {
       }
 
       a {
-        color: #464b54;
+        color: #000;
         &:hover {
           color:#0684AD;
           text-decoration: underline;
@@ -4239,8 +4273,8 @@ a.sbac-favorites-link {
     }
   }
   
-  li.collapsed {
-    background: #FFF url('../images/icon-arrowdown.png') no-repeat 96% center;
+  li.expanded {
+    background-image: none;
   }
 
   form{
@@ -4279,15 +4313,19 @@ a.sbac-favorites-link {
     border-top: 1px solid #cecece; // stroke
     border-bottom: 1px solid #cecece; // stroke
     padding-bottom: 10px;
-    
+    position: relative;
 
     h2 {
-      @include border-radius(6px 6px 0 0); // border radius
-      background-color: white;
-      padding: 5px;
-      margin: 0;
       cursor: pointer;
       font-weight: normal;
+      margin: 0;
+      color: #0684ad;
+    }
+    
+    [class*="enclosed foundicon-"]:before {
+      position: absolute;
+      top: -21px;
+      right: 15px;
     }
   }
   
