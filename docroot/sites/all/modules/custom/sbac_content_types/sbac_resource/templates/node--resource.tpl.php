@@ -94,9 +94,11 @@
     <?php if (isset($field_publisher[0]['safe_value']) && $field_publisher[0]['safe_value']): ?>
       <p class="divider"><span class="publisher">Owner: </span><?php echo $field_publisher[0]['safe_value']; ?></p>
     <?php endif; ?>
-
-    <?php if (isset($user->full_name) && $user->full_name): ?>
-      <p class="contributed_by"><span class="contributor">Contributed By: </span><?php echo $user->full_name; ?></p>
+      
+    <?php if (isset(user_load($node->uid)->field_first_name[und][0]['value']) && user_load($node->uid)->field_first_name[und][0]['value']): ?>
+        <?php if (isset(user_load($node->uid)->field_last_name[und][0]['value']) && user_load($node->uid)->field_last_name[und][0]['value']): ?>
+            <p class="contributed_by"><span class="contributor">Contributed By: </span><?php echo user_load($node->uid)->field_first_name[und][0]['value'] . ' ' . user_load($node->uid)->field_last_name[und][0]['value']; ?></p>
+        <?php endif; ?>
     <?php endif; ?>
 
     <?php if (isset($edit_link) && $edit_link): ?>
