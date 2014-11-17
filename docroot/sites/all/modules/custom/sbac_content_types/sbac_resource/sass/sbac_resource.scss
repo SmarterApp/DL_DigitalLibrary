@@ -1014,7 +1014,6 @@ html.js .category-hide {
   color: #0684ad;
   padding: 0;
   border-bottom: 1px solid #056382;
-
   position: relative;
 
   &.active{
@@ -1039,14 +1038,21 @@ html.js .category-hide {
   }
   
   li,
-  li.collapsed,
-  li.expanded {
+  li.collapsed {
     @include border-radius(3px);
     background: #FFF url('../images/icon-arrow-down.png') no-repeat 96% center;
     padding: 3px 0;
     margin:0 0 10px;
     font-size: 12px;
     cursor: pointer;
+
+    &.active {
+      background: $teal;
+    }
+
+    a {
+      color: $white;
+    }
 
     .sbac-search-filter-name,
     .sbac-search-filter-custom-link {
@@ -1060,15 +1066,15 @@ html.js .category-hide {
         font-weight: normal;
         margin-bottom: 0;
       }
-      
+
       a {
-        color: #464b54;
+        color: #000;
         &:hover {
-          color: #0684AD;
+          color:#0684AD;
           text-decoration: underline;
         }
       }
-      
+
 			a.ctools-use-modal {
 				width: 100%;
 				display: block;
@@ -1078,10 +1084,14 @@ html.js .category-hide {
     span {
       margin-right: 10px;
     }
+    
+    .sbac-search-filter-custom-link a {
+      color: #0684AD;
+    }
   }
   
-  li.expanded  {
-    background: #FFF url('../images/icon-arrow-up.png') no-repeat 96% center;
+  li.expanded {
+    background-image: none;
   }
 
   form{
@@ -1122,15 +1132,24 @@ html.js .category-hide {
     border-top: 1px solid #cecece; // stroke
     border-bottom: 1px solid #cecece; // stroke
     padding-bottom: 10px;
-    
+    position: relative;
 
     h2 {
-      @include border-radius(6px 6px 0 0); // border radius
-      background-color: white;
-      padding: 5px;
-      margin: 0;
       cursor: pointer;
       font-weight: normal;
+      margin: 0;
+      color: #0684ad;
+    }
+    
+    [class*="enclosed foundicon-"]:before {
+      position: absolute;
+      top: -21px;
+      right: 15px;
+    }
+    
+    div.status {//override of system style
+      background-color: transparent;
+      background-image: none;
     }
   }
   
@@ -1310,6 +1329,10 @@ html.js .category-hide {
       margin-bottom: 1px;
       font-style: italic;
       position: relative;
+    }
+    
+    .current-filter.original {
+      background-color: #f4fbfe;
     }
     
     .current-filter.changed {
