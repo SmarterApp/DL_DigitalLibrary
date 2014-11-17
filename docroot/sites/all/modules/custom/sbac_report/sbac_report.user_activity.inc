@@ -26,9 +26,25 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     ),
     '#required' => TRUE,
   );
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    $form['state'] = array_merge($form['state'], array(
+      '#multiple' => FALSE,
+      '#attributes' => array('class' => array()),
+      '#disabled' => TRUE,
+    ));
+  }
+
   $user_group_options = sbac_report_user_group_options();
   array_push($user_group_options, 'SNE Members');
   array_push($user_group_options, 'SLT Members');
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    foreach($user_group_options as $index => $option){
+      if(!in_array($option, array('resource contributor', 'resource reviewer'))){
+        unset($user_group_options[$index]);
+      }
+    }
+  }
   sbac_csv_report_prettify($user_group_options);
 
   $form['user_group_dropdown'] = array(
@@ -81,6 +97,12 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
 
   if (empty($form_state['values']['date_range1'])) {
     form_set_error('date_range', t('Choose a time period field is required.'));
+  }
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    if ($form_state['values']['state'] != sbac_report_get_default_state_tid()) {
+      form_set_error('state', t('You\'re only allowed to select your own state'));
+    }
   }
 }
 
@@ -303,8 +325,10 @@ function sbac_csv_report_prettify(&$user_group_options) {
         break;
     }
   }
-  $res = $user_group_options;
-  $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
+  if (!sbac_central_user_has_role(array('reports administrator'))) {
+    $res = $user_group_options;
+    $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
+  }
 }
 
 /*
@@ -372,7 +396,11 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   }
   else {
     $query->join('field_data_field_state', 'state', 'u.uid = state.entity_id');
-    $query->condition('state.field_state_tid', $state_tid, 'IN');
+    if (is_array($state_tid)) {
+      $query->condition('state.field_state_tid', $state_tid, 'IN');
+    } else {
+      $query->condition('state.field_state_tid', $state_tid);
+    }
   }
 
   $result = $query->execute();

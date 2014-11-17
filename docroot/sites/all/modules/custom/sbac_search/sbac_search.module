@@ -424,6 +424,7 @@ function sbac_search_my_resources_form() {
       ),
     ),
     '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
@@ -437,15 +438,6 @@ function sbac_search_my_resources_form() {
         ),
       ),
     ),
-  );
-
-  $form['reset_filters'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset Filters'),
-    '#attributes' => array(
-      'class' => array('js-hide'),
-    ),
-    '#suffix' => '</div>',
   );
 
   return $form;
@@ -507,6 +499,7 @@ function sbac_search_resource_review_form() {
       ),
     ),
     '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
@@ -520,15 +513,6 @@ function sbac_search_resource_review_form() {
         ),
       ),
     ),
-  );
-
-  $form['reset_filters'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset Filters'),
-    '#attributes' => array(
-      'class' => array('js-hide'),
-    ),
-    '#suffix' => '</div>',
   );
 
   return $form;
@@ -575,6 +559,12 @@ function sbac_search_digital_library_resources_form() {
     '#attributes' => array('id' => 'sbac-search-current-filters'),
   );
 
+  $form['original_filters'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-original-filters'),
+  );
+
   $form['search_categories'] = array(
     '#markup' => sbac_search_digital_library_categories(),
   );
@@ -600,6 +590,7 @@ function sbac_search_digital_library_resources_form() {
       ),
     ),
     '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
@@ -613,15 +604,6 @@ function sbac_search_digital_library_resources_form() {
         ),
       ),
     ),
-  );
-
-  $form['reset_filters'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset Filters'),
-    '#attributes' => array(
-      'class' => array('js-hide'),
-    ),
-    '#suffix' => '</div>',
   );
 
   return $form;
@@ -909,7 +891,8 @@ function sbac_search_digital_library_categories() {
   );
   $link = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
   $categories['education_alignment']['display_name'] = 'Common Core State Standards';
-  $categories['education_alignment']['vocabulary'] = array();
+  $vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
+  $categories['education_alignment']['vocabulary'] = $vocab;
   $categories['education_alignment']['terms'] = array();
   $categories['education_alignment']['link'] = $link;
 
