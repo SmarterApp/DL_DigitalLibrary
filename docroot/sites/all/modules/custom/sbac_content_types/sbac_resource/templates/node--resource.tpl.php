@@ -94,10 +94,10 @@
     <?php if (isset($field_publisher[0]['safe_value']) && $field_publisher[0]['safe_value']): ?>
       <p class="divider"><span class="publisher">Owner: </span><?php echo $field_publisher[0]['safe_value']; ?></p>
     <?php endif; ?>
-      
-    <?php if (isset(user_load($node->uid)->field_first_name[und][0]['value']) && user_load($node->uid)->field_first_name[und][0]['value']): ?>
-        <?php if (isset(user_load($node->uid)->field_last_name[und][0]['value']) && user_load($node->uid)->field_last_name[und][0]['value']): ?>
-            <p class="contributed_by"><span class="contributor">Contributed By: </span><?php echo user_load($node->uid)->field_first_name[und][0]['value'] . ' ' . user_load($node->uid)->field_last_name[und][0]['value']; ?></p>
+
+    <?php if (isset($resource_contributor_first_name) && $resource_contributor_first_name): ?>
+        <?php if (isset($resource_contributor_last_name) && $resource_contributor_last_name): ?>
+            <p class="contributed_by"><span class="contributor">Contributed By: </span><?php echo $resource_contributor_first_name . ' ' . $resource_contributor_last_name; ?></p>
         <?php endif; ?>
     <?php endif; ?>
 
