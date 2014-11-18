@@ -1173,7 +1173,7 @@ function sbac_media_file_validate($file) {
       $file_limit = SBAC_MEDIA_250MB;
     }
     // Have to create custom validator for user1. Standard file_validate_size exempts user1.
-    if ($user->uid == 1) {
+    if ($user->uid == 1 || user_is_logged_in()) {
       if ($file->filesize > $file_limit) {
         $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($file->filesize), '%maxsize' => format_size($file_limit)));
         return $errors;
