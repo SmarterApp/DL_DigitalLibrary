@@ -360,7 +360,7 @@ function sbac_media_download_contents($node) {
             }
           }
         }
-        if ($zip->open($real_path) === TRUE && ($primary_add || $secondary_add)) {
+        if ($zip->open($real_path) === TRUE && ($primary_add || $secondary_add) && $node->workbench_moderation['current']->state != 'draft') {
           $destination = variable_get('file_private_path', conf_path() . '/files') . '/resource_pdfs/';
           $about_this_resource_directory = $destination . floor($node->nid / 32000) . '/' . $node->nid . '/';
           $zip->addFile($about_this_resource_directory . 'about_this_resource.pdf', 'about_this_resource.pdf');
