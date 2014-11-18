@@ -3990,13 +3990,22 @@ function sbac_resource_quick_search_filter() {
   $query = drupal_get_query_parameters();
   $clear_link = l('x', 'digital-library-resources');
   if (isset($query['contributor'])) {
-    $output = t('Showing resources contributed by: @author !clear', array('@author' => sbac_central_get_user_first_last_name($query['contributor']), '!clear'=>$clear_link));
+    $output = t('Showing resources contributed by: !author !clear', array(
+      '!author' => '<span>' . sbac_central_get_user_first_last_name($query['contributor']) . '</span>',
+      '!clear' => $clear_link
+    ));
   }
   elseif (isset($query['author'])) {
-    $output = t('Showing resources authored or owned by: @author !clear', array('@author' => $query['author'], '!clear'=>$clear_link));
+    $output = t('Showing resources authored or owned by: !author !clear', array(
+      '!author' => '<span>' . $query['author'] . '</span>',
+      '!clear' => $clear_link
+    ));
   }
   elseif (isset($query['owner'])) {
-    $output = t('Showing resources authored or owned by: @author !clear', array('@author' => $query['owner'], '!clear'=>$clear_link));
+    $output = t('Showing resources authored or owned by: !author !clear', array(
+      '!author' => '<span>' . $query['owner'] . '</span>',
+      '!clear' => $clear_link
+    ));
   }
   return $output;
 }
