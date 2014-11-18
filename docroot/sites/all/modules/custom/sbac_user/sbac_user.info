@@ -150,6 +150,7 @@ features[user_role][] = guest
 features[user_role][] = help desk
 features[user_role][] = moderator
 features[user_role][] = on-boarding
+features[user_role][] = reports administrator
 features[user_role][] = resource contributor
 features[user_role][] = resource publisher
 features[user_role][] = resource reviewer

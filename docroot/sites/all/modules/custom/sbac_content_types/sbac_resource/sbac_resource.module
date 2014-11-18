@@ -3959,6 +3959,28 @@ function sbac_resource_form_user_profile_form_alter(&$form, &$form_state, $form_
 }
 
 /**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject_s_'),
+    array('vid' => 'grades', 'field' => 'field_grade_level_s_'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_special_populations'),
+  );
+  foreach ($configs as $config) {
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    $form[$config['field']]['und']['#options'] = $options;
+  }
+}
+/**
  * Show the contributor/author/owner filter
  *
  * @return null|string

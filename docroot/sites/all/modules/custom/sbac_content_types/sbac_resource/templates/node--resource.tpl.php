@@ -94,6 +94,12 @@
       <p class="divider"><span class="contributor">Contributor: </span><?php echo $contributor; ?></p>
     <?php endif; ?>
 
+    <?php if (isset($resource_contributor_first_name) && $resource_contributor_first_name): ?>
+        <?php if (isset($resource_contributor_last_name) && $resource_contributor_last_name): ?>
+            <p class="contributed_by"><span class="contributor">Contributed By: </span><?php echo $resource_contributor_first_name . ' ' . $resource_contributor_last_name; ?></p>
+        <?php endif; ?>
+    <?php endif; ?>
+
     <?php if (isset($edit_link) && $edit_link): ?>
       <p><span class="edit-link"><?php echo $edit_link; ?></span></p>
     <?php endif; ?>
