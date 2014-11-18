@@ -55,13 +55,6 @@ class Hooks extends \devtools\Hooks {
       ),
     );
   }
-
-  /**
-   * Implements hook_theme().
-   */
-  function hook_theme($existing, $type, $theme, $path){
-
-  }
   /*----------------------------------------------------------------------------
       MODULE HOOKS
   ----------------------------------------------------------------------------*/
