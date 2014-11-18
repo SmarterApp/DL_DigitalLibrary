@@ -41,8 +41,11 @@ function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
   if ($vocab = taxonomy_vocabulary_machine_name_load($vocab_name)) {
     $terms = taxonomy_get_tree($vocab->vid);
     $options = array();
-    foreach($terms AS $idx => $term) {
-      $options[$term->tid] = $term->name;
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
     }
     return $options;
   }
