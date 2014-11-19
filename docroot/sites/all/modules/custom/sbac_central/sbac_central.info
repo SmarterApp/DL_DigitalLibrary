@@ -4,6 +4,7 @@ core = 7.x
 package = ~SBAC
 version = 7.x-1.0
 project = sbac_central
+scripts[] = js/critical-message.js
 dependencies[] = ctools
 dependencies[] = elysia_cron
 dependencies[] = features
