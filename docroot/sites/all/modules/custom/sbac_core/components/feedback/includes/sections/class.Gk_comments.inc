@@ -4,7 +4,7 @@ namespace sbac_core\components\feedback\sections;
 class Gk_Comments extends Base {
   const name = 'gk_comments';
   const title = 'Gate Keeper Comments';
-  const permission = 'access review comments';
+  const permission = 'access gk review comments';
 
   /**
    * Builds and returns the content for current section.
