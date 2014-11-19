@@ -215,8 +215,48 @@ a.sbac-grid-layout {
   background-image: url("../images/thumbnails.png");
 }
 
+.block-sbac-resource-sbac-resource-quick-search {
+  margin: 0 26px 20px;
+  padding-right: 20px;
+  color: #fff;
+  line-height: 35px;
+  border-bottom: 1px solid #a0cfde;
+  box-shadow: 0 1px #17576c;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+  float: left;
+  
+  span {
+    font-weight: bold;
+  }
+  
+  a {
+    width: 40px;
+    height: 20px;
+    position: relative;
+    color: transparent; 
+    text-shadow: none;
+    
+    &:hover {color: transparent;}
+    
+    &:before {
+      content: "\e636";
+      font-family: "SBAC";
+      font-size: 20px;
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      display: block;
+      top: -9px;
+      left: 0;
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+    }
+  }
+}
+
 .block-sbac-resource-sbac-resource-results-count {
   float:left;
+  clear: left;
   margin-right: 10px;
   margin-left: 26px;
   font-size: emCalc(24px);
@@ -229,6 +269,7 @@ a.sbac-grid-layout {
     margin:0;
     font-weight: normal;
     font-size: 1.2rem;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -1605,14 +1646,6 @@ html.js .category-hide {
 
 .node-type-resource {
   #page-title {
-    /*font-size: 2.375em;
-        font-family: Arial, sans-serif;
-        font-weight: normal;
-        color: $teal;
-        margin: 35px 0 10px;
-        padding: 0 25px;
-        word-wrap: break-word;*/
-
 		border-bottom: 1px solid #62676E;
     color: #04384E;
     display: block;
@@ -1628,6 +1661,7 @@ html.js .category-hide {
 		font-size: 13px;
 		color: #62676E;
 		display: inline-block;
+		text-transform: uppercase;
 	}
 
 	.favorites-link {
@@ -1701,8 +1735,17 @@ html.js .category-hide {
 
 			&.divider {
 				border-top: 1px #CECECE solid;
-				max-width: 510px;
 				padding-top: 7px;
+			}
+			
+			a {
+			  color: #0583ac;
+			  text-decoration: underline;
+			  padding-right: 5px;
+			}
+			
+			a:first-child {
+			  padding-right: 10px;
 			}
     }
 
