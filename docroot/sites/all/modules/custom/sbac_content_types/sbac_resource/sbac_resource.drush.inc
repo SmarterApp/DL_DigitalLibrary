@@ -88,6 +88,14 @@ function sbac_resource_drush_command() {
     'description' => 'Find resources that are affected by the workflow bug. See 81058166',
   );
 
+  $items['sbac-resource-generate-pdfs'] = array(
+    'description' => 'Generate the PDFs.',
+    'examples' => array(
+      'drush sbac-resource-generate-pdfs',
+    ),
+    'callback' => 'drush_sbac_resource_generate_pdfs',
+  );
+
   return $items;
 }
 
@@ -556,5 +564,24 @@ function drush_sbac_resource_find_extra_reviews() {
     if (!empty($output)) {
       drush_print(implode(' | ', $output));
     }
+  }
+}
+
+/**
+ * Find resources that are affected by the workflow bug
+ */
+function drush_sbac_resource_generate_pdfs() {
+  ini_set('memory_limit', '1048M');
+  $results = db_query("SELECT nid FROM {node} WHERE type = 'resource'");
+  foreach ($results as $nid) {
+    $node = node_load($nid->nid);
+    if ($node) {
+      $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/about_this_resource.pdf';
+      if (!file_exists($directory)) {
+        sbac_resource_print_about_this_tab($node);
+        drush_print($node->nid . ' updated.');
+      }
+    }
+    unset($node);
   }
 }

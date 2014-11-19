@@ -26,9 +26,25 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     ),
     '#required' => TRUE,
   );
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    $form['state'] = array_merge($form['state'], array(
+      '#multiple' => FALSE,
+      '#attributes' => array('class' => array()),
+      '#disabled' => TRUE,
+    ));
+  }
+
   $user_group_options = sbac_report_user_group_options();
   array_push($user_group_options, 'SNE Members');
   array_push($user_group_options, 'SLT Members');
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    foreach($user_group_options as $index => $option){
+      if(!in_array($option, array('resource contributor', 'resource reviewer', 'all'))){
+        unset($user_group_options[$index]);
+      }
+    }
+  }
   sbac_csv_report_prettify($user_group_options);
 
   $form['user_group_dropdown'] = array(
@@ -81,6 +97,12 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
 
   if (empty($form_state['values']['date_range1'])) {
     form_set_error('date_range', t('Choose a time period field is required.'));
+  }
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    if ($form_state['values']['state'] != sbac_report_get_default_state_tid()) {
+      form_set_error('state', t('You\'re only allowed to select your own state'));
+    }
   }
 }
 
@@ -303,8 +325,10 @@ function sbac_csv_report_prettify(&$user_group_options) {
         break;
     }
   }
-  $res = $user_group_options;
-  $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
+  if (!sbac_central_user_has_role(array('reports administrator'))) {
+    $res = $user_group_options;
+    $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
+  }
 }
 
 /*
@@ -372,7 +396,11 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   }
   else {
     $query->join('field_data_field_state', 'state', 'u.uid = state.entity_id');
-    $query->condition('state.field_state_tid', $state_tid, 'IN');
+    if (is_array($state_tid)) {
+      $query->condition('state.field_state_tid', $state_tid, 'IN');
+    } else {
+      $query->condition('state.field_state_tid', $state_tid);
+    }
   }
 
   $result = $query->execute();
@@ -461,8 +489,8 @@ function get_user_activity($user, $date_range) {
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.uid";
   $user_activity['resources_contributed'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
-  # forum views
-  $sql = "select count(distinct tid) as count, uid from sbac_forum_views where uid in (%s) group by uid";
+  # topic forum views
+  $sql = "select count(distinct v.tid) as count, v.uid from sbac_forum_views v left join field_data_field_forum_resource_ref r on v.tid = r.entity_id where v.uid in (%s) and r.field_forum_resource_ref_target_id is null group by v.uid";
   $user_activity['forum_views'] = count_with_users_query($sql, $user);
 
   # resource forum participated

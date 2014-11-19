@@ -55,6 +55,23 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
+  $form['resource_state_dropdown'] = array(
+    '#type' => 'select',
+    '#title' => t('Choose contributor state'),
+    '#options' => sbac_report_state_options(),
+    '#multiple' => TRUE,
+    '#default_value' => sbac_report_get_default_state_tid(),
+    '#attributes' => array('class' => array('chosen-widget')),
+    '#ajax' => array(
+      'callback' => 'sbac_report_state_ajax',
+    ),
+    '#required' => TRUE,
+  );
+  // Reports administrator only sees their own state
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    $form['resource_state_dropdown']['#multiple'] = FALSE;
+    $form['resource_state_dropdown']['#disabled'] = TRUE;
+  }
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -73,6 +90,12 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
  */
 function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_STATES;
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    if ($form_state['values']['resource_state_dropdown'] != sbac_report_get_default_state_tid()) {
+      form_set_error('state', t('You\'re only allowed to select your own state'));
+    }
+  }
 }
 
 /**
@@ -87,6 +110,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
     set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_grade_dropdown'], sbac_report_resource_grade_options());
     set_resource_filter($resource_filters, 'status', $form_state['values']['resource_status_dropdown'], sbac_report_resource_status_options());
     set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_attribute_dropdown'], sbac_report_resource_attribute_options());
+    set_resource_filter($resource_filters, 'state', $form_state['values']['resource_state_dropdown'], sbac_report_state_options());
   }
 
   $_SESSION['report_chosen_filters'] = $resource_filters;
@@ -330,7 +354,10 @@ function query_taxonomy_term($sql) {
   $values[0] = 'All';
 
   foreach ($result as $record) {
-    $values[$record->tid] = $record->name;
+    $children = taxonomy_get_children($record->tid);
+    if (empty($children)) {
+      $values[$record->tid] = sbac_resource_term_concat_parents($record->tid, $record->name);
+    }
   }
   return $values;
 }
@@ -623,6 +650,21 @@ function get_resources($resource_filters) {
     else {
       $query->innerJoin('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND a.bundle = \'resource\'');
       $query->condition('a.field_attributes_tid', array_keys($resource_filters['attribute']));
+    }
+  }
+
+  // State filter
+  if (!empty($resource_filters['state'])) {
+    if (isset($resource_filters['state']['all'])) {
+      // do nothing
+    }
+    else {
+      $query->innerJoin('field_data_field_state', 's', 'n.uid = s.entity_id AND s.entity_type = \'user\'');
+      if (is_array($resource_filters['state'])) {
+        $query->condition('s.field_state_tid', array_keys($resource_filters['state']));
+      } else {
+        $query->condition('s.field_state_tid', $resource_filters['state']);
+      }
     }
   }
   $query->fields('n', array('nid'));

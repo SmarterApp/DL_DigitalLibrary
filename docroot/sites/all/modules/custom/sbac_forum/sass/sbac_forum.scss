@@ -113,12 +113,8 @@ $gray: #464B54;
     display: none;
   }
 
-  margin: 10px 20px 5px;
-  padding: 10px 0 0;
-  /*color: white;
-      border: 1px solid white;
-      border-width: 0 0 1px;
-  */
+  margin: 0 0.9375em;
+  padding: 10px 0 5px;
   border-top: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
 
@@ -127,18 +123,107 @@ $gray: #464B54;
     font-size: 18px;
   }
 
-  .current-filter {
-    @include border-radius(50px);
-    cursor:pointer;
-    float: left;
-    margin:10px 10px 10px 0;
-    font-size: 0.8em;
-    padding: 10px 40px 10px 10px;
-    background: #fff url('../images/icon-close.png') no-repeat right center;
-    border-right: 10px solid transparent;
-    color: #7d8a95;
+  /*Active Filters*/
+  #clear-all {
+    color: #000;
+    margin-top: 10px;
+    height: 30px;
+    clear: both;
+    
+    a {
+      background-color: #aac5d1;
+			@include background-image(linear-gradient(center top , rgba(255, 255, 255, 0.5) 30%, rgba(168, 196, 208, 0.1) 100%));        
+      border-radius: 3px;
+  		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+  		margin-left: 20px;
+  		padding: 5px 15px 5px 18px;
+  		border: 1px solid #88a8b6;
+  		color: #146281;
+  		font-size: 12px;
+  		line-height: 1.2;
+  		
+  		&:before {
+  		  content: "\e636";
+  		  font-family: 'sbac';
+  		  font-size: 16px;
+  		  color: #146281;
+  		  width: 12px;
+  		  height: 12px;
+  		  margin-right: 5px;
+  		  position: relative;
+  		  top: 3px;
+  		  left: -2px;
+  		}
+    }
   }
+  
+  [id*="current-search-filter-name"] {
+    width: 19%;
+    float: left;
+    margin-right: 1.25%;
+    margin-top: 12px;
+    @include border-radius(3px);
+    background-color: #f4fbfe;
+    padding-bottom: 7px;
+    
+    h5 {
+      font-family: Arial,Helvetica,sans-serif;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 10px 15px 8px; 
+      margin-bottom: 10px;
+      border-bottom: 2px solid #c9eaf8;
+    }
+    
+    .current-filter {
+      @include border-radius(0);
+      cursor:pointer;
+      font-size: 0.8em;
+      padding: 10px 40px 10px 10px;
+  		border-right: 10px solid transparent;
+      color: #464b54;
+      background-color: #f5d4c2;
+      padding: 10px 15px 8px;
+      margin-bottom: 1px;
+      font-style: italic;
+      position: relative;
+    }
+        
+    .current-filter.original {
+      background-color: #f4fbfe;
+    }
+    
+    .current-filter.changed {
+      background-color: #f5d4c2;
+    }
+  }
+
+  .current-filter:after {
+    content: "\e636";
+	  font-family: 'sbac';
+	  font-size: 18px;
+	  font-style: normal;
+	  color: #838989;
+	  width: 12px;
+	  height: 12px;
+	  margin-right: 5px;
+	  position: absolute;
+	  top: 8px;
+	  right: 0;
+	}
+	
+	[id*="current-search-filter-name"]:nth-child(5n) {
+	  margin-right: 0;
+	}
+	
+	[id*="current-search-filter-name"]:nth-child(5n+1){
+    clear:left;
+  }
+   
 }
+  
 
 // --------- Hide Categories and Show Categories link toggle. -------------
 
@@ -202,6 +287,11 @@ select {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	height: 34px;
+}
+
+#sbac-forum-filter-button {
+  background-color: #fd7d30;
+  border: 1px solid #be5e24;
 }
 
 #sbac-forum-filter-button:before {
@@ -2300,8 +2390,21 @@ form[id*='sbac-flag-collaboration-form']{
 			padding: 0;
 			border: none !important;
 			clear: both;
-		}
+			
+			.fieldset-description {
+  	    color: #8a1538;
+  	    font-size: 13px;
+  	    line-height: 1.4;
+  	    margin-left: 20px;
+  	    margin-top: 5px;
 
+  	    a{
+  	      color: #0583ac;
+  	      text-decoration: underline;
+  	    }
+  	  }
+		}
+  
 		fieldset.collapsed {
 			border: none !important;
 		}
@@ -3806,12 +3909,11 @@ a.sbac-favorites-link {
 		color: #0c84ad;
 	}
 }
-
+ 
 
 /*Flag section*/
 .topic-node-comment-region-right-bottm-comment {
 	clear: both;
-	float: left;
 }
 .flag-section {
 	background-color: #f2f2f2;
@@ -3822,12 +3924,12 @@ a.sbac-favorites-link {
 	.tertiary-flag-head {
 		color: #333;
 		font-weight: bold;
-	}
+	} 
 
 	.tertiary-flag-head:before {
 	  content:"\e62b";
     display: inline-block;
-    font-family: 'sbac';
+    font-family: 'sbac'; 
     font-size: 16px;
     font-weight: normal;
     margin-right: 7px;
@@ -3895,6 +3997,8 @@ a.sbac-favorites-link {
 			padding-bottom: 5px;
 			margin-bottom: 10px;
 			font-weight: bold;
+			line-height: 1.6;
+			padding-top: 10px;
 		}
 
 		.sbac-forum-flagged-type:before {
@@ -3913,7 +4017,7 @@ a.sbac-favorites-link {
 		.sbac-forum-flagged-num {
 			position: absolute;
 			right: 0;
-			top: 4px;
+			top: 2px;
 			font-style: italic;
 		}
 
@@ -3921,6 +4025,24 @@ a.sbac-favorites-link {
 			margin-top: 5px;
 			padding-top: 5px;
 			border-top: 1px #CECECE solid;
+			
+			.sbac-forum-report-author {
+			  display: block;
+			  clear: both;
+			  margin-bottom: 5px;
+			}
+			
+			.sbac-forum-author-email,
+			.sbac-forum-author-state {
+			  display: inline-block;
+			  margin-bottom: 15px;
+			  
+			  a {
+			    color:#0684ad;
+			    text-decoration: underline;
+			  }
+			}
+			
 		}
 
 		.sbac-forum-report-details:first-child {
@@ -4103,10 +4225,9 @@ a.sbac-favorites-link {
   }
   
   li,
-  li.collapsed,
-  li.expanded {
+  li.collapsed {
     @include border-radius(3px);
-    background: #FFF url('../images/icon-arrowup.png') no-repeat 96% center;
+    background: #FFF url('../images/icon-arrowdown.png') no-repeat 96% center;
     padding: 3px 0;
     margin:0 0 10px;
     font-size: 12px;
@@ -4152,8 +4273,8 @@ a.sbac-favorites-link {
     }
   }
   
-  li.collapsed {
-    background: #FFF url('../images/icon-arrowdown.png') no-repeat 96% center;
+  li.expanded {
+    background-image: none;
   }
 
   form{
@@ -4162,9 +4283,10 @@ a.sbac-favorites-link {
   }
 
   .category-buttons {
-    padding-right: 5px;
-		padding-bottom: 10px;
-    text-align: right;
+    border-top: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
+    text-align: center;
+    margin: 1em 0.875em 0;
 
     button {
       margin: 10px;
@@ -4191,15 +4313,19 @@ a.sbac-favorites-link {
     border-top: 1px solid #cecece; // stroke
     border-bottom: 1px solid #cecece; // stroke
     padding-bottom: 10px;
-    
+    position: relative;
 
     h2 {
-      @include border-radius(6px 6px 0 0); // border radius
-      background-color: white;
-      padding: 5px;
-      margin: 0;
       cursor: pointer;
       font-weight: normal;
+      margin: 0;
+      color: #0684ad;
+    }
+    
+    [class*="enclosed foundicon-"]:before {
+      position: absolute;
+      top: -21px;
+      right: 15px;
     }
   }
   
@@ -4303,7 +4429,6 @@ a.sbac-favorites-link {
 
 .topic-node-main-content-warning p {
   font-size: 13px;
-  color: #999;
   
   span {
     font-weight: bold;

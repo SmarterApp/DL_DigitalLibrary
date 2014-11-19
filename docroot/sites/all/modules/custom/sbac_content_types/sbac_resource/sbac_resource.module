@@ -250,7 +250,7 @@ function sbac_resource_print_about_this_tab($node) {
   $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/';
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   if ($writable) {
-    file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_RENAME);
+    file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_REPLACE);
   }
   return '';
 }
@@ -360,7 +360,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        if ($temp_term) {
+          $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        }
       }
     }
     else {
@@ -369,7 +371,9 @@ function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
-        $terms[] = $temp_term->name;
+        if ($temp_term) {
+          $terms[] = $temp_term->name;
+        }
       }
     }
   }
@@ -770,6 +774,9 @@ function sbac_resource_preprocess_node(&$vars) {
     $vars['owner'] = '';
     $vars['resource_type'] = '';
 
+    $contributor_name = sbac_central_get_user_first_last_name($vars['uid']);
+    $vars['contributor'] = l($contributor_name, 'digital-library-resources', array('query' => array('contributor' => $vars['uid'])));
+
     if (isset($vars['field_focus'][0]['tid'])) {
       $resource_types = array();
       foreach ($vars['field_focus'] as $key => $term) {
@@ -778,10 +785,12 @@ function sbac_resource_preprocess_node(&$vars) {
       $vars['resource_type'] = implode(', ', $resource_types);
     }
     if (isset($vars['field_author'][0]['safe_value'])) {
-      $vars['author'] = htmlspecialchars_decode($vars['field_author'][0]['safe_value']);
+      $author_name = htmlspecialchars_decode($vars['field_author'][0]['safe_value']);
+      $vars['author'] = l($author_name, 'digital-library-resources', array('query' => array('author' => $author_name, 'owner' => $author_name)));
     }
-    if (isset($vars['field_publisher']['und'][0]['safe_value'])) {
-      $vars['owner'] = htmlspecialchars_decode($vars['field_publisher']['und'][0]['safe_value']);
+    if (isset($vars['field_publisher'][0]['safe_value'])) {
+      $owner_name = htmlspecialchars_decode($vars['field_publisher'][0]['safe_value']);
+      $vars['owner'] = l($owner_name, 'digital-library-resources', array('query' => array('owner' => $owner_name, 'author' => $owner_name)));
     }
     if (isset($vars['field_license'][0]['taxonomy_term']->name)) {
       $vars['license'] = $vars['field_license'][0]['taxonomy_term']->name;
@@ -2593,6 +2602,16 @@ function sbac_resource_block_info() {
     'status' => 1,
   );
 
+  $blocks['sbac_resource_quick_search'] = array(
+    'info' => t('Quick search filter'),
+    'region' => 'sub-header',
+    'pages' => "digital-library-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -25,
+    'status' => 1,
+  );
+
   $blocks['sbac_resource_review_tabs'] = array(
     'info' => t('Resource Review Tabs'),
     'region' => 'sub-header',
@@ -2746,6 +2765,10 @@ function sbac_resource_block_view($delta = '') {
     case 'sbac_resource_mr_sort_form':
       $block['subject'] = NULL;
       $block['content'] = drupal_get_form('sbac_resource_my_resources_sort_form');
+      break;
+    case 'sbac_resource_quick_search':
+      $block['subject'] = NULL;
+      $block['content'] = sbac_resource_quick_search_filter();
       break;
   }
   return $block;
@@ -3903,8 +3926,7 @@ function _sbac_resource_taxonomy_get_parents($tid){
  *  Implements hook_taxonomy_term_load().
  */
 function sbac_resource_taxonomy_term_load($terms) {
-
-  foreach ($terms as $index => $term) {
+  foreach ($terms as $term) {
     // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
@@ -3915,9 +3937,96 @@ function sbac_resource_taxonomy_term_load($terms) {
     $query->orderBy('t.name');
     $children = $query->execute()->fetchCol();
     if (!empty($children)) {
-      unset($terms[$index]);
+      unset($terms[$term->tid]);
     }
     // concatenate the children name with parents. We're using our own get parent function because we don't want to trigger this hook again.
-    $terms[$index]->name = sbac_resource_term_concat_parents($term->tid, $term->name);
+    $term->name = sbac_resource_term_concat_parents($term->tid, $term->name);
   }
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
+  // because we concatenate the term name in sbac_resource_taxonomy_term_load, we don't want to show this concatenated name in the term edit form
+  $form['name']['#default_value'] = db_select('taxonomy_term_data', 't')
+    ->condition('t.tid', $form['#term']['tid'])
+    ->fields('t', array('name'))
+    ->execute()
+    ->fetchField();
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject_s_'),
+    array('vid' => 'grades', 'field' => 'field_grade_level_s_'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_special_populations'),
+  );
+  foreach ($configs as $config) {
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    $form[$config['field']]['und']['#options'] = $options;
+  }
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject_s_'),
+    array('vid' => 'grades', 'field' => 'field_grade_level_s_'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_special_populations'),
+  );
+  foreach ($configs as $config) {
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    $form[$config['field']]['und']['#options'] = $options;
+  }
+}
+/**
+ * Show the contributor/author/owner filter
+ *
+ * @return null|string
+ */
+function sbac_resource_quick_search_filter() {
+  $output = '';
+  $query = drupal_get_query_parameters();
+  $clear_link = l('x', 'digital-library-resources');
+  if (isset($query['contributor'])) {
+    $output = t('Showing resources contributed by: !author !clear', array(
+      '!author' => '<span>' . sbac_central_get_user_first_last_name($query['contributor']) . '</span>',
+      '!clear' => $clear_link
+    ));
+  }
+  elseif (isset($query['author'])) {
+    $output = t('Showing resources authored or owned by: !author !clear', array(
+      '!author' => '<span>' . $query['author'] . '</span>',
+      '!clear' => $clear_link
+    ));
+  }
+  elseif (isset($query['owner'])) {
+    $output = t('Showing resources authored or owned by: !author !clear', array(
+      '!author' => '<span>' . $query['owner'] . '</span>',
+      '!clear' => $clear_link
+    ));
+  }
+  return $output;
 }

@@ -27,8 +27,7 @@
         if (!$(this).hasClass('selectedDiv')) {
           var selectedDiv = $('.selectedDiv');
           var vid = selectedDiv.attr('vid');
-          $('#filter-header-' + vid).removeClass('expanded');
-          $('#filter-header-' + vid).addClass('collapsed');
+          $('.expanded').removeClass('expanded').addClass('collapsed');
           selectedDiv.hide();
           selectedDiv.removeClass('selectedDiv');
         }
@@ -67,8 +66,11 @@
       // Close the individual filter list.
       $('.category-filter-header').once('cmod-catfilterheader', function () {
         $('.category-filter-header').click(function () {
+          var vid = $(this).attr('vid');
           $('.category-filter-list').hide();
           $('.category-filter-list').removeClass('selectedDiv');
+          $('#filter-header-' + vid).removeClass('expanded');
+          $('#filter-header-' + vid).addClass('collapsed');
           return false;
         });
       });
@@ -77,8 +79,8 @@
       $('.sbac-search-filter-name').once('cmod-searchfiltername', function () {
         $('.sbac-search-filter-name').click(function (e) {
           var vid = $(this).attr('vid');
-          $('#filter-header-' + vid).removeClass('collapsed');
-          $('#filter-header-' + vid).addClass('expanded');
+          $('.expanded').removeClass('expanded').addClass('collapsed');
+          $('#filter-header-' + vid).removeClass('collapsed').addClass('expanded');
           $('.category-filter-list').hide();
           $('.category-filter-list-' + vid).show();
           $('.category-filter-list-' + vid).addClass('selectedDiv');
@@ -116,6 +118,7 @@
       // Close the filter list.
       $('.category-hide').once('cmod-cathide', function () {
         $('.category-hide').click(function () {
+          $('.expanded').removeClass('expanded').addClass('collapsed');
           var slideableItems = $('.slideable');
           if (slideableItems.is(':visible')) {
             $(this).text(Drupal.t('Show Categories'));
@@ -353,6 +356,7 @@
 (function ($) {
   Drupal.behaviors.sbac_search_filters = {
     attach: function (context, settings) {
+      var original_filters = $('#sbac-search-current-filters').val();
       current_filter_clicked = function () {
         var tid = $(this).attr('tid');
         var vid = $(this).attr('vid');
@@ -365,10 +369,17 @@
         var $current_filter_div = $('.categories-current-filters');
         var $reset_filters = $('#edit-reset-filters');
         var $search_button = $('#sbac-search-filter-button');
-        var $hidden_filters = $('#sbac-search-current-filters');
         $current_filter_div.empty();
+        var $clear_all_link = $('<a href="#">Clear All</a>').click(function(){
+          window.location.href = 'sbac-search/clear-all?location=resource-review';
+        });
+        var $clear_all_div = $('<div id="clear-all">Active Filters</div>');
+        $clear_all_div.append($clear_all_link);
+        $current_filter_div.append($clear_all_div);
+        var $filter_item = $('<div class="filter-type-item"></div>');
+        $current_filter_div.append($filter_item);
         // Get all the trees
-        var filters = [];
+        var current_filters_array = [];
         $('.jstree').each(function (i, element) {
           var $tree = $.jstree.reference(element.id);
           // get selected terms
@@ -379,21 +390,34 @@
             $search_button.removeClass('js-hide');
             $current_filter_div.removeClass('noshow');
             $.each(selected, function (i, selected_id) {
-              filters.push(selected_id);
+              current_filters_array.push(selected_id);
               var parent_id = $tree.get_parent(selected_id);
-              if ($tree.is_selected(parent_id)) {
-                // the parent node is fully (NOT partially) selected, don't print this child node because we will print just the parent node later
-              }
-              else {
-                var this_node = $tree.get_node(selected_id);
-                var $new_filter = $('<div class="current-filter" vid="' + this_node.li_attr.vid + '" tid="' + this_node.li_attr.tid + '">' + this_node.li_attr.term + '</div>').click(current_filter_clicked);
-                $current_filter_div.append($new_filter);
+              if (!$tree.is_selected(parent_id)) {
+                var selected_node = $tree.get_node(selected_id);
+                var vid = selected_node.li_attr.vid;
+                var filter_name = $('#sbac-search-filter-name-' + vid).contents().filter(function () {
+                  return this.nodeType == 3;
+                }).text();
+                var current_search_filter_group_id = 'current-search-filter-name-' + vid;
+                if($('#' + current_search_filter_group_id).length){
+                  var $current_search_filter_group_div = $('#' + current_search_filter_group_id);
+                }
+                else {
+                  var $current_search_filter_group_div = $('<div id="' + current_search_filter_group_id + '"><h5>' + filter_name + '</h5></div>');
+                }
+                var changed_class = 'original';
+                if (original_filters.indexOf(selected_id) == -1){
+                  changed_class = 'changed';
+                }
+                var $new_filter = $('<div class="current-filter ' + changed_class + '" vid="' + vid + '" tid="' + selected_node.li_attr.tid + '">' + selected_node.li_attr.term + '</div>').click(current_filter_clicked);
+                $current_search_filter_group_div.append($new_filter);
+                $filter_item.append($current_search_filter_group_div);
               }
             });
           }
         });
         // save the selected filters to the hidden field
-        $('#sbac-search-current-filters').val(filters.join('::'));
+        $('#sbac-search-current-filters').val(current_filters_array.join('::'));
       };
 
       // initialize all the jstrees

@@ -75,6 +75,7 @@ function sbac_forum_category_forum_form($form, &$form_state) {
       ),
     ),
     '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
@@ -88,16 +89,6 @@ function sbac_forum_category_forum_form($form, &$form_state) {
         ),
       ),
     ),
-  );
-
-  $form['reset_filters'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset Filters'),
-    '#attributes' => array(
-      'class' => array('js-hide'),
-    ),
-    '#suffix' => '</div>',
-    '#submit' => array('sbac_forum_category_forum_form_reset_submit'),
   );
 
   return $form;
