@@ -319,9 +319,19 @@ function sbac_central_get_users_with_roles($roles) {
   return $users;
 }
 
-function sbac_central_user_has_role($roles_arr) {
-  global $user;
-  $check = array_intersect($roles_arr, array_values($user->roles));
+/**
+ * Check to see if a user has a role
+ *
+ * @param $roles_arr
+ * @param null $account
+ * @return bool
+ */
+function sbac_central_user_has_role($roles_arr, $account = NULL) {
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+  $check = array_intersect($roles_arr, array_values($account->roles));
   return empty ($check) ? FALSE : TRUE;
 }
 
@@ -852,6 +862,20 @@ function sbac_central_theme($existing, $type, $theme, $path) {
  * page callback function.
  */
 function sbac_central_set_critical_message_shown() {
-    $_SESSION['has_been_shown_critical_message'] = TRUE;
-    exit;
+  $_SESSION['has_been_shown_critical_message'] = TRUE;
+  exit;
+}
+
+/**
+ * Get the first and last name of user
+ *
+ * @param $uid
+ * @return mixed
+ */
+function sbac_central_get_user_first_last_name($uid) {
+  $query = db_select('field_data_field_first_name', 'f');
+  $query->leftJoin('field_data_field_last_name', 'l', 'f.entity_id = l.entity_id');
+  $query->condition('f.entity_id', $uid);
+  $query->addExpression('concat(f.field_first_name_value, \' \', l.field_last_name_value)', 'name');
+  return $query->execute()->fetchField();
 }

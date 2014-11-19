@@ -40,7 +40,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
   array_push($user_group_options, 'SLT Members');
   if (sbac_central_user_has_role(array('reports administrator'))) {
     foreach($user_group_options as $index => $option){
-      if(!in_array($option, array('resource contributor', 'resource reviewer'))){
+      if(!in_array($option, array('resource contributor', 'resource reviewer', 'all'))){
         unset($user_group_options[$index]);
       }
     }
