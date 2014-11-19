@@ -243,16 +243,19 @@ function sbac_central_preprocess_page(&$vars) {
   $now = date('m/d/Y - H:i');
   if ($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) {
       if (drupal_is_front_page()) {
+          drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/critical-message.js');
           $critical_message = theme('critical_message_theme', array(
               'critical_message_start_date' => $critical_message_start_date,
               'critical_message_end_date' => $critical_message_end_date,
               'critical_message_textbox' => $critical_message_textbox,
           ));
-          $settings['sbac_central'] = array(
-             'message' => $critical_message,
-             'showCriticalMessage' => !$_SESSION['has_been_shown_critical_message'],
-          );
-          drupal_add_js($settings, 'setting');
+          if (!isset($_SESSION['has_been_shown_critical_message'])) {
+              $settings['sbac_central'] = array(
+                  'message' => $critical_message,
+                  'showCriticalMessage' => !$_SESSION['has_been_shown_critical_message'],
+              );
+              drupal_add_js($settings, 'setting');
+          }
       }
   }
 }
@@ -735,7 +738,6 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
             $hour_options["$time"] = "$time";
         }
     }
-
     $form['critical_message_on_off'] = array(
         '#title' => t('Critical Message'),
         '#description' => t('Displays important message to all users each time they log in (new session).'),
@@ -744,15 +746,15 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
             0 => t('Critical Message Off'),
             1 => t('Critical Message ON'),
         ),
-        '#default_value' => 1
+        '#default_value' => 0
     );
     $form['critical_message_start_date'] = array(
         '#title' => t('Start'),
         '#type' => 'date_popup',
         '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
         '#default_value' => $today,
-        '#date_format' => variable_get('date_format_short', 'm/d/Y - H:i'),
-        //'#required' => TRUE,
+        '#date_format' => variable_get('date_format_short', 'm/d/Y'),
+        '#required' => TRUE,
         '#states' => array(
             'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
         ),
@@ -760,18 +762,27 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
     $form['critical_message_add_time_start_checkbox'] = array(
         '#title' => t('Add Time'),
         '#type' => 'checkbox',
-        '#description' => 'Note: time is in Eastern Time zone',
+        '#description' => t('Note: Time is in Eastern Time zone, and format is 24H.'),
         '#states' => array(
             'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
+        ),
+    );
+    $form['critical_message_start_time'] = array(
+        '#type' => 'date_popup',
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#default_value' => variable_get('critical_message_start_time', NULL),
+        '#date_format' => variable_get('date_format_short', 'H:i'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_add_time_start_checkbox"]' => array('checked' => FALSE)),
         ),
     );
     $form['critical_message_end_date'] = array(
         '#title' => t('End'),
         '#type' => 'date_popup',
         '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
-        '#date_format' => variable_get('date_format_short', 'm/d/Y - H:i'),
+        '#date_format' => variable_get('date_format_short', 'm/d/Y'),
         '#required' => TRUE,
-        '#default_value' => '',
+        '#default_value' => variable_get('critical_message_end_date'),
         '#states' => array(
             'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
         ),
@@ -779,12 +790,21 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
     $form['critical_message_add_time_end_checkbox'] = array(
         '#title' => t('Add Time'),
         '#type' => 'checkbox',
-        '#description' => 'Note: time is in Eastern Time zone',
+        '#description' => t('Note: Time is in Eastern Time zone, and format is 24H.'),
         '#states' => array(
             'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
         ),
     );
-
+    $form['critical_message_end_time'] = array(
+        '#title' => t('End'),
+        '#type' => 'date_popup',
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#date_format' => variable_get('date_format_short', 'H:i'),
+        '#default_value' => variable_get('critical_message_end_time'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_add_time_end_checkbox"]' => array('checked' => FALSE)),
+        ),
+    );
     $form['critical_message_textbox'] = array(
         '#title' => t('Message'),
         '#type' => 'textarea',
@@ -794,7 +814,6 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
             'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
         ),
     );
-
     $form['#submit'][] = 'sbac_central_form_system_site_maintenance_mode_alter_submit';
     return $form;
 }
@@ -806,10 +825,10 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
  */
 function sbac_central_form_system_site_maintenance_mode_alter_submit(&$form, &$form_state){
     variable_set('critical_message_on_off', $form_state['values']['critical_message_on_off']['value']);
-    variable_set('critical_message_start_date', $form_state['values']['critical_message_start_date']['value']);
-    variable_set('critical_message_end_date', $form_state['values']['critical_message_end_date']['value']);
-    variable_set('critical_message_add_time_start_checkbox', $form_state['values']['critical_message_add_time_end_checkbox']['value']);
-    variable_set('critical_message_add_time_end_checkbox', $form_state['values']['critical_message_add_time_end_checkbox']['value']);
+    variable_set('critical_message_start_date', $form_state['values']['critical_message_start_date']);
+    variable_set('critical_message_end_date', $form_state['values']['critical_message_end_date']);
+    variable_set('critical_message_start_time', $form_state['input']['critical_message_start_time']['time']);
+    variable_set('critical_message_end_time', $form_state['input']['critical_message_end_time']['time']);
     variable_set('critical_message_textbox', $form_state['values']['critical_message_textbox']);
 }
 

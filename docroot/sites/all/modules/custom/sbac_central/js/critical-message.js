@@ -5,6 +5,7 @@
         var message = Drupal.settings.sbac_central.message;
         if (true === showMessage) {
             Drupal.CTools.Modal.show();
+            $('#modal-title').html(Drupal.t('Important Notice', {}, ''));
             $('#modal-content').html(message);
             $(".cr-msg").click(function() {
                 $.get('/sbac-central-shown-message', function() {
