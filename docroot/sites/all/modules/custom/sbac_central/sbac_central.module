@@ -692,3 +692,17 @@ function sbac_central_cron(){
     }
   }
 }
+
+/**
+ * Get the first and last name of user
+ *
+ * @param $uid
+ * @return mixed
+ */
+function sbac_central_get_user_first_last_name($uid) {
+  $query = db_select('field_data_field_first_name', 'f');
+  $query->leftJoin('field_data_field_last_name', 'l', 'f.entity_id = l.entity_id');
+  $query->condition('f.entity_id', $uid);
+  $query->addExpression('concat(f.field_first_name_value, \' \', l.field_last_name_value)', 'name');
+  return $query->execute()->fetchField();
+}
