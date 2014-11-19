@@ -27,9 +27,6 @@ define('SBAC_SEARCH_MY_RESOURCES_COUNT', 'sbac-my-resources-count');
 define('SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT', 'sbac-digital-library-count');
 define('SBAC_SEARCH_RESOURCE_REVIEW_COUNT', 'sbac-resource-review-count');
 
-define('SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED', 'sbac-my-resources-filters-closed');
-define('SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED', 'sbac-digital-library-filters-closed');
-define('SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED', 'sbac-resource-review-filters-closed');
 define('SBAC_SEARCH_EXTERNAL_RESOURCE_FILTERS_CLOSED', 'sbac-external-resource-filters-closed');
 
 define('SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS', 'sbac-search-digital-library-keywords');
@@ -360,24 +357,6 @@ function sbac_search_block_view($delta = '') {
   return $block;
 }
 
-/*
- * Hides category filter if called
- */
-function sbac_search_hide_category_style() {
-  if (arg(0) == 'digital-library-resources' && isset($_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED]) {
-    return ' style="display:none;"';
-  }
-  if (arg(0) == 'my-resources' && isset($_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED]) {
-    return ' style="display:none;"';
-  }
-  if (arg(0) == 'resource-review' && isset($_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED]) {
-    return ' style="display:none;"';
-  }
-  if (arg(0) == 'external-resources' && isset($_COOKIE[SBAC_SEARCH_EXTERNAL_RESOURCE_FILTERS_CLOSED]) && $_COOKIE[SBAC_SEARCH_EXTERNAL_RESOURCE_FILTERS_CLOSED]) {
-    return ' style="display:none;"';
-  }
-}
-
 /**
  * Form for submitting the category filters.
  *
@@ -386,24 +365,17 @@ function sbac_search_hide_category_style() {
 function sbac_search_my_resources_form() {
   $form = array();
 
-  $hide_categories_text = t('Hide Categories');
+  $hide_categories_text = t('Filters');
   $hide_categories_class = 'active';
-  $should_hide_categories = sbac_search_hide_category_style();
 
   $current_filters = NULL;
-  $hide_a_tag = '';
-  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS])) {
+  if (!empty($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS])) {
     $current_filters = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS];
-    $hide_a_tag = 'style="display:none;"';
-  }
-
-  if ($should_hide_categories) {
-    $hide_categories_text = t('Show Categories');
     $hide_categories_class = '';
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#" ' . $hide_a_tag . '>' . $hide_categories_text . '</a>',
+    '#prefix' => '<div class="category-hide-container"><a class="category-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a></div>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
@@ -415,28 +387,17 @@ function sbac_search_my_resources_form() {
 
   $form['filter'] = array(
     '#type' => 'submit',
-    '#value' => ($current_filters != NULL) ? t('Edit Filters') : t('Apply Filters'),
+    '#value' => t('Apply Filters'),
     '#attributes' => array(
       'id' => 'sbac-search-filter-button',
-      'class' => array(
-        ($current_filters != NULL) ? 'is-edit' : 'is-apply',
-        ($current_filters == NULL) ? 'js-hide' : ''
-      ),
+      'class' => array('js-hide'),
     ),
-    '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#prefix' => '<div class="category-buttons">',
     '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
       'effect' => 'fade'
-    ),
-    '#attached' => array(
-      'js' => array(
-        array(
-          'data' => array('sbac_search' => array('isEdit' => ($current_filters != NULL ? 1 : 0))),
-          'type' => 'setting',
-        ),
-      ),
     ),
   );
 
@@ -461,24 +422,17 @@ function sbac_search_my_resources_form_submit(&$form, &$form_state) {
 function sbac_search_resource_review_form() {
   $form = array();
 
-  $hide_categories_text = t('Hide Categories');
+  $hide_categories_text = t('Filters');
   $hide_categories_class = 'active';
-  $should_hide_categories = sbac_search_hide_category_style();
 
   $current_filters = NULL;
-  $hide_a_tag = '';
-  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS])) {
+  if (!empty($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS])) {
     $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS];
-    $hide_a_tag = 'style="display:none;"';
-  }
-
-  if ($should_hide_categories) {
-    $hide_categories_text = t('Show Categories');
     $hide_categories_class = '';
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#" ' . $hide_a_tag . '>' . $hide_categories_text . '</a>',
+    '#prefix' => '<div class="category-hide-container"><a class="category-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a></div>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
@@ -490,28 +444,17 @@ function sbac_search_resource_review_form() {
 
   $form['filter'] = array(
     '#type' => 'submit',
-    '#value' => ($current_filters != NULL) ? t('Edit Filters') : t('Apply Filters'),
+    '#value' => t('Apply Filters'),
     '#attributes' => array(
       'id' => 'sbac-search-filter-button',
-      'class' => array(
-        ($current_filters != NULL) ? 'is-edit' : 'is-apply',
-        ($current_filters == NULL) ? 'js-hide' : ''
-      ),
+      'class' => array('js-hide'),
     ),
-    '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#prefix' => '<div class="category-buttons">',
     '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
       'effect' => 'fade'
-    ),
-    '#attached' => array(
-      'js' => array(
-        array(
-          'data' => array('sbac_search' => array('isEdit' => ($current_filters != NULL ? 1 : 0))),
-          'type' => 'setting',
-        ),
-      ),
     ),
   );
 
@@ -536,24 +479,17 @@ function sbac_search_resource_review_form_submit(&$form, &$form_state) {
 function sbac_search_digital_library_resources_form() {
   $form = array();
 
-  $hide_categories_text = t('Hide Categories');
+  $hide_categories_text = t('Filters');
   $hide_categories_class = 'active';
-  $should_hide_categories = sbac_search_hide_category_style();
 
   $current_filters = NULL;
-  $hide_a_tag = '';
-  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS])) {
+  if (!empty($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS])) {
     $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS];
-    $hide_a_tag = 'style="display:none;"';
-  }
-
-  if ($should_hide_categories) {
-    $hide_categories_text = t('Show Categories');
     $hide_categories_class = '';
   }
 
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#" ' . $hide_a_tag . '>' . $hide_categories_text . '</a>',
+    '#prefix' => '<div class="category-hide-container"><a class="category-hide ' . $hide_categories_class . '" href="#" >' . $hide_categories_text . '</a></div>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-search-current-filters'),
@@ -581,28 +517,17 @@ function sbac_search_digital_library_resources_form() {
 
   $form['filter'] = array(
     '#type' => 'submit',
-    '#value' => ($current_filters != NULL) ? t('Edit Filters') : t('Apply Filters'),
+    '#value' => t('Apply Filters'),
     '#attributes' => array(
       'id' => 'sbac-search-filter-button',
-      'class' => array(
-        ($current_filters != NULL) ? 'is-edit' : 'is-apply',
-        ($current_filters == NULL) ? 'js-hide' : ''
-      ),
+      'class' => array('js-hide'),
     ),
-    '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#prefix' => '<div class="category-buttons">',
     '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
       'effect' => 'fade'
-    ),
-    '#attached' => array(
-      'js' => array(
-        array(
-          'data' => array('sbac_search' => array('isEdit' => ($current_filters != NULL ? 1 : 0))),
-          'type' => 'setting',
-        ),
-      ),
     ),
   );
 

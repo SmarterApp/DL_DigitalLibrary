@@ -418,7 +418,7 @@ function sbac_forum_block_view($delta = '') {
   switch ($delta) {
     case 'sbac_forum_categories':
       module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-      $block['subject'] = t('FORUM CATEGORIES');
+      $block['subject'] = NULL;
       $block['content'] = drupal_get_form('sbac_forum_category_forum_form');
       break;
     case 'sbac_forum_back_button':
