@@ -236,8 +236,10 @@ function sbac_central_init() {
 
 /**
  * Implements hook_preprocess_HOOK().
+ *
  * Adds security headers to all pages.
  * Adds critical message to digital-library-resources url page(homepage).
+ *
  * @param  array $vars Template variables.
  */
 function sbac_central_preprocess_page(&$vars) {
