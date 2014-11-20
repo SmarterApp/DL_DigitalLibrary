@@ -187,7 +187,6 @@ $gray: #464B54;
       background-color: #f5d4c2;
       padding: 10px 15px 8px;
       margin-bottom: 1px;
-      font-style: italic;
       position: relative;
     }
         
@@ -197,6 +196,7 @@ $gray: #464B54;
     
     .current-filter.changed {
       background-color: #f5d4c2;
+      font-style: italic;
     }
   }
 
@@ -228,12 +228,13 @@ $gray: #464B54;
 // --------- Hide Categories and Show Categories link toggle. -------------
 
 a.category-hide {
-  color: #006082;
+	color: #006082;
 	height: 45px;
 	width: 100px;
 	display: block;
 	line-height: 45px;
-	padding-left: 0.9375em;
+	margin-left: 0.9375em;
+	padding-left: 18px;
 	font-weight: bold;
 	position: relative;
 }
@@ -244,33 +245,32 @@ a.category-hide:focus  {
 }
 
 .category-hide.active:before {
-   content: "\f0aa";
-   font-family: "SBAC";
-   font-size: 16px;
-   color: #006082;
-   display: inline-block;
-   height: 12px;
-   margin-right: 10px;
-   vertical-align: baseline;
-   width: 10px;
-   position: relative;
-   top: 1px;
-}
-
-.category-hide:before {
    content: "\f05b";
    font-family: "SBAC";
    font-size: 16px;
    color: #006082;
    display: inline-block;
    height: 12px;
-   margin-right: 10px;
    vertical-align: baseline;
    width: 10px;
-   position: relative;
-   top: 1px;
+   position: absolute;
+   top: 0;
+   left: 0;
 }
 
+.category-hide:before {
+   content: "\f05a";
+   font-family: "SBAC";
+   font-size: 16px;
+   color: #006082;
+   display: inline-block;
+   height: 12px;
+   vertical-align: baseline;
+   width: 10px;
+   position: absolute;
+   top: 0;
+   left: 0;
+}
 
 // --------- Main select, button styling, Apply and Reset -------------------------
 
@@ -4291,12 +4291,19 @@ a.sbac-favorites-link {
     border-top: 1px solid rgba(255, 255, 255, 0.9);
     box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
     text-align: center;
-    margin: 1em 0.875em 0;
+    margin: 0 0.875em;
 
     button {
       margin: 10px;
     }
   }
+}
+
+.filter-type-item {
+  display: block;
+  float: left;
+  margin-bottom: 18px;
+  width: 100%;
 }
 
 .categories-filter {
