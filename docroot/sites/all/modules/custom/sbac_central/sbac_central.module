@@ -753,8 +753,8 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
         '#description' => t('Displays important message to all users each time they log in (new session).'),
         '#type' => 'radios',
         '#options' => array(
-            0 => t('Critical Message Off'),
             1 => t('Critical Message ON'),
+            0 => t('Critical Message Off'),
         ),
         '#default_value' => variable_get('critical_message_on_off', NULL),
     );
@@ -768,6 +768,7 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
         '#states' => array(
             'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
         ),
+        '#prefix' => '<div class="start-date-wrapper">',
     );
     $form['critical_message_add_time_start_checkbox'] = array(
         '#title' => t('Add Time'),
@@ -785,6 +786,7 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
         '#states' => array(
             'disabled' => array(':input[name="critical_message_add_time_start_checkbox"]' => array('checked' => FALSE)),
         ),
+      '#suffix' => '</div>',
     );
     $form['critical_message_end_date'] = array(
         '#title' => t('End'),
@@ -796,6 +798,7 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
         '#states' => array(
             'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
         ),
+      '#prefix' => '<div class="end-date-wrapper">',
     );
     $form['critical_message_add_time_end_checkbox'] = array(
         '#title' => t('Add Time'),
@@ -814,6 +817,7 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
         '#states' => array(
             'disabled' => array(':input[name="critical_message_add_time_end_checkbox"]' => array('checked' => FALSE)),
         ),
+        '#suffix' => '</div>',
     );
     $form['critical_message_textbox'] = array(
         '#title' => t('Message'),
