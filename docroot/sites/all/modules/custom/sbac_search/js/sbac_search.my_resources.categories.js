@@ -44,29 +44,8 @@
         }
       });
 
-      $('#sbac-search-filter-button').once('searchfilterbutton', function () {
-        $(this).click( function () {
-          var isEdit = Drupal.settings.sbac_search.isEdit;
-          // The button is in edit state.
-          if (isEdit) {
-            $('.categories-filter.slideable').slideDown('fast');
-            $('.category-hide').show();
-            $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
-            Drupal.settings.sbac_search.isEdit = 0;
-            return false;
-          }
-          else {
-            $('.categories-filter.slideable').slideUp('slow');
-            $('.category-hide').hide();
-            $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
-            Drupal.settings.sbac_search.isEdit = 1;
-          }
-        });
-      });
-
       if ($('#sbac-search-current-filters').val() != '') {
         $('#edit-reset-filters').removeClass('js-hide');
-        $('#sbac-search-filter-button').removeClass('js-hide');
       }
       else {
         $('.category-hide').removeClass('js-hide');
@@ -211,15 +190,7 @@
       $('.category-hide').once('cmod-cathide', function () {
         $('.category-hide').click(function () {
           $('.expanded').removeClass('expanded').addClass('collapsed');
-          var slideableItems = $('.slideable');
-          if (slideableItems.is(':visible')) {
-            $(this).text(Drupal.t('Show Categories'));
-            $(this).toggleClass('active');
-          }
-          else {
-            $(this).text(Drupal.t('Hide Categories'));
-            $(this).toggleClass('active');
-          }
+          $(this).toggleClass('active');
           close_categories_list();
           $('.selectedDiv').hide();
           return false;
@@ -231,12 +202,10 @@
       close_categories_list = function () {
         var slideableItems = $('.slideable');
         if (slideableItems.is(':visible')) {
-          $.cookie("sbac-my-resources-filters-closed", 1);
           slideableItems.slideUp('slow');
           $('.sbac-filter-cat-area').removeClass("active");
         }
         else{
-          $.cookie("sbac-my-resources-filters-closed", 0);
           slideableItems.slideDown('fast');
           $('.sbac-filter-cat-area').addClass("active");
         }
@@ -449,13 +418,12 @@
         var vid = $(this).attr('vid');
         $.jstree.reference('filter-' + vid).deselect_node(vid + ':' + tid);
         build_current_filters();
+        $('#sbac-search-filter-button').removeClass('js-hide');
       };
 
       // build the current filter list
       build_current_filters = function () {
         var $current_filter_div = $('.categories-current-filters');
-        var $reset_filters = $('#edit-reset-filters');
-        var $search_button = $('#sbac-search-filter-button');
         $current_filter_div.empty();
         var $clear_all_link = $('<a href="#">Clear All</a>').click(function(){
           window.location.href = 'sbac-search/clear-all?location=my-resources';
@@ -472,9 +440,6 @@
           // get selected terms
           var selected = $tree.get_selected();
           if (selected.length > 0) {
-            // Show the buttons
-            $reset_filters.removeClass('js-hide');
-            $search_button.removeClass('js-hide');
             $current_filter_div.removeClass('noshow');
             $.each(selected, function (i, selected_id) {
               current_filters_array.push(selected_id);
@@ -495,6 +460,7 @@
                 var changed_class = 'original';
                 if (original_filters.indexOf(selected_id) == -1){
                   changed_class = 'changed';
+                  $('#sbac-search-filter-button').removeClass('js-hide');
                 }
                 var $new_filter = $('<div class="current-filter ' + changed_class + '" vid="' + vid + '" tid="' + selected_node.li_attr.tid + '">' + selected_node.li_attr.term + '</div>').click(current_filter_clicked);
                 $current_search_filter_group_div.append($new_filter);
@@ -504,7 +470,15 @@
           }
         });
         // save the selected filters to the hidden field
-        $('#sbac-search-current-filters').val(current_filters_array.join('::'));
+        var $current_filters =  $('#sbac-search-current-filters');
+        $current_filters.val(current_filters_array.join('::'));
+
+        var orignal_filters_array = original_filters.split('::');
+        $.each(orignal_filters_array, function(index, value){
+          if ($current_filters.val().indexOf(value) == -1){
+            $('#sbac-search-filter-button').removeClass('js-hide');
+          }
+        });
       };
 
       // initialize all the jstrees

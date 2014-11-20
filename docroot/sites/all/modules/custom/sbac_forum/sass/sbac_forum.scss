@@ -228,42 +228,47 @@ $gray: #464B54;
 // --------- Hide Categories and Show Categories link toggle. -------------
 
 a.category-hide {
-    position: absolute;
-    right: 20px;
-    top: -30px;
-    font-size: 13px;
-    color: #006082;
+  color: #006082;
+	height: 45px;
+	width: 100px;
+	display: block;
+	line-height: 45px;
+	padding-left: 0.9375em;
+	font-weight: bold;
+	position: relative;
 }
 
-a.category-hide:hover {
-  text-decoration: underline;
+a.category-hide:hover,
+a.category-hide:focus  {
   color: #006082;
 }
 
-a.category-hide:focus {
-  color: #006082;
-}
-
-.category-hide.active:after {
-   background-image: url("../images/icon-toggle-up.png");
-   background-position: center center;
-   content: " ";
+.category-hide.active:before {
+   content: "\f0aa";
+   font-family: "SBAC";
+   font-size: 16px;
+   color: #006082;
    display: inline-block;
    height: 12px;
-   margin-left: 5px;
+   margin-right: 10px;
    vertical-align: baseline;
    width: 10px;
+   position: relative;
+   top: 1px;
 }
 
-.category-hide:after {
-   background-image: url("../images/icon-toggle-down.png");
-   background-position: center center;
-   content: " ";
+.category-hide:before {
+   content: "\f05b";
+   font-family: "SBAC";
+   font-size: 16px;
+   color: #006082;
    display: inline-block;
    height: 12px;
-   margin-left: 5px;
+   margin-right: 10px;
    vertical-align: baseline;
    width: 10px;
+   position: relative;
+   top: 1px;
 }
 
 
@@ -4203,7 +4208,7 @@ a.sbac-favorites-link {
 .filters {
   background: #c9eaf8;
   color: #0684ad;
-  padding: 45px 0 0;
+  padding: 0;
 	border-bottom: 1px solid #056382;
   position: relative;
 
