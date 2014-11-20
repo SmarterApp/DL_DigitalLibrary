@@ -16,9 +16,8 @@
 function sbac_forum_category_forum_form($form, &$form_state) {
   $form = array();
 
-  $hide_categories_text = t('Hide Categories');
+  $hide_categories_text = t('Filters');
   $hide_categories_class = 'active';
-  $should_hide_categories = '';
 
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
@@ -29,35 +28,32 @@ function sbac_forum_category_forum_form($form, &$form_state) {
   // Get correct set of category filters based on subnav.
   switch ($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_RESOURCE:
-      if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
+      if (!empty($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_COOKIE[SBAC_FORUM_RESOURCE_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_RESOURCE_FORUM_FILTERS_CLOSED]) {
-        $should_hide_categories = ' style="display:none;"';
+        $hide_categories_class = '';
       }
       break;
     case SBAC_FORUM_SUBNAV_TOPIC:
-      if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS])) {
+      if (!empty($_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS];
-      }
-      if (isset($_COOKIE[SBAC_FORUM_TOPIC_FORUM_FILTERS_CLOSED]) && $_COOKIE[SBAC_FORUM_TOPIC_FORUM_FILTERS_CLOSED]) {
-        $should_hide_categories = ' style="display:none;"';
+        $hide_categories_class = '';
       }
       break;
     case SBAC_FORUM_SUBNAV_KEYWORD:
       break;
   }
 
-  if ($should_hide_categories) {
-    $hide_categories_text = t('Show Categories');
-    $hide_categories_class = '';
-  }
-
   $form['current_filters'] = array(
-    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a>',
+    '#prefix' => '<div class="category-hide-container"><a class="category-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a></div>',
     '#type' => 'hidden',
     '#value' => $current_filters,
     '#attributes' => array('id' => 'sbac-forum-current-filters'),
+  );
+
+  $form['original_filters'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-forum-original-filters'),
   );
 
   $form['search_categories'] = array(
@@ -66,28 +62,17 @@ function sbac_forum_category_forum_form($form, &$form_state) {
 
   $form['filter'] = array(
     '#type' => 'submit',
-    '#value' => ($current_filters != NULL) ? t('Edit Filters') : t('Apply Filters'),
+    '#value' => t('Apply Filters'),
     '#attributes' => array(
       'id' => 'sbac-forum-filter-button',
-      'class' => array(
-        ($current_filters != NULL) ? 'is-edit' : 'is-apply',
-        ($current_filters == NULL) ? 'js-hide' : ''
-      ),
+      'class' => array('js-hide'),
     ),
-    '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#prefix' => '<div class="category-buttons">',
     '#suffix' => '</div>',
     '#ajax' => array(
       'wrapper' => '',
       'method' => 'replace',
       'effect' => 'fade'
-    ),
-    '#attached' => array(
-      'js' => array(
-        array(
-          'data' => array('sbac_forum' => array('isEdit' => ($current_filters != NULL ? 1 : 0))),
-          'type' => 'setting',
-        ),
-      ),
     ),
   );
 

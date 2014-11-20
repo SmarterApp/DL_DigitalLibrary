@@ -804,6 +804,17 @@ function sbac_resource_preprocess_node(&$vars) {
     }
     if ($vars['uid'] == $user->uid && $vars['workbench_moderation']['current']->state == 'rejected' && in_array('resource contributor', $user->roles)) {
       $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+    } elseif ($vars['uid'] == $user->uid && $vars['workbench_moderation']['current']->state == 'draft' && in_array('resource contributor', $user->roles)){
+      $rejected = db_select('workbench_moderation_node_history', 'h')
+        ->condition('h.state', 'rejected')
+        ->condition('h.nid', $vars['nid'])
+        ->fields('h', array('hid'))
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if ($rejected && $vars['uid'] == $user->uid) {
+        $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+      }
     }
 
     // Documents
@@ -3116,6 +3127,16 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
             $access = TRUE;
           }
         }
+        // Reports admin in the same state as contributor can view it
+        if (!$access && sbac_central_user_has_role(array('reports administrator'), $account)) {
+          $query = db_select('node', 'n');
+          $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+          $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+          $query->condition('n.nid', $node->nid);
+          $query->where('s1.field_state_tid = s2.field_state_tid');
+          $query->fields('n', array('nid'));
+          $access = (bool) $query->countQuery()->execute()->fetchField();
+        }
         break;
       case 'needs_review':
         // author has view
@@ -3193,12 +3214,7 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         $result = $query->execute();
         $count = $result->rowCount();
         if ($count) {
-          if (in_array('resource reviewer', $account->roles) && $op == 'view') {
-            $access = TRUE;
-          }
-          if (in_array('resource publisher', $account->roles) && $op == 'view') {
-            $access = TRUE;
-          }
+          $access = sbac_central_user_has_role(array('resource reviewer', 'resource publisher', 'reports administrator'), $account);
         }
         if ($account->uid == $node->uid && $op == 'view') {
           $access = TRUE;
@@ -3206,23 +3222,23 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         break;
       case 'rejected':
         // author has view/edit
-        // resource reviewer has view
-        // resource publisher has view
-        $query->condition('s.uid', $account->uid);
-        $condition = db_or()->condition('s.state', 'gk_view_rejected')->condition('s.state', 'post_view_rejected');
-        $query->condition($condition);
-        $result = $query->execute();
-        $count = $result->rowCount();
-        if ($count) {
-          if (in_array('resource reviewer', $account->roles) && $op == 'view') {
-            $access = TRUE;
-          }
-          if (in_array('resource publisher', $account->roles) && $op == 'view') {
-            $access = TRUE;
-          }
-        }
         if ($account->uid == $node->uid && ($op == 'view' || $op == 'update')) {
           $access = TRUE;
+        }
+        // resource publisher has view
+        if (!$access) {
+          $access = sbac_central_user_has_role(array('resource publisher', 'reports administrator'), $account);
+        }
+        if (!$access) {
+          // resource reviewer has view
+          $query->condition('s.uid', $account->uid);
+          $condition = db_or()->condition('s.state', 'gk_view_rejected')->condition('s.state', 'post_view_rejected');
+          $query->condition($condition);
+          $result = $query->execute();
+          $count = $result->rowCount();
+          if ($count) {
+            $access = sbac_central_user_has_role(array('resource reviewer'), $account);
+          }
         }
         break;
       case 'removed':

@@ -27,28 +27,8 @@
         });
       });
 
-      $('#sbac-forum-filter-button').once('forum-filter-button', function () {
-        $(this).click( function() {
-          var isEdit = Drupal.settings.sbac_forum.isEdit;
-
-          // The button is in edit state.
-          if (isEdit) {
-            $('.categories-filter.slideable').slideDown('fast');
-            $(this).text(Drupal.t('Apply Filters')).removeClass('is-edit');
-            Drupal.settings.sbac_forum.isEdit = 0;
-            return false;
-          }
-          else {
-            $('.categories-filter.slideable').slideUp('slow');
-            $(this).text(Drupal.t('Edit Filters')).addClass('is-edit');
-            Drupal.settings.sbac_forum.isEdit = 1;
-          }
-        });
-      });
-
       if ($('#sbac-forum-current-filters').val() != '') {
         $('#edit-reset-filters').removeClass('js-hide');
-        $('#sbac-forum-filter-button').removeClass('js-hide');
       }
       else {
         $('.category-hide').removeClass('js-hide');
@@ -183,15 +163,7 @@
       $('.category-hide').once('category-hide-click', function () {
         $(this).click( function () {
           $('.expanded').removeClass('expanded').addClass('collapsed');
-          var slideableItems = $('.slideable');
-          if (slideableItems.is(':visible')) {
-            $(this).text(Drupal.t('Show Categories'));
-            $(this).toggleClass('active');
-          }
-          else {
-            $(this).text(Drupal.t('Hide Categories'));
-            $(this).toggleClass('active');
-          }
+          $(this).toggleClass('active');
           close_categories_list();
           $('.selectedDiv').hide();
           return false;
@@ -206,7 +178,6 @@
           if (allForumsActive) {
             $.cookie("sbac-forum-filters-closed", 1);
           }else {
-            $.cookie("sbac-forum-my-forum-filters-closed", 1);
           }
           slideableItems.slideUp('slow');
           $('.sbac-filter-cat-area').removeClass("active");
@@ -215,7 +186,6 @@
           if (allForumsActive) {
             $.cookie("sbac-forum-filters-closed", 0);
           }else {
-            $.cookie("sbac-forum-my-forum-filters-closed", 0);
           }
           slideableItems.slideDown('fast');
           $('.sbac-filter-cat-area').addClass("active");
@@ -358,19 +328,18 @@
 (function ($) {
   Drupal.behaviors.sbac_search_filters = {
     attach: function (context, settings) {
-      var original_filters = $('#sbac-forum-current-filters').val();
+      var original_filters = $('#sbac-forum-original-filters').val();
       current_filter_clicked = function () {
         var tid = $(this).attr('tid');
         var vid = $(this).attr('vid');
         $.jstree.reference('filter-' + vid).deselect_node(vid + ':' + tid);
         build_current_filters();
+        $('#sbac-forum-filter-button').removeClass('js-hide');
       };
 
       // build the current filter list
       build_current_filters = function () {
         var $current_filter_div = $('.categories-current-filters');
-        var $reset_filters = $('#edit-reset-filters');
-        var $search_button = $('#sbac-forum-filter-button');
         $current_filter_div.empty();
         var $clear_all_link = $('<a href="#">Clear All</a>').click(function(){
           // Clear the current filters
@@ -390,9 +359,6 @@
           // get selected terms
           var selected = $tree.get_selected();
           if (selected.length > 0) {
-            // Show the buttons
-            $reset_filters.removeClass('js-hide');
-            $search_button.removeClass('js-hide');
             $current_filter_div.removeClass('noshow');
             $.each(selected, function (i, selected_id) {
               current_filters_array.push(selected_id);
@@ -413,6 +379,7 @@
                 var changed_class = 'original';
                 if (original_filters.indexOf(selected_id) == -1){
                   changed_class = 'changed';
+                  $('#sbac-forum-filter-button').removeClass('js-hide');
                 }
                 var $new_filter = $('<div class="current-filter ' + changed_class + '" vid="' + vid + '" tid="' + selected_node.li_attr.tid + '">' + selected_node.li_attr.term + '</div>').click(current_filter_clicked);
                 $current_search_filter_group_div.append($new_filter);
@@ -422,7 +389,15 @@
           }
         });
         // save the selected filters to the hidden field
-        $('#sbac-forum-current-filters').val(current_filters_array.join('::'));
+        var $current_filters =  $('#sbac-forum-current-filters');
+        $current_filters.val(current_filters_array.join('::'));
+
+        var orignal_filters_array = original_filters.split('::');
+        $.each(orignal_filters_array, function(index, value){
+          if ($current_filters.val().indexOf(value) == -1){
+            $('#sbac-forum-filter-button').removeClass('js-hide');
+          }
+        });
       };
 
       // initialize all the jstrees

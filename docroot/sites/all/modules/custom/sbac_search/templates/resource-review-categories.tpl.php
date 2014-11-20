@@ -1,7 +1,7 @@
 <div class="categories-container clearfix">
 <?php ($cf_value ? $class = '' : $class = 'noshow'); ?>
 <?php ($cf_value ? $hide_filters = 'js-hide' : $hide_filters = 'js-show'); ?>
-  <div class="categories-filter clearfix slideable <?php print $hide_filters; ?>" <?php print sbac_search_hide_category_style();?> >
+  <div class="categories-filter clearfix slideable <?php print $hide_filters; ?>" >
     <?php
     $count = 1;
     $total_cols = 3;

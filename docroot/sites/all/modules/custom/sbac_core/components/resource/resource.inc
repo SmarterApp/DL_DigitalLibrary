@@ -31,7 +31,7 @@ function resource_access($op, $node, $account = NULL) {
     return FALSE;
   }
 
-  $access = & drupal_static(__FUNCTION__);
+  $access = &drupal_static(__FUNCTION__);
   if (empty($access) || empty($access[$account->uid]) || !isset($access[$account->uid][$op])) {
     if ('resource' == $node->type) {
       $perm = FALSE;
@@ -75,8 +75,8 @@ function resource_access($op, $node, $account = NULL) {
         case 'view collaboration':
           $perm = _resource_access_node_has_state($node, array('published')) && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
           break;
-        case 'access review comments':
-          $perm = _resource_access_node_has_state($node, array('rejected')) && $node->uid == $account->uid;
+        case 'access gk review comments':
+          $perm = _resource_access_gk_review_comment($node, $account);
           break;
         case 'access share process':
         case 'view share':
@@ -92,7 +92,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = TRUE;
           break;
         case 'access qc review comments':
-          $perm = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
+          $perm = _resource_access_access_qc_review_comment($node, $account);
           break;
       }
       $access[$account->uid][$op] = $perm;
@@ -420,6 +420,90 @@ function _resource_access_access_quality_criteria_revisions($node, $account) {
         && array_intersect(array(FEEDBACK_REVIEWER_RID, FEEDBACK_PUBLISHER_RID), array_keys($account->roles))
         && $node->uid != $account->uid
         && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
+    }
+  }
+  return $access;
+}
+
+/**
+ * 'access qc review comment' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_access_qc_review_comment($node, $account) {
+  $access = FALSE;
+  $rejected = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.state', 'rejected')
+    ->condition('h.nid', $node->nid)
+    ->fields('h', array('hid'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if ($rejected) {
+    if (_resource_access_node_has_state($node, array('draft'))) {
+      // contributor can see it
+      $access = $node->uid == $account->uid;
+      if (!$access && sbac_central_user_has_role(array('reports administrator'), $account)) {
+        // reports administrator in the same state as contributor can see it
+        $query = db_select('node', 'n');
+        $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+        $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+        $query->condition('n.nid', $node->nid);
+        $query->where('s1.field_state_tid = s2.field_state_tid');
+        $query->fields('n', array('nid'));
+        $access = (bool) $query->countQuery()->execute()->fetchField();
+      }
+    }
+    elseif (_resource_access_node_has_state($node, array('rejected'))) {
+      $access = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
+    }
+  }
+  return $access;
+}
+
+/**
+ * 'access gk review comment' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_gk_review_comment($node, $account){
+  $access = false;
+  $rejected = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.state', 'rejected')
+    ->condition('h.nid', $node->nid)
+    ->fields('h', array('hid'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if ($rejected) {
+    $failed_arbitration_twice = db_select('eck_feedback', 'f')
+      ->condition('f.node_id', $node->nid)
+      ->condition('f.completed', 1)
+      ->fields('f', array('type'))
+      ->orderBy('f.id', 'DESC')
+      ->range(0, 2)
+      ->execute()
+      ->fetchCol();
+    // don't show this tab if the resource failed arbitration 2+ times
+    if ($failed_arbitration_twice[0] != 'post' && $failed_arbitration_twice[1] != 'post') {
+      if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
+        // contributor has access
+        $access = $node->uid == $account->uid;
+        if (!$access && sbac_central_user_has_role(array('reports administrator'), $account)) {
+          // reports administrator has access if they are from the same state
+          $query = db_select('node', 'n');
+          $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+          $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+          $query->condition('n.nid', $node->nid);
+          $query->where('s1.field_state_tid = s2.field_state_tid');
+          $query->fields('n', array('nid'));
+          $access = (bool) $query->countQuery()->execute()->fetchField();
+        }
+      }
     }
   }
   return $access;
