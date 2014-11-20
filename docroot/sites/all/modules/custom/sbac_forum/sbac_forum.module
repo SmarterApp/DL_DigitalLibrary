@@ -1003,6 +1003,26 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       $form['actions']['cancel']['#options']['path'] = $forum_path;
     }
 
+    $configs = array(
+      array('vid' => 'subject', 'field' => 'field_subject'),
+      array('vid' => 'grades', 'field' => 'field_grades'),
+      array('vid' => 'intended_student_populations', 'field' => 'field_intended_student'),
+      array('vid' => 'intended_end_user', 'field' => 'field_intended_end_user'),
+      array('vid' => 'geographical_settings', 'field' => 'field_geographical_settings'),
+      array('vid' => 'attributes', 'field' => 'field_attributes'),
+    );
+    foreach ($configs as $config) {
+      $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+      $options = array();
+      $terms = taxonomy_get_tree($vocab->vid);
+      foreach ($terms as $term) {
+        $children = taxonomy_get_children($term->tid);
+        if (empty($children)) {
+          $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+        }
+      }
+      $form[$config['field']]['und']['#options'] = $options;
+    }
   }
 }
 

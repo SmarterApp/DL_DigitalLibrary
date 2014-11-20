@@ -87,6 +87,12 @@ function sbac_central_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-central-shown-message'] = array(
+    'title' => 'Critical Message',
+    'access callback' => 'user_is_logged_in',
+    'page callback' => 'sbac_central_set_critical_message_shown',
+    'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -222,6 +228,7 @@ function sbac_central_init() {
 /**
  * Implements hook_preprocess_HOOK().
  * Adds security headers to all pages.
+ * Adds critical message to digital-library-resources url page(homepage).
  * @param  array $vars Template variables.
  */
 function sbac_central_preprocess_page(&$vars) {
@@ -229,6 +236,28 @@ function sbac_central_preprocess_page(&$vars) {
   drupal_add_http_header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   drupal_add_http_header('X-Content-Type-Options', 'nosniff');
   drupal_add_http_header('X-XSS-Protection', '1;mode=block');
+
+  $critical_message_start_date = variable_get('critical_message_start_date');
+  $critical_message_end_date = variable_get('critical_message_end_date');
+  $critical_message_textbox = variable_get('critical_message_textbox');
+  $now = date('m/d/Y - H:i');
+  if ($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) {
+      if (drupal_is_front_page()) {
+          drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/critical-message.js');
+          $critical_message = theme('critical_message_theme', array(
+              'critical_message_start_date' => $critical_message_start_date,
+              'critical_message_end_date' => $critical_message_end_date,
+              'critical_message_textbox' => $critical_message_textbox,
+          ));
+          if (!isset($_SESSION['has_been_shown_critical_message'])) {
+              $settings['sbac_central'] = array(
+                  'message' => $critical_message,
+                  'showCriticalMessage' => !$_SESSION['has_been_shown_critical_message'],
+              );
+              drupal_add_js($settings, 'setting');
+          }
+      }
+  }
 }
 
 /**
@@ -290,9 +319,19 @@ function sbac_central_get_users_with_roles($roles) {
   return $users;
 }
 
-function sbac_central_user_has_role($roles_arr) {
-  global $user;
-  $check = array_intersect($roles_arr, array_values($user->roles));
+/**
+ * Check to see if a user has a role
+ *
+ * @param $roles_arr
+ * @param null $account
+ * @return bool
+ */
+function sbac_central_user_has_role($roles_arr, $account = NULL) {
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+  $check = array_intersect($roles_arr, array_values($account->roles));
   return empty ($check) ? FALSE : TRUE;
 }
 
@@ -691,6 +730,140 @@ function sbac_central_cron(){
       $wrapper->save();
     }
   }
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @return $form
+ * Implements hook_form_form_id_alter().
+ */
+function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_state) {
+    $timepicker = date_popup_get_preferred_timepicker();
+    $today = date('Y-m-d');
+    $hour_options = array();
+    for ($h = 0; $h < 24; $h++){
+        for ($m = 0; $m < 60 ; $m += 1){
+            $time = sprintf('%02d:%02d', $h, $m);
+            $hour_options["$time"] = "$time";
+        }
+    }
+    $form['critical_message_on_off'] = array(
+        '#title' => t('Critical Message'),
+        '#description' => t('Displays important message to all users each time they log in (new session).'),
+        '#type' => 'radios',
+        '#options' => array(
+            0 => t('Critical Message Off'),
+            1 => t('Critical Message ON'),
+        ),
+        '#default_value' => variable_get('critical_message_on_off', NULL),
+    );
+    $form['critical_message_start_date'] = array(
+        '#title' => t('Start'),
+        '#type' => 'date_popup',
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#default_value' => $today,
+        '#date_format' => variable_get('date_format_short', 'm/d/Y'),
+        '#required' => TRUE,
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
+        ),
+    );
+    $form['critical_message_add_time_start_checkbox'] = array(
+        '#title' => t('Add Time'),
+        '#type' => 'checkbox',
+        '#description' => t('Note: Time is in Eastern Time zone, and format is 24H.'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
+        ),
+    );
+    $form['critical_message_start_time'] = array(
+        '#type' => 'date_popup',
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#default_value' => variable_get('critical_message_start_time', NULL),
+        '#date_format' => variable_get('date_format_short', 'H:i'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_add_time_start_checkbox"]' => array('checked' => FALSE)),
+        ),
+    );
+    $form['critical_message_end_date'] = array(
+        '#title' => t('End'),
+        '#type' => 'date_popup',
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#date_format' => variable_get('date_format_short', 'm/d/Y'),
+        '#required' => TRUE,
+        '#default_value' => variable_get('critical_message_end_date'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
+        ),
+    );
+    $form['critical_message_add_time_end_checkbox'] = array(
+        '#title' => t('Add Time'),
+        '#type' => 'checkbox',
+        '#description' => t('Note: Time is in Eastern Time zone, and format is 24H.'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
+        ),
+    );
+    $form['critical_message_end_time'] = array(
+        '#title' => t('End'),
+        '#type' => 'date_popup',
+        '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
+        '#date_format' => variable_get('date_format_short', 'H:i'),
+        '#default_value' => variable_get('critical_message_end_time'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_add_time_end_checkbox"]' => array('checked' => FALSE)),
+        ),
+    );
+    $form['critical_message_textbox'] = array(
+        '#title' => t('Message'),
+        '#type' => 'textarea',
+        '#required' => TRUE,
+        '#default_value' => variable_get('critical_message_textbox'),
+        '#states' => array(
+            'disabled' => array(':input[name="critical_message_on_off"]' => array('value' => 0)),
+        ),
+    );
+    $form['#submit'][] = 'sbac_central_form_system_site_maintenance_mode_alter_submit';
+    return $form;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * Implements hook_alter_submit().
+ */
+function sbac_central_form_system_site_maintenance_mode_alter_submit(&$form, &$form_state){
+    variable_set('critical_message_on_off', $form_state['values']['critical_message_on_off']['value']);
+    variable_set('critical_message_start_date', $form_state['values']['critical_message_start_date']);
+    variable_set('critical_message_end_date', $form_state['values']['critical_message_end_date']);
+    variable_set('critical_message_start_time', $form_state['input']['critical_message_start_time']['time']);
+    variable_set('critical_message_end_time', $form_state['input']['critical_message_end_time']['time']);
+    variable_set('critical_message_textbox', $form_state['values']['critical_message_textbox']);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sbac_central_theme($existing, $type, $theme, $path) {
+    return array(
+        'critical_message_theme' => array(
+            'template' => 'templates/critical-message',
+            'variables' => array(
+                'critical_message_start_date' => NULL,
+                'critical_message_end_date' => NULL,
+                'critical_message_textbox' => NULL
+            ),
+        ),
+    );
+}
+
+/**
+ * page callback function.
+ */
+function sbac_central_set_critical_message_shown() {
+  $_SESSION['has_been_shown_critical_message'] = TRUE;
+  exit;
 }
 
 /**

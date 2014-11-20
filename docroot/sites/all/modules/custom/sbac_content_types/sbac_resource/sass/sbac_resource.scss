@@ -1134,7 +1134,7 @@ html.js .category-hide {
   li.expanded {
     background-image: none;
   }
-
+ 
   form{
     margin: 0;
 		/*position: relative;*/
@@ -1374,7 +1374,6 @@ html.js .category-hide {
       color: #464b54;
       padding: 10px 15px 8px;
       margin-bottom: 1px;
-      font-style: italic;
       position: relative;
     }
     
@@ -1384,6 +1383,7 @@ html.js .category-hide {
     
     .current-filter.changed {
       background-color: #f5d4c2;
+      font-style: italic;
     }
   }
 
