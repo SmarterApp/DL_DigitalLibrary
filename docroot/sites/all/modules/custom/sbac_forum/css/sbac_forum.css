@@ -196,16 +196,16 @@
   background-color: #f5d4c2;
   padding: 10px 15px 8px;
   margin-bottom: 1px;
-  font-style: italic;
   position: relative;
 }
-/* line 194, ../sass/sbac_forum.scss */
+/* line 193, ../sass/sbac_forum.scss */
 .categories-current-filters [id*="current-search-filter-name"] .current-filter.original {
   background-color: #f4fbfe;
 }
-/* line 198, ../sass/sbac_forum.scss */
+/* line 197, ../sass/sbac_forum.scss */
 .categories-current-filters [id*="current-search-filter-name"] .current-filter.changed {
   background-color: #f5d4c2;
+  font-style: italic;
 }
 /* line 203, ../sass/sbac_forum.scss */
 .categories-current-filters .current-filter:after {
@@ -237,45 +237,46 @@ a.category-hide {
   width: 100px;
   display: block;
   line-height: 45px;
-  padding-left: 0.9375em;
+  margin-left: 0.9375em;
+  padding-left: 18px;
   font-weight: bold;
   position: relative;
 }
 
-/* line 242, ../sass/sbac_forum.scss */
+/* line 243, ../sass/sbac_forum.scss */
 a.category-hide:hover,
 a.category-hide:focus {
   color: #006082;
 }
 
-/* line 246, ../sass/sbac_forum.scss */
+/* line 247, ../sass/sbac_forum.scss */
 .category-hide.active:before {
-  content: "\f0aa";
-  font-family: "SBAC";
-  font-size: 16px;
-  color: #006082;
-  display: inline-block;
-  height: 12px;
-  margin-right: 10px;
-  vertical-align: baseline;
-  width: 10px;
-  position: relative;
-  top: 1px;
-}
-
-/* line 260, ../sass/sbac_forum.scss */
-.category-hide:before {
   content: "\f05b";
   font-family: "SBAC";
   font-size: 16px;
   color: #006082;
   display: inline-block;
   height: 12px;
-  margin-right: 10px;
   vertical-align: baseline;
   width: 10px;
-  position: relative;
-  top: 1px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* line 261, ../sass/sbac_forum.scss */
+.category-hide:before {
+  content: "\f05a";
+  font-family: "SBAC";
+  font-size: 16px;
+  color: #006082;
+  display: inline-block;
+  height: 12px;
+  vertical-align: baseline;
+  width: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* line 277, ../sass/sbac_forum.scss */
@@ -4792,7 +4793,7 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
   border-top: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 -1px 0 0 rgba(0, 97, 131, 0.3);
   text-align: center;
-  margin: 1em 0.875em 0;
+  margin: 0 0.875em;
 }
 /* line 4296, ../sass/sbac_forum.scss */
 .filters .category-buttons button {
@@ -4800,11 +4801,19 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
 }
 
 /* line 4302, ../sass/sbac_forum.scss */
+.filter-type-item {
+  display: block;
+  float: left;
+  margin-bottom: 18px;
+  width: 100%;
+}
+
+/* line 4309, ../sass/sbac_forum.scss */
 .categories-filter {
   padding-bottom: 10px;
 }
 
-/* line 4306, ../sass/sbac_forum.scss */
+/* line 4313, ../sass/sbac_forum.scss */
 .categories-filter-choices {
   position: absolute;
   top: 22px;
@@ -4813,7 +4822,7 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
   width: 100%;
   z-index: 9999;
 }
-/* line 4314, ../sass/sbac_forum.scss */
+/* line 4321, ../sass/sbac_forum.scss */
 .categories-filter-choices .category-filter-list {
   -webkit-border-radius: 0 0 6px 6px;
   -moz-border-radius: 0 0 6px 6px;
@@ -4829,20 +4838,20 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
   padding-bottom: 10px;
   position: relative;
 }
-/* line 4323, ../sass/sbac_forum.scss */
+/* line 4330, ../sass/sbac_forum.scss */
 .categories-filter-choices .category-filter-list h2 {
   cursor: pointer;
   font-weight: normal;
   margin: 0;
   color: #0684ad;
 }
-/* line 4330, ../sass/sbac_forum.scss */
+/* line 4337, ../sass/sbac_forum.scss */
 .categories-filter-choices .category-filter-list [class*="enclosed foundicon-"]:before {
   position: absolute;
   top: -21px;
   right: 15px;
 }
-/* line 4337, ../sass/sbac_forum.scss */
+/* line 4344, ../sass/sbac_forum.scss */
 .categories-filter-choices ul.jstree-container-ul {
   border-bottom: 1px solid #cecece;
   max-height: 300px;
@@ -4850,58 +4859,58 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
   padding-left: 18px;
   padding-top: 5px;
 }
-/* line 4344, ../sass/sbac_forum.scss */
+/* line 4351, ../sass/sbac_forum.scss */
 .categories-filter-choices ul.jstree-container-ul > li {
   margin-bottom: 0;
 }
-/* line 4349, ../sass/sbac_forum.scss */
+/* line 4356, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree .jstree-open > .jstree-children {
   margin-left: 20px;
 }
-/* line 4354, ../sass/sbac_forum.scss */
+/* line 4361, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-node,
 .categories-filter-choices .jstree-anchor {
   white-space: normal;
 }
-/* line 4359, ../sass/sbac_forum.scss */
+/* line 4366, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-clicked,
 .categories-filter-choices .jstree-default .jstree-hovered {
   background: none;
   border-radius: 0;
   box-shadow: none;
 }
-/* line 4365, ../sass/sbac_forum.scss */
+/* line 4372, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-node.jstree-closed {
   background: url(../images/filter/icon-plus-sign.png) no-repeat 0 8px;
 }
-/* line 4369, ../sass/sbac_forum.scss */
+/* line 4376, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-node.jstree-open {
   background: url(../images/filter/icon-minus-sign.png) no-repeat 0 8px;
 }
-/* line 4373, ../sass/sbac_forum.scss */
+/* line 4380, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-checkbox {
   background: url(../images/filter/icon-checkbox.png) no-repeat 0 3px !important;
   position: absolute;
   left: -20px;
 }
-/* line 4379, ../sass/sbac_forum.scss */
+/* line 4386, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-clicked .jstree-checkbox {
   background: url(../images/filter/icon-check-mark.png) no-repeat 0 3px !important;
 }
-/* line 4383, ../sass/sbac_forum.scss */
+/* line 4390, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-anchor > .jstree-undetermined {
   background: url(../images/filter/icon-undetermined.png) no-repeat 0 3px !important;
 }
-/* line 4388, ../sass/sbac_forum.scss */
+/* line 4395, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-node,
 .categories-filter-choices .jstree-default .jstree-icon {
   background: none;
 }
-/* line 4392, ../sass/sbac_forum.scss */
+/* line 4399, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-node {
   margin-left: 20px;
 }
-/* line 4396, ../sass/sbac_forum.scss */
+/* line 4403, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-anchor {
   padding-right: 10px;
   height: auto;
@@ -4909,40 +4918,40 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
   position: relative;
   margin-left: 20px;
 }
-/* line 4404, ../sass/sbac_forum.scss */
+/* line 4411, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-icon:empty {
   width: 20px;
 }
-/* line 4408, ../sass/sbac_forum.scss */
+/* line 4415, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-leaf > .jstree-ocl {
   width: 0;
 }
-/* line 4412, ../sass/sbac_forum.scss */
+/* line 4419, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-themeicon {
   background: none;
   width: 0 !important;
 }
-/* line 4417, ../sass/sbac_forum.scss */
+/* line 4424, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default li.jstree-node.jstree-leaf .jstree-ocl {
   width: 20px;
 }
-/* line 4422, ../sass/sbac_forum.scss */
+/* line 4429, ../sass/sbac_forum.scss */
 .categories-filter-choices .jstree-default .jstree-open li.jstree-node.jstree-leaf > .jstree-ocl,
 .categories-filter-choices .jstree-default .jstree-closed li.jstree-node.jstree-leaf > .jstree-ocl {
   width: 0;
 }
 
 @media screen and (max-width: 1350px) {
-  /* line 4428, ../sass/sbac_forum.scss */
+  /* line 4435, ../sass/sbac_forum.scss */
   .jstree-default li.jstree-node.jstree-leaf .jstree-anchor {
     width: 80%;
   }
 }
-/* line 4435, ../sass/sbac_forum.scss */
+/* line 4442, ../sass/sbac_forum.scss */
 .topic-node-main-content-warning p {
   font-size: 13px;
 }
-/* line 4438, ../sass/sbac_forum.scss */
+/* line 4445, ../sass/sbac_forum.scss */
 .topic-node-main-content-warning p span {
   font-weight: bold;
   color: #5a5a5a;
