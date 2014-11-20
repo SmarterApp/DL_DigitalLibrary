@@ -93,6 +93,15 @@ function sbac_central_menu() {
     'page callback' => 'sbac_central_set_critical_message_shown',
     'type' => MENU_CALLBACK,
   );
+
+  $items['sbac-central/%ctools_js/critical-message'] = array(
+    'title' => 'Critical Message',
+    'page callback' => 'sbac_central_critical_message_modal',
+    'page arguments' => array(1),
+    'access callback' => 'user_is_logged_in',
+    'file' => 'sbac_central.modal.inc',
+  );
+
   return $items;
 }
 
@@ -239,24 +248,35 @@ function sbac_central_preprocess_page(&$vars) {
 
   $critical_message_start_date = variable_get('critical_message_start_date');
   $critical_message_end_date = variable_get('critical_message_end_date');
-  $critical_message_textbox = variable_get('critical_message_textbox');
   $now = date('m/d/Y - H:i');
-  if ($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) {
-      if (drupal_is_front_page()) {
-          drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/critical-message.js');
-          $critical_message = theme('critical_message_theme', array(
-              'critical_message_start_date' => $critical_message_start_date,
-              'critical_message_end_date' => $critical_message_end_date,
-              'critical_message_textbox' => $critical_message_textbox,
-          ));
-          if (!isset($_SESSION['has_been_shown_critical_message'])) {
-              $settings['sbac_central'] = array(
-                  'message' => $critical_message,
-                  'showCriticalMessage' => !$_SESSION['has_been_shown_critical_message'],
-              );
-              drupal_add_js($settings, 'setting');
-          }
-      }
+  if (($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) && drupal_is_front_page() && !isset($_SESSION['show_critical_message'])) {
+    // button
+    $critical_message_button = l(t('Critical Message'), 'sbac-central/nojs/critical-message', array(
+      'attributes' => array(
+        'class' => 'ctools-use-modal button blue use-ajax ctools-modal-sbac-central-critical-message',
+        'id' => 'sbac-central-critical-message'
+      ),
+    ));
+
+    $js_settings = array(
+      'sbac-central-critical-message' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 305,
+        ),
+        'modalTheme' => 'CtoolSbacCentralCriticalMessage',
+      ),
+    );
+
+    drupal_add_js($js_settings, 'setting');
+    drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/sbac_central.ctools.js');
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    drupal_add_library('system', 'drupal.ajax');
+    $vars['critical_message_button'] = $critical_message_button;
   }
 }
 
@@ -833,9 +853,11 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
 }
 
 /**
+ * Implements hook_alter_submit().
+ *
  * @param $form
  * @param $form_state
- * Implements hook_alter_submit().
+ *
  */
 function sbac_central_form_system_site_maintenance_mode_alter_submit(&$form, &$form_state){
     variable_set('critical_message_on_off', $form_state['values']['critical_message_on_off']['value']);
@@ -844,30 +866,6 @@ function sbac_central_form_system_site_maintenance_mode_alter_submit(&$form, &$f
     variable_set('critical_message_start_time', $form_state['input']['critical_message_start_time']['time']);
     variable_set('critical_message_end_time', $form_state['input']['critical_message_end_time']['time']);
     variable_set('critical_message_textbox', $form_state['values']['critical_message_textbox']);
-}
-
-/**
- * Implements hook_theme().
- */
-function sbac_central_theme($existing, $type, $theme, $path) {
-    return array(
-        'critical_message_theme' => array(
-            'template' => 'templates/critical-message',
-            'variables' => array(
-                'critical_message_start_date' => NULL,
-                'critical_message_end_date' => NULL,
-                'critical_message_textbox' => NULL
-            ),
-        ),
-    );
-}
-
-/**
- * page callback function.
- */
-function sbac_central_set_critical_message_shown() {
-  $_SESSION['has_been_shown_critical_message'] = TRUE;
-  exit;
 }
 
 /**
