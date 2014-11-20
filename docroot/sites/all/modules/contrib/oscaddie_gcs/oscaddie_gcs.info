@@ -2,10 +2,8 @@ name = osCaddie GCS
 description = Provides the ability to upload file contents to Google Cloud Storage
 package = osCaddie
 core = 7.x
-files[] = stream_wrappers/OSCaddieGCSStreamWrapperLegacy.inc
-files[] = stream_wrappers/OSCaddieGCSStreamWrapperBeta.inc
+files[] = stream_wrappers/OSCaddieGCSStreamWrapper.inc
 dependencies[] = libraries (2.x)
-dependencies[] = xautoload
 configure = admin/config/media/oscaddie_gcs
 
 ; Information added by Drupal.org packaging script on 2014-09-04

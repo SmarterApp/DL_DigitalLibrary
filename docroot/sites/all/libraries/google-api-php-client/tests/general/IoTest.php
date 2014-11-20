@@ -19,17 +19,16 @@
  */
 
 require_once 'BaseTest.php';
-require_once 'Google/Http/Request.php';
-require_once 'Google/IO/Curl.php';
-require_once 'Google/IO/Stream.php';
+require_once realpath(dirname(__FILE__) . '/../../autoload.php');
 
 class IoTest extends BaseTest
 {
 
   public function testExecutorSelection()
   {
+    $default = function_exists('curl_version') ? 'Google_IO_Curl' : 'Google_IO_Stream';
     $client = $this->getClient();
-    $this->assertInstanceOf('Google_IO_Curl', $client->getIo());
+    $this->assertInstanceOf($default, $client->getIo());
     $config = new Google_Config();
     $config->setIoClass('Google_IO_Stream');
     $client = new Google_Client($config);
@@ -80,18 +79,27 @@ class IoTest extends BaseTest
 
   public function testCurlSetTimeout()
   {
+    if (!function_exists('curl_version')) {
+      $this->markTestSkipped('cURL not present');
+    }
     $io = new Google_IO_Curl($this->getClient());
     $this->timeoutChecker($io);
   }
 
   public function testCurlParseHttpResponseBody()
   {
+    if (!function_exists('curl_version')) {
+      $this->markTestSkipped('cURL not present');
+    }
     $io = new Google_IO_Curl($this->getClient());
     $this->responseChecker($io);
   }
 
   public function testCurlProcessEntityRequest()
   {
+    if (!function_exists('curl_version')) {
+      $this->markTestSkipped('cURL not present');
+    }
     $client = $this->getClient();
     $io = new Google_IO_Curl($client);
     $this->processEntityRequest($io, $client);
@@ -99,6 +107,9 @@ class IoTest extends BaseTest
 
   public function testCurlCacheHit()
   {
+    if (!function_exists('curl_version')) {
+      $this->markTestSkipped('cURL not present');
+    }
     $client = $this->getClient();
     $io = new Google_IO_Curl($client);
     $this->cacheHit($io, $client);
@@ -106,6 +117,9 @@ class IoTest extends BaseTest
 
   public function testCurlAuthCache()
   {
+    if (!function_exists('curl_version')) {
+      $this->markTestSkipped('cURL not present');
+    }
     $client = $this->getClient();
     $io = new Google_IO_Curl($client);
     $this->authCache($io, $client);
@@ -116,6 +130,9 @@ class IoTest extends BaseTest
    */
   public function testCurlInvalidRequest()
   {
+    if (!function_exists('curl_version')) {
+      $this->markTestSkipped('cURL not present');
+    }
     $io = new Google_IO_Curl($this->getClient());
     $this->invalidRequest($io);
   }
@@ -196,6 +213,12 @@ class IoTest extends BaseTest
 
   public function responseChecker($io)
   {
+    $hasQuirk = false;
+    if (function_exists('curl_version')) {
+      $curlVer = curl_version();
+      $hasQuirk = $curlVer['version_number'] < Google_IO_Curl::NO_QUIRK_VERSION;
+    }
+
     $rawHeaders = "HTTP/1.1 200 OK\r\n"
         . "Expires: Sun, 22 Jan 2012 09:00:56 GMT\r\n"
         . "Date: Sun, 22 Jan 2012 09:00:56 GMT\r\n"
@@ -214,16 +237,33 @@ class IoTest extends BaseTest
     $this->assertEquals(3, sizeof($headers));
     $this->assertEquals(null, json_decode($body, true));
 
-    // Test transforms from proxies.
-    $rawHeaders = Google_IO_Abstract::CONNECTION_ESTABLISHED
-        . "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n";
-    $headersSize = strlen($rawHeaders);
-    $rawBody = "{}";
-
-    $rawResponse = "$rawHeaders\r\n$rawBody";
-    list($headers, $body) = $io->parseHttpResponse($rawResponse, $headersSize);
+    // Test no content.
+    $rawerHeaders = "HTTP/1.1 204 No Content\r\n"
+      . "Date: Fri, 19 Sep 2014 15:52:14 GMT";
+    list($headers, $body) = $io->parseHttpResponse($rawerHeaders, 0);
     $this->assertEquals(1, sizeof($headers));
-    $this->assertEquals(array(), json_decode($body, true));
+    $this->assertEquals(null, json_decode($body, true));
+
+    // Test transforms from proxies.
+    $connection_established_headers = array(
+      "HTTP/1.0 200 Connection established\r\n\r\n",
+      "HTTP/1.1 200 Connection established\r\n\r\n",
+    );
+    foreach ($connection_established_headers as $established_header) {
+      $rawHeaders = "{$established_header}HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n";
+      $headersSize = strlen($rawHeaders);
+      // If we have a broken cURL version we have to simulate it to get the
+      // correct test result.
+      if ($hasQuirk && get_class($io) === 'Google_IO_Curl') {
+          $headersSize -= strlen($established_header);
+      }
+      $rawBody = "{}";
+
+      $rawResponse = "$rawHeaders\r\n$rawBody";
+      list($headers, $body) = $io->parseHttpResponse($rawResponse, $headersSize);
+      $this->assertEquals(1, sizeof($headers));
+      $this->assertEquals(array(), json_decode($body, true));
+    }
   }
 
   public function processEntityRequest($io, $client)

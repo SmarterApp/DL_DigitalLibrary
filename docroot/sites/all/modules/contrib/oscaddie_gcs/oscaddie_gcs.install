@@ -94,5 +94,4 @@ function oscaddie_gcs_uninstall() {
   variable_del('oscaddie_gcs_pem_file_path');
   variable_del('oscaddie_gcs_pem_fid');
   variable_del('oscaddie_gcs_signed_url_expiry');
-  variable_del('oscaddie_gcs_library_version');
 }

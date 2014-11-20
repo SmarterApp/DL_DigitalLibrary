@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 
-require_once "Google/Cache/Abstract.php";
-require_once "Google/Cache/Exception.php";
+require_once realpath(dirname(__FILE__) . '/../../../autoload.php');
 
 /**
  * A persistent storage class based on the memcache, which is not
@@ -47,7 +46,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
     } else {
       $this->host = $client->getClassConfig($this, 'host');
       $this->port = $client->getClassConfig($this, 'port');
-      if (empty($this->host) || empty($this->port)) {
+      if (empty($this->host) || (empty($this->port) && (string) $this->port != "0")) {
         throw new Google_Cache_Exception("You need to supply a valid memcache host and port");
       }
     }
