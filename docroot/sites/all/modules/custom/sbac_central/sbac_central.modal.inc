@@ -23,7 +23,7 @@ function sbac_central_critical_message_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
-
+        $_SESSION['has_been_shown_critical_message'] = TRUE;
       }
     }
     print ajax_render($output);
