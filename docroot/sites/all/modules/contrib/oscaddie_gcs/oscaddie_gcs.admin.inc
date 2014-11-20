@@ -14,7 +14,7 @@ function oscaddie_gcs_admin($form, &$form_state) {
   $directory = 'private://';
   $private_directory = file_prepare_directory($directory, 'FILE_EXIST');
   $info = libraries_load('google-api-php-client');
-  
+
   if (!$openssl || !$private_directory || (isset($info['loaded']) && !$info['loaded'])) {
     $errors = TRUE;
     $form['oscaddie_gcs_warning_details'] = array(
