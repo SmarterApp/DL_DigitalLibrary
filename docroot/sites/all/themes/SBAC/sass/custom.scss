@@ -4107,3 +4107,143 @@ form#sbac-user-filter-form #edit-email {
 		margin-bottom: 0;
 	}
 }
+
+/* -----------------------------------------
+  Critical Message
+  ------------------------------------------ */
+.page-admin-config-development-maintenance {
+  .main-container {
+    background: none repeat scroll 0 0 #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
+    display: block;
+    margin: 50px auto;
+    min-height: 60px;
+    padding: 40px 50px;
+    position: relative;
+    width: 960px;
+    
+    h1 {color: #04384e;}
+  }
+  
+  label {
+    font-size: 15px;
+  }
+  
+  .form-item-maintenance-mode {
+    .description {
+      line-height: 1.4;
+    }
+  }
+  
+  label[for="edit-critical-message-on-off"] {
+    font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+    color: #04384e;
+    font-size: 1.5em;
+    margin-top: 40px;
+  }
+  
+  .start-date-wrapper,
+  .end-date-wrapper {
+    width: 50%;
+  }
+  
+  .start-date-wrapper {
+    float: left;
+    margin-top: 30px;
+    
+    label[for="edit-critical-message-start-date"],
+    #edit-critical-message-start-date{
+      display: inline-block;
+      float: left;
+      padding-top: 0;
+      
+      label {display: none;}
+    }
+    
+    .form-item.form-type-checkbox  {
+      margin: 0.5em 0;
+      
+      .description { margin-left: 2.2em; }
+    }
+  }
+  
+  .end-date-wrapper {
+    float: right;
+    margin-top: 30px;
+    
+    label[for="edit-critical-message-end-date"],
+    #edit-critical-message-end-date{
+      display: inline-block;
+      float: left;
+      padding-top: 0;
+      
+      label {display: none;}
+    }
+    
+    .form-item.form-type-checkbox {
+      margin: 0.5em 0;
+      
+      .description { margin-left: 2.2em; }
+    }
+  }
+  
+  .form-item-critical-message-textbox {
+    clear: both;
+    width: 100%;
+    margin-top: 20px;
+    
+    textarea {height: 100px;}
+  }
+  
+  label[for="edit-critical-message-start-date"],
+  label[for="edit-critical-message-end-date"] {
+    margin-top: 10px;
+  }
+}
+
+.ctools-modal-content.critical {
+  position: relative;
+  line-height: 1.4;
+  
+  .modal-content {
+    overflow: visible !important;
+    overflow-y: visible !important;
+  }
+  
+  strong {
+    width: 100%;
+    float: left;
+    clear: both;
+  }
+  
+  button.close.form-submit {
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    height: 20px;
+    line-height: 20px;
+    padding: 0;
+    text-align: center;
+    text-shadow: none;
+    position: absolute;
+    right: -20px;
+    top: -60px;
+    z-index: 9999;
+  }
+  
+  button.close.form-submit:before {
+    content: "\e636";
+    font-family: SBAC;
+    font-size: 20px;
+    color: #04384e;
+    width: 20px;
+    height: 20px;
+  }
+}
+

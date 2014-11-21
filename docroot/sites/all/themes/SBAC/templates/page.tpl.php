@@ -214,6 +214,12 @@
   </div>
 </div>
 
+<?php if (isset($critical_message_button)): ?>
+  <div class="critical-message-button" style="display:none">
+    <?php echo $critical_message_button; ?>
+  </div>
+<?php endif; ?>
+
 <?php if (user_is_logged_in()) : ?>
   <?php if (isset($session_expire)): ?>
     <div class="sbac-sso-session-expire" style="display:none">

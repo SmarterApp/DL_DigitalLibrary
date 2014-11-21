@@ -11741,3 +11741,154 @@ form#sbac-user-filter-form #edit-email {
   margin-left: 10px;
   margin-bottom: 0;
 }
+
+/* -----------------------------------------
+  Critical Message
+  ------------------------------------------ */
+/* line 4115, ../sass/custom.scss */
+.page-admin-config-development-maintenance .main-container {
+  background: none repeat scroll 0 0 #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
+  display: block;
+  margin: 50px auto;
+  min-height: 60px;
+  padding: 40px 50px;
+  position: relative;
+  width: 960px;
+}
+/* line 4126, ../sass/custom.scss */
+.page-admin-config-development-maintenance .main-container h1 {
+  color: #04384e;
+}
+/* line 4129, ../sass/custom.scss */
+.page-admin-config-development-maintenance label {
+  font-size: 15px;
+}
+/* line 4134, ../sass/custom.scss */
+.page-admin-config-development-maintenance .form-item-maintenance-mode .description {
+  line-height: 1.4;
+}
+/* line 4139, ../sass/custom.scss */
+.page-admin-config-development-maintenance label[for="edit-critical-message-on-off"] {
+  font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+  color: #04384e;
+  font-size: 1.5em;
+  margin-top: 40px;
+}
+/* line 4147, ../sass/custom.scss */
+.page-admin-config-development-maintenance .start-date-wrapper,
+.page-admin-config-development-maintenance .end-date-wrapper {
+  width: 50%;
+}
+/* line 4151, ../sass/custom.scss */
+.page-admin-config-development-maintenance .start-date-wrapper {
+  float: left;
+  margin-top: 30px;
+}
+/* line 4156, ../sass/custom.scss */
+.page-admin-config-development-maintenance .start-date-wrapper label[for="edit-critical-message-start-date"],
+.page-admin-config-development-maintenance .start-date-wrapper #edit-critical-message-start-date {
+  display: inline-block;
+  float: left;
+  padding-top: 0;
+}
+/* line 4161, ../sass/custom.scss */
+.page-admin-config-development-maintenance .start-date-wrapper label[for="edit-critical-message-start-date"] label,
+.page-admin-config-development-maintenance .start-date-wrapper #edit-critical-message-start-date label {
+  display: none;
+}
+/* line 4164, ../sass/custom.scss */
+.page-admin-config-development-maintenance .start-date-wrapper .form-item.form-type-checkbox {
+  margin: 0.5em 0;
+}
+/* line 4167, ../sass/custom.scss */
+.page-admin-config-development-maintenance .start-date-wrapper .form-item.form-type-checkbox .description {
+  margin-left: 2.2em;
+}
+/* line 4171, ../sass/custom.scss */
+.page-admin-config-development-maintenance .end-date-wrapper {
+  float: right;
+  margin-top: 30px;
+}
+/* line 4176, ../sass/custom.scss */
+.page-admin-config-development-maintenance .end-date-wrapper label[for="edit-critical-message-end-date"],
+.page-admin-config-development-maintenance .end-date-wrapper #edit-critical-message-end-date {
+  display: inline-block;
+  float: left;
+  padding-top: 0;
+}
+/* line 4181, ../sass/custom.scss */
+.page-admin-config-development-maintenance .end-date-wrapper label[for="edit-critical-message-end-date"] label,
+.page-admin-config-development-maintenance .end-date-wrapper #edit-critical-message-end-date label {
+  display: none;
+}
+/* line 4184, ../sass/custom.scss */
+.page-admin-config-development-maintenance .end-date-wrapper .form-item.form-type-checkbox {
+  margin: 0.5em 0;
+}
+/* line 4187, ../sass/custom.scss */
+.page-admin-config-development-maintenance .end-date-wrapper .form-item.form-type-checkbox .description {
+  margin-left: 2.2em;
+}
+/* line 4191, ../sass/custom.scss */
+.page-admin-config-development-maintenance .form-item-critical-message-textbox {
+  clear: both;
+  width: 100%;
+  margin-top: 20px;
+}
+/* line 4196, ../sass/custom.scss */
+.page-admin-config-development-maintenance .form-item-critical-message-textbox textarea {
+  height: 100px;
+}
+/* line 4200, ../sass/custom.scss */
+.page-admin-config-development-maintenance label[for="edit-critical-message-start-date"],
+.page-admin-config-development-maintenance label[for="edit-critical-message-end-date"] {
+  margin-top: 10px;
+}
+
+/* line 4205, ../sass/custom.scss */
+.ctools-modal-content.critical {
+  position: relative;
+  line-height: 1.4;
+}
+/* line 4209, ../sass/custom.scss */
+.ctools-modal-content.critical .modal-content {
+  overflow: visible !important;
+  overflow-y: visible !important;
+}
+/* line 4214, ../sass/custom.scss */
+.ctools-modal-content.critical strong {
+  width: 100%;
+  float: left;
+  clear: both;
+}
+/* line 4220, ../sass/custom.scss */
+.ctools-modal-content.critical button.close.form-submit {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: normal;
+  height: 20px;
+  line-height: 20px;
+  padding: 0;
+  text-align: center;
+  text-shadow: none;
+  position: absolute;
+  right: -20px;
+  top: -60px;
+  z-index: 9999;
+}
+/* line 4240, ../sass/custom.scss */
+.ctools-modal-content.critical button.close.form-submit:before {
+  content: "\e636";
+  font-family: SBAC;
+  font-size: 20px;
+  color: #04384e;
+  width: 20px;
+  height: 20px;
+}
