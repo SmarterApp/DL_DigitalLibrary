@@ -125,7 +125,8 @@ $gray: #464B54;
 
   /*Active Filters*/
   #clear-all {
-    color: #000;
+    color: #006082;
+    font-weight: bold;
     margin-top: 10px;
     height: 30px;
     clear: both;
@@ -139,6 +140,7 @@ $gray: #464B54;
   		padding: 5px 15px 5px 18px;
   		border: 1px solid #88a8b6;
   		color: #146281;
+  		font-weight: normal;
   		font-size: 12px;
   		line-height: 1.2;
   		
