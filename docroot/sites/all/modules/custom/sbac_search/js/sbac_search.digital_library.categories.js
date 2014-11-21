@@ -332,23 +332,22 @@
   Drupal.behaviors.sbac_search_filters = {
     attach: function (context, settings) {
       var original_filters = $('#sbac-search-original-filters').val();
+      var $clear_all_div = $('<div id="clear-all"><span>Applied Filters</span></div>');
+      var $clear_all_link = $('<a href="sbac-search/clear-all?location=digital-library-resources">Clear All</a>');
+      $clear_all_div.append($clear_all_link);
       current_filter_clicked = function () {
         var tid = $(this).attr('tid');
         var vid = $(this).attr('vid');
         $.jstree.reference('filter-' + vid).deselect_node(vid + ':' + tid);
         build_current_filters();
         $('#sbac-search-filter-button').removeClass('js-hide');
+        $('#clear-all > span').html('Your selections');
       };
 
       // build the current filter list
       build_current_filters = function () {
         var $current_filter_div = $('.categories-current-filters');
         $current_filter_div.empty();
-        var $clear_all_link = $('<a href="#">Clear All</a>').click(function(){
-          window.location.href = 'sbac-search/clear-all?location=digital-library-resources';
-        });
-        var $clear_all_div = $('<div id="clear-all">Active Filters</div>');
-        $clear_all_div.append($clear_all_link);
         $current_filter_div.append($clear_all_div);
         var $filter_item = $('<div class="filter-type-item"></div>');
         $current_filter_div.append($filter_item);
@@ -384,6 +383,7 @@
                 if (original_filters.indexOf(selected_id) == -1){
                   changed_class = 'changed';
                   $('#sbac-search-filter-button').removeClass('js-hide');
+                  $('#clear-all > span').html('Your selections');
                 }
                 var $new_filter = $('<div class="current-filter ' + changed_class + '" vid="' + vid + '" tid="' + selected_node.li_attr.tid + '">' + selected_node.li_attr.term + '</div>').click(current_filter_clicked);
                 $current_search_filter_group_div.append($new_filter);
@@ -401,6 +401,7 @@
         .on('changed.jstree', build_current_filters)
         .on('deselect_node.jstree', function(){
           $('#sbac-search-filter-button').removeClass('js-hide');
+          $('#clear-all > span').html('Your selections');
         })
         .jstree({
           "plugins": ["checkbox"]
