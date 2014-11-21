@@ -349,13 +349,27 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   // look for the 'all' option being set:
   else {
     if (array_key_exists(0, $user_groups_ids)) {
-      $admins = sbac_report_user_group_admins();
-      foreach ($admins as $key => $value) {
-        $user_groups_ids[$key] = $key;
+      if (sbac_central_user_has_role(array('reports administrator'))) {
+        $roles = array(
+          'resource contributor',
+          'resource reviewer',
+        );
+        foreach ($roles as $role_name) {
+          $role = user_role_load_by_name($role_name);
+          if ($role) {
+            $user_groups_ids[$role->rid] = $role->rid;
+          }
+        }
       }
-      $all = sbac_report_user_group_options();
-      foreach ($all as $key => $value) {
-        $user_groups_ids[$key] = $key;
+      else {
+        $admins = sbac_report_user_group_admins();
+        foreach ($admins as $key => $value) {
+          $user_groups_ids[$key] = $key;
+        }
+        $all = sbac_report_user_group_options();
+        foreach ($all as $key => $value) {
+          $user_groups_ids[$key] = $key;
+        }
       }
     }
   }
