@@ -112,9 +112,14 @@ function sbac_report_individual_form_validate($form, &$form_state) {
     form_set_error('date_range', t('Choose a time period field is required.'));
   }
 
+  // Double-check to make sure the user didn't "mess around" with the form
   if (sbac_central_user_has_role(array('reports administrator'))) {
     if ($form_state['values']['state'] != sbac_report_get_default_state_tid()) {
       form_set_error('state', t('You\'re only allowed to select your own state'));
+    }
+    $account = user_load($form_state['values']['uid']);
+    if (!sbac_central_user_has_role(array('resource contributor', 'resource reviewer'), $account)) {
+      form_set_error('sne', t('You\'re only allowed to choose a resource contributor or reviewer'));
     }
   }
 }
