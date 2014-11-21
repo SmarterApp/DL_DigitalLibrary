@@ -91,6 +91,8 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   $view->pre_execute();
   $view->execute();
   $view->_post_execute();
+  dpq($view->build_info['query']);
+
   $forum_list_output = $view->preview();
   $active_view_count = $view->total_rows;
   $count_values[$active_display] = $active_view_count;
