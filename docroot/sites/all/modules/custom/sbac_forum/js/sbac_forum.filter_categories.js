@@ -389,20 +389,15 @@
           }
         });
         // save the selected filters to the hidden field
-        var $current_filters =  $('#sbac-forum-current-filters');
-        $current_filters.val(current_filters_array.join('::'));
-
-        var orignal_filters_array = original_filters.split('::');
-        $.each(orignal_filters_array, function(index, value){
-          if ($current_filters.val().indexOf(value) == -1){
-            $('#sbac-forum-filter-button').removeClass('js-hide');
-          }
-        });
+        $('#sbac-forum-current-filters').val(current_filters_array.join('::'));
       };
 
       // initialize all the jstrees
       $('.jstree')
         .on('changed.jstree', build_current_filters)
+        .on('deselect_node.jstree', function(){
+          $('#sbac-forum-filter-button').removeClass('js-hide');
+        })
         .jstree({
           "plugins": ["checkbox"]
         });
