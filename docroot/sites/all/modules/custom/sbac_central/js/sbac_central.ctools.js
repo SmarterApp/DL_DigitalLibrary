@@ -8,7 +8,7 @@
 Drupal.theme.prototype.CtoolSbacCentralCriticalMessage = function () {
   var html = ''
   html += '  <div id="ctools-modal" class="small">'
-  html += '    <div class="ctools-modal-content small">' // panels-modal-content
+  html += '    <div class="ctools-modal-content small critical">' // panels-modal-content
   html += '      <div class="modal-header">';
   html += '        <a class="close" href="#">';
   html +=            Drupal.CTools.Modal.currentSettings.closeText + Drupal.CTools.Modal.currentSettings.closeImage;

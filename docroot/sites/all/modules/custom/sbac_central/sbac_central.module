@@ -831,7 +831,6 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
         ),
     );
     $form['critical_message_end_time'] = array(
-        '#title' => t('End'),
         '#type' => 'date_popup',
         '#timepicker' => variable_get('date_popup_timepicker', $timepicker),
         '#date_format' => variable_get('date_format_short', 'H:i'),

@@ -51,7 +51,7 @@ function sbac_central_critical_message_form($form, &$form_state) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Close',
-    '#attributes' => array('class' => array('button', 'red'))
+    '#attributes' => array('class' => array('close'))
   );
 
   return $form;
