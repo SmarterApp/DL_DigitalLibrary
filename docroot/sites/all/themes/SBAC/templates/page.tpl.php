@@ -215,7 +215,7 @@
 </div>
 
 <?php if (isset($critical_message_button)): ?>
-  <div class="critical-message-button" style="display:block;">
+  <div class="critical-message-button" style="display:none">
     <?php echo $critical_message_button; ?>
   </div>
 <?php endif; ?>
