@@ -1971,26 +1971,18 @@ function sbac_resource_save_current_state($node) {
  * @param $query
  */
 function sbac_resource_query_alter(&$query) {
-  if (isset($query->alterMetaData['view']->name) && ($query->alterMetaData['view']->name == "resource_review" || $query->alterMetaData['view']->name == 'resources' || $query->alterMetaData['view']->name == 'my_resources')) {
+  if (isset($query->alterMetaData['view']->name) &&
+    ($query->alterMetaData['view']->name == "resource_review" ||
+      $query->alterMetaData['view']->name == 'resources' ||
+      $query->alterMetaData['view']->name == 'my_resources' ||
+      ($query->alterMetaData['view']->name == 'forum_list' &&
+        ($query->alterMetaData['view']->current_display == 'block_2' || $query->alterMetaData['view']->current_display == 'block_3')))) {
     $removed_tables = array();
     $tables =& $query->getTables();
     $where =& $query->conditions();
+    $possible_filters = array();
 
     // resources view
-    $possible_filters = array(
-      'field_data_field_focus_value_',
-      'field_data_field_grades_value_',
-      'field_data_field_subject_value_',
-      'field_data_field_attributes_value_',
-      'field_data_field_intended_student_value_',
-      'field_data_field_digital_media_type_value_',
-      'field_data_field_geographical_settings_value_',
-      'field_data_field_educational_use_value_',
-      'field_data_field_intended_end_user_value_',
-      'field_data_field_smarter_balanced_keyword_value_',
-      'field_data_field_classroom_technologies_value_',
-      'taxonomy_index_value_',
-    );
     if ($query->alterMetaData['view']->name == 'resource_review') {
       $possible_filters = array(
         'field_data_field_focus_value_',
@@ -1998,82 +1990,212 @@ function sbac_resource_query_alter(&$query) {
         'field_data_field_subject_value_'
       );
     }
-    else {
-      if ($query->alterMetaData['view']->name == 'my_resources') {
-        $possible_filters = array(
-          'field_data_field_focus_value_',
-          'field_data_field_grades_value_',
-          'field_data_field_subject_value_'
-        );
-      }
+    else if ($query->alterMetaData['view']->name == 'my_resources') {
+      $possible_filters = array(
+        'field_data_field_focus_value_',
+        'field_data_field_grades_value_',
+        'field_data_field_subject_value_'
+      );
+    }
+    else if ($query->alterMetaData['view']->name == 'resources') {
+      $possible_filters = array(
+        'field_data_field_focus_value_',
+        'field_data_field_grades_value_',
+        'field_data_field_subject_value_',
+        'field_data_field_attributes_value_',
+        'field_data_field_intended_student_value_',
+        'field_data_field_digital_media_type_value_',
+        'field_data_field_geographical_settings_value_',
+        'field_data_field_educational_use_value_',
+        'field_data_field_intended_end_user_value_',
+        'field_data_field_smarter_balanced_keyword_value_',
+        'field_data_field_classroom_technologies_value_',
+        'taxonomy_index_value_',
+      );
+    }
+    else if ($query->alterMetaData['view']->name == 'forum_list') {
+      $possible_filters = array(
+        'field_data_field_focus_value_',
+        'field_data_field_grades_value_',
+        'field_data_field_subject_value_',
+        'field_data_field_attributes_value_',
+        'field_data_field_intended_student_value_',
+        'field_data_field_digital_media_type_value_',
+        'field_data_field_geographical_settings_value_',
+        'field_data_field_educational_use_value_',
+        'field_data_field_intended_end_user_value_',
+        'field_data_field_smarter_balanced_keyword_value_',
+        'field_data_field_classroom_technologies_value_',
+      );
     }
 
-    foreach ($possible_filters as $filter_name) {
-      foreach ($tables as $key => $table) {
-        if (preg_match('/' . $filter_name . '[0-9]/', $key)) {
-          $length = strlen($filter_name);
-          $number = substr($key, $length);
-          if ($number == 0) {
-            if (strpos($filter_name, 'taxonomy_index_value_') !== FALSE) {
-              $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.nid';
-              $tables[$key]['arguments'] = array();
-            }
-            else {
-              $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.entity_id AND ' . $filter_name . "0.bundle = 'resource'";
-              $tables[$key]['arguments'] = array();
-            }
+    if ($possible_filters) {
+      if ($query->alterMetaData['view']->name == 'forum_list') {
+        sbac_resource_forum_table_optimize($possible_filters, $tables, $removed_tables);
+        sbac_resource_forum_query_optimize($query, $removed_tables, $tables, $where, $possible_filters);
+      }
+      else {
+        sbac_resource_default_table_optimize($possible_filters, $tables, $removed_tables);
+        sbac_resource_default_query_optimize($query, $removed_tables, $tables, $where, $possible_filters);
+      }
+    }
+  }
+}
+
+/**
+ * Optimize the query tables.
+ *
+ * @param $possible_filters
+ * @param $tables
+ * @param $removed_tables
+ */
+function sbac_resource_forum_table_optimize(&$possible_filters, &$tables, &$removed_tables) {
+  foreach ($possible_filters as $filter_name) {
+    foreach ($tables as $key => $table) {
+      if (preg_match('/' . $filter_name . '[0-9]/', $key)) {
+        $length = strlen($filter_name);
+        $number = substr($key, $length);
+        if ($number == 0) {
+          if (strpos($filter_name, 'taxonomy_index_value_') !== FALSE) {
+            $tables[$key]['condition'] = 'taxonomy_term_data.tid = ' . $filter_name . '0.entity_id';
+            $tables[$key]['arguments'] = array();
           }
           else {
-            unset($tables[$key]);
-            $removed_tables[] = $key;
+            $tables[$key]['condition'] = 'taxonomy_term_data.tid = ' . $filter_name . '0.entity_id AND ' . $filter_name . "0.bundle = 'forum'";
+            $tables[$key]['arguments'] = array();
+          }
+        }
+        else {
+          unset($tables[$key]);
+          $removed_tables[] = $key;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Forum query optimizing.
+ *
+ * @param $query
+ * @param $removed_tables
+ * @param $tables
+ * @param $where
+ * @param $possible_filters
+ */
+function sbac_resource_forum_query_optimize(&$query, &$removed_tables, &$tables, &$where, &$possible_filters) {
+  foreach ($where as $key => $clause) {
+    if (isset($clause['field']) && is_object($clause['field'])) {
+      $conditions =& $clause['field']->conditions();
+      if ($conditions) {
+        foreach ($conditions as $key1 => $clause1) {
+          if (isset($clause1['field']) && is_object($clause1['field'])) {
+            $conditions2 =& $clause1['field']->conditions();
+            if ($conditions2) {
+              foreach ($conditions2 as $key2 => $clause2) {
+                if (isset($clause2['field']) && is_object($clause2['field'])) {
+                  $conditions3 =& $clause2['field']->conditions();
+                  if ($conditions3) {
+                    foreach ($conditions3 as $key3 => $clause3) {
+                      if (isset($clause3['field']) && is_object($clause3['field'])) {
+                        $conditions4 =& $clause3['field']->conditions();
+                        if ($conditions4) {
+                          foreach ($conditions4 as $key4 => $clause4) {
+                            if (isset($clause4['field']) && is_string($clause4['field'])) {
+                              sbac_resource_optimize_field_query($clause4, $conditions4, $key4, $possible_filters);
+                            }
+                          }
+                        }
+                      }
+                      else {
+                        if (isset($clause3['field'])) {
+                          sbac_resource_optimize_field_query($clause3, $conditions3, $key3, $possible_filters);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
+  }
+//  $query->groupBy("node.nid");
+}
 
-//    $pos = strrpos($table['condition'], $table['alias']);
-//    if ($pos !== FALSE) {
-//      $join_condition = substr($table['condition'], $pos);
-//      if ($join_condition) {
-//        $join_condition = str_replace($key, $filter_name . '0', $join_condition);
-//        $tables[$filter_name . '0']['condition'] .= ' AND ' . $join_condition;
-//        $merged = array_merge($tables[$filter_name . '0']['arguments'], $table['arguments']);
-//        $tables[$filter_name . '0']['arguments'] = $merged;
-//        unset($tables[$key]);
-//        $removed_tables[] = $key;
-//      }
-//    }
+/**
+ * Optimize the query tables.
+ *
+ * @param $possible_filters
+ * @param $tables
+ * @param $removed_tables
+ */
+function sbac_resource_default_table_optimize(&$possible_filters, &$tables, &$removed_tables) {
+  foreach ($possible_filters as $filter_name) {
+    foreach ($tables as $key => $table) {
+      if (preg_match('/' . $filter_name . '[0-9]/', $key)) {
+        $length = strlen($filter_name);
+        $number = substr($key, $length);
+        if ($number == 0) {
+          if (strpos($filter_name, 'taxonomy_index_value_') !== FALSE) {
+            $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.nid';
+            $tables[$key]['arguments'] = array();
+          }
+          else {
+            $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.entity_id AND ' . $filter_name . "0.bundle = 'resource'";
+            $tables[$key]['arguments'] = array();
+          }
+        }
+        else {
+          unset($tables[$key]);
+          $removed_tables[] = $key;
+        }
+      }
+    }
+  }
+}
 
-    foreach ($where as $key => $clause) {
-      if (isset($clause['field']) && is_object($clause['field'])) {
-        $conditions =& $clause['field']->conditions();
-        if ($conditions) {
-          foreach ($conditions as $key1 => $clause1) {
-            if (isset($clause1['field']) && is_object($clause1['field'])) {
-              $conditions2 =& $clause1['field']->conditions();
-              if ($conditions2) {
-                foreach ($conditions2 as $key2 => $clause2) {
-                  if (isset($clause2['field']) && is_object($clause2['field'])) {
-                    $conditions3 =& $clause2['field']->conditions();
-                    if ($conditions3) {
-                      foreach ($conditions3 as $key3 => $clause3) {
-                        if (isset($clause3['field']) && is_object($clause3['field'])) {
-                          $conditions4 =& $clause3['field']->conditions();
-                          if ($conditions4) {
-                            foreach ($conditions4 as $key4 => $clause4) {
-                              if (isset($clause4['field']) && is_string($clause4['field'])) {
-                                sbac_resource_optimize_field_query($clause4, $conditions4, $key4, $possible_filters);
-                              }
+/**
+ * Default query optimizing.
+ *
+ * @param $query
+ * @param $removed_tables
+ * @param $tables
+ * @param $where
+ * @param $possible_filters
+ */
+function sbac_resource_default_query_optimize(&$query, &$removed_tables, &$tables, &$where, &$possible_filters) {
+  foreach ($where as $key => $clause) {
+    if (isset($clause['field']) && is_object($clause['field'])) {
+      $conditions =& $clause['field']->conditions();
+      if ($conditions) {
+        foreach ($conditions as $key1 => $clause1) {
+          if (isset($clause1['field']) && is_object($clause1['field'])) {
+            $conditions2 =& $clause1['field']->conditions();
+            if ($conditions2) {
+              foreach ($conditions2 as $key2 => $clause2) {
+                if (isset($clause2['field']) && is_object($clause2['field'])) {
+                  $conditions3 =& $clause2['field']->conditions();
+                  if ($conditions3) {
+                    foreach ($conditions3 as $key3 => $clause3) {
+                      if (isset($clause3['field']) && is_object($clause3['field'])) {
+                        $conditions4 =& $clause3['field']->conditions();
+                        if ($conditions4) {
+                          foreach ($conditions4 as $key4 => $clause4) {
+                            if (isset($clause4['field']) && is_string($clause4['field'])) {
+                              sbac_resource_optimize_field_query($clause4, $conditions4, $key4, $possible_filters);
                             }
                           }
                         }
-                        else {
-                          if (isset($clause3['field'])) {
-                            $field = $clause3['field'];
-                            $filter_name = 'taxonomy_index_value_';
-                            if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
-                              sbac_resource_optimize_taxonomy_query($clause3, $conditions3, $key3);
-                            }
+                      }
+                      else {
+                        if (isset($clause3['field'])) {
+                          $field = $clause3['field'];
+                          $filter_name = 'taxonomy_index_value_';
+                          if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
+                            sbac_resource_optimize_taxonomy_query($clause3, $conditions3, $key3);
                           }
                         }
                       }
@@ -2086,8 +2208,8 @@ function sbac_resource_query_alter(&$query) {
         }
       }
     }
-    $query->groupBy("node.nid");
   }
+  $query->groupBy("node.nid");
 }
 
 /**
@@ -2098,19 +2220,19 @@ function sbac_resource_query_alter(&$query) {
  * @param $key4
  * @param $possible_filters
  */
-function sbac_resource_optimize_field_query(&$clause4, &$conditions4, &$key4, &$possible_filters) {
-  $field = $clause4['field'];
+function sbac_resource_optimize_field_query(&$clause, &$conditions, &$key, &$possible_filters) {
+  $field = $clause['field'];
   foreach ($possible_filters as $filter_name) {
     if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
-      if (is_array($conditions4[0]['value'])) {
-        array_push($conditions4[0]['value'], $clause4['value']);
+      if (is_array($conditions[0]['value'])) {
+        array_push($conditions[0]['value'], $clause['value']);
       }
       else {
-        $value = $conditions4[0]['value'];
-        $conditions4[0]['value'] = array($value, $clause4['value']);
-        $conditions4[0]['operator'] = 'IN';
+        $value = $conditions[0]['value'];
+        $conditions[0]['value'] = array($value, $clause['value']);
+        $conditions[0]['operator'] = 'IN';
       }
-      unset($conditions4[$key4]);
+      unset($conditions[$key]);
     }
   }
 }
