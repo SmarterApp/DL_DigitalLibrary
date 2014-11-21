@@ -81,6 +81,11 @@ $darkgreen: #246a34;
   .form-item-state {
     width: 100%;
   }
+  
+  .form-item.form-disabled{
+    width: 90%;
+    select { margin: 5px 0; }
+  }
 }
 
 .report-title {

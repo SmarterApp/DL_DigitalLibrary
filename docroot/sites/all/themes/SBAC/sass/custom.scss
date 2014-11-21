@@ -4202,13 +4202,22 @@ form#sbac-user-filter-form #edit-email {
   }
 }
 
-.ctools-modal-content.critical {
+#modalContent .ctools-modal-content.critical.small {
   position: relative;
   line-height: 1.4;
+  border: 5px solid #ffffff;
+  box-shadow: 0 0 3px 0 rgba(4, 56, 78, 0.3), 0 1px 0 0 rgba(0, 0, 0, 0.1);
+  background-color: #fdf2b1;
+  color: #464b54;
   
   .modal-content {
     overflow: visible !important;
     overflow-y: visible !important;
+  }
+  
+  .modal-title {
+    color: #8a1538 !important;
+    padding: 15px 0;
   }
   
   strong {
@@ -4217,12 +4226,13 @@ form#sbac-user-filter-form #edit-email {
     clear: both;
   }
   
-  button.close.form-submit {
+  button.close.form-submit,
+  button.close#edit-submit {
     background: none;
     border: none;
     border-radius: 0;
     box-shadow: none;
-    color: #ffffff;
+    color: transparent;
     cursor: pointer;
     font-size: 16px;
     font-weight: normal;

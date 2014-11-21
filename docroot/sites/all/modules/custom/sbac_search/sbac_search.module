@@ -141,6 +141,11 @@ function sbac_resource_clear_library_page() {
         unset($_SESSION['load_more']['resource_review']['page']);
         drupal_goto($location);
         break;
+      case 'forums':
+        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
+        $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
+        drupal_goto($location);
+        break;
     }
   }
 
