@@ -21,7 +21,7 @@ function sbac_report_individual_form($form, &$form_state) {
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
     '#multiple' => FALSE,
-    '#disabled' => !sbac_report_user_access_all($account),
+    '#disabled' => !sbac_report_user_access_all($account) || sbac_central_user_has_role(array('reports administrator')),
     '#default_value' => sbac_report_get_default_state_tid(),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
@@ -57,7 +57,7 @@ function sbac_report_individual_form($form, &$form_state) {
   $name_value = sbac_user_format_username($user);
   $form['sne'] = array(
     '#type' => 'textfield',
-    '#title' => t('Choose a SNE'),
+    '#title' => t('Choose a Contributor or Reviewer'),
     '#autocomplete_path' => 'sne/autocomplete',
     '#required' => TRUE,
     '#size' => 30,
