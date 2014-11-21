@@ -2020,11 +2020,11 @@ function sbac_resource_query_alter(&$query) {
     if ($possible_filters) {
       if ($query->alterMetaData['view']->name == 'forum_list') {
         sbac_resource_forum_table_optimize($possible_filters, $tables, $removed_tables);
-        sbac_resource_forum_query_optimize($query, $removed_tables, $table, $where, $possible_filters);
+        sbac_resource_forum_query_optimize($query, $removed_tables, $tables, $where, $possible_filters);
       }
       else {
         sbac_resource_default_table_optimize($possible_filters, $tables, $removed_tables);
-        sbac_resource_default_query_optimize($query, $removed_tables, $table, $where, $possible_filters);
+        sbac_resource_default_query_optimize($query, $removed_tables, $tables, $where, $possible_filters);
       }
     }
   }
