@@ -69,6 +69,7 @@ function sbac_user_user_default_permissions() {
       'guest' => 'guest',
       'help desk' => 'help desk',
       'moderator' => 'moderator',
+      'reports administrator' => 'reports administrator',
       'resource contributor' => 'resource contributor',
       'resource publisher' => 'resource publisher',
       'resource reviewer' => 'resource reviewer',

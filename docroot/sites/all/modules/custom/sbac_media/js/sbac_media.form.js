@@ -41,7 +41,7 @@
       });
 
       if ($('#edit-field-content-module-upload').length) {
-        $('#edit-field-content-module-upload').html('Upload (100MB Max)');
+        $('#edit-field-content-module-upload').html('Upload (250MB Max)');
       }
     }
   };
