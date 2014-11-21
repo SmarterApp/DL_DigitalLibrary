@@ -252,6 +252,8 @@ function sbac_central_preprocess_page(&$vars) {
   $critical_message_end_date = variable_get('critical_message_end_date');
   $now = date('m/d/Y - H:i');
   if (($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) && drupal_is_front_page() && !isset($_SESSION['show_critical_message'])) {
+    drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/sbac_central.js');
+
     // button
     $critical_message_button = l(t('Critical Message'), 'sbac-central/nojs/critical-message', array(
       'attributes' => array(
