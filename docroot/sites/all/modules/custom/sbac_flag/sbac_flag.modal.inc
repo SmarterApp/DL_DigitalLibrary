@@ -589,12 +589,12 @@ function sbac_flag_session_expire_modal($js = FALSE) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Continue Moderation') {
         // refresh the user session somehow.
-        sbac_sso_session_regenerate();
+        // sbac_sso_session_regenerate();
         $output[] = ajax_command_callback('sbac_node_form', 'reset_timers');
       }
       else {
         // cancel was clicked.
-        sbac_sso_session_regenerate();
+        // sbac_sso_session_regenerate();
         $node = node_load($form_state['nid']);
         sbac_flag_unset_being_moderated($node);
         $output[] = ctools_ajax_command_redirect('moderation');

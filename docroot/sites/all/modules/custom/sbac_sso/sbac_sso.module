@@ -158,7 +158,7 @@ function sbac_sso_session_expire_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'OK') {
-        sbac_sso_session_regenerate();
+        // sbac_sso_session_regenerate();
       }
       else {
         global $base_url;
@@ -301,7 +301,7 @@ function sbac_sso_session_regenerate() {
 function sbac_sso_preprocess_page(&$vars) {
   // Regenerate the user session per page.
   if (user_is_logged_in() && strpos($_GET['q'], 'ajax') === FALSE) {
-    sbac_sso_session_regenerate();
+    // sbac_sso_session_regenerate();
   }
 
   // If the user is being presented with the conflicting profile screen
