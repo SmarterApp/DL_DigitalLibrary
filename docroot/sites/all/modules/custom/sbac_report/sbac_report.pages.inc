@@ -754,7 +754,7 @@ function sbac_report_sne_autocomplete($string = '') {
   if (sbac_central_user_has_role(array('reports administrator'))) {
     $query->leftJoin('users_roles', 'ur', 'ur.uid = u.uid');
     $query->leftJoin('role', 'r', 'r.rid = ur.rid');
-    $query->condition('r.name', array('resource publisher', 'resource reviewer'), 'IN');
+    $query->condition('r.name', array('resource contributor', 'resource reviewer'), 'IN');
   }
 
   $result = $query->execute()->fetchAll();
