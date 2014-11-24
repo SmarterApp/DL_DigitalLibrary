@@ -1,4 +1,10 @@
 <?php
+/**
+ * @file
+ * Code for the SBAC SSO feature.
+ */
+
+include_once 'sbac_sso.features.inc';
 
 /**
  * @file.
