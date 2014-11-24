@@ -464,8 +464,7 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
 function sbac_flag_preprocess_node(&$vars) {
   if ($vars['type'] == 'resource') {
     if (isset($_GET['flag']) && $_GET['flag'] == 'view-resource-flags') {
-      global $user;
-      if (in_array('moderator', $user->roles)) {
+      if (sbac_flag_moderation_access()) {
         drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
         // get status, get amount of flags, get urgent amount of flags, produce start moderation button
         $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'resource');
@@ -479,8 +478,7 @@ function sbac_flag_preprocess_node(&$vars) {
     }
 
     if (isset($_GET['flag']) && ($_GET['flag'] == 'view-resource-review-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
-      global $user;
-      if (in_array('moderator', $user->roles)) {
+      if (sbac_flag_moderation_access()) {
         drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
         $review = $_GET['review'];
         $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'review', $review);
@@ -500,8 +498,7 @@ function sbac_flag_preprocess_node(&$vars) {
  */
 function sbac_flag_preprocess_page(&$vars) {
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'edit' && isset($_GET['flag']) && $_GET['flag'] == 'resolve-resource-flags') {
-    global $user;
-    if (in_array('moderator', $user->roles)) {
+    if (sbac_flag_moderation_access()) {
       $node = menu_get_object();
       if ($node && $node->type == 'resource') {
         $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
