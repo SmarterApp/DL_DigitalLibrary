@@ -445,19 +445,18 @@ function _resource_access_access_qc_review_comment($node, $account) {
     if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
       // contributor can see it
       $access = $node->uid == $account->uid;
-      if (!$access && sbac_central_user_has_role(array('reports administrator'), $account)) {
-        // reports administrator in the same state as contributor can see it
-        $query = db_select('node', 'n');
-        $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
-        $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
-        $query->condition('n.nid', $node->nid);
-        $query->where('s1.field_state_tid = s2.field_state_tid');
-        $query->fields('n', array('nid'));
-        $access = (bool) $query->countQuery()->execute()->fetchField();
+      if (!$access && sbac_central_user_has_role(array('reports administrator', 'resource publisher'), $account)) {
+        if (_resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1) || sbac_resource_failed_arbitration_twice($node->nid)) {
+          // reports administrator in the same state as contributor can see it
+          $query = db_select('node', 'n');
+          $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+          $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+          $query->condition('n.nid', $node->nid);
+          $query->where('s1.field_state_tid = s2.field_state_tid');
+          $query->fields('n', array('nid'));
+          $access = (bool) $query->countQuery()->execute()->fetchField();
+        }
       }
-    }
-    elseif (_resource_access_node_has_state($node, array('rejected'))) {
-      $access = _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
     }
   }
   return $access;
@@ -480,20 +479,12 @@ function _resource_access_gk_review_comment($node, $account){
     ->execute()
     ->fetchField();
   if ($rejected) {
-    $failed_arbitration_twice = db_select('eck_feedback', 'f')
-      ->condition('f.node_id', $node->nid)
-      ->condition('f.completed', 1)
-      ->fields('f', array('type'))
-      ->orderBy('f.id', 'DESC')
-      ->range(0, 2)
-      ->execute()
-      ->fetchCol();
     // don't show this tab if the resource failed arbitration 2+ times
-    if ($failed_arbitration_twice[0] != 'post' && $failed_arbitration_twice[1] != 'post') {
+    if (!sbac_resource_failed_arbitration_twice($node->nid)) {
       if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
         // contributor has access
         $access = $node->uid == $account->uid;
-        if (!$access && sbac_central_user_has_role(array('reports administrator'), $account)) {
+        if (!$access && sbac_central_user_has_role(array('reports administrator', 'resource publisher'), $account)) {
           // reports administrator has access if they are from the same state
           $query = db_select('node', 'n');
           $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');

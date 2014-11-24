@@ -4159,3 +4159,21 @@ function sbac_resource_quick_search_filter() {
   }
   return $output;
 }
+
+/**
+ * Check to see if a resource has failed arbitration 2+ times
+ *
+ * @param $resource_id
+ * @return bool
+ */
+function sbac_resource_failed_arbitration_twice($resource_id){
+  $failed_arbitration_twice = db_select('eck_feedback', 'f')
+    ->condition('f.node_id', $resource_id)
+    ->condition('f.completed', 1)
+    ->fields('f', array('type'))
+    ->orderBy('f.id', 'DESC')
+    ->range(0, 2)
+    ->execute()
+    ->fetchCol();
+  return $failed_arbitration_twice[0] == 'post' && $failed_arbitration_twice[1] == 'post';
+}
