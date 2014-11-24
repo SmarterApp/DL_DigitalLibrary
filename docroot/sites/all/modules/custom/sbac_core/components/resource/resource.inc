@@ -442,7 +442,7 @@ function _resource_access_access_qc_review_comment($node, $account) {
     ->execute()
     ->fetchField();
   if ($rejected) {
-    if (_resource_access_node_has_state($node, array('draft'))) {
+    if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
       // contributor can see it
       $access = $node->uid == $account->uid;
       if (!$access && sbac_central_user_has_role(array('reports administrator'), $account)) {
