@@ -112,14 +112,6 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.modal.inc',
   );
 
-  $items['sbac-flag/%ctools_js/session-expire'] = array(
-    'title' => 'Session Expire',
-    'page callback' => 'sbac_flag_session_expire_modal',
-    'page arguments' => array(1),
-    'access callback' => TRUE,
-    'file' => 'sbac_flag.modal.inc',
-  );
-
   $items['moderation'] = array(
     'title' => t('Moderation'),
     'page callback' => 'sbac_flag_moderation',
