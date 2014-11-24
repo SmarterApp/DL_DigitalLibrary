@@ -253,10 +253,14 @@ function sbac_central_preprocess_page(&$vars) {
   $critical_message_end_date = variable_get('critical_message_end_date');
   $now = date('m/d/Y - H:i');
   if ($critical_message_on && ($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) && drupal_is_front_page() && !isset($_SESSION['show_critical_message'])) {
+    if ((isset($_SESSION['welcome-update']) && $_SESSION['welcome-update'] == TRUE)) {
+      $critical_message_button = '<input type="hidden" value="1" id="sbac-central-click-welcome-tutorial">';
+      $_SESSION['critical-first-then-welcome-tutorial'] = TRUE;
+    }
     drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/sbac_central.js');
 
     // button
-    $critical_message_button = l(t('Critical Message'), 'sbac-central/nojs/critical-message', array(
+    $critical_message_button .= l(t('Critical Message'), 'sbac-central/nojs/critical-message', array(
       'attributes' => array(
         'class' => 'ctools-use-modal button blue use-ajax ctools-modal-sbac-central-critical-message',
         'id' => 'sbac-central-critical-message'
