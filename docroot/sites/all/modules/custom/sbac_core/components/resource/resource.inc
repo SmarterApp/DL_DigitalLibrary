@@ -444,7 +444,7 @@ function _resource_access_access_qc_review_comment($node, $account) {
   if ($rejected) {
     if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
       // contributor can see it
-      $access = $node->uid == $account->uid && _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
+      $access = $node->uid == $account->uid && (_resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1) || sbac_resource_failed_arbitration_twice($node->nid));
       if (!$access && sbac_central_user_has_role(array('reports administrator', 'resource publisher'), $account)) {
         if (_resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1) || sbac_resource_failed_arbitration_twice($node->nid)) {
           // reports administrator in the same state as contributor can see it
