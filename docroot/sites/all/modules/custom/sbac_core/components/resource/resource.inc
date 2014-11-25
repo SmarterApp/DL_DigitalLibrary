@@ -50,7 +50,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_edit_quality_criteria($node, $account);
           break;
         case 'access post process':
-          $perm = in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
+          $perm = sbac_central_user_has_role(array('resource publisher'), $account);
           break;
         case 'view post':
         case 'start post':
@@ -67,13 +67,13 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_access_quality_criteria_revisions($node, $account);
           break;
         case 'access quality criteria process':
-          $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles)) || in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
+          $perm = sbac_central_user_has_role(array('resource reviewer', 'resource publisher'), $account);
           break;
         case 'view related resources':
           $perm = _resource_access_node_has_state($node, array('published'));
           break;
         case 'view collaboration':
-          $perm = _resource_access_node_has_state($node, array('published')) && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
+          $perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && sbac_forum_get_resource_forum_id($node->nid);
           break;
         case 'access gk review comments':
           $perm = _resource_access_gk_review_comment($node, $account);
@@ -85,7 +85,7 @@ function resource_access($op, $node, $account = NULL) {
         case 'access flag':
         case 'view reviews':
         case 'access review process':
-          $perm = _resource_access_node_has_state($node, array('published')) && !in_array(SBAC_SHARE_GUEST, $account->roles) && in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
+          $perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && $account->uid > 0;
           break;
         case 'access about process':
         case 'view about':
@@ -117,7 +117,7 @@ function _resource_access_view_gate_keeper($node, $account) {
   }
   else {
     // Make sure we are still in GK and have the right role.
-    if (_sbac_resource_is_in_gate_keeping($node) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+    if (_sbac_resource_is_in_gate_keeping($node) && sbac_central_user_has_role(array('resource reviewer'), $account)) {
       $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
       // if this is a new submission, or if it is a resubmission and the user has access
       if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_reviewer_access($node, $account, $submit_timestamp))) {
@@ -174,7 +174,7 @@ function _resource_access_edit_gate_keeper($node, $account) {
  */
 function _resource_access_view_quality_criteria($node, $account) {
   $access = FALSE;
-  if (_sbac_resource_is_in_quality_review($node) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+  if (_sbac_resource_is_in_quality_review($node) && sbac_central_user_has_role(array('resource reviewer'), $account)) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
     // if this is a new submission, or if it is a resubmission and the user has access
     if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_reviewer_access($node, $account, $submit_timestamp))) {
@@ -234,7 +234,7 @@ function _resource_access_view_quality_criteria($node, $account) {
  */
 function _resource_access_view_post($node, $account) {
   $access = FALSE;
-  if (_resource_access_node_has_state($node, array('approved')) && in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))) {
+  if (_resource_access_node_has_state($node, array('approved')) && sbac_central_user_has_role(array('resource publisher'), $account)) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
     // if this is a new submission, or if it is a resubmission and the user has access
     if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_publisher_access($node, $account, $submit_timestamp))) {
@@ -278,7 +278,7 @@ function _resource_access_edit_post($node, $account) {
  */
 function _resource_access_view_tags($node, $account) {
   $access = FALSE;
-  if (in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))) {
+  if (sbac_central_user_has_role(array('resource publisher'), $account)) {
     // to access the tags screen the user must have an active post
     $access = _resource_access_count_feedback($node->nid, 'post', $account->uid, 1, 0);
   }
@@ -417,7 +417,7 @@ function _resource_access_access_quality_criteria_revisions($node, $account) {
     else {
       // There are no in progress reviews
       $access = _resource_access_node_has_state($node, array('needs_review', 'being_reviewed', 'approved'))
-        && array_intersect(array(FEEDBACK_REVIEWER_RID, FEEDBACK_PUBLISHER_RID), array_keys($account->roles))
+        && sbac_central_user_has_role(array('resource reviewer', 'resource publisher'), $account)
         && $node->uid != $account->uid
         && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
     }
@@ -444,7 +444,7 @@ function _resource_access_access_qc_review_comment($node, $account) {
   if ($rejected) {
     if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
       // contributor can see it
-      $access = $node->uid == $account->uid;
+      $access = $node->uid == $account->uid && _resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1);
       if (!$access && sbac_central_user_has_role(array('reports administrator', 'resource publisher'), $account)) {
         if (_resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1) || sbac_resource_failed_arbitration_twice($node->nid)) {
           // reports administrator in the same state as contributor can see it

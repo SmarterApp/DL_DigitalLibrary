@@ -435,7 +435,7 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   foreach ($results as $row) {
     $resource = node_load($row->nid);
     $title = truncate($row->title, 55, array('check_markup' => FALSE));
-    $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => array('sec' => '1')));
+    $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => !sbac_central_user_has_role(array('resource contributor', 'reports administrator')) ? array('sec' => '1') : array()));
     $row->contribution_date = date('m/d/Y h:i a', $row->created);
     $rows[] = $row;
   }
@@ -754,7 +754,7 @@ function sbac_report_sne_autocomplete($string = '') {
   if (sbac_central_user_has_role(array('reports administrator'))) {
     $query->leftJoin('users_roles', 'ur', 'ur.uid = u.uid');
     $query->leftJoin('role', 'r', 'r.rid = ur.rid');
-    $query->condition('r.name', array('resource publisher', 'resource reviewer'), 'IN');
+    $query->condition('r.name', array('resource contributor', 'resource reviewer'), 'IN');
   }
 
   $result = $query->execute()->fetchAll();
