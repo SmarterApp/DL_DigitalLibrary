@@ -250,9 +250,24 @@ function sbac_central_preprocess_page(&$vars) {
 
   $critical_message_on = variable_get('critical_message_on_off', 0);
   $critical_message_start_date = variable_get('critical_message_start_date');
+  $critical_message_start_time = '00:00:00';
+  if(variable_get('critical_message_add_start_time', 0)){
+    $critical_message_start_time = variable_get('critical_message_start_time', '00:00:00');
+  }
+  $critical_message_start_datetime = strtotime($critical_message_start_date . ' ' . $critical_message_start_time);
   $critical_message_end_date = variable_get('critical_message_end_date');
-  $now = date('m/d/Y - H:i');
-  if ($critical_message_on && ($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) && drupal_is_front_page() && !isset($_SESSION['show_critical_message'])) {
+  $critical_message_end_time = '00:00:00';
+  if(variable_get('critical_message_add_end_time', 0)){
+    $critical_message_end_time = variable_get('critical_message_end_time', '00:00:00');
+  }
+  $critical_message_end_datetime = strtotime($critical_message_end_date . ' ' . $critical_message_end_time);
+  $now = time();
+  if ($critical_message_on
+    && $critical_message_start_datetime <= $now
+    && $now <= $critical_message_end_datetime
+    && drupal_is_front_page()
+    && !isset($_SESSION['show_critical_message'])
+  ) {
     if ((isset($_SESSION['welcome-update']) && $_SESSION['welcome-update'] == TRUE)) {
       $critical_message_button = '<input type="hidden" value="1" id="sbac-central-click-welcome-tutorial">';
       $_SESSION['critical-first-then-welcome-tutorial'] = TRUE;
