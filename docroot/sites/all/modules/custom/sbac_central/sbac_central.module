@@ -272,7 +272,7 @@ function sbac_central_preprocess_page(&$vars) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 305,
+          'height' => 220,
         ),
         'modalTheme' => 'CtoolSbacCentralCriticalMessage',
       ),
