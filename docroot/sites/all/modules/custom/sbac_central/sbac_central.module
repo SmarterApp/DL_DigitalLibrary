@@ -250,9 +250,24 @@ function sbac_central_preprocess_page(&$vars) {
 
   $critical_message_on = variable_get('critical_message_on_off', 0);
   $critical_message_start_date = variable_get('critical_message_start_date');
+  $critical_message_start_time = '00:00:00';
+  if(variable_get('critical_message_add_start_time', 0)){
+    $critical_message_start_time = variable_get('critical_message_start_time', '00:00:00');
+  }
+  $critical_message_start_datetime = strtotime($critical_message_start_date . ' ' . $critical_message_start_time);
   $critical_message_end_date = variable_get('critical_message_end_date');
-  $now = date('m/d/Y - H:i');
-  if ($critical_message_on && ($critical_message_start_date >= $now && $critical_message_end_date >= $critical_message_start_date && $critical_message_end_date >= $now) && drupal_is_front_page() && !isset($_SESSION['show_critical_message'])) {
+  $critical_message_end_time = '00:00:00';
+  if(variable_get('critical_message_add_end_time', 0)){
+    $critical_message_end_time = variable_get('critical_message_end_time', '00:00:00');
+  }
+  $critical_message_end_datetime = strtotime($critical_message_end_date . ' ' . $critical_message_end_time);
+  $now = time();
+  if ($critical_message_on
+    && $critical_message_start_datetime <= $now
+    && $now <= $critical_message_end_datetime
+    && drupal_is_front_page()
+    && !isset($_SESSION['show_critical_message'])
+  ) {
     if ((isset($_SESSION['welcome-update']) && $_SESSION['welcome-update'] == TRUE)) {
       $critical_message_button = '<input type="hidden" value="1" id="sbac-central-click-welcome-tutorial">';
       $_SESSION['critical-first-then-welcome-tutorial'] = TRUE;
@@ -272,7 +287,7 @@ function sbac_central_preprocess_page(&$vars) {
         'modalSize' => array(
           'type' => 'fixed',
           'width' => 600,
-          'height' => 305,
+          'height' => 220,
         ),
         'modalTheme' => 'CtoolSbacCentralCriticalMessage',
       ),
@@ -819,6 +834,7 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
     '#date_format' => variable_get('date_format_short', 'H:i'),
     '#states' => array(
       'disabled' => array(':input[name="critical_message_add_time_start_checkbox"]' => array('checked' => FALSE)),
+      'required' => array(':input[name="critical_message_add_time_start_checkbox"]' => array('checked' => TRUE)),
     ),
     '#suffix' => '</div>',
   );
@@ -854,6 +870,7 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
     '#default_value' => $default_end_time,
     '#states' => array(
       'disabled' => array(':input[name="critical_message_add_time_end_checkbox"]' => array('checked' => FALSE)),
+      'required' => array(':input[name="critical_message_add_time_end_checkbox"]' => array('checked' => TRUE)),
     ),
     '#suffix' => '</div>',
   );
@@ -867,7 +884,27 @@ function sbac_central_form_system_site_maintenance_mode_alter(&$form, &$form_sta
     ),
   );
   $form['#submit'][] = 'sbac_central_form_system_site_maintenance_mode_alter_submit';
+  $form['#validate'][] = 'sbac_central_form_system_site_maintenance_mode_alter_validate';
   return $form;
+}
+
+/**
+ * Form validate function
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_central_form_system_site_maintenance_mode_alter_validate(&$form, &$form_state){
+  if($form_state['values']['critical_message_add_time_start_checkbox']){
+    if(empty($form_state['input']['critical_message_start_time']['time'])){
+      form_set_error('critical_message_start_time', t('Start time is required'));
+    }
+  }
+  if($form_state['values']['critical_message_add_time_end_checkbox']){
+    if(empty($form_state['input']['critical_message_end_time']['time'])){
+      form_set_error('critical_message_end_time', t('End time is required'));
+    }
+  }
 }
 
 /**
