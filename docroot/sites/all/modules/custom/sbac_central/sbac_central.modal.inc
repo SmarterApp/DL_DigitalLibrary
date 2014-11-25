@@ -22,8 +22,15 @@ function sbac_central_critical_message_modal($js = FALSE) {
     if (!empty($form_state['executed'])) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
-      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+      if ($form_state['triggering_element']['#value'] == 'Close') {
         $_SESSION['show_critical_message'] = TRUE;
+        global $user;
+        $disable_help = isset($user->data['disable_help']) ? $user->data['disable_help'] : 0;
+        $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
+        if ((!$last_welcome && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
+          $output[] = ajax_command_invoke('#sbac-central-click-welcome-tutorial', 'remove');
+          $output[] = ajax_command_invoke('#sbac-help-welcome-tutorial', 'click');
+        }
       }
     }
     print ajax_render($output);
