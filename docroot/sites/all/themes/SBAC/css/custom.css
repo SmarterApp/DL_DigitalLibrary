@@ -11797,33 +11797,39 @@ form#sbac-user-filter-form #edit-email {
 }
 
 /* line 4188, ../sass/custom.scss */
-#modalContent .ctools-modal-content.critical.small {
+#modalContent .ctools-modal-content.critical {
   position: relative;
   line-height: 1.4;
   border: 5px solid #ffffff;
   box-shadow: 0 0 3px 0 rgba(4, 56, 78, 0.3), 0 1px 0 0 rgba(0, 0, 0, 0.1);
   background-color: #fdf2b1;
   color: #464b54;
+  padding: 10px 20px;
+  overflow-y: scroll;
 }
-/* line 4196, ../sass/custom.scss */
-#modalContent .ctools-modal-content.critical.small .modal-content {
+/* line 4198, ../sass/custom.scss */
+#modalContent .ctools-modal-content.critical .modal-content {
   overflow: visible !important;
   overflow-y: visible !important;
 }
-/* line 4201, ../sass/custom.scss */
-#modalContent .ctools-modal-content.critical.small .modal-title {
+/* line 4202, ../sass/custom.scss */
+#modalContent .ctools-modal-content.critical .modal-content h2 {
+  color: #000;
+}
+/* line 4205, ../sass/custom.scss */
+#modalContent .ctools-modal-content.critical #modal-title {
   color: #8a1538 !important;
   padding: 15px 0;
 }
-/* line 4206, ../sass/custom.scss */
-#modalContent .ctools-modal-content.critical.small strong {
+/* line 4210, ../sass/custom.scss */
+#modalContent .ctools-modal-content.critical strong {
   width: 100%;
   float: left;
   clear: both;
 }
-/* line 4213, ../sass/custom.scss */
-#modalContent .ctools-modal-content.critical.small button.close.form-submit,
-#modalContent .ctools-modal-content.critical.small button.close#edit-submit {
+/* line 4217, ../sass/custom.scss */
+#modalContent .ctools-modal-content.critical button.close.form-submit,
+#modalContent .ctools-modal-content.critical button.close#edit-submit {
   background: none;
   border: none;
   border-radius: 0;
@@ -11838,12 +11844,12 @@ form#sbac-user-filter-form #edit-email {
   text-align: center;
   text-shadow: none;
   position: absolute;
-  right: -20px;
-  top: -60px;
+  right: -30px;
+  top: -50px;
   z-index: 9999;
 }
-/* line 4233, ../sass/custom.scss */
-#modalContent .ctools-modal-content.critical.small button.close.form-submit:before {
+/* line 4237, ../sass/custom.scss */
+#modalContent .ctools-modal-content.critical button.close.form-submit:before {
   content: "\e636";
   font-family: SBAC;
   font-size: 20px;
@@ -11855,7 +11861,7 @@ form#sbac-user-filter-form #edit-email {
 /* -----------------------------------------
   Auto Logout Popup
   ------------------------------------------ */
-/* line 4246, ../sass/custom.scss */
+/* line 4250, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog {
   background: none;
   border: none;
@@ -11863,7 +11869,7 @@ form#sbac-user-filter-form #edit-email {
   font-family: Arial,sans-serif;
   line-height: 1.4;
 }
-/* line 4253, ../sass/custom.scss */
+/* line 4257, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-widget-header {
   width: 640px;
   padding: 20px 40px 0;
@@ -11871,11 +11877,11 @@ form#sbac-user-filter-form #edit-email {
   color: #000;
   margin: 0 auto;
 }
-/* line 4260, ../sass/custom.scss */
+/* line 4264, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-widget-header .ui-button {
   display: none;
 }
-/* line 4265, ../sass/custom.scss */
+/* line 4269, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-widget-content {
   width: 640px;
   background-color: #fff;
@@ -11883,18 +11889,18 @@ form#sbac-user-filter-form #edit-email {
   font-size: 16px;
   margin: 0 auto;
 }
-/* line 4273, ../sass/custom.scss */
+/* line 4277, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog #autologout-confirm.ui-widget-content {
   width: 640px !important;
   padding: 20px 40px;
   margin: 0 auto !important;
 }
-/* line 4279, ../sass/custom.scss */
+/* line 4283, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-dialog-buttonpane.ui-widget-content {
   border: none;
   padding-bottom: 25px;
 }
-/* line 4283, ../sass/custom.scss */
+/* line 4287, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-dialog-buttonpane.ui-widget-content button {
   float: right;
   margin: 0 20px 0 10px;
@@ -11916,20 +11922,20 @@ form#sbac-user-filter-form #edit-email {
   background-color: #2AA549;
   border: 1px solid #268A16;
 }
-/* line 4300, ../sass/custom.scss */
+/* line 4304, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-dialog-buttonpane.ui-widget-content button:hover {
   background-color: #269542;
 }
-/* line 4305, ../sass/custom.scss */
+/* line 4309, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-dialog-buttonpane.ui-widget-content button.ui-state-default {
   background-image: none;
 }
-/* line 4309, ../sass/custom.scss */
+/* line 4313, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-dialog-buttonpane.ui-widget-content button + button {
   background-color: #6E7379;
   border: 1px solid #4D5457;
 }
-/* line 4313, ../sass/custom.scss */
+/* line 4317, ../sass/custom.scss */
 .ui-widget-content.autologout-dialog .ui-dialog-buttonpane.ui-widget-content button + button:hover {
   background-color: #64696e;
 }
