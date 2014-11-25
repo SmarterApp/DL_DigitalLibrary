@@ -10,6 +10,11 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   ctools_include('modal');
   ctools_modal_add_js();
 
+  $flag_property = isset($_GET['flag']) ? $_GET['flag'] : 0;
+  if ($flag_property && !sbac_flag_moderation_access()) {
+    return drupal_access_denied();
+  }
+
   global $user;
   $node_data = entity_metadata_wrapper('node', $vars['node']);
   $forum_term = $node_data->field_topic_forum_parent->value();
@@ -185,7 +190,6 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
   $vars['action_section'] = $action_section;
 
-  $flag_property = isset($_GET['flag']) ? $_GET['flag'] : 0;
   if ($flag_property) {
     $flags = sbac_flag_get_forum_flags($node_data->nid->value(), $_GET['cid']);
     $flag_out = array();
@@ -335,6 +339,11 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
 
 function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
+  $moderation_type = isset($_GET['flag']) ? $_GET['flag'] : '';
+  if ($moderation_type && !sbac_flag_moderation_access()) {
+    return drupal_access_denied();
+  }
+
   global $user;
   $comment_entity = $vars['comment'];
   $comment_data = entity_metadata_wrapper('comment', $comment_entity);
