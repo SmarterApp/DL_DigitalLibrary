@@ -51,7 +51,7 @@ class Gk_Comments extends Base {
             <div class="criteria-set-title">' . t('Reviewer 1') . '</div>
             <div class="date">' . format_date($entity->created, 'full') . '</div>
             <div class="headline">' . t('Quality Criteria Level: !level', array('!level' => $level)) . '</div>
-            <div class="comments">' . field_entity_value($question, 'field_comments') . '</div>
+            <div class="comments">' . filter_xss(field_entity_value($question, 'field_comments')) . '</div>
           </div>
         ';
 
