@@ -35,7 +35,7 @@ function sbac_sso_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'autologout_message';
-  $strongarm->value = 'Select Yes to extend your session. Pressing No or failing to respond in the next two minutes will require site reauthentication.';
+  $strongarm->value = 'Select Ok to extend your session. Pressing Cancel or failing to respond in the next two minutes will require site reauthentication.';
   $export['autologout_message'] = $strongarm;
 
   $strongarm = new stdClass();
