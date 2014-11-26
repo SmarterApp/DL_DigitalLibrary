@@ -248,60 +248,77 @@ function sbac_central_preprocess_page(&$vars) {
   drupal_add_http_header('X-Content-Type-Options', 'nosniff');
   drupal_add_http_header('X-XSS-Protection', '1;mode=block');
 
-  $critical_message_on = variable_get('critical_message_on_off', 0);
-  $critical_message_start_date = variable_get('critical_message_start_date');
-  $critical_message_start_time = '00:00:00';
-  if(variable_get('critical_message_add_start_time', 0)){
-    $critical_message_start_time = variable_get('critical_message_start_time', '00:00:00');
-  }
-  $critical_message_start_datetime = strtotime($critical_message_start_date . ' ' . $critical_message_start_time);
-  $critical_message_end_date = variable_get('critical_message_end_date');
-  $critical_message_end_time = '00:00:00';
-  if(variable_get('critical_message_add_end_time', 0)){
-    $critical_message_end_time = variable_get('critical_message_end_time', '00:00:00');
-  }
-  $critical_message_end_datetime = strtotime($critical_message_end_date . ' ' . $critical_message_end_time);
-  $now = time();
-  if ($critical_message_on
-    && $critical_message_start_datetime <= $now
-    && $now <= $critical_message_end_datetime
-    && drupal_is_front_page()
-    && !isset($_SESSION['show_critical_message'])
-  ) {
-    if ((isset($_SESSION['welcome-update']) && $_SESSION['welcome-update'] == TRUE)) {
-      $critical_message_button = '<input type="hidden" value="1" id="sbac-central-click-welcome-tutorial">';
-      $_SESSION['critical-first-then-welcome-tutorial'] = TRUE;
-    }
-    drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/sbac_central.js');
+  if (drupal_is_front_page() && !isset($_SESSION['show_critical_message'])) {
+    $cm_array = sbac_central_get_critical_message_date_time();
+    $now = time();
+    
+    if ($cm_array['cm_on'] && $cm_array['cm_start_datetime'] <= $now && $now <= $cm_array['cm_end_datetime']) {
+      if ((isset($_SESSION['welcome-update']) && $_SESSION['welcome-update'] == TRUE)) {
+        $critical_message_button = '<input type="hidden" value="1" id="sbac-central-click-welcome-tutorial">';
+        $_SESSION['critical-first-then-welcome-tutorial'] = TRUE;
+      }
+      drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/sbac_central.js');
 
-    // button
-    $critical_message_button .= l(t('Critical Message'), 'sbac-central/nojs/critical-message', array(
-      'attributes' => array(
-        'class' => 'ctools-use-modal button blue use-ajax ctools-modal-sbac-central-critical-message',
-        'id' => 'sbac-central-critical-message'
-      ),
-    ));
-
-    $js_settings = array(
-      'sbac-central-critical-message' => array(
-        'modalSize' => array(
-          'type' => 'fixed',
-          'width' => 600,
-          'height' => 220,
+      // button
+      $critical_message_button .= l(t('Critical Message'), 'sbac-central/nojs/critical-message', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button blue use-ajax ctools-modal-sbac-central-critical-message',
+          'id' => 'sbac-central-critical-message'
         ),
-        'modalTheme' => 'CtoolSbacCentralCriticalMessage',
-      ),
-    );
+      ));
 
-    drupal_add_js($js_settings, 'setting');
-    drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/sbac_central.ctools.js');
-    ctools_include('modal');
-    ctools_include('ajax');
-    ctools_add_js('ajax-responder');
-    ctools_modal_add_js();
-    drupal_add_library('system', 'drupal.ajax');
-    $vars['critical_message_button'] = $critical_message_button;
+      $js_settings = array(
+        'sbac-central-critical-message' => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 600,
+            'height' => 220,
+          ),
+          'modalTheme' => 'CtoolSbacCentralCriticalMessage',
+        ),
+      );
+
+      drupal_add_js($js_settings, 'setting');
+      drupal_add_js(drupal_get_path('module', 'sbac_central') . '/js/sbac_central.ctools.js');
+      ctools_include('modal');
+      ctools_include('ajax');
+      ctools_add_js('ajax-responder');
+      ctools_modal_add_js();
+      drupal_add_library('system', 'drupal.ajax');
+      $vars['critical_message_button'] = $critical_message_button;
+    }
   }
+}
+
+/**
+ * Return the critical message variables.
+ *
+ * @return array
+ */
+function sbac_central_get_critical_message_date_time() {
+  $cm_array = array();
+  $local_timezone = date_default_timezone_get();
+  // Set EST timezone, this is a global set
+  date_default_timezone_set('US/Eastern');
+
+  $cm_array['cm_on'] = variable_get('critical_message_on_off', 0);
+  $cm_array['cm_start_date'] = variable_get('critical_message_start_date');
+  $cm_array['cm_start_time'] = '00:00:00';
+  if(variable_get('critical_message_add_start_time', 0)){
+    $cm_array['cm_start_time'] = variable_get('critical_message_start_time', '00:00:00');
+  }
+  $cm_array['cm_start_datetime'] = strtotime($cm_array['cm_start_date'] . ' ' . $cm_array['cm_start_time']);
+  $cm_array['cm_end_date'] = variable_get('critical_message_end_date');
+  $cm_array['cm_end_time'] = '00:00:00';
+  if(variable_get('critical_message_add_end_time', 0)){
+    $cm_array['cm_end_time'] = variable_get('critical_message_end_time', '00:00:00');
+  }
+  $cm_array['cm_end_datetime'] = strtotime($cm_array['cm_end_date'] . ' ' . $cm_array['cm_end_time']);
+
+  // Set back timezone.
+  date_default_timezone_set($local_timezone);
+
+  return $cm_array;
 }
 
 /**
