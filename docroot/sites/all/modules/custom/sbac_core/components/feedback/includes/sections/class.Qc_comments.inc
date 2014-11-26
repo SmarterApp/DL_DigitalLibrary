@@ -30,7 +30,7 @@ class Qc_Comments extends Base {
             <div class="criteria-set-title">
               ' . t('Posting Comments') . '
             </div>
-            <div class="comments">' . field_entity_value($entity, 'field_to_contributor') . '</div>
+            <div class="comments">' . filter_xss(field_entity_value($entity, 'field_to_contributor')) . '</div>
           </div>
         ';
     }
@@ -103,7 +103,7 @@ class Qc_Comments extends Base {
             $questions = field_entity_value($entity, 'field_review_set');
 
             $level = field_entity_value($questions[$i], 'field_level');
-            $comments = field_entity_value($questions[$i], 'field_comments');
+            $comments = filter_xss(field_entity_value($questions[$i], 'field_comments'));
             $comments = more_less_text($comments, 140);
 
             $output_item .= '

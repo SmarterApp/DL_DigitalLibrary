@@ -3275,6 +3275,7 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
       case 'needs_review':
         // author has view
         // resource reviewer has view/edit
+        // reports admin / publishers can view
         $query->condition('s.uid', 0);
         $query->condition('s.state', 'gk_needs_review');
         $result = $query->execute();
@@ -3287,20 +3288,28 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         if ($account->uid == $node->uid && $op == 'view') {
           $access = TRUE;
         }
+        elseif (sbac_central_user_has_role(array('resource publisher', 'reports administrator'), $account) && $op == 'view') {
+          $access = TRUE;
+        }
         break;
       case 'being_reviewed':
         // author has view
         // resource reviewer has view/edit
+        // posters can view
         if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
           $access = TRUE;
         }
-        if ($account->uid == $node->uid && $op == 'view') {
+        elseif ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
+        }
+        elseif (sbac_central_user_has_role(array('resource publisher', 'reports administrator'), $account) && $op == 'view') {
           $access = TRUE;
         }
         break;
       case 'approved':
         // author has view
         // resource publisher has view/edit
+        // reports admin can view
         $all_condition = db_and()->condition('s.state', 'post_needs_review')->condition('s.uid', 0);
         $user_condition = db_and()->condition('s.state', 'post_being_reviewed')->condition('s.uid', $account->uid);
         $query->condition(db_or()->condition($all_condition)->condition($user_condition));
@@ -3312,6 +3321,9 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
           }
         }
         if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
+        }
+        elseif (sbac_central_user_has_role(array('reports administrator'), $account) && $op == 'view') {
           $access = TRUE;
         }
         break;
