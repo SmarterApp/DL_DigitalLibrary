@@ -125,6 +125,7 @@ function sbac_sso_init() {
     $redirect_url = $logout_url;
     $settings = array(
       'redirect_url' => url($redirect_url),
+      'title' => t('Your session is about to end'),
     );
     drupal_add_js(array('autologout' => $settings), 'setting');
   }
