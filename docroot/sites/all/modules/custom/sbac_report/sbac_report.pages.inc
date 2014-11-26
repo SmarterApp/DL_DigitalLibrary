@@ -408,6 +408,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
  * @param $date_range
  */
 function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
+  global $user;
   // Deal with the sort options on the "Contributed resources details" table.
   $sort = 'desc';
   $order = 'created';
@@ -435,7 +436,16 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   foreach ($results as $row) {
     $resource = node_load($row->nid);
     $title = truncate($row->title, 55, array('check_markup' => FALSE));
-    $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => !sbac_central_user_has_role(array('resource contributor', 'reports administrator')) ? array('sec' => '1') : array()));
+    if (_resource_access_node_has_state($resource, array('rejected', 'published')) && sbac_central_user_has_role(array('reports administrator', 'resource publisher'))) {
+      $query = array();
+    }
+    elseif ($resource->uid == $user->uid) {
+      $query = array();
+    }
+    else {
+      $query = array('sec' => '1');
+    }
+    $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => $query));
     $row->contribution_date = date('m/d/Y h:i a', $row->created);
     $rows[] = $row;
   }
