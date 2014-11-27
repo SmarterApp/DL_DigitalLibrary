@@ -35,7 +35,7 @@ function sbac_sso_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'autologout_message';
-  $strongarm->value = 'Select Yes to extend your session. Pressing No or failing to respond in the next two minutes will require site reauthentication.';
+  $strongarm->value = 'Select OK to extend your session. Pressing Cancel or failing to respond in the next two minutes will require site reauthentication.';
   $export['autologout_message'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -49,7 +49,7 @@ function sbac_sso_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'autologout_padding';
-  $strongarm->value = '60';
+  $strongarm->value = '300';
   $export['autologout_padding'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -63,7 +63,7 @@ function sbac_sso_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'autologout_timeout';
-  $strongarm->value = '120';
+  $strongarm->value = '1800';
   $export['autologout_timeout'] = $strongarm;
 
   $strongarm = new stdClass();
