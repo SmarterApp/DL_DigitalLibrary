@@ -2028,10 +2028,10 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               '#suffix' => '</h2>'
             );
             if (!empty($post)) {
-              $post_comment = field_entity_value($post, 'field_to_contributor');
+              $post_comment = filter_xss(field_entity_value($post, 'field_to_contributor'));
               if ($post_comment != '') {
                 $form['sbac_revisions']['post_comment'] = array(
-                  '#markup' => field_entity_value($post, 'field_to_contributor'),
+                  '#markup' => $post_comment,
                   '#prefix' => '<h2>Posting comments</h2><p>',
                   '#suffix' => '</p>'
                 );
@@ -2049,7 +2049,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $created = format_date($entity->created, 'full');
               $options = field_allowed_values('field_rec_options');
               $headline = $options[field_entity_value($entity, 'field_rec_options')];
-              $comments = field_entity_value($entity, 'field_rec_rationale');
+              $comments = filter_xss(field_entity_value($entity, 'field_rec_rationale'));
               $recommendations .= theme('qc_teaser', array(
                 'id' => $entity->id,
                 'author' => t('Reviewer !count', array('!count' => $i)),
@@ -2112,7 +2112,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               foreach ($qc_entities as $entity) {
                 $questions = field_entity_value($entity, 'field_review_set');
                 $level = field_entity_value($questions[$i], 'field_level');
-                $comments = field_entity_value($questions[$i], 'field_comments');
+                $comments = filter_xss(field_entity_value($questions[$i], 'field_comments'));
                 $comments = more_less_text($comments, 140);
                 $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j] = array(
                   '#type' => 'container',
@@ -2148,7 +2148,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
-                '#default_value' => field_entity_value($questions[$i], 'field_contributor_comment') ? field_entity_value($questions[$i], 'field_contributor_comment') : ''
+                '#default_value' => field_entity_value($questions[$i], 'field_contributor_comment') ? filter_xss(field_entity_value($questions[$i], 'field_contributor_comment')) : ''
               );
               $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
                 '#type' => 'hidden',
@@ -2171,7 +2171,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               '#suffix' => '</h2>'
             );
             if (!empty($post)) {
-              $post_comment = field_entity_value($post, 'field_to_contributor');
+              $post_comment = filter_xss(field_entity_value($post, 'field_to_contributor'));
               if ($post_comment != '') {
                 $form['sbac_revisions']['post_comment'] = array(
                   '#markup' => $post_comment,
@@ -2182,7 +2182,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $form['sbac_revisions']['feedback']['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
-                '#default_value' => field_entity_value($post, 'field_contributor_comment') ? field_entity_value($post, 'field_contributor_comment') : ''
+                '#default_value' => field_entity_value($post, 'field_contributor_comment') ? filter_xss(field_entity_value($post, 'field_contributor_comment')) : ''
               );
               $form['sbac_revisions']['feedback']['post_id'] = array(
                 '#type' => 'hidden',
@@ -2247,12 +2247,12 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $form['sbac_revisions']['feedback_' . $i]['gk_comment'] = array(
                 '#type' => 'item',
                 '#title' => t('Quality Criteria Level: !level', array('!level' => $level)),
-                '#markup' => more_less_text(field_entity_value($question, 'field_comments'))
+                '#markup' => more_less_text(filter_xss(field_entity_value($question, 'field_comments')))
               );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
-                '#default_value' => field_entity_value($question, 'field_contributor_comment') ? field_entity_value($question, 'field_contributor_comment') : ''
+                '#default_value' => field_entity_value($question, 'field_contributor_comment') ? filter_xss(field_entity_value($question, 'field_contributor_comment')) : ''
               );
               $i++;
             }
