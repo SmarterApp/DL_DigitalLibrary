@@ -1,0 +1,16 @@
+Index: docroot/sites/all/modules/contrib/learning_registry/learning_registry.module
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- docroot/sites/all/modules/contrib/learning_registry/learning_registry.module	(revision )
++++ docroot/sites/all/modules/contrib/learning_registry/learning_registry.module	(date 1417217898000)
+@@ -177,7 +177,7 @@
+ function learning_registry_cron() {
+   module_load_include('inc', 'learning_registry', 'learning_registry.learning_registry');
+   // Pull node IDs of records queued for processing.
+-  $records = db_query('SELECT nid FROM {learning_registry} WHERE queued = :queued', array(':queued' => 1));
++  $records = db_query('SELECT nid FROM {learning_registry} WHERE queued = :queued LIMIT 0, 50', array(':queued' => 1));
+ 
+   foreach ($records as $record) {
+     $node = node_load($record->nid, NULL, TRUE);
