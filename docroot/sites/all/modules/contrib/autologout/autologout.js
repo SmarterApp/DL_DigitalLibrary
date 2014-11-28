@@ -103,7 +103,7 @@
 
       function dialog() {
         var buttons = {};
-        buttons[Drupal.t('Ok')] = function() {
+        buttons[Drupal.t('OK')] = function() {
           $(this).dialog("destroy");
           clearTimeout(paddingTimer);
           refresh();
