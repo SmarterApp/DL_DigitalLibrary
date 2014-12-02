@@ -886,6 +886,10 @@ function sbac_resource_determine_download_ability(&$vars) {
  * @return string
  */
 function _sbac_resource_preview_content(&$vars) {
+  if (isset($vars['view_mode']) && $vars['view_mode'] == 'print') {
+    return;
+  }
+
   $viewer = NULL;
   $html5 = FALSE;
   if (isset($vars['document']['html5'])) {
