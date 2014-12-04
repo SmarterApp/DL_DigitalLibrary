@@ -4072,6 +4072,10 @@ function _sbac_resource_taxonomy_get_parents($tid){
  */
 function sbac_resource_taxonomy_term_load($terms) {
   foreach ($terms as $term) {
+    if ($term->vocabulary_machine_name == 'education_alignment') {
+      continue;
+    }
+
     // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
