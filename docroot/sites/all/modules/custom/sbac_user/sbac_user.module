@@ -1022,9 +1022,9 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
 function sbac_user_user_login(&$edit, $account) {
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
-      drupal_goto('sbac-user/setup');
-    }
+//    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+//      drupal_goto('sbac-user/setup');
+//    }
   }
 
   // Update user information.
