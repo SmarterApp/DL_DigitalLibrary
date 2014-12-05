@@ -131,7 +131,25 @@ function sbac_user_menu() {
     'access callback' => TRUE,
   );
 
+  $items['sbac-user/legal-accept'] = array(
+    'title' => 'Legal Accept',
+    'page callback' => 'sbac_user_legal_accept',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Accept the new users legal conditions.
+ */
+function sbac_user_legal_accept() {
+  $sql = "SELECT uid FROM {users} WHERE name like '%%appnovation_%%'";
+  $results = db_query($sql);
+  foreach ($results as $row) {
+    db_query("INSERT INTO {legal_accepted} VALUES (30, 1, 'en'," . $row->uid . "," . time() . ")");
+  }
 }
 
 /**
