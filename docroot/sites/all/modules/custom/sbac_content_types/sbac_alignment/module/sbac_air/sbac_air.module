@@ -49,7 +49,7 @@ function sbac_air_test_data() {
  */
 function sbac_air_cron() {
   //  Get standards at 2AM.
-//  if (date('G') == 2) {
+  if (date('G') == 2) {
     //  Load all standards
     $publisher    = 'CC';
     $api_ela_key  = 'ELA';
@@ -92,7 +92,7 @@ function sbac_air_cron() {
     foreach ($cc_standards as $api_standard) {
       $queue->createItem($api_standard);
     }
-//  }
+  }
 }
 
 /**
