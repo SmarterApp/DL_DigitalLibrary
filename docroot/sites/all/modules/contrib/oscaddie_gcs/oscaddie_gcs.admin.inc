@@ -10,17 +10,11 @@
  */
 function oscaddie_gcs_admin($form, &$form_state) {
   $errors = FALSE;
-  $form['#attached']['css'] = array(
-    drupal_get_path('module', 'oscaddie_gcs') . '/css/oscaddie_gcs.css',
-  );
-
   $openssl = extension_loaded('openssl');
   $directory = 'private://';
   $private_directory = file_prepare_directory($directory, 'FILE_EXIST');
-  $version = variable_get('oscaddie_gcs_library_version');
-  if ($version) {
-    $info = libraries_load('google-api-php-client');
-  }
+  $info = libraries_load('google-api-php-client');
+
   if (!$openssl || !$private_directory || (isset($info['loaded']) && !$info['loaded'])) {
     $errors = TRUE;
     $form['oscaddie_gcs_warning_details'] = array(
@@ -137,70 +131,6 @@ function oscaddie_gcs_admin($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $versions = array(OSCADDIE_GCS_LIBRARY_VERSION_067 => t('0.6.7'), OSCADDIE_GCS_LIBRARY_VERSION_105BETA => t('1.0.5-beta'));
-  $form['oscaddie_gcs_library_options']['oscaddie_gcs_library_version'] = array(
-    '#type' => 'radios',
-    '#title' => t('Library Version'),
-    '#default_value' => variable_get('oscaddie_gcs_library_version'),
-    '#description' => t('The Google PHP API library version in use.'),
-    '#required' => TRUE,
-    '#options' => $versions,
-    '#ajax' => array(
-      'callback' => 'oscaddie_gcs_admin_form_callback',
-      'wrapper' => 'oscaddie-gcs-message-container',
-      'effect' => 'fade',
-    ),
-  );
-
-  // Determine which has been selected.
-  $version = 0;
-  if (isset($form_state['values']['oscaddie_gcs_library_version']) && $form_state['values']['oscaddie_gcs_library_version'] == OSCADDIE_GCS_LIBRARY_VERSION_067) {
-    $version = OSCADDIE_GCS_LIBRARY_VERSION_067;
-  }
-  elseif (isset($form_state['values']['oscaddie_gcs_library_version']) && $form_state['values']['oscaddie_gcs_library_version'] == OSCADDIE_GCS_LIBRARY_VERSION_105BETA) {
-    $version = OSCADDIE_GCS_LIBRARY_VERSION_105BETA;
-  }
-  elseif (variable_get('oscaddie_gcs_library_version') != NULL) {
-    $version = variable_get('oscaddie_gcs_library_version');
-  }
-
-  if ($version == OSCADDIE_GCS_LIBRARY_VERSION_067) {
-    $link = l(t('link'), OSCADDIE_GCS_GITHUB_LINK, array('external' => TRUE));
-    $message = '<p>' . t('This version of the Google PHP API Client Library
-      is deprecated and no longer supported by Google. This version does
-      work however, and if you would like to use the old library, the
-      choice is yours. We recommend upgrading your version to the latest
-      using this !link', array('!link' => $link)) . '</p>';
-  }
-  elseif ($version = OSCADDIE_GCS_LIBRARY_VERSION_105BETA) {
-    $is_installed = module_exists('xautoload');
-    $x_auto_load_link = l(t('XAutoload'), 'https://drupal.org/project/xautoload', array('external' => TRUE));
-    if (!$is_installed) {
-      $information = t('The latest version of the Google PHP API Client
-      Library requires a Drupal contrib module called !XAutoload_link. We
-      have checked your system and identified that XAutoload is not
-      installed. Please download
-      and enable.', array('!XAutoload_link' => $x_auto_load_link));
-    }
-    else {
-      $information = t('The latest version of the Google PHP API Client
-      Library requires a Drupal contrib module called !XAutoload_link. We
-      have checked your system and identified that XAutoload is
-      installed.', array('!XAutoload_link' => $x_auto_load_link));
-    }
-    $message = '<p>' . t('!information', array('!information' => $information)) . '</p>';
-  }
-  else {
-    $message = '<p>' . t('Please select a library version.') . '</p>';
-  }
-
-  $form['oscaddie_gcs_library_options']['message_container'] = array(
-    '#type' => 'item',
-    '#markup' => $message,
-    '#prefix' => '<div id="oscaddie-gcs-message-container">',
-    '#suffix' => '</div>',
-  );
-
   if (variable_get('oscaddie_gcs_public_key', NULL) != NULL) {
     $form['test_connection'] = array(
       '#type' => 'submit',
@@ -215,22 +145,6 @@ function oscaddie_gcs_admin($form, &$form_state) {
   );
 
   return $form;
-}
-
-
-/**
- * Ajax Callback for admin form.
- *
- * @param array $form
- *   The form array.
- * @param array $form_state
- *   The form_state array.
- *
- * @return mixed
- *   The message container.
- */
-function oscaddie_gcs_admin_form_callback(array $form, array &$form_state) {
-  return $form['oscaddie_gcs_library_options']['message_container'];
 }
 
 /**
@@ -268,9 +182,8 @@ function oscaddie_gcs_admin_public_key_file_element_process(array $element, arra
 function oscaddie_gcs_admin_validate(array $form, array &$form_state) {
   if (isset($form_state['clicked_button']) && $form_state['clicked_button']['#value'] == OSCADDIE_GCS_ADMIN_TEST_CONNECTION_BUTTON) {
     $info = libraries_load('google-api-php-client');
-    $version = variable_get('oscaddie_gcs_library_version');
-    if ($version && $info['loaded']) {
-      $response = oscaddie_gcs_test_connection($version);
+    if ($info['loaded']) {
+      $response = oscaddie_gcs_test_connection();
       if (empty($response)) {
         form_set_error('oscaddie_gcs_public_key_file', t('Error authenticating. Please check the Service Account Name, Key file and Bucket Name.'));
       }
@@ -302,7 +215,6 @@ function oscaddie_gcs_admin_submit(array $form, array &$form_state) {
     variable_set('oscaddie_gcs_client_id', $form_state['values']['oscaddie_gcs_client_id']);
     variable_set('oscaddie_gcs_service_account_name', $form_state['values']['oscaddie_gcs_service_account_name']);
     variable_set('oscaddie_gcs_signed_url_expiry', $form_state['values']['oscaddie_gcs_signed_url_expiry']);
-    variable_set('oscaddie_gcs_library_version', $form_state['values']['oscaddie_gcs_library_version']);
     oscaddie_gcs_admin_save_key_file($form, $form_state);
   }
 }

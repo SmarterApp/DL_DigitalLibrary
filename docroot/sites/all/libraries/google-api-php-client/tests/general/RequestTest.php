@@ -19,11 +19,11 @@
  */
 
 require_once 'BaseTest.php';
-require_once 'Google/Service/Plus.php';
-require_once 'Google/Http/Request.php';
+require_once realpath(dirname(__FILE__) . '/../../autoload.php');
 
-class RequestTest extends BaseTest {
-  public function testRequestParameters() 
+class RequestTest extends BaseTest
+{
+  public function testRequestParameters()
   {
     $url = 'http://localhost:8080/foo/bar?foo=a&foo=b&wowee=oh+my';
     $url2 = 'http://localhost:8080/foo/bar?foo=a&foo=b&wowee=oh+my&hi=there';

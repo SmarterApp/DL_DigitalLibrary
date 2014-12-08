@@ -5,7 +5,7 @@
  * Implements DrupalStreamWrapperInterface.
  */
 
-class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
+class OSCaddieGCSStreamWrapper implements DrupalStreamWrapperInterface {
 
   /**
    * Google Cloud Store connection object.
@@ -181,7 +181,6 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
         watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::getExternalUrl');
       }
     }
-
     return $url;
   }
 
@@ -343,11 +342,12 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
       $target = $this->getTarget($this->uri);
       if ($target) {
         try {
-          $response = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
-          if ($response) {
+          $service = $this->gcs->objects->get($this->bucket, $this->folder . '/' . $target);
+          if ($service) {
             $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target;
-            $request = new Google_HttpRequest($download_url, 'GET');
-            $response = $this->client->getIo()->authenticatedRequest($request);
+            $request = new Google_Http_Request($download_url, 'GET');
+            $signed_request = $this->client->getAuth()->sign($request);
+            $response = $this->client->getIo()->makeRequest($signed_request);
             if ($response) {
               $this->object = $response->getResponseBody();
             }
@@ -448,26 +448,38 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
   public function stream_flush() {
     if ($this->bufferWrite) {
       try {
-        $local_path = $this->getLocalPath();
-        $chunk_size_bytes = 1 * 1024 * 1024;
-        $media = new Google_MediaFileUpload(OSCaddieGCSStreamWrapperLegacy::getMimeType($this->uri), $this->buffer, TRUE, $chunk_size_bytes);
-        $postbody = array(
-          'mimeType' => OSCaddieGCSStreamWrapperLegacy::getMimeType($this->uri),
+        $file = new Google_Service_Storage_StorageObject();
+        $local_path = $this->getLocalPath($this->uri);
+        $file->setName($this->folder . '/' . $local_path);
+        $post_body = array(
+          'mimeType' => OSCaddieGCSStreamWrapper::getMimeType($this->uri),
           'data' => $this->buffer,
-          'mediaUpload' => $media,
         );
-        $gso = new Google_StorageObject();
-        $gso->setName($this->folder . '/' . $local_path);
-        $response = $this->gcs->objects->insert($this->bucket, $gso, $postbody);
-        if ($response) {
-          // Send the content in chunks.
-          $upload_result = FALSE;
-          while ($upload_result === FALSE) {
-            $upload_result = $media->nextChunk($response);
-          }
-          if ($upload_result) {
-            return TRUE;
-          }
+        $chunk_size_bytes = 1 * 1024 * 1024;
+        $this->client->setDefer(TRUE);
+        $request = $this->gcs->objects->insert($this->bucket, $file, $post_body);
+        $media = new Google_Http_MediaFileUpload(
+          $this->client,
+          $request,
+          OSCaddieGCSStreamWrapper::getMimeType($this->uri),
+          NULL,
+          TRUE,
+          $chunk_size_bytes
+        );
+        $length = strlen($this->buffer);
+        $media->setFileSize($length);
+
+        // Send the content in chunks.
+        $upload_result = FALSE;
+        $pos = 0;
+        $length = strlen($this->buffer);
+        while (!$upload_result && $pos < $length) {
+          $chunk = substr($this->buffer, $pos, $chunk_size_bytes);
+          $upload_result = $media->nextChunk($chunk);
+          $pos += $chunk_size_bytes;
+        }
+        if ($upload_result) {
+          return TRUE;
         }
       }
       catch (Exception $e) {
@@ -615,24 +627,8 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
    * @see http://php.net/manual/en/streamwrapper.mkdir.php
    */
   public function mkdir($uri, $mode, $options) {
-    try {
-      $this->callConstructor();
-      $target = $this->getLocalPath($uri);
-      $download_url = 'https://' . $this->domain . '/' . $this->bucket . '/' . $this->folder . '/' . $target . '/';
-      $request = new Google_HttpRequest($download_url, 'PUT');
-      $http_response = $this->client->getIo()->authenticatedRequest($request);
-      if ($http_response) {
-        $code = $http_response->getResponseHttpCode();
-        if ($code == 200) {
-          return TRUE;
-        }
-      }
-    }
-    catch (Exception $e) {
-      watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::stream_flush');
-    }
-
-    return FALSE;
+    // Folders do not exist.
+    return TRUE;
   }
 
   /**
@@ -807,10 +803,10 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
           // Replace this with your application name.
           $client->setApplicationName($this->serviceAccountName);
           // Replace this with the service you are using.
-          $service = new Google_StorageService($client);
+          $service = new Google_Service_Storage($client);
           // This file location should point to the private key file.
           $key = file_get_contents($this->keyFilePath);
-          $cred = new Google_AssertionCredentials(
+          $cred = new Google_Auth_AssertionCredentials(
           // Replace this with the email address from the client.
             $this->serviceAccountName,
             // Replace this with the scopes you are requesting.
@@ -822,7 +818,8 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
           if ($client->getAuth()->isAccessTokenExpired()) {
             $client->getAuth()->refreshTokenWithAssertion($cred);
           }
-
+          $token = $client->getAccessToken();
+          $client->setAccessToken($token);
           // Store services for later use.
           $this->gcs = $service;
           $this->client = $client;
@@ -885,12 +882,14 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
    *   for a description of this array.
    */
   protected function _stat($uri = NULL) {
+    if ($this->client == NULL) {
+      return FALSE;
+    }
     if (!isset($uri)) {
       $uri = $this->uri;
     }
     $this->uri = $uri;
     $target = $this->getTarget($uri);
-
     if ($target) {
       try {
         // Determine type: file or folder.
@@ -917,7 +916,6 @@ class OSCaddieGCSStreamWrapperLegacy implements DrupalStreamWrapperInterface {
       catch (Exception $e) {
       }
     }
-
     return FALSE;
   }
 
