@@ -1102,7 +1102,7 @@ function sbac_user_redirect_on_login($edit = array()) {
   if (!isset($edit['sbac-share'])) {
     if (isset($_SESSION['sbac-sso']['relay']) && $_SESSION['sbac-sso']['relay'] != NULL) {
       $relay = $_SESSION['sbac-sso']['relay'];
-      // strip the leading /, causes issues with drupal_get_path_alias  
+      // strip the leading /, causes issues with drupal_get_path_alias
       if ($relay[0] == '/') {
         $relay = substr($relay, 1);
       }

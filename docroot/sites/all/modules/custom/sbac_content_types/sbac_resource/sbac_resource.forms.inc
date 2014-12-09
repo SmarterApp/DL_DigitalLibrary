@@ -1407,6 +1407,8 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                 send_review_notifications($task, $node, $recipients);
               }
             }
+
+            sbac_resource_print_about_this_tab($node);
           }
         }
       }
