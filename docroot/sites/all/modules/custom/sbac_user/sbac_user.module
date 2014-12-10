@@ -1102,10 +1102,15 @@ function sbac_user_redirect_on_login($edit = array()) {
   if (!isset($edit['sbac-share'])) {
     if (isset($_SESSION['sbac-sso']['relay']) && $_SESSION['sbac-sso']['relay'] != NULL) {
       $relay = $_SESSION['sbac-sso']['relay'];
-      $path = drupal_valid_path($relay);
+      // strip the leading /, causes issues with drupal_get_path_alias
+      if ($relay[0] == '/') {
+        $relay = substr($relay, 1);
+      }
+      $alias_path = drupal_get_path_alias($relay);
+      $path = drupal_valid_path($alias);
       unset($_SESSION['sbac-sso']['relay']);
       if ($path) {
-        drupal_goto($relay);
+        drupal_goto($alias_path);
       }
       else {
         drupal_goto('digital-library-resources');
