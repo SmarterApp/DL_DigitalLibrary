@@ -1217,22 +1217,24 @@ function sbac_media_html5_element_upload($form, $form_state) {
           return $form['field_content_module_container'];
         }
 
-        // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
-        $callback_options = array(
-          array(
-            'function' => 'sbac_media_html5_upload_asynchronous',
-            // Setup options array.
-            'options' => array(
-              'timeout' => 1200,
-              'global_timeout' => 1200,
-            ),
-          ),
-          $file_attributes,
-        );
-        // Queue up the request.
-        httprl_queue_background_callback($callback_options);
+//        // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
+//        $callback_options = array(
+//          array(
+//            'function' => 'sbac_media_html5_upload_asynchronous',
+//            // Setup options array.
+//            'options' => array(
+//              'timeout' => 1200,
+//              'global_timeout' => 1200,
+//            ),
+//          ),
+//          $file_attributes,
+//        );
+//        // Queue up the request.
+//        httprl_queue_background_callback($callback_options);
         // Execute request.
-        $response = httprl_send_request();
+//        $response = httprl_send_request();
+        sbac_media_html5_upload_asynchronous($file_attributes);
+
         error_log(print_r($response));
         if ($response === FALSE) {
           watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
@@ -1307,9 +1309,8 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
       }
     }
 
-    error_log("COMPLETED SOMETHING");
     if (!$error_uploading) {
-      error_log("VALID");
+      error_log("VALID UPLOAD");
       // Finish the progress indicator
       error_log(print_r($file_attributes, TRUE));
       sbac_media_html5_finish_progress($file_attributes['nid']);
@@ -1409,8 +1410,30 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
     while (!$upload_result && $pos < $file_size) {
       $chunk = substr($buffer, $pos, $chunk_size_bytes);
       $upload_result = $media->nextChunk($chunk);
+
+      // If upload_result isn't FALSE while pos is less than file_size, an error has happened.
+      if(!$upload_result && $pos < $file_size) {
+        $max_retry_attempts = 5;
+        $retry_delay = 0;
+        if ($upload_result >= 500) {
+          // Use exponential back off if the status code is in the 500's
+          $retry_delay = 1;
+        }
+
+        for ($i = 0; $i < $max_retry_attempts; $i++) {
+          wait($retry_delay);   // Wait retry_delay seconds
+          $retry_result = $media->nextChunk($chunk);
+          if($retry_result) {
+            // If the retry is successful, break out of for loop
+            $upload_result = $retry_result;
+            break;
+          }
+          $retry_delay = $retry_delay * 2;
+        }
+      }
       $pos += $chunk_size_bytes;
     }
+
     // return the result
     if ($upload_result) {
       return TRUE;
