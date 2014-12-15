@@ -1456,8 +1456,7 @@ function sbac_forum_taxonomy_term_insert($term) {
  * Implements hook_taxonomy_term_presave
  */
 function sbac_forum_taxonomy_term_presave($term) {
-  if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
-    global $user;
+  if ($term->vocabulary_machine_name == 'forum') {
 
     // Cleanup task to ensure that state list is unset if access is set to "all states";
     if (isset($term->field_forum_access_states) && !empty($term->field_forum_access_states[LANGUAGE_NONE])) {
@@ -1495,103 +1494,55 @@ function sbac_forum_taxonomy_term_presave($term) {
 
     $people_to_notify = array();
     $entity_list = array();
-    if (isset($term->field_forum_member_count) && !empty($term->field_forum_member_count[LANGUAGE_NONE])) {
-      $member_count = $term->field_forum_member_count[LANGUAGE_NONE][0]['value'];
+    $term_data = entity_metadata_wrapper('taxonomy_term', $term->original);
+    try {
+      $member_count = $term_data->field_forum_member_count->value();
+    } catch (EntityMetadataWrapperException $e) {
+      $member_count = 0;
     }
-    if (((!empty($state_restrictions)) || (!empty($role_restrictions))) && (!empty($member_count) && $member_count > 1)
-    ) { // no need to run notify if there is only the creator as member.
-
-      $term_data = entity_metadata_wrapper('taxonomy_term', $term);
-      if (isset($term_data->field_fc_forum_members)) {
-        $fc_member_list = $term_data->field_fc_forum_members->value();
-        if (!empty($fc_member_list)) {
-          foreach ($fc_member_list as $fc_item) {
-            $member_entity = entity_metadata_wrapper('field_collection_item', $fc_item);
-            if (isset($member_entity->field_fc_forum_member)) {
-
-              // Do state check first.
-              $has_state = array();
-              if (!empty($state_restrictions)) {
-                $members_states = array();
-                try {
-                  $members_states_raw = $member_entity->field_fc_forum_member->field_state->value();
-                  if (!empty($members_states_raw)) {
-                    foreach ($members_states_raw as $index => $state_element) {
-                      $members_states[$state_element->tid] = $state_element->tid;
-                    }
-                  }
-                } catch (EntityMetadataWrapperException $e) {
-                }
-                $has_state = array_intersect($state_restrictions, $members_states);
-              } // end state check
-
-
-              // Check position/title/role
-              $has_role = array();
-              if (!empty($role_restrictions)) {
-                try {
-                  $members_title_raw = $member_entity->field_fc_forum_member->field_position->value();
-                  $members_title_tid = $members_title_raw->tid;
-                  $has_role = in_array($members_title_tid, $role_restrictions);
-                } catch (EntityMetadataWrapperException $e) {
-                }
-              } // end title check
-
-
-              // Bring it all together
-              $pass = 0; // Both need to match. Its an "AND", role AND state.
-              if (!empty($role_restrictions)) {
-                if (!empty($has_role)) {
-                  $pass++;
-                }
-              }
-              else { // Forum isnt role restricted.
-                $pass++;
-              }
-
-              if (!empty($state_restrictions)) { // Means check state
-                if (!empty($has_state)) {
-                  $pass++;
-                }
-              }
-              else {
-                $pass++;
-              }
-
-              if ($pass != 2) {
-                try {
-                  $user_to_remove = $member_entity->field_fc_forum_member->uid->value();
-                  $entity_id = $member_entity->item_id->value();
-                  $entity_list[] = $entity_id;
-                  $people_to_notify[] = $user_to_remove;
-                } catch (EntityMetadataWrapperException $e) {
-                }
-                $fc_item->delete(); // Mimics "leaving" a forum. User is removed entirely.
-                $member_count--;
-              }
-            }
+    if ($member_count) {
+      foreach ($term_data->field_fc_forum_members as $member_wrapper) {
+        $delete = FALSE;
+        try {
+          $member_state = $member_wrapper->field_fc_forum_member->field_state[0]->tid->value();
+          $member_roles = $member_wrapper->field_fc_forum_member->roles->value();
+          if (!empty($state_restrictions) && !in_array($member_state, $state_restrictions)) {
+            $delete = TRUE;
           }
+          elseif (!empty($role_restrictions) && !array_intersect($member_roles, $role_restrictions)) {
+            $delete = TRUE;
+          }
+        } catch (EntityMetadataWrapperException $e) {
         }
-      } // endif for sanity check entity metadata wrapper field.
-    } // End OR
-
-    if (!empty($people_to_notify)) {
-      $clean_members_list = array();
-      // Cleanup task to remove the relationship between deleted field collection entity and forum term.
-      foreach ($term->field_fc_forum_members[LANGUAGE_NONE] as $index => $entity_data) {
-        if (!in_array($entity_data['value'], $entity_list)) {
-          $clean_members_list[] = $entity_data;
+        if ($delete) {
+          try {
+            $entity_list[] = $member_wrapper->item_id->value();
+            $people_to_notify[] = $member_wrapper->field_fc_forum_member->uid->value();
+          } catch (EntityMetadataWrapperException $e) {
+          }
+          $member_wrapper->delete(); // Mimics "leaving" a forum. User is removed entirely.
+          $member_count--;
         }
       }
-      $term->field_fc_forum_members[LANGUAGE_NONE] = $clean_members_list;
-      $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = $member_count;
 
-      sbac_forum__api__send_bulk_notifications($term, 'access-change', $people_to_notify);
+      if (!empty($people_to_notify)) {
+        $clean_members_list = array();
+        // Cleanup task to remove the relationship between deleted field collection entity and forum term.
+        foreach ($term->field_fc_forum_members[LANGUAGE_NONE] as $index => $entity_data) {
+          if (!in_array($entity_data['value'], $entity_list)) {
+            $clean_members_list[] = $entity_data;
+          }
+        }
+        $term->field_fc_forum_members[LANGUAGE_NONE] = $clean_members_list;
+        $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = $member_count;
 
-      // invalidate memberlist cache when a user is removed or leaves.
-      $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $term->tid;
-      if (cache_get($cid)) {
-        cache_clear_all($cid, 'cache');
+        sbac_forum__api__send_bulk_notifications($term, 'access-change', $people_to_notify);
+
+        // invalidate memberlist cache when a user is removed or leaves.
+        $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $term->tid;
+        if (cache_get($cid)) {
+          cache_clear_all($cid, 'cache');
+        }
       }
     }
 
