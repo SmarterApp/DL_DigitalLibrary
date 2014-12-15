@@ -185,7 +185,12 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $reply_to = 'Topic Creator';
   }
   $action_section = l('Reply to ' . $reply_to . ', ' . $topic_author_first_name, $new_comment_url, $action_link_ops);
-  $control_data = sbac_forum__api__create_forum_controls($is_faci, $forum_term->tid);
+  if (isset($forum_term->field_forum_resource_ref) && !empty($forum_term->field_forum_resource_ref[LANGUAGE_NONE])) {
+    $control_data = sbac_forum__api__create_forum_controls(sbac_central_user_has_role(array('administrator')), $forum_term->tid);
+  }
+  else {
+    $control_data = sbac_forum__api__create_forum_controls($is_faci, $forum_term->tid);
+  }
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
   drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
   $vars['action_section'] = $action_section;
