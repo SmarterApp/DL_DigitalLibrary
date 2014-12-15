@@ -2193,17 +2193,20 @@ function sbac_forum_recommend_ajax_click() {
     $forum_wrapper = $comment_wrapper->node->field_topic_forum_parent;
     if ($forum_wrapper->field_fc_forum_members->count()) {
       foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
-        if ($member_wrapper->field_fc_forum_member->uid->value() == $comment->uid) {
-          // Increment the recommend count
-          $current_recommend_count = $member_wrapper->field_fc_forum_member_reco_count->value();
-          $current_recommend_count++;
-          $member_wrapper->field_fc_forum_member_reco_count->set($current_recommend_count);
-          // Set the date
-          $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-          // Update the participation score
-          $participation_score = sbac_forum_calculate_participation_score($current_recommend_count, $member_wrapper->field_fc_forum_member_tpic_count->value(), $member_wrapper->field_fc_forum_member_post_count->value());
-          $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
-          $member_wrapper->save(TRUE);
+        try {
+          if ($member_wrapper->field_fc_forum_member->uid->value() == $comment->uid) {
+            // Increment the recommend count
+            $current_recommend_count = $member_wrapper->field_fc_forum_member_reco_count->value();
+            $current_recommend_count++;
+            $member_wrapper->field_fc_forum_member_reco_count->set($current_recommend_count);
+            // Set the date
+            $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+            // Update the participation score
+            $participation_score = sbac_forum_calculate_participation_score($current_recommend_count, $member_wrapper->field_fc_forum_member_tpic_count->value(), $member_wrapper->field_fc_forum_member_post_count->value());
+            $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+            $member_wrapper->save(TRUE);
+          }
+        } catch (EntityMetadataWrapperException $e) {
         }
       }
     }
