@@ -2,7 +2,6 @@
 CONTENTS OF THIS FILE
 ---------------------
 
- * Temp
  * About Drupal
  * Configuration and features
  * Installation profiles
