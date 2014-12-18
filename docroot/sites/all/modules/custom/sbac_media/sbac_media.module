@@ -341,7 +341,7 @@ function sbac_media_download_contents($node) {
                     $target = implode('/', $target_path) . '/' . $target_file;
                     if ($response) {
                       $target_path = explode('/', $target);
-                      $target_file = rawurlencode(array_pop($target_path));
+                      $target_file = array_pop($target_path);
                       $target = implode('/', $target_path) . '/' . $target_file;
                       $download_url = 'https://' . OSCADDIE_GCS_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
                       $request = new Google_Http_Request($download_url, 'GET');
