@@ -1409,26 +1409,30 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
     $pos = 0;
     while (!$upload_result && $pos < $file_size) {
       $chunk = substr($buffer, $pos, $chunk_size_bytes);
-      $upload_result = $media->nextChunk($chunk);
-
-      // If upload_result isn't FALSE while pos is less than file_size, an error has happened.
-      if(!$upload_result && $pos < $file_size) {
-        $max_retry_attempts = 5;
-        $retry_delay = 0;
-        if ($upload_result >= 500) {
-          // Use exponential back off if the status code is in the 500's
+      try {
+        $upload_result = $media->nextChunk($chunk);
+      }
+      catch(Exception $e) {
+        // If upload_result isn't FALSE while pos is less than file_size, an error has happened.
+        if(!$upload_result && $pos < $file_size) {
+          $max_retry_attempts = 5;
           $retry_delay = 1;
-        }
-
-        for ($i = 0; $i < $max_retry_attempts; $i++) {
-          wait($retry_delay);   // Wait retry_delay seconds
-          $retry_result = $media->nextChunk($chunk);
-          if($retry_result) {
-            // If the retry is successful, break out of for loop
-            $upload_result = $retry_result;
-            break;
+          $retry_result = FALSE;
+          for ($i = 0; $i < $max_retry_attempts; $i++) {
+            // Wait retry_delay seconds
+            sleep($retry_delay);
+            try {
+              $retry_result = $media->nextChunk($chunk);
+            }
+            catch (Exception $f) {
+            }
+            if($retry_result) {
+              // If the retry is successful, break out of for loop
+              $upload_result = $retry_result;
+              break;
+            }
+            $retry_delay = $retry_delay * 2;
           }
-          $retry_delay = $retry_delay * 2;
         }
       }
       $pos += $chunk_size_bytes;
