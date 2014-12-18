@@ -82,11 +82,15 @@ DirectoryIndex index.php index.html index.htm
   # downloaded.
   RewriteRule "(^|/)\." - [F]
 
-  RewriteCond %{HTTP_HOST} stage.smarterbalancedlibrary.org$ [NC]
-  RewriteCond %{HTTP_HOST} staging.smarterbalancedlibrary.org$ [NC]
-  RewriteCond %{HTTP_HOST} dev.smarterbalancedlibrary.org$ [NC]
-  RewriteCond %{HTTP_HOST} integration.smarterbalancedlibrary.org$ [NC]
-  RewriteRule ^ https://{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+#  RewriteCond %{HTTP_HOST} stage.smarterbalancedlibrary.org$ [NC]
+#  RewriteCond %{HTTP_HOST} staging.smarterbalancedlibrary.org$ [NC]
+#  RewriteCond %{HTTP_HOST} dev.smarterbalancedlibrary.org$ [NC]
+#  RewriteCond %{HTTP_HOST} integration.smarterbalancedlibrary.org$ [NC]
+#  RewriteRule ^ https://{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
   # Redirect to https and www version of site.
   RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary.org$ [NC]
