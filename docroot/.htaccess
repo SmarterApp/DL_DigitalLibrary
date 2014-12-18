@@ -113,7 +113,7 @@ DirectoryIndex index.php index.html index.htm
   RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !beta.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !^www\. [NC]
-  RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
   #
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
