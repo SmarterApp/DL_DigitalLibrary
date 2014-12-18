@@ -67,6 +67,18 @@ DirectoryIndex index.php index.html index.htm
   # even when running as CGI or FastCGI.
   RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+  # Redirect to HTTPS
+  RewriteCond %{HTTP_HOST} ^dev.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^stage.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^staging.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^training.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^integration.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [OR]
+  RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary.org$
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
   # Block access to "hidden" directories whose names begin with a period. This
   # includes directories used by version control systems such as Subversion or
   # Git to store control files. Files whose names begin with a period, as well
@@ -82,11 +94,6 @@ DirectoryIndex index.php index.html index.htm
   # downloaded.
   RewriteRule "(^|/)\." - [F]
 
-  RewriteCond %{HTTPS} off
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteCond %{HTTP_HOST} dev.smarterbalancedlibary.org [NC]
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
   # If your site can be accessed both with and without the 'www.' prefix, you
   # can use one of the following settings to redirect users to your preferred
   # URL, either WITH or WITHOUT the 'www.' prefix. Choose ONLY one option:
@@ -98,10 +105,15 @@ DirectoryIndex index.php index.html index.htm
   # RewriteCond %{HTTP_HOST} !^www\. [NC]
   # RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  RewriteCond %{HTTPS} off
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteCond %{HTTP_HOST} !^www\.smarterbalancedlibary.org [NC]
-  RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} !sbac.dev$
+  RewriteCond %{HTTP_HOST} !dev.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !integration.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !stage.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !staging.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !beta.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
   #
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
