@@ -297,6 +297,11 @@ function _sbac_forum_delete_forum_user_access($term) {
     return $access; // Someone trying to delete a taxonomy term not from forums
   }
 
+  // restricted access for resource forums
+  if (isset($term->field_forum_resource_ref) && !empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
+    return sbac_central_user_has_role(array('administrator'));
+  }
+
   $vocab_id = $term->vid;
   $delete_perm = 'delete terms in ' . $vocab_id;
   $access = user_access($delete_perm);
