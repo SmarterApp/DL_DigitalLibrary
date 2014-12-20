@@ -4197,3 +4197,28 @@ function sbac_resource_failed_arbitration_twice($resource_id){
     ->fetchCol();
   return $failed_arbitration_twice[0] == 'post' && $failed_arbitration_twice[1] == 'post';
 }
+
+/**
+ *  Implements hook_menu_alter().
+ */
+function sbac_resource_menu_alter(&$items) {
+  if(!empty($items['taxonomy/term/%taxonomy_term/edit'])){
+    $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'sbac_resource_edit_taxonomy_access';
+  }
+}
+
+/**
+ * Access rule for taxonomy term edit
+ *
+ * @param $term
+ * @return bool
+ */
+function sbac_resource_edit_taxonomy_access($term) {
+  // restrict access for resource forums
+  if (isset($term->field_forum_resource_ref) && !empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
+    return sbac_central_user_has_role(array('administrator'));
+  }
+  else {
+    return user_access("edit terms in $term->vid") || user_access('administer taxonomy');
+  }
+}

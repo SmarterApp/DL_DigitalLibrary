@@ -1307,9 +1307,8 @@ function sbac_media_html5_upload_asynchronous($file_attributes) {
       }
     }
 
-    error_log("COMPLETED SOMETHING");
     if (!$error_uploading) {
-      error_log("VALID");
+      error_log("VALID UPLOAD");
       // Finish the progress indicator
       error_log(print_r($file_attributes, TRUE));
       sbac_media_html5_finish_progress($file_attributes['nid']);
@@ -1408,9 +1407,35 @@ function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
     $pos = 0;
     while (!$upload_result && $pos < $file_size) {
       $chunk = substr($buffer, $pos, $chunk_size_bytes);
-      $upload_result = $media->nextChunk($chunk);
+      try {
+        $upload_result = $media->nextChunk($chunk);
+      }
+      catch(Exception $e) {
+        // If upload_result isn't FALSE while pos is less than file_size, an error has happened.
+        if(!$upload_result && $pos < $file_size) {
+          $max_retry_attempts = 5;
+          $retry_delay = 1;
+          $retry_result = FALSE;
+          for ($i = 0; $i < $max_retry_attempts; $i++) {
+            // Wait retry_delay seconds
+            sleep($retry_delay);
+            try {
+              $retry_result = $media->nextChunk($chunk);
+            }
+            catch (Exception $f) {
+            }
+            if($retry_result) {
+              // If the retry is successful, break out of for loop
+              $upload_result = $retry_result;
+              break;
+            }
+            $retry_delay = $retry_delay * 2;
+          }
+        }
+      }
       $pos += $chunk_size_bytes;
     }
+
     // return the result
     if ($upload_result) {
       return TRUE;
