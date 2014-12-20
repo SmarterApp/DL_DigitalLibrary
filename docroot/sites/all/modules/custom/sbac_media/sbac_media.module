@@ -1217,24 +1217,22 @@ function sbac_media_html5_element_upload($form, $form_state) {
           return $form['field_content_module_container'];
         }
 
-//        // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
-//        $callback_options = array(
-//          array(
-//            'function' => 'sbac_media_html5_upload_asynchronous',
-//            // Setup options array.
-//            'options' => array(
-//              'timeout' => 1200,
-//              'global_timeout' => 1200,
-//            ),
-//          ),
-//          $file_attributes,
-//        );
-//        // Queue up the request.
-//        httprl_queue_background_callback($callback_options);
+        // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
+        $callback_options = array(
+          array(
+            'function' => 'sbac_media_html5_upload_asynchronous',
+            // Setup options array.
+            'options' => array(
+              'timeout' => 1200,
+              'global_timeout' => 1200,
+            ),
+          ),
+          $file_attributes,
+        );
+        // Queue up the request.
+        httprl_queue_background_callback($callback_options);
         // Execute request.
-//        $response = httprl_send_request();
-        sbac_media_html5_upload_asynchronous($file_attributes);
-
+        $response = httprl_send_request();
         error_log(print_r($response));
         if ($response === FALSE) {
           watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
