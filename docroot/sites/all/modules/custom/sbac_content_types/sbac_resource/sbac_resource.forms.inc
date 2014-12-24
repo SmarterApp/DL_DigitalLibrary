@@ -2389,7 +2389,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_view_permissions_per_state']['und']['#title'] = '';
   $form['field_view_permissions_per_state']['und']['#prefix'] = '<div id="sbac-permissions-state">';
   $form['field_view_permissions_per_state']['und']['#suffix'] = '</div>';
-  $form['field_view_permissions_per_state']['#weight'] = 39;
+  $form['field_view_permissions_per_state']['#weight'] = 40;
 
   // Resource Actions.
   $form['field_resource_actions']['#weight'] = 40;

@@ -271,6 +271,7 @@
       });
       $('#sbac-permissions-per-state input:radio:last').click(function () {
         $('.form-item-field-view-permissions-per-state-und').show();
+        $('#edit_field_view_permissions_per_state_und_chzn input').width(200);
       });
 
       // Resource actions

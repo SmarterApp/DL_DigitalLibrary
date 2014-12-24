@@ -6,7 +6,7 @@ CONTENTS OF THIS FILE
  * Configuration and features
  * Installation profiles
  * Appearance
- * Developing for Drupal
+ * Developing for Drupal.
 
 ABOUT DRUPAL
 ------------
