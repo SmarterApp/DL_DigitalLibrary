@@ -68,6 +68,7 @@ DirectoryIndex index.php index.html index.htm
   RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
   # Redirect to HTTPS
+  RewriteCond %{HTTP_HOST} !sbacloadtest.prod.acquia-sites.com$ [OR]
   RewriteCond %{HTTP_HOST} ^dev.smarterbalancedlibrary.org$ [OR]
   RewriteCond %{HTTP_HOST} ^stage.smarterbalancedlibrary.org$ [OR]
   RewriteCond %{HTTP_HOST} ^staging.smarterbalancedlibrary.org$ [OR]
@@ -110,6 +111,7 @@ DirectoryIndex index.php index.html index.htm
   RewriteCond %{HTTP_HOST} !integration.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !stage.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !staging.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !sbacloadtest.prod.acquia-sites.com$
   RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !beta.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !^www\. [NC]
