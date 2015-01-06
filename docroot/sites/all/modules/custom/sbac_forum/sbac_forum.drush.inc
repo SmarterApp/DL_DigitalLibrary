@@ -61,7 +61,7 @@ function drush_sbac_forum_update_participant_count() {
     if ($term_wrapper->field_forum_member_count->value() > 1) {
       foreach ($term_wrapper->field_fc_forum_members as $member_wrapper) {
         $uid = $member_wrapper->field_fc_forum_member->uid->value();
-        if(!sbac_forum_user_has_participated($tid, $uid)){
+        if (!sbac_forum_user_has_participated($tid, $uid)) {
           sbac_forum__api__leave_forum($term, 'leave', $uid);
         }
       }

@@ -1121,10 +1121,15 @@ function sbac_user_redirect_on_login($edit = array()) {
   if (!isset($edit['sbac-share'])) {
     if (isset($_SESSION['sbac-sso']['relay']) && $_SESSION['sbac-sso']['relay'] != NULL) {
       $relay = $_SESSION['sbac-sso']['relay'];
-      $path = drupal_valid_path($relay);
+      // strip the leading /, causes issues with drupal_get_path_alias
+      if ($relay[0] == '/') {
+        $relay = substr($relay, 1);
+      }
+      $alias_path = drupal_get_path_alias($relay);
+      $path = drupal_valid_path($alias);
       unset($_SESSION['sbac-sso']['relay']);
       if ($path) {
-        drupal_goto($relay);
+        drupal_goto($alias_path);
       }
       else {
         drupal_goto('digital-library-resources');
@@ -1460,9 +1465,6 @@ function sbac_user_preprocess_page(&$vars) {
   }
 
   global $user;
-  if (!$user->uid || (!isset($_SESSION['user_setup']) && !isset($_SESSION['welcome-update']))) {
-    return;
-  }
   $disable_help = isset($user->data['disable_help']) ? $user->data['disable_help'] : 0;
   $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
   $last_session = $user->login > $last_welcome;
@@ -1470,7 +1472,7 @@ function sbac_user_preprocess_page(&$vars) {
     drupal_goto('sbac-user/setup');
   }
   if (!isset($_SESSION['critical-first-then-welcome-tutorial'])) {
-    if ((!$last_welcome && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
+    if (($last_session && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
       drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
     }
   }

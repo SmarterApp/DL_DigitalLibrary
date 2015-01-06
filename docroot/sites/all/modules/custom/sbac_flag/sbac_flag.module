@@ -1035,7 +1035,7 @@ function sbac_flag_determine_urgent($flag_option, $type = 'resource') {
       if ($term->name == 'Contains personally identifiable information (PII)') {
         return TRUE;
       }
-      if ($term->name == 'May be in violation of intellectual property rights') {
+      if (strstr($term->name, 'May be in violation of intellectual property rights')) {
         return TRUE;
       }
       if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {

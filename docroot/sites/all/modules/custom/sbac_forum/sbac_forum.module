@@ -297,6 +297,11 @@ function _sbac_forum_delete_forum_user_access($term) {
     return $access; // Someone trying to delete a taxonomy term not from forums
   }
 
+  // restricted access for resource forums
+  if (isset($term->field_forum_resource_ref) && !empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
+    return sbac_central_user_has_role(array('administrator'));
+  }
+
   $vocab_id = $term->vid;
   $delete_perm = 'delete terms in ' . $vocab_id;
   $access = user_access($delete_perm);
@@ -1051,6 +1056,179 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = $link;
+
+  $term = taxonomy_term_load($tid);
+  if($term) {
+    // Get the forum restrictions.  We won't add users who don't meet these restrictions
+    $state_restrictions = array();
+    if (isset($term->field_forum_access_states) && !empty($term->field_forum_access_states[LANGUAGE_NONE])) {
+      $all_states = $term->field_forum_access_states[LANGUAGE_NONE][0]['value'];
+      if (!$all_states && !empty($term->field_state[LANGUAGE_NONE])) {
+        foreach ($term->field_state[LANGUAGE_NONE] as $key => $value) {
+          $state_restrictions[$value['tid']] = $value['tid'];
+        }
+      }
+    }
+
+    $role_restrictions = array();
+    if (isset($term->field_forum_access_user_roles) && !empty($term->field_forum_access_user_roles[LANGUAGE_NONE])) {
+      $all_roles = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
+      if (!$all_roles && !empty($term->field_forum_access_role_list[LANGUAGE_NONE])) {
+        foreach ($term->field_forum_access_role_list[LANGUAGE_NONE] as $key => $value) {
+          $role_restrictions[$value['value']] = $value['value'];
+        }
+      }
+    }
+
+    // delete all the current members
+    $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+    foreach ($forum_wrapper->field_fc_forum_members as $index => $member_wrapper) {
+      $member_wrapper->delete();
+      unset($term->field_fc_forum_members[LANGUAGE_NONE][$index]);
+    }
+    $current_member_count = 0;
+    $current_members = array();
+    $people_to_notify = array();
+
+    // Add topic creators
+    $topics = _sbac_forum_get_topic_creators($term->tid);
+    foreach ($topics as $topic) {
+      if (empty($role_restrictions) || (!empty($role_restrictions) && array_intersect($role_restrictions, explode(',', $topic->roles)))) {
+        if (empty($state_restrictions) || (!empty($state_restrictions) && array_intersect($state_restrictions, explode(',', $topic->states)))) {
+          // add the user to the participant list
+          $params = array(
+            'field_name' => 'field_fc_forum_members'
+          );
+          $new_member_item = entity_create('field_collection_item', $params);
+          $new_member_item->setHostEntity('taxonomy_term', $term);
+          $new_member_item->field_fc_forum_member[LANGUAGE_NONE][]['target_id'] = $topic->uid;
+          $new_member_item->field_fc_forum_member_joined[LANGUAGE_NONE][]['value'] = date(DATE_FORMAT_DATETIME, $topic->created);
+          $new_member_item->field_fc_forum_member_rcnt_actvt[LANGUAGE_NONE][]['value'] = $topic->created;
+          $new_member_item->field_fc_forum_member_tpic_count[LANGUAGE_NONE][]['value'] = $topic->count;
+          $new_member_item->field_fc_forum_member_post_count[LANGUAGE_NONE][]['value'] = 0;
+          $new_member_item->field_fc_forum_member_reco_count[LANGUAGE_NONE][]['value'] = 0;
+          $new_member_item->field_fc_forum_member_partip_scr[LANGUAGE_NONE][]['value'] = sbac_forum_calculate_participation_score(0, $topic->count, 0);
+          $new_member_item->save();
+
+          $current_members[$topic->uid] = $new_member_item->item_id;
+          $current_member_count++;
+        } else {
+          $people_to_notify[] = $topic->uid;
+        }
+      } else {
+        $people_to_notify[] = $topic->uid;
+      }
+    }
+
+    // Add commenter
+    $comments = _sbac_forum_get_commenters($term->tid);
+    foreach ($comments as $comment) {
+      if (empty($role_restrictions) || (!empty($role_restrictions) && array_intersect($role_restrictions, explode(',', $comment->roles)))) {
+        if (empty($state_restrictions) || (!empty($state_restrictions) && array_intersect($state_restrictions, explode(',', $comment->states)))) {
+          $query = db_select('comment', 'c');
+          $query->innerJoin('field_data_field_topic_comment_recommended', 'r', 'r.entity_id = c.cid AND r.entity_type = \'comment\'');
+          $query->innerJoin('field_data_field_topic_forum_parent', 'p', 'p.entity_id = c.nid');
+          $query->condition('p.field_topic_forum_parent_tid', $term->tid)
+            ->condition('c.uid', $comment->uid);
+          $recommend_count = $query->fields('c', array('cid'))->countQuery()->execute()->fetchField();
+          if (!in_array($comment->uid, array_keys($current_members))) {
+            // add the user to the participant list
+            $params = array(
+              'field_name' => 'field_fc_forum_members'
+            );
+            $new_member_item = entity_create('field_collection_item', $params);
+            $new_member_item->setHostEntity('taxonomy_term', $term);
+            $new_member_item->field_fc_forum_member[LANGUAGE_NONE][]['target_id'] = $comment->uid;
+            $new_member_item->field_fc_forum_member_joined[LANGUAGE_NONE][]['value'] = date(DATE_FORMAT_DATETIME, $comment->created);
+            $new_member_item->field_fc_forum_member_rcnt_actvt[LANGUAGE_NONE][]['value'] = $comment->created;
+            $new_member_item->field_fc_forum_member_post_count[LANGUAGE_NONE][]['value'] = $comment->count;
+            $new_member_item->field_fc_forum_member_reco_count[LANGUAGE_NONE][]['value'] = $recommend_count;
+            $new_member_item->field_fc_forum_member_tpic_count[LANGUAGE_NONE][]['value'] = 0;
+            $new_member_item->field_fc_forum_member_partip_scr[LANGUAGE_NONE][]['value'] = sbac_forum_calculate_participation_score($recommend_count, 0, $comment->count);
+            $new_member_item->save();
+
+            $current_member_count++;
+            $current_members[$comment->uid] = $new_member_item->item_id;
+          }
+          else {
+            $member = field_collection_item_load($current_members[$comment->uid]);
+            if ($comment->created < strtotime($member->field_fc_forum_member_joined['und'][0]['value'])) {
+              $member->field_fc_forum_member_joined['und'][0]['value'] = date(DATE_FORMAT_DATETIME, $comment->created);
+            }
+            if ($comment->created > $member->field_fc_forum_member_rcnt_actvt['und'][0]['value']) {
+              $member->field_fc_forum_member_rcnt_actvt['und'][0]['value'] = $comment->created;
+            }
+            $member->field_fc_forum_member_post_count['und'][0]['value'] = $comment->count;
+            $member->field_fc_forum_member_reco_count['und'][0]['value'] = $recommend_count;
+            $member->field_fc_forum_member_partip_scr['und'][0]['value'] = sbac_forum_calculate_participation_score($recommend_count, $member->field_fc_forum_member_tpic_count['und'][0]['value'], $comment->count);
+            $member->save();
+          }
+        } else {
+          $people_to_notify[] = $comment->uid;
+        }
+      } else {
+        $people_to_notify[] = $comment->uid;
+      }
+    }
+
+    if (!empty($people_to_notify)) {
+      sbac_forum__api__send_bulk_notifications($term, 'access-change', $people_to_notify);
+    }
+
+    $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = $current_member_count;
+    taxonomy_term_save($term);
+
+    // invalidate member list cache when a new user joins.
+    $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $term->tid;
+    if (cache_get($cid)) {
+      cache_clear_all($cid, 'cache');
+    }
+  }
+}
+
+/**
+ * Get the topic creators for a forum
+ *
+ * @param $forum_id
+ * @return mixed
+ */
+function _sbac_forum_get_topic_creators($forum_id){
+  $query = db_select('field_data_field_topic_forum_parent', 'p');
+  $query->leftJoin('node', 'n', 'n.nid = p.entity_id');
+  $query->leftJoin('users_roles', 'ur', 'ur.uid = n.uid');
+  $query->leftJoin('field_data_field_state', 's', 's.entity_id = n.uid AND s.entity_type = \'user\'');
+  $query->condition('p.bundle', 'topic')
+    ->condition('p.field_topic_forum_parent_tid', $forum_id);
+  $query->fields('n', array('uid'));
+  $query->addExpression("max(n.created)", 'created');
+  $query->addExpression("count(DISTINCT n.nid)", 'count');
+  $query->addExpression("GROUP_CONCAT(DISTINCT ur.rid)", 'roles');
+  $query->addExpression("GROUP_CONCAT(DISTINCT s.field_state_tid)", 'states');
+  $query->groupBy('n.uid');
+  return $query->execute()->fetchAll();
+}
+
+/**
+ * Get the forum commenters/posters
+ *
+ * @param $forum_id
+ * @return mixed
+ */
+function _sbac_forum_get_commenters($forum_id){
+  $query = db_select('field_data_field_topic_forum_parent', 'p');
+  $query->leftJoin('node', 'n', 'n.nid = p.entity_id');
+  $query->leftJoin('comment', 'c', 'c.nid = n.nid');
+  $query->leftJoin('users_roles', 'ur', 'ur.uid = c.uid');
+  $query->leftJoin('field_data_field_state', 's', 's.entity_id = c.uid AND s.entity_type = \'user\'');
+  $query->condition('p.bundle', 'topic')
+    ->condition('p.field_topic_forum_parent_tid', $forum_id);
+  $query->isNotNull('c.cid');
+  $query->groupBy('c.uid');
+  $query->fields('c', array('uid', 'created'));
+  $query->addExpression("count(DISTINCT c.cid)", 'count');
+  $query->addExpression("GROUP_CONCAT(DISTINCT ur.rid)", 'roles');
+  $query->addExpression("GROUP_CONCAT(DISTINCT s.field_state_tid)", 'states');
+  return $query->execute()->fetchAll();
 }
 
 /**
@@ -1456,144 +1634,7 @@ function sbac_forum_taxonomy_term_insert($term) {
  * Implements hook_taxonomy_term_presave
  */
 function sbac_forum_taxonomy_term_presave($term) {
-  if ($term->vocabulary_machine_name == 'forum') { // Adding term to forum
-    global $user;
-
-    // Cleanup task to ensure that state list is unset if access is set to "all states";
-    if (isset($term->field_forum_access_states) && !empty($term->field_forum_access_states[LANGUAGE_NONE])) {
-      $state_access = $term->field_forum_access_states[LANGUAGE_NONE][0]['value'];
-    }
-    $state_restrictions = array();
-    if (!empty($state_access)) {
-      $term->field_state[LANGUAGE_NONE] = array(); // Unset the selection for state lists.
-    }
-    else { // forum has been state restricted. Get states.
-      if (!empty($term->field_state[LANGUAGE_NONE])) {
-        $raw = $term->field_state[LANGUAGE_NONE];
-        foreach ($raw as $key => $value) {
-          $state_restrictions[$value['tid']] = $value['tid'];
-        }
-      }
-    }
-
-    // Cleanup task to ensure that role list is unset if access is set to "all roles"; AKA title
-    if (isset($term->field_forum_access_user_roles) && !empty($term->field_forum_access_user_roles[LANGUAGE_NONE])) {
-      $role_access = $term->field_forum_access_user_roles[LANGUAGE_NONE][0]['value'];
-    }
-    $role_restrictions = array();
-    if (!empty($role_access)) {
-      $term->field_forum_access_role_list[LANGUAGE_NONE] = array(); // Unset the selection for role lists.
-    }
-    else {
-      if (!empty($term->field_forum_access_role_list[LANGUAGE_NONE])) {
-        $raw = $term->field_forum_access_role_list[LANGUAGE_NONE];
-        foreach ($raw as $key => $value) {
-          $role_restrictions[$value['value']] = $value['value'];
-        }
-      }
-    }
-
-    $people_to_notify = array();
-    $entity_list = array();
-    if (isset($term->field_forum_member_count) && !empty($term->field_forum_member_count[LANGUAGE_NONE])) {
-      $member_count = $term->field_forum_member_count[LANGUAGE_NONE][0]['value'];
-    }
-    if (((!empty($state_restrictions)) || (!empty($role_restrictions))) && (!empty($member_count) && $member_count > 1)
-    ) { // no need to run notify if there is only the creator as member.
-
-      $term_data = entity_metadata_wrapper('taxonomy_term', $term);
-      if (isset($term_data->field_fc_forum_members)) {
-        $fc_member_list = $term_data->field_fc_forum_members->value();
-        if (!empty($fc_member_list)) {
-          foreach ($fc_member_list as $fc_item) {
-            $member_entity = entity_metadata_wrapper('field_collection_item', $fc_item);
-            if (isset($member_entity->field_fc_forum_member)) {
-
-              // Do state check first.
-              $has_state = array();
-              if (!empty($state_restrictions)) {
-                $members_states = array();
-                try {
-                  $members_states_raw = $member_entity->field_fc_forum_member->field_state->value();
-                  if (!empty($members_states_raw)) {
-                    foreach ($members_states_raw as $index => $state_element) {
-                      $members_states[$state_element->tid] = $state_element->tid;
-                    }
-                  }
-                } catch (EntityMetadataWrapperException $e) {
-                }
-                $has_state = array_intersect($state_restrictions, $members_states);
-              } // end state check
-
-
-              // Check position/title/role
-              $has_role = array();
-              if (!empty($role_restrictions)) {
-                try {
-                  $members_title_raw = $member_entity->field_fc_forum_member->field_position->value();
-                  $members_title_tid = $members_title_raw->tid;
-                  $has_role = in_array($members_title_tid, $role_restrictions);
-                } catch (EntityMetadataWrapperException $e) {
-                }
-              } // end title check
-
-
-              // Bring it all together
-              $pass = 0; // Both need to match. Its an "AND", role AND state.
-              if (!empty($role_restrictions)) {
-                if (!empty($has_role)) {
-                  $pass++;
-                }
-              }
-              else { // Forum isnt role restricted.
-                $pass++;
-              }
-
-              if (!empty($state_restrictions)) { // Means check state
-                if (!empty($has_state)) {
-                  $pass++;
-                }
-              }
-              else {
-                $pass++;
-              }
-
-              if ($pass != 2) {
-                try {
-                  $user_to_remove = $member_entity->field_fc_forum_member->uid->value();
-                  $entity_id = $member_entity->item_id->value();
-                  $entity_list[] = $entity_id;
-                  $people_to_notify[] = $user_to_remove;
-                } catch (EntityMetadataWrapperException $e) {
-                }
-                $fc_item->delete(); // Mimics "leaving" a forum. User is removed entirely.
-                $member_count--;
-              }
-            }
-          }
-        }
-      } // endif for sanity check entity metadata wrapper field.
-    } // End OR
-
-    if (!empty($people_to_notify)) {
-      $clean_members_list = array();
-      // Cleanup task to remove the relationship between deleted field collection entity and forum term.
-      foreach ($term->field_fc_forum_members[LANGUAGE_NONE] as $index => $entity_data) {
-        if (!in_array($entity_data['value'], $entity_list)) {
-          $clean_members_list[] = $entity_data;
-        }
-      }
-      $term->field_fc_forum_members[LANGUAGE_NONE] = $clean_members_list;
-      $term->field_forum_member_count[LANGUAGE_NONE][0]['value'] = $member_count;
-
-      sbac_forum__api__send_bulk_notifications($term, 'access-change', $people_to_notify);
-
-      // invalidate memberlist cache when a user is removed or leaves.
-      $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $term->tid;
-      if (cache_get($cid)) {
-        cache_clear_all($cid, 'cache');
-      }
-    }
+  if ($term->vocabulary_machine_name == 'forum') {
 
     // Get all nodes tagged with this term / in this forum.
     if (isset($term->tid)) {
@@ -2242,17 +2283,20 @@ function sbac_forum_recommend_ajax_click() {
     $forum_wrapper = $comment_wrapper->node->field_topic_forum_parent;
     if ($forum_wrapper->field_fc_forum_members->count()) {
       foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
-        if ($member_wrapper->field_fc_forum_member->uid->value() == $comment->uid) {
-          // Increment the recommend count
-          $current_recommend_count = $member_wrapper->field_fc_forum_member_reco_count->value();
-          $current_recommend_count++;
-          $member_wrapper->field_fc_forum_member_reco_count->set($current_recommend_count);
-          // Set the date
-          $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
-          // Update the participation score
-          $participation_score = sbac_forum_calculate_participation_score($current_recommend_count, $member_wrapper->field_fc_forum_member_tpic_count->value(), $member_wrapper->field_fc_forum_member_post_count->value());
-          $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
-          $member_wrapper->save(TRUE);
+        try {
+          if ($member_wrapper->field_fc_forum_member->uid->value() == $comment->uid) {
+            // Increment the recommend count
+            $current_recommend_count = $member_wrapper->field_fc_forum_member_reco_count->value();
+            $current_recommend_count++;
+            $member_wrapper->field_fc_forum_member_reco_count->set($current_recommend_count);
+            // Set the date
+            $member_wrapper->field_fc_forum_member_rcnt_actvt->set(time());
+            // Update the participation score
+            $participation_score = sbac_forum_calculate_participation_score($current_recommend_count, $member_wrapper->field_fc_forum_member_tpic_count->value(), $member_wrapper->field_fc_forum_member_post_count->value());
+            $member_wrapper->field_fc_forum_member_partip_scr->set($participation_score);
+            $member_wrapper->save(TRUE);
+          }
+        } catch (EntityMetadataWrapperException $e) {
         }
       }
     }
