@@ -1330,3 +1330,16 @@ function sbac_central_update_7092() {
   );
   module_enable($modules);
 }
+
+/**
+ * Add indexes to taskit table.
+ */
+function sbac_central_update_7093() {
+  if (db_table_exists('taskit')) {
+    db_add_index('taskit', 'type', array('type'));
+    db_add_index('taskit', 'created', array('created'));
+    db_add_index('taskit', 'viewed', array('viewed'));
+    db_add_index('taskit', 'state', array('state'));
+    db_add_index('taskit', 'visibility', array('visibility'));
+  }
+}
