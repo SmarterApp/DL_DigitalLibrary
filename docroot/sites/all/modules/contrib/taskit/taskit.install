@@ -229,6 +229,25 @@ function taskit_schema() {
     ),
   );
 
+  $schema['taskit_user_unread_notifications_count'] = array(
+    'description' => 'The count of notifications for a given user',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'count' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('uid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+  );
+
   return $schema;
 }
 
@@ -315,4 +334,29 @@ function taskit_update_7004(&$sandbox) {
   //db_query("ALTER TABLE taskit_viewed DROP INDEX `PRIMARY`");
 }
 
+/**
+ * Creates the {taskit_user_notifications_count} table.
+ */
+function taskit_update_7005(&$sandbox) {
+  $schema['taskit_user_unread_notifications_count'] = array(
+    'description' => 'The unread count of notifications for a given user',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'count' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('uid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+  );
+
+  db_create_table('taskit_user_unread_notifications_count', $schema['taskit_user_unread_notifications_count']);
+}
 

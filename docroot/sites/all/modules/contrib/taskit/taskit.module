@@ -725,7 +725,8 @@ function taskit_count_tasks($uid, $rids, $new = FALSE) {
   module_load_include('inc', 'taskit', 'includes/class.Base');
   module_load_include('inc', 'taskit', 'includes/class.Task');
 
-  $counts = &drupal_static(__FUNCTION__);
+  // $counts = &drupal_static(__FUNCTION__);
+  $count = null;
   $type = $new ? 'unread' : 'all';
 
   if (is_null($counts)) {
@@ -977,4 +978,31 @@ function taskit_zebra($id) {
   }
   
   return $data[$id] = $zebra[$data[$id]];
+}
+
+/**
+ * Update the user unread notifications count.
+ *
+ * @param $uid
+ * @throws \Exception
+ */
+function taskit_update_user_unread_count($uid) {
+  $sql = "SELECT uid FROM {taskit_user_unread_notifications_count} WHERE uid = :uid";
+  $result = db_query_range($sql, 0, 1, array(':uid' => $uid))->execute()->rowCount();
+  if ($result) {
+    // Add 1 to count.
+    db_update('taskit_user_unread_notifications_count')
+      ->expression('count', 'count + :count', array(':count' => 1))
+      ->condition('uid', $uid)
+      ->execute();
+  }
+  else {
+    // Initialize count to 1.
+    db_insert('taskit_user_unread_notifications_count')
+      ->fields(array(
+        'uid' => $uid,
+        'count' => 1,
+      ))
+      ->execute();
+  }
 }
