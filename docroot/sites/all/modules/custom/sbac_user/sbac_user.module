@@ -1568,10 +1568,10 @@ function sbac_user_preprocess_favorites(&$vars, $user) {
  * @param $user
  */
 function sbac_user_preprocess_notifications(&$vars, $user) {
-  $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
+  $taskit_count = sbac_user_get_taskit_count($user->uid);
   $text = t('Notifications');
-  if ($taskit_counts['_no_role_'] != 0) {
-    $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
+  if ($taskit_count != 0) {
+    $text .= ' <span>' . $taskit_count . '</span>';
   }
   $link = drupal_get_path_alias('user/' . $user->uid);
   $vars['user']->notifications = l($text, $link, array(
@@ -1579,6 +1579,18 @@ function sbac_user_preprocess_notifications(&$vars, $user) {
     'fragment' => 'profile-notifications',
     'attributes' => array('title' => 'Notifications'),
   ));
+}
+
+/**
+ * Returns the users unread notifications count.
+ *
+ * @param $uid
+ * @return mixed
+ */
+function sbac_user_get_taskit_count($uid) {
+  $sql = "SELECT count FROM {taskit_user_unread_notifications_count} WHERE uid = :uid";
+  $result = db_query($sql, array(':uid' => $uid))->fetchField();
+  return $result;
 }
 
 /**
