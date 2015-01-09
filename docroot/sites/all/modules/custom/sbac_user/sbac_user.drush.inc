@@ -74,8 +74,8 @@ function drush_sbac_user_notifications_count() {
  * @return bool
  */
 function drush_sbac_user_check_notifications_table($uid) {
-  $sql = "SELECT uid FROM {taskit_user_unread_notifications_count} WHERE uid = :uid";
-  $result = db_query_range($sql, 0, 1, array(':uid' => $uid))->execute()->rowCount();
+  $sql = "SELECT uid FROM {taskit_user_unread_notifications_count} WHERE uid = " . $uid;
+  $result = db_query($sql)->fetchField();
   if ($result) {
     return TRUE;
   }

@@ -987,8 +987,8 @@ function taskit_zebra($id) {
  * @throws \Exception
  */
 function taskit_update_user_unread_count($uid) {
-  $sql = "SELECT uid FROM {taskit_user_unread_notifications_count} WHERE uid = :uid";
-  $result = db_query_range($sql, 0, 1, array(':uid' => $uid))->execute()->rowCount();
+  $sql = "SELECT uid FROM {taskit_user_unread_notifications_count} WHERE uid = " . $uid;
+  $result = db_query($sql)->fetchField();
   if ($result) {
     // Add 1 to count.
     db_update('taskit_user_unread_notifications_count')

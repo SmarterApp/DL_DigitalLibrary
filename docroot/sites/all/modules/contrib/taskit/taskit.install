@@ -335,7 +335,7 @@ function taskit_update_7004(&$sandbox) {
 }
 
 /**
- * Creates the {taskit_user_notifications_count} table.
+ * Creates the {taskit_user_unread_notifications_count} table.
  */
 function taskit_update_7005(&$sandbox) {
   $schema['taskit_user_unread_notifications_count'] = array(
