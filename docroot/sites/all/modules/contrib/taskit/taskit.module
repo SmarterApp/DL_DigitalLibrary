@@ -726,7 +726,7 @@ function taskit_count_tasks($uid, $rids, $new = FALSE) {
   module_load_include('inc', 'taskit', 'includes/class.Task');
 
   // $counts = &drupal_static(__FUNCTION__);
-  $count = null;
+  $counts = null;
   $type = $new ? 'unread' : 'all';
 
   if (is_null($counts)) {
