@@ -50,7 +50,7 @@ function drush_sbac_user_accept_terms() {
  */
 function drush_sbac_user_notifications_count() {
   ini_set('memory_limit', '1048M');
-  $sql = "SELECT COUNT(u.uid)
+  $sql = "SELECT u.uid
     FROM users u
     LEFT OUTER JOIN taskit_user_unread_notifications_count t ON u.uid = t.uid
     WHERE t.uid IS NULL;";
