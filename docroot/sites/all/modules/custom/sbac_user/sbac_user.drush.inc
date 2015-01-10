@@ -50,36 +50,20 @@ function drush_sbac_user_accept_terms() {
  */
 function drush_sbac_user_notifications_count() {
   ini_set('memory_limit', '1048M');
-  $sql = "SELECT * FROM {users} WHERE status = 1";
+  $sql = "select count(u.uid)
+    from users u
+    left outer join taskit_user_unread_notifications_count t on u.uid = t.uid
+    WHERE t.uid IS NULL;";
   $result = db_query($sql);
   foreach ($result as $row) {
     $user = user_load($row->uid);
     if ($user) {
-      $exists = drush_sbac_user_check_notifications_table($user->uid);
-      if (!$exists) {
-        $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
-        drush_sbac_user_update_user_notifications_count($user->uid, $taskit_counts['_no_role_']);
-        unset($taskit_counts);
-      }
+      $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
+      drush_sbac_user_update_user_notifications_count($user->uid, $taskit_counts['_no_role_']);
+      unset($taskit_counts);
     }
     unset($user);
   }
-}
-
-/**
- * Check if the user already exists in the table.
- *
- * @param $uid
- *
- * @return bool
- */
-function drush_sbac_user_check_notifications_table($uid) {
-  $sql = "SELECT uid FROM {taskit_user_unread_notifications_count} WHERE uid = " . $uid;
-  $result = db_query($sql)->fetchField();
-  if ($result) {
-    return TRUE;
-  }
-  return FALSE;
 }
 
 /**
