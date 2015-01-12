@@ -66,7 +66,7 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   sbac_forum_forum_listing_apply_filters($view_p, $passive_filters, $passive_display); // Set filters here.
   $view_p->pre_execute();
   $view_p->execute();
-  $view_p->_post_execute();
+  // $view_p->_post_execute();
   $count_values[$passive_display] = $view_p->total_rows;
   $view_p->destroy();
 
