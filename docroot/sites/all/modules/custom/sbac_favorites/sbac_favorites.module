@@ -138,6 +138,7 @@ function sbac_favorites_ajax_click() {
         ->condition('type', $type)
         ->execute();
     }
+    unset($_SESSION['favorites']['count']);
     $output = array();
     print drupal_json_encode($output);
     exit;
@@ -176,6 +177,7 @@ function sbac_favorites_ajax_delete() {
     $output['total'] = 0;
     $output['no_results'] = sbac_favorites_get_html_content();
   }
+  unset($_SESSION['favorites']['count']);
   print drupal_json_encode($output);
   exit;
 }
@@ -187,9 +189,15 @@ function sbac_favorites_ajax_delete() {
  * @return array
  */
 function sbac_favorites_get_count($uid) {
+  if (isset($_SESSION['favorites']['count'])) {
+    return $_SESSION['favorites']['count'];
+  }
+
   $forum_favorites = sbac_favorites_get_favorite_forum_list_count($uid);
   $resource_favorites = sbac_favorites_get_favorite_resource_list_count($uid);
-  return $forum_favorites + $resource_favorites;
+  $count = $forum_favorites + $resource_favorites;
+  $_SESSION['favorites']['count'] = $count;
+  return $count;
 }
 
 /**
