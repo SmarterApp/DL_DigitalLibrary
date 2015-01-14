@@ -246,7 +246,7 @@ function sbac_forum_view_forum_page($term) {
   if (isset($forum_data->field_forum_description)) {
     $description_text = more_less_text($forum_data->field_forum_description->value());
   }
-  $add_comma = FALSE;
+
   $is_facilitator = FALSE;
   $facilitator_text = '';
   $faci_details = '';
@@ -410,26 +410,41 @@ function sbac_forum_view_forum_page($term) {
     $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
 
     // resource image
-    $default_file = 'public://file.png';
-    $uri = $default_file;
+    $default_file = 'no_img';
+    $uri = NULL;
+    $url = NULL;
     if ($resource_wrapper->__isset('field_thumbnail_uri')) {
       $thumbnail_uri = $forum_data->field_forum_resource_ref->field_thumbnail_uri->value();
       $thumbnail_uri = str_replace('<div class="field-content">', '', $thumbnail_uri);
       $thumbnail_uri = str_replace('</div>', '', $thumbnail_uri);
       $thumbnail_pieces = explode('::', $thumbnail_uri);
       $uri = $thumbnail_pieces[0];
+      $url = $thumbnail_pieces[1];
       $ext = pathinfo($uri, PATHINFO_EXTENSION);
-      $file_type = _sbac_resource_determine_extension($ext);
-      if ($file_type != 'image') {
+      $type = _sbac_resource_determine_extension($ext);
+      $real_path = drupal_realpath($uri);
+      if (!file_exists($real_path)) {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+
+      if ($type != 'image') {
+        $url = $default_file;
         $uri = $default_file;
       }
     }
-    $resource_image = theme('image_style', array(
-      'style_name' => 'resource_image_grid',
-      'path' => $uri,
-      'attributes' => array('class' => array()),
-      'alt' => 'Resource thumbnail image'
-    ));
+    else {
+      $url = $default_file;
+      $uri = $default_file;
+    }
+
+    if ($uri != 'no_img' && $url != 'no_img') {
+      $image_url = file_create_url($uri);
+      $image_tag = '<img typeof="foaf:Image" src="' . $image_url . '" width="268" height="138" alt="Resource thumbnail image" />';
+      $variables['image'] = $image_tag;
+      $variables['mime-type'] = file_get_mimetype($url);
+      $variables['file-type-icon'] = 'document';
+    }
 
     // resource rating
     $resource_rating = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($id));
@@ -464,7 +479,7 @@ function sbac_forum_view_forum_page($term) {
     'tabs' => $tab_output,
     'favorites_link' => $favorite_link,
     'resource_link' => $resource_link,
-    'resource_image' => $resource_image,
+    'resource_image' => $image_tag,
     'resource_rating' => $resource_rating,
     'resource_rating_count' => $resource_rating_count,
     'resource_views' => $resource_views,
