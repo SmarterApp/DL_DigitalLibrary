@@ -47,13 +47,7 @@ function resource_feedback_page($node) {
             'flag' => FALSE,
           ),
         ),
-        'access moderate flag' => array(
-          'feedback' => array(
-            'moderate_flag' => TRUE,
-          )
-        ),
       );
-
     }
     else {
       $tabs = array(
