@@ -32,6 +32,8 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
       }
       if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
         $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+        // If there are filters applied, we need to remove the saved value.
+        unset($_SESSION['forums'][$passive_display]);
       }
       if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS]) &&
         $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != ''
@@ -61,14 +63,20 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   }
 
   // Passive
-  $view_p = views_get_view('forum_list');
-  $view_p->set_display($passive_display);
-  sbac_forum_forum_listing_apply_filters($view_p, $passive_filters, $passive_display); // Set filters here.
-  $view_p->pre_execute();
-  $view_p->execute();
-  // $view_p->_post_execute();
-  $count_values[$passive_display] = $view_p->total_rows;
-  $view_p->destroy();
+  if (!isset($_SESSION['forums'][$passive_display])) {
+    $view_p = views_get_view('forum_list');
+    $view_p->set_display($passive_display);
+    sbac_forum_forum_listing_apply_filters($view_p, $passive_filters, $passive_display); // Set filters here.
+    $view_p->pre_execute();
+    $view_p->execute();
+    $count_values[$passive_display] = $view_p->total_rows;
+    $view_p->destroy();
+
+    $_SESSION['forums'][$passive_display] = $count_values[$passive_display];
+  }
+  else {
+    $count_values[$passive_display] = $_SESSION['forums'][$passive_display];
+  }
 
   // Active
   $view = views_get_view('forum_list');
@@ -84,13 +92,12 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   }
   // If session is set, change pager.
   else if (isset($_SESSION['load_more'][$view->name]['page'])) {
-      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
-    }
+    $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
+  }
   sbac_forum_forum_listing_apply_filters($view, $current_filters, $active_display); // Set filters here.
   sbac_forum_listing_apply_sorts($view, $current_sorts, $default_sort);
   $view->pre_execute();
   $view->execute();
-  $view->_post_execute();
   // dpq($view->build_info['query']);
 
   $forum_list_output = $view->preview();
@@ -151,7 +158,7 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
         break;
     }
     $output .= $forum_list_output;
-		$output .= '</p>';
+	$output .= '</p>';
     $output .= '</div>';
     return $output;
   }
