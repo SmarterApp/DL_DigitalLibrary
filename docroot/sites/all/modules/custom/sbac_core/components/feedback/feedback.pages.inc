@@ -119,7 +119,7 @@ function resource_feedback_page($node) {
         foreach ($sources as $source => $items) {
           foreach ($items as $tab => $visible) {
             $section = $factory->get($source, $tab);
-            if ($section) {
+            if ($section && ($section->access() || $section->show_disabled())) {
               $factory->add($section, $source, $tab, $visible);
             }
           }
