@@ -404,11 +404,11 @@ function sbac_forum_view_forum_page($term) {
   // If this is a resource forum, then I am favoriting the resource itself (node)
   // Otherwise I'm favoriting the forum (taxonomy term)
   $id = $term->tid;
-  $type = 'term';
+  $fav_type = 'term';
   if (!empty($term->field_forum_resource_ref)) {
     $resource_wrapper = $forum_data->field_forum_resource_ref;
     $id = $term->field_forum_resource_ref['und'][0]['target_id'];
-    $type = 'node';
+    $fav_type = 'node';
     $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
 
     // resource image
@@ -465,7 +465,7 @@ function sbac_forum_view_forum_page($term) {
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
 
-  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $type);
+  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $fav_type);
 
   // Add all the markup to variable for tpl.
   $fields = array(

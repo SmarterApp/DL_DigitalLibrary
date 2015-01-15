@@ -274,8 +274,6 @@ function sbac_favorites_get_favorite_forum_list_count($uid) {
     ->fields('sf', array('id', 'uid', 'weight', 'type', 'created'))
     ->condition('sf.uid', $uid);
   $query->condition('sf.type', $type);
-  $query->innerJoin('node', 'n', 'n.nid = sf.id'); // make sure the node hasn't been hard deleted
-  $query->innerJoin('workbench_moderation_node_history', 'h', 'n.nid = h.nid AND h.current = 1 AND h.state <> \'removed\''); // make sure the node is not soft deleted
   $query->innerJoin('taxonomy_term_data', 'term', 'term.tid = sf.id');
   $result = $query
     ->orderBy('sf.weight', 'ASC')
