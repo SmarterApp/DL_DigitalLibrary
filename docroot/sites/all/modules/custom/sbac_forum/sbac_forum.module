@@ -2408,6 +2408,7 @@ function sbac_forum_go_to_thread($nid, $cid) {
  */
 function sbac_forum_taxonomy_term_view_alter(&$build) {
   if ($build['#view_mode'] == 'forum_page_card') {
+    global $user;
     // Participants
     $count = $build['field_forum_member_count']['#items'][0]['value'];
     $build['field_forum_member_count'][0]['#markup'] = $count . '<div class="forum-listing-suffix-label">Participants</div>';
@@ -2422,7 +2423,6 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
 
     // Forum resource reference
     if (!empty($build['field_forum_resource_ref'][0]['#markup'])) {
-      global $user;
       $favorites = sbac_favorites_get_favorites($user->uid, $build['field_forum_resource_ref'][0]['#markup']);
       $build['field_forum_resource_ref'][0]['#markup'] = '';
       if ($favorites) {
@@ -2435,7 +2435,7 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
       if (!empty($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
         foreach ($build['#term']->field_forum_facilitators[LANGUAGE_NONE] as $index => $values) {
           $faci_user_id = $values['target_id'];
-          if ($current_user->uid == $faci_user_id) {
+          if ($user->uid == $faci_user_id) {
             $is_faci = TRUE;
           }
         }
