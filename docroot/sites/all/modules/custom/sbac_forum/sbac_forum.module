@@ -2471,7 +2471,7 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
         }
         $facilitator_text .= '</div>';
         // Output Facilatator text.
-        $build['field_facilitator'] = array('#type' => 'markup', '#markup' => $facilitator_text, '#weight' => 0);
+        $build['field_facilitator'] = array('#type' => 'markup', '#markup' => $facilitator_text, '#weight' => 1);
       }
     }
   }
