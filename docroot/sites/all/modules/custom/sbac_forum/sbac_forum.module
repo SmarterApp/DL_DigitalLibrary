@@ -2402,3 +2402,32 @@ function sbac_forum_go_to_thread($nid, $cid) {
   $_SESSION['sbac-topic-comment-sorts'] = 'comment-most-recent-activity';
   drupal_goto('node/' . $nid, array('fragment' => 'comment-' . $cid));
 }
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function sbac_forum_taxonomy_term_view_alter(&$build) {
+  if ($build['#view_mode'] == 'forum_page_card') {
+    // Participants
+    $count = $build['field_forum_member_count']['#items'][0]['value'];
+    $build['field_forum_member_count'][0]['#markup'] = $count . '<div class="forum-listing-suffix-label">Participants</div>';
+
+    // Posts
+    $count = $build['field_forum_topic_comment_count']['#items'][0]['value'];
+    $build['field_forum_topic_comment_count'][0]['#markup'] = $count . '<div class="forum-listing-suffix-label">Posts</div>';
+
+    // Discussions
+    $count = $build['field_forum_topic_count']['#items'][0]['value'];
+    $build['field_forum_topic_count'][0]['#markup'] = $count . '<div class="forum-listing-suffix-label">Discussions</div>';
+
+    // Forum resource reference
+    if (!empty($build['field_forum_resource_ref'][0]['#markup'])) {
+      global $user;
+      $favorites = sbac_favorites_get_favorites($user->uid, $build['field_forum_resource_ref'][0]['#markup']);
+      $build['field_forum_resource_ref'][0]['#markup'] = '';
+      if ($favorites) {
+        $build['field_forum_resource_ref'][0]['#markup'] = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
+      }
+    }
+  }
+}

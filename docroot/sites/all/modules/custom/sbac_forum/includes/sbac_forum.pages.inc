@@ -69,6 +69,7 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
     sbac_forum_forum_listing_apply_filters($view_p, $passive_filters, $passive_display); // Set filters here.
     $view_p->pre_execute();
     $view_p->execute();
+    $view_p->post_execute();
     $count_values[$passive_display] = $view_p->total_rows;
     $view_p->destroy();
 
@@ -98,6 +99,7 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   sbac_forum_listing_apply_sorts($view, $current_sorts, $default_sort);
   $view->pre_execute();
   $view->execute();
+  $view->post_execute();
   // dpq($view->build_info['query']);
 
   $forum_list_output = $view->preview();
