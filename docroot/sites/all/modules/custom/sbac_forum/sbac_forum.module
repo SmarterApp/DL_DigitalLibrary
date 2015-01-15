@@ -2430,14 +2430,9 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
       }
     }
     else {
-      $faci_field = array();
-      if (isset($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
-        $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
-      }
       $is_faci = FALSE;
-
       if (!empty($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
-        foreach ($faci_field as $index => $values) {
+        foreach ($build['#term']->field_forum_facilitators[LANGUAGE_NONE] as $index => $values) {
           $faci_user_id = $values['target_id'];
           if ($current_user->uid == $faci_user_id) {
             $is_faci = TRUE;
@@ -2445,8 +2440,8 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
         }
         $facilitator_text = '<div class="sbac-forum-faci-status-label">';
         if (!$is_faci) { // Current user is not set as facilitator
-          if (!empty($faci_field)) {
-            $first_item = array_shift($faci_field);
+          if (!empty($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
+            $first_item = array_shift($build['#term']->field_forum_facilitators[LANGUAGE_NONE]);
             if ($first_faci_user_id = $first_item['target_id']) {
               $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
               $facilitator_text .= 'Facilitator: ' . $faci_link;
@@ -2463,6 +2458,8 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
           $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
         }
         $facilitator_text .= '</div>';
+
+        $build['field_facilitator'] = array('#type' => 'markup', '#markup' => $facilitator_text, '#weight' => 0);
       }
     }
   }
