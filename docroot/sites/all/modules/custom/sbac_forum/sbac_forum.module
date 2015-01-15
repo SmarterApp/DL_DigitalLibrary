@@ -2429,5 +2429,41 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
         $build['field_forum_resource_ref'][0]['#markup'] = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
       }
     }
+    else {
+      $faci_field = array();
+      if (isset($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
+        $faci_field = $row_data->_field_data['tid']['entity']->field_forum_facilitators[LANGUAGE_NONE];
+      }
+      $is_faci = FALSE;
+
+      if (!empty($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
+        foreach ($faci_field as $index => $values) {
+          $faci_user_id = $values['target_id'];
+          if ($current_user->uid == $faci_user_id) {
+            $is_faci = TRUE;
+          }
+        }
+        $facilitator_text = '<div class="sbac-forum-faci-status-label">';
+        if (!$is_faci) { // Current user is not set as facilitator
+          if (!empty($faci_field)) {
+            $first_item = array_shift($faci_field);
+            if ($first_faci_user_id = $first_item['target_id']) {
+              $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
+              $facilitator_text .= 'Facilitator: ' . $faci_link;
+            }
+            else { // No facilitator set
+              $facilitator_text .= 'Facilitator: None';
+            }
+          }
+          else { // No facilitator set
+            $facilitator_text .= 'Facilitator: None';
+          }
+        }
+        else {
+          $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
+        }
+        $facilitator_text .= '</div>';
+      }
+    }
   }
 }

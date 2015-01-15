@@ -257,7 +257,7 @@ function sbac_forum_strongarm() {
             'visible' => FALSE,
           ),
           'forum_page_card' => array(
-            'weight' => '15',
+            'weight' => '17',
             'visible' => FALSE,
           ),
         ),
