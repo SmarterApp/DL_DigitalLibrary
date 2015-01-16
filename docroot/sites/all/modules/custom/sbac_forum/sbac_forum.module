@@ -2422,15 +2422,15 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
     global $user;
     // Participants
     $count = $build['field_forum_member_count']['#items'][0]['value'];
-    $build['field_forum_member_count'][0]['#markup'] = $count . '<div class="forum-listing-suffix-label">Participants</div>';
+    $build['field_forum_member_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Participants</div></div>';
 
     // Posts
     $count = $build['field_forum_topic_comment_count']['#items'][0]['value'];
-    $build['field_forum_topic_comment_count'][0]['#markup'] = $count . '<div class="forum-listing-suffix-label">Posts</div>';
+    $build['field_forum_topic_comment_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Posts</div></div>';
 
     // Discussions
     $count = $build['field_forum_topic_count']['#items'][0]['value'];
-    $build['field_forum_topic_count'][0]['#markup'] = $count . '<div class="forum-listing-suffix-label">Discussions</div>';
+    $build['field_forum_topic_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Discussions</div></div>';
 
     // Forum resource reference
     if (!empty($build['field_forum_resource_ref'][0]['#markup'])) {
@@ -2450,7 +2450,7 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
             $is_faci = TRUE;
           }
         }
-        $facilitator_text = '<div class="sbac-forum-faci-status-label">';
+        $facilitator_text = '<div class="views-field-nothing"><div class="sbac-forum-faci-status-label">';
         if (!$is_faci) { // Current user is not set as facilitator
           if (!empty($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
             $first_item = array_shift($build['#term']->field_forum_facilitators[LANGUAGE_NONE]);
@@ -2469,9 +2469,9 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
         else {
           $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
         }
-        $facilitator_text .= '</div>';
+        $facilitator_text .= '</div></div>';
         // Output Facilatator text.
-        $build['field_facilitator'] = array('#type' => 'markup', '#markup' => $facilitator_text, '#weight' => 0);
+        $build['field_facilitator'] = array('#type' => 'markup', '#markup' => $facilitator_text, '#weight' => -1);
       }
     }
   }
