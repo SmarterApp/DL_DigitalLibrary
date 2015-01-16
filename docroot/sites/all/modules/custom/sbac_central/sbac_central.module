@@ -31,7 +31,7 @@ function sbac_central_entity_info_alter(&$entity_info) {
     $entity_info['node']['field cache'] = TRUE;
   }
   if (isset($entity_info['file']['entity cache'])) {
-    $entity_info['file']['entity cache'] = FALSE;
+    $entity_info['file']['entity cache'] = TRUE;
     $entity_info['file']['controller class'] = 'DrupalDefaultEntityController';
     $entity_info['file']['field cache'] = TRUE;
   }
@@ -41,7 +41,7 @@ function sbac_central_entity_info_alter(&$entity_info) {
     $entity_info['taxonomy_vocabulary']['field cache'] = TRUE;
   }
   if (isset($entity_info['user']['entity cache'])) {
-    $entity_info['user']['entity cache'] = FALSE;
+    $entity_info['user']['entity cache'] = TRUE;
     $entity_info['user']['controller class'] = 'UserController';
     $entity_info['user']['field cache'] = TRUE;
   }
