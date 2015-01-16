@@ -1,7 +1,7 @@
 
 CONTENTS OF THIS FILE
 ---------------------
- * Push
+
  * About Drupal
  * Configuration and features
  * Installation profiles
