@@ -36,7 +36,7 @@ function sbac_central_entity_info_alter(&$entity_info) {
     $entity_info['file']['field cache'] = TRUE;
   }
   if (isset($entity_info['taxonomy_vocabulary']['entity cache'])) {
-    $entity_info['taxonomy_vocabulary']['entity cache'] = TRUE;
+    $entity_info['taxonomy_vocabulary']['entity cache'] = FALSE;
     $entity_info['taxonomy_vocabulary']['controller class'] = 'TaxonomyVocabularyController';
     $entity_info['taxonomy_vocabulary']['field cache'] = TRUE;
   }

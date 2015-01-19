@@ -381,7 +381,7 @@ function sbac_forum_view_forum_page($term) {
   $overrides = array(
     'style' => 'sbac-forum', // Style available, none/zen/etc.
     'sorted' => TRUE, // TRUE or FALSE.
-    'ajax' => FALSE, // TRUE or FALSE.
+    'ajax' => TRUE, // TRUE or FALSE.
     'default_tab' => $default_tab, // Id of the tab - 0/1/2/etc.
     'list_classes' => $tab_classes,
   );
