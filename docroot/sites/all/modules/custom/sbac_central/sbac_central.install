@@ -1345,7 +1345,7 @@ function sbac_central_update_7093() {
 }
 
 /**
- * Add indexes to taskit table.
+ * Add indexes to eck_flag table.
  */
 function sbac_central_update_7094() {
   if (db_table_exists('eck_flag')) {
