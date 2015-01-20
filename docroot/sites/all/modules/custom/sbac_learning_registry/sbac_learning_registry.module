@@ -783,8 +783,7 @@ function sbac_learning_registry_queue_all_resources() {
     ->condition('n.status', 1)
     ->condition('h.current', 1)
     ->condition('h.state', 'published');
-  $results = $query->fields('n', array('nid'))->range(0, 1)->orderBy('n.nid', 'DESC')->execute()->fetchCol();
-//  $results = $query->fields('n', array('nid'))->execute()->fetchCol();
+  $results = $query->fields('n', array('nid'))->execute()->fetchCol();
   foreach ($results as $result) {
     _learning_registry_queue_node($result);
   }
