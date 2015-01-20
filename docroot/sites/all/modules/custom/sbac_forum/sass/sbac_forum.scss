@@ -2030,6 +2030,28 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 			}
 		}
 	}
+	
+	#quicktabs-container-forum_content {
+	  position: relative;
+  	min-height: 500px;
+
+  	>.ajax-progress-throbber {
+  		position: absolute;
+  		left: 37%;
+  		top: 190px;
+  		float: none;
+  		display:inline;
+
+  		.throbber  {
+  			display: block;
+  			background: url('../images/loading.gif') no-repeat center center !important;
+  			background-size:70% !important;
+  			width: 225px;
+  			height: 180px;
+  			z-index: 10;
+  		}
+  	}
+	}
 }
 
 
