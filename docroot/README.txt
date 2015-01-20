@@ -2,12 +2,12 @@
 CONTENTS OF THIS FILE
 ---------------------
 
- * Temp Change
+ * Push
  * About Drupal
  * Configuration and features
  * Installation profiles
  * Appearance
- * Developing for Drupal
+ * Developing for Drupal.
 
 ABOUT DRUPAL
 ------------

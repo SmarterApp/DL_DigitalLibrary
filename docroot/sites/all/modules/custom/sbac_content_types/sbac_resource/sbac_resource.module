@@ -886,6 +886,10 @@ function sbac_resource_determine_download_ability(&$vars) {
  * @return string
  */
 function _sbac_resource_preview_content(&$vars) {
+  if (isset($vars['view_mode']) && $vars['view_mode'] == 'print') {
+    return;
+  }
+
   $viewer = NULL;
   $html5 = FALSE;
   if (isset($vars['document']['html5'])) {
@@ -4068,6 +4072,10 @@ function _sbac_resource_taxonomy_get_parents($tid){
  */
 function sbac_resource_taxonomy_term_load($terms) {
   foreach ($terms as $term) {
+    if ($term->vocabulary_machine_name == 'education_alignment') {
+      continue;
+    }
+
     // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
@@ -4188,4 +4196,29 @@ function sbac_resource_failed_arbitration_twice($resource_id){
     ->execute()
     ->fetchCol();
   return $failed_arbitration_twice[0] == 'post' && $failed_arbitration_twice[1] == 'post';
+}
+
+/**
+ *  Implements hook_menu_alter().
+ */
+function sbac_resource_menu_alter(&$items) {
+  if(!empty($items['taxonomy/term/%taxonomy_term/edit'])){
+    $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'sbac_resource_edit_taxonomy_access';
+  }
+}
+
+/**
+ * Access rule for taxonomy term edit
+ *
+ * @param $term
+ * @return bool
+ */
+function sbac_resource_edit_taxonomy_access($term) {
+  // restrict access for resource forums
+  if (isset($term->field_forum_resource_ref) && !empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
+    return sbac_central_user_has_role(array('administrator'));
+  }
+  else {
+    return user_access("edit terms in $term->vid") || user_access('administer taxonomy');
+  }
 }

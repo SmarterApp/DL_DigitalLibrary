@@ -247,7 +247,7 @@ function sbac_flag_create_flag_content($row, $node, $eck_review, $eck_review_wra
   }
 
 
-  $variables['eck_flag']['urgent'] = $row->urgent;
+  $variables['eck_flag']['urgent'] = $urgent;
   if ($eck_flag) {
     $issue_type = field_entity_value($eck_flag, 'field_issue_type');
     if ($issue_type == 'pii') {

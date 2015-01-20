@@ -26,8 +26,7 @@ function sbac_central_critical_message_modal($js = FALSE) {
         $_SESSION['show_critical_message'] = TRUE;
         global $user;
         $disable_help = isset($user->data['disable_help']) ? $user->data['disable_help'] : 0;
-        $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
-        if ((!$last_welcome && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
+        if ((!$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
           $output[] = ajax_command_invoke('#sbac-central-click-welcome-tutorial', 'remove');
           $output[] = ajax_command_invoke('#sbac-help-welcome-tutorial', 'click');
         }

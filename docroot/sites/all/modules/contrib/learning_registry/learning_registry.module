@@ -140,12 +140,7 @@ function learning_registry_node_insert($node) {
       // Switch case below used to accomodate more methods (update, delete)
       // in the future.
       if ($node->status == 1) {
-        if (variable_get('learning_registry_queuing', LEARNING_REGISTRY_QUEUE_IMMEDIATE) == LEARNING_REGISTRY_QUEUE_QUEUED) {
-          _learning_registry_queue_node($node->nid);
-        }
-        else {
-          _learning_registry_publish($node);
-        }
+        _learning_registry_queue_node($node->nid);
       }
     }
   }

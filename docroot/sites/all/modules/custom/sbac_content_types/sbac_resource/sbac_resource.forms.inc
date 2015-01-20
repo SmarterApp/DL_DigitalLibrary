@@ -1407,6 +1407,8 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                 send_review_notifications($task, $node, $recipients);
               }
             }
+
+            sbac_resource_print_about_this_tab($node);
           }
         }
       }
@@ -2387,7 +2389,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_view_permissions_per_state']['und']['#title'] = '';
   $form['field_view_permissions_per_state']['und']['#prefix'] = '<div id="sbac-permissions-state">';
   $form['field_view_permissions_per_state']['und']['#suffix'] = '</div>';
-  $form['field_view_permissions_per_state']['#weight'] = 39;
+  $form['field_view_permissions_per_state']['#weight'] = 40;
 
   // Resource Actions.
   $form['field_resource_actions']['#weight'] = 40;
