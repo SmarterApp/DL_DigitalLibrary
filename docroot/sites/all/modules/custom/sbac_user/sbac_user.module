@@ -1451,7 +1451,7 @@ function sbac_user_cron() {
  * @param $vars
  */
 function sbac_user_preprocess_page(&$vars) {
-  if (isset($vars['user'])) {
+  if (isset($vars['user']) && $vars['user']->uid > 0) {
     $user = $vars['user'];
     $account = user_load($user->uid, TRUE);
     sbac_user_preprocess_username($vars, $account);

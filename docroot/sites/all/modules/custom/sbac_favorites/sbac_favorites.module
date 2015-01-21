@@ -694,3 +694,14 @@ function theme_sbac_favorites_forum_tabledrag($vars) {
   }
   return $output;
 }
+
+/**
+ * Implements hook_logout().
+ *
+ * @param $account
+ */
+function sbac_favorites_user_logout($account) {
+  if (isset($_SESSION['favorites']['count'])) {
+    unset($_SESSION['favorites']['count']);
+  }
+}
