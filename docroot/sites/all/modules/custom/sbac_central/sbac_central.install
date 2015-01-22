@@ -1383,3 +1383,31 @@ function sbac_central_update_7093() {
     }
   }
 }
+
+/**
+ * Add indexes to taskit table.
+ */
+function sbac_central_update_7094() {
+  if (db_table_exists('taskit')) {
+    db_add_index('taskit', 'type', array('type'));
+    db_add_index('taskit', 'created', array('created'));
+    db_add_index('taskit', 'viewed', array('viewed'));
+    db_add_index('taskit', 'state', array('state'));
+    db_add_index('taskit', 'visibility', array('visibility'));
+  }
+}
+
+/**
+ * Add indexes to eck_flag table.
+ */
+function sbac_central_update_7095() {
+  if (db_table_exists('eck_flag')) {
+    db_add_index('eck_flag', 'type', array('type'));
+    db_add_index('eck_flag', 'uid', array('uid'));
+    db_add_index('eck_flag', 'nid', array('nid'));
+    db_add_index('eck_flag', 'target_id', array('target_id'));
+    db_add_index('eck_flag', 'resolved', array('resolved'));
+    db_add_index('eck_flag', 'being_moderated', array('being_moderated'));
+    db_add_index('eck_flag', 'urgent', array('urgent'));
+  }
+}

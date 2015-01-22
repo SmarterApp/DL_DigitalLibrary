@@ -561,7 +561,11 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				color: #70757E;
 			}
 
-			.views-field-name {
+			.views-field-name,
+			h2 {
+			  margin: 0;
+				width: 65%;
+			  
 				a {
 					color: #04384E;
 					font-size: 15px;
@@ -595,7 +599,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					content: "";
 			    position: absolute;
 					left: -12px;
-					top: 0;
+					top: 1px;
 					height: 0;
 			    width: 0;
 					display:block;
@@ -635,24 +639,33 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				}
 			}
 
-			.views-field-field-forum-last-activity {
+			.views-field-field-forum-last-activity,
+			.field-name-field-forum-last-activity {
 				display: inline-block;
 				margin-top: 15px;
 
 				.views-label,
-				.field-content {
+				.field-label,
+				.field-content,
+				.date-display-single {
 					display: inline-block;
 					margin-top: 0;
 					font-weight: normal;
+					font-size: 13px;
 
 					.date-display-single {
 						font-size: 13px;
 						color: #101010;
 					}
 				}
+				
+				.date-display-single {
+				  color: #101010;
+				}
 			}
 
-			.views-field-nothing-1 {
+			.views-field-nothing-1,
+			.field-name-field-forum-resource-ref {
 				display: inline-block;
 				margin-left: 10px;
 
@@ -671,7 +684,10 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 
 			.views-field-field-forum-topic-count,
 			.views-field-field-forum-member-count,
-			.views-field-field-forum-topic-comment-count {
+			.views-field-field-forum-topic-comment-count,
+			.field-name-field-forum-topic-count,
+			.field-name-field-forum-topic-comment-count,
+			.field-name-field-forum-member-count {
 				-moz-box-sizing: border-box;
 				background-color: #F2F2F2;
 		    border-left: 1px solid #FFFFFF;
@@ -687,17 +703,28 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 		    text-shadow: 0 1px 0 #FFFFFF;
 		    top: 0;
 			}
+			
+			.sbac-forum-faci-status-label {
+			  display: inline-block;
+			  font-size: 13px;
+			  border-right: solid 1px #333;
+			  margin-right: 10px;
+			  padding-right: 10px;
+			}
 
-			.views-field-field-forum-topic-count {
+			.views-field-field-forum-topic-count,
+			.field-name-field-forum-topic-count {
 				right: 245px;
 				width: 140px;
 			}
 
-			.views-field-field-forum-topic-comment-count {
+			.views-field-field-forum-topic-comment-count,
+			.field-name-field-forum-topic-comment-count {
 				right: 150px;
 			}
 
-			.views-field-field-forum-member-count {
+			.views-field-field-forum-member-count,
+			.field-name-field-forum-member-count {
 				@include border-radius(0 6px 6px 0);
 				width: 150px;
 			}
@@ -717,6 +744,7 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 					color: #464B54;
 					text-shadow: 0 1px 0 #FFFFFF;
 					font-weight: normal;
+					margin-top: 5px;
 				}
 			}
 		}
@@ -2001,6 +2029,28 @@ button.gray.sbac-forum-add-forum-cancel-button:before {
 				width: 140px;
 			}
 		}
+	}
+	
+	#quicktabs-container-forum_content {
+	  position: relative;
+  	min-height: 500px;
+
+  	>.ajax-progress-throbber {
+  		position: absolute;
+  		left: 37%;
+  		top: 190px;
+  		float: none;
+  		display:inline;
+
+  		.throbber  {
+  			display: block;
+  			background: url('../images/loading.gif') no-repeat center center !important;
+  			background-size:70% !important;
+  			width: 225px;
+  			height: 180px;
+  			z-index: 10;
+  		}
+  	}
 	}
 }
 

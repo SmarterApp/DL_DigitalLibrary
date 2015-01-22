@@ -2402,3 +2402,77 @@ function sbac_forum_go_to_thread($nid, $cid) {
   $_SESSION['sbac-topic-comment-sorts'] = 'comment-most-recent-activity';
   drupal_goto('node/' . $nid, array('fragment' => 'comment-' . $cid));
 }
+
+/**
+ * Implements hook_preprocess_ENTITY.
+ *
+ * @param $vars
+ */
+function sbac_forum_preprocess_taxonomy_term(&$vars) {
+  if ($vars['view_mode'] == 'forum_page_card') {
+    $vars['term_url'] = '/forums/term/' . $vars['term']->tid;
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function sbac_forum_taxonomy_term_view_alter(&$build) {
+  if ($build['#view_mode'] == 'forum_page_card') {
+    global $user;
+    // Participants
+    $count = $build['field_forum_member_count']['#items'][0]['value'];
+    $build['field_forum_member_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Participants</div></div>';
+
+    // Posts
+    $count = $build['field_forum_topic_comment_count']['#items'][0]['value'];
+    $build['field_forum_topic_comment_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Posts</div></div>';
+
+    // Discussions
+    $count = $build['field_forum_topic_count']['#items'][0]['value'];
+    $build['field_forum_topic_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Discussions</div></div>';
+
+    // Forum resource reference
+    if (!empty($build['field_forum_resource_ref'][0]['#markup'])) {
+      $favorites = sbac_favorites_get_favorites($user->uid, $build['field_forum_resource_ref'][0]['#markup']);
+      $build['field_forum_resource_ref'][0]['#markup'] = '';
+      if ($favorites) {
+        $build['field_forum_resource_ref'][0]['#markup'] = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
+      }
+    }
+
+    if (empty($build['field_forum_resource_ref'][0]['#markup'])) {
+      $is_faci = FALSE;
+      if (!empty($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
+        foreach ($build['#term']->field_forum_facilitators[LANGUAGE_NONE] as $index => $values) {
+          $faci_user_id = $values['target_id'];
+          if ($user->uid == $faci_user_id) {
+            $is_faci = TRUE;
+          }
+        }
+        $facilitator_text = '<div class="views-field-nothing"><div class="sbac-forum-faci-status-label">';
+        if (!$is_faci) { // Current user is not set as facilitator
+          if (!empty($build['#term']->field_forum_facilitators[LANGUAGE_NONE])) {
+            $first_item = array_shift($build['#term']->field_forum_facilitators[LANGUAGE_NONE]);
+            if ($first_faci_user_id = $first_item['target_id']) {
+              $faci_link = sbac_forum__api__get_authpane_hoverover($first_faci_user_id);
+              $facilitator_text .= 'Facilitator: ' . $faci_link;
+            }
+            else { // No facilitator set
+              $facilitator_text .= 'Facilitator: None';
+            }
+          }
+          else { // No facilitator set
+            $facilitator_text .= 'Facilitator: None';
+          }
+        }
+        else {
+          $facilitator_text .= '<span class="facilitator">You are the <span class="sbac-forum-is-faci-highlight">Facilitator</span></span>';
+        }
+        $facilitator_text .= '</div></div>';
+        // Output Facilatator text.
+        $build['field_facilitator'] = array('#type' => 'markup', '#markup' => $facilitator_text, '#weight' => -1);
+      }
+    }
+  }
+}

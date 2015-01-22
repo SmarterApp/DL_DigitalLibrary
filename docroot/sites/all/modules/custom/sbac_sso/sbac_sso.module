@@ -582,7 +582,7 @@ function sbac_sso_create_clean_tenancy_chains(&$tenancy_chains, &$response) {
         // Meaning, if chain includes state/district/institution keep that one, if the
         // chain includes state/district and state/institution, keep the first one since the
         // weight (number of items) is the same.
-        if (count($chain) > count($keep_chain[$state_id]) || !isset($keep_chain[$state_id])) {
+        if (!isset($keep_chain[$state_id]) || count($chain) > count($keep_chain[$state_id])) {
           $keep_chain[$state_id] = $chain;
         }
       }

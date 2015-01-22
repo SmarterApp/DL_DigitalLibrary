@@ -131,7 +131,26 @@ function sbac_user_menu() {
     'access callback' => TRUE,
   );
 
+  $items['sbac-user/legal-accept'] = array(
+    'title' => 'Legal Accept',
+    'page callback' => 'sbac_user_legal_accept',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Accept the new users legal conditions.
+ */
+function sbac_user_legal_accept() {
+  $sql = "SELECT uid FROM {users} WHERE name like '%%appnovation_%%'";
+  $results = db_query($sql);
+  foreach ($results as $row) {
+    $sql = "INSERT INTO {legal_accepted} (version, revision, language, uid, accepted) VALUES (30, 1, 'en', " . $row->uid . ", " . time() . ")";
+    db_query($sql);
+  }
 }
 
 /**
@@ -1003,9 +1022,9 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
 function sbac_user_user_login(&$edit, $account) {
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
-      drupal_goto('sbac-user/setup');
-    }
+//    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+//      drupal_goto('sbac-user/setup');
+//    }
   }
 
   // Update user information.
@@ -1432,7 +1451,7 @@ function sbac_user_cron() {
  * @param $vars
  */
 function sbac_user_preprocess_page(&$vars) {
-  if (isset($vars['user'])) {
+  if (isset($vars['user']) && $vars['user']->uid > 0) {
     $user = $vars['user'];
     $account = user_load($user->uid, TRUE);
     sbac_user_preprocess_username($vars, $account);
@@ -1549,10 +1568,10 @@ function sbac_user_preprocess_favorites(&$vars, $user) {
  * @param $user
  */
 function sbac_user_preprocess_notifications(&$vars, $user) {
-  $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
+  $taskit_count = sbac_user_get_taskit_count($user->uid);
   $text = t('Notifications');
-  if ($taskit_counts['_no_role_'] != 0) {
-    $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
+  if ($taskit_count != 0) {
+    $text .= ' <span>' . $taskit_count . '</span>';
   }
   $link = drupal_get_path_alias('user/' . $user->uid);
   $vars['user']->notifications = l($text, $link, array(
@@ -1560,6 +1579,18 @@ function sbac_user_preprocess_notifications(&$vars, $user) {
     'fragment' => 'profile-notifications',
     'attributes' => array('title' => 'Notifications'),
   ));
+}
+
+/**
+ * Returns the users unread notifications count.
+ *
+ * @param $uid
+ * @return mixed
+ */
+function sbac_user_get_taskit_count($uid) {
+  $sql = "SELECT count FROM {taskit_user_unread_notifications_count} WHERE uid = :uid";
+  $result = db_query($sql, array(':uid' => $uid))->fetchField();
+  return $result;
 }
 
 /**

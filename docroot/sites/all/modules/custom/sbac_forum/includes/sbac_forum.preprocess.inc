@@ -27,14 +27,10 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   }
   // Declare variables.
   $forum_name_text = '';
-  $control_data = array();
   $back_link = '';
   $delete_link = '';
   $edit_link = '';
   $flag_link = '';
-  $author_image_markup = '';
-  $author_info = '';
-  $posted = '';
   $has_materials = FALSE;
   $moderation_topic_header = '';
   $moderation_topic_content = '';
@@ -57,7 +53,6 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
     $is_member = sbac_forum__api__check_user_is_forum_member($forum_term->tid, $user->uid);
     if ($is_member === TRUE) {
-      $control_data = sbac_forum__api__create_forum_controls($is_member, $is_faci, $forum_term->tid);
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_view.js");
       drupal_add_js(drupal_get_path("module", "sbac_forum") . "/js/sbac_forum.topic_comments_form.js");
       module_load_include('module', 'sbac_flag');

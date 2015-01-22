@@ -32,6 +32,12 @@ function resource_access($op, $node, $account = NULL) {
   }
 
   $access = &drupal_static(__FUNCTION__);
+  // If the node is published and the user is not a guest, they get access to all tabs.
+  if ($node->workbench_moderation['current']->state == 'published' && !in_array(SBAC_SHARE_GUEST, $account->roles)) {
+    $access[$account->uid][$op] = TRUE;
+    return $access[$account->uid][$op];
+  }
+
   if (empty($access) || empty($access[$account->uid]) || !isset($access[$account->uid][$op])) {
     if ('resource' == $node->type) {
       $perm = FALSE;

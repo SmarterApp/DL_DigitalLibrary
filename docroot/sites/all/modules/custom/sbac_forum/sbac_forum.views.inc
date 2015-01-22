@@ -401,18 +401,3 @@ function sbac_forum_views_query_alter(&$view, &$query) {
 
   }
 }
-
-/**
- * Implements hook_view_post_render().
- *
- * @param $view
- * @param $output
- * @param $cache
- */
-function sbac_forums_views_post_render(&$view, &$output, &$cache) {
-  if ($view->name == 'forum_list') {
-    if (isset($_POST['page'])) {
-      $_SESSION['load_more'][$view->name]['page'] = $_POST['page'];
-    }
-  }
-}
