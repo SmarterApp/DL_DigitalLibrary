@@ -334,35 +334,41 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
 }
 
 function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
-  $account = user_load($user_id);
-  $account_renderable = user_view($account, 'tooltip');
+  $rendered_output = &drupal_static(__FUNCTION__);
 
-  $account_data = entity_metadata_wrapper('user', $account);
-  $fn = $account_data->field_first_name->value();
-  $ln = ''; // last name hide by default.
-  if (isset($account_data->field_privacy)) { // user is using non-default settings.
-    $privacy_settings = $account_data->field_privacy->value();
-    if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
-      $ln = ' ' . $account_data->field_last_name->value();
+  if (empty($rendered_output) || empty($rendered_output[$user_id])) {
+    $account = user_load($user_id);
+    $account_renderable = user_view($account, 'tooltip');
+
+    $account_data = entity_metadata_wrapper('user', $account);
+    $fn = $account_data->field_first_name->value();
+    $ln = ''; // last name hide by default.
+    if (isset($account_data->field_privacy)) { // user is using non-default settings.
+      $privacy_settings = $account_data->field_privacy->value();
+      if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+        $ln = ' ' . $account_data->field_last_name->value();
+      }
     }
-  }
-  $full_name = $fn . $ln;
+    $full_name = $fn . $ln;
 
-  $tooltip = '
+    $tooltip = '
               <div class="devtools-tooltip account-tooltip">
                 <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
                 <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
               </div>
              ';
 
-  $created = isset($account->created) ? $account->created : time();
+    $created = isset($account->created) ? $account->created : time();
 
-  $output = t('!name', array(
-    '!name' => $tooltip,
-    '!date' => format_date($created, 'simple'),
-  ));
+    $output = t('!name', array(
+      '!name' => $tooltip,
+      '!date' => format_date($created, 'simple'),
+    ));
 
-  return $output;
+    $rendered_output[$account->uid] = $output;
+  }
+
+  return $rendered_output[$user_id];
 }
 
 

@@ -138,6 +138,7 @@ function sbac_favorites_ajax_click() {
         ->condition('type', $type)
         ->execute();
     }
+    unset($_SESSION['favorites']['count']);
     $output = array();
     print drupal_json_encode($output);
     exit;
@@ -176,6 +177,7 @@ function sbac_favorites_ajax_delete() {
     $output['total'] = 0;
     $output['no_results'] = sbac_favorites_get_html_content();
   }
+  unset($_SESSION['favorites']['count']);
   print drupal_json_encode($output);
   exit;
 }
@@ -187,9 +189,15 @@ function sbac_favorites_ajax_delete() {
  * @return array
  */
 function sbac_favorites_get_count($uid) {
-  $forum_favorites = sbac_favorites_get_favorite_forum_list($uid);
-  $resource_favorites = sbac_favorites_get_favorite_resource_list($uid);
-  return count($forum_favorites) + count($resource_favorites);
+  if (isset($_SESSION['favorites']['count'])) {
+    return $_SESSION['favorites']['count'];
+  }
+
+  $forum_favorites = sbac_favorites_get_favorite_forum_list_count($uid);
+  $resource_favorites = sbac_favorites_get_favorite_resource_list_count($uid);
+  $count = $forum_favorites + $resource_favorites;
+  $_SESSION['favorites']['count'] = $count;
+  return $count;
 }
 
 /**
@@ -233,6 +241,45 @@ function sbac_favorites_get_favorite_resource_list($uid) {
  */
 function sbac_favorites_get_favorite_forum_list($uid) {
   return sbac_favorites_get_favorites_list($uid, 'term');
+}
+
+/**
+ * @param $uid
+ * @return array
+ */
+function sbac_favorites_get_favorite_resource_list_count($uid) {
+  $type = 'node';
+  $query = db_select('sbac_favorites', 'sf')
+    ->fields('sf', array('id', 'uid', 'weight', 'type', 'created'))
+    ->condition('sf.uid', $uid);
+  $query->condition('sf.type', $type);
+  $query->innerJoin('node', 'n', 'n.nid = sf.id'); // make sure the node hasn't been hard deleted
+  $query->innerJoin('workbench_moderation_node_history', 'h', 'n.nid = h.nid AND h.current = 1 AND h.state <> \'removed\''); // make sure the node is not soft deleted
+  $result = $query
+    ->orderBy('sf.weight', 'ASC')
+    ->orderBy('sf.created', 'DESC')
+    ->execute()->rowCount();
+  return $result;
+}
+
+/**
+ * Get the count of the favorited forums.
+ *
+ * @param $uid
+ * @return array
+ */
+function sbac_favorites_get_favorite_forum_list_count($uid) {
+  $type = 'term';
+  $query = db_select('sbac_favorites', 'sf')
+    ->fields('sf', array('id', 'uid', 'weight', 'type', 'created'))
+    ->condition('sf.uid', $uid);
+  $query->condition('sf.type', $type);
+  $query->innerJoin('taxonomy_term_data', 'term', 'term.tid = sf.id');
+  $result = $query
+    ->orderBy('sf.weight', 'ASC')
+    ->orderBy('sf.created', 'DESC')
+    ->execute()->rowCount();
+  return $result;
 }
 
 /**
@@ -646,4 +693,15 @@ function theme_sbac_favorites_forum_tabledrag($vars) {
     $output = theme('sbac_favorites_no_favorites_forum');
   }
   return $output;
+}
+
+/**
+ * Implements hook_logout().
+ *
+ * @param $account
+ */
+function sbac_favorites_user_logout($account) {
+  if (isset($_SESSION['favorites']['count'])) {
+    unset($_SESSION['favorites']['count']);
+  }
 }

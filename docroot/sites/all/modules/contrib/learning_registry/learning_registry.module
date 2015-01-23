@@ -140,12 +140,7 @@ function learning_registry_node_insert($node) {
       // Switch case below used to accomodate more methods (update, delete)
       // in the future.
       if ($node->status == 1) {
-        if (variable_get('learning_registry_queuing', LEARNING_REGISTRY_QUEUE_IMMEDIATE) == LEARNING_REGISTRY_QUEUE_QUEUED) {
-          _learning_registry_queue_node($node->nid);
-        }
-        else {
-          _learning_registry_publish($node);
-        }
+        _learning_registry_queue_node($node->nid);
       }
     }
   }
@@ -177,7 +172,7 @@ function learning_registry_node_delete($node) {
 function learning_registry_cron() {
   module_load_include('inc', 'learning_registry', 'learning_registry.learning_registry');
   // Pull node IDs of records queued for processing.
-  $records = db_query('SELECT nid FROM {learning_registry} WHERE queued = :queued', array(':queued' => 1));
+  $records = db_query('SELECT nid FROM {learning_registry} WHERE queued = :queued LIMIT 0, 50', array(':queued' => 1));
 
   foreach ($records as $record) {
     $node = node_load($record->nid, NULL, TRUE);

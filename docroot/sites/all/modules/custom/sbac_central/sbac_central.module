@@ -31,7 +31,7 @@ function sbac_central_entity_info_alter(&$entity_info) {
     $entity_info['node']['field cache'] = TRUE;
   }
   if (isset($entity_info['file']['entity cache'])) {
-    $entity_info['file']['entity cache'] = FALSE;
+    $entity_info['file']['entity cache'] = TRUE;
     $entity_info['file']['controller class'] = 'DrupalDefaultEntityController';
     $entity_info['file']['field cache'] = TRUE;
   }
@@ -41,40 +41,10 @@ function sbac_central_entity_info_alter(&$entity_info) {
     $entity_info['taxonomy_vocabulary']['field cache'] = TRUE;
   }
   if (isset($entity_info['user']['entity cache'])) {
-    $entity_info['user']['entity cache'] = FALSE;
+    $entity_info['user']['entity cache'] = TRUE;
     $entity_info['user']['controller class'] = 'UserController';
     $entity_info['user']['field cache'] = TRUE;
   }
-  //Cant be cached.
-//  if (isset($entity_info['feedback']['entity cache'])) {
-//    $entity_info['feedback']['entity cache'] = FALSE;
-//    $entity_info['feedback']['controller class'] = 'EntityAPIController';
-//    $entity_info['feedback']['field cache'] = TRUE;
-//  }
-  //Cant be cached.
-//  if (isset($entity_info['review']['entity cache'])) {
-//    $entity_info['review']['entity cache'] = FALSE;
-//    $entity_info['review']['controller class'] = 'EntityAPIController';
-//    $entity_info['review']['field cache'] = TRUE;
-//  }
-  //Cant be cached.
-//  if (isset($entity_info['media']['entity cache'])) {
-//    $entity_info['media']['entity cache'] = FALSE;
-//    $entity_info['media']['controller class'] = 'EntityAPIController';
-//    $entity_info['media']['field cache'] = TRUE;
-//  }
-  //Cant be cached.
-//  if (isset($entity_info['flag']['entity cache'])) {
-//    $entity_info['flag']['entity cache'] = FALSE;
-//    $entity_info['flag']['controller class'] = 'EntityAPIController';
-//    $entity_info['flag']['field cache'] = TRUE;
-//  }
-  //Cant be cached.
-//  if (isset($entity_info['field_collection_item']['entity cache'])) {
-//    $entity_info['field_collection_item']['entity cache'] = FALSE;
-//    $entity_info['field_collection_item']['controller class'] = 'EntityAPIController';
-//    $entity_info['field_collection_item']['field cache'] = TRUE;
-//  }
 }
 
 function sbac_central_menu() {

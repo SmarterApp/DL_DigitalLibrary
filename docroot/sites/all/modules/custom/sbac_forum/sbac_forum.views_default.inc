@@ -25,7 +25,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
-  $handler->display->display_options['cache']['type'] = 'none-accelerated';
+  $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -37,7 +37,8 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['pager']['options']['more_button_text'] = 'Show More Forums';
   $handler->display->display_options['style_plugin'] = 'default';
-  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_plugin'] = 'entity';
+  $handler->display->display_options['row_options']['view_mode'] = 'forum_page_card';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -269,9 +270,22 @@ function sbac_forum_views_default_views() {
 
   /* Display: All Forums */
   $handler = $view->new_display('block', 'All Forums', 'block');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['block_caching'] = '-1';
 
   /* Display: My Forums */
   $handler = $view->new_display('block', 'My Forums', 'block_1');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['empty'] = FALSE;
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
@@ -698,6 +712,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_smarter_balanced_keyword_tid']['vocabulary'] = 'smarter_balanced_keyword';
+  $handler->display->display_options['block_caching'] = '-1';
 
   /* Display: Topic Forums */
   $handler = $view->new_display('block', 'Topic Forums', 'block_3');
@@ -865,6 +880,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['table'] = 'field_data_field_forum_resource_ref';
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['field'] = 'field_forum_resource_ref_target_id';
   $handler->display->display_options['filters']['field_forum_resource_ref_target_id']['operator'] = 'empty';
+  $handler->display->display_options['block_caching'] = '-1';
   $export['forum_list'] = $view;
 
   $view = new view();

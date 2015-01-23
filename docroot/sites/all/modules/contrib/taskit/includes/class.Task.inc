@@ -675,6 +675,15 @@ class Task extends \taskit\Base implements iTask {
         $this->saveNewRecords($table, $table_fields);
       }
 
+      if ($this->_owning_users) {
+        foreach ($this->_owning_users as $uid) {
+          $user = user_load($uid);
+          if ($user) {
+            taskit_update_user_unread_count($uid);
+          }
+        }
+      }
+
     return $this->getTaskId();
   }
 
