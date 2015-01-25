@@ -171,33 +171,6 @@ function sbac_central_fix_broken_ccss() {
  * Enables/disables maillog per environment.
  */
 function sbac_central_init() {
-  global $user;
-  if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-    switch ($_ENV['AH_SITE_ENVIRONMENT']) {
-      case 'dev':
-      case 'test':
-      case 'stage2':
-      case 'stage3':
-        if(!module_exists('maillog')) {
-          module_enable(array('maillog'));
-          watchdog('SBAC', 'Enabling maillog. See sbac_central_init for details.');
-          if ($user->uid == 1) {
-            drupal_set_message('Enabling maillog. See sbac_central_init for details.');
-          }
-        }
-        break;
-      case 'prod':
-        //do something if its prod
-        if(module_exists('maillog')) {
-          module_disable(array('maillog'));
-          watchdog('SBAC', 'Disabling maillog. See sbac_central_init for details.');
-          if ($user->uid == 1) {
-            drupal_set_message('Disabling maillog. See sbac_central_init for details.');
-          }
-        }
-        break;
-    }
-  }
   drupal_add_http_header('X-Frame-Options', 'SAMEORIGIN');
   drupal_add_http_header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   drupal_add_http_header('X-Content-Type-Options', 'nosniff');
@@ -213,11 +186,6 @@ function sbac_central_init() {
  * @param  array $vars Template variables.
  */
 function sbac_central_preprocess_page(&$vars) {
-  drupal_add_http_header('X-Frame-Options', 'SAMEORIGIN');
-  drupal_add_http_header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-  drupal_add_http_header('X-Content-Type-Options', 'nosniff');
-  drupal_add_http_header('X-XSS-Protection', '1;mode=block');
-
   if (drupal_is_front_page() && !isset($_SESSION['show_critical_message'])) {
     $cm_array = sbac_central_get_critical_message_date_time();
     $now = time();

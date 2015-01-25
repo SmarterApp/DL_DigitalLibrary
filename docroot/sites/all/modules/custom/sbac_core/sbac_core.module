@@ -47,33 +47,6 @@ module_load_include('inc', 'sbac_core', 'core/class.Core');
  * Implements hook_init().
  */
 function sbac_core_init() {
- 
-  // steev - i have removed this as we don't need to set the timezone on every call
-  // its already set in the db admin/config/regional/settings or should more accurately 
-  // be set in the php.ini could also be set by ini_set
-  //date_default_timezone_set(variable_get('date_default_timezone', 'America/Vancouver'));
-
-  // There is some kind of race condition that occasionally results in missing
-  // theme implementations for display suite fields declared through DevTools.
-  // This code checks for one of those theme implementations, and if it's missing,
-  // forces the theme registry to be rebuilt (which fixes the issue).
-  
-  /* steev - in fact, i'm removing this as it can create > 9 unnecessary cache_get
-  * calls, if it is required then the call should be made one and cached or 
-   * preferably the race condition should be identified and fixed more elegantly
-   */
-/*
-* BRANDON!
-*/
-  /*
-  $registry = cache_get('theme_registry:SBAC');
-  if (!isset($registry->data['resource_slideshow'])) {
-    // steev - aren't we storing everything in memcache?  this will do nothing if we are.
-    // steev - this should be removed and the bug fixed instead
-    db_query("DELETE FROM cache WHERE cid IN ('theme_registry:SBAC', 'theme_registry:runtime:SBAC', 'theme_registry:build:modules')");
-    registry_rebuild();
-  }*/
-
   \sbac_core\Core::hook('init', NULL);
 
   // steev - why are we doing this and do we need the if statement?

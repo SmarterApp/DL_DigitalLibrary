@@ -264,24 +264,34 @@ function _sbac_forum_add_forum_user_access($vocabulary) {
 function _sbac_forum_view_forum_user_access($term) {
   global $user;
 
-  if ($user->uid == 1) { // Allow superadmin bypass
-    return TRUE;
+  $forum_user_access = &drupal_static(__FUNCTION__);
+  if (empty($forum_user_access) || empty($forum_user_access[$user->uid]) || !isset($forum_user_access[$user->uid][$term->tid])) {
+    // Allow superadmin bypass
+    if ($user->uid == 1) {
+      $forum_user_access[$user->uid][$term->tid] = TRUE;
+      return $forum_user_access[$user->uid][$term->tid];
   }
   if (sbac_central_user_has_role(array(SBAC_RESOURCE_FACILITATOR_ROLE, SBAC_RESOURCE_ADMINISTRATOR_ROLE))) {
-    return TRUE;
+      $forum_user_access[$user->uid][$term->tid] = TRUE;
+      return $forum_user_access[$user->uid][$term->tid];
   }
 
   if ($user->uid == 0) { // Anon users have no access.
-    return FALSE;
+      $forum_user_access[$user->uid][$term->tid] = FALSE;
+      return $forum_user_access[$user->uid][$term->tid];
   }
 
   $membership_status = sbac_forum__api__check_user_is_forum_member($term->tid, $user->uid);
   if ($membership_status === 'removed') { // Removed users can no longer see forum.
-    return FALSE;
+      $forum_user_access[$user->uid][$term->tid] = FALSE;
+      return $forum_user_access[$user->uid][$term->tid];
   }
 
   $access = sbac_forum__api__check_forum_view_access($user, $term);
-  return $access;
+    $forum_user_access[$user->uid][$term->tid] = $access;
+  }
+
+  return $forum_user_access[$user->uid][$term->tid];
 }
 
 /**

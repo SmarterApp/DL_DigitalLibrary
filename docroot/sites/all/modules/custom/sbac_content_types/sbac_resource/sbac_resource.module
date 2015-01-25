@@ -3198,20 +3198,25 @@ function sbac_resource_entity_delete($entity, $type) {
  * @param $account
  */
 function sbac_resource_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+  if ($type == 'resource') {
   if ($account->uid == 1) {
     return NODE_ACCESS_ALLOW;
   }
 
-  $type = is_string($node) ? $node : $node->type;
-  if ($type == 'resource') {
+    $cache_access = &drupal_static(__FUNCTION__);
+    if (empty($cache_access) || empty($cache_access[$account->uid]) || !isset($cache_access[$account->uid][$node->nid]) || !isset($cache_access[$account->uid][$node->nid][$op])) {
     $access = sbac_resource_determine_access($node, $account, $op);
+      $cache_access[$account->uid][$node->nid][$op] = $access;
     if (!$access) {
-      variable_set('site_404', '');
+        // variable_set('site_404', '');
       return NODE_ACCESS_DENY;
     }
     else {
       return NODE_ACCESS_ALLOW;
     }
+  }
+    return $cache_access[$account->uid][$node->nid][$op];
   }
 }
 
