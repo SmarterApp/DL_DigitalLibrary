@@ -34,7 +34,9 @@ function sbac_forum__api__set_active_subnav($value = NULL) {
  * @return Boolean True or False if user has access to view forum based on criteria.
  */
 function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
+  $view_access = &drupal_static(__FUNCTION__);
 
+  if (empty($view_access) || empty($view_access[$user_obj->uid]) || !isset($view_access[$user_obj->uid][$forum->tid])) {
   // Load up forum data.
   $forum_data = entity_metadata_wrapper('taxonomy_term', $forum);
   $user_profile = user_load($user_obj->uid); // Load up profile.
@@ -128,12 +130,17 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
       $access = TRUE;
     }
   }
+    $view_access[$user_obj->uid][$forum->tid] = $access;
+  }
 
-  return $access;
+  return $view_access[$user_obj->uid][$forum->tid];
 }
 
 
 function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
+  $is_member_static = &drupal_static(__FUNCTION__);
+
+  if (empty($is_member_static) || empty($is_member_static[$uid]) || !isset($is_member_static[$uid][$forum_id])) {
   $is_member = FALSE;
   $cid = '';
   $forum_details = array(
@@ -145,7 +152,8 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
     $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_id;
   }
   else {
-    return $is_member;
+      $is_member_static[$uid][$forum_id] = $is_member;
+      return $is_member_static[$uid][$forum_id];
   }
 
   if ($cache = cache_get($cid)) {
@@ -203,8 +211,10 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
       $is_member = 'removed';
     }
   }
+    $is_member_static[$uid][$forum_id] = $is_member;
+  }
 
-  return $is_member;
+  return $is_member_static[$uid][$forum_id];
 }
 
 
@@ -235,9 +245,7 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
   $extra_classes = '';
-  if (($is_facilitator) ||
-    ($user->uid == 1)
-  ) { // Edit and delete forum
+  if (($is_facilitator) || ($user->uid == 1)) { // Edit and delete forum
     $link_ops = array(
       'attributes' => array(
         'class' => 'vp-control-link',
@@ -333,10 +341,19 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
   return $output;
 }
 
+/**
+ * Returns the rendered tooltip for a user.
+ *
+ * @param $user_id
+ * @param bool $add_comma
+ * @return null|string
+ */
 function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
-  $rendered_output = &drupal_static(__FUNCTION__);
-
-  if (empty($rendered_output) || empty($rendered_output[$user_id])) {
+  $cached_output = cache_get('authpane_' . $user_id);
+  if ($cached_output) {
+    return $cached_output->data;
+  }
+  else {
     $account = user_load($user_id);
     $account_renderable = user_view($account, 'tooltip');
 
@@ -365,10 +382,9 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
       '!date' => format_date($created, 'simple'),
     ));
 
-    $rendered_output[$account->uid] = $output;
+    cache_set('authpane_' . $user_id, $output);
+    return $output;
   }
-
-  return $rendered_output[$user_id];
 }
 
 

@@ -297,7 +297,6 @@ function sbac_forum_preprocess_node__topic(&$vars) {
 
 
   // Put everything into arrays and register in vars for tpl. ------------
-
   $parent_forum_markup = array(
     'welcome_message' => $welcome_message,
     'forum_name' => $forum_name_text,

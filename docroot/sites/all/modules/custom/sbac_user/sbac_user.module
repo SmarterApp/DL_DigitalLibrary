@@ -973,31 +973,13 @@ function sbac_user_mail($key, &$message, $params) {
   }
 }
 
-/*
- * Implements hook_entity_update()
+/**
+ * Implements hook_user_update().
  *
- * Used to intercept uploaded user image and move it to a hashed directory for scalability.
- * IMPORTANT: For production deployment the directory for full-sized pics will need to be NFS mounted (S3 will do).
- *  Same goes for the thumbnail directory on all the Drupal nodes.
- *  The hashed dir structures will be created there and should scale nicely.
+ * When a user updates there profile, clear the authpane cached card.
  */
-function sbac_user_entity_update($entity, $type) {
-  // UGLY WORKAROUND WARNING: this hook is called twice for some reason, don't know why.
-  // on 2nd call the image was already hashed so preg_match will fail and cause this to skip.
-//  if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&
-//      preg_match('/public\:\/\/pictures\/picture-/', $entity->uri)) {
-//    $userid = sbac_user_util_parse_user_id($entity->filename);
-//    $hashdir = sbac_user_util_compute_hash_dir($userid);
-//    $new_uri = sbac_user_util_compute_new_path($entity->uri, $hashdir);
-//    $old_absolute_path = drupal_realpath($entity->uri);
-//    $new_absolute_path = sbac_user_util_compute_new_path($old_absolute_path, $hashdir);
-//    $res = sbac_user_util_move_file($old_absolute_path, $new_absolute_path);
-//    if (!$res) {
-//      drupal_set_message(t('Error moving image to hashed directory.'));
-//    }
-//    $entity->uri = $new_uri;
-//    field_attach_update($type, $entity); // save changes to db
-//  }
+function sbac_user_user_update(&$edit, $account, $category) {
+  cache_clear_all('authpane_' . $account->uid);
 }
 
 /**
