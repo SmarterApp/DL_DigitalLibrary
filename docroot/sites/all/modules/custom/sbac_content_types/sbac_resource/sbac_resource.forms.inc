@@ -1392,19 +1392,29 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               $task_type = 'resource_submitted';
             }
 
+            // Save the current state of the node.
             sbac_resource_save_current_state($node);
 
-            if ($task = taskit_get_object($task_type)) {
-              global $user;
-
-              $task->addVisibility($task::VISIBILITY_USER);
-              $task->addEntity('node', $node->nid);
-              $task->addOwningUser($node->uid);
-              $task->addTriggeringUser($user->uid);
-              $task->save();
-
-              if (!empty($recipients)) {
-                send_review_notifications($task, $node, $recipients);
+            if ($task_type == 'resource_submitted') {
+              if ($task = taskit_get_object($task_type)) {
+                global $user;
+                $task->addVisibility($task::VISIBILITY_USER);
+                $task->addEntity('node', $node->nid);
+                $task->addOwningUser($node->uid);
+                $task->addTriggeringUser($user->uid);
+                $task->save();
+              }
+            }
+            else {
+              if ($task = taskit_get_object($task_type)) {
+                global $user;
+                $task->addVisibility($task::VISIBILITY_USER);
+                $task->addEntity('node', $node->nid);
+                $task->addOwningUser($node->uid);
+                $task->addTriggeringUser($user->uid);
+                if (!empty($recipients)) {
+                  send_review_notifications($task, $node, $recipients);
+                }
               }
             }
 
