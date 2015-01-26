@@ -979,7 +979,12 @@ function sbac_user_mail($key, &$message, $params) {
  * When a user updates there profile, clear the authpane cached card.
  */
 function sbac_user_user_update(&$edit, $account, $category) {
-  cache_clear_all('authpane_' . $account->uid);
+  if (strpos($_GET['q'], 'sbac-sso') === FALSE) {
+    $cache = cache_get('authpane_' . $account->uid);
+    if ($cache) {
+      cache_clear_all('authpane_' . $account->uid);
+    }
+  }
 }
 
 /**
