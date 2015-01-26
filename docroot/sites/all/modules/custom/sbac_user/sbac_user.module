@@ -980,7 +980,10 @@ function sbac_user_mail($key, &$message, $params) {
  */
 function sbac_user_user_update(&$edit, $account, $category) {
   if (strpos($_GET['q'], 'sbac-sso') === FALSE) {
-    cache_clear_all('authpane_' . $account->uid);
+    $cache = cache_get('authpane_' . $account->uid);
+    if ($cache) {
+      cache_clear_all('authpane_' . $account->uid);
+    }
   }
 }
 
