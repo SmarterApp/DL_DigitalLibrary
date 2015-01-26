@@ -3200,9 +3200,9 @@ function sbac_resource_entity_delete($entity, $type) {
 function sbac_resource_node_access($node, $op, $account) {
   $type = is_string($node) ? $node : $node->type;
   if ($type == 'resource') {
-  if ($account->uid == 1) {
-    return NODE_ACCESS_ALLOW;
-  }
+    if ($account->uid == 1) {
+      return NODE_ACCESS_ALLOW;
+    }
 
     $cache_access = &drupal_static(__FUNCTION__);
     if (empty($cache_access) || empty($cache_access[$account->uid]) || !isset($cache_access[$account->uid][$node->nid]) || !isset($cache_access[$account->uid][$node->nid][$op])) {
