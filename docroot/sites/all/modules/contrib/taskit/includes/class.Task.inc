@@ -676,6 +676,7 @@ class Task extends \taskit\Base implements iTask {
     }
 
     if (strpos($_GET['q'], 'taskit/view') === FALSE) {
+      // Update the unread notifications table.
       if ($this->_owning_users) {
         foreach ($this->_owning_users as $uid) {
           $user = user_load($uid);

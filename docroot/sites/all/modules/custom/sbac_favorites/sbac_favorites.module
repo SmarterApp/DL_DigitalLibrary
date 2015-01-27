@@ -163,6 +163,8 @@ function sbac_favorites_ajax_delete() {
     exit;
   }
 
+  unset($_SESSION['favorites']['count']);
+
   db_delete('sbac_favorites')
     ->condition('id', $_POST['id'])
     ->condition('uid', $_POST['uid'])
@@ -177,7 +179,6 @@ function sbac_favorites_ajax_delete() {
     $output['total'] = 0;
     $output['no_results'] = sbac_favorites_get_html_content();
   }
-  unset($_SESSION['favorites']['count']);
   print drupal_json_encode($output);
   exit;
 }
