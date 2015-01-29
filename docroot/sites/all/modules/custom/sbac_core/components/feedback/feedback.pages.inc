@@ -19,95 +19,63 @@ function resource_feedback_page($node) {
   try {
     $factory = new \sbac_core\components\sections\Factory($node);
 
-    if ($node->workbench_moderation['current']->state == 'published') {
-      $tabs = array(
-        'access about process' => array(
-          'feedback' => array(
-            'about' => TRUE,
-            'collaboration' => FALSE,
-          ),
+    $tabs = array(
+      'access about process' => array(
+        'feedback' => array(
+          'about' => TRUE,
+          'collaboration' => FALSE,
         ),
-        'access review process' => array(
-          'review' => array(
-            'reviews' => FALSE,
-          ),
+      ),
+      'access gk review comments' => array(
+        'feedback' => array(
+          'gk_comments' => TRUE,
         ),
-        'access share process' => array(
-          'feedback' => array(
-            'share' => FALSE,
-          )
+      ),
+      'access qc review comments' => array(
+        'feedback' => array(
+          'qc_comments' => TRUE,
         ),
-        'access related resources' => array(
-          'feedback' => array(
-            'related_resources' => FALSE,
-          ),
+      ),
+      'access review process' => array(
+        'review' => array(
+          'reviews' => FALSE,
         ),
-        'access flag' => array(
-          'feedback' => array(
-            'flag' => FALSE,
-          ),
+      ),
+      'access quality criteria process' => array(
+        'feedback' => array(
+          'revisions' => TRUE,
+          'gk' => TRUE,
+          'qc' => TRUE,
         ),
-      );
-    }
-    else {
-      $tabs = array(
-        'access about process' => array(
-          'feedback' => array(
-            'about' => TRUE,
-            'collaboration' => FALSE,
-          ),
+      ),
+      'access post process' => array(
+        'feedback' => array(
+          'tags' => TRUE,
+          'post' => TRUE,
         ),
-        'access gk review comments' => array(
-          'feedback' => array(
-            'gk_comments' => TRUE,
-          ),
+      ),
+      'access share process' => array(
+        'feedback' => array(
+          'share' => FALSE,
+        )
+      ),
+      'access related resources' => array(
+        'feedback' => array(
+          'related_resources' => FALSE,
         ),
-        'access qc review comments' => array(
-          'feedback' => array(
-            'qc_comments' => TRUE,
-          ),
+      ),
+      'access flag' => array(
+        'feedback' => array(
+          'flag' => FALSE,
         ),
-        'access review process' => array(
-          'review' => array(
-            'reviews' => FALSE,
-          ),
-        ),
-        'access quality criteria process' => array(
-          'feedback' => array(
-            'revisions' => TRUE,
-            'gk' => TRUE,
-            'qc' => TRUE,
-          ),
-        ),
-        'access post process' => array(
-          'feedback' => array(
-            'tags' => TRUE,
-            'post' => TRUE,
-          ),
-        ),
-        'access share process' => array(
-          'feedback' => array(
-            'share' => FALSE,
-          )
-        ),
-        'access related resources' => array(
-          'feedback' => array(
-            'related_resources' => FALSE,
-          ),
-        ),
-        'access flag' => array(
-          'feedback' => array(
-            'flag' => FALSE,
-          ),
-        ),
-        'access moderate flag' => array(
-          'feedback' => array(
-            'moderate_flag' => TRUE,
-          )
-        ),
-      );
-    }
-
+      ),
+      'access moderate flag' => array(
+        'feedback' => array(
+          'moderate_flag' => TRUE,
+        )
+      ),
+    );
+    
     foreach ($tabs as $permission => $sources) {
       if ($factory->access($permission)) {
         foreach ($sources as $source => $items) {
