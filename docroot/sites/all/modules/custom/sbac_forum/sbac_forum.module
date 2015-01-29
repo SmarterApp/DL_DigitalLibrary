@@ -2022,6 +2022,9 @@ function sbac_forum_add_to_favorite($forum_id, $uid) {
     ':created' => time(),
     ':type' => $type,
   ));
+  if (isset($_SESSION['favorites']['count'])) {
+    unset($_SESSION['favorites']['count']);
+  }
 }
 
 /**
