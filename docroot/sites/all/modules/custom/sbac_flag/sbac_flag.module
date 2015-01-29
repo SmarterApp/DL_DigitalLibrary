@@ -525,7 +525,7 @@ function sbac_flag_preprocess_page(&$vars) {
  * @param $vars
  * @param $flags
  */
-function  sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
+function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
   $entity_review = entity_load_single('review', $review);
   if ($entity_review) {
     $entity_renderable = entity_view('review', array($entity_review));
