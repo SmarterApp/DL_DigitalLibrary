@@ -1602,14 +1602,19 @@ function sbac_forum_taxonomy_term_insert($term) {
     global $user;
     $forum_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
     $forum_wrapper->field_forum_facilitators[0]->set($user->uid);
-    if (!user_is_anonymous() && !sbac_forum__api__check_user_is_forum_member($term->tid, $user->uid)) {
+    try {
+      $author = $forum_wrapper->field_forum_resource_ref->author->uid->value();
+    } catch (EntityMetadataWrapperException $e) {
+      $author = $user->uid;
+    }
+    if (!user_is_anonymous() && !sbac_forum__api__check_user_is_forum_member($term->tid, $author)) {
       $params = array(
         'field_name' => 'field_fc_forum_members'
       );
       $new_member_item = entity_create('field_collection_item', $params);
       $new_member_item->setHostEntity('taxonomy_term', $term);
       $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
-      $new_member_data->field_fc_forum_member->set($user->uid);
+      $new_member_data->field_fc_forum_member->set($author);
       $new_member_data->field_fc_forum_member_joined->set(time());
       $new_member_data->save(TRUE);
 
@@ -2154,6 +2159,7 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
         // reset to avoid adding the same user 2 more times by the sbac_forum_create_forum_topic() below
         drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
         sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC, 1);
+        drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
         sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC, 1);
       }
     }
