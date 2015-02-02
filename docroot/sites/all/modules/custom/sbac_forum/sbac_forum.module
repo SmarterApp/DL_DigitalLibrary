@@ -2151,6 +2151,8 @@ function sbac_forum_create_resource_forum($nid, $vid = NULL) {
       $term_wrapper->field_forum_last_activity->set(time());
       $term_wrapper->save(TRUE);
       if (isset($term->tid)) {
+        // reset to avoid adding the same user 2 more times by the sbac_forum_create_forum_topic() below
+        drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
         sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC, 1);
         sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC, 1);
       }
