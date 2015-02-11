@@ -775,7 +775,9 @@ function sbac_resource_preprocess_node(&$vars) {
     $vars['resource_type'] = '';
 
     $contributor_name = sbac_central_get_user_first_last_name($vars['uid']);
-    $vars['contributor'] = l($contributor_name, 'digital-library-resources', array('query' => array('contributor' => $vars['uid'])));
+    if ('published' == $vars['node']->workbench_moderation['current']->state) {
+      $vars['contributor'] = l($contributor_name, 'digital-library-resources', array('query' => array('contributor' => $vars['uid'])));
+    }
 
     if (isset($vars['field_focus'][0]['tid'])) {
       $resource_types = array();
