@@ -158,6 +158,7 @@ function ctools_ajax_sample_page() {
     // to the settings, prefixed with 'ctools-modal'.
     $links[] = ctools_modal_text_button(t('Modal Login (custom style)'), 'ctools_ajax_sample/nojs/login', t('Login via modal'),  'ctools-modal-ctools-sample-style');
   }
+
   // Four ways to do our animal picking wizard.
   $button_form = ctools_ajax_sample_ajax_button_form();
   $links[] = l(t('Wizard (no modal)'), 'ctools_ajax_sample/nojs/animal');
