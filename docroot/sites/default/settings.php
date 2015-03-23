@@ -689,3 +689,13 @@ $conf['fast_404_HTML_error_all_paths'] = FALSE;
 # 404s and the trade-off is worth it.
 # This setting will deliver 404s with less than 2MB of RAM.
 //fast_404_path_check();
+
+
+/**
+ * Include a local settings file if it exists.
+ */
+$local_settings = dirname(__FILE__) . '/settings.local.php';
+if (file_exists($local_settings)) {
+  include $local_settings;
+}
+
