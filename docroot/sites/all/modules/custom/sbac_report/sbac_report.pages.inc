@@ -101,6 +101,12 @@ function sbac_report_individual() {
     )
   );
 
+  $csv_form3 = drupal_get_form('sbac_csv_report_forum_stats_form');
+  $csv_forum_stats_tab = theme('sbac_csv_report_forum_stats', array(
+      'form' => $csv_form3,
+    )
+  );
+
   $output = array(
     '#type' => 'vertical_tabs',
     '#attached' => array(
@@ -146,6 +152,18 @@ function sbac_report_individual() {
         '#markup' => $csv_resource_stats_tab,
       ),
     );
+
+    $output[SBAC_REPORT_TAB_FORUM] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('Forum Statistics Report (CSV Report)'),
+      '#attributes' => array(
+        'id' => SBAC_REPORT_TAB_FORUM,
+      ),
+      'content' => array(
+        '#markup' => $csv_forum_stats_tab,
+      ),
+    );
   }
 
   $default_tab = SBAC_REPORT_TAB_INDIVIDUAL;
@@ -159,6 +177,7 @@ function sbac_report_individual() {
         SBAC_REPORT_TAB_INDIVIDUAL,
         SBAC_REPORT_TAB_USER,
         SBAC_REPORT_TAB_STATES,
+        SBAC_REPORT_TAB_FORUM,
       ),
       'default_tab' => $default_tab,
     ),
@@ -389,6 +408,7 @@ function sbac_report_build_resource_statistics($uid, $date_range, $limit = 5) {
  * @param $date_range
  */
 function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
+  global $user;
   // Deal with the sort options on the "Contributed resources details" table.
   $sort = 'desc';
   $order = 'created';
@@ -416,7 +436,16 @@ function sbac_report_build_resource_details($uid, $date_range, $limit = 5) {
   foreach ($results as $row) {
     $resource = node_load($row->nid);
     $title = truncate($row->title, 55, array('check_markup' => FALSE));
-    $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => array('sec' => '1')));
+    if (_resource_access_node_has_state($resource, array('rejected', 'published')) && sbac_central_user_has_role(array('reports administrator', 'resource publisher'))) {
+      $query = array();
+    }
+    elseif ($resource->uid == $user->uid) {
+      $query = array();
+    }
+    else {
+      $query = array('sec' => '1');
+    }
+    $row->title = l($title, $resource->path['alias'], array('attributes' => array('target' => '_blank'), 'query' => $query));
     $row->contribution_date = date('m/d/Y h:i a', $row->created);
     $rows[] = $row;
   }
@@ -691,24 +720,39 @@ function sbac_report_build_sne_output($user) {
  * Ajax for the autocomplete SNE textfield.
  */
 function sbac_report_sne_autocomplete($string = '') {
+  global $user;
+  // Individual report hides the autocomplete to some users, check if this
+  // user can see more users or not.
+  $see_others = sbac_report_select_other_users($user);
+  if (!$see_others) {
+    print drupal_json_encode(array());
+    exit;
+  }
+
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
 
-  $args = array(
-    ':str' => '%' . $string . '%',
-  );
+  $query = db_select('users', 'u');
+  $query->innerJoin('field_data_field_state', 's', 'u.uid = s.entity_id AND s.entity_type = \'user\' AND s.deleted = 0');
+  $query->leftJoin('field_data_field_last_name', 'l', 'u.uid = l.entity_id AND l.entity_type = \'user\' AND l.deleted = 0');
+  $query->leftJoin('field_data_field_first_name', 'f', 'u.uid = f.entity_id AND f.entity_type = \'user\' AND f.deleted = 0');
+  $query->condition('u.status', 0, '<>');
+  $query->where("CONCAT_WS(' ', f.field_first_name_value, l.field_last_name_value) LIKE :str", array(':str' => '%' . $string . '%'));
+  $query->fields('u', array('uid', 'name'));
+  $query->addField('f', 'field_first_name_value', 'first_name');
+  $query->addField('l','field_last_name_value', 'last_name');
+  $query->groupBy('u.uid');
+  $query->range(0, 10);
 
   // Get the selected state if there's any.
   $matches = array();
 
-  $state_condition = '';
   $state_tid = sbac_report_get_default_state_tid();
 
   if ($state_tid == 'all' || (isset($state_tid['all']) && ($state_tid['all'] == 'all' || $state_tid == 'all'))) {
-    $state_condition = '';
+    // Do nothing
   }
   elseif (!empty($state_tid)) {
-    $state_condition = "AND (field_state.field_state_tid = :state_tid)";
-    $args[':state_tid'] = $state_tid;
+    $query->condition('s.field_state_tid', $state_tid);
   }
   else {
     $matches['none'] = t('Please select a state');
@@ -716,41 +760,14 @@ function sbac_report_sne_autocomplete($string = '') {
     exit;
   }
 
-  $sql = <<<SQL
+  // Reports administrators are only allowed to view resource contributors/reviewers
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    $query->leftJoin('users_roles', 'ur', 'ur.uid = u.uid');
+    $query->leftJoin('role', 'r', 'r.rid = ur.rid');
+    $query->condition('r.name', array('resource contributor', 'resource reviewer'), 'IN');
+  }
 
-  SELECT users.uid AS uid,
-    users.name AS name,
-    field_last_name.field_last_name_value AS 'last_name',
-    field_first_name.field_first_name_value AS 'first_name'
-
-  FROM {users} users
-
-  INNER JOIN {field_data_field_state} AS field_state
-    ON users.uid = field_state.entity_id AND field_state.entity_type = 'user' AND field_state.deleted = 0
-
-  LEFT JOIN {field_data_field_last_name} AS field_last_name
-    ON users.uid = field_last_name.entity_id AND field_last_name.entity_type = 'user' AND field_last_name.deleted = 0
-
-  LEFT JOIN {field_data_field_first_name} AS field_first_name
-    ON users.uid = field_first_name.entity_id AND field_first_name.entity_type = 'user' AND field_first_name.deleted = 0
-
-  LEFT JOIN {field_data_field_sne_member} AS field_sne_member
-    ON users.uid = field_sne_member.entity_id AND field_sne_member.entity_type = 'user' AND field_sne_member.deleted = 0
-
-  WHERE (
-    CONCAT_WS(' ', field_first_name.field_first_name_value, field_last_name.field_last_name_value) LIKE :str
-    AND (users.status <> 0)
-    AND (field_sne_member.field_sne_member_value = 1)
-    $state_condition
-  )
-
-  GROUP BY uid
-
-  LIMIT 10 OFFSET 0
-
-SQL;
-
-  $result = db_query($sql, $args);
+  $result = $query->execute()->fetchAll();
 
   foreach ($result as $record) {
     $first_name = $record->first_name;

@@ -19,9 +19,6 @@ ErrorDocument 404 /index.php
 # Set the default handler.
 DirectoryIndex index.php index.html index.htm
 
-# Override mimetype for quicktime movies to support IE9
-AddType video/mp4 .mov
-
 # Override PHP settings that cannot be changed at runtime. See
 # sites/default/default.settings.php and drupal_environment_initialize() in
 # includes/bootstrap.inc for settings that can be changed at runtime.
@@ -59,15 +56,16 @@ AddType video/mp4 .mov
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [NC]
-  RewriteRule ^(.*)$ https://www.smarterbalancedlibrary.org/$1 [L,R=301]
-
   # Set "protossl" to "s" if we were accessed via https://.  This is used later
   # if you enable "www." stripping or enforcement, in order to ensure that
   # you don't bounce between http and https.
   RewriteRule ^ - [E=protossl]
   RewriteCond %{HTTPS} on
   RewriteRule ^ - [E=protossl:s]
+
+  # Make sure Authorization HTTP header is available to PHP
+  # even when running as CGI or FastCGI.
+  RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
   # Redirect to HTTPS
   RewriteCond %{HTTP_HOST} ^dev.smarterbalancedlibrary.org$ [OR]
@@ -76,8 +74,7 @@ AddType video/mp4 .mov
   RewriteCond %{HTTP_HOST} ^training.smarterbalancedlibrary.org$ [OR]
   RewriteCond %{HTTP_HOST} ^integration.smarterbalancedlibrary.org$ [OR]
   RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} www.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} smarterbalancedlibrary.org$ [NC]
+  RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary.org$
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -104,6 +101,10 @@ AddType video/mp4 .mov
   # To redirect all users to access the site WITH the 'www.' prefix,
   # (http://example.com/... will be redirected to http://www.example.com/...)
   # uncomment the following:
+  # RewriteCond %{HTTP_HOST} .
+  # RewriteCond %{HTTP_HOST} !^www\. [NC]
+  # RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
   RewriteCond %{HTTP_HOST} !sbac.dev$
   RewriteCond %{HTTP_HOST} !dev.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !integration.smarterbalancedlibrary.org$
@@ -111,9 +112,9 @@ AddType video/mp4 .mov
   RewriteCond %{HTTP_HOST} !staging.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !beta.smarterbalancedlibrary.org$
-  RewriteCond %{HTTP_HOST} smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !^www\. [NC]
-  RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
   #
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
   # (http://www.example.com/... will be redirected to http://example.com/...)

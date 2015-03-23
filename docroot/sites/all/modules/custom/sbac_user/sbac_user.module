@@ -124,7 +124,33 @@ function sbac_user_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['sbac-user/%ctools_js/disagree-tos'] = array(
+    'title' => 'Disagree TOS',
+    'page callback' => 'sbac_user_disagree_tos_modal',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+  );
+
+  $items['sbac-user/legal-accept'] = array(
+    'title' => 'Legal Accept',
+    'page callback' => 'sbac_user_legal_accept',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Accept the new users legal conditions.
+ */
+function sbac_user_legal_accept() {
+  $sql = "SELECT uid FROM {users} WHERE name like '%%appnovation_%%'";
+  $results = db_query($sql);
+  foreach ($results as $row) {
+    $sql = "INSERT INTO {legal_accepted} (version, revision, language, uid, accepted) VALUES (30, 1, 'en', " . $row->uid . ", " . time() . ")";
+    db_query($sql);
+  }
 }
 
 /**
@@ -358,6 +384,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['legal']['#access'] = FALSE;
       $form['field_sso_uuid']['#access'] = FALSE;
       $form['field_login_count']['#access'] = FALSE;
+      $form['field_sso_tenancy_hash']['#access'] = FALSE;
 
       // remove user_profile_submit handler and then re-add so we can re-order the submit handlers
       $form['#submit'] = array_diff($form['#submit'], array('user_profile_form_submit'));
@@ -463,13 +490,35 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       '#suffix' => '</div>',
     );
 
-
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    $user = user_load(arg(1));
     $form['cancel'] = array(
-      '#markup' => sbac_user_login_overlay(),
+      '#markup' => l(t('I disagree'), 'sbac-user/nojs/disagree-tos', array(
+        'attributes' => array(
+          'class' => 'left button secondary medium ctools-use-modal button red use-ajax ctools-modal-sbac-user-disagree-tos',
+          'id' => 'sbac-user-disagree-tos'
+        ),
+        'query' => array(
+          'uid' => $user->uid,
+        )
+      )),
       '#prefix' => '<div id="cancel-button">',
       '#suffix' => '</div>',
       '#weight' => 49,
     );
+    $js_settings = array(
+      'sbac-user-disagree-tos' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 220
+        )
+      )
+    );
+    drupal_add_js($js_settings, 'setting');
 
     $form['legal']['legal_accept'] = array(
       '#type' => 'checkbox',
@@ -924,31 +973,18 @@ function sbac_user_mail($key, &$message, $params) {
   }
 }
 
-/*
- * Implements hook_entity_update()
+/**
+ * Implements hook_user_update().
  *
- * Used to intercept uploaded user image and move it to a hashed directory for scalability.
- * IMPORTANT: For production deployment the directory for full-sized pics will need to be NFS mounted (S3 will do).
- *  Same goes for the thumbnail directory on all the Drupal nodes.
- *  The hashed dir structures will be created there and should scale nicely.
+ * When a user updates there profile, clear the authpane cached card.
  */
-function sbac_user_entity_update($entity, $type) {
-  // UGLY WORKAROUND WARNING: this hook is called twice for some reason, don't know why.
-  // on 2nd call the image was already hashed so preg_match will fail and cause this to skip.
-//  if ($type == 'file' && isset($entity->source) && $entity->source == 'picture_upload' &&
-//      preg_match('/public\:\/\/pictures\/picture-/', $entity->uri)) {
-//    $userid = sbac_user_util_parse_user_id($entity->filename);
-//    $hashdir = sbac_user_util_compute_hash_dir($userid);
-//    $new_uri = sbac_user_util_compute_new_path($entity->uri, $hashdir);
-//    $old_absolute_path = drupal_realpath($entity->uri);
-//    $new_absolute_path = sbac_user_util_compute_new_path($old_absolute_path, $hashdir);
-//    $res = sbac_user_util_move_file($old_absolute_path, $new_absolute_path);
-//    if (!$res) {
-//      drupal_set_message(t('Error moving image to hashed directory.'));
-//    }
-//    $entity->uri = $new_uri;
-//    field_attach_update($type, $entity); // save changes to db
-//  }
+function sbac_user_user_update(&$edit, $account, $category) {
+  if (strpos($_GET['q'], 'sbac-sso') === FALSE) {
+    $cache = cache_get('authpane_' . $account->uid);
+    if ($cache) {
+      cache_clear_all('authpane_' . $account->uid);
+    }
+  }
 }
 
 /**
@@ -964,64 +1000,6 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
   }
 }
 
-// Load test version of hook_user_login.
-//function sbac_user_user_login(&$edit, $account) {
-//  // steev - trying to get redirect for auth'd users earlier in the process so
-//  // we avoid the db write later on
-//
-//  // check if the user has account data
-//  if(isset($account->data)){
-//    $account->data['login_count'] +=1;
-//    // steev - there has to be a way to avoid this write, its going to cane the performance.
-//    // perhaps we can store logins in memcache and write once per minute?
-//    db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($account->data), ':uid' => $account->uid));
-//    if (!isset($account->data['disable_help'])) {
-//      drupal_goto('user');
-//    }
-//    else {
-//      drupal_goto('digital-library-resources');
-//    }
-//  }
-//
-//
-//  /* count user logins and save them in an array in account->data */
-//  if (!$account->data) { // initialize for new users
-//    $account->data = array();
-//  }
-//  // Increment login count.
-//  if (!isset($account->data['login_count'])) {
-//    $account->data['login_count'] = 1;
-//  }
-//  // Log the time the user first logged in.
-//  if (!isset($account->data['first_login'])) {
-//    $account->data['first_login'] = time();
-//  }
-//  // Disable feedback flag.
-//  if(!isset($account->field_feedback_flag['und'][0])) {
-//    db_query('UPDATE {field_revision_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
-//  }
-//  // guest account
-//  if (isset($edit['sbac-share'])) {
-//    $account->data['disable_help'] = TRUE;
-//  }
-//
-//  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($account->data), ':uid' => $account->uid));
-//  user_cookie_save(array('sbac_just_logged_in'=> TRUE));
-//  /**
-//   * steev - this if statement needs to be changed so it redirects to digital-library-resources much earlier in the process
-//   */
-//  // $edit['sbac-share'] seems to indicate the user is a guest or something?
-//  // so this only executes if the user is not a guest
-//  if (!isset($edit['sbac-share'])) {
-//    if (!isset($account->data['disable_help'])) {
-//      drupal_goto('user');
-//    }
-//    else {
-//      drupal_goto('digital-library-resources');
-//    }
-//  }
-//}
-
 /**
  * Implements hook_user_login().
  *
@@ -1036,6 +1014,19 @@ function sbac_user_user_login(&$edit, $account) {
     }
   }
 
+  // Update user information.
+  sbac_user_update_data($account, $edit);
+  // Redirect the user.
+  sbac_user_redirect_on_login($edit);
+}
+
+/**
+ * Update user information on login.
+ *
+ * @param $account
+ * @param array $edit
+ */
+function sbac_user_update_data($account, $edit = array()) {
   /* count user logins and save them in an array in account->data */
   if (!$account->data) { // initialize for new users
     $account->data = array();
@@ -1052,6 +1043,7 @@ function sbac_user_user_login(&$edit, $account) {
   }
   // Disable feedback flag.
   if(!isset($account->field_feedback_flag['und'][0])) {
+    db_query('UPDATE {field_data_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
     db_query('UPDATE {field_revision_field_feedback_flag} f SET f.field_feedback_flag_value = :flag WHERE f.entity_id = :uid', array(':flag' => 0, ':uid' => $account->uid));
   }
   // guest account
@@ -1062,12 +1054,69 @@ function sbac_user_user_login(&$edit, $account) {
   db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
   user_cookie_save(array('sbac_just_logged_in'=> TRUE));
 
+  // In the case where the user has not seen the conflicting profile screen where we save the hash on submit,
+  // we need to insert or update the hash.
+  if (isset($_SESSION['sbac-sso']['multiple']) && $_SESSION['sbac-sso']['multiple'] == FALSE) {
+    $hash = $_SESSION['sbac-sso']['hash'];
+    if (empty($account->field_sso_tenancy_hash)) {
+      db_insert('field_data_field_sso_tenancy_hash')
+        ->fields(array(
+            'entity_type' => 'user',
+            'bundle' => 'user',
+            'deleted' => 0,
+            'entity_id' => $account->uid,
+            'revision_id' => $account->uid,
+            'language' => 'und',
+            'delta' => 0,
+            'field_sso_tenancy_hash_value' => $hash,
+            'field_sso_tenancy_hash_format' => NULL
+          ))
+        ->execute();
+      db_insert('field_revision_field_sso_tenancy_hash')
+        ->fields(array(
+          'entity_type' => 'user',
+          'bundle' => 'user',
+          'deleted' => 0,
+          'entity_id' => $account->uid,
+          'revision_id' => $account->uid,
+          'language' => 'und',
+          'delta' => 0,
+          'field_sso_tenancy_hash_value' => $hash,
+          'field_sso_tenancy_hash_format' => NULL
+        ))
+        ->execute();
+    }
+    else {
+      db_update('field_data_field_sso_tenancy_hash')
+        ->fields(array('field_sso_tenancy_hash_value' => $hash))
+        ->condition('entity_id', $account->uid)
+        ->execute();
+      db_update('field_revision_field_sso_tenancy_hash')
+        ->fields(array('field_sso_tenancy_hash_value' => $hash))
+        ->condition('entity_id', $account->uid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Redirect the user on login to the correct page.
+ *
+ * @param array $edit
+ */
+function sbac_user_redirect_on_login($edit = array()) {
   if (!isset($edit['sbac-share'])) {
-    if (isset($edit['sbac_sso_relay']) && $edit['sbac_sso_relay'] != NULL) {
-      $relay = $edit['sbac_sso_relay'];
-      $path = drupal_valid_path($relay);
+    if (isset($_SESSION['sbac-sso']['relay']) && $_SESSION['sbac-sso']['relay'] != NULL) {
+      $relay = $_SESSION['sbac-sso']['relay'];
+      // strip the leading /, causes issues with drupal_get_path_alias
+      if ($relay[0] == '/') {
+        $relay = substr($relay, 1);
+      }
+      $alias_path = drupal_get_path_alias($relay);
+      $path = drupal_valid_path($alias);
+      unset($_SESSION['sbac-sso']['relay']);
       if ($path) {
-        drupal_goto($relay);
+        drupal_goto($alias_path);
       }
       else {
         drupal_goto('digital-library-resources');
@@ -1156,28 +1205,6 @@ function sbac_user_user_view($account, $view_mode, $langcode) {
       '#markup' => $account->access ? date("Y-m-d H:i", $account->access) . " (" . format_interval(REQUEST_TIME - $account->access) . " ago)" : t("never"),
     );
   }
-}
-
-/*
- * Overlay to leave Digital Library if disagree with T & C
- */
-function sbac_user_login_overlay() {
-  $output = '<a href="#" class="left button secondary medium" data-reveal-id="overlay">I disagree</a>
-
-            <div id="overlay" class="reveal-modal">
-              <h3>You are about to leave the Digital Library</h3>
-              <p>If you do not agree to the Terms of Service, you will be unable to access the Digital Library.</p>
-
-              <h5> Are you sure you want to leave?  </h5>
-              <div id="decision">
-                <a class="button small close-reveal-modal">No, return to Terms of Service</a>
-                 or
-                <a class="button small secondary" href="/"> Yes, log me out </a>
-              </div>
-            </div>';
-
-
-  return $output;
 }
 
 /*
@@ -1411,7 +1438,7 @@ function sbac_user_cron() {
  * @param $vars
  */
 function sbac_user_preprocess_page(&$vars) {
-  if (isset($vars['user'])) {
+  if (isset($vars['user']) && $vars['user']->uid > 0) {
     $user = $vars['user'];
     $account = user_load($user->uid, TRUE);
     sbac_user_preprocess_username($vars, $account);
@@ -1425,17 +1452,16 @@ function sbac_user_preprocess_page(&$vars) {
   }
 
   global $user;
-  if (!$user->uid || (!isset($_SESSION['user_setup']) && !isset($_SESSION['welcome-update']))) {
-    return;
-  }
   $disable_help = isset($user->data['disable_help']) ? $user->data['disable_help'] : 0;
   $last_welcome = isset($user->data['disable_recent']) ? $user->data['disable_recent'] : 0;
   $last_session = $user->login > $last_welcome;
   if (isset($_SESSION['user_setup']) && arg(0) != 'sbac-user') {
     drupal_goto('sbac-user/setup');
   }
-  if ((!$last_welcome && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
-    drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
+  if (!isset($_SESSION['critical-first-then-welcome-tutorial'])) {
+    if (($last_session && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
+      drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
+    }
   }
 }
 
@@ -1464,6 +1490,7 @@ function sbac_user_preprocess_username(&$vars, $user) {
 
 /**
  * Implements hook_user_import_data().
+ *
  * @param  [type] $settings        [description]
  * @param  [type] $update_setting  [description]
  * @param  [type] $column_settings [description]
@@ -1471,6 +1498,7 @@ function sbac_user_preprocess_username(&$vars, $user) {
  * @param  [type] $field_id        [description]
  * @param  [type] $data            [description]
  * @param  [type] $column_id       [description]
+ *
  * @return
  */
 function sbac_user_user_import_data($settings, $update_setting, $column_settings, $module, $field_id, $data, $column_id) {
@@ -1527,10 +1555,10 @@ function sbac_user_preprocess_favorites(&$vars, $user) {
  * @param $user
  */
 function sbac_user_preprocess_notifications(&$vars, $user) {
-  $taskit_counts = taskit_count_tasks($user->uid, array_keys($user->roles), TRUE);
+  $taskit_count = sbac_user_get_taskit_count($user->uid);
   $text = t('Notifications');
-  if ($taskit_counts['_no_role_'] != 0) {
-    $text .= ' <span>' . $taskit_counts['_no_role_'] . '</span>';
+  if ($taskit_count != 0) {
+    $text .= ' <span>' . $taskit_count . '</span>';
   }
   $link = drupal_get_path_alias('user/' . $user->uid);
   $vars['user']->notifications = l($text, $link, array(
@@ -1538,4 +1566,86 @@ function sbac_user_preprocess_notifications(&$vars, $user) {
     'fragment' => 'profile-notifications',
     'attributes' => array('title' => 'Notifications'),
   ));
+}
+
+/**
+ * Returns the users unread notifications count.
+ *
+ * @param $uid
+ * @return mixed
+ */
+function sbac_user_get_taskit_count($uid) {
+  $sql = "SELECT count FROM {taskit_user_unread_notifications_count} WHERE uid = :uid";
+  $result = db_query($sql, array(':uid' => $uid))->fetchField();
+  return $result;
+}
+
+/**
+ * The disagree tos model.
+ *
+ * @param bool $js
+ */
+function sbac_user_disagree_tos_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = 'You are about to leave the Digital Library</h3>';
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+      'uid' => $_GET['uid'],
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_user_disagree_tos_form', $form_state);
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'Yes, log me out') {
+        // The current global user is actually an anonymous user
+        // as created by legal module. So have to make the global user
+        // the right one, for the SAML assertion on logout.
+        global $user;
+        $user = user_load($form_state['uid']);
+        $output[] = ctools_ajax_command_redirect('sbac-sso-logout');
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Resource review cancel form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_user_disagree_tos_form($form, &$form_state) {
+  $form = array();
+  $form['submit_description'] = array(
+    '#markup' => '<p>If you do not agree to the Terms of Service, you will be unable to access the Digital Library.</p>
+        <h5> Are you sure you want to leave?  </h5>',
+  );
+  $form['continue'] = array(
+    '#type' => 'submit',
+    '#value' => 'No, return to Terms of Service',
+    '#attributes' => array('class' => array('button', 'small'))
+  );
+  $form['or'] = array(
+    '#markup' => 'or',
+  );
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Yes, log me out',
+    '#attributes' => array('class' => array('button', 'small', 'secondary'))
+  );
+  return $form;
 }

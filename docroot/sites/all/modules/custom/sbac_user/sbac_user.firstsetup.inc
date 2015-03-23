@@ -41,8 +41,11 @@ function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
   if ($vocab = taxonomy_vocabulary_machine_name_load($vocab_name)) {
     $terms = taxonomy_get_tree($vocab->vid);
     $options = array();
-    foreach($terms AS $idx => $term) {
-      $options[$term->tid] = $term->name;
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
     }
     return $options;
   }
@@ -682,6 +685,8 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     $updates['field_special_populations']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['student_population_options']);
     $updates['field_introduction']['und'][0]['value'] = $_SESSION['user_setup']['about_me'];
 
+    // Update user information.
+    sbac_user_update_data($account);
     $account = user_save($account, $updates);
     if ($account !== FALSE) {
       if (isset($_SESSION['user_setup']['temp_profile_image'])) {
@@ -689,7 +694,7 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
       }
       $_SESSION['welcome-update'] = TRUE;
       unset($_SESSION['user_setup']);
-      drupal_goto('');
+      sbac_user_redirect_on_login();
     }
   }
 }

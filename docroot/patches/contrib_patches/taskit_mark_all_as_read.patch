@@ -1,0 +1,19 @@
+Index: docroot/sites/all/modules/custom/sbac_core/components/taskit/taskit.inc
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- docroot/sites/all/modules/custom/sbac_core/components/taskit/taskit.inc	(revision 39cbcfe3664c53f0950e39dee2c931187587c5d4)
++++ docroot/sites/all/modules/custom/sbac_core/components/taskit/taskit.inc	(revision )
+@@ -62,5 +62,9 @@
+       break;
+   }
+ 
+-  
++  // reset unread count
++  db_update('taskit_user_unread_notifications_count')
++    ->fields(array('count' => 0))
++    ->condition('uid', $account->uid)
++    ->execute();
+ }
+\ No newline at end of file

@@ -32,6 +32,8 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
       }
       if (isset($_SESSION[SBAC_FORUM_CATEGORY_FILTERS])) {
         $passive_filters = $_SESSION[SBAC_FORUM_CATEGORY_FILTERS];
+        // If there are filters applied, we need to remove the saved value.
+        unset($_SESSION['forums'][$passive_display]);
       }
       if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS]) &&
         $_SESSION[SBAC_FORUM_RESOURCE_FORUM_SORTS] != ''
@@ -61,14 +63,21 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   }
 
   // Passive
-  $view_p = views_get_view('forum_list');
-  $view_p->set_display($passive_display);
-  sbac_forum_forum_listing_apply_filters($view_p, $passive_filters, $passive_display); // Set filters here.
-  $view_p->pre_execute();
-  $view_p->execute();
-  $view_p->_post_execute();
-  $count_values[$passive_display] = $view_p->total_rows;
-  $view_p->destroy();
+  if (!isset($_SESSION['forums'][$passive_display])) {
+    $view_p = views_get_view('forum_list');
+    $view_p->set_display($passive_display);
+    sbac_forum_forum_listing_apply_filters($view_p, $passive_filters, $passive_display); // Set filters here.
+    $view_p->pre_execute();
+    $view_p->execute();
+    // $view_p->post_execute();
+    $count_values[$passive_display] = $view_p->total_rows;
+    $view_p->destroy();
+
+    $_SESSION['forums'][$passive_display] = $count_values[$passive_display];
+  }
+  else {
+    $count_values[$passive_display] = $_SESSION['forums'][$passive_display];
+  }
 
   // Active
   $view = views_get_view('forum_list');
@@ -90,7 +99,9 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   sbac_forum_listing_apply_sorts($view, $current_sorts, $default_sort);
   $view->pre_execute();
   $view->execute();
-  $view->_post_execute();
+  // $view->post_execute();
+  // dpq($view->build_info['query']);
+
   $forum_list_output = $view->preview();
   $active_view_count = $view->total_rows;
   $count_values[$active_display] = $active_view_count;
@@ -133,7 +144,23 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   if (!$ajax) {
     $output .= drupal_render($subnav);
     $output .= '<div class="sbac-forum-main-container">';
+    switch ($active_tab) {
+      case SBAC_FORUM_SUBNAV_RESOURCE:
+				$output .= '<p class="recource-forums">';
+        $output .= t('<strong>Resource Forums</strong> provide opportunities to discuss specific resources in the Digital Library. The title of the forum is the title of the resource. View the <a href="@help-topics"> Help Topics</a> to learn more about Resource Forums.' , array(
+        '@help-topics' => '/help-topics',
+        ));
+        break;
+
+      case SBAC_FORUM_SUBNAV_TOPIC:
+				$output .= '<p class="topic-forums">';
+        $output .= t('<strong>Topic Forums</strong> provide opportunities to discuss the formative assessment process, standards, curriculum, summative and interim assessments, professional development, and other topics with colleagues across the country. The title reflects the focus of the discussion. View the <a href="@help-topics"> Help Topics</a> to learn more about Topic Forums.' , array(
+        '@help-topics' => '/help-topics',
+        ));
+        break;
+    }
     $output .= $forum_list_output;
+	$output .= '</p>';
     $output .= '</div>';
     return $output;
   }
@@ -207,6 +234,12 @@ function sbac_forum_view_forum_page($term) {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $output = '';
 
+  $query = "INSERT INTO {sbac_forum_views} (uid, tid, hits) VALUES (:uid, :tid, 1) ON DUPLICATE KEY UPDATE hits = hits + 1";
+  db_query($query, array(
+    ':uid' => $user->uid,
+    ':tid' => $term->tid,
+  ));
+
   // Load up forum data.
   $forum_data = entity_metadata_wrapper('taxonomy_term', $term);
   // $test = $forum_data->getPropertyInfo();
@@ -215,7 +248,7 @@ function sbac_forum_view_forum_page($term) {
   if (isset($forum_data->field_forum_description)) {
     $description_text = more_less_text($forum_data->field_forum_description->value());
   }
-  $add_comma = FALSE;
+
   $is_facilitator = FALSE;
   $facilitator_text = '';
   $faci_details = '';
@@ -325,7 +358,7 @@ function sbac_forum_view_forum_page($term) {
     'vid' => 'forum_topic_list',
     'display' => 'block',
     'args' => $term->tid,
-    'title' => t('Topics') . $topic_count_text,
+    'title' => t('Discussions') . $topic_count_text,
     'weight' => -99,
     'type' => 'view',
   );
@@ -348,7 +381,7 @@ function sbac_forum_view_forum_page($term) {
   $overrides = array(
     'style' => 'sbac-forum', // Style available, none/zen/etc.
     'sorted' => TRUE, // TRUE or FALSE.
-    'ajax' => FALSE, // TRUE or FALSE.
+    'ajax' => TRUE, // TRUE or FALSE.
     'default_tab' => $default_tab, // Id of the tab - 0/1/2/etc.
     'list_classes' => $tab_classes,
   );
@@ -371,34 +404,49 @@ function sbac_forum_view_forum_page($term) {
   // If this is a resource forum, then I am favoriting the resource itself (node)
   // Otherwise I'm favoriting the forum (taxonomy term)
   $id = $term->tid;
-  $type = 'term';
+  $fav_type = 'term';
   if (!empty($term->field_forum_resource_ref)) {
     $resource_wrapper = $forum_data->field_forum_resource_ref;
     $id = $term->field_forum_resource_ref['und'][0]['target_id'];
-    $type = 'node';
+    $fav_type = 'node';
     $resource_link = l('View Resource', 'node/' . $id, array('attributes' => array('target' => '_blank')));
 
     // resource image
-    $default_file = 'public://file.png';
-    $uri = $default_file;
+    $default_file = 'no_img';
+    $uri = NULL;
+    $url = NULL;
     if ($resource_wrapper->__isset('field_thumbnail_uri')) {
       $thumbnail_uri = $forum_data->field_forum_resource_ref->field_thumbnail_uri->value();
       $thumbnail_uri = str_replace('<div class="field-content">', '', $thumbnail_uri);
       $thumbnail_uri = str_replace('</div>', '', $thumbnail_uri);
       $thumbnail_pieces = explode('::', $thumbnail_uri);
       $uri = $thumbnail_pieces[0];
+      $url = $thumbnail_pieces[1];
       $ext = pathinfo($uri, PATHINFO_EXTENSION);
-      $file_type = _sbac_resource_determine_extension($ext);
-      if ($file_type != 'image') {
+      $type = _sbac_resource_determine_extension($ext);
+      $real_path = drupal_realpath($uri);
+      if (!file_exists($real_path)) {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+
+      if ($type != 'image') {
+        $url = $default_file;
         $uri = $default_file;
       }
     }
-    $resource_image = theme('image_style', array(
-      'style_name' => 'resource_image_grid',
-      'path' => $uri,
-      'attributes' => array('class' => array()),
-      'alt' => 'Resource thumbnail image'
-    ));
+    else {
+      $url = $default_file;
+      $uri = $default_file;
+    }
+
+    if ($uri != 'no_img' && $url != 'no_img') {
+      $image_url = file_create_url($uri);
+      $image_tag = '<img typeof="foaf:Image" src="' . $image_url . '" width="268" height="138" alt="Resource thumbnail image" />';
+      $variables['image'] = $image_tag;
+      $variables['mime-type'] = file_get_mimetype($url);
+      $variables['file-type-icon'] = 'document';
+    }
 
     // resource rating
     $resource_rating = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($id));
@@ -417,7 +465,7 @@ function sbac_forum_view_forum_page($term) {
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
 
-  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $type);
+  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $fav_type);
 
   // Add all the markup to variable for tpl.
   $fields = array(
@@ -433,7 +481,7 @@ function sbac_forum_view_forum_page($term) {
     'tabs' => $tab_output,
     'favorites_link' => $favorite_link,
     'resource_link' => $resource_link,
-    'resource_image' => $resource_image,
+    'resource_image' => $image_tag,
     'resource_rating' => $resource_rating,
     'resource_rating_count' => $resource_rating_count,
     'resource_views' => $resource_views,

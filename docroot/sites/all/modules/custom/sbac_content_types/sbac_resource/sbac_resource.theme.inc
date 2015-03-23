@@ -24,6 +24,21 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     ),
   );
 
+  $items['sbac_resource_profile_print'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates/print',
+    'template' => 'resource-profile-print',
+    'variables' => array('node' => NULL),
+    'preprocess functions' => array(
+      'sbac_resource_profile_fields',
+    ),
+  );
+
+  $items['sbac_resource_print'] = array(
+    'path' => drupal_get_path('module', 'sbac_resource') . '/templates/print',
+    'template' => 'resource-print',
+    'variables' => array('print' => array(), 'type' => PRINT_HTML_FORMAT, 'node' => NULL),
+  );
+
   $items['sbac_resource_related_resources_header'] = array(
     'path' => drupal_get_path('module', 'sbac_resource') . '/templates/related_resources',
     'template' => 'related-resources-header',
@@ -704,6 +719,9 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
  * Returns the image icon.
  *
  * @param $fields
+ * @param $view_display
+ *
+ * @return string
  */
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
@@ -714,7 +732,6 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $class = 'list-image lazy';
     }
 
-    // $default_file = 'public://file.png';
     $default_file = 'no_img';
     $uri = NULL;
     $url = NULL;
@@ -744,14 +761,11 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     }
 
     if ($uri != 'no_img' && $url != 'no_img') {
-      $variables['image'] = theme('image_style', array(
-        'style_name' => 'resource_image_grid',
-        'path' => $uri,
-        'attributes' => array('class' => $class),
-        'alt' => 'Resource thumbnail image'
-      ));
+      $image_url = file_create_url($uri);
+      $image_tag = '<img class="' . $class . '" typeof="foaf:Image" src="' . $image_url . '" width="268" height="138" alt="Resource thumbnail image" />';
+      $variables['image'] = $image_tag;
       $variables['mime-type'] = file_get_mimetype($url);
-      $variables['file-type-icon'] = 'document'; //_sbac_resource_determine_file_type_icon($ext);
+      $variables['file-type-icon'] = 'document';
     }
   }
   if (count($thumbnail_pieces) && $uri != 'no_img' && $url != 'no_img') {
@@ -882,14 +896,14 @@ function _sbac_resource_my_resources_links($fields, $row) {
       case 'draft':
         $url = url('node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['buttons'][] = l('Edit', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-//        $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
-//          'html' => TRUE,
-//          'attributes' => array(
-//            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource-button-' . $nid,
-//            'id' => 'sbac-resource-modal-delete-resource-button-' . $nid,
-//          ),
-//          'query' => array('nid' => $nid),
-//        ));
+        $variables['buttons'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+          'html' => TRUE,
+          'attributes' => array(
+            'class' => 'use-ajax medium red button ctools-modal-sbac-resource-modal-delete-resource-button-' . $nid,
+            'id' => 'sbac-resource-modal-delete-resource-button-' . $nid,
+          ),
+          'query' => array('nid' => $nid),
+        ));
 
         // JS to properly size the modal when submit resource is clicked.
         $js_settings = array(
@@ -905,16 +919,16 @@ function _sbac_resource_my_resources_links($fields, $row) {
 
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
         $variables['links'][] = l('Edit', 'node/' . $nid . '/edit', array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-//        $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
-//          'html' => TRUE,
-//          'query' => array(
-//            'nid' => $nid
-//          ),
-//          'attributes' => array(
-//            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource-link-' . $nid,
-//            'id' => 'sbac-resource-modal-delete-resource-link-' . $nid,
-//          )
-//        ));
+        $variables['links'][] = l(t('Delete'), 'sbac_resource/nojs/delete-resource', array(
+          'html' => TRUE,
+          'query' => array(
+            'nid' => $nid
+          ),
+          'attributes' => array(
+            'class' => 'use-ajax ctools-modal-sbac-resource-modal-delete-resource-link-' . $nid,
+            'id' => 'sbac-resource-modal-delete-resource-link-' . $nid,
+          )
+        ));
 
         // JS to properly size the modal when submit resource is clicked.
         $js_settings = array(
@@ -1252,10 +1266,10 @@ function _sbac_resource_resource_review_links($fields, $row) {
           $variables['text'] = t('Needs Review');
         }
         elseif ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_flag != 'qc_being_reviewed') {
-          $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc', 'query' => array('destination' => arg(0))));
-          $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-          $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
+          $variables['buttons'][] = l('Continue Review', $url, array('attributes' => array('class' => array('medium', 'button'))));
+          $variables['links'][] = l('Continue Review', $url, array('absolute' => TRUE));
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE));
           $variables['text'] = t('Being Reviewed');
         }
         elseif ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_flag == 'gk_being_reviewed') {

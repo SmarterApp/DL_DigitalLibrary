@@ -112,14 +112,6 @@ function sbac_flag_menu() {
     'file' => 'sbac_flag.modal.inc',
   );
 
-  $items['sbac-flag/%ctools_js/session-expire'] = array(
-    'title' => 'Session Expire',
-    'page callback' => 'sbac_flag_session_expire_modal',
-    'page arguments' => array(1),
-    'access callback' => TRUE,
-    'file' => 'sbac_flag.modal.inc',
-  );
-
   $items['moderation'] = array(
     'title' => t('Moderation'),
     'page callback' => 'sbac_flag_moderation',
@@ -464,19 +456,29 @@ function sbac_flag_theme($existing, $type, $theme, $path) {
 function sbac_flag_preprocess_node(&$vars) {
   if ($vars['type'] == 'resource') {
     if (isset($_GET['flag']) && $_GET['flag'] == 'view-resource-flags') {
-      drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
-      // get status, get amount of flags, get urgent amount of flags, produce start moderation button
-      $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'resource');
-      if ($flags) {
-        sbac_flag_create_resource_view_output($vars, $flags);
+      if (sbac_flag_moderation_access()) {
+        drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
+        // get status, get amount of flags, get urgent amount of flags, produce start moderation button
+        $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'resource');
+        if ($flags) {
+          sbac_flag_create_resource_view_output($vars, $flags);
+        }
+      }
+      else {
+        return drupal_access_denied();
       }
     }
 
     if (isset($_GET['flag']) && ($_GET['flag'] == 'view-resource-review-flags' || $_GET['flag'] == 'resolve-resource-review-flags')) {
-      drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
-      $review = $_GET['review'];
-      $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'review', $review);
-      sbac_flag_create_resource_review_view_output($vars, $flags, $review);
+      if (sbac_flag_moderation_access()) {
+        drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
+        $review = $_GET['review'];
+        $flags = sbac_flag_get_all_flags_for_node($vars['node'], 'review', $review);
+        sbac_flag_create_resource_review_view_output($vars, $flags, $review);
+      }
+      else {
+        return drupal_access_denied();
+      }
     }
   }
 }
@@ -488,26 +490,31 @@ function sbac_flag_preprocess_node(&$vars) {
  */
 function sbac_flag_preprocess_page(&$vars) {
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'edit' && isset($_GET['flag']) && $_GET['flag'] == 'resolve-resource-flags') {
-    $node = menu_get_object();
-    if ($node && $node->type == 'resource') {
-      $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
-      if ($flags) {
-        drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
-        $vars['flag']['resource'] = TRUE;
-        $vars['flag']['total'] = count($flags);
-        $vars['flag']['count_message'] = count($flags);
-        (count($flags) == 1 ? $vars['flag']['count_message'] .= ' flag' : $vars['flag']['count_message'] .= ' flags');
-        // determine urgent flags
-        $urgent_flags = sbac_flag_get_all_urgent_flags($flags);
-        if ($urgent_flags) {
-          $vars['flag']['urgent_total'] = count($urgent_flags);
-          $vars['flag']['count_message'] .= ' (' . count($urgent_flags) . ' urgent)';
+    if (sbac_flag_moderation_access()) {
+      $node = menu_get_object();
+      if ($node && $node->type == 'resource') {
+        $flags = sbac_flag_get_all_flags_for_node($node, 'resource');
+        if ($flags) {
+          drupal_add_css(drupal_get_path('module', 'sbac_flag') . '/css/sbac_flag.css');
+          $vars['flag']['resource'] = TRUE;
+          $vars['flag']['total'] = count($flags);
+          $vars['flag']['count_message'] = count($flags);
+          (count($flags) == 1 ? $vars['flag']['count_message'] .= ' flag' : $vars['flag']['count_message'] .= ' flags');
+          // determine urgent flags
+          $urgent_flags = sbac_flag_get_all_urgent_flags($flags);
+          if ($urgent_flags) {
+            $vars['flag']['urgent_total'] = count($urgent_flags);
+            $vars['flag']['count_message'] .= ' (' . count($urgent_flags) . ' urgent)';
+          }
+          // determine status of resource
+          $status = sbac_flag_determine_status_for_resource($flags);
+          $vars['flag']['status'] = $status;
+          $vars['flag']['button'] = "<a href='/" . $node->path['alias'] . "' class='button' target='_blank' >Open Resource Preview</a>";
         }
-        // determine status of resource
-        $status = sbac_flag_determine_status_for_resource($flags);
-        $vars['flag']['status'] = $status;
-        $vars['flag']['button'] = "<a href='/" . $node->path['alias'] . "' class='button' target='_blank' >Open Resource Preview</a>";
       }
+    }
+    else {
+      return drupal_access_denied();
     }
   }
 }
@@ -518,7 +525,7 @@ function sbac_flag_preprocess_page(&$vars) {
  * @param $vars
  * @param $flags
  */
-function  sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
+function sbac_flag_create_resource_review_view_output(&$vars, $flags, $review) {
   $entity_review = entity_load_single('review', $review);
   if ($entity_review) {
     $entity_renderable = entity_view('review', array($entity_review));
@@ -1028,7 +1035,7 @@ function sbac_flag_determine_urgent($flag_option, $type = 'resource') {
       if ($term->name == 'Contains personally identifiable information (PII)') {
         return TRUE;
       }
-      if ($term->name == 'May be in violation of intellectual property rights') {
+      if (strstr($term->name, 'May be in violation of intellectual property rights')) {
         return TRUE;
       }
       if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {
@@ -1362,13 +1369,15 @@ function sbac_flag_resource_profile_view($flags) {
       }
       //create each flag row
       $user_name = $account->name;
+      $user_email = $account->mail;
+      $user_state = taxonomy_term_load($account->field_state['und'][0]['tid'])->name;
       if (!empty($account->field_first_name)) {
         $user_name = $account->field_first_name['und'][0]['value'];
         if (!empty($account->field_last_name)) {
           $user_name .= ' ' . $account->field_last_name['und'][0]['value'];
         }
       }
-      $list_output .= theme('flag_category_row', array('username' => $user_name, 'created' => $created, 'flag_comment' => $flag_comment));
+      $list_output .= theme('flag_category_row', array('username' => $user_name, 'created' => $created, 'flag_comment' => $flag_comment, 'user_email' => $user_email, 'user_state' => $user_state));
     }
     $list_output .= '</div>';
   }
@@ -1429,13 +1438,15 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
         $flag_comment = 'No Comment Provided';
       }
       $user_name = $account->name;
+      $user_email = $account->mail;
+      $user_state = taxonomy_term_load($account->field_state['und'][0]['tid'])->name;
       if (!empty($account->field_first_name)) {
         $user_name = $account->field_first_name['und'][0]['value'];
         if (!empty($account->field_last_name)) {
           $user_name .= ' ' . $account->field_last_name['und'][0]['value'];
         }
       }
-      $list_output .= theme('flag_category_row', array('username' => $user_name, 'created' => $created, 'flag_comment' => $flag_comment));
+      $list_output .= theme('flag_category_row', array('username' => $user_name, 'created' => $created, 'flag_comment' => $flag_comment, 'user_email' => $user_email, 'user_state' => $user_state));
     }
     $list_output .= '</div>';
   }

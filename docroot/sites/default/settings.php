@@ -563,42 +563,61 @@ if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/sbac/sbac-settings.inc');
 }
 
+// Local DB settings
+$file = __DIR__ . '/dev_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
+}
+
+// Local Environment settings
+$file = __DIR__ . '/local_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
+}
+
 // Sets the Apache Solr Environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
       $conf['file_private_path'] = '/mnt/files/sbacdev/files-private';
       $conf['google_cdn_folder'] = 'dev';
+      $conf['oscaddie_gcs_folder'] = 'dev';
       // do something on dev
       break;
     case 'test':
       // do something on staging
       $conf['file_private_path'] = '/mnt/files/sbacstg/files-private';
       $conf['google_cdn_folder'] = 'stage';
+      $conf['oscaddie_gcs_folder'] = 'stage';
       break;
     case 'stage2':
       // do something on staging2
       $conf['file_private_path'] = '/mnt/files/sbacstg2/files-private';
       $conf['google_cdn_folder'] = 'stage2';
+      $conf['oscaddie_gcs_folder'] = 'stage2';
       break;
     case 'stage3':
       // do something on staging3
       $conf['file_private_path'] = '/mnt/files/sbacstg3/files-private';
       $conf['google_cdn_folder'] = 'integration';
+      $conf['oscaddie_gcs_folder'] = 'integration';
       break;
     case 'prod':
       // do something on prod
       $conf['file_private_path'] = '/mnt/files/sbac/files-private';
       $conf['google_cdn_folder'] = 'production';
+      $conf['oscaddie_gcs_folder'] = 'production';
       break;
     case 'loadtest':
       $conf['file_private_path'] = '/mnt/files/sbacloadtest/files-private';
       $conf['google_cdn_folder'] = 'performance';
+      $conf['oscaddie_gcs_folder'] = 'performance';
       break;
   }
 }
 else {
   $conf['google_cdn_folder'] = 'local';
+  $conf['oscaddie_gcs_folder'] = 'local';
   $conf['file_default_scheme'] = 'private';
 }
 
@@ -610,7 +629,13 @@ $conf['google_cdn_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgf
 $conf['google_cdn_signed_url_expiry'] = 300;
 $conf['google_cdn_library_version'] = 2;
 
-//ini_set('memory_limit', '196M');
+// osCaddie GCS variables.
+$conf['oscaddie_gcs_bucket_name'] = 'sbac_media';
+$conf['oscaddie_gcs_extensions'] = 'all';
+$conf['oscaddie_gcs_client_id'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot.apps.googleusercontent.com';
+$conf['oscaddie_gcs_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot@developer.gserviceaccount.com';
+$conf['oscaddie_gcs_signed_url_expiry'] = 300;
+$conf['oscaddie_gcs_library_version'] = 2;
 
 /**
  * Fast 404 settings:
@@ -661,7 +686,7 @@ $conf['fast_404_url_whitelisting'] = FALSE;
 $conf['fast_404_whitelist'] = array('index.php', 'rss.xml', 'install.php', 'cron.php', 'update.php', 'xmlrpc.php');
 
 # Array of whitelisted URL fragment strings that conflict with fast_404.
-$conf['fast_404_string_whitelisting'] = array('cdn/farfuture', '/advagg_', 'html5_module', 'resources', 'resource_stats_csv');
+$conf['fast_404_string_whitelisting'] = array('cdn/farfuture', '/advagg_', 'html5_module', 'resources', 'resource_stats_csv', 'resource_thumbnails', 'html5_thumbnails');
 
 # By default we will show a super plain 404, because usually errors like this are shown to browsers who only look at the headers.
 # However, some cases (usually when checking paths for Drupal pages) you may want to show a regular 404 error. In this case you can

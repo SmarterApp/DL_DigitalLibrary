@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 
-require_once "Google/Auth/Abstract.php";
-require_once "Google/Http/Request.php";
+require_once realpath(dirname(__FILE__) . '/../../../autoload.php');
 
 /**
  * Simple API access implementation. Can either be used to make requests
@@ -49,36 +48,6 @@ class Google_Auth_Simple extends Google_Auth_Abstract
   {
     $request = $this->sign($request);
     return $this->io->makeRequest($request);
-  }
-
-  public function authenticate($code)
-  {
-    throw new Google_Auth_Exception("Simple auth does not exchange tokens.");
-  }
-
-  public function setAccessToken($accessToken)
-  {
-    /* noop*/
-  }
-
-  public function getAccessToken()
-  {
-    return null;
-  }
-
-  public function createAuthUrl($scope)
-  {
-    return null;
-  }
-
-  public function refreshToken($refreshToken)
-  {
-    /* noop*/
-  }
-
-  public function revokeToken()
-  {
-    /* noop*/
   }
 
   public function sign(Google_Http_Request $request)

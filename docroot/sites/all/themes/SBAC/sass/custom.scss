@@ -214,17 +214,6 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   }
 
 @mixin global-button {
- /*@include text-shadow(0px 1px 0px #45613e);
-   @include border-radius(6px);
-   @include box-shadow(inset 0px 1px 0px 0px #6DC088);
-   display: inline-block;
-   font-size: 16px;
-   font-weight: normal;
-   color: #FFF;
-   background: #2aa549;
-   border: 1px solid #268a16;
-   padding: 8px 18px;
-   text-align: center;*/
 	@include border-radius(6px);
 	box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
@@ -244,16 +233,10 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 	}
 
   &:focus {
-    /*background: rgba(191, 216, 229, 1);
-        color: rgba(0, 98, 152, 1);*/
     outline: none;
 		background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 
     &:hover {
-      /*@include text-shadow(0px 1px 0px rgba(0,0,0,.5));
-            @include transition(all 500ms ease);
-            background: rgba(0, 133, 173, 1);
-            color: white;*/
 			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
     }
   }
@@ -270,7 +253,7 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
   font-family: $body-font-family;
 
   &:hover, &:focus  {
-    @include box-shadow(inset 0px 1px 0px 0px #006184);
+    @include box-shadow(inset 0px 1px 0px 0px #22B3E3);
 		@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
   }
 }
@@ -3168,7 +3151,7 @@ a.tabledrag-handle .handle {
 #edit-submit--3 {
   //float: right;
   color: white;
-  background: #2aa549;
+  /*background: #2aa549;*/
 
   &:hover, &:focus {
 	/*	background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);*/
@@ -3612,7 +3595,7 @@ a.tabledrag-handle .handle {
 		color: #FFFFFF;
 		font-size: 15px;
     font-weight: normal;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
 
 		span {
 			font-weight: bold;
@@ -3647,7 +3630,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		box-shadow: none;
 		color: #FFFFFF;
 		margin: 0;
-		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 		margin: 0 0 0 25px;
 		padding: 0 18px;
@@ -3744,7 +3727,7 @@ div.block-sbac-resource-sbac-resource-rr-sort-form  {
 		float: right;
 		color: #fff;
 		font-size: 16px;
-	  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+	  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
 		margin-right: 35px;
 	}
 
@@ -4035,4 +4018,305 @@ button.radius, .button.radius {
 // Admin fix input email
 form#sbac-user-filter-form #edit-email {
   clear: both;
+}
+
+/* -----------------------------------------
+  SSO error messages
+  ------------------------------------------ */
+.page-sbac-sso-error {
+	#main.columns {
+		float: none;
+		padding-bottom: 20px;
+	}
+	
+	#main.large-9 {
+		margin: 0 auto;
+		
+		p {
+			font-size: 1rem;
+		}
+	}
+	
+	#main.push-3 {
+		left: auto;
+	}
+	
+	.error-code {
+		margin-top: 20px;
+		clear: left;
+	}
+}
+
+/* -----------------------------------------
+  Terms of Service page
+  ------------------------------------------ */
+.page-legal-accept {
+	#modal-content {overflow-y: hidden !important;}
+}
+
+#legal-login {
+	
+	#cancel-button {
+		.ajax-progress-throbber {
+			display: none;
+		}
+	}
+	
+	#sbac-user-disagree-tos {
+		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+		
+		&:focus, &:active {
+			background-color: #8A1538;
+		}
+	}
+}	
+
+#sbac-user-disagree-tos-form {
+	margin-bottom: 0;
+
+	h5 {
+		font-size: 16px;
+		margin-bottom: 15px;
+		font-family: Arial,sans-serif;
+	}
+
+	#edit-continue {
+		margin-right: 10px;
+		margin-bottom: 0;
+	}
+
+	#edit-cancel {
+		margin-left: 10px;
+		margin-bottom: 0;
+	}
+}
+
+/* -----------------------------------------
+  Critical Message
+  ------------------------------------------ */
+.page-admin-config-development-maintenance {
+  .main-container {
+    background: none repeat scroll 0 0 #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 0 rgba(4, 56, 78, 0.75);
+    display: block;
+    margin: 50px auto;
+    min-height: 60px;
+    padding: 40px 50px;
+    position: relative;
+    width: 960px;
+    
+    h1 {color: #04384e;}
+  }
+  
+  label {
+    font-size: 15px;
+  }
+  
+  .form-item-maintenance-mode {
+    .description {
+      line-height: 1.4;
+    }
+  }
+  
+  label[for="edit-critical-message-on-off"] {
+    font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+    color: #04384e;
+    font-size: 1.5em;
+    margin-top: 40px;
+  }
+  
+  .start-date-wrapper,
+  .end-date-wrapper {
+    width: 50%;
+  }
+  
+  .start-date-wrapper {
+    float: left;
+    margin-top: 30px;
+    
+    label[for="edit-critical-message-start-date"],
+    #edit-critical-message-start-date{
+      display: inline-block;
+      float: left;
+      padding-top: 0;
+      
+      label {display: none;}
+    }
+    
+    .form-item.form-type-checkbox  {
+      margin: 0.5em 0;
+      
+      .description { margin-left: 2.2em; }
+    }
+  }
+  
+  .end-date-wrapper {
+    float: right;
+    margin-top: 30px;
+    
+    label[for="edit-critical-message-end-date"],
+    #edit-critical-message-end-date{
+      display: inline-block;
+      float: left;
+      padding-top: 0;
+      
+      label {display: none;}
+    }
+    
+    .form-item.form-type-checkbox {
+      margin: 0.5em 0;
+      
+      .description { margin-left: 2.2em; }
+    }
+  }
+  
+  .form-item-critical-message-textbox {
+    clear: both;
+    width: 100%;
+    margin-top: 20px;
+    
+    textarea {height: 100px;}
+  }
+  
+  label[for="edit-critical-message-start-date"],
+  label[for="edit-critical-message-end-date"] {
+    margin-top: 10px;
+  }
+}
+
+#modalContent .ctools-modal-content.critical {
+  position: relative;
+  line-height: 1.4;
+  border: 5px solid #ffffff;
+  box-shadow: 0 0 3px 0 rgba(4, 56, 78, 0.3), 0 1px 0 0 rgba(0, 0, 0, 0.1);
+  background-color: #fdf2b1;
+  color: #464b54;
+  padding: 10px 20px;
+  overflow-y: scroll;
+  
+  .modal-content {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    
+    h2 {color: #000;}
+  }
+  
+  #modal-title {
+    color: #8a1538 !important;
+    padding: 15px 0;
+  }
+  
+  strong {
+    width: 100%;
+    float: left;
+    clear: both;
+  }
+  
+  button.close.form-submit,
+  button.close#edit-submit {
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    color: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    height: 20px;
+    line-height: 20px;
+    padding: 0;
+    text-align: center;
+    text-shadow: none;
+    position: absolute;
+    right: -30px;
+    top: -50px;
+    z-index: 9999;
+  }
+  
+  button.close.form-submit:before {
+    content: "\e636";
+    font-family: SBAC;
+    font-size: 20px;
+    color: #04384e;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* -----------------------------------------
+  Auto Logout Popup
+  ------------------------------------------ */
+.ui-widget-content.autologout-dialog {
+  background: none;
+  border: none;
+  width: 100% !important;
+  font-family: Arial,sans-serif;
+  line-height: 1.4;
+  
+  .ui-widget-header {
+    width: 640px;
+    padding: 20px 40px 0;
+    background-color: #fff;
+    color: #000;
+    margin: 0 auto;
+    
+    .ui-button {
+      display: none;
+    }
+  }
+  
+  .ui-widget-content {
+    width: 640px;
+    background-color: #fff;
+    color: #464b54;
+    font-size: 16px;
+    margin: 0 auto;
+  }
+  
+  #autologout-confirm.ui-widget-content {
+    width: 640px !important;
+    padding: 20px 40px;
+    margin: 0 auto !important;
+  }
+  
+  .ui-dialog-buttonpane.ui-widget-content {
+    border: none;
+    padding-bottom: 25px;
+           
+    button {
+      float: right;
+      margin: 0 20px 0 10px;
+      @include border-radius(6px);
+    	box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+    	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    	color: #FFFFFF;
+    	cursor: pointer;
+    	font-size: 16px;
+    	font-weight: normal;
+    	height: 34px;
+    	line-height: 34px;
+    	padding: 0 18px;
+    	text-align: center;
+    	background-color: #2AA549;
+      border: 1px solid #268A16;
+      
+      &:hover {
+    		background-color: #269542;
+      }
+    }
+    
+    button.ui-state-default {
+      background-image: none;
+    }
+    
+    button + button {
+      background-color: #6E7379;
+      border: 1px solid #4D5457;
+      
+      &:hover {
+    		background-color: #64696e;
+      }
+    }
+  }
 }

@@ -590,90 +590,102 @@ class Task extends \taskit\Base implements iTask {
    */
   public function save($multi_update = TRUE, $uid = NULL) {
     // insert new task
-      if ($this->getTaskId() == 0) {
-        $fields = array(
-          'type' => $this->getType(),
-          'created' => REQUEST_TIME,
-          'state' => $this->getState(),
-          'visibility' => $this->getVisibility(),
-        );
+    if ($this->getTaskId() == 0) {
+      $fields = array(
+        'type' => $this->getType(),
+        'created' => REQUEST_TIME,
+        'state' => $this->getState(),
+        'visibility' => $this->getVisibility(),
+      );
 
-        $this->setTaskId(db_insert('taskit')->fields($fields)->execute());
-      }
+      $this->setTaskId(db_insert('taskit')->fields($fields)->execute());
+    }
     // update misc fields  
-      else {
-        $fields = array(
-          'state' => $this->getState(),
-          'visibility' => $this->getVisibility(),
-          'viewed' => $this->getViewed(),
-        );
+    else {
+      $fields = array(
+        'state' => $this->getState(),
+        'visibility' => $this->getVisibility(),
+        'viewed' => $this->getViewed(),
+      );
 
-        // by default we treat task updates as "stacking" of additional events on to the
-        // same notification, but there are cases where we don't want to update any
-        // timestamp data, so this flag allows us to bypass that code
-        if ($multi_update) {
-          // reset the viewed timestamp
-          $this->setViewed(0);
-          $fields['viewed'] = $this->getViewed();
+      // by default we treat task updates as "stacking" of additional events on to the
+      // same notification, but there are cases where we don't want to update any
+      // timestamp data, so this flag allows us to bypass that code
+      if ($multi_update) {
+        // reset the viewed timestamp
+        $this->setViewed(0);
+        $fields['viewed'] = $this->getViewed();
 
-          $fields['created'] = REQUEST_TIME; // update the created time so that subsequent updates
-          // to this task will bump the task to the top of the user's notifications feed
-        }
-
-        db_update('taskit')
-          ->fields($fields)
-          ->condition('task_id', $this->getTaskId())
-          ->execute();
-
-        $visibility_type = variable_get('taskit_visibility', 'global');
-        if ($visibility_type == 'user' && $uid) {
-          db_merge('taskit_viewed')
-            ->key(array(
-              'task_id' => $this->getTaskId(),
-              'user_id' => $uid,
-            ))
-            ->execute();
-        }
+        $fields['created'] = REQUEST_TIME; // update the created time so that subsequent updates
+        // to this task will bump the task to the top of the user's notifications feed
       }
+
+      db_update('taskit')
+        ->fields($fields)
+        ->condition('task_id', $this->getTaskId())
+        ->execute();
+
+      $visibility_type = variable_get('taskit_visibility', 'global');
+      if ($visibility_type == 'user' && $uid) {
+        db_merge('taskit_viewed')
+          ->key(array(
+            'task_id' => $this->getTaskId(),
+            'user_id' => $uid,
+          ))
+          ->execute();
+      }
+    }
 
     // regardless of whether we insterted a new task or are updating
     // an existing one, we now have a task id to work with
 
     // remove old referenced entities and save new ones
-      $this->removeOldRecords('taskit_entity');
+    $this->removeOldRecords('taskit_entity');
 
-      $table_fields = array();
-      foreach ($this->_entities as $entity_type => $entity_ids) {
-        foreach ($entity_ids as $entity_id) {
-          $table_fields[] = array(
-            'task_id' => $this->getTaskId(),
-            'entity_type' => $entity_type,
-            'entity_id' => $entity_id,
-          );
-        }
+    $table_fields = array();
+    foreach ($this->_entities as $entity_type => $entity_ids) {
+      foreach ($entity_ids as $entity_id) {
+        $table_fields[] = array(
+          'task_id' => $this->getTaskId(),
+          'entity_type' => $entity_type,
+          'entity_id' => $entity_id,
+        );
       }
+    }
 
-      $this->saveNewRecords('taskit_entity', $table_fields);
+    $this->saveNewRecords('taskit_entity', $table_fields);
 
     // remove old referenced triggering & owning users and save new ones
-      $user_types = array(
-        'taskit_user_trigger' => '_triggering_users',
-        'taskit_user_owner'   => '_owning_users',
-      );
+    $user_types = array(
+      'taskit_user_trigger' => '_triggering_users',
+      'taskit_user_owner' => '_owning_users',
+    );
 
-      foreach ($user_types as $table => $field) {
-        $this->removeOldRecords($table);
+    foreach ($user_types as $table => $field) {
+      $this->removeOldRecords($table);
 
-        $table_fields = array();
-        foreach ($this->{$field} as $user_id) {
-          $table_fields[] = array(
-            'task_id' => $this->getTaskId(),
-            'user_id' => $user_id,
-          );
-        }
-
-        $this->saveNewRecords($table, $table_fields);
+      $table_fields = array();
+      foreach ($this->{$field} as $user_id) {
+        $table_fields[] = array(
+          'task_id' => $this->getTaskId(),
+          'user_id' => $user_id,
+        );
       }
+
+      $this->saveNewRecords($table, $table_fields);
+    }
+
+    if (strpos($_GET['q'], 'taskit/view') === FALSE) {
+      // Update the unread notifications table.
+      if ($this->_owning_users) {
+        foreach ($this->_owning_users as $uid) {
+          $user = user_load($uid);
+          if ($user) {
+            taskit_update_user_unread_count($uid);
+          }
+        }
+      }
+    }
 
     return $this->getTaskId();
   }

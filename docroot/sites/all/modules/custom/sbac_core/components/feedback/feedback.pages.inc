@@ -26,9 +26,13 @@ function resource_feedback_page($node) {
           'collaboration' => FALSE,
         ),
       ),
-      'access review comments' => array(
+      'access gk review comments' => array(
         'feedback' => array(
           'gk_comments' => TRUE,
+        ),
+      ),
+      'access qc review comments' => array(
+        'feedback' => array(
           'qc_comments' => TRUE,
         ),
       ),
@@ -67,11 +71,11 @@ function resource_feedback_page($node) {
       ),
       'access moderate flag' => array(
         'feedback' => array(
-          'moderate_flag' => FALSE,
+          'moderate_flag' => TRUE,
         )
       ),
     );
-
+    
     foreach ($tabs as $permission => $sources) {
       if ($factory->access($permission)) {
         foreach ($sources as $source => $items) {

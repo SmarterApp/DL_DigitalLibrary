@@ -26,7 +26,26 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     ),
     '#required' => TRUE,
   );
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    $form['state'] = array_merge($form['state'], array(
+      '#multiple' => FALSE,
+      '#attributes' => array('class' => array()),
+      '#disabled' => TRUE,
+    ));
+  }
+
   $user_group_options = sbac_report_user_group_options();
+  array_push($user_group_options, 'SNE Members');
+  array_push($user_group_options, 'SLT Members');
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    foreach($user_group_options as $index => $option){
+      if(!in_array($option, array('resource contributor', 'resource reviewer', 'all'))){
+        unset($user_group_options[$index]);
+      }
+    }
+  }
+  sbac_csv_report_prettify($user_group_options);
 
   $form['user_group_dropdown'] = array(
     '#type' => 'select',
@@ -38,31 +57,14 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $options = array(
-    1 => 'All',
-    2 => 'Neither SNE nor SLT',
-    3 => 'SNE members only',
-    4 => 'SLT members only',
-    5 => 'Combination SLT/SNE members',
-  );
-  $form['sne_slt_filter'] = array(
-    '#type' => 'select',
-    '#title' => t('Filter for SNE or SLT Members'),
-    '#options' => $options,
-    '#multiple' => TRUE,
-    '#attributes' => array('class' => array('chosen-widget')),
-    '#default_value' => sbac_report_get_default_sne_slt(),
-    '#required' => TRUE,
-  );
-
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
 
   // If there was no date range stored in SESSION.
   // Default to the "Last 30 Days".
   if (empty($session_date_range) || $session_date_range = $date_options['Cumulative to date']) {
-    $session_date_range = $date_options['Last 30 Days'];
-    $date_display = t('Last 30 Days');
+    $session_date_range = $date_options['Cumulative to date'];
+    $date_display = t('Cumulative to date');
   }
   // If there is, we get the display text "Last 60 Days", "Last 90 Days", etc.
   elseif ($key = array_search($session_date_range, $date_options)) {
@@ -96,6 +98,12 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
   if (empty($form_state['values']['date_range1'])) {
     form_set_error('date_range', t('Choose a time period field is required.'));
   }
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    if ($form_state['values']['state'] != sbac_report_get_default_state_tid()) {
+      form_set_error('state', t('You\'re only allowed to select your own state'));
+    }
+  }
 }
 
 /**
@@ -112,12 +120,10 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     $_SESSION['sbac_report']['state']['tid'] = $form_state['values']['state'];
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
-    $_SESSION['sbac_report']['sne-slt-filter']['filter'] = $form_state['values']['sne_slt_filter'];
   }
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range1', 'range');
   $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
-  $sne_filter = sbac_report_get_session_value('sne-slt-filter', 'filter');
 
   if (count($user_groups) == 0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
@@ -125,7 +131,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     return; // report did not contain any data.
   }
 
-  $users = get_users_for_user_groups($sne_filter, $state_tid, $user_groups);
+  $users = get_users_for_user_groups($state_tid, $user_groups);
   if ($users) {
     batch_set(array(
         'title' => t('User Activity Report'),
@@ -138,9 +144,9 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     batch_process('reports');
   }
   else {
-    if (count($user_groups) == 0) {
+    if (count($users) == 0) {
+      drupal_set_message(SBAC_REPORT_FILTER_ERROR, 'error');
       $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
-      $_SESSION['sbac_report']['active_tab'] = 1;
       return;
     }
   }
@@ -201,6 +207,7 @@ function sbac_report_user_activity_batch($users, $date_range, &$context) {
       $user = array_shift($context['sandbox']['users']);
       $user_activity = get_user_activity($user, $context['sandbox']['date_range']);
       $row = create_user_activity_from_data($user, $user_activity);
+      sbac_report_user_activity_organize_columns($row, $context['sandbox']['report_configuration']);
       fputcsv($handle, $row);
 
       unset($row);
@@ -219,6 +226,17 @@ function sbac_report_user_activity_batch($users, $date_range, &$context) {
     '@count' => $context['results']['count'],
     '@total' => $context['sandbox']['user_total'],
   ));
+}
+
+/**
+ * Organize a row according to the columns specified
+ */
+function sbac_report_user_activity_organize_columns(&$row, $columns){
+  $temp_row = array();
+  foreach($columns as $index => $column_name){
+    $temp_row[] = $row[$column_name];
+  }
+  $row = $temp_row;
 }
 
 /**
@@ -264,12 +282,67 @@ function sbac_report_user_activity_finished_batch($success, $results, $operation
   drupal_set_message($message);
 }
 
+/**
+ * Prettify the drop down options.
+ *
+ * @param $user_group_options
+ */
+function sbac_csv_report_prettify(&$user_group_options) {
+  foreach ($user_group_options as $key => $value) {
+    switch ($value) {
+      case 'all':
+        $user_group_options[$key] = t('All Users');
+        break;
+      case 'basic end user':
+        unset($user_group_options[$key]);
+        break;
+      case 'advanced end user':
+        $user_group_options[$key] = t('End Users');
+        break;
+      case 'resource contributor':
+        $user_group_options[$key] = t('Contributors');
+        break;
+      case 'resource reviewer':
+        $user_group_options[$key] = t('Reviewers');
+        break;
+      case 'resource publisher':
+        $user_group_options[$key] = t('Posters');
+        break;
+      case 'facilitator':
+        $user_group_options[$key] = t('Facilitators');
+        break;
+      case 'moderator':
+        $user_group_options[$key] = t('Moderators');
+        break;
+      case 'DLRB member':
+        $user_group_options[$key] = t('DLRB Members');
+        break;
+      case 'guest':
+        unset($user_group_options[$key]);
+        break;
+      case 'admins':
+        $user_group_options[$key] = t('Admins');
+        break;
+    }
+  }
+  if (!sbac_central_user_has_role(array('reports administrator'))) {
+    $res = $user_group_options;
+    $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
+    if (isset($user_group_options[37]) && $user_group_options[37] == 'SNE Members') {
+      unset($user_group_options[37]);
+    }
+    if (isset($user_group_options[38]) && $user_group_options[38] == 'SLT Members') {
+      unset($user_group_options[38]);
+    }
+  }
+}
+
 /*
  * Get the user groups for a given user group.  Note that a query with 'in (%s)' in the string doesn't work
  * properly with Drupals perpared statement support.
  *
  */
-function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
+function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   // look for the aggregated admins option "admins"
   if (array_key_exists(1, $user_groups_ids)) {
     // get the admins:
@@ -282,63 +355,75 @@ function get_users_for_user_groups($sne_filter, $state_tid, &$user_groups_ids) {
   // look for the 'all' option being set:
   else {
     if (array_key_exists(0, $user_groups_ids)) {
-      $admins = sbac_report_user_group_admins();
-      foreach ($admins as $key => $value) {
-        $user_groups_ids[$key] = $key;
-      }
-      $all = sbac_report_user_group_options();
-      foreach ($all as $key => $value) {
-        $user_groups_ids[$key] = $key;
-      }
-    }
-  }
-
-  $user_groups = implode(',', $user_groups_ids);
-  $look_for_both_sne_and_slt = in_array(5, $sne_filter);
-  $look_for_slt = in_array(4, $sne_filter);
-  $look_for_sne = in_array(3, $sne_filter);
-  $look_for_neither = in_array(2, $sne_filter);
-  $look_for_all_users = in_array(1, $sne_filter);
-
-  $sql  = "SELECT u.uid FROM {users} AS u ";
-  $sql .= "JOIN {users_roles} AS ur ON u.uid = ur.uid ";
-  if (!$look_for_all_users) {
-    $sql .= "JOIN {field_data_field_sne_member} AS sne ON u.uid = sne.entity_id ";
-    $sql .= "JOIN {field_data_field_slt_member} AS slt ON u.uid = slt.entity_id ";
-  }
-  $sql .= "JOIN {field_data_field_state} AS state ON u.uid = state.entity_id ";
-  $sql .= "WHERE ur.rid IN ($user_groups) ";
-
-  if (!$look_for_all_users) {
-    if ($look_for_both_sne_and_slt) { // both
-      $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 1 ";
-    }
-    else {
-      if ($look_for_slt) { // slt only.
-        $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 1 ";
-      }
-      else {
-        if ($look_for_sne) { // sne only.
-          $sql .= "AND sne.field_sne_member_value = 1 AND slt.field_slt_member_value = 0 ";
-        }
-        else {
-          if ($look_for_neither) { // niether.
-            $sql .= "AND sne.field_sne_member_value = 0 AND slt.field_slt_member_value = 0 ";
+      if (sbac_central_user_has_role(array('reports administrator'))) {
+        $roles = array(
+          'resource contributor',
+          'resource reviewer',
+        );
+        foreach ($roles as $role_name) {
+          $role = user_role_load_by_name($role_name);
+          if ($role) {
+            $user_groups_ids[$role->rid] = $role->rid;
           }
         }
       }
+      else {
+        $admins = sbac_report_user_group_admins();
+        foreach ($admins as $key => $value) {
+          $user_groups_ids[$key] = $key;
+        }
+        $all = sbac_report_user_group_options();
+        foreach ($all as $key => $value) {
+          $user_groups_ids[$key] = $key;
+        }
+      }
     }
   }
 
+  $slt_filter = FALSE;
+  $sne_filter = FALSE;
+  if (in_array(32, $user_groups_ids)) { // 32 is SNE
+    $sne_filter = $user_groups_ids[32];
+    unset($user_groups_ids[32]);
+  }
+  if (in_array(33, $user_groups_ids)) { // 33 is SLT
+    $slt_filter = $user_groups_ids[33];
+    unset($user_groups_ids[33]);
+  }
+
+  $query = db_select('users', 'u');
+  $query->fields('u', array('uid'));
+  if ($user_groups_ids) {
+    $query->join('users_roles', 'ur', 'u.uid = ur.uid');
+    $query->condition('ur.rid', $user_groups_ids, 'IN');
+  }
+  if ($sne_filter && $slt_filter) {
+    $query->join('field_data_field_sne_member', 'sne', 'u.uid = sne.entity_id');
+    $query->join('field_data_field_slt_member', 'slt', 'u.uid = slt.entity_id');
+    $or = db_or()->condition('sne.field_sne_member_value', 1)->condition('slt.field_slt_member_value', 1);
+    $query->condition($or);
+  }
+  else if ($sne_filter) {
+    $query->join('field_data_field_sne_member', 'sne', 'u.uid = sne.entity_id');
+    $query->condition('sne.field_sne_member_value', 1);
+  }
+  else if ($slt_filter) {
+    $query->join('field_data_field_slt_member', 'slt', 'u.uid = slt.entity_id');
+    $query->condition('slt.field_slt_member_value', 1);
+  }
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
   }
   else {
-    $states = implode(',', $state_tid);
-    $sql .= "AND state.field_state_tid IN ($states) ";
+    $query->join('field_data_field_state', 'state', 'u.uid = state.entity_id');
+    if (is_array($state_tid)) {
+      $query->condition('state.field_state_tid', $state_tid, 'IN');
+    } else {
+      $query->condition('state.field_state_tid', $state_tid);
+    }
   }
 
-  $result = db_query($sql);
+  $result = $query->execute();
   $users = array();
   foreach ($result as $record) {
     $users[$record->uid] = $record;
@@ -397,8 +482,20 @@ function get_user_activity($user, $date_range) {
   # resources viewed
   $sql = "select count(nid) as count, uid From node_user_paradata where uid in (%s) group by uid";
   $user_activity['resources_viewed'] = count_with_users_query($sql, $user);
-  # resouces downloaded
-  # not ready: select * from field_ass where uid = 372;
+
+  # resources downloaded
+  $sql = "select count(nid) as count, uid from sbac_resource_download_stats where uid in (%s) group by uid";
+  $user_activity['resources_downloaded'] = count_with_users_query($sql, $user);
+
+  # resources favorited
+  $sql = "select count(s.id) as count, s.uid from sbac_favorites s where s.uid in (%s) and s.type = 'node' and
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL s.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by s.uid";
+  $user_activity['resources_favorited'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # helpful reviews
+  $sql = "select count(distinct r.node_id) as count, r.uid from eck_review r left join votingapi_vote v on v.entity_id = r.id and v.entity_type = 'review' where v.value
+ > 0 and r.uid in (%s) and DATE_FORMAT((DATE_ADD('19700101', INTERVAL r.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by r.uid";
+  $user_activity['resources_helpful'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # resources reviewed/rated
   $sql = "select count(id) as count, uid,created from eck_review where status = 1 and uid in (%s) and
@@ -412,11 +509,282 @@ function get_user_activity($user, $date_range) {
     DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.uid";
   $user_activity['resources_contributed'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
+  # topic forum views
+  $sql = "select count(distinct v.tid) as count, v.uid from sbac_forum_views v left join field_data_field_forum_resource_ref r on v.tid = r.entity_id where v.uid in (%s) and r.field_forum_resource_ref_target_id is null group by v.uid";
+  $user_activity['forum_views'] = count_with_users_query($sql, $user);
+
+  # resource forum participated
+  $sql = "select count(distinct s.resource_id) as count, s.uid from
+	(select r.field_forum_resource_ref_target_id as resource_id, n.uid, n.created from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id  where n.type = 'topic' and r.field_forum_resource_ref_target_id is not null
+UNION
+select r.field_forum_resource_ref_target_id as resource_id, c.uid, c.created from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where r.field_forum_resource_ref_target_id is not null) s
+where s.uid in (%s) and DATE_FORMAT((DATE_ADD('19700101', INTERVAL s.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+group by s.uid";
+  $user_activity['resource_forum_participated'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # resource forum posts created
+  $sql = "select count(c.cid) as count, c.uid from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id
+left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where c.uid in (%s) and r.field_forum_resource_ref_target_id
+ is not null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL c.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by c.uid";
+  $user_activity['resource_forum_posts_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # topic forum posts created
+  $sql = "select count(c.cid) as count, c.uid from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id
+left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where c.uid in (%s) and r.field_forum_resource_ref_target_id
+ is null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL c.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by c.uid";
+  $user_activity['topic_forum_posts_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # posts recommended by others
+  $sql = "select count(distinct c.cid) as count, c.uid from comment c left join field_data_field_topic_comment_recommended r on c.cid = r.entity_id where r
+.field_topic_comment_recommended_target_id is not null and c.uid in (%s) and DATE_FORMAT((DATE_ADD('19700101', INTERVAL c.created SECOND) + INTERVAL -25200
+SECOND), '%s') BETWEEN %s AND %s group by c.uid";
+  $user_activity['posts_recommended_by_others'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # posts recommend by user
+  $sql = "
+SELECT
+	count(DISTINCT c.cid) AS count,
+	r.field_topic_comment_recommended_target_id as uid
+FROM comment c
+	LEFT JOIN field_data_field_topic_comment_recommended r
+		ON c.cid = r.entity_id
+WHERE
+	r.field_topic_comment_recommended_target_id IN (%s)
+GROUP BY r.field_topic_comment_recommended_target_id";
+  $user_activity['posts_recommended_by_user'] = count_with_users_query($sql, $user);
+
+  # flag resources removed by user
+  $sql = "
+SELECT
+	count(DISTINCT f.target_id) AS count,
+	f.being_moderated                       AS uid
+FROM eck_flag f
+WHERE f.target_type = 'resource'
+      AND f.being_moderated in (%s)
+      AND f.resolved = 2
+      AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+	group by f.being_moderated";
+  $user_activity['flag_resources_removed_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flag resources resolved by user
+  $sql = "
+SELECT
+	count(DISTINCT f.target_id) AS count,
+	f.being_moderated                       AS uid
+FROM eck_flag f
+WHERE f.target_type = 'resource'
+      AND f.being_moderated in (%s)
+      AND f.resolved = 1
+      AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+	group by f.being_moderated";
+  $user_activity['flag_resources_resolved_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flag reviews removed by user
+  $sql = "
+SELECT
+	count(DISTINCT f.target_id)       AS count,
+	f.being_moderated AS uid
+FROM eck_flag f
+	LEFT JOIN eck_review r
+		ON r.id = f.target_id
+WHERE
+	f.target_type = 'review'
+	AND f.being_moderated IN (%s)
+	AND f.resolved = 1
+	AND r.status = 0
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.changed SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY f.being_moderated";
+  $user_activity['flag_reviews_removed_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flag reviews resolved by user
+  $sql = "
+SELECT
+	count(DISTINCT f.target_id)       AS count,
+	f.being_moderated AS uid
+FROM eck_flag f
+	LEFT JOIN eck_review r
+		ON r.id = f.target_id
+WHERE
+	f.target_type = 'review'
+	AND f.being_moderated IN (%s)
+	AND f.resolved = 1
+	AND r.status = 1
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.changed SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY f.being_moderated";
+  $user_activity['flag_reviews_resolved_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flag discussion removed by user
+  $sql = "
+SELECT
+	count(f.target_id) AS count,
+	f.being_moderated  AS uid
+FROM eck_flag f
+WHERE
+	f.target_type = 'topic'
+	AND f.being_moderated IN (%s)
+	AND f.resolved = 2
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.changed SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY f.being_moderated";
+  $user_activity['flag_discussion_removed_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flag posts removed by user
+  $sql = "
+SELECT
+	count(DISTINCT f.target_id) AS count,
+	f.being_moderated           AS uid
+FROM eck_flag f
+WHERE
+	f.target_type = 'comment'
+	AND f.being_moderated in (%s)
+	AND f.resolved = 2
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.changed SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY f.being_moderated";
+  $user_activity['flag_posts_removed_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # topic discussion deleted by user
+  $sql = "
+SELECT
+	count(l.entity_id) AS count,
+	l.uid              AS uid
+FROM sbac_forum_deleted_log l
+WHERE
+	l.uid IN (%s)
+	AND l.entity_type = 'node'
+	AND l.forum_type = 'topic'
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL l.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY l.uid";
+  $user_activity['topic_discussions_deleted_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # resource discussion deleted by user
+  $sql = "
+SELECT
+	count(l.entity_id) AS count,
+	l.uid              AS uid
+FROM sbac_forum_deleted_log l
+WHERE
+	l.uid IN (%s)
+	AND l.entity_type = 'node'
+	AND l.forum_type = 'resource'
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL l.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY l.uid";
+  $user_activity['resource_discussions_deleted_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flagged reviews
+  $sql = "select count(distinct r.id) as count, r.uid from eck_review r left join eck_flag f on f.target_id = r.id and f.target_type = 'review' where r.uid in (%s) and f
+.id is not null and DATE_FORMAT((DATE_ADD('19700101',
+ INTERVAL r.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by r.uid ;";
+  $user_activity['flagged_rating'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flagged discussions
+  $sql = "
+SELECT
+	count(DISTINCT n.nid) AS count,
+	n.uid
+FROM node n LEFT JOIN eck_flag f
+		ON f.target_id = n.nid AND f.target_type = 'topic'
+WHERE
+	n.type = 'topic'
+	AND n.uid in (%s)
+	AND f.id IS NOT NULL
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY n.uid;";
+  $user_activity['flagged_discussions'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # flagged posts
+  $sql = "
+SELECT
+	count(c.cid) AS count,
+	c.uid
+FROM comment c LEFT JOIN eck_flag f
+		ON f.target_id = c.cid AND f.target_type = 'comment'
+WHERE
+	f.id IS NOT NULL
+	AND c.uid in (%s)
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL c.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY c.uid";
+  $user_activity['flagged_posts'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # posts flagged by user
+  $sql = "
+SELECT
+	count(f.id) AS count,
+	f.uid
+FROM eck_flag f
+WHERE
+	f.target_type IN ('comment', 'topic')
+	AND f.uid IN (%s)
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY f.uid";
+  $user_activity['posts_flagged'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # resources flagged by others
+  $sql = "
+SELECT
+	count(n.nid) as count,
+	n.uid
+FROM node n
+	LEFT JOIN eck_flag f
+		ON f.target_id = n.nid AND f.target_type = 'resource'
+WHERE
+	n.type = 'resource'
+	AND n.uid IN (%s)
+	AND f.id IS NOT NULL
+	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY n.uid";
+  $user_activity['resources_flagged_by_others'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # topic forum participated
+  $sql = "
+SELECT
+	count(DISTINCT s.forum_id) AS count,
+	s.uid
+FROM
+	(SELECT
+		 p.field_topic_forum_parent_tid AS forum_id,
+		 n.uid,
+		 n.created
+	 FROM node n LEFT JOIN field_data_field_topic_forum_parent p
+			 ON n.nid = p.entity_id
+		 LEFT JOIN field_data_field_forum_resource_ref r
+			 ON p.field_topic_forum_parent_tid = r.entity_id
+	 WHERE n.type = 'topic' AND r.field_forum_resource_ref_target_id IS NULL
+	 UNION
+	 SELECT
+		 p.field_topic_forum_parent_tid AS forum_id,
+		 c.uid,
+		 c.created
+	 FROM comment c LEFT JOIN node n
+			 ON c.nid = n.nid
+		 LEFT JOIN field_data_field_topic_forum_parent p
+			 ON n.nid = p.entity_id
+		 LEFT JOIN field_data_field_forum_resource_ref r
+			 ON p.field_topic_forum_parent_tid = r.entity_id
+	 WHERE r.field_forum_resource_ref_target_id IS NULL) s
+WHERE
+	s.uid IN (%s)
+ 	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL s.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+GROUP BY s.uid;
+";
+  $user_activity['topic_forum_participated'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # resource forum discussion created
+  $sql = "select count(distinct n.nid) as count, n.uid from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join
+field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where n.uid in (%s) and  n.type = 'topic' and r
+.field_forum_resource_ref_target_id is not null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND),
+'%s') BETWEEN %s AND %s group by n.uid";
+  $user_activity['resource_forum_discussion_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+  # topic forum discussion created
+  $sql = "select count(distinct n.nid) as count, n.uid from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join
+field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where n.uid in (%s) and  n.type = 'topic' and r
+.field_forum_resource_ref_target_id is null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND),
+'%s') BETWEEN %s AND %s group by n.uid";
+  $user_activity['topic_forum_discussion_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
+
+
   # Resources Viewed:
-  $sql = "select count(id) as count, uid,created from eck_feedback where
-    type = 'gate_keeper' and status = 1 and completed = 1 and met_criteria = 1 and uid in (%s) and
-    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
-  $user_activity['resources_viewed'] = count_with_users_query($sql, $user, $from_date, $to_date);
+  $sql = "select count(n.nid) as count, n.uid from node_user_paradata n where n.uid in (%s) group by n.uid";
+  $user_activity['resources_viewed'] = count_with_users_query($sql, $user);
 
   # GK Reviews completed:
   $sql = "select count(id) as count, uid,created from eck_feedback where type = 'gate_keeper' and ((status = 1) OR (status = 0 AND archived = 1)) and completed = 1 and
@@ -493,11 +861,6 @@ function get_user_activity($user, $date_range) {
   }
   $user_activity['tos'] = $values;
 
-  # Unique Permanent Links Copied
-  $sql = "SELECT nid, uid FROM {sbac_share_link_copy_count} WHERE uid IN (%s)
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by nid, uid";
-  $user_activity['unique_permanent_links_copied'] = count_with_users_query($sql, $user, $from_date, $to_date, TRUE);
-
   # Temporary Links Generated
   $sql = "SELECT count(nid) AS count, uid FROM {sbac_share} WHERE uid IN (%s)
           AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL create_datetime SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by uid";
@@ -511,18 +874,6 @@ function get_user_activity($user, $date_range) {
   if ($user->uid == 144) {
     $var = '';
   }
-
-  # Resources with Pending Flags
-  $sql = "SELECT count(n.nid) as count, n.uid FROM {node} n JOIN {eck_flag} ef ON n.nid = ef.nid
-          WHERE n.uid IN (%s) AND n.type = 'resource' AND ef.type = 'resource' AND ef.being_moderated = 0 AND ef.resolved = 0
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL ef.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.nid, n.uid";
-  $user_activity['resource_with_pending_flags'] = count_with_users_query($sql, $user, $from_date, $to_date);
-
-  # Resources with Resolved Flags
-  $sql = "SELECT count(n.nid) as count, n.uid FROM {node} n JOIN {eck_flag} ef ON n.nid = ef.nid
-          WHERE n.uid IN (%s) AND n.type = 'resource' AND ef.type = 'resource' AND ef.being_moderated > 0 AND ef.resolved = 1
-          AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL ef.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by n.nid, n.uid";
-  $user_activity['resource_with_resolved_flags'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # Resource reviews with Pending Flags
   $sql = "SELECT count(er.node_id) AS count, er.uid FROM {eck_flag} ef JOIN {eck_review} er ON ef.target_id = er.id
@@ -579,7 +930,7 @@ function create_user_activity_from_data($user, $user_activity) {
     $is_date = (array_key_exists(2, $fieldkey) ? $fieldkey[2] == 'date' : FALSE);
     $string = '';
     format_value_field($string, $account->{$fieldkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date);
-    $row[] = $string;
+    $row[$fieldkey[1]] = $string;
   }
 
   foreach ($foreignidkeys as $foreignidkey) {
@@ -587,7 +938,7 @@ function create_user_activity_from_data($user, $user_activity) {
     // tid is replaced by the actual value in the value field.
     $string = '';
     format_value_field($string, $account->{$foreignidkey[0]}, $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date);
-    $row[] = $string;
+    $row[$foreignidkey[1]] = $string;
   }
 
   foreach ($stringkeys as $stringkey) {
@@ -603,12 +954,16 @@ function create_user_activity_from_data($user, $user_activity) {
         $value = $account->{$stringkey[0]};
       }
     }
-    $row[] = $value;
+    if($stringkey[1] == 'Role' && is_array($value)){
+      unset($value[2]); // authenticated user role
+      $value = ucwords(implode(', ', $value));
+    }
+    $row[$stringkey[1]] = $value;
     $value = NULL;
   }
 
   foreach ($uidcountkeys as $uidcountkey) {
-    $row[] = $user_activity[$uidcountkey[0]][$user->uid]->count;
+    $row[$uidcountkey[1]] = $user_activity[$uidcountkey[0]][$user->uid]->count;
   }
 
   $param = array();
@@ -619,7 +974,7 @@ function create_user_activity_from_data($user, $user_activity) {
     $param['und'][0]['value'] = $user_activity['tos'][$user->uid]->{$toskey[0]};
     $string = '';
     format_value_field($string, $param, $separator, $encloseer, $subseparator, $quote_arrays, $subquote, $is_date);
-    $row[] = $string;
+    $row[$toskey[1]] = $string;
   }
 
   foreach ($countkeys as $countkey) {
@@ -634,7 +989,7 @@ function create_user_activity_from_data($user, $user_activity) {
         $value = 0;
       }
     }
-    $row[] = $value;
+    $row[$countkey[1]] = $value;
   }
 
   foreach ($flagkeys as $flagkey) {
@@ -649,7 +1004,7 @@ function create_user_activity_from_data($user, $user_activity) {
         $value = 0;
       }
     }
-    $row[] = $value;
+    $row[$flagkey[1]] = $value;
   }
 
   return $row;
@@ -684,49 +1039,55 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
   array_push($foreignidkeys, array('field_special_populations', 'School Population(s)'));
 
   array_push($stringkeys, array('mail', 'Email'));
+  array_push($stringkeys, array('roles', 'Role'));
   array_push($stringkeys, array('created', 'Date Created', 'date'));
   array_push($stringkeys, array('access', 'Last Access', 'date'));
   array_push($stringkeys, array('login', 'Last Login', 'date'));
 
-  array_push($uidcountkeys, array('resources_viewed', 'Resources Viewed'));
-  array_push($uidcountkeys, array('resources_reviewed', 'Resources Reviewed/Rated'));
-  array_push($uidcountkeys, array('resources_contributed', 'Resources Contributed'));
-  array_push($uidcountkeys, array(
-    'gc_reviews_accepted_on_contributed_resources',
-    'GK Reviews Accepted on Contributed Resources'
-  ));
-  array_push($uidcountkeys, array(
-    'gc_reviews_returned_on_contributed_resources',
-    'GK Reviews Returned on Contributed Resources'
-  ));
-  array_push($uidcountkeys, array('gc_reviews_completed', 'GK Reviews Completed'));
-  array_push($uidcountkeys, array('qc_reviews_completed', 'QC Reviews Completed'));
-  array_push($uidcountkeys, array('poster_reviews_completed', 'Posting Reviews Completed'));
-  array_push($uidcountkeys, array('contributed_resources_posted', 'Contributed Resources Posted'));
-  array_push($uidcountkeys, array(
-    'contributed_resources_posted_with_distinction',
-    'Contributed Resources Posted with Distinction'
-  ));
-  array_push($uidcountkeys, array(
-    'contributed_resources_reviewed_and_returned',
-    'Contributed Resources Reviewed and Returned'
-  ));
+  array_push($uidcountkeys, array('resources_viewed', '# of Resources Viewed by User'));
+  array_push($uidcountkeys, array('resources_downloaded', '# of Resources Downloaded by User'));
+  array_push($uidcountkeys, array('resources_favorited', '# of Resources Favorited by User'));
+  array_push($uidcountkeys, array('resources_reviewed', '# of Resources Rated by User'));
+  array_push($uidcountkeys, array('resources_helpful', '# of User\'s Ratings Marked Helpful by Others'));
+  array_push($uidcountkeys, array('resources_contributed', '# of Resources Contributed by User'));
+  array_push($uidcountkeys, array('forum_views', '# of Topic Forums Viewed by User'));
+  array_push($uidcountkeys, array('resource_forum_participated', '# of Resource Forums Participated by User'));
+  array_push($uidcountkeys, array('topic_forum_participated', '# of Topic Forums Participated by User'));
+  array_push($uidcountkeys, array('resource_forum_discussion_created', '# of Resource Forum Discussions Created by User'));
+  array_push($uidcountkeys, array('topic_forum_discussion_created', '# of Topic Forum Discussions Created by User'));
+  array_push($uidcountkeys, array('resource_forum_posts_created', '# of Resource Forum Posts Created by User'));
+  array_push($uidcountkeys, array('topic_forum_posts_created', '# of Topic Forum Posts Created by User'));
+  array_push($uidcountkeys, array('posts_recommended_by_others', '# of User\'s Forum Posts Recommended by Others'));
+  array_push($uidcountkeys, array('posts_recommended_by_user', '# of Others\' Forum Posts Recommended by User'));
+  array_push($uidcountkeys, array('flag_resources_removed_by_user', '# of Flagged Resources Removed by User through Moderation'));
+  array_push($uidcountkeys, array('flag_resources_resolved_by_user', '# of Flagged Resources Resolved by User through Moderation'));
+  array_push($uidcountkeys, array('flag_reviews_removed_by_user', '# of Flagged Resource Reviews Removed by User through moderation'));
+  array_push($uidcountkeys, array('flag_reviews_resolved_by_user', '# of Flagged Resource Reviews Resolved by User through moderation'));
+  array_push($uidcountkeys, array('flag_discussion_removed_by_user', '# of Flagged Forum Discussions Removed by User through moderation'));
+  array_push($uidcountkeys, array('flag_posts_removed_by_user', '# of Flagged Forum Posts Removed by User through moderation'));
+  array_push($uidcountkeys, array('flagged_rating', '# of Resource Ratings Created by User that were Flagged'));
+  array_push($uidcountkeys, array('flagged_discussions', '# of Forum discussions created by User that were Flagged'));
+  array_push($uidcountkeys, array('flagged_posts', '# of Forum Posts created by User that were Flagged'));
+  array_push($uidcountkeys, array('posts_flagged', '# of Forum Posts and Discussions Flagged by User'));
+  array_push($uidcountkeys, array('gc_reviews_completed', '# of GK Reviews Completed by User'));
+  array_push($uidcountkeys, array('qc_reviews_completed', '# of QC Reviews Completed by User'));
+  array_push($uidcountkeys, array('poster_reviews_completed', '# of Arbitration Reviews Completed by User'));
+  array_push($uidcountkeys, array('contributed_resources_posted', '# of Resources Contributed by User that are Posted'));
+  array_push($uidcountkeys, array('contributed_resources_posted_with_distinction', '# of Resources Contributed by User that are Posted with Distinction'));
+  array_push($uidcountkeys, array('resources_flagged_by_others', '# of  Resources Contributed by User that were Flagged'));
+  array_push($uidcountkeys, array('topic_forums_created', '# of Topic Forums Created by User'));
+  array_push($uidcountkeys, array('topic_discussions_deleted_by_user', '# of Topic Forum Discussions Deleted by User'));
+  array_push($uidcountkeys, array('resource_discussions_deleted_by_user', '# of Resource Forum Discussions Deleted by User'));
 
   array_push($toskeys, array('tos_accepted', 'Date of Terms of Service', 'date'));
   array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
-  //array_push($toskeys, array('tos_revision', 'Terms of Service Version'));
   array_push($toskeys, array('tos_revision_date', 'Date of Terms of Service Version', 'date'));
 
-  array_push($countkeys, array('unique_permanent_links_copied', 'Unique Permanent Links Copied'));
-  array_push($countkeys, array('temporary_link_generated', 'Temporary Links Generated'));
-  array_push($countkeys, array('unique_temporary_link_generated', 'Unique Temporary Links Generated'));
+  array_push($countkeys, array('temporary_link_generated', '# of Temporary Public Links Generated by User'));
+  array_push($countkeys, array('unique_temporary_link_generated', '# of Resources For Which User Generated Temporary Public Links'));
 
-  array_push($flagkeys, array('resource_with_pending_flags', 'Resources with Pending Flags'));
-  array_push($flagkeys, array('resource_with_resolved_flags', 'Resources with Resolved Flags'));
-  array_push($flagkeys, array('resource_reviews_with_pending_flags', 'Resource Reviews with Pending Flags'));
-  array_push($flagkeys, array('resource_reviews_with_resolved_flags', 'Resource Reviews with Resolved Flags'));
-  array_push($flagkeys, array('resources_flagged', 'Resources Flagged'));
-  array_push($flagkeys, array('resource_reviews_flagged', 'Resource Reviews Flagged'));
+  array_push($flagkeys, array('resources_flagged', '# of Resources Flagged by User'));
+  array_push($flagkeys, array('resource_reviews_flagged', '# of Resource Reviews Flagged by User'));
 
   // replace missing values with ' ' or 0
   $missing_string = ' ';
@@ -804,11 +1165,10 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
  * and by state, then gets the user activty statistics and legal terms of service data, then calls the routine
  * to create the report from the data.
  */
-function build_activity_report_csv($state_tid, $date_range, &$usergroups, $sne_slt_filter) {
+function build_activity_report_csv($state_tid, $date_range, &$usergroups) {
   $users = get_users_for_user_groups($usergroups);
 
   $user_profiles = user_load_multiple(array_keys($users));
-  $user_profiles = filter_users_by_sne_slt($user_profiles, $sne_slt_filter);
   $user_profiles = filter_users_by_state($user_profiles, $state_tid);
   if (count($user_profiles) == 0) {
     return NULL;
@@ -838,42 +1198,59 @@ function set_user_activity_report_columns() {
   $csv_header = array(
     "First Name",
     "Last Name",
-    "Is SNE Member",
-    "Is SLT Member",
-    "School",
-    "District",
+    "Email",
     "Title",
     "State",
+    "District",
+    "School",
     "Grade(s)",
     "Subject(s)",
     "School Population(s)",
-    "Email",
+    "Is SLT Member",
+    "Is SNE Member",
+    "Role",
     "Date Created",
-    "Last Access",
     "Last Login",
-    "Resources Viewed",
-    "Resources Reviewed/Rated",
-    "Resources Contributed",
-    "GK Reviews Accepted on Contributed Resources",
-    "GK Reviews Returned on Contributed Resources",
-    "GK Reviews Completed",
-    "QC Reviews Completed",
-    "Posting Reviews Completed",
-    "Contributed Resources Posted",
-    "Contributed Resources Posted with Distinction",
-    "Contributed Resources Reviewed and Returned",
     "Date of Terms of Service",
     "Version of Terms of Service Accepted",
     "Date of Terms of Service Version",
-    "Unique Permanent Links Copied",
-    "Temporary Links Generated",
-    "Unique Temporary Links Generated",
-    "Resources with Pending Flags",
-    "Resources with Resolved Flags",
-    "Resource Reviews with Pending Flags",
-    "Resource Reviews with Resolved Flags",
-    "Resources Flagged",
-    "Resource Reviews Flagged"
+    "# of Resources Viewed by User",
+    "# of Resources Downloaded by User",
+    "# of Resources Favorited by User",
+    "# of Resources Rated by User",
+    '# of User\'s Ratings Marked Helpful by Others',
+    '# of Topic Forums Viewed by User',
+    '# of Resource Forums Participated by User',
+    '# of Topic Forums Participated by User',
+    '# of Resource Forum Discussions Created by User',
+    '# of Topic Forum Discussions Created by User',
+    '# of Resource Forum Posts Created by User',
+    '# of Topic Forum Posts Created by User',
+    '# of Topic Forum Discussions Deleted by User',
+    '# of Resource Forum Discussions Deleted by User',
+    '# of User\'s Forum Posts Recommended by Others',
+    '# of Others\' Forum Posts Recommended by User',
+    '# of Temporary Public Links Generated by User',
+    '# of Resources For Which User Generated Temporary Public Links',
+    '# of GK Reviews Completed by User',
+    '# of QC Reviews Completed by User',
+    '# of Arbitration Reviews Completed by User',
+    '# of Resources Contributed by User',
+    '# of Resources Contributed by User that are Posted',
+    '# of Resources Contributed by User that are Posted with Distinction',
+    '# of Flagged Resources Removed by User through Moderation',
+    '# of Flagged Resources Resolved by User through Moderation',
+    '# of Flagged Resource Reviews Removed by User through moderation',
+    '# of Flagged Resource Reviews Resolved by User through moderation',
+    '# of Flagged Forum Discussions Removed by User through moderation',
+    '# of Flagged Forum Posts Removed by User through moderation',
+    '# of Resource Ratings Created by User that were Flagged',
+    '# of Forum discussions created by User that were Flagged',
+    '# of Forum Posts created by User that were Flagged',
+    '# of Resources Flagged by User',
+    "# of Resource Reviews Flagged by User",
+    '# of Forum Posts and Discussions Flagged by User',
+    '# of  Resources Contributed by User that were Flagged',
   );
   return $csv_header;
 }

@@ -62,5 +62,9 @@ function taskit_mark_all_read($account) {
       break;
   }
 
-  
+  // reset unread count
+  db_update('taskit_user_unread_notifications_count')
+    ->fields(array('count' => 0))
+    ->condition('uid', $account->uid)
+    ->execute();
 }

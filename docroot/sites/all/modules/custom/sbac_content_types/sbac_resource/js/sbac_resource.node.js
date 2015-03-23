@@ -85,8 +85,9 @@
           }
           break;
         default:
+          var url = '/sites/all/modules/custom/sbac_content_types/sbac_resource/images/no-preview.jpg';
           var img = $('<img>');
-          img.attr('src', local_url);
+          img.attr('src', url);
           img.attr('height', 400);
           img.attr('width', 850);
           resource.empty().append(img);

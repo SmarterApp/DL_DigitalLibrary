@@ -10,7 +10,7 @@
     <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
   <h1 class="title left">Digital Library</h1>
-  <?php if ($user->uid && !in_array('guest', $user->roles)): ?>
+  <?php if ($user->uid && !in_array('guest', $user->roles) && !$conflicting_profile): ?>
     <ul class="inline-list right user-nav">
       <li class="user-info">
         <a title='<?php echo $user->full_name ?>' data-dropdown="drop3" href="#">
@@ -61,7 +61,7 @@
 
 <div class="top-bar sub-top">
   <nav class="main-nav left">
-    <?php if ($main_menu_links && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
+    <?php if ($main_menu_links && !in_array(SBAC_SHARE_GUEST, $user->roles) && !$conflicting_profile) : ?>
       <?php print $main_menu_links; ?>
     <?php endif; ?>
   </nav>
@@ -193,7 +193,7 @@
         print render($page['bottom_menu']);
       }
       ?>
-      <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
+      <?php if ($user && !in_array(SBAC_SHARE_GUEST, $user->roles) && !$conflicting_profile) : ?>
         <ul class="footer-links inline-list right">
           <li>
             <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
@@ -213,6 +213,12 @@
     </div>
   </div>
 </div>
+
+<?php if (isset($critical_message_button)): ?>
+  <div class="critical-message-button" style="display:none">
+    <?php echo $critical_message_button; ?>
+  </div>
+<?php endif; ?>
 
 <?php if (user_is_logged_in()) : ?>
   <?php if (isset($session_expire)): ?>

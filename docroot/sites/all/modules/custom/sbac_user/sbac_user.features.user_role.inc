@@ -64,6 +64,12 @@ function sbac_user_user_default_roles() {
     'weight' => 14,
   );
 
+  // Exported role: reports administrator.
+  $roles['reports administrator'] = array(
+    'name' => 'reports administrator',
+    'weight' => 16,
+  );
+
   // Exported role: resource contributor.
   $roles['resource contributor'] = array(
     'name' => 'resource contributor',

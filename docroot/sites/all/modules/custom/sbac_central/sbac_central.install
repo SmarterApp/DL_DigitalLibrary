@@ -1320,3 +1320,94 @@ function sbac_central_update_7091() {
   );
   module_disable($modules);
 }
+
+/**
+ * Enable oscaddie_gcs.
+ */
+function sbac_central_update_7092() {
+  $modules = array(
+    'oscaddie_gcs',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enable learning registry modules, set configurations, and queue all resources
+ */
+function sbac_central_update_7093() {
+  if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+      case 'prod':
+        $modules = array(
+          'learning_registry',
+          'learning_resource_metadata_initiative',
+          'sbac_learning_registry'
+        );
+        module_enable($modules);
+        variable_set('learning_registry_key_location', 'https://www.smarterbalancedlibrary.org/id_rsa.pub.prod.txt');
+        variable_set('learning_registry_node_types', array(
+          'resource' => 'resource',
+          'alignment' => 0,
+          'topic' => 0,
+          'help_page' => 0,
+        ));
+        variable_set('learning_registry_node_url', 'https://node01.public.learningregistry.net');
+        variable_set('learning_registry_queuing', 0);
+        variable_set('learning_registry_schema_type', array(
+          'name' => 'LRMI',
+          'resource_data_callback' => 'learning_resource_metadata_initiative_create_lrmi_payload',
+          'payload_schema' => array(
+            'schema.org',
+            'LRMI',
+            'application/microdata+json'
+          ),
+          'slice_callback' => 'learning_resource_metadata_initiative_slice'
+        ));
+        variable_set('learning_registry_schema_type_default_value', 'lrmi');
+        variable_set('learning_registry_signing_method', 'LR-PGP.1.0');
+        variable_set('learning_registry_submitter', 'Smarter Balanced');
+        variable_set('learning_registry_tos', 'http://creativecommons.org/choose/');
+        variable_set('learning_registry_url_type', 1);
+        $salt = 'KrP7FgnpjK4hXfVDIAwC';
+        variable_set('learning_registry_oauth_salt', $salt);
+        variable_set('learning_registry_oauth_consumer', array(
+          'key' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'seant@appnovation.com', MCRYPT_MODE_ECB),
+          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'jnnE8OkgLdOR3Jo8CH3aJil2Buz131Dp', MCRYPT_MODE_ECB),
+        ));
+        variable_set('learning_registry_oauth_token', array(
+          'key' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'node_sign_token', MCRYPT_MODE_ECB),
+          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), '2vV4UxfyKfZLxtlr+s5pizucH8xGo0bv', MCRYPT_MODE_ECB),
+        ));
+        sbac_learning_registry_queue_all_resources();
+        break;
+    }
+  }
+}
+
+/**
+ * Add indexes to taskit table.
+ */
+function sbac_central_update_7094() {
+  if (db_table_exists('taskit')) {
+    db_add_index('taskit', 'type', array('type'));
+    db_add_index('taskit', 'created', array('created'));
+    db_add_index('taskit', 'viewed', array('viewed'));
+    db_add_index('taskit', 'state', array('state'));
+    db_add_index('taskit', 'visibility', array('visibility'));
+  }
+}
+
+/**
+ * Add indexes to eck_flag table.
+ */
+function sbac_central_update_7095() {
+  if (db_table_exists('eck_flag')) {
+    db_add_index('eck_flag', 'type', array('type'));
+    db_add_index('eck_flag', 'uid', array('uid'));
+    db_add_index('eck_flag', 'nid', array('nid'));
+    db_add_index('eck_flag', 'target_id', array('target_id'));
+    db_add_index('eck_flag', 'resolved', array('resolved'));
+    db_add_index('eck_flag', 'being_moderated', array('being_moderated'));
+    db_add_index('eck_flag', 'urgent', array('urgent'));
+  }
+}

@@ -234,6 +234,9 @@ function sbac_forum_strongarm() {
       'tooltip' => array(
         'custom_settings' => FALSE,
       ),
+      'forum_page_card' => array(
+        'custom_settings' => TRUE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -251,6 +254,10 @@ function sbac_forum_strongarm() {
         'description' => array(
           'default' => array(
             'weight' => '15',
+            'visible' => FALSE,
+          ),
+          'forum_page_card' => array(
+            'weight' => '17',
             'visible' => FALSE,
           ),
         ),

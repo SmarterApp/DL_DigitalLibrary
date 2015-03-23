@@ -11,6 +11,9 @@ function sbac_forum_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "context" && $api == "context") {
     return array("version" => "3");
   }
+  if ($module == "ds" && $api == "ds") {
+    return array("version" => "1");
+  }
   if ($module == "field_group" && $api == "field_group") {
     return array("version" => "1");
   }
@@ -91,7 +94,7 @@ function sbac_forum_node_info() {
       'base' => 'node_content',
       'description' => t('Forum Topic'),
       'has_title' => '1',
-      'title_label' => t('Topic Title'),
+      'title_label' => t('Discussion Title'),
       'help' => '',
     ),
   );

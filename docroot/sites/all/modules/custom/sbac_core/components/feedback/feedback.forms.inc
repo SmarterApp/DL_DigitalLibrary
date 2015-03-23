@@ -106,13 +106,29 @@ function feedback_eck_feedback_form_validate($form, &$form_state) {
       switch ($values['action']) {
         case 'validate':
 
-          $fields = array(
-            'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
-            'field_to_reviewer_1' => 'You must enter a comment for Reviewer 1 to continue',
-            'field_to_reviewer_2' => 'You must enter a comment for Reviewer 2 to continue',
-            'field_to_reviewer_3' => 'You must enter a comment for Reviewer 3 to continue',
-            'field_post_options' => 'You must select a Post Option to continue',
-          );
+          $last_feedback = db_select('eck_feedback', 'f')
+            ->condition('f.completed', 1)
+            ->condition('f.node_id', $values['node_id'])
+            ->fields('f', array('type'))
+            ->orderBy('f.id', 'desc')
+            ->range(0, 1)
+            ->execute()
+            ->fetchField();
+          if ($last_feedback && 'post' == $last_feedback) {
+            $fields = array(
+              'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
+              'field_post_options' => 'You must select a Post Option to continue',
+            );
+          }
+          else {
+            $fields = array(
+              'field_to_contributor' => 'You must enter a comment for the Contributor to continue',
+              'field_to_reviewer_1' => 'You must enter a comment for Reviewer 1 to continue',
+              'field_to_reviewer_2' => 'You must enter a comment for Reviewer 2 to continue',
+              'field_to_reviewer_3' => 'You must enter a comment for Reviewer 3 to continue',
+              'field_post_options' => 'You must select a Post Option to continue',
+            );
+          }
 
           form_check_fields($fields, $form_state['values'], $lang);
 
@@ -203,9 +219,16 @@ function feedback_eck_feedback_form_submit($form, &$form_state) {
     $errors = form_get_errors();
     $form_error = (int) !empty($errors);
 
+  // Redirect to resource-review page on save and close
+  $redirect_js = '';
+  if($form_state['values']['action'] == 'save_close'){
+    $redirect_js = 'window.location.href = "/resource-review"';
+  }
     $form['run_js'] = array(
-      '#markup' => '<script>Drupal.settings.feedback.form_error = ' . $form_error . ';</script>',
+      '#markup' => '<script>Drupal.settings.feedback.form_error = ' . $form_error . ';' . $redirect_js . ';</script>',
     );
+
+  sbac_resource_remove_default_status_messages();
 
   return $form;
 }
@@ -224,6 +247,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
 
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
+  drupal_set_message(t('@title - Gate Keeping Review has been saved', array('@title' => $node->title)));
   global $user;
 
   $task = FALSE;
@@ -272,7 +296,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       $qc->current = 1;
       $qc->node_id = $node->nid;
 
-      drupal_set_message(t('Quality Criteria Review process started.'));
+      drupal_set_message(t('Quality Criteria Review has started.'));
       entity_save('feedback', $qc);
       sbac_resource_save_current_state($node);
 
@@ -298,6 +322,8 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
     $task->addTriggeringUser(1);
     $task->save();
   }
+
+  sbac_resource_remove_default_status_messages();
 }
 
 /**
@@ -310,6 +336,8 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
 
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
+  drupal_set_message(t('@title - Quality Criteria Review has been saved', array('@title' => $node->title)));
+
   global $user;
 
   $task = FALSE;
@@ -435,6 +463,8 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
   $form_state['redirect'] = array(
     'resource-review'
   );
+
+  sbac_resource_remove_default_status_messages();
 }
 
 /**
@@ -447,6 +477,8 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
+  drupal_set_message(t('@title - Posting Review has been saved', array('@title' => $node->title)));
+
   global $user;
 
   // find the associated reviews
@@ -530,6 +562,8 @@ function feedback_eck_post_form_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = 'node/' . $node->nid;
+
+  sbac_resource_remove_default_status_messages();
 }
 
 /*----------------------------------------------------------------------------

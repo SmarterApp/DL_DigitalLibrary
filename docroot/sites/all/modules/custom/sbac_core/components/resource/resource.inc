@@ -25,12 +25,13 @@ function resource_access($op, $node, $account = NULL) {
     }
   }
   if (isset($_GET['flag']) && in_array($_GET['flag'], array('view-resource-flags', 'view-resource-review-flags', 'resolve-resource-review-flags'))) {
-    if (!in_array($op, array('access about process', 'view about', 'access moderate flag', 'view moderate flag'))) {
-      return FALSE;
+    if (in_array($op, array('access about process', 'view about', 'access moderate flag', 'view moderate flag'))) {
+      return TRUE;
     }
+    return FALSE;
   }
 
-  $access = & drupal_static(__FUNCTION__);
+  $access = &drupal_static(__FUNCTION__);
   if (empty($access) || empty($access[$account->uid]) || !isset($access[$account->uid][$op])) {
     if ('resource' == $node->type) {
       $perm = FALSE;
@@ -49,7 +50,7 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_edit_quality_criteria($node, $account);
           break;
         case 'access post process':
-          $perm = in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles));
+          $perm = sbac_central_user_has_role(array('resource publisher'), $account);
           break;
         case 'view post':
         case 'start post':
@@ -63,19 +64,19 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_view_tags($node, $account);
           break;
         case 'access quality criteria revisions':
-          $perm = _sbac_resource_resubmit_timestamp($node->nid) && _sbac_resource_is_recent_reviewers($node, $account->uid);
+          $perm = _resource_access_access_quality_criteria_revisions($node, $account);
           break;
         case 'access quality criteria process':
-          $perm = in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles));
+          $perm = sbac_central_user_has_role(array('resource reviewer', 'resource publisher'), $account);
           break;
         case 'view related resources':
           $perm = _resource_access_node_has_state($node, array('published'));
           break;
         case 'view collaboration':
-          $perm = _resource_access_node_has_state($node, array('published')) && !in_array(SBAC_SHARE_GUEST, $account->roles) && sbac_forum_get_resource_forum_id($node->nid);
+          $perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && sbac_forum_get_resource_forum_id($node->nid);
           break;
-        case 'access review comments':
-          $perm = _resource_access_node_has_state($node, array('rejected')) && $node->uid == $account->uid;
+        case 'access gk review comments':
+          $perm = _resource_access_gk_review_comment($node, $account);
           break;
         case 'access share process':
         case 'view share':
@@ -84,21 +85,14 @@ function resource_access($op, $node, $account = NULL) {
         case 'access flag':
         case 'view reviews':
         case 'access review process':
-          $perm = _resource_access_node_has_state($node, array('published')) && !in_array(SBAC_SHARE_GUEST, $account->roles) && in_array(FEEDBACK_AUTHENTICATED_RID, array_keys($account->roles));
+          $perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && $account->uid > 0;
           break;
         case 'access about process':
         case 'view about':
           $perm = TRUE;
           break;
         case 'access qc review comments':
-          $qc_entities = entity_load('feedback', FALSE, array(
-            'node_id' => $node->nid,
-            'type' => 'qc',
-            'status' => 1,
-            'current' => 1,
-            'completed' => 1,
-          ));
-          $perm = (bool) $qc_entities;
+          $perm = _resource_access_access_qc_review_comment($node, $account);
           break;
       }
       $access[$account->uid][$op] = $perm;
@@ -123,7 +117,7 @@ function _resource_access_view_gate_keeper($node, $account) {
   }
   else {
     // Make sure we are still in GK and have the right role.
-    if (_sbac_resource_is_in_gate_keeping($node) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+    if (_sbac_resource_is_in_gate_keeping($node) && sbac_central_user_has_role(array('resource reviewer'), $account)) {
       $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
       // if this is a new submission, or if it is a resubmission and the user has access
       if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_reviewer_access($node, $account, $submit_timestamp))) {
@@ -143,9 +137,11 @@ function _resource_access_view_gate_keeper($node, $account) {
     }
     else {
       // it is not in gate keeping, but we'll allow the owner of the GK review to view (read-only) his review
-      $user_completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, FALSE, 1);
-      if ($user_completed_gk) {
-        $access = TRUE;
+      if (!_resource_access_node_has_state($node, array('published'))) {
+        $user_completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, FALSE, 1);
+        if ($user_completed_gk) {
+          $access = TRUE;
+        }
       }
     }
   }
@@ -178,7 +174,7 @@ function _resource_access_edit_gate_keeper($node, $account) {
  */
 function _resource_access_view_quality_criteria($node, $account) {
   $access = FALSE;
-  if (_sbac_resource_is_in_quality_review($node) && in_array(FEEDBACK_REVIEWER_RID, array_keys($account->roles))) {
+  if (_sbac_resource_is_in_quality_review($node) && sbac_central_user_has_role(array('resource reviewer'), $account)) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
     // if this is a new submission, or if it is a resubmission and the user has access
     if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_reviewer_access($node, $account, $submit_timestamp))) {
@@ -217,6 +213,15 @@ function _resource_access_view_quality_criteria($node, $account) {
       }
     }
   }
+  else {
+    // it is not in QC, but we'll allow the owner of the QC review to view (read-only) his review
+    if (!_resource_access_node_has_state($node, array('published'))) {
+      $user_completed_qc = _resource_access_count_feedback($node->nid, 'qc', $account->uid, FALSE, 1, 1);
+      if ($user_completed_qc) {
+        $access = TRUE;
+      }
+    }
+  }
   return $access;
 }
 
@@ -229,7 +234,7 @@ function _resource_access_view_quality_criteria($node, $account) {
  */
 function _resource_access_view_post($node, $account) {
   $access = FALSE;
-  if (_resource_access_node_has_state($node, array('approved')) && in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))) {
+  if (_resource_access_node_has_state($node, array('approved')) && sbac_central_user_has_role(array('resource publisher'), $account)) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
     // if this is a new submission, or if it is a resubmission and the user has access
     if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_publisher_access($node, $account, $submit_timestamp))) {
@@ -273,7 +278,7 @@ function _resource_access_edit_post($node, $account) {
  */
 function _resource_access_view_tags($node, $account) {
   $access = FALSE;
-  if (in_array(FEEDBACK_PUBLISHER_RID, array_keys($account->roles))) {
+  if (sbac_central_user_has_role(array('resource publisher'), $account)) {
     // to access the tags screen the user must have an active post
     $access = _resource_access_count_feedback($node->nid, 'post', $account->uid, 1, 0);
   }
@@ -357,9 +362,10 @@ function _resource_access_node_has_state($node, $states) {
  * @param bool $uid
  * @param bool $status
  * @param bool $completed
+ * @param bool $current
  * @return int
  */
-function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FALSE, $completed = FALSE) {
+function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE) {
   $query = db_select('eck_feedback', 'f')
     ->condition('f.node_id', $nid)
     ->condition('f.type', $type)
@@ -373,6 +379,123 @@ function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FA
   if ($completed !== FALSE) {
     $query->condition('f.completed', $completed);
   }
+  if ($current !== FALSE) {
+    $query->condition('f.current', $current);
+  }
   $query->fields('f', array('id'));
   return $query->countQuery()->execute()->fetchField();
+}
+
+/**
+ * 'access quality criteria revisions' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_access_quality_criteria_revisions($node, $account) {
+  $access = FALSE;
+  $resubmit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
+  if ($resubmit_timestamp) {
+    // Check for in progress reviews
+    $in_progress_reviewers = db_select('eck_feedback', 'f')
+      ->condition('f.status', 1)
+      ->condition('f.completed', 0)
+      ->condition('f.current', 1)
+      ->condition('f.node_id', $node->nid)
+      ->fields('f', array('uid'))
+      ->execute()
+      ->fetchCol();
+    if (in_array($account->uid, $in_progress_reviewers)) {
+      // I have an in progress review
+      $access = TRUE;
+    }
+    elseif (!empty($in_progress_reviewers)) {
+      // Someone else has an in progress review
+      $access = FALSE;
+    }
+    else {
+      // There are no in progress reviews
+      $access = _resource_access_node_has_state($node, array('needs_review', 'being_reviewed', 'approved'))
+        && sbac_central_user_has_role(array('resource reviewer', 'resource publisher'), $account)
+        && $node->uid != $account->uid
+        && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
+    }
+  }
+  return $access;
+}
+
+/**
+ * 'access qc review comment' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_access_qc_review_comment($node, $account) {
+  $access = FALSE;
+  $rejected = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.state', 'rejected')
+    ->condition('h.nid', $node->nid)
+    ->fields('h', array('hid'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if ($rejected) {
+    if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
+      // contributor can see it
+      $access = $node->uid == $account->uid && (_resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1) || sbac_resource_failed_arbitration_twice($node->nid));
+      if (!$access && sbac_central_user_has_role(array('reports administrator', 'resource publisher'), $account)) {
+        if (_resource_access_count_feedback($node->nid, 'qc', FALSE, 1, 1, 1) || sbac_resource_failed_arbitration_twice($node->nid)) {
+          // reports administrator in the same state as contributor can see it
+          $query = db_select('node', 'n');
+          $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+          $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+          $query->condition('n.nid', $node->nid);
+          $query->where('s1.field_state_tid = s2.field_state_tid');
+          $query->fields('n', array('nid'));
+          $access = (bool) $query->countQuery()->execute()->fetchField();
+        }
+      }
+    }
+  }
+  return $access;
+}
+
+/**
+ * 'access gk review comment' access control
+ *
+ * @param $node
+ * @param $account
+ * @return bool
+ */
+function _resource_access_gk_review_comment($node, $account){
+  $access = false;
+  $rejected = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.state', 'rejected')
+    ->condition('h.nid', $node->nid)
+    ->fields('h', array('hid'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if ($rejected) {
+    // don't show this tab if the resource failed arbitration 2+ times
+    if (!sbac_resource_failed_arbitration_twice($node->nid)) {
+      if (_resource_access_node_has_state($node, array('draft', 'rejected'))) {
+        // contributor has access
+        $access = $node->uid == $account->uid;
+        if (!$access && sbac_central_user_has_role(array('reports administrator', 'resource publisher'), $account)) {
+          // reports administrator has access if they are from the same state
+          $query = db_select('node', 'n');
+          $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+          $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+          $query->condition('n.nid', $node->nid);
+          $query->where('s1.field_state_tid = s2.field_state_tid');
+          $query->fields('n', array('nid'));
+          $access = (bool) $query->countQuery()->execute()->fetchField();
+        }
+      }
+    }
+  }
+  return $access;
 }

@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 
-require_once "Google/Cache/Abstract.php";
-require_once "Google/Cache/Exception.php";
+require_once realpath(dirname(__FILE__) . '/../../../autoload.php');
 
 /*
  * This class implements a basic on disk storage. While that does
@@ -48,7 +47,7 @@ class Google_Cache_File extends Google_Cache_Abstract
 
     if ($expiration) {
       $mtime = filemtime($storageFile);
-      if (($now - $mtime) >= $expiration) {
+      if ((time() - $mtime) >= $expiration) {
         $this->delete($key);
         return false;
       }

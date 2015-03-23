@@ -175,9 +175,18 @@
 }
 /* line 176, ../sass/sbac_flag.scss */
 .node-type-resource .flag-resource-container .flag-row .flag-user {
+  padding-bottom: 5px;
+}
+/* line 180, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container .flag-row .flag-email-state {
   padding-bottom: 15px;
 }
-/* line 182, ../sass/sbac_flag.scss */
+/* line 183, ../sass/sbac_flag.scss */
+.node-type-resource .flag-resource-container .flag-row .flag-email-state a {
+  color: #0684ad;
+  text-decoration: underline;
+}
+/* line 191, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information {
   background-color: #F2F2F2;
   border: 7px solid #FFFFFF;
@@ -191,55 +200,55 @@
   margin-bottom: 30px;
   position: relative;
 }
-/* line 195, ../sass/sbac_flag.scss */
+/* line 204, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-status {
   color: #006082;
   font-weight: bold;
   padding-top: 0px;
   font-size: 16px;
 }
-/* line 202, ../sass/sbac_flag.scss */
+/* line 211, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-count {
   padding-top: 3px;
 }
-/* line 204, ../sass/sbac_flag.scss */
+/* line 213, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-button {
   position: absolute;
   top: 22px;
   right: 20px;
 }
-/* line 208, ../sass/sbac_flag.scss */
+/* line 217, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information .flag-button a {
   margin-bottom: 0;
 }
-/* line 215, ../sass/sbac_flag.scss */
+/* line 224, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information.urgent {
   background-color: #FDF2B1;
   color: #101010;
 }
-/* line 219, ../sass/sbac_flag.scss */
+/* line 228, ../sass/sbac_flag.scss */
 .node-type-resource .resource-flag-information.urgent .flag-status {
   color: #8A1538;
 }
 
-/* line 225, ../sass/sbac_flag.scss */
+/* line 234, ../sass/sbac_flag.scss */
 .node-type-resource .entity-review.view-mode-full {
   border-bottom: none;
   padding-top: 0;
 }
 
 /*Edit page*/
-/* line 234, ../sass/sbac_flag.scss */
+/* line 243, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #page-title {
   border-bottom: none;
   float: left;
 }
-/* line 239, ../sass/sbac_flag.scss */
+/* line 248, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-preview {
   margin-top: 18px;
   margin-left: 22px;
 }
-/* line 244, ../sass/sbac_flag.scss */
+/* line 253, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-information {
   clear: both;
   background-color: #F2F2F2;
@@ -252,26 +261,26 @@
   position: relative;
   margin-left: 25px;
 }
-/* line 256, ../sass/sbac_flag.scss */
+/* line 265, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-information .flag-status {
   color: #006082;
   font-weight: bold;
   padding: 0 0 15px;
 }
-/* line 263, ../sass/sbac_flag.scss */
+/* line 272, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .flag-resource-container {
   margin: 0;
 }
-/* line 267, ../sass/sbac_flag.scss */
+/* line 276, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category {
   position: relative;
 }
-/* line 270, ../sass/sbac_flag.scss */
+/* line 279, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category .resource-category {
   width: 90%;
   line-height: 1.4;
 }
-/* line 275, ../sass/sbac_flag.scss */
+/* line 284, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .resource-flag-category .resource-count {
   position: absolute;
   bottom: 10px;
@@ -279,16 +288,16 @@
 }
 
 /*Confirmation modal for edit page*/
-/* line 286, ../sass/sbac_flag.scss */
+/* line 295, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .page-moderation .modal-content, .node-type-resource.section-content .page-moderation .modal-content {
   overflow-y: hidden !important;
 }
-/* line 292, ../sass/sbac_flag.scss */
+/* line 301, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #sbac-flag-start-moderation-form .button, .page-node-edit.node-type-resource #sbac-flag-start-moderation-form .form-submit, .node-type-resource.section-content #sbac-flag-start-moderation-form .button, .node-type-resource.section-content #sbac-flag-start-moderation-form .form-submit {
   float: right;
   margin-left: 30px;
 }
-/* line 303, ../sass/sbac_flag.scss */
+/* line 312, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont,
@@ -301,7 +310,7 @@
   padding: 15px 40px 0;
   background-color: #F2F2F2;
 }
-/* line 309, ../sass/sbac_flag.scss */
+/* line 318, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont h3,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont h3,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont h3,
@@ -313,7 +322,7 @@
   color: #000;
   padding-top: 10px;
 }
-/* line 315, ../sass/sbac_flag.scss */
+/* line 324, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .category-output,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .category-output,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont .category-output,
@@ -323,7 +332,7 @@
 .node-type-resource.section-content #sbac-flag-resolve-all-resource-review-moderation-form .flag-modal-cont .category-output {
   font-size: 16px;
 }
-/* line 318, ../sass/sbac_flag.scss */
+/* line 327, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .category-output span,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .category-output span,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont .category-output span,
@@ -334,7 +343,7 @@
   color: #62676E;
   font-style: italic;
 }
-/* line 324, ../sass/sbac_flag.scss */
+/* line 333, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont label,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont label,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-modal-cont label,
@@ -345,7 +354,7 @@
   font-size: 16px;
   color: #000;
 }
-/* line 329, ../sass/sbac_flag.scss */
+/* line 338, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-textarea-wrapper, .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-item-contributor-message,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-textarea-wrapper,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-item-contributor-message,
@@ -361,7 +370,7 @@
 .node-type-resource.section-content #sbac-flag-resolve-all-resource-review-moderation-form .flag-modal-cont .form-item-contributor-message {
   position: relative;
 }
-/* line 332, ../sass/sbac_flag.scss */
+/* line 341, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-textarea-wrapper textarea, .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-item-contributor-message textarea,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-textarea-wrapper textarea,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-item-contributor-message textarea,
@@ -379,7 +388,7 @@
   max-width: 100%;
   margin-bottom: 15px;
 }
-/* line 338, ../sass/sbac_flag.scss */
+/* line 347, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-textarea-wrapper .counter, .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-modal-cont .form-item-contributor-message .counter,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-textarea-wrapper .counter,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-modal-cont .form-item-contributor-message .counter,
@@ -399,7 +408,7 @@
   top: -20px;
   color: #5A5A5A;
 }
-/* line 348, ../sass/sbac_flag.scss */
+/* line 357, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] .flag-button-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] .flag-button-cont,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] .flag-button-cont,
@@ -417,7 +426,7 @@
   z-index: 4;
   height: 69px;
 }
-/* line 360, ../sass/sbac_flag.scss */
+/* line 369, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button,
@@ -428,7 +437,7 @@
   float: right;
   margin-left: 30px;
 }
-/* line 362, ../sass/sbac_flag.scss */
+/* line 371, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button[id*="edit-finish-moderation"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button[id*="edit-finish-moderation"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button[id*="edit-finish-moderation"],
@@ -440,7 +449,7 @@
   border: 1px solid #0D6785;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 368, ../sass/sbac_flag.scss */
+/* line 377, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button[id*="edit-cancel"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button[id*="edit-cancel"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button[id*="edit-cancel"],
@@ -452,7 +461,7 @@
   border: 1px solid #4D5457 !important;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset !important;
 }
-/* line 374, ../sass/sbac_flag.scss */
+/* line 383, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button[id*="edit-finish-moderation-review"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button[id*="edit-finish-moderation-review"],
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button[id*="edit-finish-moderation-review"],
@@ -466,7 +475,7 @@
   padding-left: 15px !important;
   line-height: 20px;
 }
-/* line 382, ../sass/sbac_flag.scss */
+/* line 391, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource form[id*="sbac-flag-resolve-all-flags-form"] button[id*="edit-finish-moderation-review"]:before,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-form"] button[id*="edit-finish-moderation-review"]:before,
 .page-node-edit.node-type-resource form[id*="sbac-flag-remove-resource-review-form"] button[id*="edit-finish-moderation-review"]:before,
@@ -484,25 +493,25 @@
   top: 2px;
   left: 0;
 }
-/* line 395, ../sass/sbac_flag.scss */
+/* line 404, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource .form-item-error-holder.error + .form-item, .node-type-resource.section-content .form-item-error-holder.error + .form-item {
   background: url("../images/icon-validation-fail.png") no-repeat right 10px top 40px;
 }
 
 /*Modal with scrolling content*/
-/* line 405, ../sass/sbac_flag.scss */
+/* line 414, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content, .node-type-resource.section-content #modalContent .ctools-modal-content {
   padding: 0;
   width: 850px !important;
   height: 340px !important;
 }
-/* line 410, ../sass/sbac_flag.scss */
+/* line 419, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content .modal-content, .node-type-resource.section-content #modalContent .ctools-modal-content .modal-content {
   overflow-y: hidden !important;
   height: auto !important;
   padding: 0 !important;
 }
-/* line 417, ../sass/sbac_flag.scss */
+/* line 426, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .modal-header, .node-type-resource.section-content #modalContent .modal-header {
   -moz-box-sizing: border-box;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
@@ -510,53 +519,53 @@
   position: relative;
   z-index: 3;
 }
-/* line 425, ../sass/sbac_flag.scss */
+/* line 434, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .modal-title, .node-type-resource.section-content #modalContent .modal-title {
   color: #04384E !important;
   display: block;
   font-size: 22px !important;
   font-weight: bold;
   margin: 0;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   padding: 0 !important;
 }
 
 /*Modal with small content*/
-/* line 442, ../sass/sbac_flag.scss */
+/* line 451, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small, .node-type-resource.section-content #modalContent .ctools-modal-content.small {
   width: 620px !important;
   height: auto !important;
 }
-/* line 446, ../sass/sbac_flag.scss */
+/* line 455, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small .modal-header, .node-type-resource.section-content #modalContent .ctools-modal-content.small .modal-header {
   -moz-box-sizing: none;
   box-shadow: none;
   font-size: 18px !important;
   color: #000;
 }
-/* line 453, ../sass/sbac_flag.scss */
+/* line 462, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small .modal-title, .node-type-resource.section-content #modalContent .ctools-modal-content.small .modal-title {
   /*color: #04384E !important;*/
   display: block;
   font-size: 18px !important;
   font-weight: bold;
   margin: 0;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
   padding: 0 !important;
 }
-/* line 463, ../sass/sbac_flag.scss */
+/* line 472, ../sass/sbac_flag.scss */
 .page-node-edit.node-type-resource #modalContent .ctools-modal-content.small form, .node-type-resource.section-content #modalContent .ctools-modal-content.small form {
   margin-top: 0;
   padding: 0 40px;
 }
 
 /*Modal - sbac-flag-start-moderation-form*/
-/* line 473, ../sass/sbac_flag.scss */
+/* line 482, ../sass/sbac_flag.scss */
 #sbac-flag-start-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 478, ../sass/sbac_flag.scss */
+/* line 487, ../sass/sbac_flag.scss */
 #sbac-flag-start-moderation-form #edit-cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
@@ -564,50 +573,50 @@
 }
 
 /*Modal - sbac-flag-resolve-all-resource-review-moderation-form*/
-/* line 487, ../sass/sbac_flag.scss */
+/* line 496, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 492, ../sass/sbac_flag.scss */
+/* line 501, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 498, ../sass/sbac_flag.scss */
+/* line 507, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form button#edit-cancel {
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 502, ../sass/sbac_flag.scss */
+/* line 511, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form h3 {
   font-size: 16px;
   color: #000;
 }
-/* line 507, ../sass/sbac_flag.scss */
+/* line 516, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form .category-output {
   font-size: 16px;
 }
-/* line 510, ../sass/sbac_flag.scss */
+/* line 519, ../sass/sbac_flag.scss */
 #sbac-flag-resolve-all-resource-review-moderation-form .category-output span {
   color: #62676E;
   font-style: italic;
 }
 
 /*Modal - sbac-flag-cancel-resource-review-moderation-form*/
-/* line 519, ../sass/sbac_flag.scss */
+/* line 528, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-review-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 524, ../sass/sbac_flag.scss */
+/* line 533, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-review-moderation-form button#edit-cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
   padding-left: 40px;
 }
-/* line 531, ../sass/sbac_flag.scss */
+/* line 540, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-review-moderation-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
@@ -615,17 +624,17 @@
 }
 
 /*Modal - sbac-flag-cancel-resource-moderation-form*/
-/* line 539, ../sass/sbac_flag.scss */
+/* line 548, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-moderation-form {
   padding: 0 40px;
   margin-top: 30px;
 }
-/* line 544, ../sass/sbac_flag.scss */
+/* line 553, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-moderation-form button {
   float: right;
   margin-left: 30px;
 }
-/* line 549, ../sass/sbac_flag.scss */
+/* line 558, ../sass/sbac_flag.scss */
 #sbac-flag-cancel-resource-moderation-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
@@ -633,19 +642,19 @@
 }
 
 /*Modal - sbac-flag-session-expire-form*/
-/* line 558, ../sass/sbac_flag.scss */
+/* line 567, ../sass/sbac_flag.scss */
 #sbac-flag-session-expire-form button {
   float: right;
   margin-left: 30px;
   margin-top: 30px;
 }
-/* line 563, ../sass/sbac_flag.scss */
+/* line 572, ../sass/sbac_flag.scss */
 #sbac-flag-session-expire-form button#edit-continue {
   background-color: #0084B0;
   border: 1px solid #0D6785;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 }
-/* line 569, ../sass/sbac_flag.scss */
+/* line 578, ../sass/sbac_flag.scss */
 #sbac-flag-session-expire-form button#edit-cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
@@ -699,37 +708,37 @@
 	}
 }*/
 /*button*/
-/* line 626, ../sass/sbac_flag.scss */
+/* line 635, ../sass/sbac_flag.scss */
 .flag-category-review-buttons, .form-actions {
   text-align: center !important;
   padding-top: 15px;
 }
-/* line 630, ../sass/sbac_flag.scss */
+/* line 639, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel, .flag-category-review-buttons .finish, .form-actions .cancel, .form-actions .finish {
   display: inline-block;
   margin: 0 15px;
   position: relative;
 }
-/* line 635, ../sass/sbac_flag.scss */
+/* line 644, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list, .flag-category-review-buttons .finish .item-list, .form-actions .cancel .item-list, .form-actions .finish .item-list {
   position: absolute;
   top: 40px;
   right: 30px;
 }
-/* line 640, ../sass/sbac_flag.scss */
+/* line 649, ../sass/sbac_flag.scss */
 .flag-category-review-buttons .cancel .item-list ul, .flag-category-review-buttons .finish .item-list ul, .form-actions .cancel .item-list ul, .form-actions .finish .item-list ul {
   width: 190px;
   text-align: left;
   top: 0 !important;
   left: 0 !important;
 }
-/* line 649, ../sass/sbac_flag.scss */
+/* line 658, ../sass/sbac_flag.scss */
 .flag-category-review-buttons #sbac-flag-cancel-moderation, .form-actions #sbac-flag-cancel-moderation {
   display: inline-block;
   margin: 0 15px;
 }
 
-/* line 655, ../sass/sbac_flag.scss */
+/* line 664, ../sass/sbac_flag.scss */
 button.gray.cancel, .button.gray.cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
@@ -737,14 +746,14 @@ button.gray.cancel, .button.gray.cancel {
   position: relative;
   margin: 0;
 }
-/* line 662, ../sass/sbac_flag.scss */
+/* line 671, ../sass/sbac_flag.scss */
 button.gray.cancel:hover, .button.gray.cancel:hover {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   background-image: -moz-linear-gradient(center top, rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
 }
 
-/* line 668, ../sass/sbac_flag.scss */
+/* line 677, ../sass/sbac_flag.scss */
 button.gray.cancel:before, .button.gray.cancel:before {
   content: url(../images/buttonCancel.png);
   position: absolute;
@@ -752,27 +761,27 @@ button.gray.cancel:before, .button.gray.cancel:before {
   top: 4px;
 }
 
-/* line 675, ../sass/sbac_flag.scss */
+/* line 684, ../sass/sbac_flag.scss */
 .sbac-flag-load-more-button {
   text-align: center;
   margin-top: 30px;
 }
-/* line 679, ../sass/sbac_flag.scss */
+/* line 688, ../sass/sbac_flag.scss */
 .sbac-flag-load-more-button a {
   width: 480px;
 }
 
-/* line 682, ../sass/sbac_flag.scss */
+/* line 691, ../sass/sbac_flag.scss */
 .ajax-progress-throbber {
   display: none;
 }
 
-/* line 686, ../sass/sbac_flag.scss */
+/* line 695, ../sass/sbac_flag.scss */
 div.ctools-modal-content .modal-title {
   height: auto !important;
 }
 
-/* line 690, ../sass/sbac_flag.scss */
+/* line 699, ../sass/sbac_flag.scss */
 .section-moderation #modalContent .ctools-modal-content .modal-content {
   overflow-y: hidden !important;
 }

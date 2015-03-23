@@ -92,9 +92,9 @@
           $('.sbac-favorites-menu span').html(response.total);
         }
         else {
-          $('.sbac-favorites-menu span').html(0);
-          $('.favorites-helpful-info').remove();
+          $('.sbac-favorites-menu span').html(response.total);
           $('#favorites-table').empty().append(response.no_results);
+          Drupal.attachBehaviors();
         }
       },
       error: function(data) {

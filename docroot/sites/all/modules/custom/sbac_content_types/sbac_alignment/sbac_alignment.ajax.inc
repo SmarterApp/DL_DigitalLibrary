@@ -256,10 +256,9 @@ function sbac_alignment_ajax_filter_alignment_finish_set_callback() {
     } else {
       $label = $term_wrapper->name->value();
     }
-    $filter_text = '<div class="current-filter">';
-    $filter_text .= '<span class="filter-name" tid="'.$tid.'" vid="'.$vocab->vid.'">';
+    $filter_text = '<div class="current-filter" class="filter-name" tid="'.$tid.'" vid="'.$vocab->vid.'">';
     $filter_text .= $label;
-    $filter_text .= '</span></div>';
+    $filter_text .= '</div>';
     $filter_markup[] = $filter_text;
 
     $filter_hidden[] = $vocab->vid . ':' . $tid;

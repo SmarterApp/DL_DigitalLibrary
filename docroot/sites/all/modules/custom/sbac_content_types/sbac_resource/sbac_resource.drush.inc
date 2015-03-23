@@ -64,6 +64,38 @@ function sbac_resource_drush_command() {
     'callback' => 'drush_sbac_resource_update_failed_thumbnails',
   );
 
+  $items['sbac-resource-move-private-to-public'] = array(
+    'description' => 'Moves private thumbnails to public.',
+    'examples' => array(
+      'drush sbac-resource-move-private-to-public',
+    ),
+    'callback' => 'drush_sbac_resource_move_private_to_public',
+  );
+
+  $items['sbac-resource-move-html5-thumbnails'] = array(
+    'description' => 'Move html5 thumbnails',
+    'examples' => array(
+      'drush sbac-resource-move-html5-thumbnails',
+    ),
+    'callback' => 'drush_sbac_resource_move_html5_thumbnails',
+  );
+
+  $items['sbac-resource-find-resources-with-missing-reviewers'] = array(
+    'description' => 'Find resources that have no original reviewers/publishers'
+  );
+
+  $items['sbac-resource-find-extra-reviews'] = array(
+    'description' => 'Find resources that are affected by the workflow bug. See 81058166',
+  );
+
+  $items['sbac-resource-generate-pdfs'] = array(
+    'description' => 'Generate the PDFs.',
+    'examples' => array(
+      'drush sbac-resource-generate-pdfs',
+    ),
+    'callback' => 'drush_sbac_resource_generate_pdfs',
+  );
+
   return $items;
 }
 
@@ -291,8 +323,12 @@ function drush_sbac_resource_update_failed_thumbnails() {
 
   while ($current_nid <= $max_nid) {
 
-    $db_or = db_or()->condition('ft.field_thumbnail_uri_value', array('::', 'public://file.png::public://file.png', 'no_img::no_img'), 'IN')
-                    ->condition('ft.field_thumbnail_uri_value', '%x-empty%', 'LIKE');
+    $db_or = db_or()->condition('ft.field_thumbnail_uri_value', array(
+        '::',
+        'public://file.png::public://file.png',
+        'no_img::no_img'
+      ), 'IN')
+      ->condition('ft.field_thumbnail_uri_value', '%x-empty%', 'LIKE');
 
     $query = db_select('field_data_field_thumbnail_uri', 'ft');
     $query->fields('ft', array('entity_id'))
@@ -313,7 +349,239 @@ function drush_sbac_resource_update_failed_thumbnails() {
       unset($node);
     }
   }
-
-
   ini_set('memory_limit', $current_limit);
+}
+
+/**
+ * Moves the already generated thumbnail from private
+ * to a public directory, else tries to re-create the thumbnail
+ * and place in public directory.
+ */
+function drush_sbac_resource_move_private_to_public() {
+  ini_set('memory_limit', '1048M');
+
+  $max_nid = db_query("SELECT MAX(n.nid)
+                       FROM   {node} n
+                       WHERE  n.type = 'resource'
+                      ")->fetchField();
+
+  $current_nid = 0;
+  $chunk_size = drush_get_option('chunk-size', 300);
+  while ($current_nid <= $max_nid) {
+    $query = db_select('node', 'n');
+    $query->fields('n', array('nid'))
+      ->condition('n.nid', $current_nid, '>')
+      ->condition('n.type', 'resource', '=')
+      ->orderBy('n.nid')
+      ->range(0, $chunk_size);
+    $nids = $query->execute()->fetchCol();
+
+    foreach ($nids as $nid) {
+      $node = node_load($nid);
+      if ($node) {
+        $current_nid = $nid;
+        if (isset($node->field_thumbnail_uri['und'][0]['value']) && $node->field_thumbnail_uri['und'][0]['value'] != NULL) {
+          $location = $node->field_thumbnail_uri['und'][0]['value'];
+          if (strpos($location, 'x-empty') !== FALSE) {
+            sbac_resource_determine_thumbnail_uri($node);
+            entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+          }
+          else if (strpos($location, 'private://resource_thumbnails') !== FALSE) {
+            // Get the private location.
+            sbac_resource_move_private_to_public($node);
+          }
+          else if (strpos($location, 'public://resource_thumbnails') === FALSE && strpos($location, 'no_img::no_img') === FALSE) {
+            sbac_resource_determine_thumbnail_uri($node);
+            entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+          }
+          drush_print($node->nid . ' updated.');
+        }
+      }
+      unset($node);
+    }
+  }
+}
+
+/**
+ * Move the HTML5 thumbnails.
+ */
+function drush_sbac_resource_move_html5_thumbnails() {
+  $result = db_query("SELECT n.nid FROM {node} n JOIN {field_data_field_html5} f ON n.nid = f.entity_id WHERE  n.type = 'resource' AND f.field_html5_value = 1");
+  foreach ($result as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      sbac_resource_move_html5_thumbnail($node);
+    }
+    drush_print($node->nid . ' updated.');
+  }
+}
+
+/**
+ * Find resources with missing original reviewers/publishers
+ */
+function drush_sbac_resource_find_resources_with_missing_reviewers() {
+  // Get all resources that haven't been published yet
+  $resources = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.current', 1)
+    ->condition('h.state', 'published', '<>')
+    ->fields('h', array('nid', 'state'))
+    ->orderBy('h.state')
+    ->orderBy('h.nid')
+    ->execute()
+    ->fetchAll();
+  foreach ($resources as $resource) {
+    $row = array();
+    $rejected = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'rejected')
+      ->condition('h.nid', $resource->nid)
+      ->fields('h')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($rejected) {
+      $reviewers = db_select('field_data_field_recent_reviewers', 'r')
+        ->condition('r.entity_id', $resource->nid)
+        ->condition('r.field_recent_reviewers_target_id', 0, '>')
+        ->fields('r', array())
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if (!$reviewers) {
+        $row[] = $resource->nid;
+        $row[] = 'no reviewers';
+      }
+    }
+    $approve = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'approve')
+      ->condition('h.nid', $resource->nid)
+      ->condition('h.current', 0)
+      ->fields('h')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if($approve){
+      $publishers = db_select('field_data_field_recent_publishers', 'r')
+        ->condition('r.entity_id', $resource->nid)
+        ->condition('r.field_recent_publishers_target_id', 0, '>')
+        ->fields('r', array())
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if (!$publishers) {
+        $row[] = $resource->nid;
+        $row[] = 'no publishers';
+      }
+    }
+    if (!empty($row)) {
+      $query = db_select('node', 'n');
+      $query->leftJoin('users', 'u', 'u.uid = n.uid');
+      $query->leftJoin('workbench_moderation_node_history', 'h',
+        'h.nid = n.nid');
+      $query->leftJoin('field_data_field_state', 's', 's.entity_id = n.nid');
+      $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
+      $query->condition('n.nid', $resource->nid);
+      $query->fields('h', array('state'))
+        ->fields('n', array('title'))
+        ->fields('u', array('name', 'mail'))
+        ->fields('t', array('name'));
+      $info = $query->execute()->fetchAll();
+      foreach ($info as $r) {
+        $row = array_merge($row, (array) $r);
+      }
+      drush_print(implode(' | ', $row));
+    }
+  }
+}
+
+/**
+ * Find resources that are affected by the workflow bug
+ */
+function drush_sbac_resource_find_extra_reviews() {
+  // Get all resources that haven't been published yet
+  $resources = db_select('workbench_moderation_node_history', 'h')
+    ->condition('h.current', 1)
+    ->condition('h.state', 'published', '<>')
+    ->fields('h', array('nid'))
+    ->execute()
+    ->fetchCol();
+  foreach ($resources as $resource) {
+    $output = array();
+    $str = array();
+    $submit_timestamp = db_select('workbench_moderation_node_history', 'h')
+      ->condition('h.state', 'needs_review')
+      ->condition('h.from_state', 'draft')
+      ->condition('h.nid', $resource)
+      ->fields('h', array('stamp'))
+      ->orderBy('h.stamp', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    // Find resources with 2 GK
+    $gk = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'gate_keeper')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($gk > 1) {
+      $str[] = $gk . ' GKs';
+    }
+    // Find resources with 4 QC
+    $qc = db_select('eck_feedback', 'f')
+      ->condition('f.completed', 1)
+      ->condition('f.created', $submit_timestamp, '>')
+      ->condition('f.node_id', $resource)
+      ->condition('f.type', 'qc')
+      ->fields('f', array('id'))
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    if ($qc > 3) {
+      $str[] = $qc . ' QCs';
+    }
+    if (!empty($str)) {
+      $output[] = $resource;
+      $output[] = implode(' and ', $str);
+      $query = db_select('node', 'n');
+      $query->leftJoin('users', 'u', 'u.uid = n.uid');
+      $query->leftJoin('workbench_moderation_node_history', 'h',
+        'h.nid = n.nid');
+      $query->leftJoin('field_data_field_state', 's', 's.entity_id = n.nid');
+      $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
+      $query->condition('n.nid', $resource);
+      $query->fields('h', array('state'))
+        ->fields('n', array('title'))
+        ->fields('u', array('name', 'mail'))
+        ->fields('t', array('name'));
+      $info = $query->execute()->fetchAll();
+      foreach ($info as $r) {
+        $output = array_merge($output, (array) $r);
+      }
+    }
+    if (!empty($output)) {
+      drush_print(implode(' | ', $output));
+    }
+  }
+}
+
+/**
+ * Find resources that are affected by the workflow bug
+ */
+function drush_sbac_resource_generate_pdfs() {
+  ini_set('memory_limit', '1048M');
+  $results = db_query("SELECT nid FROM {node} WHERE type = 'resource'");
+  foreach ($results as $nid) {
+    $node = node_load($nid->nid);
+    if ($node) {
+      $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/about_this_resource.pdf';
+      if (!file_exists($directory)) {
+        sbac_resource_print_about_this_tab($node);
+        drush_print($node->nid . ' updated.');
+      }
+    }
+    unset($node);
+  }
 }

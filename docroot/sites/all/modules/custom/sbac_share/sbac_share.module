@@ -212,10 +212,9 @@ function sbac_share_login_redirect_view() {
 /**
  * Create a guest user.
  *
- * @param $provided_key
  * @return bool|stdClass
  */
-function sbac_share_create_guest_user($provided_key) {
+function sbac_share_create_guest_user() {
   // create a new user with junk username/password/email
   $guest_role = user_role_load_by_name('guest');
   $guest_account = array(

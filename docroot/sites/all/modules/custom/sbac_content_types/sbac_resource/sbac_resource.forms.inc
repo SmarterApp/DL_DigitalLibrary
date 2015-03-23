@@ -37,6 +37,44 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_required_fields($form, $form_state);
     _sbac_resource_form_remove_elements($form, $form_state);
     _sbac_resource_form_finalize($form, $form_state);
+    _sbac_resource_form_flatten_term_tree($form, $form_state);
+  }
+}
+
+/**
+ * Flatten the taxonomy term tree.  Only show the children concatenated with parents
+ * @param $form
+ * @param $form_state
+ */
+function _sbac_resource_form_flatten_term_tree(&$form, &$form_state) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject', 'wrapper' => ''),
+    array('vid' => 'grades', 'field' => 'field_grades', 'wrapper' => ''),
+    array('vid' => 'digital_media_type', 'field' => 'field_digital_media_type', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_intended_student', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'geographical_settings', 'field' => 'field_geographical_settings', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'educational_use', 'field' => 'field_educational_use', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'technologies_for_classroom_use', 'field' => 'field_classroom_technologies', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'smarter_balanced_keyword', 'field' => 'field_smarter_balanced_keyword', 'wrapper' => 'tag_wrapper'),
+    array('vid' => 'intended_end_user', 'field' => 'field_intended_end_user', 'wrapper' => ''),
+  );
+  foreach ($configs as $config) {
+    // Subject vocab
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    if (!empty($config['wrapper'])) {
+      $form[$config['wrapper']][$config['field']]['und']['#options'] = $options;
+    }
+    else {
+      $form[$config['field']]['und']['#options'] = $options;
+    }
   }
 }
 
@@ -360,12 +398,12 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $form = drupal_rebuild_form('resource_node_form', $form_state);
         return $form;
       }
-
-      $media_items = sbac_media_load_items($form['#node']->nid);
-      $output = _sbac_media_create_list($media_items, $form_state);
-      $form['field_file_container']['materials']['#markup'] = $output;
-      $form['field_file_container']['materials']['#weight'] = -100;
     }
+    
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $output = _sbac_media_create_list($media_items, $form_state);
+    $form['field_file_container']['materials']['#markup'] = $output;
+    $form['field_file_container']['materials']['#weight'] = -100;
     return $form;
   }
 
@@ -391,7 +429,7 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       $response = httprl_send_request();
       error_log(print_r($response));
       if ($response === FALSE) {
-        watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
+        watchdog('SBAC Media', 'Failed to start background tasks', NULL, WATCHDOG_ERROR);
       }
     }
     unset($_SESSION['file_attributes']);
@@ -1014,7 +1052,7 @@ function sbac_resource_validate_revisions(&$form, &$form_state) {
           $error = "Please remove any inappropriate language from question $i.";
         }
       }
-      if ($error) {
+      if (isset($error)) {
         form_set_error('sbac_revisions][' . $index . '][contributor_comment', $error);
         _sbac_resource_remove_error_message($error);
         drupal_set_message('revisions:field_contributor_comment_' . $index . ':single:' . $error, 'sbac_resource_error');
@@ -1354,21 +1392,33 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               $task_type = 'resource_submitted';
             }
 
+            // Save the current state of the node.
             sbac_resource_save_current_state($node);
 
-            if ($task = taskit_get_object($task_type)) {
-              global $user;
-
-              $task->addVisibility($task::VISIBILITY_USER);
-              $task->addEntity('node', $node->nid);
-              $task->addOwningUser($node->uid);
-              $task->addTriggeringUser($user->uid);
-              $task->save();
-
-              if (!empty($recipients)) {
-                send_review_notifications($task, $node, $recipients);
+            if ($task_type == 'resource_submitted') {
+              if ($task = taskit_get_object($task_type)) {
+                global $user;
+                $task->addVisibility($task::VISIBILITY_USER);
+                $task->addEntity('node', $node->nid);
+                $task->addOwningUser($node->uid);
+                $task->addTriggeringUser($user->uid);
+                $task->save();
               }
             }
+            else {
+              if ($task = taskit_get_object($task_type)) {
+                global $user;
+                $task->addVisibility($task::VISIBILITY_USER);
+                $task->addEntity('node', $node->nid);
+                $task->addOwningUser($node->uid);
+                $task->addTriggeringUser($user->uid);
+                if (!empty($recipients)) {
+                  send_review_notifications($task, $node, $recipients);
+                }
+              }
+            }
+
+            sbac_resource_print_about_this_tab($node);
           }
         }
       }
@@ -1957,6 +2007,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
       switch ($last_feedback_type) {
         case 'post':
         case 'qc':
+          $post = NULL;
           if ($last_feedback_type == 'post') {
             $post_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'post' AND completed = 1 ORDER BY changed DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
             $post_entities = entity_load('feedback', $post_id);
@@ -1966,7 +2017,14 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             }
           }
           // Get the last 3 QC
-          $qc_ids = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY changed ASC LIMIT 0, 3", array(':nid' => $form['#node']->nid))->fetchCol();
+          $qc_ids = db_query("SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND completed = 1 AND changed > IFNULL((SELECT max(h.stamp) FROM {workbench_moderation_node_history} h WHERE h.state = 'needs_review' AND h.nid = :nid), 0) ORDER BY created ASC LIMIT 0, 3", array(
+            ':nid' => $form['#node']->nid,
+          ))->fetchCol();
+          if (empty($qc_ids)) {
+              $qc_ids = db_query("SELECT id FROM {eck_feedback} WHERE node_id = :nid AND type = 'qc' AND completed = 1 ORDER BY created ASC LIMIT 0, 3", array(
+                  ':nid' => $form['#node']->nid,
+              ))->fetchCol();
+          }
 
           // check for QC feedbacks first
           $qc_entities = entity_load('feedback', $qc_ids);
@@ -1985,13 +2043,15 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               '#prefix' => '<h2>',
               '#suffix' => '</h2>'
             );
-            $post_comment = field_entity_value($post, 'field_to_contributor');
-            if ($post_comment != '') {
-              $form['sbac_revisions']['post_comment'] = array(
-                '#markup' => field_entity_value($post, 'field_to_contributor'),
-                '#prefix' => '<h2>Posting comments</h2><p>',
-                '#suffix' => '</p>'
-              );
+            if (!empty($post)) {
+              $post_comment = filter_xss(field_entity_value($post, 'field_to_contributor'));
+              if ($post_comment != '') {
+                $form['sbac_revisions']['post_comment'] = array(
+                  '#markup' => $post_comment,
+                  '#prefix' => '<h2>Posting comments</h2><p>',
+                  '#suffix' => '</p>'
+                );
+              }
             }
             $form['sbac_revisions']['sub_header'] = array(
               '#markup' => t("Reviewer's Resource Recommendation"),
@@ -2002,10 +2062,10 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
             $recommendations = '';
             $i = 1;
             foreach ($qc_entities as $entity) {
-              $created = format_date($entity->changed, 'full');
+              $created = format_date($entity->created, 'full');
               $options = field_allowed_values('field_rec_options');
               $headline = $options[field_entity_value($entity, 'field_rec_options')];
-              $comments = field_entity_value($entity, 'field_rec_rationale');
+              $comments = filter_xss(field_entity_value($entity, 'field_rec_rationale'));
               $recommendations .= theme('qc_teaser', array(
                 'id' => $entity->id,
                 'author' => t('Reviewer !count', array('!count' => $i)),
@@ -2068,7 +2128,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               foreach ($qc_entities as $entity) {
                 $questions = field_entity_value($entity, 'field_review_set');
                 $level = field_entity_value($questions[$i], 'field_level');
-                $comments = field_entity_value($questions[$i], 'field_comments');
+                $comments = filter_xss(field_entity_value($questions[$i], 'field_comments'));
                 $comments = more_less_text($comments, 140);
                 $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j] = array(
                   '#type' => 'container',
@@ -2104,11 +2164,45 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
-                '#default_value' => field_entity_value($questions[$i], 'field_contributor_comment') ? field_entity_value($questions[$i], 'field_contributor_comment') : ''
+                '#default_value' => field_entity_value($questions[$i], 'field_contributor_comment') ? filter_xss(field_entity_value($questions[$i], 'field_contributor_comment')) : ''
               );
               $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
                 '#type' => 'hidden',
                 '#value' => implode('::', $question_ids),
+              );
+            }
+          } else {
+            $form['sbac_revisions'] = array(
+              '#type' => 'fieldset',
+              '#title' => t('Revisions'),
+              '#tree' => TRUE,
+              '#group' => 'additional_settings',
+              '#attributes' => array(
+                'id' => 'sbac-revisions-tab',
+              )
+            );
+            $form['sbac_revisions']['header'] = array(
+              '#markup' => t('Quality Criteria'),
+              '#prefix' => '<h2>',
+              '#suffix' => '</h2>'
+            );
+            if (!empty($post)) {
+              $post_comment = filter_xss(field_entity_value($post, 'field_to_contributor'));
+              if ($post_comment != '') {
+                $form['sbac_revisions']['post_comment'] = array(
+                  '#markup' => $post_comment,
+                  '#prefix' => '<h2>Posting comments</h2><p>',
+                  '#suffix' => '</p>'
+                );
+              }
+              $form['sbac_revisions']['feedback']['contributor_comment'] = array(
+                '#type' => 'textarea',
+                '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
+                '#default_value' => field_entity_value($post, 'field_contributor_comment') ? filter_xss(field_entity_value($post, 'field_contributor_comment')) : ''
+              );
+              $form['sbac_revisions']['feedback']['post_id'] = array(
+                '#type' => 'hidden',
+                '#value' => $post->id,
               );
             }
           }
@@ -2169,12 +2263,12 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               $form['sbac_revisions']['feedback_' . $i]['gk_comment'] = array(
                 '#type' => 'item',
                 '#title' => t('Quality Criteria Level: !level', array('!level' => $level)),
-                '#markup' => more_less_text(field_entity_value($question, 'field_comments'))
+                '#markup' => more_less_text(filter_xss(field_entity_value($question, 'field_comments')))
               );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
-                '#default_value' => field_entity_value($question, 'field_contributor_comment') ? field_entity_value($question, 'field_contributor_comment') : ''
+                '#default_value' => field_entity_value($question, 'field_contributor_comment') ? filter_xss(field_entity_value($question, 'field_contributor_comment')) : ''
               );
               $i++;
             }
@@ -2309,7 +2403,7 @@ function _sbac_resource_form_advanced(&$form, &$form_state) {
   $form['field_view_permissions_per_state']['und']['#title'] = '';
   $form['field_view_permissions_per_state']['und']['#prefix'] = '<div id="sbac-permissions-state">';
   $form['field_view_permissions_per_state']['und']['#suffix'] = '</div>';
-  $form['field_view_permissions_per_state']['#weight'] = 39;
+  $form['field_view_permissions_per_state']['#weight'] = 40;
 
   // Resource Actions.
   $form['field_resource_actions']['#weight'] = 40;
@@ -2477,7 +2571,7 @@ function _sbac_resource_form_cancel_button(&$form, &$form_state) {
     '#weight' => 0,
     '#attributes' => array('class' => array('sbac-cancel-blue', 'sbac-resource-cancel-button')),
     '#limit_validation_errors' => array(),
-    '#submit' => array('_sbac_resource_my_resource_redirect'),
+    '#submit' => array('sbac_media_widget_form_element_submit_handler', '_sbac_resource_my_resource_redirect'),
   );
 }
 
@@ -2619,7 +2713,7 @@ function _sbac_resource_form_required_fields(&$form, &$form_state) {
   $form['#group_children']['required_fields_summary'] = "group_summary";
 
   $form['required_fields_materials'] = array(
-    '#markup' => 'Required Information',
+    '#markup' => 'Required Information <br /> <strong>**</strong> Temporary Files are not displayed on the front end until save or continue is clicked. Clicking close will remove the file.',
     '#prefix' => '<p class="sbac-resource-required">',
     '#suffix' => '</p>',
     '#weight' => 150,
@@ -3011,12 +3105,12 @@ function sbac_resource_delete_resource_form() {
 
   $form['submit_description'] = array(
     '#markup' => '<p>' . t('
-    If you continue, you will no longer be able to review this resource. All review information you have entered will be lost.') . '</p>',
+    If you continue, you will no longer be able to access this resource') . '</p>',
   );
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Delete Draft Resource',
+    '#value' => 'Delete',
     '#attributes' => array('id' => array('edit-delete-overlay'))
   );
 
@@ -3517,7 +3611,10 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     $vocab_terms = array();
     $vocab_tree = taxonomy_get_tree($vocab_entity->vid);
     foreach ($vocab_tree as $term) {
-      $vocab_terms[$term->tid] = $term->name;
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $vocab_terms[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
     }
     $form[$machine_name][$machine_name . '_terms'] = array(
       '#type' => 'checkboxes',
@@ -3725,15 +3822,24 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
   // Save the contributor's comments
   if (!empty($form_state['values']['sbac_revisions'])) {
     foreach ($form_state['values']['sbac_revisions'] as $feedback) {
-      $question_ids = explode('::', $feedback['question_id']);
-      foreach ($question_ids as $item_id) {
-        $question = field_collection_item_load($item_id);
-        if ($question) {
-          $question_wrapper = entity_metadata_wrapper('field_collection_item', $question);
-          $question_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
-          $question_wrapper->field_contributor_comment_date->set(time());
-          $question_wrapper->save();
+      if (!empty($feedback['question_id'])) {
+        $question_ids = explode('::', $feedback['question_id']);
+        foreach ($question_ids as $item_id) {
+          $question = field_collection_item_load($item_id);
+          if ($question) {
+            $question_wrapper = entity_metadata_wrapper('field_collection_item', $question);
+            $question_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
+            $question_wrapper->field_contributor_comment_date->set(time());
+            $question_wrapper->save();
+          }
         }
+      }
+      if(!empty($feedback['post_id'])){
+        $post = entity_load_single('feedback', $feedback['post_id']);
+        $post_wrapper = entity_metadata_wrapper('feedback', $post);
+        $post_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
+        $post_wrapper->field_contributor_comment_date->set(time());
+        $post_wrapper->save();
       }
     }
   }

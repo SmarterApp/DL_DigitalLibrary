@@ -34,13 +34,12 @@ function sbac_forum__api__set_active_subnav($value = NULL) {
  * @return Boolean True or False if user has access to view forum based on criteria.
  */
 function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
-  $role_access = 0; // Set default just in case. 0 = closed forum
-  $state_access = 0; // Set default just in case.
+  $view_access = &drupal_static(__FUNCTION__);
 
+  if (empty($view_access) || empty($view_access[$user_obj->uid]) || !isset($view_access[$user_obj->uid][$forum->tid])) {
   // Load up forum data.
   $forum_data = entity_metadata_wrapper('taxonomy_term', $forum);
   $user_profile = user_load($user_obj->uid); // Load up profile.
-  $user_profile_wrapper = entity_metadata_wrapper('user', $user_profile);
 
   // Check to see if forum is role restricted.
   $validate_user_role = FALSE; // default to all roles have access
@@ -61,13 +60,7 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
     (!empty($user_obj)) &&
     (!empty($allowed_roles))
   ) {
-    if (isset($user_profile_wrapper->field_position)) {
-      $title_terms = $user_profile_wrapper->field_position->value();
-      if (!empty($title_terms)) {
-        $users_title = $title_terms->tid;
-        $has_role = in_array($users_title, $allowed_roles);
-      }
-    }
+    $has_role = array_intersect($allowed_roles, array_keys($user_obj->roles));
   }
 
 
@@ -137,12 +130,17 @@ function sbac_forum__api__check_forum_view_access($user_obj, $forum) {
       $access = TRUE;
     }
   }
+    $view_access[$user_obj->uid][$forum->tid] = $access;
+  }
 
-  return $access;
+  return $view_access[$user_obj->uid][$forum->tid];
 }
 
 
 function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
+  $is_member_static = &drupal_static(__FUNCTION__);
+
+  if (empty($is_member_static) || empty($is_member_static[$uid]) || !isset($is_member_static[$uid][$forum_id])) {
   $is_member = FALSE;
   $cid = '';
   $forum_details = array(
@@ -154,7 +152,8 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
     $cid = SBAC_FORUM_MEMBER_LIST_CACHE_ENTRY_NAME . $forum_id;
   }
   else {
-    return $is_member;
+      $is_member_static[$uid][$forum_id] = $is_member;
+      return $is_member_static[$uid][$forum_id];
   }
 
   if ($cache = cache_get($cid)) {
@@ -212,8 +211,10 @@ function sbac_forum__api__check_user_is_forum_member($forum_id, $uid) {
       $is_member = 'removed';
     }
   }
+    $is_member_static[$uid][$forum_id] = $is_member;
+  }
 
-  return $is_member;
+  return $is_member_static[$uid][$forum_id];
 }
 
 
@@ -224,7 +225,7 @@ function sbac_forum__api__create_start_new_topic_link($forum_id) {
     ),
     'query' => array('target-forum' => $forum_id),
   );
-  $link = l('Start a Topic', 'node/add/topic', $link_ops);
+  $link = l('Start a Discussion', 'node/add/topic', $link_ops);
   $link_text = '<div class="join-forum-start-topic-wrapper">' . $link . '</div>';
 
   return $link_text;
@@ -244,9 +245,7 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
   $extra_classes = '';
-  if (($is_facilitator) ||
-    ($user->uid == 1)
-  ) { // Edit and delete forum
+  if (($is_facilitator) || ($user->uid == 1)) { // Edit and delete forum
     $link_ops = array(
       'attributes' => array(
         'class' => 'vp-control-link',
@@ -342,36 +341,50 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
   return $output;
 }
 
+/**
+ * Returns the rendered tooltip for a user.
+ *
+ * @param $user_id
+ * @param bool $add_comma
+ * @return null|string
+ */
 function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
-  $account = user_load($user_id);
-  $account_renderable = user_view($account, 'tooltip');
-
-  $account_data = entity_metadata_wrapper('user', $account);
-  $fn = $account_data->field_first_name->value();
-  $ln = ''; // last name hide by default.
-  if (isset($account_data->field_privacy)) { // user is using non-default settings.
-    $privacy_settings = $account_data->field_privacy->value();
-    if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
-      $ln = ' ' . $account_data->field_last_name->value();
-    }
+  $cached_output = cache_get('authpane_' . $user_id);
+  if ($cached_output) {
+    return $cached_output->data;
   }
-  $full_name = $fn . $ln;
+  else {
+    $account = user_load($user_id);
+    $account_renderable = user_view($account, 'tooltip');
 
-  $tooltip = '
+    $account_data = entity_metadata_wrapper('user', $account);
+    $fn = $account_data->field_first_name->value();
+    $ln = ''; // last name hide by default.
+    if (isset($account_data->field_privacy)) { // user is using non-default settings.
+      $privacy_settings = $account_data->field_privacy->value();
+      if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+        $ln = ' ' . $account_data->field_last_name->value();
+      }
+    }
+    $full_name = $fn . $ln;
+
+    $tooltip = '
               <div class="devtools-tooltip account-tooltip">
                 <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
                 <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
               </div>
              ';
 
-  $created = isset($account->created) ? $account->created : time();
+    $created = isset($account->created) ? $account->created : time();
 
-  $output = t('!name', array(
-    '!name' => $tooltip,
-    '!date' => format_date($created, 'simple'),
-  ));
+    $output = t('!name', array(
+      '!name' => $tooltip,
+      '!date' => format_date($created, 'simple'),
+    ));
 
-  return $output;
+    cache_set('authpane_' . $user_id, $output);
+    return $output;
+  }
 }
 
 

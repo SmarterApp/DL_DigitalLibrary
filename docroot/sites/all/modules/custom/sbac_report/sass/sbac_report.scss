@@ -81,6 +81,11 @@ $darkgreen: #246a34;
   .form-item-state {
     width: 100%;
   }
+  
+  .form-item.form-disabled{
+    width: 90%;
+    select { margin: 5px 0; }
+  }
 }
 
 .report-title {
@@ -259,7 +264,7 @@ select#edit-limit {
   }
 
   .form-item-sne {
-    width: 25%;
+    width: 30%;
     float: left;
     margin-right: 10px;
 		padding-right: 20px;
@@ -340,6 +345,7 @@ select#edit-limit {
 
 		label {
 			font-size: 14px;
+			white-space: nowrap;
 		}
 
 		#edit-date-range {
@@ -781,6 +787,16 @@ form[id*="sbac-report-ct-individual-modal-form"] {
 	button {
 		float: right;
 		margin-left: 20px;
+	}
+}
+
+.page-reports {
+	#user_activity,
+	#sbac_report_tab_forum {
+		p {
+			font-size: 1rem;
+			margin-bottom: 0.25em;
+		}
 	}
 }
 

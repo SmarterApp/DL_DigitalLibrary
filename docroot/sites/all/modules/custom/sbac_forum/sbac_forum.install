@@ -36,11 +36,64 @@ function sbac_forum_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the forum was deleted.',
+        'type' => 'int',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The uid of the user who deleted',
+        'type' => 'int',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'forum_type' => array(
+        'description' => 'Topic or resource forum.',
+        'type' => 'varchar',
+        'length' => 150,
+        'default' => '',
+      ),
     ),
     'indexes' => array(
       'entity' => array('entity_id', 'entity_type'),
     ),
     'primary key' => array('fdlid'),
+  );
+
+  $schema['sbac_forum_views'] = array(
+    'description' => t('Stores data for forum hits by uid.'),
+    'fields' => array(
+      'tid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The tid of the forum'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who viewed the resource'),
+      ),
+      'hits' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('A counter by uid/nid for views of this tid'),
+      ),
+    ),
+    'primary key' => array('tid', 'uid'),
+    'indexes' => array(
+      'nid' => array('tid'),
+      'uid' => array('uid'),
+    ),
   );
 
   return $schema;
@@ -144,4 +197,49 @@ function sbac_forum_update_7007() {
 function sbac_forum_update_7008() {
   $instance = field_info_instance('taxonomy_term', 'field_alignment_term', 'forum');
   field_delete_instance($instance);
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Adds the new table.
+ */
+function sbac_forum_update_7009() {
+  $ret = array();
+  $table = 'sbac_forum_views';
+  if (!db_table_exists($table)) {
+    $schema = drupal_get_schema($table, TRUE);
+    db_create_table($table, $schema);
+  }
+  return $ret;
+}
+
+/**
+ * Update the schema
+ */
+function sbac_forum_update_7010() {
+  db_add_field('sbac_forum_deleted_log', 'created', array(
+    'description' => 'The Unix timestamp when the forum was deleted.',
+    'type' => 'int',
+    'default' => 0,
+    'not null' => TRUE,
+  ));
+  db_add_field('sbac_forum_deleted_log', 'uid', array(
+    'description' => 'The uid of the user who deleted',
+    'type' => 'int',
+    'default' => 0,
+    'not null' => TRUE,
+  ));
+}
+
+/**
+ * Update the schema
+ */
+function sbac_forum_update_7011() {
+  db_add_field('sbac_forum_deleted_log', 'forum_type', array(
+    'description' => 'Topic or resource forum.',
+    'type' => 'varchar',
+    'length' => 150,
+    'default' => '',
+  ));
 }

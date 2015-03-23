@@ -12,6 +12,9 @@
   <a href="#" id="date-selected<?php print $which ?>" class="report-dropdown-toggle"><?php print $date_display; ?></a>
   <div id="date-range-dropdown<?php print $which ?>" class="report-dropdown hide">
     <ul>
+      <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $cumulative; ?>">
+              <?php print t('Cumulative to date'); ?>
+      </a></li>
       <li><a class="date-range-item report-dropdown-toggle" data-value="<?php print $ago_30; ?>">
               <?php print t('Last 30 Days'); ?>
       </a></li>

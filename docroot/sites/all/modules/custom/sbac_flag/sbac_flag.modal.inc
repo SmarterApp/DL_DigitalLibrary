@@ -180,7 +180,9 @@ function sbac_flag_start_resource_review_moderation_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
-        // button acts like cancel
+        // button to the Flag tab
+        $node = node_load($form_state['nid']);
+         $output[] = ctools_ajax_command_redirect($node->path['alias'], 0, array('query' => array('flag' => 'resolve-resource-review-flags', 'review' => $form_state['eck_review']), 'fragment' => 'review-Moderate_flag'));
       }
 
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
@@ -225,7 +227,8 @@ function sbac_flag_start_resource_moderation_modal($js = FALSE) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] == 'Review Flags') {
-        // button acts like cancel
+        // button to the Flag tab
+        $output[] = ctools_ajax_command_reload();
       }
 
       if ($form_state['triggering_element']['#value'] == 'Start Moderation') {
@@ -548,53 +551,6 @@ function sbac_flag_remove_resource_review_modal($js = FALSE) {
         $output[] = ctools_ajax_command_redirect('moderation');
         // remove session variables
         unset($_SESSION['sbac-flag']);
-      }
-    }
-    print ajax_render($output);
-    exit();
-  }
-  else {
-    return;
-  }
-}
-
-/**
- * Session expire modal.
- *
- * @param bool $js
- */
-function sbac_flag_session_expire_modal($js = FALSE) {
-  if ($js) {
-    ctools_include('ajax');
-    ctools_include('modal');
-    ctools_add_js('ajax-responder');
-    ctools_modal_add_js();
-
-    $title = 'Your moderation session is about to end';
-
-    $form_state = array(
-      'title' => $title,
-      'ajax' => TRUE,
-      'nid' => $_GET['nid'],
-    );
-
-    module_load_include('inc', 'sbac_flag', 'sbac_flag.modal');
-    $output = ctools_modal_form_wrapper('sbac_flag_session_expire_form', $form_state);
-    // This means the form has been executed
-    if (!empty($form_state['executed'])) {
-      $output = array();
-      $output[] = ctools_modal_command_dismiss();
-      if ($form_state['triggering_element']['#value'] == 'Continue Moderation') {
-        // refresh the user session somehow.
-        sbac_sso_session_regenerate();
-        $output[] = ajax_command_callback('sbac_node_form', 'reset_timers');
-      }
-      else {
-        // cancel was clicked.
-        sbac_sso_session_regenerate();
-        $node = node_load($form_state['nid']);
-        sbac_flag_unset_being_moderated($node);
-        $output[] = ctools_ajax_command_redirect('moderation');
       }
     }
     print ajax_render($output);
@@ -1068,41 +1024,6 @@ function sbac_flag_remove_resource_review_form_submit(&$form, &$form_state) {
 }
 
 /**
- * Session expire form.
- *
- * @param $form
- * @param $form_state
- * @return array
- */
-function sbac_flag_session_expire_form($form, &$form_state) {
-  $form = array();
-
-  $form['submit_description'] = array(
-    '#markup' => "<p>If you don't click continue moderation, the
-    session will timeout and the resource review will be returned to
-    moderation queue in its initial state."
-  );
-	
-	$form['continue'] = array(
-    '#type' => 'submit',
-    '#value' => 'Continue Moderation',
-    '#attributes' => array('class' => array('button', 'blue'))
-  );
-
-  $form['cancel'] = array(
-    '#type' => 'submit',
-    '#value' => 'Cancel Moderation',
-    '#attributes' => array('class' => array('button', 'gray', 'cancel'))
-  );  
-
-  $form['button_suffix'] = array(
-    '#suffix' => '</div>',
-  );
-
-  return $form;
-}
-
-/**
  * Form callback for collaboration flagging.
  * @param  boolean $js  ctools_js
  * @param  int     $nid Node ID.
@@ -1309,7 +1230,7 @@ function sbac_flag_collaboration_resolve_callback($js = FALSE, $type, $nid, $cid
   if (!empty($form_state['executed'])) {
 
     if ($form_state['triggering_element']['#value'] == 'Resolve Flags') {
-      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
       sbac_flag_collaboration_resolve_forum($nid, $cid);
       $url = drupal_get_path_alias('node/' . $nid);
       $output[] = ctools_ajax_command_redirect($url);
@@ -1429,7 +1350,7 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
 
   if (!empty($form_state['executed'])) {
     if ($form_state['triggering_element']['#value'] == 'Remove Topic') {
-      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
       sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
 
       // Notify poster
@@ -1475,7 +1396,7 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
       $output[] = ctools_ajax_command_redirect('moderation');
     }
     elseif ($form_state['triggering_element']['#value'] == 'Remove Post') {
-      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
       sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
       $comment = entity_metadata_wrapper('comment', $cid);
       $forum_poster = $comment->author->uid->value();

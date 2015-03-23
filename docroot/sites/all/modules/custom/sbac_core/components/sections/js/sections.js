@@ -115,6 +115,16 @@ Drupal.behaviors.sections = {
       $('.specific-section').removeClass('active').css('padding-top', 0);
       $('section.section-quality-criteria-review').addClass('active').css('padding-top', '45px');
     }
+    else if (hash == '#review-post') {
+      $('section.section-1').css('width', '100%');
+      $('.specific-section').removeClass('active').css('padding-top', 0);
+      $('section.section-quality-criteria-review').addClass('active').css('padding-top', '45px');
+    }
+    else if (hash == '#review-Moderate_flag') {
+      $('section.section-1').css('width', '100%');
+      $('.specific-section').removeClass('active').css('padding-top', 0);
+      $('section.section-resource-flags').addClass('active').css('padding-top', '45px');
+    }
 
     var tab = $('a[href=' + hash + ']');
     if (tab.length) {
@@ -164,7 +174,10 @@ if (Drupal.ajax) {
           ajax.beforeSerialize(ajax.element, ajax.options);
           $.ajax(ajax.options);
           if ($('#main').find($(element)).length > 0) {
-            $(element).addClass('section-loaded');
+            var section_id = $(element).attr('section_id')
+            if (typeof section_id !== typeof undefined && section_id !== false) {
+              $(element).addClass('section-loaded');
+            }
           }
         }
       }

@@ -55,6 +55,23 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
     '#required' => TRUE,
     '#attributes' => array('class' => array('chosen-widget')),
   );
+  $form['resource_state_dropdown'] = array(
+    '#type' => 'select',
+    '#title' => t('Choose contributor state'),
+    '#options' => sbac_report_state_options(),
+    '#multiple' => TRUE,
+    '#default_value' => sbac_report_get_default_state_tid(),
+    '#attributes' => array('class' => array('chosen-widget')),
+    '#ajax' => array(
+      'callback' => 'sbac_report_state_ajax',
+    ),
+    '#required' => TRUE,
+  );
+  // Reports administrator only sees their own state
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    $form['resource_state_dropdown']['#multiple'] = FALSE;
+    $form['resource_state_dropdown']['#disabled'] = TRUE;
+  }
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -73,6 +90,12 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
  */
 function sbac_csv_report_resource_stats_form_validate($form, &$form_state) {
   $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_STATES;
+
+  if (sbac_central_user_has_role(array('reports administrator'))) {
+    if ($form_state['values']['resource_state_dropdown'] != sbac_report_get_default_state_tid()) {
+      form_set_error('state', t('You\'re only allowed to select your own state'));
+    }
+  }
 }
 
 /**
@@ -82,38 +105,12 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
   // State.
   $resource_filters = array();
   if ($form_state) {
-    /**
-     * Local function to filter out resources that don't match a criteria
-     */
-    function set_resource_filter(&$resource_filters, $key, $form_value, $all_values) {
-      if (isset($all_values['published'])) {
-        $all_values['published'] = 'Published';
-      }
-      if (isset($all_values['rejected'])) {
-        $all_values['rejected'] = 'Rejected';
-      }
-      if (isset($all_values['approved'])) {
-        $all_values['approved'] = 'Approved';
-      }
-      if (in_array('0', $form_value)) { // all.
-        $resource_filters[$key] = $all_values;
-      }
-      else {
-        if (in_array('1', $form_value)) { // not yet assigned
-          $resource_filters[$key] = $all_values;
-          unset($resource_filters[$key][0]); // remove 'All'.
-        }
-        else {
-          $resource_filters[$key] = $form_value;
-        }
-      }
-    }
-
     set_resource_filter($resource_filters, 'types', $form_state['values']['resource_type_dropdown'], sbac_report_resource_type_options());
     set_resource_filter($resource_filters, 'subject', $form_state['values']['resource_subject_dropdown'], sbac_report_resource_subject_options());
     set_resource_filter($resource_filters, 'grade', $form_state['values']['resource_grade_dropdown'], sbac_report_resource_grade_options());
     set_resource_filter($resource_filters, 'status', $form_state['values']['resource_status_dropdown'], sbac_report_resource_status_options());
     set_resource_filter($resource_filters, 'attribute', $form_state['values']['resource_attribute_dropdown'], sbac_report_resource_attribute_options());
+    set_resource_filter($resource_filters, 'state', $form_state['values']['resource_state_dropdown'], sbac_report_state_options());
   }
 
   $_SESSION['report_chosen_filters'] = $resource_filters;
@@ -136,6 +133,21 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
 }
 
 /**
+ * Filter out resources that don't match a criteria
+ */
+function set_resource_filter(&$resource_filters, $key, $form_value, $all_values) {
+  if (in_array('1', $form_value) && $key != 'status') { // not yet assigned
+    $resource_filters[$key] = $all_values;
+    unset($resource_filters[$key][0]); // remove 'All'.
+  }
+  else {
+    $resource_filters[$key] = $form_value;
+  }
+}
+
+
+/**
+ * @param $resources
  * @param $resource_filters
  * @param $context
  */
@@ -291,6 +303,7 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
   ));
 }
 
+
 /**
  * @param $success
  * @param $results
@@ -341,7 +354,10 @@ function query_taxonomy_term($sql) {
   $values[0] = 'All';
 
   foreach ($result as $record) {
-    $values[$record->tid] = $record->name;
+    $children = taxonomy_get_children($record->tid);
+    if (empty($children)) {
+      $values[$record->tid] = sbac_resource_term_concat_parents($record->tid, $record->name);
+    }
   }
   return $values;
 }
@@ -375,21 +391,20 @@ function sbac_report_default_resource_type_option($form_state = array()) {
  * Resource Status Dropdown options extracted from the taxonomy table.
  */
 function sbac_report_resource_status_options() {
-  // not a taxonomy term, these values come from the workbench moderation states.
-  //$sql = "SELECT * FROM taxonomy_term_data where vid = (SELECT vid FROM taxonomy_vocabulary where machine_name = 'resource_states')";
-  $sql = "SELECT name AS tid, label AS name FROM workbench_moderation_states WHERE name <> 'creation'";
-  $options = query_taxonomy_term($sql);
-  if (isset($options['published'])) {
-    $options['published'] = 'Posted';
-  }
-  if (isset($options['rejected'])) {
-    $options['rejected'] = 'Returned';
-  }
-  if (isset($options['approved'])) {
-    $options['approved'] = 'Needs Posting';
-  }
-  $options['posted_distinction'] = 'Posted with Distinction';
-  asort($options);
+  $options = array(
+    'All',
+    'Draft',
+    'Submitted',
+    'Gate-Keeping Review',
+    'Quality Criteria Review 1',
+    'Quality Criteria Review 2',
+    'Quality Criteria Review 3',
+    'Arbitration Review',
+    'Returned',
+    'Posted',
+    'Posted with Distinction',
+    'Removed',
+  );
   return $options;
 }
 
@@ -504,65 +519,158 @@ function sbac_report_default_resource_attribute_option($form_state = array()) {
  */
 function get_resources($resource_filters) {
   $query = db_select('node', 'n');
-  $query->fields('n', array('nid'));
-  $query->join('field_data_field_focus', 'f', 'n.nid = f.entity_id AND n.vid = f.revision_id');
-  $query->join('field_data_field_grades', 'g', 'n.nid = g.entity_id AND n.vid = g.revision_id');
-  $query->join('field_data_field_subject', 's', 'n.nid = s.entity_id AND n.vid = s.revision_id');
-  $query->join('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND n.vid = a.revision_id');
-  if (!isset($resource_filters['status'][0])) {
-    $query->join('workbench_moderation_node_history', 'w', 'n.nid = w.nid AND n.vid = w.vid');
-  }
   $query->condition('n.type', 'resource');
   $query->condition('n.status', 1);
-  $query->condition('f.field_focus_tid', array_keys($resource_filters['types']));
-  if (!isset($resource_filters['status'][0])) {
-    if (in_array('posted_distinction', $resource_filters['status'])) {
-      // ensure published is brought back, since posted with distinction is a published state with sticky = 1;
-      // $resource_filters['status']['published'] = 'Published';
-      // remove the option that does not exist in the DB.
-      // unset($resource_filters['status']['posted_distinction']);
-      $query->condition(db_and()->condition('w.state', array('published'), 'IN')->condition('n.sticky', 1));
+
+  // Resource type filter
+  if (!empty($resource_filters['types'])) {
+    if (isset($resource_filters['types'][0])) {
+      // User selected 'All', do nothing
     }
     else {
-      $query->condition('w.state', array_keys($resource_filters['status']), 'IN');
+      $query->innerJoin('field_data_field_focus', 'f', 'n.nid = f.entity_id AND f.bundle = \'resource\'');
+      $query->condition('f.field_focus_tid', array_keys($resource_filters['types']));
     }
-    $query->condition('w.current', 1);
   }
-  set_field_condition_filter_restrictive($query, $resource_filters['subject'], 's.field_subject_tid');
-  set_field_condition_filter_restrictive($query, $resource_filters['grade'], 'g.field_grades_tid');
-  set_field_condition_filter_restrictive($query, $resource_filters['attribute'], 'a.field_attributes_tid');
+
+  // Subject filter
+  if (!empty($resource_filters['subject'])) {
+    if (isset($resource_filters['subject'][0])) {
+      // User selected 'All', do nothing
+    }
+    elseif (isset($resource_filters['subject'][1])) {
+      $query->innerJoin('field_data_field_subject', 's', 'n.nid = s.entity_id AND s.bundle = \'resource\'');
+      $query->isNull('s.field_subject_tid');
+    }
+    else {
+      $query->innerJoin('field_data_field_subject', 's', 'n.nid = s.entity_id AND s.bundle = \'resource\'');
+      $query->condition('s.field_subject_tid', array_keys($resource_filters['subject']));
+    }
+  }
+
+  // Status filter
+  if (!empty($resource_filters['status'])) {
+    if (isset($resource_filters['status'][0])) {
+      // User selected 'All', do nothing
+    }
+    else {
+      $query->innerJoin('workbench_moderation_node_history', 'h', 'h.nid = n.nid');
+      $query->condition('h.current', 1);
+      $status_condition = db_or();
+      $sub_condition = 'h.state = \'being_reviewed\' AND :completed_reviews = (
+            SELECT count(*)
+            FROM eck_feedback f3
+            WHERE f3.node_id = n.nid AND f3.completed = 1 AND f3.created > IFNULL((SELECT max(h4.stamp)
+                  FROM workbench_moderation_node_history h4
+                  WHERE h4.nid = n.nid AND h4.from_state = \'draft\' AND h4.state = \'needs_review\' AND h4.stamp > (
+                    SELECT max(h5.stamp)
+                    FROM workbench_moderation_node_history h5
+                    WHERE h5.state = \'rejected\' AND h5.nid = n.nid
+                  )), 0)
+            )';
+      // see sbac_report_resource_status_options() for the statuses
+      foreach ($resource_filters['status'] as $status) {
+        switch ($status) {
+          case 1:
+            // Draft
+            $status_condition->condition('h.state', 'draft');
+            break;
+          case 2:
+            // Submitted
+            $status_condition->condition('h.state', 'needs_review');
+            break;
+          case 3:
+            // GK
+            $status_condition->where(str_replace(':completed_reviews', 0, $sub_condition));
+            break;
+          case 4:
+            // QC1
+            $status_condition->where(str_replace(':completed_reviews', 1, $sub_condition));
+            break;
+          case 5:
+            // QC2
+            $status_condition->where(str_replace(':completed_reviews', 2, $sub_condition));
+            break;
+          case 6:
+            // QC3
+            $status_condition->where(str_replace(':completed_reviews', 3, $sub_condition));
+            break;
+          case 7:
+            // Arbitration Review
+            $status_condition->condition('h.state', 'approved');
+            break;
+          case 8:
+            // Returned
+            $status_condition->condition('h.state', 'rejected');
+            break;
+          case 9:
+            // Posted
+            $status_condition->condition(db_and()->condition('h.state', 'published')->condition('n.sticky', 0));
+            break;
+          case 10:
+            // Posted with Distinction
+            $status_condition->condition(db_and()->condition('h.state', 'published')->condition('n.sticky', 1));
+            break;
+          case 11:
+            // Removed
+            $status_condition->condition('h.state', 'removed');
+            break;
+        }
+      }
+      $query->condition($status_condition);
+    }
+  }
+
+  // Grade filter
+  if (!empty($resource_filters['grade'])) {
+    if (isset($resource_filters['grade'][0])) {
+      // User selected 'All', do nothing
+    }
+    elseif (isset($resource_filters['grade'][1])) {
+      // 'Not Yet Selected'
+      $query->innerJoin('field_data_field_grades', 'g', 'n.nid = g.entity_id AND g.bundle = \'resource\'');
+      $query->isNull('g.field_grades_tid');
+    }
+    else {
+      $query->innerJoin('field_data_field_grades', 'g', 'n.nid = g.entity_id AND g.bundle = \'resource\'');
+      $query->condition('g.field_grades_tid', array_keys($resource_filters['grade']));
+    }
+  }
+
+  // Attributes filter
+  if (!empty($resource_filters['attribute'])) {
+    if (isset($resource_filters['attribute'][0])) {
+      // User selected 'All', do nothing
+    }
+    elseif (isset($resource_filters['attribute'][1])) {
+      // 'Not Yet Selected'
+      $query->innerJoin('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND a.bundle = \'resource\'');
+      $query->isNull('a.field_attributes_tid');
+    }
+    else {
+      $query->innerJoin('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND a.bundle = \'resource\'');
+      $query->condition('a.field_attributes_tid', array_keys($resource_filters['attribute']));
+    }
+  }
+
+  // State filter
+  if (!empty($resource_filters['state'])) {
+    if (isset($resource_filters['state']['all'])) {
+      // do nothing
+    }
+    else {
+      $query->innerJoin('field_data_field_state', 's', 'n.uid = s.entity_id AND s.entity_type = \'user\'');
+      if (is_array($resource_filters['state'])) {
+        $query->condition('s.field_state_tid', array_keys($resource_filters['state']));
+      } else {
+        $query->condition('s.field_state_tid', $resource_filters['state']);
+      }
+    }
+  }
+  $query->fields('n', array('nid'));
   $query->groupBy('n.nid');
   $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
-  $result = $query->execute();
-  $nids = array();
-  foreach ($result as $row) {
-    $nids[] = $row->nid;
-  }
-
-  // grade, subject, and attribute, have "not yet assgined", need to query separately for each of these.
-  if (isset($resource_filters['subject'][1]) || isset($resource_filters['grade'][1]) || isset($resource_filters['attribute'][1])) {
-    $query = db_select('node', 'n');
-    $query->fields('n', array('nid'));
-    $query->join('field_data_field_grades', 'g', 'n.nid = g.entity_id AND n.vid = g.revision_id');
-    $query->join('field_data_field_subject', 's', 'n.nid = s.entity_id AND n.vid = s.revision_id');
-    $query->join('field_data_field_attributes', 'a', 'n.nid = a.entity_id AND n.vid = a.revision_id');
-    $query->condition('n.type', 'resource');
-    $query->condition('n.status', 1);
-    set_field_condition_niether_filter($query, $resource_filters['subject'], 's.field_subject_tid');
-    set_field_condition_niether_filter($query, $resource_filters['grade'], 'g.field_grades_tid');
-    set_field_condition_niether_filter($query, $resource_filters['attribute'], 'a.field_attributes_tid');
-    $query->groupBy('n.nid');
-    $query->addTag('DANGEROUS_ACCESS_CHECK_OPT_OUT');
-
-    $result = $query->execute();
-    $separate_nids = array();
-    foreach ($result as $row) {
-      $separate_nids[] = $row->nid;
-    }
-    $nids = array_merge($nids, $separate_nids);
-  }
-
-  return $nids;
+  return $query->execute()->fetchCol();
 }
 
 /**
@@ -668,8 +776,7 @@ function fitler_resource_status($node, $statuses) {
 
 /**
  * Get the entities related to resource nodes (review, feedback, etc).
- * @param $resources
- * @param $entity_type
+ * @param $nid
  * @return array
  */
 function get_entities_for_resources($nid) {
@@ -681,32 +788,42 @@ function get_entities_for_resources($nid) {
   $query->leftJoin('taxonomy_term_data', 't', 't.tid = s.field_state_tid');
   $query->leftJoin('field_data_field_rec_options', 'o', 'o.entity_id = f.id');
   $query->leftJoin('field_data_field_rec_rationale', 'r', 'r.entity_id = f.id');
-  $query->leftJoin('field_data_field_posting_options', 'p', 'p.entity_id = f.node_id');
+  $query->leftJoin('field_data_field_post_options', 'p', 'p.entity_id = f.id');
   $query->leftJoin('field_data_field_to_contributor', 'c', 'c.entity_id = f.id AND c.entity_type = \'feedback\' AND c.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_1', 'rv1', 'rv1.entity_id = f.id AND rv1.entity_type = \'feedback\' AND rv1.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_2', 'rv2', 'rv2.entity_id = f.id AND rv2.entity_type = \'feedback\' AND rv2.bundle = \'post\'');
   $query->leftJoin('field_data_field_to_reviewer_3', 'rv3', 'rv3.entity_id = f.id AND rv3.entity_type = \'feedback\' AND rv3.bundle = \'post\'');
   $query->condition('f.node_id', $nid)
     ->condition('f.status', 1)
-    ->condition('f.created', _sbac_resource_resubmit_timestamp($nid), '>');
+    ->condition('f.current', 1);
   $query->fields('u', array('mail'))
     ->fields('f', array('status', 'completed', 'type'))
     ->fields('o', array('field_rec_options_value'))
     ->fields('r', array('field_rec_rationale_value'))
-    ->fields('p', array('field_posting_options_value'))
     ->fields('c', array('field_to_contributor_value'))
     ->fields('rv1', array('field_to_reviewer_1_value'))
     ->fields('rv2', array('field_to_reviewer_2_value'))
     ->fields('rv3', array('field_to_reviewer_3_value'))
     ->fields('t', array('name'));
-  $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
-  $query->addExpression('FROM_UNIXTIME(f.changed, \'%c/%d/%Y\')', 'changed');
   $query->addExpression('
   CASE
-    WHEN f.met_criteria = 1 THEN \'Met all Criteria\'
-    WHEN f.met_criteria = 0 THEN \'Does not Meet all Criteria\'
+    WHEN f.completed = 1 THEN p.field_post_options_value
+    ELSE \'\'
+  END', 'field_post_options_value');
+  $query->addExpression('CONCAT(fn.field_first_name_value, \' \', ln.field_last_name_value)', 'reviewer_name');
+  $query->addExpression('
+  CASE
+    WHEN f.completed = 1 THEN FROM_UNIXTIME(f.changed, \'%c/%d/%Y\')
+    ELSE \'\'
+  END', 'changed');
+  $query->addExpression('
+  CASE
+    WHEN f.met_criteria = 1 AND f.completed = 1 THEN \'Met all Criteria\'
+    WHEN f.met_criteria = 0 AND f.completed = 1 THEN \'Does not Meet all Criteria\'
+    ELSE \'\'
   END', 'met_criteria');
-  return $query->orderBy('f.changed', 'ASC')->execute()->fetchAll();
+  $query->groupBy('f.uid')->groupBy('f.type')->orderBy('f.created', 'ASC');
+  return $query->execute()->fetchAll();
 }
 
 /**
@@ -1344,10 +1461,22 @@ function sbac_report_get_qc_info($fieldkey, $data, $resource) {
   $current_qc = 1;
   foreach ($data['resource_feedback'] as $feedback) {
     if (!empty($fieldkey['type'])) {
-      if ($feedback->type == $fieldkey['type'] && 1 == $feedback->completed) {
+      if ($feedback->type == $fieldkey['type']) {
         if (!empty($fieldkey['qc_number']) && !empty($fieldkey['field'])) {
           if ($fieldkey['qc_number'] == $current_qc) {
-            return $feedback->{$fieldkey['field']};
+            if ('field_rec_options_value' == $fieldkey['field']) {
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_rec_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            elseif ('field_post_options_value' == $fieldkey['field']){
+              // get the allowed values
+              $allowed_values = list_allowed_values(field_info_field('field_post_options'));
+              return $allowed_values[$feedback->{$fieldkey['field']}];
+            }
+            else {
+              return $feedback->{$fieldkey['field']};
+            }
           }
         }
         $current_qc++;
@@ -1356,16 +1485,17 @@ function sbac_report_get_qc_info($fieldkey, $data, $resource) {
   }
 }
 
-function sbac_report_get_total_reviews($fieldkey, $data, $resource){
+function sbac_report_get_total_reviews($fieldkey, $data, $resource) {
   return db_select('eck_review', 'r')
     ->condition('r.node_id', $resource->nid->value())
+    ->condition('r.status', 1)
     ->fields('r', array('id'))
     ->countQuery()
     ->execute()
     ->fetchField();
 }
 
-function sbac_report_get_total_resource_flags($fieldkey, $data, $resource){
+function sbac_report_get_total_resource_flags($fieldkey, $data, $resource) {
   return db_select('eck_flag', 'f')
     ->condition('f.type', 'resource')
     ->condition('f.target_type', 'resource')
@@ -1377,7 +1507,7 @@ function sbac_report_get_total_resource_flags($fieldkey, $data, $resource){
     ->fetchField();
 }
 
-function sbac_report_get_first_flag_date($fieldkey, $data, $resource){
+function sbac_report_get_first_flag_date($fieldkey, $data, $resource) {
   $date = db_select('eck_flag', 'f')
     ->condition('f.type', 'resource')
     ->condition('f.target_type', 'resource')
@@ -1388,12 +1518,12 @@ function sbac_report_get_first_flag_date($fieldkey, $data, $resource){
     ->range(0, 1)
     ->execute()
     ->fetchField();
-  if($date){
-    return date('m/d/y', $date);
+  if ($date) {
+    return date('m/d/Y', $date);
   }
 }
 
-function sbac_report_get_user_rating_flags($fieldkey, $data, $resource){
+function sbac_report_get_user_rating_flags($fieldkey, $data, $resource) {
   return db_select('eck_flag', 'f')
     ->condition('f.type', 'review_end_use')
     ->condition('f.target_type', 'review')
@@ -1405,7 +1535,7 @@ function sbac_report_get_user_rating_flags($fieldkey, $data, $resource){
     ->fetchField();
 }
 
-function sbac_report_get_user_rating_flag_date($fieldkey, $data, $resource){
+function sbac_report_get_user_rating_flag_date($fieldkey, $data, $resource) {
   $date = db_select('eck_flag', 'f')
     ->condition('f.type', 'review_end_use')
     ->condition('f.target_type', 'review')
@@ -1416,8 +1546,8 @@ function sbac_report_get_user_rating_flag_date($fieldkey, $data, $resource){
     ->range(0, 1)
     ->execute()
     ->fetchField();
-  if($date){
-    return date('m/d/y', $date);
+  if ($date) {
+    return date('m/d/Y', $date);
   }
 }
 
@@ -1439,6 +1569,7 @@ function sbac_report_get_average_rating($fieldkey, $data, $resource) {
         break;
     }
     $query->condition('r.node_id', $resource->nid->value());
+    $query->condition('r.status', 1);
     return $query->execute()->fetchField() * 4 / 100;
   }
 }
@@ -1454,14 +1585,34 @@ function sbac_report_get_publish_date($fieldkey, $data, $resource) {
       ->execute()
       ->fetchField();
     if ($date) {
-      return date('m/d/y', $date);
+      return date('m/d/Y', $date);
     }
   }
 }
 
 
+/**
+ * Get the total completed review count
+ *
+ * @param $fieldkey
+ * @param $data
+ * @param $resource
+ * @return int
+ */
 function sbac_report_count_completed_reviews($fieldkey, $data, $resource) {
-  return _resource_access_count_feedback($resource->nid->value(), array('qc', 'gate_keeper', 'post'), FALSE, FALSE, 1);
+  $count = db_select('eck_feedback', 'f')
+    ->condition('f.completed', 1)
+    ->condition('f.node_id', $resource->nid->value())
+    ->condition('f.status', 1)
+    ->condition('f.current', 1)
+    ->fields('f', array('id'))
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if (0 == $count) {
+    $count = '0';
+  }
+  return $count;
 }
 
 function sbac_report_get_review_cycle($fieldkey, $data, $resource) {
@@ -1478,7 +1629,7 @@ function sbac_report_get_submission_date($fieldkey, $data, $resource) {
   $date = '';
   $resubmit = _sbac_resource_resubmit_timestamp($resource->nid->value());
   if ($resubmit) {
-    $date = date('m/d/y', $resubmit);
+    $date = date('m/d/Y', $resubmit);
   }
   else {
     $submit = db_select('workbench_moderation_node_history', 'h')
@@ -1487,7 +1638,7 @@ function sbac_report_get_submission_date($fieldkey, $data, $resource) {
       ->condition('h.nid', $resource->nid->value())
       ->fields('h', array('stamp'))->execute()->fetchField();
     if ($submit) {
-      $date = date('m/d/y', $submit);
+      $date = date('m/d/Y', $submit);
     }
   }
   return $date;
@@ -1662,7 +1813,7 @@ function set_report_columns() {
           array('', 'QC Poster Email Address', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'mail', 'type' => 'post'),
           array('', 'QC Poster State', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'name', 'type' => 'post'),
           array('', 'QC Poster Completion Date', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'changed', 'type' => 'post'),
-          array('', 'QC Poster Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_posting_options_value', 'type' => 'post'),
+          array('', 'QC Poster Recommendation', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_post_options_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Contributor', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_contributor_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Reviewer 1', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_1_value', 'type' => 'post'),
           array('', 'QC Poster Comment to Reviewer 2', 'function' => 'sbac_report_get_qc_info', 'qc_number' => 1, 'field' => 'field_to_reviewer_2_value', 'type' => 'post'),
@@ -1683,12 +1834,12 @@ function set_report_columns() {
           array('', 'Current Professional Development Rating', 'function' => 'sbac_report_get_average_rating', 'type' => 'professional_development'),
           array('', 'Current Ease of Use Rating', 'function' => 'sbac_report_get_average_rating', 'type' => 'ease_of_use'),
           array('top_three_appropriate_for_categories', 'Current Top Three "Appropriate For" Categories', 'function' => 'get_resource_review_data', 'field' => 'review'),
-          array('', 'Total # of Ratings', 'function'=>'sbac_report_get_total_reviews'),
-          array('', 'Number of Resource Flags', 'function'=>'sbac_report_get_total_resource_flags'),
-          array('', 'First Resource Flag Date', 'function'=>'sbac_report_get_first_flag_date'),
+          array('', 'Total # of Ratings', 'function' => 'sbac_report_get_total_reviews'),
+          array('', 'Number of Resource Flags', 'function' => 'sbac_report_get_total_resource_flags'),
+          array('', 'First Resource Flag Date', 'function' => 'sbac_report_get_first_flag_date'),
           array('resource_flag_reasons', 'Resource Flag Reason', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
-          array('', 'Number of Resource User Ratings Flagged', 'function'=>'sbac_report_get_user_rating_flags'),
-          array('', 'Date of Resource User Rating Flag', 'function'=>'sbac_report_get_user_rating_flag_date'),
+          array('', 'Number of Resource User Ratings Flagged', 'function' => 'sbac_report_get_user_rating_flags'),
+          array('', 'Date of Resource User Rating Flag', 'function' => 'sbac_report_get_user_rating_flag_date'),
           array('resource_review_flag_reasons', 'Resource Review Flag Reasons', 'function' => 'get_eck_flag_data', 'field' => 'flag'),
         ),
       ),
