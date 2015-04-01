@@ -1138,9 +1138,7 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
     $url_option = '';
     switch ($option) {
       case 'cdn':
-        $url_option = 'https://docs.google.com/viewer?url=';
-        $url_option .= urlencode(file_create_url($uri));
-        $url_option .= '&a=bi&pagenumber=1&w=268';
+        $url_option = 'no_img';
         break;
       case 'primary':
         $url_option = $url;
