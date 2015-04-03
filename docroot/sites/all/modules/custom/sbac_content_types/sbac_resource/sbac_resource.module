@@ -2606,7 +2606,7 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
         $uri = $thumb_url['uri'];
       }
       else {
-        if($node->field_resource_thumbnail){
+        if($node->field_resource_thumbnail && !empty($node->field_resource_thumbnail['und'])){
           $file = file_load($node->field_resource_thumbnail['und'][0]['fid']);
           $uri = $file->uri;
           $url = file_create_url($uri);
@@ -2616,6 +2616,14 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
         $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid, $media);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
+        if(empty($node->field_resource_thumbnail['und']) && $node->field_thumbnail_uri['und'][0]['value']){
+          // If there is no resource image, check if it used to come from a resource thumbnail
+          if (strpos($node->field_thumbnail_uri['und'][0]['value'], 'public://resource_thumbnails') !== false) {
+            $url = $default_file;
+            $uri = $default_file;
+          }
+        }
+
       }
     }
     elseif (isset($media->embed_url)) {
