@@ -1138,7 +1138,7 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
     $url_option = '';
     switch ($option) {
       case 'cdn':
-        $url_option = 'no_img';
+        $url_option = $url;
         break;
       case 'primary':
         $url_option = $url;
@@ -2606,6 +2606,13 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
         $uri = $thumb_url['uri'];
       }
       else {
+        if($node->field_resource_thumbnail){
+          $file = file_load($node->field_resource_thumbnail['und'][0]['fid']);
+          $uri = $file->uri;
+          $url = file_create_url($uri);
+          $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
+        }
+
         $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid, $media);
         $url = $thumb_url['url'];
         $uri = $thumb_url['uri'];
