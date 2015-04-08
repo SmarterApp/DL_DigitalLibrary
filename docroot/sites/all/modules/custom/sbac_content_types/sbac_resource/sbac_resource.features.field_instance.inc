@@ -354,7 +354,7 @@ function sbac_resource_field_default_field_instances() {
         'size' => 150,
       ),
       'type' => 'text_textfield',
-      'weight' => 34,
+      'weight' => 7,
     ),
     'xss' => 1,
   );
@@ -643,7 +643,7 @@ function sbac_resource_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'file_generic',
-      'weight' => 38,
+      'weight' => 11,
     ),
   );
 
@@ -1325,7 +1325,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_select',
-      'weight' => 36,
+      'weight' => 9,
     ),
   );
 
@@ -1382,7 +1382,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 33,
+      'weight' => 6,
     ),
   );
 
@@ -1435,7 +1435,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 37,
+      'weight' => 10,
     ),
   );
 
@@ -1605,7 +1605,7 @@ function sbac_resource_field_default_field_instances() {
         'maxlength_js_label' => '',
       ),
       'type' => 'options_buttons',
-      'weight' => 39,
+      'weight' => 12,
     ),
   );
 
@@ -1837,7 +1837,7 @@ function sbac_resource_field_default_field_instances() {
         'size' => 150,
       ),
       'type' => 'text_textfield',
-      'weight' => 35,
+      'weight' => 8,
     ),
     'xss' => 1,
   );
@@ -2109,7 +2109,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_resource_thumbnail',
-    'label' => 'Resource Cover Photo',
+    'label' => 'Add Resource Card Cover Image',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
@@ -2117,40 +2117,21 @@ function sbac_resource_field_default_field_instances() {
       'file_directory' => 'resource_thumbnails/resource_cover_photos',
       'file_extensions' => 'png gif jpg jpeg',
       'max_filesize' => '',
-      'max_resolution' => '300x300',
+      'max_resolution' => '400x400',
       'min_resolution' => '',
       'title_field' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
       'active' => 1,
-      'module' => 'media',
+      'module' => 'image',
       'settings' => array(
-        'allowed_schemes' => array(
-          'gs' => 0,
-          'private' => 0,
-          'public' => 'public',
-          'schooltube' => 0,
-          'slideshare' => 0,
-          'teachertube' => 0,
-          'vimeo' => 0,
-          'youtube' => 0,
-        ),
-        'allowed_types' => array(
-          'audio' => 0,
-          'document' => 0,
-          'image' => 'image',
-          'video' => 0,
-        ),
-        'browser_plugins' => array(
-          'media_internet' => 0,
-          'upload' => 'upload',
-        ),
-        'label_help_description' => '',
+        'label_help_description' => 'Please add a resource card cover image that best represents your resource. Acceptable file types include png, gif, jpg, jpeg',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
       ),
-      'type' => 'media_generic',
+      'type' => 'image_image',
       'weight' => 5,
     ),
   );
@@ -3027,6 +3008,7 @@ function sbac_resource_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Add Resource Card Cover Image');
   t('Alignment Tags');
   t('Asset Downloads');
   t('Attributes');
@@ -3075,7 +3057,6 @@ function sbac_resource_field_default_field_instances() {
   t('Principles');
   t('Recent publishers');
   t('Recent reviewers');
-  t('Resource Cover Photo');
   t('Resource State');
   t('Resource Type');
   t('Setting(s) for which this resource is appropriate. Select all that apply.');

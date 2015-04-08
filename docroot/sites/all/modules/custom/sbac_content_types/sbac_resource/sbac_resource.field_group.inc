@@ -66,8 +66,7 @@ function sbac_resource_field_group_info() {
       4 => 'field_connection_to_fap',
       5 => 'field_focus',
       6 => 'field_student_agency',
-      7 => 'field_resource_thumbnail',
-      8 => 'title',
+      7 => 'title',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -140,6 +139,7 @@ function sbac_resource_field_group_info() {
       4 => 'field_pii',
       5 => 'field_license_secondary',
       6 => 'field_copyright_clearace_forms',
+      7 => 'field_resource_thumbnail',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
