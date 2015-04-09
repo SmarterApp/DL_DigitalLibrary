@@ -1,0 +1,6 @@
+name = SBAC Landing Page
+description = Provides a landing page for SBAC
+core = 7.x
+package = ~SBAC
+version = 7.x-0.1
+project = sbac_landing_page

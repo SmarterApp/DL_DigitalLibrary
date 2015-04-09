@@ -1,0 +1,70 @@
+<?php
+/* 
+ * 
+ * 
+ * 
+ */
+/**
+ * Implements hook_menu().
+ */
+
+function sbac_landing_page_menu() {
+  $items = array();
+
+  $items['sbac'] = array(
+    'title' => 'Smarter Balanced Assessments Consortium',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'sbac_landing_page',
+    'access arguments' => array('access content'),    
+  );
+  return $items;
+}
+
+function sbac_landing_page(){
+  $variables = array();
+  $variables['test'] = 'Testing Variables';
+  $variables['featured_content'] = featured_content();
+  $variables['help_topics'] = help_topics();
+  $variables['find_resource'] = find_resource();  
+  return theme('sbac_landing_page',$variables);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sbac_landing_page_theme($existing, $type, $theme, $path) {
+  $theme = array();
+  $theme['sbac_landing_page'] = array(
+    'render element' => 'content',
+    'template' => 'landing-page',
+    'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
+   );
+  return $theme;
+}
+function sbac_landing_page_preprocess_page(&$variables) {
+}
+
+function help_topics(){
+  if(module_exists('sbac_help_topics_landing')){
+    return 'Embed Help Topics Block Here';
+  }else{
+    return 'Help Topics Comming Soon';    
+  }
+}
+
+function featured_content(){
+  if(module_exists('sbac_featured_content')){
+    return 'Embed Featured Content Block Here';
+  }else{
+    return 'Featured Content Comming Soon';    
+  }
+}
+
+function find_resource(){
+  if(module_exists('sbac_find_resources')){
+    return 'Embed Find Resources Content Block Here';
+  }else{
+    return 'More Resources Comming Soon';    
+  }
+}
+
