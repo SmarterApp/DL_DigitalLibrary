@@ -1,24 +1,30 @@
 <?php
 /* 
- * 
- * 
- * 
+ * Template for SBAC landing page
  */
-print $test;
 ?>
 <?php if($help_topics): ?>
-<div id="landing-page-help-topics">
-  <?php print $help_topics; ?>
+<div id="lp-help-topics-wrapper">
+  <div id="lp-help-topics">
+    <?php print $help_topics; ?>
+  </div>
 </div>
 <?php endif; ?>
 
 <?php if($featured_content): ?>
-<div id="landing-page-featured-content">
-  <?php print $featured_content; ?>
+<div id="lp-featured-content-wrapper">
+  <div id="lp-featured-content">
+    <?php print $featured_content; ?>
+  </div>
 </div>
 <?php endif; ?>
 <?php if($find_resource): ?>
-<div id="landing-page-find-resource">
-  <?php print $find_resource; ?>
+<div id="lp-find-resource-wrapper">
+  <div id="lp-find-resource">
+    <?php print $find_resource; ?>
+  </div>
 </div>
 <?php endif; ?>
+
+<?php
+print $test;
