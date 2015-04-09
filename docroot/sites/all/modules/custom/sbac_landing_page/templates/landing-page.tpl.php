@@ -5,7 +5,7 @@
 ?>
 <?php if($help_topics): ?>
 <div id="lp-help-topics-wrapper">
-  <div id="lp-help-topics">
+  <div id="lp-help-topics" class="row">
     <?php print $help_topics; ?>
   </div>
 </div>
@@ -27,4 +27,3 @@
 <?php endif; ?>
 
 <?php
-print $test;

@@ -29297,12 +29297,81 @@ nav.main-nav ul li.last {
   content: none;
 }
 
+/* line 1, ../sass/components/_landing-page.scss */
+body.page-sbac {
+  background: #f2f2f2;
+}
+
 /* -----------------------------------------
    Color Variables
    ----------------------------------------- */
 /* Landing Page Help Topics */
-/* line 3, ../sass/components/_help-topics.scss */
-#lp-help-topics-wrapper {
+/* Landing Page Featured Content */
+/* line 4, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 43.75rem;
+  background: rgba(255, 255, 255, 0.85);
+  margin-top: 1.875rem;
+  padding: 1.25rem 1.875rem 1.875rem 1.875rem;
+  border: 1px solid #ffffff;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
+}
+/* line 15, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .resource img {
+  margin-bottom: 0.9375rem;
+  outline: 1px solid #999999;
+}
+/* line 19, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+}
+/* line 23, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .resource .label {
+  margin-bottom: 0.3125rem;
+}
+/* line 26, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .resource .title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #101010;
+}
+/* line 31, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .details {
+  width: 16.75rem;
+  margin-left: 1.875rem;
+}
+/* line 35, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .details p {
+  line-height: 1.4;
+  color: #101010;
+  font-weight: 400;
+}
+/* line 40, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .details .label {
+  margin-top: 1.25rem;
+  margin-bottom: -0.25rem;
+  font-weight: 400;
+  color: #101010;
+}
+/* line 46, ../sass/components/_featured-content.scss */
+#lp-featured-content-wrapper #lp-featured-content-wrapper .box .details li {
+  color: #000000;
+  line-height: 1.25rem;
+  padding: 0 0.4375rem;
+  background: rgba(16, 16, 16, 0.07);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.4375rem;
+  margin-right: 0.4375rem;
+}
+
+/* line 2, ../sass/layout/_landing-page.scss */
+body.page-sbac #lp-help-topics-wrapper {
   height: 100px;
   background: -webkit-linear-gradient(white, #0085ad);
   /* For Safari 5.1 to 6.0 */
@@ -29313,10 +29382,13 @@ nav.main-nav ul li.last {
   background: linear-gradient(#ffffff, #0085ad);
   /* Standard syntax (must be last) */
 }
-
-/* line 1, ../sass/layout/_landing-page.scss */
-body.page-sbac {
-  background: #f2f2f2;
+/* line 9, ../sass/layout/_landing-page.scss */
+body.page-sbac #lp-featured-content-wrapper {
+  height: 28.125rem;
+}
+/* line 14, ../sass/layout/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper {
+  height: 3rem;
 }
 
 /* ==========================================================================
