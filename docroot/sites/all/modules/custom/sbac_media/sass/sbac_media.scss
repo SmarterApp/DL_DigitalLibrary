@@ -1,7 +1,8 @@
 @import "compass/css3/";
 #sbac-field-file-container {
 	position: relative;
-
+  overflow:auto;
+  
 	.secondary-items-info {
 		position: absolute;
 		top: 101px;
@@ -127,7 +128,7 @@
 
 #sbac-field-file-container {
 
-	.form-item-field-embed-video {
+  .form-item-field-embed-video {
 		width: 55%;
 		margin-right: 2%;
 		float: left;
