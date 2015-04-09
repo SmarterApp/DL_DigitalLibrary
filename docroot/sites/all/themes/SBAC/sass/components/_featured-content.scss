@@ -1,0 +1,58 @@
+/* Landing Page Featured Content */
+#lp-featured-content-wrapper{
+  #lp-featured-content-wrapper{
+    .box {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 43.75rem;
+      background: rgba(255, 255, 255, 0.85);
+      margin-top: 1.875rem;
+      padding: 1.25rem 1.875rem 1.875rem 1.875rem;
+      border: 1px solid #ffffff;
+      border-radius: 0.25rem;
+      box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
+      .resource img {
+        margin-bottom: 0.9375rem;
+        outline: 1px solid #999999;
+      }
+      .label {
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+      }
+      .resource .label {
+        margin-bottom: 0.3125rem;
+      }
+      .resource .title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #101010;
+      }
+      .details {
+        width: 16.75rem;
+        margin-left: 1.875rem;
+      }
+      .details p {
+        line-height: 1.4;
+        color: #101010;
+        font-weight: 400;
+      }
+      .details .label {
+        margin-top: 1.25rem;
+        margin-bottom: -0.25rem;
+        font-weight: 400;
+        color: #101010;
+      }
+      .details li {
+        color: #000000;
+        line-height: 1.25rem;
+        padding: 0 0.4375rem;
+        background: rgba(16, 16, 16, 0.07);
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.4375rem;
+        margin-right: 0.4375rem;
+      }
+    }
+  }
+}

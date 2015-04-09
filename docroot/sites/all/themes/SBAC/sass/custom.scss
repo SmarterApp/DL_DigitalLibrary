@@ -2,6 +2,9 @@
 @import "colors.scss";
 @import "compass/css3/";
 @import url(../css/sbac_icons.css);
+@import "components/_components.scss";
+@import "layout/_layout.scss";
+
 
 /* ==========================================================================
    Table of Contents
@@ -20,17 +23,6 @@
 :: Legal
 :: Admin theme fixes
 */
-
-/* -----------------------------------------
-   Color Variables
-   ----------------------------------------- */
-$white: #FFF;
-$text: #5a5a5a;
-$header: #18577e;
-$teal: #0085ad;
-$darkgreen: #246a34;
-$dark-blue: #04384e;
-
 
 /** Font Face **/
 
@@ -528,159 +520,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   }
 }
 
-.top-bar {
-  margin: 0;
-	line-height: 44px;
-
-  &.main-top {
-    background-color: #f2f2f2;
-    border-top:5px solid #0980a8;
-    border-bottom: 1px solid $header-borders;
-    height: auto;
-
-  }
-
-  &.sub-top {
-    background-color: $white; // color overlay
-    height: auto;
-    border-bottom: 1px solid #006082;
-  }
-
-  &.last-top {
-    height: auto;
-    background-color: $white; // color overlay
-  }
-
-  h1.title {
-    color: #fcfcfc;
-    padding: 0;
-    margin: 0;
-    margin-left: 30px;
-    font-size: emCalc(18px);
-    font-weight: normal;
-    font-family: "Franklin Gothic Medium", Franklin, sans-serif;
-    background-color: #0980a8;
-    position: relative;
-
-    &:before {
-      content: '';
-      display:inline-block;
-      width: 33px;
-      height: 25px;
-      background:url('../images/tab-left.svg') top left no-repeat;
-      position: absolute;
-      top:0;
-      left: -30px;
-    }
-
-    &:after {
-      content: '';
-      display:inline-block;
-      width: 33px;
-      height: 25px;
-      background:url('../images/tab-right.svg') top left no-repeat;
-      position: absolute;
-      top: 0;
-      right: -32px;
-    }
-  }
-
-  /*.button {
-   		@include border-radius (6px);
-        @include transition (all 500ms ease);
-        @include box-shadow(none);
-        padding: 8px 18px;
-        margin-left: 10px;
-        background: rgba(191, 216, 229, 1);
-        border: 1px rgba(0, 98, 152, .5) solid;
-        font-size: 1em;
-        font-weight: bold;
-        color: rgba(0, 98, 152, 1);
-        text-shadow: 0px -1px 0px rgba(000,000,000,0), 0px 1px 0px rgba(255,255,255,.5);
-        cursor: pointer;
-        line-height: 1em;
-        height: auto;
-
-      &:hover, &:focus, &.form-submit.ajax-processed {
-  			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
-  			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
-
-        color: rgba(255, 255, 255, 1);
-        background: rgba(0, 133, 173, 1);
-        text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
-       }
-    }*/
-
-		.button {
-			float: left;
-			top: 18px;
-			margin-left: 8px;
-		}
-
-  .user-nav {
-    font-size: 1em;
-    color: #333;
-    line-height: 45px;
-
-    li {
-      border-left:1px solid $header-borders;
-      padding: 0px;
-      margin: 0px;
-      &:hover {
-        background: #c9eaf8;
-      }
-
-      li {
-        a {
-          padding-left: 20px;
-          padding-right: 20px;
-          color: black;
-          height: auto;
-          line-height: normal;
-        }
-
-        border:none;
-      }
-    }
-
-    a {
-      color: inherit;
-      padding-left: 20px;
-      padding-right: 20px;
-      height: 50px;
-      line-height: 50px;
-    }
-
-
-    .notifications {
-      span {
-        display: inline-block;
-        width: 27px;
-        height: 40px;
-        background: url('../images/icons/notification-number.png') center 13px no-repeat;
-        text-align: center;
-        color: white;
-        font-weight: bold;
-      }
-    }
-
-    .user-info {
-      img {
-        margin: 12px 10px 0 0;
-      }
-    }
-
-    .sbac-question {
-      background: url('../images/icons/help-small.png') center no-repeat;
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-      background-size: contain;
-			vertical-align: middle;
-    }
-  }
-}
-
 .bottom-bar {
   background: #006184;
 
@@ -813,40 +652,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   /*background-color: #f9f9f9; */// layer fill content + color overlay
 	background-color: #FFF;
   padding: 15px 0;
-}
-
-nav.main-nav {
-  ul {
-    margin-left: 26px;
-
-    li {
-      display: inline-block;
-      margin: 0px;
-      padding: 0px;
-      border-right: 1px $header-borders solid;
-
-      &:hover {
-        background: #b0e6f4;
-      }
-
-      a {
-        display: block;
-        padding: 0 10px 1px;
-        height: 44px;
-        line-height: 44px;
-        color: $header-text; // text color
-
-        &.active {
-          background-color: #93d8f3; // color overlay
-          color: #063e5f; // text color + color overlay
-        }
-      }
-    }
-  }
-
-  li.last {
-    content: none;
-  }
 }
 
 #drop3 {
@@ -1866,7 +1671,7 @@ a.tabledrag-handle .handle {
   #edit-group_summary,
   #edit-field-author,
   #edit-field-publisher,
-  #edit-group_materials,  {
+  #edit-group_materials {
     .form-type-textfield,
     .form-type-textarea {
       position: relative;

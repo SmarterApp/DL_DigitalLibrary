@@ -1,0 +1,48 @@
+@import "app.scss";
+@import "colors.scss";
+@import "compass/css3/";
+@import url(../css/sbac_icons.css);
+
+nav.main-nav {
+  ul {
+    margin-left: 26px;
+
+    li {
+      display: inline-block;
+      margin: 0px;
+      padding: 0px;
+      border-right: 1px $header-borders solid;
+
+      &:hover {
+        background: #b0e6f4;
+      }
+
+      a {
+        display: block;
+        padding: 0 10px 1px;
+        height: 44px;
+        line-height: 44px;
+        color: $header-text; // text color
+
+        &.active {
+          background-color: #93d8f3; // color overlay
+          color: #063e5f; // text color + color overlay
+        }
+      }
+      &.first {
+        text-indent:-10000px;
+        width:50px;
+        border-left: 1px $header-borders solid;
+        a {
+          background: url('../images/icons/home.png') no-repeat center center;
+          &.active {
+            display: none;
+          }
+        }
+      }
+      &.last {
+        content: none;
+      }
+    }
+  }
+}
