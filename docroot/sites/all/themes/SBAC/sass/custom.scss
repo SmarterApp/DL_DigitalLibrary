@@ -1753,7 +1753,8 @@ a.tabledrag-handle .handle {
   margin: 1em 0;
 }
 
-#edit-field-resource-thumbnail {
+#edit-field-resource-thumbnail,
+.field-name-field-resource-thumbnail{
   margin-top: 30px;
   clear: both;
   input[type='file']{
