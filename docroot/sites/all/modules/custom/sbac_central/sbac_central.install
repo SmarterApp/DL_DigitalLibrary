@@ -1370,13 +1370,15 @@ function sbac_central_update_7093() {
         variable_set('learning_registry_url_type', 1);
         $salt = 'KrP7FgnpjK4hXfVDIAwC';
         variable_set('learning_registry_oauth_salt', $salt);
+        ## @TODO - WLV1 - removed id's and salt hash below and replaced with "REMOVED".  
+        ##  See master branch prior to 20150410 for this data
         variable_set('learning_registry_oauth_consumer', array(
-          'key' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'seant@appnovation.com', MCRYPT_MODE_ECB),
-          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'jnnE8OkgLdOR3Jo8CH3aJil2Buz131Dp', MCRYPT_MODE_ECB),
+          'key' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'REMOVED', MCRYPT_MODE_ECB),
+          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'REMOVED', MCRYPT_MODE_ECB),
         ));
         variable_set('learning_registry_oauth_token', array(
           'key' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'node_sign_token', MCRYPT_MODE_ECB),
-          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), '2vV4UxfyKfZLxtlr+s5pizucH8xGo0bv', MCRYPT_MODE_ECB),
+          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'REMOVED', MCRYPT_MODE_ECB),
         ));
         sbac_learning_registry_queue_all_resources();
         break;

@@ -16,6 +16,7 @@ include_once 'sbac_learning_registry.features.inc';
  */
 
 define('SBAC_LEARNING_REGISTRY_PUBLISHER', 'Smarter Balanced Assessment Consortium');
+## @TODO - WLV1 - Look at the below link to see if this remains for whitelabling distribution
 define('SBAC_LEARNING_REGISTRY_INBLOOM_URL', 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search');
 define('SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE', 12);
 define('SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS', 'sbac-learning-registry-external-solr-keywords');
