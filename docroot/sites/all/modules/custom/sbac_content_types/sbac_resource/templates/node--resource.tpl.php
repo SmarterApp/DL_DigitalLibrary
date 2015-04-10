@@ -75,10 +75,15 @@
  * @see template_process()
  */
 
-  drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
+drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
 ?>
 <?php if (isset($resource_type) && $resource_type): ?>
   <span class="resource-type"><?php echo $resource_type; ?></span>
+<?php endif; ?>
+<?php if (flag_get_flag('featured_node')): ?>
+  <div class="featured-resource-link">
+    <?php print flag_create_link('featured_node', $node->nid)?>
+  </div>
 <?php endif; ?>
 <?php if (isset($favorites_link)): ?>
   <div class="favorites-link">

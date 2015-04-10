@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Featured Content feature.
+ */
+
+include_once 'sbac_featured_content.features.inc';

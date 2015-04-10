@@ -1,0 +1,9 @@
+name = SBAC Featured Content
+core = 7.x
+package = ~SBAC
+dependencies[] = features
+dependencies[] = flag
+features[features_api][] = api:2
+features[flag][] = featured_node
+features[user_permission][] = flag featured_node
+features[user_permission][] = unflag featured_node

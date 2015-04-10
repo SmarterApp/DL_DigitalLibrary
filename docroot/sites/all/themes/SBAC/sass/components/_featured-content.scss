@@ -56,3 +56,28 @@
     }
   }
 }
+
+/* Featured Resource */
+body.node-type-resource{
+  .featured-resource-link{
+    float:right;
+    display: inline-block;
+    width: auto;
+    float: right;
+    text-align: right;
+    margin-top: 3px;
+    margin-right: 26px;
+    a{
+      display: block;
+      padding-left: 20px;
+      vertical-align: middle;
+      font-size: 13px;
+      line-height: 15px;
+      height: 15px;
+      color: #62676e;
+      &:hover{
+        color: #0c84ad;
+      }
+    }
+  } 
+}

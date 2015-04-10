@@ -29370,6 +29370,32 @@ body.page-sbac {
   margin-right: 0.4375rem;
 }
 
+/* Featured Resource */
+/* line 62, ../sass/components/_featured-content.scss */
+body.node-type-resource .featured-resource-link {
+  float: right;
+  display: inline-block;
+  width: auto;
+  float: right;
+  text-align: right;
+  margin-top: 3px;
+  margin-right: 26px;
+}
+/* line 70, ../sass/components/_featured-content.scss */
+body.node-type-resource .featured-resource-link a {
+  display: block;
+  padding-left: 20px;
+  vertical-align: middle;
+  font-size: 13px;
+  line-height: 15px;
+  height: 15px;
+  color: #62676e;
+}
+/* line 78, ../sass/components/_featured-content.scss */
+body.node-type-resource .featured-resource-link a:hover {
+  color: #0c84ad;
+}
+
 /* line 2, ../sass/layout/_landing-page.scss */
 body.page-sbac #lp-help-topics-wrapper {
   height: 100px;
