@@ -564,7 +564,8 @@ if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/sbac/training-settings.inc');
 }
 
-// Sets the Apache Solr Environment
+// Sets the Acquia specific environment settings
+// @TODO - WLV1 - remove for whitelabeling distribution
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   switch ($_ENV['AH_SITE_ENVIRONMENT']) {
     case 'dev':
@@ -604,10 +605,11 @@ else {
 }
 
 // Google CDN variables.
-$conf['google_cdn_bucket_name'] = 'sbac_media';
+## WLV1 - removed the following cdn strings for whitelabeling the distribution 
+$conf['google_cdn_bucket_name'] = '';
 $conf['google_cdn_extensions'] = 'all';
-$conf['google_cdn_client_id'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot.apps.googleusercontent.com';
-$conf['google_cdn_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot@developer.gserviceaccount.com';
+$conf['google_cdn_client_id'] = '';
+$conf['google_cdn_service_account_name'] = '';
 $conf['google_cdn_signed_url_expiry'] = 300;
 $conf['google_cdn_library_version'] = 2;
 
