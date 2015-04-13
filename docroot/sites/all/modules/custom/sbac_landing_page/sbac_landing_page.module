@@ -23,9 +23,9 @@ function sbac_landing_page_menu() {
 function sbac_landing_page(){
   $variables = array();
   $variables['test'] = 'Testing Variables';
-  $variables['featured_content'] = featured_content();
-  $variables['help_topics'] = help_topics();
-  $variables['find_resource'] = find_resource();  
+  $variables['featured_content'] = lp_featured_content();
+  $variables['help_topics'] = lp_help_topics();
+  $variables['find_resource'] = lp_find_resource();  
   return theme('sbac_landing_page',$variables);
 }
 
@@ -44,7 +44,7 @@ function sbac_landing_page_theme($existing, $type, $theme, $path) {
 function sbac_landing_page_preprocess_page(&$variables) {
 }
 
-function help_topics(){
+function lp_help_topics(){
   if(module_exists('sbac_help_topics_landing')){
     return 'Embed Help Topics Block Here';
   }else{
@@ -52,7 +52,7 @@ function help_topics(){
   }
 }
 
-function featured_content(){
+function lp_featured_content(){
   if(module_exists('sbac_featured_content')){
     return 'Embed Featured Content Block Here';
   }else{
@@ -60,7 +60,7 @@ function featured_content(){
   }
 }
 
-function find_resource(){
+function lp_find_resource(){
   if(module_exists('sbac_find_resources')){
     return 'Embed Find Resources Content Block Here';
   }else{

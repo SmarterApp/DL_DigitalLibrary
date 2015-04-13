@@ -1,7 +1,129 @@
 <?php
 /**
  * @file
- * Code for the SBAC Featured Content feature.
+ * Code for the SBAC Featured Content Module.
  */
 
 include_once 'sbac_featured_content.features.inc';
+
+function sbac_featured_content_menu() {
+  $items = array();
+
+  $items['sbac-featured-content'] = array(
+    'title' => 'Just using this for Dev',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'sbac_featured_content',
+    'access arguments' => array('access content'),    
+  );
+  return $items;
+}
+
+
+function sbac_featured_content(){
+  $variables = array();
+  $variables['featured_content'] = '';
+  $variables['test'] = 'Featured Content TPL is returning';
+  
+  $featured_content = sbac_featured_content_flagged();
+  
+  foreach($featured_content as $content){
+     $variables['featured_content'] .= $content;
+  } 
+  
+  return theme('sbac_featured_content',$variables);
+}
+
+/**
+ * Implements hook_theme().
+ * 
+ * Identify templates for each featured entity type
+ */
+function sbac_featured_content_theme($existing, $type, $theme, $path) {
+  $theme = array();
+  $theme['sbac_featured_content'] = array(
+    'render element' => 'content',
+    'template' => 'sbac-featured-content',
+    'path' => drupal_get_path('module', 'sbac_featured_content') . '/templates',
+   );
+  $theme['sbac_featured_resource'] = array(
+    'render element' => 'content',
+    'template' => 'sbac-featured_resource',
+    'path' => drupal_get_path('module', 'sbac_featured_content') . '/templates',
+   );
+  return $theme;
+}
+
+function sbac_featured_content_preprocess_page(&$variables) {
+}
+
+
+/*
+ * Build featured resource
+ */
+function sbac_featured_resource($node){
+  dpm('------------------ Resource ------------------');
+  $variables = array();
+  $variables['test'] = 'Featured Resource TPL is returning';
+
+  dpm($node);
+  // Retrieve image
+  //$image = landing_page_featured_resource
+  $variables['thumbnail'] = "->field_thumbnail_uri['und'][0]['value'])";
+  $variables['title'] = $node->title;
+  $variables['summary'] = truncate_utf8($node->field_alt_body['und'][0]['value'], 400, TRUE, TRUE, 1);
+  $grades = sbac_resource_terms($node->field_grades['und']);
+  $variables['grades'] = $grades;
+  $attributes = sbac_resource_terms($node->field_attributes['und']);
+  $variables['formative_process'] = $attributes;
+  return theme('sbac_featured_resource',$variables);
+}
+
+/*
+ * Build Flagged Content Array
+ * 
+ * Retreives all flagged enttities, and builds an array of featured entities
+ * with respective templates
+ */
+function sbac_featured_content_flagged(){
+  $featured_content = array();
+  $limit = 1;
+  $flags = db_query("SELECT  entity_type,  entity_id FROM  {flagging}")->fetchAll();
+  foreach($flags as $flagged){
+    switch ($flagged->entity_type) {
+      case 'node':
+        $node = node_load($flagged->entity_id);
+        switch ($node->type) {
+          case "resource":
+            $featured_content[] = sbac_featured_resource($node);
+            break;
+
+          default:
+            break;
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+  return $featured_content;
+}
+
+/* 
+ * Retrieve Resource Attributes
+ * 
+ * @terms array()
+ */
+
+function sbac_resource_terms($tids){
+  $term_names = '';
+  foreach($tids as $termID){
+    $term = taxonomy_term_load($termID['tid']);
+    dpm($term);
+    $term_names .= '<li>' . $term->name . '</li>';
+  }
+  $terms = '<ul class="sbac-' . $tids->vocabulary_machine_name . '">';
+  $terms .= $term_names;
+  $terms .= '</ul>';
+  return $terms;
+}
