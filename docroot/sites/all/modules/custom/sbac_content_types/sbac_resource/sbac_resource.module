@@ -1138,9 +1138,7 @@ function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
     $url_option = '';
     switch ($option) {
       case 'cdn':
-        $url_option = 'https://docs.google.com/viewer?url=';
-        $url_option .= urlencode(file_create_url($uri));
-        $url_option .= '&a=bi&pagenumber=1&w=268';
+        $url_option = $url;
         break;
       case 'primary':
         $url_option = $url;
@@ -1238,7 +1236,7 @@ function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, 
       );
     }
   }
-
+  
   foreach ($urls as $url) {
     if (url_is_external($url) && !$thumbnail_exists) {
       $finfo = new finfo(FILEINFO_MIME_TYPE);
@@ -2608,9 +2606,23 @@ function sbac_resource_determine_thumbnail_uri(&$node) {
         $uri = $thumb_url['uri'];
       }
       else {
-        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $file->filename, $nid, $media);
-        $url = $thumb_url['url'];
-        $uri = $thumb_url['uri'];
+        if($node->field_resource_thumbnail){
+          if (!empty($node->field_resource_thumbnail['und']) || strpos($node->field_thumbnail_uri['und'][0]['value'], 'public://resource_thumbnails') !== false){
+            $file = file_load($node->field_resource_thumbnail['und'][0]['fid']);
+            file_get_contents(image_style_url('resource_image_grid',$file->uri));
+            $url = image_style_url('resource_image_grid',$file->uri);
+            $uri = image_style_path('resource_image_grid',$file->uri);
+            $thumb_urls = array($url, $uri, $thumb_opts);
+          }
+        }
+        $thumb_url = array($thumb_urls, $file->filename, $nid, $media);
+        if(empty($node->field_resource_thumbnail['und']) && $node->field_thumbnail_uri['und'][0]['value']){
+          // If there is no resource image, check if it used to come from a resource thumbnail
+          if (strpos($node->field_thumbnail_uri['und'][0]['value'], 'public://resource_thumbnails') !== false) {
+            $url = $default_file;
+            $uri = $default_file;
+          }
+        }
       }
     }
     elseif (isset($media->embed_url)) {

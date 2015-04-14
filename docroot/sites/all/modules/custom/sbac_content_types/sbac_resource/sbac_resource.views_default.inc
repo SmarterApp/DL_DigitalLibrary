@@ -1694,7 +1694,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
   $handler->display->display_options['block_caching'] = '-1';
-
   $export['resources'] = $view;
 
   return $export;

@@ -39,6 +39,7 @@ html, body {
 .flex-video {
   margin-bottom: 0;
 }
+
 .page-wrap {
   min-height: 100%;
   margin-bottom: -50px;
@@ -1557,6 +1558,22 @@ a.tabledrag-handle .handle {
   margin: 1em 0;
 }
 
+#edit-field-resource-thumbnail,
+.field-name-field-resource-thumbnail{
+  margin-top: 30px;
+  clear: both;
+  input[type='file']{
+    width: auto;
+  }
+  .image-widget-data{
+    width:100%;
+  }
+  .form-submit{
+    margin-left: 50px;
+    float:right;
+  }
+}
+
 .field-name-field-license-information {
   margin-top: 30px;
   clear: both;
@@ -1671,7 +1688,7 @@ a.tabledrag-handle .handle {
   #edit-group_summary,
   #edit-field-author,
   #edit-field-publisher,
-  #edit-group_materials {
+  #edit-group_materials  {
     .form-type-textfield,
     .form-type-textarea {
       position: relative;
