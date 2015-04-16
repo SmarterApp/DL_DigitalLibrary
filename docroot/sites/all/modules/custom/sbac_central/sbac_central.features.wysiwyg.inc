@@ -65,8 +65,6 @@ function sbac_central_wysiwyg_default_profiles() {
       'css_path' => '',
       'css_classes' => '',
     ),
-    'entity_type' => 'wysiwyg_profile',
-    'entity_id' => 'full_html',
     'rdf_mapping' => array(),
   );
 

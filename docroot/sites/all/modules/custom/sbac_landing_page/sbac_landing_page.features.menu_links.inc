@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * sbac_landing_page2.features.menu_links.inc
+ * sbac_landing_page.features.menu_links.inc
  */
 
 /**
