@@ -463,7 +463,7 @@ body {
   color: #5a5a5a;
   padding: 0;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -7738,7 +7738,7 @@ body {
   color: #5a5a5a;
   padding: 0;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -15018,7 +15018,7 @@ body {
   color: #5a5a5a;
   padding: 0;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -22420,7 +22420,7 @@ body {
   color: #5a5a5a;
   padding: 0;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -29345,7 +29345,7 @@ body.page-sbac #lp-featured-content-wrapper {
   height: 28.125rem;
   background-image: url("../images/bg1.jpg");
   background-repeat: no-repeat;
-  background-position: right;
+  background-position: center;
 }
 /* line 15, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper {
@@ -29372,7 +29372,6 @@ body.page-sbac #lp-find-resource-wrapper {
 #lp-featured-content .featured-content-container .featured-content-wrapper {
   display: block;
   width: 43.75rem;
-  height: 375px;
   border: 1px solid #ffffff;
   border-radius: 0.25rem;
   box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
@@ -29383,31 +29382,32 @@ body.page-sbac #lp-find-resource-wrapper {
   box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
   transition: background-color 0.3s ease;
 }
-/* line 21, ../sass/components/_featured-content.scss */
+/* line 20, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url {
-  padding: 1.25rem 1.875rem 1.875rem 1.875rem;
-  height: 100%;
+  height: 366px;
+  padding: 20px 30px 30px 30px;
   display: block;
 }
-/* line 25, ../sass/components/_featured-content.scss */
+/* line 24, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-title {
-  font-size: 1.125rem;
-  line-height: 1.375rem;
+  font-size: 18px;
+  line-height: 22px;
   font-weight: 600;
   color: #0583ac;
+  margin-top: 10px;
 }
-/* line 30, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-title:hover {
+/* line 32, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url:hover .featured-title {
   text-decoration: underline;
 }
-/* line 34, ../sass/components/_featured-content.scss */
+/* line 36, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-summary {
   line-height: 1.4;
   color: #101010;
   font-weight: 400;
-  font-size: 0.8125rem;
+  font-size: 13px;
 }
-/* line 41, ../sass/components/_featured-content.scss */
+/* line 43, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-label {
   margin-top: 1.25rem;
   margin-bottom: -0.25rem;
@@ -29417,27 +29417,28 @@ body.page-sbac #lp-find-resource-wrapper {
   clear: both;
   padding: 1px;
   text-transform: uppercase;
-}
-/* line 51, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-type {
-  margin-bottom: 0.3125rem;
+  font-size: 11px;
 }
 /* line 54, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-type {
+  margin-top: 15px;
+}
+/* line 57, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 57, ../sass/components/_featured-content.scss */
+/* line 60, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 59, ../sass/components/_featured-content.scss */
+/* line 62, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
   padding: 0 0.4375rem;
   background: rgba(16, 16, 16, 0.07);
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 600;
   margin-top: 0.4375rem;
   margin-right: 0.4375rem;
@@ -29773,7 +29774,7 @@ button.secondary, .button.secondary, #edit-cancel, #edit-tags-cancel, #sbac-sear
   border: 1px solid #0d6785;
   color: #FFF;
   /*padding: 8px 18px;*/
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 /* line 248, ../sass/custom.scss */
 button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus, #edit-cancel:hover, #edit-cancel:focus, #edit-tags-cancel:hover, #edit-tags-cancel:focus, #sbac-search-close-button:hover, #sbac-search-close-button:focus, button.sbac-cancel-blue:hover, button.sbac-cancel-blue:focus, .button.devtools-dialog-close:hover, .button.devtools-dialog-close:focus, #gate-keeper-cancel:hover, #gate-keeper-cancel:focus, #review-cancel:hover, #review-cancel:focus, #edit-delete-overlay:hover, #edit-delete-overlay:focus, #edit-cancel-overlay:hover, #edit-cancel-overlay:focus, #post-cancel:hover, #post-cancel:focus, div.ctools-modal-content a.close:hover, div.ctools-modal-content a.close:focus, a.remove:hover, a.remove:focus, a.fake-cancel:hover, a.fake-cancel:focus {
@@ -30418,7 +30419,7 @@ a.tabledrag-handle .handle {
 }
 /* line 823, ../sass/custom.scss */
 #user-pass h1, #change-password h1, #sbac-user-change-password-form h1, .user-pass-confirm h1 {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 1.5em;
 }
 /* line 828, ../sass/custom.scss */
@@ -30732,7 +30733,7 @@ a.tabledrag-handle .handle {
 
 /* line 1120, ../sass/custom.scss */
 .section-container.auto > section > .title a {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   /*font-size: emCalc(16px);*/
   font-size: 15px;
   font-weight: bold;
@@ -30918,7 +30919,7 @@ a.tabledrag-handle .handle {
 /* line 1281, ../sass/custom.scss */
 .resource-info .field-label {
   color: #246a34;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   margin-bottom: 5px;
 }
 /* line 1287, ../sass/custom.scss */
@@ -31072,7 +31073,7 @@ a.tabledrag-handle .handle {
 }
 /* line 1420, ../sass/custom.scss */
 .page-media-browser .ui-widget button {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 16px;
 }
 /* line 1427, ../sass/custom.scss */

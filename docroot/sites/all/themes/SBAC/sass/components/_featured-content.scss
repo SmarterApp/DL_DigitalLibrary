@@ -8,7 +8,6 @@
     .featured-content-wrapper{
       display:block;
       width: 43.75rem;
-      height:375px;
       border: 1px solid #ffffff;
       border-radius: 0.25rem;
       box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
@@ -19,15 +18,18 @@
       box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
       transition: background-color 0.3s ease;
       a.featured-content-url{
-        padding: 1.25rem 1.875rem 1.875rem 1.875rem;
-        height:100%;
+        height:366px;
+        padding: 20px 30px 30px 30px;
         display:block;
         .featured-title{
-          font-size: 1.125rem;
-          line-height: 1.375rem;
+          font-size: 18px;
+          line-height: 22px;
           font-weight: 600;
           color: #0583ac;
-          &:hover{
+          margin-top: 10px;
+        }
+        &:hover{
+          .featured-title{
             text-decoration: underline;
           }
         }
@@ -35,7 +37,7 @@
           line-height: 1.4;
           color: #101010;
           font-weight: 400;
-          font-size: 0.8125rem;
+          font-size: 13px;
         }
 
         .featured-label{
@@ -47,9 +49,10 @@
             clear:both;
             padding: 1px;
             text-transform: uppercase;
+            font-size:11px;
           }
           .featured-type{
-            margin-bottom: 0.3125rem;
+            margin-top: 15px;
           }
           .featured-content-terms-wrapper{
             clear:both;
@@ -61,7 +64,7 @@
                 line-height: 1.25rem;
                 padding: 0 0.4375rem;
                 background: rgba(16, 16, 16, 0.07);
-                font-size: 0.75rem;
+                font-size: 12px;
                 font-weight: 600;
                 margin-top: 0.4375rem;
                 margin-right: 0.4375rem;
