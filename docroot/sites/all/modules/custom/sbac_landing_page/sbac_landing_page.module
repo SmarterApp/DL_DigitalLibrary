@@ -54,7 +54,7 @@ function lp_help_topics(){
 
 function lp_featured_content(){
   if(module_exists('sbac_featured_content')){
-    return 'Embed Featured Content Block Here';
+    return sbac_featured_content();
   }else{
     return 'Featured Content Comming Soon';    
   }
