@@ -80,17 +80,18 @@ drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css
 <?php if (isset($resource_type) && $resource_type): ?>
   <span class="resource-type"><?php echo $resource_type; ?></span>
 <?php endif; ?>
-<?php if (flag_get_flag('featured_node')): ?>
-  <div class="featured-resource-link">
-    <?php print flag_create_link('featured_node', $node->nid)?>
-  </div>
-<?php endif; ?>
+
 <?php if (isset($favorites_link)): ?>
   <div class="favorites-link">
     <?php echo $favorites_link; ?>
   </div>
 <?php endif; ?>
-<article id="node-<?php echo $node->nid; ?>" class="<?php echo $classes; ?>"<?php echo $attributes; ?>>
+<?php if (flag_get_flag('featured_node')): ?>
+  <div class="featured-resource-link">
+    <?php print flag_create_link('featured_node', $node->nid)?>
+  </div>
+<?php endif; ?>
+  <article id="node-<?php echo $node->nid; ?>" class="<?php echo $classes; ?>"<?php echo $attributes; ?>>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>
       <p><span class="author">Author: </span class="publisher"><?php echo $author; ?> | Owner: <?php print $owner; ?></p>

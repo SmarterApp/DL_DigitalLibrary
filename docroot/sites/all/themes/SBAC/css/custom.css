@@ -29297,6 +29297,38 @@ nav.main-nav ul li.last {
   content: none;
 }
 
+/* -----------------------------------------
+   Color Variables
+   ----------------------------------------- */
+/* line 2, ../sass/components/_flags.scss */
+.flag-message {
+  clear: both;
+  padding: 10px;
+  background-color: #246a34;
+  color: white;
+  border-radius: 5px;
+}
+
+/* line 10, ../sass/components/_flags.scss */
+.featured-resource-link {
+  display: inline-block;
+  width: auto;
+  float: right;
+  text-align: right;
+  margin-top: 3px;
+  margin-right: 26px;
+}
+/* line 17, ../sass/components/_flags.scss */
+.featured-resource-link a {
+  display: block;
+  padding-left: 20px;
+  vertical-align: middle;
+  font-size: 13px;
+  line-height: 15px;
+  height: 15px;
+  color: #62676e;
+}
+
 /* line 1, ../sass/components/_landing-page.scss */
 body.page-sbac {
   background: #f2f2f2;
