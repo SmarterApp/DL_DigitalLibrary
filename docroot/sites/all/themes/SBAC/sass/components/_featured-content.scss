@@ -17,21 +17,26 @@
       border-radius: 0.25rem;
       box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
       transition: background-color 0.3s ease;
+      &:hover{
+        background:rgba(255,255,255,1);
+        box-shadow:0 2px 4px fade(16,16,16,0.3);
+        transition: background-color 0.2s ease;
+        .featured-title{
+          text-decoration: underline;
+          
+        }
+      }
       a.featured-content-url{
-        height:366px;
+        max-height:366px;
         padding: 20px 30px 30px 30px;
         display:block;
+        overflow:hidden;
         .featured-title{
           font-size: 18px;
           line-height: 22px;
           font-weight: 600;
           color: #0583ac;
           margin-top: 10px;
-        }
-        &:hover{
-          .featured-title{
-            text-decoration: underline;
-          }
         }
         .featured-summary{
           line-height: 1.4;

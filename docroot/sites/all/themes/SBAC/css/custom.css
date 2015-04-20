@@ -29383,12 +29383,23 @@ body.page-sbac #lp-find-resource-wrapper {
   transition: background-color 0.3s ease;
 }
 /* line 20, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url {
-  height: 366px;
-  padding: 20px 30px 30px 30px;
-  display: block;
+#lp-featured-content .featured-content-container .featured-content-wrapper:hover {
+  background: white;
+  box-shadow: 0 2px 4px fade(16, 16, 16, 0.3);
+  transition: background-color 0.2s ease;
 }
 /* line 24, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .featured-content-wrapper:hover .featured-title {
+  text-decoration: underline;
+}
+/* line 29, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url {
+  max-height: 366px;
+  padding: 20px 30px 30px 30px;
+  display: block;
+  overflow: hidden;
+}
+/* line 34, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-title {
   font-size: 18px;
   line-height: 22px;
@@ -29396,18 +29407,14 @@ body.page-sbac #lp-find-resource-wrapper {
   color: #0583ac;
   margin-top: 10px;
 }
-/* line 32, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url:hover .featured-title {
-  text-decoration: underline;
-}
-/* line 36, ../sass/components/_featured-content.scss */
+/* line 41, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-summary {
   line-height: 1.4;
   color: #101010;
   font-weight: 400;
   font-size: 13px;
 }
-/* line 43, ../sass/components/_featured-content.scss */
+/* line 48, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-label {
   margin-top: 1.25rem;
   margin-bottom: -0.25rem;
@@ -29419,20 +29426,20 @@ body.page-sbac #lp-find-resource-wrapper {
   text-transform: uppercase;
   font-size: 11px;
 }
-/* line 54, ../sass/components/_featured-content.scss */
+/* line 59, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-type {
   margin-top: 15px;
 }
-/* line 57, ../sass/components/_featured-content.scss */
+/* line 62, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 60, ../sass/components/_featured-content.scss */
+/* line 65, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 62, ../sass/components/_featured-content.scss */
+/* line 67, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
