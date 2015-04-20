@@ -120,6 +120,13 @@ function sbac_help_menu() {
     'page arguments' => array(1),
     'access arguments' => array('access content'),
   );
+  $items['happy/%ctools_js/%'] = array(
+      'title' => 'The Happy Modal',
+      'page arguments' => array(1, 2),
+      'page callback' => 'happy_modal_page',
+      'access callback' => TRUE,
+      'type' => MENU_NORMAL_ITEM,
+  );
 
   return $items;
 }
@@ -174,7 +181,6 @@ function sbac_help_preprocess_welcome_tutorial_list(&$vars) {
  * @param  [type] $vars [description]
  */
 function sbac_help_preprocess_welcome_tutorial_post(&$vars) {
-  $vars['back_link'] = l('Back to Topics', 'welcome-tutorial/nojs', array('attributes' => array('class' => 'use-ajax')));
   $vars['title'] = $vars['node']->title;
   $vars['body'] = $vars['node']->body['und'][0]['value'];
 
@@ -612,17 +618,6 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
     '#prefix' => '<div class="welcome-modal-buttons">',
   );
 
-  $form['disable_tut'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Do not show this tutorial again.',
-    '#description' => "You can always find it under 'Help' in the top menu.",
-    '#default_value' => $user->data['disable_help'],
-    '#attributes' => array(
-      'class' => array(
-        'welcome-tut-do-not-show'
-      ),
-    ),
-  );
 
   $form['close_tutorial'] = array(
     '#type' => 'submit',
@@ -654,7 +649,7 @@ function sbac_help_welcome_tutorial_list_form_submit($form, &$form_state) {
  * Returns a list of Node Entities that the currently logged in user can view.
  * @return array of stdClass representing nodes.
  */
-function sbac_help_welcome_tutorial_topics() {
+function sbac_help_welcome_tutorial_topics($limit = NULL) {
   $ar_welcome = taxonomy_get_term_by_name('Welcome tutorial', 'help_page_topic');
   $welcome_term = array_pop($ar_welcome);
   $roles = array();
@@ -691,7 +686,9 @@ function sbac_help_welcome_tutorial_topics() {
               AND     roles.field_help_user_roles_tid IN (:roles)
             ORDER BY COALESCE(weight.weight, 10000) ASC
            ';
-
+  if($limit){
+    $query .="LIMIT $limit";
+  }
   $results = db_query($query, array(
     ':view_name' => 'help_topics',
     ':view_page' => 'page_4',
@@ -762,3 +759,25 @@ function sbac_help_resource_help_form($form, $form_state) {
   );
   return $form;
 }
+
+/**
+ * Display Help Topics Call to Action open in a modal
+ *
+ * @param $limit Number of help topics to return
+ * @return mixed
+ */
+function sbac_help_topic_ctas($limit){
+  $topics = '';
+  $help_topics = sbac_help_welcome_tutorial_topics($limit);
+  foreach($help_topics as $topic){
+    $topics .= theme('welcome_tutorial_list',
+          array(
+            'nid'     => $topic['nid'],
+            'title'   => $topic['title'],
+            'image'   => $topic['img_fid'],
+            'img_alt' => $topic['img_alt'],
+          ));
+  }
+  return $topics;
+}
+

@@ -51,8 +51,8 @@ function sbac_landing_page_preprocess_page(&$variables) {
 }
 
 function lp_help_topics(){
-  if(module_exists('sbac_help_topics_landing')){
-    return 'Embed Help Topics Block Here';
+  if(module_exists('sbac_help')){
+    return sbac_help_topic_ctas('3');
   }else{
     return 'Help Topics Comming Soon';    
   }
