@@ -1774,7 +1774,8 @@ function sbac_forum_node_insert($node) {
         // Update user's topic count
         foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
           try {
-            if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid) {
+            if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid && db_table_exists('cache_entity_field_collection_item
+')) {
               // Increment the recommend count
               $current_topic_count = $member_wrapper->field_fc_forum_member_tpic_count->value();
               $current_topic_count++;
