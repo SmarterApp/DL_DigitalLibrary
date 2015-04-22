@@ -148,7 +148,7 @@ function sbac_help_preprocess_views_view__help_topics__block(&$vars){
 function sbac_help_preprocess_help_dropdown(&$vars) {
   ctools_include('modal');
   drupal_add_js(drupal_get_path('module', 'sbac_help') . '/js/sbac_help.ctools.js');
-  $js_settings = array('sbac-help-welcome-tutorial' => array('modalSize' => array('type' => 'fixed', 'width' => 900, 'height' => 650), 'modalTheme' => 'CtoolSbacWelcomeTutorial'));
+  $js_settings = array('sbac-help-welcome-tutorial' => array('modalSize' => array('type' => 'fixed', 'width' => 960, 'height' => 650), 'modalTheme' => 'CtoolSbacWelcomeTutorial'));
   drupal_add_js($js_settings, 'setting');
   ctools_modal_add_js();
 }
@@ -159,14 +159,14 @@ function sbac_help_preprocess_help_dropdown(&$vars) {
  * @param  [type] $vars [description]
  */
 function sbac_help_preprocess_welcome_tutorial_list(&$vars) {
-  // $vars['title'] = l($vars['title'], drupal_get_path_alias('node/' . $vars['nid']), array('attributes' => array('class' => 'use-ajax')));
-  $vars['title'] = l($vars['title'], 'welcome-tutorial/nojs/' . $vars['nid'], array('attributes' => array('class' => 'use-ajax')));
+  $vars['link_open'] = '<a href="welcome-tutorial/nojs/' . $vars['nid'] . '" class="ctools-use-ajax use-ajax ctools-modal-sbac-help-welcome-tutorial" id="sbac-help-welcome-tutorial">';
+  $vars['link_close'] = '</a>';
   $vars['summary'] = truncate_utf8($vars['summary'], 140, TRUE);
   if (isset($vars['image'])) {
     $file = file_load($vars['image']);
     if ($file) {
       $tut_image = array(
-        'style_name' => 'welcome_tutorial',
+        'style_name' => 'landing_page_help_topic',
         'path' => $file->uri,
         'alt' => $vars['img_alt'],
       );
@@ -293,7 +293,7 @@ function sbac_help_form_alter(&$form, &$form_state, $form_id) {
           ),
         )),
       );
-      $js_settings = array('sbac-resource-help-modal' => array('modalSize' => array('type' => 'fixed', 'width' => 1024, 'height' => 612)));
+      $js_settings = array('sbac-resource-help-modal' => array('modalSize' => array('type' => 'fixed', 'width' => 900, 'height' => '')));
       drupal_add_js($js_settings, 'setting');
     }
   }
@@ -478,8 +478,7 @@ function sbac_help_welcome_callback($js = FALSE, $node = FALSE) {
     ctools_include('modal');
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
-
-    $title      = 'Welcome to the Smarter Balanced Digital Library';
+    $title      = $node->title;
     $tutorials  = sbac_help_welcome_tutorial_topics();
 
     $form_state = array(

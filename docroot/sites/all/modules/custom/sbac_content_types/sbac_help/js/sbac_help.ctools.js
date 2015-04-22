@@ -8,9 +8,9 @@
  * @returns {string}
  * @constructor
  */
-
+  
 Drupal.theme.prototype.CtoolSbacWelcomeTutorial = function () {
-  var html = ''
+var html = ''
   html += '  <div id="ctools-modal" class="sbac-welcome">'
   html += '    <div class="ctools-modal-content sbac-welcome">' // panels-modal-content
   html += '      <div class="modal-header">';

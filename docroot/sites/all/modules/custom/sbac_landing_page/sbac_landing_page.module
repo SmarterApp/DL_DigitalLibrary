@@ -45,6 +45,11 @@ function sbac_landing_page_theme($existing, $type, $theme, $path) {
     'template' => 'landing-page',
     'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
    );
+  $theme['sbac_help_topics'] = array(
+    'render element' => 'content',
+    'template' => 'help-topics',
+    'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
+   );
   return $theme;
 }
 function sbac_landing_page_preprocess_page(&$variables) {
@@ -52,9 +57,13 @@ function sbac_landing_page_preprocess_page(&$variables) {
 
 function lp_help_topics(){
   if(module_exists('sbac_help')){
-    return sbac_help_topic_ctas('3');
+    $help_topics =  theme('sbac_help_topics',
+      array(
+        'topics'     => sbac_help_topic_ctas('3')
+      ));
+    return $help_topics;
   }else{
-    return 'Help Topics Comming Soon';    
+    return 'Help Topics Comming Soon';
   }
 }
 
