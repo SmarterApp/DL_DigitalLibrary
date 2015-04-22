@@ -1,0 +1,13 @@
+.filter-wrapper.no-format-selector {
+  display: none;
+}
+
+.form-type-textarea {
+  position: relative;
+}
+
+.form-type-textarea .wysiwyg-toggle-wrapper {
+  position: absolute;
+  right: 0;
+  top: 8px;
+}

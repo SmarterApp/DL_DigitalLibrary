@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @file
+ * This is the file description for the Label Help module.
+ *
+ * In normal rendering of textarea form fields that are text-format-enabled,
+ * the field's help text gets placed below the text format selector and tips.
+ * This means that website users are unlikely to notice and read the help text.
+ * This module creates help text to be placed directly below the field's
+ * label.
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function label_help_form_alter(&$form, &$form_state, $form_id) {
+  $form = label_help_set_description($form);
+}
+
+/**
+ * Recursively loops through form elements and sets the appropriate label_help description.
+ * 
+ * @param  [type] $form [description]
+ * @return [type]       [description]
+ */
+function label_help_set_description($form) {
+  foreach ($form as $key => &$field) {
+    if ($key{0} != '#' && is_array($field)) {
+      $lang = isset($field['#language']) ? $field['#language'] : LANGUAGE_NONE;
+
+      if (isset($field[$lang][0])) {
+        $target = &$field[$lang][0];
+      }
+      elseif(isset($field[$lang])) {
+        $target = &$field[$lang];
+      }
+      else {
+        $target = &$field;
+      } 
+
+      if (!isset($target['#entity_type']) || !isset($target['#field_name']) || !isset($target['#bundle'])) {
+        continue;
+      }
+
+      $entity_type = $target['#entity_type'];
+      $field_name = $target['#field_name'];
+      $bundle_name = $target['#bundle'];
+
+      if (isset($field['#type']) && $field['#type'] == 'container' && isset($form['#entity_type']) && isset($form['#bundle'])) {
+        $entity_type = $form['#entity_type'];
+        $bundle_name = $form['#bundle'];
+      }
+
+      $instance = field_info_instance($entity_type, $field_name, $bundle_name);
+
+      if (isset($instance['widget']['settings']['label_help_description'])) {
+        $target['#theme_options']['description at top']          = $instance['widget']['settings']['label_help_description'];
+        $target['value']['#theme_options']['description at top'] = $instance['widget']['settings']['label_help_description'];
+      }
+
+      if (isset($field[$lang])) {
+        foreach ($field[$lang] as &$child) {
+          if (is_array($child)) {
+            $child = label_help_set_description($child);
+          }
+      }
+      }
+
+      $form[$key] = $field;
+    }
+  }
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function label_help_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  // Add settings for file upload widgets.
+  $form['instance']['widget']['settings']['label_help_description'] = array(
+    '#type' => 'textarea',
+    '#rows' => 2,
+    '#title' => t('Label help message'),
+    '#default_value' => isset($form['#instance']['widget']['settings']['label_help_description']) ? $form['#instance']['widget']['settings']['label_help_description'] : '',
+    '#description' => t('Help text to insert below the label and above the input form element.'),
+  );
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function label_help_theme_registry_alter(&$theme_registry) {
+  // Set our custom function for theming form_element_label.
+  // Duplicate the original theme hook, under a new name. This
+  // will allow us to 'wrap' the theme function without
+  // breaking it.
+  $theme_registry['form_element_label_x'] = $theme_registry['form_element_label'];
+
+  // Because we don't need to count on drupal to re-load this file
+  // we're going to only override the 'function' key
+  // and leave the 'theme path' etc. to the core setting
+  // to avoid potential problems down the road if
+  // core changes.
+  $theme_registry['form_element_label']['function'] = 'label_help_theme_form_element_label';
+}
+
+/**
+ * Replacement for core theme_form_element_label function.
+ *
+ * Prints #description at top of field output.
+ * Because of jujitsu happening in FAPI theming/wrapping,
+ * ctools and WYSIWYG, we have to jump through some hoops 
+ * to pull this off.
+ *
+ * @param Array $variables
+ *   An array containing an element.
+ */
+function label_help_theme_form_element_label($variables) {
+  $desc = '';
+  if (isset($variables['element']['#theme_options']['description at top']) && !empty($variables['element']['#theme_options']['description at top'])) {
+    $desc = '<div class="description">' . t($variables['element']['#theme_options']['description at top']) . '</div>';
+  }
+
+  // Pass element through the "real" theme hook.
+  return theme('form_element_label_x', $variables) . $desc;
+}

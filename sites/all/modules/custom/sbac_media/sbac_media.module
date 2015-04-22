@@ -1,0 +1,2451 @@
+<?php
+
+/**
+ * @file.
+ * Module to handle all resource media functionality.
+ *
+ * Provides:
+ *  - Handles add / delete for materials (doc, pdf, excel, ppt etc)
+ *  - Creates UI for add / delete
+ *  - Hanldes upload / deletion of HTML5 modules
+ *  - Handles vimeo, youtube, schooltube, teachertube and slideshare adding / deleting
+ *  - Exports custom entity type for media
+ */
+
+// Hooks and callbacks for integrating with File Entity module for display.
+include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'sbac_media') . '/includes/sbac_media.formatters.inc';
+include_once 'sbac_media.features.inc';
+
+define('SBAC_MEDIA_100MB', 104857600);
+define('SBAC_MEDIA_250MB', 262144000);
+define('SBAC_MEDIA_HTML5_IN_PROGRESS', 1);
+define('SBAC_MEDIA_HTML5_FINISHED', 0);
+define('SBAC_MEDIA_HTML5_ERROR', 2);
+define('SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION', 'html5_modules');
+define('SBAC_MEDIA_HTML5_GOOGLE_URL', '//storage.googleapis.com/html5_modules/');
+
+define('SBAC_MEDIA_TEMP_FILE_STATUS', 0);
+define('SBAC_MEDIA_PERMANENT_FILE_STATUS', 1);
+define('SBAC_MEDIA_DELETE_FILE_STATUS', 2);
+
+/**
+ * Implements hook_init().
+ */
+function sbac_media_init() {
+  module_load_include('inc', 'sbac_media', 'includes/MediaYouTubeStreamWrapper');
+  module_load_include('inc', 'sbac_media', 'includes/VimeoStreamWrapper');
+}
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_media_update_projects_alter(&$projects) {
+  unset($projects['sbac_media']);
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_media_menu() {
+  $items = array();
+
+  $items['sbac-media/%ctools_js/internet-confirm'] = array(
+    'page callback' => 'sbac_media_internet_confirm',
+    'access arguments' => array('access content'),
+    'page arguments' => array(1),
+    'title' => 'You are about to embed a Video',
+  );
+
+  $items['sbac-media/%ctools_js/delete-media'] = array(
+    'page callback' => 'sbac_media_delete_media',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'title' => 'Delete Confirmation',
+  );
+
+  $items['sbac-media/%ctools_js/duplicates'] = array(
+    'page callback' => 'sbac_media_duplicates',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'title' => 'Duplicates',
+  );
+
+  $items['sbac-media/download/%node'] = array(
+    'title' => 'Download Resource',
+    'page callback' => 'sbac_media_download_contents',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+  );
+
+  $items['sbac-get-media'] = array(
+    'title' => 'Get Media',
+    'page callback' => 'sbac_media_get_url',
+    'access callback' => TRUE,
+  );
+
+  return $items;
+}
+
+/**
+ * Get the media url.
+ *
+ * @return bool|null|string
+ */
+function sbac_media_get_url() {
+  $media_id = arg(1);
+  if ($media_id) {
+    $media = sbac_media_get_item($media_id);
+    if ($media) {
+      if ($media->fid) {
+        $file = file_load($media->fid);
+        $url = file_create_url($file->uri);
+      }
+      else {
+        $url = sbac_media_create_embed_url($media);
+      }
+
+      $output['url'] = $url;
+      print drupal_json_encode($output);
+      exit;
+    }
+  }
+}
+
+/**
+ * Get the media object.
+ *
+ * @param $id
+ *   The eck_media id.
+ * @return mixed
+ */
+function sbac_media_get_item($id) {
+  if ($id) {
+    $sql = "SELECT * FROM {eck_media} WHERE id = :id";
+    return db_query($sql, array(':id' => $id))->fetchObject();
+  }
+}
+
+/**
+ * Function to check if there are any downloadable files.
+ *
+ * @param $documents
+ *
+ * @return bool
+ */
+function sbac_media_downloadable_scheme($documents) {
+  foreach ($documents as $key => $media) {
+    if (is_numeric($key)) {
+      if ($media->fid) {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_media_internet_providers().
+ */
+function sbac_media_media_internet_providers() {
+  $info['MediaInternetSchoolTubeHandler'] = array(
+    'title' => t('SchoolTube'),
+  );
+  $info['MediaInternetTeacherTubeHandler'] = array(
+    'title' => t('TeacherTube'),
+  );
+  $info['MediaInternetSlideShareHandler'] = array(
+    'title' => t('SlideShare'),
+  );
+  $info['MediaInternetYouTubeHandler'] = array(
+    'title' => t('YouTube'),
+  );
+  $info['MediaInternetVimeoHandler'] = array(
+    'title' => t('Vimeo'),
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_stream_wrappers().
+ */
+function sbac_media_stream_wrappers() {
+  return array(
+    'schooltube' => array(
+      'name' => t('SchoolTube videos'),
+      'class' => 'MediaSchoolTubeStreamWrapper',
+      'description' => t('Videos provided by SchoolTube.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+    'teachertube' => array(
+      'name' => t('TeacherTube videos'),
+      'class' => 'MediaTeacherTubeStreamWrapper',
+      'description' => t('Videos provided by TeacherTube.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+    'slideshare' => array(
+      'name' => t('SlideShare presentations'),
+      'class' => 'MediaSlideShareStreamWrapper',
+      'description' => t('Presentations provided by SlideShare.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+    'youtube' => array(
+      'name' => t('YouTube videos'),
+      'class' => 'MediaYouTubeStreamWrapper',
+      'description' => t('Videos provided by YouTube.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+    'vimeo' => array(
+      'name' => t('Vimeo videos'),
+      'class' => 'MediaVimeoStreamWrapper',
+      'description' => t('Presentations provided by Vimeo.'),
+      'type' => STREAM_WRAPPERS_READ_VISIBLE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sbac_media_theme($existing, $type, $theme, $path) {
+  return array(
+    'media_sbac_schooltube_video' => array(
+      'variables' => array('uri' => NULL, 'options' => array()),
+      'file' => 'sbac_media.theme.inc',
+      'path' => $path . '/includes',
+      'template' => 'media-schooltube-video',
+    ),
+    'media_sbac_teachertube_video' => array(
+      'variables' => array('uri' => NULL, 'options' => array()),
+      'file' => 'sbac_media.theme.inc',
+      'path' => $path . '/includes',
+      'template' => 'media-teachertube-video',
+    ),
+    'media_sbac_schooltube_video' => array(
+      'variables' => array('uri' => NULL, 'options' => array()),
+      'file' => 'sbac_media.theme.inc',
+      'path' => $path . '/includes',
+      'template' => 'media-slideshare-presentation',
+    ),
+  );
+}
+
+/**
+ * Implements hook_file_mimetype_mapping_alter().
+ *
+ * Regster the video/youtube mimetype.
+ */
+function sbac_media_file_mimetype_mapping_alter(&$mapping) {
+  $mapping['mimetypes'][] = 'video/schooltube';
+  $mapping['mimetypes'][] = 'video/teachertube';
+  $mapping['mimetypes'][] = 'video/slideshare';
+  $mapping['mimetypes'][] = 'video/youtube';
+  $mapping['mimetypes'][] = 'video/vimeo';
+}
+
+/**
+ * Attempts to connect to the Google Cloud Storage.
+ *
+ * @return Google_StorageService|null
+ */
+function sbac_media_get_google_cloud_storage() {
+  $services = NULL;
+
+  try {
+    if (libraries_load('google-api-php-client')) {
+      $service_account_name = variable_get('oscaddie_gcs_service_account_name');
+      $key_file_path = variable_get('oscaddie_gcs_public_key_file_path');
+
+      $client = new Google_Client();
+      // Replace this with your application name.
+      $client->setApplicationName($service_account_name);
+      // Replace this with the service you are using.
+      $service = new Google_Service_Storage($client);
+      // This file location should point to the private key file.
+      $key = file_get_contents($key_file_path);
+      $cred = new Google_Auth_AssertionCredentials(
+      // Replace this with the email address from the client.
+        $service_account_name,
+        // Replace this with the scopes you are requesting.
+        array('https://www.googleapis.com/auth/devstorage.full_control'),
+        $key
+      );
+
+      $client->setAssertionCredentials($cred);
+      if ($client->getAuth()->isAccessTokenExpired()) {
+        $client->getAuth()->refreshTokenWithAssertion($cred);
+      }
+
+      $services['client'] = $client;
+      $services['service'] = $service;
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('oscaddie_gcs', $e);
+  }
+
+  return $services;
+}
+
+/**
+ * Packages and downloads all materials into a zip.
+ *
+ * @param $node
+ */
+function sbac_media_download_contents($node) {
+  if ($node) {
+    // check to make sure there is public:// resources to download
+    if (sbac_media_downloadable_scheme($node->document)) {
+      $destination = variable_get('file_public_path', conf_path() . '/files') . '/resource_zips/';
+      if (!file_exists($destination)) {
+        mkdir($destination);
+      }
+      $result = sbac_media_determine_download_access($node);
+      $bucket = variable_get('oscaddie_gcs_bucket_name');
+      $folder = variable_get('oscaddie_gcs_folder');
+
+      $zip = new ZipArchive;
+      $archive_uri = 'public://resource_zips/';
+      $filename = 'download_' . REQUEST_TIME . '.zip';
+      $archive_uri .= $filename;
+      $real_path = drupal_realpath($archive_uri);
+      $open = $zip->open($real_path, ZipArchive::CREATE);
+      if ($open === TRUE) {
+        $services = sbac_media_get_google_cloud_storage();
+        if ($services) {
+          $primary_add = FALSE;
+          $secondary_add = FALSE;
+          foreach ($node->document as $key => $media) {
+            $add_file = FALSE;
+            if (is_numeric($key) && $media->fid) {
+              $file = file_load($media->fid);
+              if ($file) {
+                if ($key == 0 && $result['primary'] == TRUE) {
+                  $add_file = TRUE;
+                  $primary_add = TRUE;
+                }
+                if ($key > 0 && $result['secondary'] == TRUE) {
+                  $add_file = TRUE;
+                  $secondary_add = TRUE;
+                }
+                if ($add_file) {
+                  ini_set('memory_limit', '1024M');
+                  try {
+                    $target = str_replace('gs://', '', $file->uri);
+                    $target_path = explode('/', $target);
+                    $target_file = rawurlencode(array_pop($target_path));
+                    $response = $services['service']->objects->get($bucket, $folder . '/' . $target);
+                    $target = implode('/', $target_path) . '/' . $target_file;
+                    if ($response) {
+                      $target_path = explode('/', $target);
+                      $target_file = array_pop($target_path);
+                      $target = implode('/', $target_path) . '/' . $target_file;
+                      $download_url = 'https://' . OSCADDIE_GCS_API_DOMAIN . '/' . $bucket . '/' . $folder . '/' . $target;
+                      $request = new Google_Http_Request($download_url, 'GET');
+                      $signed_request = $services['client']->getAuth()->sign($request);
+                      $httpRequest = $services['client']->getIo()->makeRequest($signed_request);
+                      if ($httpRequest) {
+                        $data = $httpRequest->getResponseBody();
+                        $zip->addFromString($file->filename, $data);
+                      }
+                    }
+                  } catch (Exception $e) {
+                    watchdog_exception('oscaddie_gcs', $e, 'OSCaddieGCSStreamWrapper::sbac_media_download_contents');
+                  }
+                }
+              }
+            }
+          }
+        }
+        if ($zip->open($real_path) === TRUE && ($primary_add || $secondary_add) && $node->workbench_moderation['current']->state != 'draft') {
+          $destination = variable_get('file_private_path', conf_path() . '/files') . '/resource_pdfs/';
+          $about_this_resource_directory = $destination . floor($node->nid / 32000) . '/' . $node->nid . '/';
+          $zip->addFile($about_this_resource_directory . 'about_this_resource.pdf', 'about_this_resource.pdf');
+        }
+        $zip->close();
+      }
+
+      if (file_exists($real_path)) {
+        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+        header("Cache-Control: public"); // needed for i.e.
+        header("Content-Type: application/zip");
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-Length:".filesize($real_path));
+        header("Content-Disposition: attachment; filename=" . $filename);
+        if (readfile($real_path) !== FALSE) {
+          global $user;
+          // update the download stats
+          $query = "INSERT INTO {sbac_resource_download_stats} (uid, nid, hits) VALUES (:uid, :nid, :hits) ON DUPLICATE KEY UPDATE hits = hits + 1";
+          db_query($query, array(':uid' => $user->uid, ':nid' => $node->nid, ':hits' => 1));
+          $query = "SELECT sum(hits) as hits, count(distinct(uid)) as unique_hits FROM sbac_resource_download_stats WHERE nid = :nid";
+          $result = db_query($query, array(':nid' => $node->nid))->fetchAssoc();
+          $node->field_asset_downloads[LANGUAGE_NONE] = array(0 => array('value' => $result['hits']));
+          $node->field_unique_downloads[LANGUAGE_NONE] = array(0 => array('value' => $result['unique_hits']));
+          entity_save_field(array('field_asset_downloads', 'field_unique_downloads'), $node, 'node', $node->nid);
+          unlink($real_path); // delete the temp zip.
+        }
+      }
+      else {
+        drupal_set_message("There are no files to download.");
+        drupal_goto('node/' . $node->nid);
+      }
+    }
+    else {
+      drupal_set_message("There are no files to download.");
+      drupal_goto('node/' . $node->nid);
+    }
+  }
+}
+
+/**
+ * Determines if the resource button is displayed or not.
+ *
+ */
+function sbac_media_determine_download_access($node) {
+  global $user;
+  $result = array('primary' => FALSE, 'secondary' => FALSE);
+  if (isset($node->document) && sbac_media_downloadable_scheme($node->document) && !in_array(SBAC_SHARE_GUEST, $user->roles)) {
+    if (isset($node->field_resource_actions['und'][0])) {
+      foreach ($node->field_resource_actions['und'] as $index => $value) {
+        if ($index == 0) { // primary or secondary depending on how drupal served this up.
+          if ($value['value'] == 0) {
+            $result['primary'] = TRUE;
+          }
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+        if ($index == 1) { // always secondary
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+      }
+    }
+  }
+  return $result;
+}
+
+/**
+ * Implements hook_file_download().
+ *
+ * @param $uri
+ * @return array
+ */
+function sbac_media_file_download($uri) {
+  global $user;
+  if (!$user->uid) {
+    return -1;
+  }
+
+  $files = file_load_multiple(array(), array('uri' => $uri));
+  if (count($files)) {
+    $file = reset($files);
+    if ($file->status) {
+      $headers = file_get_content_headers($file);
+      if ($headers && isset($headers['Content-Type'])) {
+        return $headers;
+      }
+      return $headers;
+    }
+  }
+}
+
+/*
+ * Helper function to create embed URLs because of different implementation
+ */
+function sbac_media_create_embed_url($media) {
+  $embedded_video_source = $media->embed_url;
+
+  $file = new stdClass();
+  if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
+    $handler = new MediaInternetSchoolTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
+    $handler = new MediaInternetTeacherTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
+    $handler = new MediaInternetSlideShareHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'youtube') !== FALSE) {
+    $handler = new MediaInternetYouTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
+    $handler = new MediaInternetVimeoHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  $url = NULL;
+  if (isset($file->uri)) {
+    $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
+    $parts = $wrapper->get_parameters();
+    $id = check_plain($parts['v']);
+
+    switch($file->filemime) {
+      case 'video/schooltube':
+        $url = '//www.schooltube.com/embed_force/' . $id;
+        break;
+      case 'video/slideshare':
+        $url = '//www.slideshare.net/slideshow/embed_code/' . $id . '?rel=0';
+        break;
+      case 'video/teachertube':
+        $url = 'http://www.teachertube.com/embed.php?pg=video_' . $id;
+        break;
+      case 'video/vimeo':
+        $url = '//player.vimeo.com/video/' . $id;
+        break;
+      case 'video/youtube':
+        $url = '//www.youtube.com/embed/' . $id;
+        break;
+    }
+
+    return url($url, array('external' => TRUE));
+  }
+  return $url;
+}
+
+/**
+ * Creates a form file upload element custom to SBAC.
+ *
+ * @param $form
+ */
+function sbac_media_widget_form_element(&$form, &$form_state) {
+  // Prevent form element from firing js.
+  if (isset($form_state['build_info']['args'][1]) && $form_state['build_info']['args'][1] == 'edit_tags') {
+    return;
+  }
+
+  // Attach JS / CSS.
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.ctools.js';
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.form.js';
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/jquery-ui.js';
+  $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/jquery-ui.css';
+  $form['#attached']['css'][] = drupal_get_path('module', 'sbac_media') . '/css/sbac_media.css';
+
+  $html5 = FALSE;
+  if ($form_state['html5']) {
+    $html5 = TRUE;
+    sbac_media_build_html5_section($form, $form_state);
+  }
+
+
+  $form['field_file_container']['#tree'] = TRUE;
+  $form['field_file_container'] = array(
+    '#prefix'=>'<div id="sbac-field-file-container">',
+    '#suffix'=>'</div>',
+  );
+
+  $summary_title = t('Add Materials') . theme('form_required_marker');
+  $summary_description = 'You can add a combination of videos, images and documents to this resource. This resource must contain at least one (1) material.';
+  if ($html5) {
+    $summary_title = t('Add Secondary Module Materials');
+    $summary_description = 'These will be available in addition to module content. You can add a combination of videos, images and documents to add to this module.';
+  }
+
+  // Resource Summary.
+  $form['field_file_container']['field_file_summary'] = array(
+    '#type' => 'item',
+    '#title' => $summary_title,
+    '#markup' => '<p>'.t($summary_description).'</p>',
+    '#weight' => -101,
+    '#prefix' => '<div class="media-table">',
+  );
+
+  $media_items = array();
+  if (isset($form['#node']->nid) && $form['#node']->nid) {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $output = _sbac_media_create_list($media_items, $form_state);
+    $form['field_file_container']['materials'] = array(
+      '#markup' => $output,
+      '#weight' => -100,
+      '#suffix' => '</div>',
+    );
+  }
+
+  $weight = array();
+  if ($media_items) {
+    foreach ($media_items as $key => $media_item) {
+      if ($media_item->weight) {
+        $weight[$media_item->id] = $media_item->weight;
+      }
+      else {
+        $weight[$media_item->id] = $key;
+      }
+    }
+  }
+
+  $form['field_file_container']['weights'] = array(
+    '#type' => 'hidden',
+    '#attributes' => array('id' => 'sbac-media-weights'),
+    '#value' => drupal_json_encode($weight),
+  );
+
+  $form['field_file_container']['field_embed_video'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Embed Video URL'),
+    '#default_value' => '',
+    '#description' => t('e.g. http://www.someserver.com/videos/somevideo.mp4'),
+  );
+
+  $form['field_file_container']['field_embed_video_button'] = array(
+    '#type' => 'submit',
+    '#value' => 'Add Embedded Video',
+    '#sbac_embed_video' => TRUE,
+    '#validate' => array('sbac_media_widget_form_element_validate'),
+    '#attributes' => array('class' => array('video-embed-button')),
+    '#ajax'=> array(
+      'callback'=>'sbac_media_widget_form_element_upload',
+      'wrapper'=> 'sbac-field-file-container',
+      'method'=> 'replace',
+      'effect'=> 'fade',
+    ),
+  );
+
+  if (isset($form['#node']->nid) && $form['#node']->nid) {
+    $form['field_file_container']['field_embed_video_modal'] = array(
+      '#markup' => l(t('Modal'), 'sbac-media/nojs/internet-confirm', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-internet-confirm',
+          'id' => 'sbac-media-internet-confirm',
+          'title' => 'Confirm Embed',
+        ),
+        'query' => array(
+          'nid' => $form['#node']->nid,
+          'embed' => 'SBAC-MEDIA-EMBEDDED',
+          'html5' => $form_state['html5'],
+        )
+      )),
+    );
+
+    // JS to properly size the modal.
+    $js_settings = array(
+      'sbac-media-internet-confirm' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 600,
+          'height' => 210,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+  }
+
+  $form['field_file_container']['field_file_upload'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload2'),
+    '#title_display' => 'invisible',
+    '#size' => 22,
+    '#upload_location' => 'gs://resources',
+  );
+
+  $form['field_file_container']['field_file_upload_button'] = array(
+    '#type' => 'submit',
+    '#value' => 'Upload (100MB Max)',
+    '#sbac_embed_video' => FALSE,
+    '#attributes' => array('class' => array('sbac-file-upload-button')),
+    '#ajax'=> array(
+      'callback'=>'sbac_media_widget_form_element_upload',
+      'wrapper'=> 'sbac-field-file-container',
+      'method'=> 'replace',
+      'effect'=> 'fade',
+    ),
+  );
+
+  // Duplicates modal button.
+  if (isset($form['#node']->nid) && $form['#node']->nid) {
+    $form['actions']['duplicates_button'] = array(
+      '#markup' => l(t('Duplicates'), 'sbac-media/nojs/duplicates', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal button use-ajax ctools-modal-sbac-media-modal-duplicates',
+          'id' => 'sbac-media-modal-duplicates',
+          'title' => 'Duplicates',
+        ),
+        'query' => array(
+          'nid' => $form['#node']->nid,
+          'state' => $form_state['node']->workbench_moderation['current']->state,
+        )
+      )),
+      '#weight' => 3,
+    );
+
+    // JS to properly size the modal when submit resource is clicked.
+    $js_settings = array(
+      'sbac-media-modal-duplicates' => array(
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 700,
+          'height' => 550,
+        ),
+      ),
+    );
+    drupal_add_js($js_settings, 'setting');
+  }
+
+  $form['#after_build'][] = 'sbac_media_after_build_form';
+  $form['#group_children']['field_file_container'] = 'group_materials';
+}
+
+/**
+ * Build out the HTML5 section.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_build_html5_section(&$form, &$form_state) {
+  // Content Module Container.
+  $form['field_content_module_container']['#tree'] = TRUE;
+  $form['field_content_module_container'] = array(
+    '#prefix'=>'<div id="sbac-content-module-container">',
+    '#suffix'=>'</div>',
+  );
+
+  // Content Module Description.
+  $form['field_content_module_container']['field_content_module_summary'] = array(
+    '#type' => 'item',
+    '#title' => t('Add Content Module') . ' ' . theme('form_required_marker'),
+    '#markup' => '<p>'.t('This is the content module with which you want users to interact. You can add a HTML5 captivate package file with a zip extension.').'</p>',
+    '#weight' => -101,
+  );
+
+  // Check for default value.
+  $html5_content = FALSE;
+  if (isset($form['#node']->nid)) {
+    $form['#attached']['js'][] = drupal_get_path('module', 'sbac_media') . '/js/sbac_media.ctools.js';
+
+    $html5_media_item = sbac_media_load_html5_item($form['#node']->nid, TRUE);
+    if ($html5_media_item) {
+      $html5_content = TRUE;
+
+      $form['field_content_module_container']['ajax_container'] = array(
+        '#prefix'=>'<div id="sbac-ajax-container">',
+        '#suffix'=>'</div>',
+        '#weight' => -99,
+      );
+
+      $form['field_content_module_container']['ajax_container']['header'] = array(
+        '#markup' => "<h6>Content Module</h6>",
+        '#weight' => -98,
+      );
+
+      $form['field_content_module_container']['ajax_container']['subcontainer'] = array(
+        '#prefix'=>'<div id="sbac-content-module-subcontainer" class="row">',
+        '#suffix'=>'</div>',
+        '#weight' => -97,
+      );
+
+      $form['field_content_module_container']['ajax_container']['subcontainer']['uploaded_file'] = array(
+        '#markup' => '<div class="columns large-9"><p class="uploaded-file">' . $html5_media_item->filename . "</p></div>",
+        '#weight' => -96,
+      );
+
+      $html5_progress = db_query('SELECT * FROM {sbac_html5_progress} WHERE nid = :nid', array(':nid' => $form['#node']->nid))->fetchObject();
+      // If there is HTML5 progress record and its set to Finished or Error.
+      if ($html5_progress && ($html5_progress->status == SBAC_MEDIA_HTML5_FINISHED || $html5_progress->status == SBAC_MEDIA_HTML5_ERROR)) {
+        // Delete link.
+        $delete_link = '<div class="columns large-1">'.l('<i class="general foundicon-trash"></i>', 'sbac-media/nojs/delete-media', array(
+            'attributes' => array(
+              'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media',
+              'id' => 'sbac-media-modal-delete-media',
+              'title' => 'Delete Media',
+            ),
+            'html' =>true,
+            'query' => array(
+              'fid' => $html5_media_item->fid,
+              'nid' => $html5_media_item->nid,
+              'id' => $html5_media_item->id,
+              'html5' => $form_state['html5'],
+            )
+          )). '</div>';
+
+        // JS to properly size the modal.
+        $js_settings = array(
+          'sbac-media-modal-delete-media' => array(
+            'modalSize' => array(
+              'type' => 'fixed',
+              'width' => 600,
+              'height' => 160,
+            ),
+            'modalTheme' => 'CtoolSbacMediaDeleteMaterial'
+          ),
+        );
+        drupal_add_js($js_settings, 'setting');
+
+        $form['field_content_module_container']['ajax_container']['subcontainer']['delete_button'] = array(
+          '#markup' => $delete_link,
+          '#weight' => -95,
+        );
+      }
+      else {
+        $form['field_content_module_container']['ajax_container']['subcontainer']['delete_button'] = array(
+          '#markup' => '<div class="columns large-3">Processing...</div>',
+          '#weight' => -95,
+        );
+      }
+    }
+  }
+
+  $container = '<div id="display-container" style="display:block;">';
+  if ($html5_content) {
+    $container = '<div id="display-container" style="display:none;">';
+  }
+
+  $form['field_content_module_container']['field_display'] = array(
+    '#prefix'=> $container,
+    '#suffix'=> '</div>',
+  );
+
+  // Content Module Upload Picker.
+  $form['field_content_module_container']['field_display']['field_content_module_picker'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload3'),
+    '#title_display' => 'invisible',
+    '#size' => 22,
+    '#weight' => -96,
+    '#attributes' => array('id' => array('edit-field-content-module-picker'), 'name' => 'files[field_content_module_picker]'),
+  );
+
+  // Content Module Upload Button.
+  $form['field_content_module_container']['field_display']['field_content_module_upload'] = array(
+    '#type' => 'submit',
+    '#value' => 'Upload (250MB Max)',
+    '#sbac_embed_video' => FALSE,
+    '#weight' => -95,
+    '#attributes' => array('class' => array('sbac-html5-uploader'), 'id' => 'edit-field-content-module-upload'),
+    '#ajax' => array(
+      'callback' => 'sbac_media_html5_element_upload',
+      'wrapper' => 'sbac-content-module-container',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
+  );
+
+  $form['#group_children']['field_content_module_container'] = 'group_materials';
+}
+
+/**
+ * After build function to add the submit handler in.
+ *
+ * Used to add weights to the eck_media table.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_media_after_build_form(&$form, &$form_state) {
+  $form['actions']['cancel']['#submit'][] = 'sbac_media_widget_form_element_submit_handler';
+  $form['actions']['cancel']['#submit'] = array_reverse($form['actions']['cancel']['#submit']);
+  $form['#submit'][] = 'sbac_media_widget_form_element_submit_handler';
+  $form['#submit'] = array_reverse($form['#submit']);
+  return $form;
+}
+
+/**
+ * Submit handler to set the weights;
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_widget_form_element_submit_handler($form, &$form_state) {
+  if (isset($form_state['node']->nid) && ($form_state['node']->nid)) {
+    sbac_media_handle_temp_files($form, $form_state);
+    // Clear previous transcript flags for this node.
+    db_query("UPDATE {eck_media} SET transcript = 0 WHERE nid = :nid", array(':nid' => $form_state['node']->nid));
+  }
+
+  // Handle the weight of the media items.
+  if (isset($form_state['input']['weights']) && $form_state['input']['weights']) {
+    $weights = drupal_json_decode($form_state['input']['weights']);
+    if ($weights) {
+      foreach ($weights as $media_id => $weight) {
+        $media_id = str_replace('material-', '', $media_id);
+        db_query("UPDATE {eck_media} SET weight = :weight WHERE id = :id", array(':weight' => $weight, ':id' => $media_id));
+      }
+    }
+  }
+
+  // Set the transcript flag for each media item.
+  if (isset($form_state['input']['transcript']) && $form_state['input']['transcript']) {
+    $transcripts = $form_state['input']['transcript'];
+    foreach ($transcripts as $media_id => $value) {
+      db_query('UPDATE {eck_media} SET transcript = 1 WHERE id = :id', array(':id' => $media_id));
+    }
+  }
+
+  // On moderation, send them to moderate queue.
+  if ($form_state['clicked_button']['#value'] == 'Close') {
+    if (isset($form_state['sbac-flag']) && $form_state['sbac-flag'] == TRUE) {
+      $form_state['redirect'] = 'moderation';
+    }
+  }
+}
+
+/**
+ * Handle the temp file situations.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_handle_temp_files($form, $form_state) {
+  // need to handle HTML5 as well.
+  if ($form_state['triggering_element']['#value'] == 'Close') {
+    //handle temp files here. delete anything with a status of 0, status of 1 is permanent.
+    $temp_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => SBAC_MEDIA_TEMP_FILE_STATUS));
+    foreach ($temp_files as $file) {
+      if ($file->type != 'html5') {
+        sbac_media_delete_media_record($file->id, $file->fid);
+      }
+    }
+    unset($temp_files);
+    unset($file);
+
+    if (isset($_SESSION['new_files'])) {
+      $all_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => SBAC_MEDIA_DELETE_FILE_STATUS));
+      foreach ($all_files as $file) {
+        if (array_key_exists($file->id, $_SESSION['new_files'])) {
+          sbac_media_delete_media_record($file->id, $file->fid);
+        }
+      }
+      // clear this variable
+      unset($_SESSION['new_files']);
+    }
+    // if status is 2, set back to 1, they didn't really want to delete it.
+    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS, ':nid' => $form_state['node']->nid, ':status2' => SBAC_MEDIA_DELETE_FILE_STATUS));
+  }
+
+  if ($form_state['triggering_element']['#value'] == 'Save' || $form_state['triggering_element']['#value'] == 'Continue') {
+    // temp file, they clicked save, permanently save the file now.
+    db_query('UPDATE {eck_media} SET status = :status WHERE nid = :nid AND status = :status2', array(':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS, ':nid' => $form_state['node']->nid, ':status2' => SBAC_MEDIA_TEMP_FILE_STATUS));
+    // now check if a file is supposed to be removed, if they clicked save and a status of 2 exists, remove the file
+    $remove_files = db_query('SELECT * FROM {eck_media} WHERE nid = :nid AND status = :status', array(':nid' => $form_state['node']->nid, ':status' => SBAC_MEDIA_DELETE_FILE_STATUS));
+    foreach ($remove_files as $file) {
+      if ($file->type != 'html5') {
+        sbac_media_delete_media_record($file->id, $file->fid);
+      }
+    }
+    if (isset($_SESSION['new_files'])) {
+      // clear this variable
+      unset($_SESSION['new_files']);
+    }
+  }
+}
+
+/**
+ * Creates the table list of media items.
+ *
+ * @param $media_items
+ * @param $form_state
+ *
+ * @return string
+ */
+function _sbac_media_create_list($media_items, $form_state) {
+  if ($media_items) {
+    $output = '<table id="sbac-media-list" class="sortable">';
+    if ($form_state['html5']) {
+      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan="5">Secondary Material. These will be available in addition to module content.</td></tr></thead>';
+    }
+    else {
+      $output .= '<thead><tr><th colspan="3">Material Name</th><th colspan="3">Operations</th></tr><tr><td colspan="5">Primary Material. This is the main material with which you want users to interact.</td></tr></thead>';
+      if (count($media_items) > 1) {
+        $output .= '<div class="secondary-items-info">Secondary Material(s). These will be shown adjacent to the primary material.</div>';
+      }
+    }
+
+    $count = 0;
+    foreach ($media_items as $key => $media_item) {
+      // Open.
+      $output .= '<tr id="material-' . $media_item->id . '">';
+
+      // Image.
+      $type = _sbac_resource_determine_type($media_item, TRUE);
+      $output .= '<td class="' . $type . ' ui-icon"></td>';
+
+      // Filename.
+      $output .= '<td>' . $media_item->filename;
+      if ($media_item->status == SBAC_MEDIA_TEMP_FILE_STATUS) {
+        $output .= ' ** ';
+      }
+      if (!$media_item->fid && $media_item->filesize) {
+        if (strpos($media_item->embed_url, 'slideshare') !== FALSE) {
+          $output .= ' (' . $media_item->filesize . ' total slides)';
+        }
+        else {
+          $output .= ' (' . gmdate("i:s", $media_item->filesize) . ')';
+        }
+      }
+
+      // Checkbox
+      if ($type != 'image' && $type != 'document') {
+        $checked = '';
+        if ($media_item->transcript) {
+          $checked = 'checked=checked';
+        }
+        $output .= '<br />
+        <label class="element-invisible" for="checkbox-' . $count . '">I have uploaded a separate transcript for this material</label>
+        <input id="checkbox-' . $count . '" type="checkbox" ' . $checked . ' media="' . $media_item->id . '" value="1" name="transcript[' . $media_item->id . ']" />I have uploaded a separate transcript for this material';
+      }
+      $output .= '</td>';
+
+      // Filesize.
+      $bytes = 'Embedded Video';
+      if ($media_item->fid && $media_item->filesize) {
+        $bytes = number_format($media_item->filesize / 1024, 2) . ' KB';
+      }
+      $output .= '<td>' . $bytes . '</td>';
+
+      // Delete link.
+      $delete_link = l(t('Delete'), 'sbac-media/nojs/delete-media', array(
+        'attributes' => array(
+          'class' => 'ctools-use-modal use-ajax ctools-modal-sbac-media-modal-delete-media-' . $count,
+          'id' => 'sbac-media-modal-delete-media-' . $count,
+          'title' => 'Delete Material',
+        ),
+        'query' => array(
+          'fid' => $media_item->fid,
+          'nid' => $media_item->nid,
+          'id' => $media_item->id,
+        )
+      ));
+
+      // JS to properly size the modal.
+      $js_settings = array(
+        'sbac-media-modal-delete-media-' . $count => array(
+          'modalSize' => array(
+            'type' => 'fixed',
+            'width' => 600,
+            'height' => 160,
+          ),
+          'modalTheme' => 'CtoolSbacMediaDeleteMaterial'
+        ),
+      );
+      drupal_add_js($js_settings, 'setting');
+
+      $output .= '<td class="delete-media"><i class="general foundicon-trash""></i>' . $delete_link . '</td>';
+
+      // Close.
+      $output .= '</tr>';
+      $count++;
+    }
+    $output .= '</table>';
+  }
+  else {
+    $output = "<div id='sbac-media-list'></div>";
+  }
+  return $output;
+}
+
+/**
+ * Validate embedded videos.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_widget_form_element_validate($form, $form_state) {
+  if ($form_state['triggering_element']['#value'] == 'Add Embedded Video') {
+    if ($form_state['values']['field_embed_video']) {
+      $embed_video = strtolower($form_state['values']['field_embed_video']);
+      if (strpos($embed_video, 'youtube') === FALSE && strpos($embed_video, 'teachertube') === FALSE && strpos($embed_video, 'schooltube') === FALSE && strpos($embed_video, 'vimeo') === FALSE && strpos($embed_video, 'slideshare') === FALSE) {
+        form_set_error('field_embed_video', t('The following URL: ' . $form_state['values']['field_embed_video'] . ' cannot be embedded. Only videos from the following accepted hosts are allowed: YouTube, Vimeo, SchoolTube, TeacherTube and SlideShare.'));
+      }
+    }
+    else {
+      form_set_error('field_embed_video', t('You must enter a valid URL: e.g. http://www.someserver.com/videos/somevideo.mp4'));
+    }
+  }
+}
+
+/**
+ * The form element submit handler.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_media_widget_form_element_upload($form, $form_state) {
+  if (form_get_errors()) {
+    $media_items = sbac_media_load_items($form['#node']->nid);
+    $output = _sbac_media_create_list($media_items, $form_state);
+    $form['field_file_container']['materials']['#markup'] = $output;
+    $form['field_file_container']['materials']['#weight'] = -100;
+    return $form['field_file_container'];
+  }
+
+  if ($form_state['clicked_button']['#sbac_embed_video']) {
+    $embedded_video_source = $form_state['values']['field_embed_video'];
+    if (strpos($embedded_video_source, 'youtube') !== FALSE || strpos($embedded_video_source, 'vimeo') !== FALSE) {
+      $_SESSION['field_embed_video'] = $embedded_video_source;
+      $form['field_file_container']['run_js'] = array(
+        '#markup' => '<script>jQuery("#sbac-media-internet-confirm").click();</script>',
+      );
+    }
+    else {
+      if (isset($form_state['node'])) {
+        $node = $form_state['node'];
+        sbac_media_save_embedded_source($embedded_video_source, $node->nid);
+      }
+    }
+  }
+  else {
+    sbac_media_save_media($form, $form_state);
+  }
+
+  // Update the view
+  $media_items = sbac_media_load_items($form['#node']->nid);
+  $output = _sbac_media_create_list($media_items, $form_state);
+  $form['field_file_container']['field_embed_video']['#value'] = '';
+  $form['field_file_container']['materials']['#markup'] = $output;
+  $form['field_file_container']['materials']['#weight'] = -100;
+  // re-populate node so node_presave is up to date.
+  $form_state['node']->document = $media_items;
+
+  return $form['field_file_container'];
+}
+
+/**
+ * Save the media item.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_save_media(&$form, &$form_state) {
+  $allowed_file_types = array('txt doc docx pdf xls xlsx pptx ppt odt odp mp4 mov mp3 aac png jpg jpeg mpg avi ods');
+  // First param is file limit. second param is limit for total size for all uploads for user.
+  $allowed_size = array(SBAC_MEDIA_100MB, 0);
+  $directory = "gs://resources/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+  $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+  if ($writable) {
+    $validators = array(
+      'file_validate_extensions' => $allowed_file_types,
+      'file_validate_size' => $allowed_size,
+    );
+    $temp_uri = $_FILES['files']['tmp_name']['field_file_upload'];
+    $file_hash = md5_file($temp_uri);
+    $file = file_save_upload('field_file_upload', $validators, $directory, FILE_EXISTS_RENAME);
+    if ($file) {
+      $file->status = FILE_STATUS_PERMANENT;
+      file_save($file);
+
+      if (isset($form_state['node'])) {
+        $node = $form_state['node'];
+
+        // Create the media item, duplicates get checked later.
+        $media = new stdClass;
+        $media->type = 'media';
+        $media->fid = $file->fid;
+        $media->nid = $node->nid;
+        $media->filename = $file->filename;
+        $media->file_size = $file->filesize;
+        $media->file_hash = $file_hash;
+        $media->weight = 100;
+        $media->status = SBAC_MEDIA_TEMP_FILE_STATUS;
+        entity_save('media', $media);
+        $_SESSION['new_files'][$media->id] = $media;
+      }
+    }
+    else {
+      form_set_error('field_file_upload', t('You must add a file to continue.'));
+    }
+  }
+}
+
+/**
+ * Implements hook_file_validate().
+ *
+ * @param $file
+ * @return array
+ */
+function sbac_media_file_validate($file) {
+  if (($file->source == 'field_file_upload') ||
+    ($file->source == 'field_content_module_picker')){
+    global $user;
+    $file_limit = SBAC_MEDIA_100MB;
+    if ($file->source == 'field_content_module_picker') { // HTML5 field.
+      $file_limit = SBAC_MEDIA_250MB;
+    }
+    // Have to create custom validator for user1. Standard file_validate_size exempts user1.
+    if ($user->uid == 1 || user_is_logged_in()) {
+      if ($file->filesize > $file_limit) {
+        $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($file->filesize), '%maxsize' => format_size($file_limit)));
+        return $errors;
+      }
+    }
+  }
+}
+
+/**
+ * Upload function for html5 materials.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_media_html5_element_upload($form, $form_state) {
+  if (form_get_errors()) {
+    return $form['field_content_module_container'];
+  }
+
+  $valid = FALSE;
+  drupal_get_messages(); // clear messages if they were some from before.
+  $file_attributes = array();
+  sbac_media_save_temp_html5($file_attributes, $form, $form_state);
+  error_log(print_r($file_attributes, TRUE));
+  if ($file_attributes) {
+    // Check that the zip saved.
+    $no_errors = sbac_media_check_zip($file_attributes, $form, $form_state);
+    error_log('no errors: ' . $no_errors);
+    if ($no_errors) {
+      $valid = sbac_media_save_html5_record($file_attributes, $form_state);
+      error_log('valid: ' . $valid);
+      if ($valid) {
+        // Bail out here if background callbacks are disabled.
+        if (!httprl_is_background_callback_capable()) {
+          watchdog('sbac-media', 'HTTPRL is not capable of making a background request.');
+          // rebuild the form, output.
+          $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
+          $form['#node']->document['html5'] = $html5_media_item;
+          sbac_media_build_html5_section($form, $form_state);
+          return $form['field_content_module_container'];
+        }
+
+        // Setup callback options array; call sbac_media_html5_upload_asynchronous() in the background.
+        $callback_options = array(
+          array(
+            'function' => 'sbac_media_html5_upload_asynchronous',
+            // Setup options array.
+            'options' => array(
+              'timeout' => 1200,
+              'global_timeout' => 1200,
+            ),
+          ),
+          $file_attributes,
+        );
+        // Queue up the request.
+        httprl_queue_background_callback($callback_options);
+        // Execute request.
+        $response = httprl_send_request();
+        error_log(print_r($response));
+        if ($response === FALSE) {
+          watchdog('SBAC Media', 'Failed to start background tasks' , NULL, WATCHDOG_ERROR);
+        }
+        error_log('executing request');
+        $_SESSION['file_attributes'] = $file_attributes;
+
+        error_log('move thumbnail');
+        sbac_media_move_html5_thumbnail($file_attributes);
+      }
+      // rebuild the form, output.
+      $html5_media_item = sbac_media_load_html5_item($form_state['node']->nid);
+      $form['#node']->document['html5'] = $html5_media_item;
+      sbac_media_build_html5_section($form, $form_state);
+    }
+
+    if (!$no_errors || !$valid) {
+      // File content not there, create errors and delete temporary files (zip, zip contents, and file record).
+      form_set_error('field_content_module_picker', t('The selected file ' . $file_attributes['file']->filename . ' cannot be uploaded as content module. It is not a valid module file. Only files with a zip extension are allowed for content module upload.'));
+      // delete the unzipped contents path
+      file_unmanaged_delete_recursive($file_attributes['zip_contents_path']);
+      // delete the zip file
+      unlink($file_attributes['zip_archive_path']);
+      // delete the file record
+      file_delete($file_attributes['file']);
+      // rebuild the form
+      $form = drupal_rebuild_form('resource_node_form', $form_state);
+    }
+  }
+  return $form['field_content_module_container'];
+}
+
+/**
+ * Process the HTML5 module in the background.
+ *
+ * @param $file_attributes
+ */
+function sbac_media_html5_upload_asynchronous($file_attributes) {
+  try {
+    $error_uploading = FALSE;
+    // Insert new DB record for tracking purposes.
+    sbac_media_html5_start_progress($file_attributes['nid']);
+    $temp_path = $file_attributes['html5_temp_path'];
+    // Generate unique path for HTML5 module.
+    $gcs_location = $file_attributes['gcs_location'];
+    // Get Google Cloud Storage service / client.
+    $gcs = sbac_media_get_google_cloud_storage();
+    // Create recursive dir iterator which skips dot folders
+    $dir = new RecursiveDirectoryIterator($file_attributes['full_html5_temp_path'], FilesystemIterator::SKIP_DOTS);
+    // Flatten the recursive iterator, folders come before their files
+    $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+    // Basic loop displaying different messages based on file or folder
+    foreach ($it as $fileinfo) {
+      // Don't try to upload directories, Google just creates a place holder.
+      // When the folder has content underneath it, Google will then create
+      // an actual foler.
+      if (!$fileinfo->isDir()) {
+        $full_path = $fileinfo->getPathname();
+        if (strpos($full_path, 'Thumbs.db') !== FALSE || strpos($full_path, '.DS_Store') !== FALSE) {
+          continue;
+        }
+        $path = str_replace($temp_path, '', $full_path);
+        if (filesize($full_path) > 0) {
+          error_log($gcs_location . $path);
+          $bytes_written = sbac_media_upload_html5_file($gcs, $gcs_location . $path, $full_path);
+          error_log('Bytes Written: ' . $bytes_written);
+          if ($bytes_written == NULL || $bytes_written == FALSE) {
+            $error_uploading = TRUE;
+            break;
+          }
+        }
+      }
+    }
+
+    if (!$error_uploading) {
+      error_log("VALID UPLOAD");
+      // Finish the progress indicator
+      error_log(print_r($file_attributes, TRUE));
+      sbac_media_html5_finish_progress($file_attributes['nid']);
+      // Remove local HTML5 directory
+      $local_directory = "private://html5/" . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'];
+      if (file_exists($local_directory)) {
+        file_unmanaged_delete_recursive($local_directory);
+      }
+    }
+    else {
+      error_log("BAD UPLOAD");
+      sbac_media_html5_fail_upload($file_attributes);
+    }
+  }
+  catch (Exception $e) {
+    error_log("BAD UPLOAD EXCEPTION");
+    watchdog_exception('SBAC Media', $e, 'sbac_media_html5_upload_asynchronous');
+    sbac_media_html5_fail_upload($file_attributes);
+  }
+}
+
+/**
+ * Fail the HTML5 upload and set the node back to draft.
+ *
+ * @param $file_attributes
+ */
+function sbac_media_html5_fail_upload($file_attributes) {
+  // Set an error on the progress
+  sbac_media_html5_error_progress($file_attributes['nid']);
+  // Send notication to user who submitted HTML5 module
+  // and needs to know about the problem.
+  if ($task = taskit_get_object('html5_upload_error')) {
+    $task->addVisibility($task::VISIBILITY_USER);
+    $task->addEntity('node', $file_attributes['nid']);
+    $task->addOwningUser($file_attributes['uid']);
+    $task->save();
+  }
+  // Set resource to draft state.
+  $node = node_load($file_attributes['nid']);
+  // Load the admin roles, set it to the global user
+  $account = user_load(1);
+  global $user;
+  $temp_user = $user;
+  $user = $account;
+  workbench_moderation_moderate($node, 'draft');
+  sbac_resource_save_current_state($node);
+  $user = $temp_user;
+}
+
+/**
+ * Upload the HTML5 file via Google API PHP Library
+ *
+ * Sets the ACL to public as well.
+ *
+ * @param $gcs
+ * @param $gcs_location
+ * @param $file_to_upload
+ *
+ * @return bool
+ */
+function sbac_media_upload_html5_file($gcs, $gcs_location, $file_to_upload) {
+  try {
+    $bucket = SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION;
+    $folder = variable_get('oscaddie_gcs_folder');
+    $buffer = file_get_contents($file_to_upload);
+
+    // Create the Storage Object
+    $file = new Google_Service_Storage_StorageObject();
+    $path  = str_replace('gs://', '', $gcs_location);
+    $path = trim($path, '/');
+    $file->setName($folder . '/' . $path);
+    error_log("file to upload: " . $file_to_upload);
+    $mime_type = file_get_mimetype($file_to_upload);
+    error_log('mime_type: ' . $mime_type);
+    $post_body = array(
+      'mimeType' => $mime_type,
+      'data' => $buffer,
+    );
+    // Create the MediaFileUpload object
+    $chunk_size_bytes = 1 * 1024 * 1024;
+    $gcs['client']->setDefer(TRUE);
+    $request = $gcs['service']->objects->insert($bucket, $file, $post_body);
+    $media = new Google_Http_MediaFileUpload(
+      $gcs['client'],
+      $request,
+      $mime_type,
+      NULL,
+      TRUE,
+      $chunk_size_bytes
+    );
+    $file_size = strlen($buffer);
+    $media->setFileSize($file_size);
+
+    // Send the content in chunks.
+    $upload_result = FALSE;
+    $pos = 0;
+    while (!$upload_result && $pos < $file_size) {
+      $chunk = substr($buffer, $pos, $chunk_size_bytes);
+      try {
+        $upload_result = $media->nextChunk($chunk);
+      }
+      catch(Exception $e) {
+        // If upload_result isn't FALSE while pos is less than file_size, an error has happened.
+        if(!$upload_result && $pos < $file_size) {
+          $max_retry_attempts = 5;
+          $retry_delay = 1;
+          $retry_result = FALSE;
+          for ($i = 0; $i < $max_retry_attempts; $i++) {
+            // Wait retry_delay seconds
+            sleep($retry_delay);
+            try {
+              $retry_result = $media->nextChunk($chunk);
+            }
+            catch (Exception $f) {
+            }
+            if($retry_result) {
+              // If the retry is successful, break out of for loop
+              $upload_result = $retry_result;
+              break;
+            }
+            $retry_delay = $retry_delay * 2;
+          }
+        }
+      }
+      $pos += $chunk_size_bytes;
+    }
+
+    // return the result
+    if ($upload_result) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('oscaddie_gcs', $e, 'HTML5 Upload Exception');
+    watchdog('oscaddie_gcs', 'Unable to upload file: ' . $folder . '/' . $path);
+    return FALSE;
+  }
+}
+
+/**
+ * Take the HTML5 thumbnail and move it to the correct private location.
+ *
+ * @param $file_attributes
+ */
+function sbac_media_move_html5_thumbnail($file_attributes) {
+  $zip_contents_path = $file_attributes['full_html5_temp_path'];
+  $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
+  $thumbnail_move_path = 'public://html5_thumbnails/' . floor($file_attributes['nid'] / 32000) . '/' . $file_attributes['nid'];
+  if (file_prepare_directory($thumbnail_move_path, FILE_CREATE_DIRECTORY)) {
+    $thumbnail_move_path .= '/thumbnail.png';
+    $real_path = drupal_realpath($thumbnail_move_path);
+    $worked = copy($thumbnail_path, $real_path);
+    if ($worked) {
+      // create the file record for drupal
+      $mime_type = file_get_mimetype($real_path);
+      $file = new stdClass();
+      $file->uid = $file_attributes['uid'];
+      $file->filename = 'thumbnail.png';
+      $file->uri = $thumbnail_move_path;
+      $file->filemime = $mime_type;
+      $file->filesize = filesize($real_path);
+      $file->status = 1;
+      $file->timestamp = time();
+      $file->type = $mime_type;
+      file_save($file);
+    }
+  }
+}
+
+/**
+ * Creates a row in the progress table to indicate progress.
+ *
+ * @param $nid
+ */
+function sbac_media_html5_start_progress($nid) {
+  $query = 'INSERT INTO {sbac_html5_progress}
+  VALUES(' . $nid . ',' . SBAC_MEDIA_HTML5_IN_PROGRESS .', ' . time() . ', 0)';
+  db_query($query);
+}
+
+/**
+ * Updates the row to indicate
+ *
+ * @param $nid
+ */
+function sbac_media_html5_finish_progress($nid) {
+  $query = 'UPDATE {sbac_html5_progress}
+  SET status = ' . SBAC_MEDIA_HTML5_FINISHED .', finish_time = ' . time() . '
+  WHERE nid = ' . $nid;
+  db_query($query);
+}
+
+/**
+ * Deletes the progress indicator row
+ *
+ * @param $nid
+ */
+function sbac_media_html5_error_progress($nid) {
+  $query = 'UPDATE {sbac_html5_progress}
+  SET status = ' . SBAC_MEDIA_HTML5_ERROR .', finish_time = ' . time() . '
+  WHERE nid = ' . $nid;
+  db_query($query);
+}
+
+/**
+ * Deletes the progress indicator row
+ *
+ * @param $nid
+ */
+function sbac_media_html5_delete_progress($nid) {
+  $query = 'DELETE FROM {sbac_html5_progress} WHERE nid = ' . $nid;
+  db_query($query);
+}
+
+/**
+ * Save the media html5 element.
+ *
+ * @param $file_attributes
+ * @param $form
+ * @param $form_state
+ * @return bool
+ */
+function sbac_media_save_temp_html5(&$file_attributes, &$form, &$form_state) {
+  try {
+    $allowed_file_types = array('zip');
+    $allowed_size = array(SBAC_MEDIA_250MB, 0);
+    $directory = "private://html5/" . floor($form['#node']->nid/32000) . "/" . $form['#node']->nid;
+    $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    if ($writable) {
+      $validators = array(
+        'file_validate_extensions' => $allowed_file_types,
+        'file_validate_size' => $allowed_size,
+      );
+      // File is temporarily saved.
+      $file = file_save_upload('field_content_module_picker', $validators, $directory, FILE_EXISTS_REPLACE);
+      if ($file) {
+        // Open the zip and save the file.
+        $real_path = drupal_realpath($file->uri);
+        $zip = new ZipArchive;
+        if ($zip->open($real_path) === TRUE) {
+          $drupal_html5_temp_path = $directory . '/html5_module_temp';
+          $saved = $zip->extractTo($drupal_html5_temp_path);
+          // Handle the situation where the folder name that was zipped could be different then the name of the zip.
+          if ($saved) {
+            $zip_foldername = $zip->getNameIndex(0);
+            $pos = strpos($zip_foldername, '/');
+            $folder_name = $zip_foldername;
+            if ($pos !== FALSE) {
+              $folder_name = substr($zip_foldername, 0, $pos);
+            }
+            $zip->close();
+            global $user;
+            $unique_id = uniqid('', TRUE);
+            $full_html5_temp_path = drupal_realpath($drupal_html5_temp_path) . '/' . $folder_name;
+            $file_attributes['file'] = $file;
+            $file_attributes['real_path'] = $real_path;
+            $file_attributes['directory'] = $directory;
+            $file_attributes['full_html5_temp_path'] = $full_html5_temp_path;
+            $file_attributes['html5_temp_path'] = drupal_realpath($drupal_html5_temp_path);
+            $file_attributes['nid'] = $form['#node']->nid;
+            $file_attributes['uid'] = $user->uid;
+            $file_attributes['gcs_location'] = 'gs://html5/' . floor($file_attributes['nid']/32000) . "/" . $file_attributes['nid'] . '/' . $unique_id;
+            $file_attributes['unique_id'] = $unique_id;
+            $file_attributes['folder_name'] = $folder_name;
+            return TRUE;
+          }
+        }
+      }
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('sbac_media::sbac_media_save_temp_html5', $e);
+    form_set_error('field_content_module_picker', t('The file directory is not writable.'));
+    $form = drupal_rebuild_form('resource_node_form', $form_state);
+    return FALSE;
+  }
+}
+
+/**
+ * Checks the zip contents.
+ *
+ * @param $file_attributes
+ * @param $form
+ * @param $form_state
+ * @return bool
+ */
+function sbac_media_check_zip(&$file_attributes, &$form, &$form_state) {
+  $no_errors = FALSE;
+  if (file_exists($file_attributes['real_path'])) {
+    $zip_contents_path = $file_attributes['full_html5_temp_path'];
+    // Check that the zip contents saved.
+    if (file_exists($zip_contents_path)) {
+      //Check the file contents.
+      $index_html_path = $zip_contents_path . '/index.html';
+      $coverpage_path = $zip_contents_path . '/dlcomponents/CoverPage.html';
+      $framescale_path = $zip_contents_path . '/dlcomponents/frameScale.html';
+      $thumbnail_path = $zip_contents_path . '/dlcomponents/thumbnail.png';
+      if (file_exists($index_html_path) && file_exists($coverpage_path) && file_exists($framescale_path) && file_exists($thumbnail_path)) {
+        // File contents do exists, save file correctly
+        $no_errors = TRUE;
+      }
+    }
+  }
+  return $no_errors;
+}
+
+/**
+ * Create the html5 record.
+ *
+ * @param $file_attributes
+ * @param $form_state
+ */
+function sbac_media_save_html5_record(&$file_attributes, $form_state) {
+  $file = $file_attributes['file'];
+  $file->status = FILE_STATUS_PERMANENT;
+  $file = file_save($file);
+  $file_attributes['file'] = $file;
+  $node = $form_state['node'];
+  $file_url = drupal_realpath($file->uri);
+  $file_hash = md5_file($file_url);
+
+  // Create the media item
+  $media = new stdClass;
+  $media->type = 'html5';
+  $media->fid = $file->fid;
+  $media->nid = $node->nid;
+  $media->filename = $file->filename;
+  $media->file_size = $file->filesize;
+  $media->file_hash = $file_hash;
+  $media->weight = 100;
+  $media->status = SBAC_MEDIA_PERMANENT_FILE_STATUS;
+  $media->document_id = $file_attributes['unique_id'] . '::' . $file_attributes['folder_name'];
+  $return = entity_save('media', $media);
+
+  return $return;
+}
+
+/**
+ * Creates a record for each file in the module file.
+ *
+ * Needed since the HTML5 module is private, drupal needs a record for all files in the module content.
+ *
+ * @param $zip_contents_path
+ * @param $directory
+ */
+function sbac_media_create_file_record_html5_module($file_attributes) {
+  global $user;
+
+  // Create recursive dir iterator which skips dot folders
+  $dir = new RecursiveDirectoryIterator($file_attributes['zip_contents_path'], FilesystemIterator::SKIP_DOTS);
+  // Flatten the recursive iterator, folders come before their files
+  $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+  // Basic loop displaying different messages based on file or folder
+  foreach ($it as $fileinfo) {
+    if (!$fileinfo->isDir()) {
+      $filename = $fileinfo->getFilename();
+      if ($filename != '.DS_Store') {
+        // need fid, uid, filename, uri, filemime, filesize, status, timestamp, type
+        $path = $fileinfo->getPath();
+        $full_path = str_replace($file_attributes['zip_contents_path'], '', $path);
+        $full_path_uri = $file_attributes['directory'] . '/html5_module' . $full_path . '/' . $filename;
+        $mime_type = file_get_mimetype($full_path_uri);
+        if (strlen($mime_type) > 50) {
+          $mime_type = 'application/octet-stream';
+        }
+        $dir_file = new stdClass();
+        $dir_file->uid = $user->uid;
+        $dir_file->filename = $filename;
+        $dir_file->uri = $full_path_uri;
+        $dir_file->filemime = $mime_type;
+        $dir_file->filesize = $fileinfo->getSize();
+        $dir_file->status = 1;
+        $dir_file->timestamp = time();
+        $dir_file->type = $mime_type;
+        drupal_write_record('file_managed', $dir_file);
+      }
+    }
+  }
+}
+
+/**
+ * Creates a record for each file in the module file.
+ *
+ * Needed since the HTML5 module is private, drupal needs a record for all files in the module content.
+ *
+ * @param $zip_contents_path
+ * @param $directory
+ */
+function sbac_media_delete_file_record_html5_module($zip_contents_path, $directory) {
+  global $user;
+
+  // Create recursive dir iterator which skips dot folders
+  $dir = new RecursiveDirectoryIterator($zip_contents_path, FilesystemIterator::SKIP_DOTS);
+  // Flatten the recursive iterator, folders come before their files
+  $it  = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+  // Basic loop displaying different messages based on file or folder
+  foreach ($it as $fileinfo) {
+    if (!$fileinfo->isDir()) {
+      $filename = $fileinfo->getFilename();
+      if ($filename != '.DS_Store') {
+        // need fid, uid, filename, uri, filemime, filesize, status, timestamp, type
+        $path = $fileinfo->getPath();
+        $full_path = str_replace($zip_contents_path, '', $path);
+        $full_path_uri = $directory . '/html5_module' . $full_path . '/' . $filename;
+
+        // Create a query which deletes a record depending on path, filename and uid.
+        db_query("DELETE FROM {file_managed} WHERE uid = :uid AND uri = :uri AND filename = :filename", array(':uid' => $user->uid, ':uri' => $full_path_uri, ':filename' => $filename));
+      }
+    }
+  }
+}
+
+/**
+ * Checks if the media item is duplicated elsewhere.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_check_duplicates($media_items) {
+  $duplicates = FALSE;
+  global $user;
+  foreach ($media_items as $media_item) {
+    if ($media_item->fid) {
+      $query  = 'SELECT e.* from eck_media AS e ';
+      $query .= 'JOIN node AS n ON e.nid = n.nid ';
+      $query .= 'JOIN workbench_moderation_node_history AS w ON n.nid = w.nid AND n.vid = w.vid ';
+      $query .= 'WHERE e.file_hash = :file_hash AND ';
+      $query .= 'n.nid <> :nid AND ';
+      $query .= 'n.uid = :uid AND ';
+      $query .= 'w.state = :state';
+      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
+      if ($matches->rowCount()) {
+        $duplicates = TRUE;
+        break;
+      }
+    }
+  }
+  return $duplicates;
+}
+
+/**
+ * Counts the media items that are duplicated.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_media_count_duplicates($media_items) {
+  $count = array();
+  global $user;
+  foreach ($media_items as $media_item) {
+    if ($media_item->fid) {
+      $query  = 'SELECT e.* from eck_media AS e ';
+      $query .= 'JOIN node AS n ON e.nid = n.nid ';
+      $query .= 'JOIN workbench_moderation_node_history AS w ON n.nid = w.nid AND n.vid = w.vid ';
+      $query .= 'WHERE e.file_hash = :file_hash AND ';
+      $query .= 'n.nid <> :nid AND ';
+      $query .= 'n.uid = :uid AND ';
+      $query .= 'w.state = :state';
+      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
+      foreach ($matches as $match) {
+        $count[$match->nid][$match->id] = $match;
+      }
+    }
+  }
+  return $count;
+}
+
+/**
+ * Load the media items for the resource.
+ *
+ * @param $nid
+ * @param $permanent_only
+ *
+ * @return array
+ */
+function sbac_media_load_items($nid, $permanent_only = FALSE) {
+  $materials = sbac_media_load_materials($nid, $permanent_only);
+  $embedded_materials = sbac_media_load_embedded_materials($nid, $permanent_only);
+  $media_items = array_merge($materials, $embedded_materials);
+  return $media_items;
+}
+
+/**
+ * Load the local files.
+ *
+ * @param $nid
+ * @param bool $permanent_only
+ * @return array
+ */
+function sbac_media_load_materials($nid, $permanent_only = FALSE) {
+  $media_items = array();
+  if ($nid) {
+    if ($permanent_only) {
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              JOIN {file_managed} AS f
+                ON e.fid = f.fid
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status = :status
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS);
+    }
+    else {
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              JOIN {file_managed} AS f
+                ON e.fid = f.fid
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status <> :status
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_DELETE_FILE_STATUS);
+    }
+    $result = db_query($sql, $args);
+    foreach ($result as $row) {
+      $media_item = new stdClass();
+      $media_item->type = $row->type;
+      $media_item->id = $row->id;
+      $media_item->fid = $row->fid;
+      $media_item->nid = $row->nid;
+      $media_item->filename = $row->filename;
+      $media_item->filesize = $row->file_size;
+      $media_item->filehash = $row->file_hash;
+      $media_item->weight = $row->weight;
+      $media_item->document_id = $row->document_id;
+      $media_item->embed_url = $row->embed_url;
+      $media_item->transcript = $row->transcript;
+      $media_item->status = $row->status;
+      $media_items[] = $media_item;
+    }
+  }
+  return $media_items;
+}
+
+/**
+ * Load the embedded files (youtube, vimeo etc).
+ *
+ * @param $nid
+ * @param bool $permanent_only
+ * @return array
+ */
+function sbac_media_load_embedded_materials($nid, $permanent_only = FALSE) {
+  $media_items = array();
+  if ($nid) {
+    if ($permanent_only) {
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status = :status
+                AND e.fid = 0
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_PERMANENT_FILE_STATUS);
+    }
+    else {
+      $sql = "SELECT e.*
+              FROM {eck_media} AS e
+              WHERE e.nid = :nid
+                AND e.type <> :type
+                AND e.status <> :status
+                AND e.fid = 0
+              ORDER BY e.weight";
+      $args = array(':nid' => $nid, ':type' => 'html5', ':status' => SBAC_MEDIA_DELETE_FILE_STATUS);
+    }
+    $result = db_query($sql, $args);
+    foreach ($result as $row) {
+      $media_item = new stdClass();
+      $media_item->type = $row->type;
+      $media_item->id = $row->id;
+      $media_item->fid = $row->fid;
+      $media_item->nid = $row->nid;
+      $media_item->filename = $row->filename;
+      $media_item->filesize = $row->file_size;
+      $media_item->filehash = $row->file_hash;
+      $media_item->weight = $row->weight;
+      $media_item->document_id = $row->document_id;
+      $media_item->embed_url = $row->embed_url;
+      $media_item->transcript = $row->transcript;
+      $media_item->status = $row->status;
+      $media_items[] = $media_item;
+    }
+  }
+  return $media_items;
+}
+
+/**
+ * HTML5 media items get loaded.
+ *
+ * @param $nid
+ * @return stdClass
+ */
+function sbac_media_load_html5_item($nid, $form = NULL) {
+  $html5_item = NULL;
+  if ($nid) {
+    $args = array();
+    $sql =  'SELECT * FROM {eck_media} ';
+    $sql .= 'WHERE nid = :nid AND type = :type ';
+    $args[':nid'] = $nid;
+    $args[':type'] = 'html5';
+    if ($form) {
+      $sql .= 'AND (status = :status OR status = :status2) ';
+      $args[':status'] = SBAC_MEDIA_PERMANENT_FILE_STATUS;
+      $args[':status2'] = SBAC_MEDIA_TEMP_FILE_STATUS;
+    }
+    else {
+      $sql .= 'AND status = :status ';
+      $args[':status'] = SBAC_MEDIA_PERMANENT_FILE_STATUS;
+    }
+    $sql .= 'ORDER BY weight LIMIT 1';
+    $html5_item = db_query($sql, $args)->fetchObject();
+  }
+  return $html5_item;
+}
+
+/**
+ * Sets the status value of the record to 2 (delete).
+ *
+ * @param $id
+ * @param null $fid
+ */
+function sbac_media_temp_delete_media_record($id) {
+  if ($id) {
+    db_query('UPDATE {eck_media} SET status = :status WHERE id = :id', array(':status' => SBAC_MEDIA_DELETE_FILE_STATUS, ':id' => $id));
+  }
+}
+
+/**
+ * Deletes the html5 record.
+ *
+ * @param $file
+ */
+function sbac_media_delete_html5_record($file) {
+  $directory = "private://html5/" . floor($file->nid / 32000) . "/" . $file->nid;
+  $zip_contents_path = drupal_realpath($directory) . '/html5_module_temp';
+  if (file_exists($zip_contents_path)) {
+    sbac_media_delete_file_record_html5_module($zip_contents_path, $directory);
+    file_unmanaged_delete_recursive($zip_contents_path);
+    file_unmanaged_delete_recursive($directory);
+  }
+  else {
+    watchdog('SBAC Media', 'Unable to remove HTML5 content module for node with nid of ' . $file->nid);
+    file_unmanaged_delete_recursive($directory);
+  }
+  sbac_media_delete_media_record($file->id, $file->fid);
+}
+
+/**
+ * Implements hook_file_delete()
+ *
+ * @param $file
+ */
+function sbac_media_file_delete($file) {
+  _sbac_media_log('unknown', $file->fid);
+}
+
+/**
+ * Logger to help debug missing materials
+ *
+ */
+function _sbac_media_log($nid, $fid) {
+  global $user;
+  $e = new Exception();
+  $stack_trace = $e->getTraceAsString();
+  $time = time();
+  $date = date('Y-m-d h:i:s', $time);
+  $msg = "User $user->uid removed file $fid (node $nid) on $time ($date)\n$stack_trace";
+  error_log($msg);
+  watchdog('sbac_media', $msg);
+}
+
+
+/**
+ * Deletes the media record.
+ *
+ * @param $id
+ * @param null $fid
+ */
+function sbac_media_delete_media_record($id, $fid = NULL) {
+  // Delete the eck_media record.
+  if ($id) {
+    db_query('DELETE FROM {eck_media} WHERE id = :id', array(':id' => $id));
+  }
+
+  // Delete the local file record.
+  if ($fid) {
+    $file = file_load($fid);
+    if ($file) {
+      file_delete($file);
+    }
+  }
+}
+
+/**
+ * Displays the media delete modal.
+ *
+ * @param bool $js
+ */
+function sbac_media_delete_media($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $html5 = FALSE;
+    if (isset($_GET['html5'])) {
+      $html5 = TRUE;
+    }
+
+    $form_state = array(
+      'title' => t('You are about to delete this material'),
+      'ajax' => $js,
+      'html5' => $html5,
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_media_delete_media_form', $form_state);
+
+    // This means the form has been executed.
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        if ($form_state['html5']) {
+          // Build path to delete file folder.
+          $local_directory = "private://html5/" . floor($form_state['values']['nid']/32000) . "/" . $form_state['values']['nid'];
+          if (file_exists($local_directory)) {
+            file_unmanaged_delete_recursive($local_directory);
+          }
+          sbac_media_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+
+          // Delete folder from Google.
+          $callback_options = array(
+            array(
+              'function' => 'sbac_media_html5_delete_asynchronous',
+              // Setup options array.
+              'options' => array(
+                'timeout' => 1200,
+                'global_timeout' => 1200,
+              ),
+            ),
+            $local_directory,
+          );
+          // Queue up the request.
+          httprl_queue_background_callback($callback_options);
+          // Execute request.
+          httprl_send_request();
+
+          // Delete any leftover progress indicator
+          sbac_media_html5_delete_progress($form_state['values']['nid']);
+
+          // Delete the HTML5 thumbnail
+          sbac_media_html5_delete_thumbnail($form_state['values']['nid']);
+
+          // Rebuild the HTML5 section.
+          $form = array();
+          $form_state = array();
+          $form_state['html5'] = TRUE;
+          sbac_media_build_html5_section($form, $form_state);
+          $rendered_output = drupal_render($form['field_content_module_container']);
+          $output[] = ajax_command_html('#sbac-content-module-container', $rendered_output);
+        }
+        else {
+          sbac_media_temp_delete_media_record($form_state['values']['id'], $form_state['values']['fid']);
+          // Rebuild the list of items.
+          $media_items = sbac_media_load_items($form_state['values']['nid']);
+          $media_list = _sbac_media_create_list($media_items, $form_state);
+          $output[] = ajax_command_html('#sbac-media-list', $media_list);
+        }
+        _sbac_media_log($form_state['values']['nid'], $form_state['values']['fid']);
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Asynchronously delete the HTML5 module from Google Cloud Storage.
+ *
+ * @param $directory
+ */
+function sbac_media_html5_delete_asynchronous($directory) {
+  $google_directory = str_replace('private://', '', $directory);
+  $gcs = sbac_media_get_google_cloud_storage();
+  if ($gcs) {
+    $folder = variable_get('oscaddie_gcs_folder');
+    $response = $gcs['service']->objects->listObjects(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, array('prefix' => $folder . '/' . $google_directory));
+    if ($response && isset($response['modelData']) && isset($response['modelData']['items'])) {
+      foreach ($response['modelData']['items'] as $object) {
+        $url = urldecode($object['selfLink']);
+        $pos = strpos($url, 'html5/');
+        $url = substr($url, $pos);
+        error_log($folder . '/' . $url);
+        $deleted = $gcs['service']->objects->delete(SBAC_MEDIA_HTML5_GOOGLE_FOLDER_LOCATION, $folder . '/' . $url);
+      }
+    }
+  }
+}
+
+/**
+ * Delete the thumbnail that exists for the HTML5 module.
+ *
+ * @param $nid
+ */
+function sbac_media_html5_delete_thumbnail($nid) {
+  $thumbnail_dir = 'public://html5_thumbnails/' . floor($nid/32000) . '/' . $nid . '/thumbnail.png';
+  if (file_exists($thumbnail_dir)) {
+    file_unmanaged_delete_recursive($thumbnail_dir);
+  }
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_media_delete_media_form() {
+  $form = array();
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SERVER['HTTP_REFERER'],
+  );
+
+  $form['fid'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['fid'],
+  );
+
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['nid'],
+  );
+
+  $form['id'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['id'],
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t('If you continue, the material will be removed from this resource.') . '</p>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Delete',
+    '#attributes' => array('class' => array('red'), 'id' => array('edit-delete-media-overlay'))
+  );
+
+	$form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('gray cancel'), 'id' => array('edit-cancel-media-overlay'))
+  );
+
+  return $form;
+}
+
+/**
+ * Displays the media delete modal.
+ *
+ * @param bool $js
+ */
+function sbac_media_internet_confirm($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $form_state = array(
+      'title' => t('You are about to embed a Video'),
+      'ajax' => $js,
+      'html5' => $_GET['html5'],
+    );
+
+    $output = ctools_modal_form_wrapper('sbac_media_internet_confirm_form', $form_state);
+
+    // This means the form has been executed.
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        sbac_media_save_embedded_source($form_state['values']['embed'], $form_state['values']['nid']);
+        $media_items = sbac_media_load_items($form_state['values']['nid']);
+        $media_list = _sbac_media_create_list($media_items, $form_state);
+        $output[] = ajax_command_html('#sbac-media-list', $media_list);
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_media_internet_confirm_form() {
+  $form = array();
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SERVER['HTTP_REFERER'],
+  );
+
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['nid'],
+  );
+
+  $form['embed'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SESSION['field_embed_video'],
+  );
+
+  $form['description'] = array(
+    '#markup' => '<p>' . t('There are oftentimes issues with the playback of YouTube / Vimeo videos on filtered networks.') . '</p>',
+  );
+
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t('Are you sure you want to continue?') . '</p>',
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('id' => array('edit-cancel-media-embed'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Embed Video',
+    '#attributes' => array('id' => array('edit-delete-media-embed'))
+  );
+
+  return $form;
+}
+
+/**
+ * API call to retrieve title and save media.
+ *
+ * @param $embedded_video_source
+ */
+function sbac_media_save_embedded_source($embedded_video_source, $nid) {
+  if ($embedded_video_source == NULL || $nid == NULL) {
+    return;
+  }
+
+  $file = new stdClass();
+  // API Call to retrieve Titles. (Would like to get length but no API provides it)
+  if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
+    $handler = new MediaInternetSchoolTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
+    $handler = new MediaInternetTeacherTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
+    $handler = new MediaInternetSlideShareHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'youtube') !== FALSE) {
+    $handler = new MediaInternetYouTubeHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
+    $handler = new MediaInternetVimeoHandler($embedded_video_source);
+    $file = $handler->getFileObject();
+  }
+
+  if ($file && isset($file->filename) && $file->filename != NULL) {
+    $media = new stdClass;
+    $media->type = 'media';
+    $media->fid = 0;
+    $media->nid = $nid;
+    $media->filename = $file->filename;
+    $media->file_size = (isset($file->duration) ? $file->duration : 0);
+    $media->weight = 100;
+    $media->embed_url = $embedded_video_source;
+    $media->status = SBAC_MEDIA_TEMP_FILE_STATUS;
+    entity_save('media', $media);
+    $_SESSION['new_files'][$media->id] = $media;
+  }
+}
+
+/**
+ * Displays the duplicates form in a modal.
+ *
+ * @param bool $js
+ */
+function sbac_media_duplicates($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $nid = $_GET['nid'];
+    $state = $_GET['state'];
+    if ($nid) {
+      $media_items = sbac_media_load_items($nid);
+      $count = sbac_media_count_duplicates($media_items);
+      $title = 'There are :count published resources in the Smarter Balanced Digital Library with similar combination of materials';
+      $form_state = array(
+        'title' => t($title, array(':count' => count($count))),
+        'ajax' => $js,
+        'sbac-media-items' => $media_items,
+        'state' => $state,
+      );
+
+      $output = ctools_modal_form_wrapper('sbac_media_duplicates_form', $form_state);
+      if (!empty($form_state['executed'])) {
+        $output = array();
+        $output[] = ctools_modal_command_dismiss();
+        if ($form_state['triggering_element']['#value'] != 'Cancel') {
+          $output[] = ajax_command_invoke('.vertical-tabs-list li:nth-child(3) a', 'removeClass', array(''));
+          $output[] = ajax_command_invoke('.vertical-tabs-list li:nth-child(3) a', 'click');
+        }
+      }
+      print ajax_render($output);
+      exit();
+    }
+    else {
+      return;
+    }
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * The cancel / delete form
+ *
+ * @return array
+ */
+function sbac_media_duplicates_form($form, &$form_state) {
+  $duplicates = array();
+  global $user;
+  foreach ($form_state['sbac-media-items'] as $media_item) {
+    if ($media_item->fid) {
+      $query  = 'SELECT e.* from eck_media AS e ';
+      $query .= 'JOIN node AS n ON e.nid = n.nid ';
+      $query .= 'JOIN workbench_moderation_node_history AS w ON n.nid = w.nid AND n.vid = w.vid ';
+      $query .= 'WHERE e.file_hash = :file_hash AND ';
+      $query .= 'n.nid <> :nid AND ';
+      $query .= 'n.uid = :uid AND ';
+      $query .= 'w.state = :state';
+      $matches = db_query($query, array(':file_hash' => $media_item->filehash, ':nid' => $media_item->nid, ':uid' => $user->uid, ':state' => 'published'));
+      foreach ($matches as $match) {
+        $duplicates[$match->nid][$match->id] = $match;
+      }
+    }
+  }
+
+  $output = '';
+  if ($duplicates) {
+    $output = '<div class="sbac-media-duplicates-container">';
+    foreach ($duplicates as $resource_nid => $media_items) {
+      $node = node_load($resource_nid);
+      $url = 'node/' . $node->nid;
+      if (isset($node->path['alias'])) {
+        $url = $node->path['alias'];
+      }
+
+      $output .= '<p>' . l($node->title, $url, array('attributes' => array('title' => $node->title, 'class' => array('sbac-dup'), 'target' => '_blank'), 'absolute' => TRUE)) . '</p>';
+      $output .= '<ul>';
+      foreach ($media_items as $media) {
+        $output .= '<li>' . $media->filename . '</li>';
+      }
+      $output .= '</ul>';
+      $output .= '<span class="duplicate-line"></span>';
+    }
+    $output .= '</div>';
+  }
+
+  $form['hidden_url'] = array(
+    '#type' => 'hidden',
+    '#value' => $_SERVER['HTTP_REFERER'],
+  );
+
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $_GET['nid'],
+  );
+
+  $form['description'] = array(
+    '#markup' => '<p>' . t('Please help us maintain the quality of the Digital Library by creating original resources.') . '</p>',
+  );
+
+  $description = 'The following resources contain materials very similar to those you have uploaded.
+                  Click a resource title to view it in a new tab/window. You can cancel and adjust
+                  your resource materials or move forward to the next tab.';
+  if ($form_state['state'] == 'published') {
+    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      $description .= ' Saving changes to this resource will make these changes visible to all users of the Digital Library.';
+    }
+  }
+  $description .= '</p>';
+  $form['submit_description'] = array(
+    '#markup' => '<p>' . t($description),
+  );
+
+  $form['duplicates'] = array(
+    '#markup' => $output,
+  );
+
+  $form['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#prefix' => '<div class="dup-btns">',
+    '#attributes' => array('id' => array('edit-cancel-media-duplicates'))
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save and Continue',
+    '#suffix' => '</div>',
+    '#attributes' => array('id' => array('edit-save-media-duplicates'))
+  );
+
+  return $form;
+}

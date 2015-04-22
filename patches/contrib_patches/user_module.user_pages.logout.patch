@@ -1,0 +1,13 @@
+diff --git a/docroot/modules/user/user.pages.inc b/docroot/modules/user/user.pages.inc
+index e3e5def..218193d 100644
+--- a/docroot/modules/user/user.pages.inc
++++ b/docroot/modules/user/user.pages.inc
+@@ -177,7 +177,7 @@ function user_logout() {
+   // Destroy the current session, and reset $user to the anonymous user.
+   session_destroy();
+ 
+-  drupal_goto();
++  drupal_goto('user');
+ }
+ 
+ /**

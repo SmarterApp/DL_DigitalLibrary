@@ -1,0 +1,174 @@
+/* line 2, ../sass/taskit.scss */
+#notifications .helpful-info {
+  background: #eee;
+  border: 1px #ccc solid;
+  margin: 0 0 1em 0;
+  padding: 1em !important;
+}
+/* line 8, ../sass/taskit.scss */
+#notifications .helpful-info h2 {
+  margin-bottom: 1em;
+}
+/* line 12, ../sass/taskit.scss */
+#notifications .helpful-info p:last-child {
+  margin-bottom: 0;
+}
+/* line 17, ../sass/taskit.scss */
+#notifications .taskit-interval {
+  margin-bottom: 20px;
+  padding-bottom: 30px;
+  clear: both;
+  float: left;
+  width: 100%;
+}
+/* line 24, ../sass/taskit.scss */
+#notifications .taskit-interval:last-child {
+  margin-bottom: 0;
+}
+/* line 28, ../sass/taskit.scss */
+#notifications .taskit-interval h3 {
+  text-transform: capitalize;
+}
+/* line 32, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row {
+  border-bottom: 1px #ccc solid;
+  font-size: 0.8em;
+  position: relative;
+  float: left;
+  width: 100%;
+      /*
+      &.taskit-collapsed {
+        .remove {
+          display: none;
+        }
+
+        .item {
+          .taskit-content {
+            .taskit-expand {
+              .taskit-expand-trigger {
+                background: url('/sites/all/themes/SBAC/images/arrow-right.png') center center no-repeat;
+              }
+            }
+
+            .taskit-content-toggle {
+              display: none;
+            }
+          }
+        }
+      }
+      */
+}
+/* line 39, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row.taskit-new {
+  background: #eee;
+}
+/* line 65, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .ajax-progress-throbber {
+  display: none;
+}
+/* line 69, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .item {
+  float: left;
+  width: 100%;
+  line-height: 1.5;
+}
+/* line 74, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .item .taskit-content {
+  background: url("/sites/all/themes/SBAC/images/arrow-right.png") 99% center no-repeat;
+  color: #5a5a5a;
+  display: block;
+  padding: 10px 40px 10px 10px;
+  line-height: 1.5;
+  float: left;
+  width: 100%;
+}
+/* line 83, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .item .taskit-content:hover {
+  background-color: #eee;
+}
+/* line 87, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .item .taskit-content .taskit-title {
+  color: #0085ad;
+  font-weight: bold;
+}
+/* line 96, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .item .taskit-content .taskit-expand {
+  display: block;
+  height: 14px;
+  position: absolute;
+  right: 10px;
+  text-indent: -9999px;
+  top: 10px;
+  width: 14px;
+}
+/* line 105, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .item .taskit-content .taskit-expand .taskit-expand-trigger {
+  background: url("/sites/all/themes/SBAC/images/arrow-down.png") center center no-repeat;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+/* line 113, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .item .taskit-content .taskit-content-toggle {
+  display: block;
+  line-height: 1.5em;
+  margin-right: -30px;
+}
+/* line 121, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .remove {
+  display: none;
+  bottom: 10px;
+  position: absolute;
+  right: 10px;
+  z-index: 2;
+}
+/* line 129, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .remove.collapsed {
+  display: none;
+}
+/* line 133, ../sass/taskit.scss */
+#notifications .taskit-interval .taskit-row .remove a {
+  display: block;
+  text-transform: uppercase;
+}
+
+/* line 147, ../sass/taskit.scss */
+.taskit-interval.interval-today .taskit-forum-cont,
+.taskit-interval.interval-yesterday .taskit-forum-cont,
+.taskit-interval.interval-older .taskit-forum-cont,
+.taskit-interval.interval-prior .taskit-forum-cont {
+  padding: 10px 40px 10px 10px;
+}
+/* line 151, ../sass/taskit.scss */
+.taskit-interval.interval-today .taskit-forum-cont .taskit-content-toggle,
+.taskit-interval.interval-today .taskit-forum-cont .taskit-topic-removed-message,
+.taskit-interval.interval-yesterday .taskit-forum-cont .taskit-content-toggle,
+.taskit-interval.interval-yesterday .taskit-forum-cont .taskit-topic-removed-message,
+.taskit-interval.interval-older .taskit-forum-cont .taskit-content-toggle,
+.taskit-interval.interval-older .taskit-forum-cont .taskit-topic-removed-message,
+.taskit-interval.interval-prior .taskit-forum-cont .taskit-content-toggle,
+.taskit-interval.interval-prior .taskit-forum-cont .taskit-topic-removed-message {
+  margin-top: 3px;
+}
+/* line 155, ../sass/taskit.scss */
+.taskit-interval.interval-today .taskit-forum-cont a,
+.taskit-interval.interval-yesterday .taskit-forum-cont a,
+.taskit-interval.interval-older .taskit-forum-cont a,
+.taskit-interval.interval-prior .taskit-forum-cont a {
+  color: #0085AD;
+  font-weight: bold;
+}
+/* line 161, ../sass/taskit.scss */
+.taskit-interval.interval-today .taskit-timestamp,
+.taskit-interval.interval-yesterday .taskit-timestamp,
+.taskit-interval.interval-older .taskit-timestamp,
+.taskit-interval.interval-prior .taskit-timestamp {
+  text-align: right;
+  float: right;
+  color: #62676E;
+}
+
+/* line 169, ../sass/taskit.scss */
+.devtools-tooltip-body .line {
+  border-bottom: none;
+}

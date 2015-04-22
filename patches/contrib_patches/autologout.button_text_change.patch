@@ -1,0 +1,20 @@
+diff --git a/docroot/sites/all/modules/contrib/autologout/autologout.js b/docroot/sites/all/modules/contrib/autologout/autologout.js
+index cc3203c..8e068ab 100644
+--- a/docroot/sites/all/modules/contrib/autologout/autologout.js
++++ b/docroot/sites/all/modules/contrib/autologout/autologout.js
+@@ -103,13 +103,13 @@
+ 
+       function dialog() {
+         var buttons = {};
+-        buttons[Drupal.t('Yes')] = function() {
++        buttons[Drupal.t('OK')] = function() {
+           $(this).dialog("destroy");
+           clearTimeout(paddingTimer);
+           refresh();
+         };
+ 
+-        buttons[Drupal.t('No')] = function() {
++        buttons[Drupal.t('Cancel')] = function() {
+           $(this).dialog("destroy");
+           logout();
+         };

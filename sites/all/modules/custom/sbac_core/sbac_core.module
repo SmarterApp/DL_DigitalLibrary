@@ -1,0 +1,410 @@
+<?php
+
+/**
+ * @file.
+ * Module to handle all review related functionality
+ *
+ * Provides:
+ *  - Resource Review Gate Keeping and Resource Review workflow and administrative inputs.
+ *  - The user notifications
+ *  - Profanity filter
+ *  - More or less wrapper
+ *  - Sections (tabs) that are displayed on the resource node view
+ */
+
+/*----------------------------------------------------------------------------
+      SETUP & CONFIG
+----------------------------------------------------------------------------*/
+
+include_once 'sbac_core.features.inc';
+include_once 'components/feedback/feedback.theme.inc';
+include_once 'components/review/review.theme.inc';
+
+// load required files
+module_load_include('inc', 'sbac_core', 'core/class.Core');
+
+// initializes devtools components
+// steev - remove the if, as the module is definitely there
+//if (module_exists('devtools')) {
+// steev - do we need to load all the dev tools? if not we can just load the required
+  devtools_load();
+
+  // override the devtools handler so we can gain access to the Debug object
+  // and add more allowed IPs
+  // steev - do we need this in production?
+//  $GLOBALS['_devtools_handler_print_rr'] = 'sbac_core_print_rr';
+
+  // this must happen as early as possible in order to load any files that
+  // may have menu access callbacks
+  devtools_load('sbac_core');
+//}
+
+/*----------------------------------------------------------------------------
+      DRUPAL HOOKS
+----------------------------------------------------------------------------*/
+
+/**
+ * Implements hook_init().
+ */
+function sbac_core_init() {
+  \sbac_core\Core::hook('init', NULL);
+
+  // steev - why are we doing this and do we need the if statement?
+  global $settings_php_js;
+  if (!is_null($settings_php_js)) {
+    drupal_add_js($settings_php_js, 'setting');
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function sbac_core_menu() {
+  return \sbac_core\Core::hook('menu', array());
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function sbac_core_menu_alter(&$items) {
+  \sbac_core\Core::hook('menu_alter', NULL, $items);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sbac_core_theme($existing, $type, $theme, $path) {
+  return \sbac_core\Core::hook('theme', array(), $existing, $type, $theme, $path);
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function sbac_core_theme_registry_alter(&$theme_registry) {
+  \sbac_core\Core::hook('theme_registry_alter', NULL, $theme_registry);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sbac_core_form_alter(&$form, &$form_state, $form_id) {
+  \sbac_core\Core::hook('form_alter', NULL, $form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_permission().
+ */
+function sbac_core_permission() {
+  return \sbac_core\Core::hook('permission', array());
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function sbac_core_element_info_alter(&$type) {
+  \sbac_core\Core::hook('element_info_alter', NULL, $type);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function sbac_core_cron() {
+  \sbac_core\Core::hook('cron', NULL);
+}
+
+/**
+ * Implements hook_js_alter().
+ */
+function sbac_core_js_alter(&$javascript) {
+  \sbac_core\Core::hook('js_alter', NULL, $javascript);
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function sbac_core_field_widget_form_alter(&$element, &$form_state, $context) {
+  \sbac_core\Core::hook('field_widget_form_alter', NULL, $element, $form_state, $context);
+}
+
+/**
+ * Implements hook_field_attach_form().
+ */
+function sbac_core_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
+  \sbac_core\Core::hook('field_attach_form', NULL, $entity_type, $entity, $form, $form_state, $langcode);
+}
+
+/**
+ * Implements hook_field_attach_validate().
+ */
+function sbac_core_field_attach_validate($entity_type, $entity, &$errors) {
+  \sbac_core\Core::hook('field_attach_validate', NULL, $entity_type, $entity, $errors);
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function sbac_core_entity_info_alter(&$entity_info) {
+  \sbac_core\Core::hook('entity_info_alter', NULL, $entity_info);
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function sbac_core_entity_presave($entity, $type) {
+  \sbac_core\Core::hook('entity_presave', NULL, $entity, $type);
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function sbac_core_entity_view_alter(&$build, $type) {
+  \sbac_core\Core::hook('entity_view_alter', NULL, $build, $type);
+}
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function sbac_core_node_view_alter(&$build) {
+  \sbac_core\Core::hook('node_view_alter', NULL, $build);
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function sbac_core_page_build(&$page) {
+  \sbac_core\Core::hook('page_build', NULL, $page);
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function sbac_core_entity_insert($entity, $type) {
+  \sbac_core\Core::hook('entity_insert', NULL, $entity, $type);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function sbac_core_entity_update($entity, $type) {
+  \sbac_core\Core::hook('entity_update', NULL, $entity, $type);
+}
+
+/**
+ * Implements hook_user_view().
+ */
+function sbac_core_user_view($account, $view_mode, $langcode) {
+  if (!isset($account->content['sections'])) {
+    $account->content['sections'] = array();
+  }
+
+  \sbac_core\Core::hook('user_view', NULL, $account, $view_mode, $langcode);
+}
+
+/**
+ * Implements hook_username_alter().
+ */
+function sbac_core_username_alter(&$name, $account) {
+  \sbac_core\Core::hook('username_alter', NULL, $name, $account);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function sbac_core_form_node_form_alter(&$form, $form_state) {
+  \sbac_core\Core::hook('form_node_form_alter', NULL, $form, $form_state);
+}
+
+/**
+ * Implements hook_libraries_alter().
+ */
+function sbac_core_library_alter(&$libraries, $module) {
+  \sbac_core\Core::hook('library_alter', NULL, $libraries, $module);
+}
+
+/*----------------------------------------------------------------------------
+      MODULE HOOKS
+----------------------------------------------------------------------------*/
+
+/**
+ * Implements hook_devtools_components().
+ */
+function sbac_core_devtools_components() {
+  $components = array(
+    'admin' => array(),
+    'cmis'  => array(
+      'files' => array(
+        'cmis.forms.inc',
+      ),
+    ),
+    'colorbox' => array(),
+    'current_entity' => array(),
+    'feedback' => array(
+      'files' => array(
+        'feedback.pages.inc',
+        'feedback.pages.modal_gk.inc',
+        'feedback.pages.modal_post.inc',
+        'feedback.pages.modal_qc.inc',
+        'feedback.forms.inc',
+        'feedback.theme.inc',
+      ),
+    ),
+    'field_profanity' => array(),
+    // 'field_required' => array(),
+    'field_xss' => array(),
+    'flag' => array(
+      'files' => array(
+        'flag.forms.inc',
+        'flag.theme.inc',
+        'flag.pages.modal_review.inc',
+      ),
+    ),
+    'input_format' => array(),
+    // 'maxlength_above' => array(),
+    'memory' => array(),
+    'more_less_text' => array(),
+    'profanity' => array(
+      'dependencies' => array(
+        'phonetic',
+      ),
+    ),
+    'resource' => array(),
+    'review' => array(
+      'files' => array(
+        'review.forms.inc',
+        'review.pages.modal_eu.inc',
+        'review.theme.inc',
+      ),
+    ),
+    'sections' => array(),
+    'taskit' => array(),
+    'tooltip' => array(),
+    'user' => array(),
+    'user_profile' => array(),
+  );
+
+  return $components;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory();
+ */
+function sbac_core_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'eck' && $plugin_type == 'property_behavior') {
+    return 'plugins/' . $plugin_type;
+  }
+}
+
+/**
+ * Implements hook_taskit_types().
+ */
+function sbac_core_taskit_types() {
+  return \sbac_core\Core::hook('taskit_types', array());
+}
+
+/**
+ * Implements hook_workbench_moderation_transition().
+ */
+function sbac_core_workbench_moderation_transition($node, $previous_state, $new_state) {
+  \sbac_core\Core::hook('workbench_moderation_transition', NULL, $node, $previous_state, $new_state);
+}
+
+/**
+ * Implements hook_rate_widget_alter().
+ */
+function sbac_core_rate_widget_alter(&$widget, $context) {
+  \sbac_core\Core::hook('rate_widget_alter', NULL, $widget, $context);
+}
+
+/*----------------------------------------------------------------------------
+      DEVTOOLS HANDLERS
+----------------------------------------------------------------------------*/
+
+/**
+ * Overrides devtools' print_rr function handler to add new IPs
+ * @param  [type]  $data   [description]
+ * @param  boolean $return [description]
+ * @return [type]          [description]
+ */
+// steev - can we remove this for production?
+function sbac_core_print_rr($data, $return = FALSE) {
+  $debug = \devtools\components\Debug::instance();
+  $debug->addIp('209.82.119.242'); // appnovation external
+  return $debug->output($data, $return);
+}
+
+/*----------------------------------------------------------------------------
+      HELPERS
+----------------------------------------------------------------------------*/
+
+/**
+ * Uses preg_match to match string to the $_GET['q'] parameter and statically
+ * caches the result.
+ *
+ * @param  [type] $needle   String (or array of strings) to search for.
+ * @param  [type] $haystack String to search in. Optional, defaults to $_GET['q']
+ * @return [type]           boolean
+ */
+function match_uri($needle, $haystack = NULL) {
+  // statically cache the matches
+    $matches = &drupal_static(__FUNCTION__);
+    if (is_null($matches)) {
+      $matches = array();
+    }
+
+  // if we get an array of search terms, turn them into a string split by the
+  // regex OR operator
+    if (is_array($needle)) {
+      $needle = implode('|', $needle);
+    }
+
+  if (is_null($haystack)) {
+    $haystack = $_GET['q'];
+  }
+
+  if (!isset($matches[$haystack][$needle])) {
+    $regex = '#' . str_replace('#', '\#', $needle) . '#';
+
+    $matches[$haystack][$needle] = preg_match($regex, $haystack);
+  }
+
+  return $matches[$haystack][$needle];
+}
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_core_update_projects_alter(&$projects) {
+  unset($projects['sbac_core']);
+}
+
+function sbac_core_form_eck__entity__form_add_review_end_use_alter(&$form, &$form_state, &$form_id) {
+  $form['state_create']['field_student_learning']['#prefix'] = '<label class="element-invisible" for="edit-field-student-learning-und-0-rating--2">Helps Improve Student Learning</label>';
+  $form['state_create']['field_pro_dev']['#prefix'] = '<label class="element-invisible" for="edit-field-pro-dev-und-0-rating--2">Helps My Professional Development</label>';
+  $form['state_create']['field_ease_use']['#prefix'] = '<label class="element-invisible" for="edit-field-ease-use-und-0-rating--2">Is Easy To Use</label>';
+  $form['state_create']['hidden_markup'] = array(
+    '#markup' => '<div id="edit-field-student-learning-und-0-rating" class="element-invisible"></div><div id="edit-field-pro-dev-und-0-rating" class="element-invisible"></div><div id="edit-field-ease-use-und-0-rating" class="element-invisible"></div>',
+  );
+}
+
+/**
+ * Returns the notifications content for the profile view.
+ *
+ * @return string
+ */
+function sbac_core_notifications_get_html_content() {
+  global $user;
+  $account = $user;
+  $help_content = variable_get('user_notifications_help', input_default_full_html());
+  $notifications_content = '';
+  $notifications_content .= '<div id="notifications">';
+  $notifications_content .= '<div class="helpful-info">';
+  $notifications_content .= '<h2>' . t('Helpful Information') . '</h2>';
+  $notifications_content .= more_less_text(filter_text($help_content));
+  $notifications_content .= '</div>';
+  $notifications_content .= taskit_page($account);
+  $notifications_content .= '</div>';
+  taskit_mark_all_read($user);
+  return $notifications_content;
+}

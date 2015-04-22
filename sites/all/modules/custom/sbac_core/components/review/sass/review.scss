@@ -1,0 +1,766 @@
+/* mixins */
+
+@import "compass/css3/";
+
+@mixin left_col {
+  float: left;
+  width: 280px;
+}
+
+@mixin mid_col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 270px;
+  padding-left: 10px;
+}
+
+@mixin right_col {
+  border-left: 1px #ccc solid;
+  float: left;
+  width: 270px;
+  padding-left: 10px;
+}
+
+@mixin maxlength {
+  .counter {
+    position: absolute;
+    right: 310px;
+    top: 0px;
+    font-size: 12px;
+
+    &.messages {
+      background: #fff;
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+/* layout */
+#review-wrap-reviews {
+  margin: 0 30px;
+  padding-bottom: 20px;
+
+  .review-form-header {
+    margin-bottom: 10px;
+
+    .section-title {
+      border-bottom: 1px solid #62676E;
+			color: #04384E;
+	    display: block;
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin: 0 0 20px;
+	    padding: 20px 0 5px;
+	    text-transform: capitalize;
+    }
+  }
+
+  .review-form-trigger {
+    float: left;
+    display: inline; 
+    margin: 0 0 10px;
+  }
+
+  #review-end-use-wrap {
+    form {
+      clear: both;
+			
+			label {
+				font-size: 13px;
+		  }
+
+      /* this will only hide the initial form, while still showing it upon form submissions/state changes */
+      &#eck-entity-form-add-review-end-use {
+        display: none;
+      }
+
+      .intro {
+        padding: 0 0 10px;
+				font-size: 16px;
+				line-height: 1.6;
+				max-width: 560px;
+				
+				a {
+					border-bottom: 1px solid #0583AC;
+					color: #0583AC;
+				  display: inline;
+				  padding-bottom: 0;
+					
+					&:hover {
+						color: #8A1538;
+						border-bottom: 1px solid #8A1538;
+					}
+				}
+      }
+
+      .form-item-title {
+        position: relative;
+
+        @include maxlength;
+
+				label {
+					font-size: 14px;
+					color: #101010;
+				}
+				
+				input.form-text {
+					max-width: 560px;
+          width: 560px;
+				}
+      }
+
+      .field-name-field-details {
+        position: relative;
+				line-height: 1.2;
+				padding-bottom: 15px;
+
+        @include maxlength;
+				
+				label {
+					font-size: 14px;
+					color: #101010;
+				}
+				
+        textarea {
+          max-width: 560px;
+          width: 560px;
+
+          &.error {
+            width: 560px;
+          }
+        }
+      }
+
+      .field-name-field-student-learning {
+        @include left_col;
+
+        label {
+          margin-bottom: 10px;
+        }
+
+        .fivestar-form-item {
+          padding-right: 10px;
+        }
+      }
+      
+      .field-name-field-pro-dev {
+        @include mid_col;
+				border-left: none;
+				padding-left: 0;
+
+        label {
+          margin-bottom: 10px;
+        }
+
+        .fivestar-form-item {
+          padding-right: 10px;
+        }
+      }
+
+      .field-name-field-ease-use {
+        @include right_col;
+				border-left: none;
+				padding-left: 0;
+
+        label {
+          margin-bottom: 10px;
+        }
+
+        .fivestar-form-item {
+          padding-left: 0;
+        }
+      }
+
+      .field-name-field-appropriate-for {
+        clear: both;
+        padding: 15px 0;
+
+				label {
+					padding: 8px 0;
+				}
+								
+				input[type="checkbox"] {
+					margin-left: 0;
+				}
+
+        .form-checkboxes {
+          .form-item {
+            float: left;
+            margin: 0;
+            padding: 1px 0;
+            width: 33.3%;
+
+            /* first column */
+            &:nth-child(3n-1) {
+              @include left_col;
+            }
+
+            /* second column */
+            &:nth-child(3n+1) {
+              @include mid_col;
+							border-left: none;
+							padding-left: 0;
+            }
+
+            /* third column */
+            &:nth-child(3n+0) {
+              @include right_col;
+							border-left: none;
+							padding-left: 0;
+            }
+          }
+        }
+      }
+
+      .actions-wrapper  {
+        clear: both;
+        padding: 20px 0 10px;
+
+        .button,
+        button {
+          margin-right: 30px;
+        }
+
+        .final-submit {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .review-section-header {
+    border-bottom: 1px solid #62676E;
+		color: #04384E;
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 10px;
+    padding: 10px 0 5px;
+    text-transform: capitalize;
+
+    .section-title {
+      font-weight: bold;
+
+      .secondary {
+        color: #62676E;
+				font-size: 15px;
+		    font-weight: normal;
+		    text-transform: none;
+      }
+    }
+
+    .sorting-order {
+      float: right;
+		  font-size: 16px;
+		  line-height: 15px;
+			margin-top: 4px;
+			
+			a {
+				 color: #464B54;
+					padding: 0 10px;
+				
+				&:last-child {
+					color: #0583AC;
+					padding-right: 0;
+				}
+			}
+    }
+
+    .summary-content {
+      margin-top: 15px;
+    }
+  }
+
+  #summary {
+	
+		.summary-content {
+      padding-top: 10px;
+    }
+
+    .summary-widgets {
+    }
+
+    .appropriate-for {
+      margin-top: 15px;
+      padding-top: 10px;
+     /* border-top:1px solid #eee;*/
+
+      .term {
+        /*font-size: 0.8em;*/
+				font-size: 13px;
+        padding: 5px 0;
+
+        &.highlight {
+          font-weight: bold;
+        }
+      }
+    }
+
+    .item-title {
+			color: #464B54;
+			font-size: 13px;
+	    font-weight: bold;
+	    line-height: 1.2;
+	    margin: 0;
+	    max-width: 560px;
+	    padding: 0 0 10px 0;
+    }
+
+    .left-col {
+      @include left_col;
+    } 
+
+    .mid-col {
+      @include mid_col;
+			border-left: none;
+			padding-left: 0;
+    } 
+
+    .right-col {
+      @include right_col;
+			border-left: none;
+			padding-left: 0;
+    } 
+  }
+
+  #individual-reviews {
+		margin: 20px 0 0;
+  }
+}
+
+.preview {
+	padding-top: 0 !important;
+	
+	.entity-review-wrap {
+		padding-top: 5px;
+	}
+	
+	.entity-review.view-mode-full {
+	  border-top: 1px #cecece solid;
+		padding-top: 20px;
+	}
+} 
+
+
+.entity-review.view-mode-full{
+  //background: #eee;
+  //border: 1px #ccc solid;
+  margin: 10px 0;
+  padding: 10px 0;
+  font-size: 18px;
+  border-bottom: 1px solid silver;
+
+  .field-label {
+    margin-bottom: 5px;
+		font-weight: normal;
+		padding: 5px 0;
+  }
+
+  .group-header {
+    @include clearfix;
+    
+    margin-bottom: 10px;
+    text-align: right;
+
+    .field-name-review-author {
+      float: left;
+			color: #464B54;
+			font-size: 13px;
+	    font-weight: bold;
+	    line-height: 1.2;
+	    margin: 0;
+	    max-width: 560px;
+	
+			a.devtools-tooltip-trigger {
+				color: #0583AC;
+			}
+    }
+
+    .field-name-review-helpfulness {
+      float: right;
+			font-weight: bold;
+    }
+  }
+
+  .group-left {
+    clear: both;
+    width: 33%;
+  }
+
+  .group-middle {
+    width: 33%;
+
+    .field-name-field-pro-dev {
+      padding-left: 10px;
+    }
+  }
+
+  .group-right {
+    width: 33%;
+
+    .field-name-field-ease-use {
+      padding-left: 10px;
+    }
+  }
+
+  .average-rating {
+    margin-top: 10px;
+  }
+
+  .fivestar-summary {
+    display: none;
+    /*margin-top: 5px;*/
+  }
+
+  .group-footer {
+    clear: both;
+    padding-top: 20px;
+
+    .rate-widget {
+      padding: 15px 0;
+
+      .vote {
+        padding: 0 10px;
+
+        .action-triggers {
+          display: none;
+        } 
+      }
+    }
+
+		.field-name-field-details {
+			margin-top: 15px;
+		}
+			
+    .field-name-field-appropriate-for {
+      padding-top: 0px;
+      /*border-top:1px solid #eee;*/
+      font-size: 0.95em;
+
+      .field-label {
+        color: inherit;
+        font-size: 13px;
+				font-weight: bold;
+      }
+
+      ul {
+        font-size: 0.8em;
+        margin:0 0 20px 0;
+        padding:0;
+				max-width: 560px;
+
+        li {
+          list-style-type: none;
+          /*padding: 5px 0;*/
+					background-color: #F2F2F2;
+				  border-radius: 2px;
+			    display: inline-block;
+			    font-size: 12px;
+			    line-height: 22px;
+			    margin-right: 7px;
+			    margin-top: 7px;
+			    padding: 0 5px;
+        }
+      }
+
+      .term {
+        padding: 10px;
+
+        &.highlight {
+          font-weight: bold;
+        }
+      }
+    }
+
+    h2 {
+      color: #464B54;
+			font-size: 13px;
+	    font-weight: bold;
+	    line-height: 1.2;
+	    margin: 0 0 8px;
+	    max-width: 560px;
+	    padding: 0;
+    }
+
+    .field-name-review-vote {
+      float: left;
+      width: 740px;
+			margin-top: 30px;
+    }
+
+    .field-name-review-delete {
+      float: right;
+      padding-top: 35px;
+      text-align: right;
+      width: 90px;
+    }
+
+    .field-name-flagging-form {
+      clear: both;
+    }
+  }
+}
+
+.footer-title {
+  color: #000000;
+	display: block;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  max-width: 560px;
+  padding: 30px 0 15px;
+  text-transform: capitalize;
+}
+
+.footer-body {
+	font-size: 16px;
+	line-height: 1.6;
+  margin: 0;
+  max-width: 560px;
+}
+
+/* modals */
+.dialog_review_end_use_form #dialog {
+  .intro {
+    border-bottom: 1px solid silver;
+    padding-bottom: 1em;
+    border-bottom: 1em; 
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: left; 
+		 color: #464B54;
+  }
+
+  form {
+    text-align: right;
+  }
+
+  .form-submit {
+    display: inline;
+		margin-bottom: 0;
+    /*float: none;*/
+  }
+
+  .close-dialog {
+    display: inline;
+  }
+}
+
+.dialog_review_end_use_form_delete #dialog {
+  .form-submit {
+    float: right;
+  }
+}
+
+#dialog .devtools-dialog-content .button {
+	margin-bottom: 0 !important;
+}
+
+.rating-label {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+/* user tooltips */
+.account-tooltip {
+  .row.first {
+    padding: 10px;
+  }
+
+  .line {
+    display: none;
+  }
+}
+
+
+.fivestar-widget {
+  padding: 5px 0;
+}
+
+/* Tag of Sharing */
+#sbac-share-resource-form {
+	margin: 0 30px;
+	
+	#edit-sharing-options {
+		h2 {
+		  border-bottom: 1px solid #62676E;
+	    color: #04384E;
+	    display: block;
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin: 0;
+	    text-transform: capitalize;
+		}
+	}
+	
+	#edit-permanent-link-text {
+		font-weight: bold;
+		font-size: 18px;
+		color: #000;
+		padding-top: 20px;
+		
+		.sbac-private {
+			color: #62676E;
+			font-weight: normal;
+			margin-right: 10px;
+		}
+		
+		.foundicon-people {
+			font-size: 120%;
+			color: #aaa;
+			vertical-align: middle;
+		}
+		
+		.foundicon-lock {
+			color: #aaa;
+			vertical-align: middle;
+		}
+		
+		span {
+			font-weight: normal;
+		}
+		
+		.description {
+			margin-top: 10px;
+			font-weight: normal;
+			color: #464B54;
+			font-size: 13px;
+			line-height: 1.2;
+		}
+	}
+	
+	#edit-temporary-link-text {
+		h2 {
+			color: #5a5a5a;
+			padding-bottom: 2px;
+		}
+	}
+	
+	input#sbac-permanent-link-text, input#sbac-temporary-link-text {
+		width: 65%; 
+		float: left;
+		margin-right: 30px;
+		padding-right: 30px;
+	}
+	
+	button#edit-permanent-link-button, button#edit-temporary-link-button {
+		width: 225px;
+		margin-top: -3px;
+	}
+	
+	.temporary-link-container {
+		.description {
+			font-size: 13px;
+			line-height: 1.2;
+		}
+	}
+	
+	.temporary-link-container.active {
+		opacity: 1;
+	}
+	
+	.temporary-link-container.inactive {
+		opacity: 0.5;
+		
+		a {
+			cursor: default;
+		}
+		a:hover {
+			color: #FFF;
+	    background: #2aa549;
+	    border: 1px solid #268a16;
+			@include text-shadow(0px 1px 0px #45613e);
+	    @include box-shadow(inset 0px 1px 0px 0px #6DC088);
+		}
+	}
+	
+	.form-item-temporary-link {
+		position: relative;
+				
+		 .temp-link-clear {
+			
+				background: url("../images/icon-validation-fail.png") no-repeat 0 0;
+		    cursor: pointer;
+		    display: block;
+		    float: right;
+		    height: 15px;
+		    position: absolute;
+				z-index: 997;
+		    right: 302px;
+		    top: 9px;
+		    width: 15px;
+		}
+	}
+}
+
+/* Tag of Related resources */
+.related-resources {
+	margin: 0 30px;
+	
+		h2 {
+			border-bottom: 1px solid #62676E;
+			color: #04384E;
+	    display: block;
+	    font-size: 22px;
+	    font-weight: bold;
+	    margin: 0;
+	    text-transform: capitalize;
+			margin: 16px 0 15px;
+		}
+		
+		p {
+			font-size: 16px;
+			margin-bottom: 30px;
+			max-width: 560px; 
+		}
+}
+
+.no-related-resources {
+	padding: 50px 30px;
+	
+	h2{
+		text-align: center;
+		color: #000;
+	}
+	.instruction {
+		text-align: center;
+	}
+}
+	
+
+
+/* Sharing Options- Copy Link to Clipboard button */
+body.admin-menu #global-zeroclipboard-html-bridge {
+	margin-top: -28px;
+}
+
+#review-end-use-form {
+	margin-bottom: 0;
+}
+
+
+/*Rate info*/
+.rate-info {
+	font-size: 13px;
+}
+
+/*Preview*/
+.node-type-resource {
+	.preview {
+		margin-top: 0 !important;
+	}
+}

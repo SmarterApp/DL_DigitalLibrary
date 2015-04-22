@@ -1,0 +1,12 @@
+name = SBAC Share
+description = Handles the share functionality of the resource.
+core = 7.x
+package = ~SBAC
+version = 7.x-1.0
+project = sbac_share
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = field_group
+dependencies[] = number
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2

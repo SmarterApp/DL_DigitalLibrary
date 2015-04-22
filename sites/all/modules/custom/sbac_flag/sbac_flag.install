@@ -1,0 +1,203 @@
+<?php
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Creates taxonomy terms.
+ */
+function sbac_flag_update_7004() {
+  $return = array();
+  $flags = array(
+    'name' => array(
+      0 => 'Outdated',
+      1 => 'Inaccurate / misleading',
+      2 => 'Unintelligible / not viewable / technology does not function properly',
+      3 => 'Accessibility and accommodation issues',
+      4 => 'Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>',
+      5 => 'Contains personally identifiable information (PII)',
+      6 => 'Summary information does not match the resource',
+      7 => 'May be in violation of intellectual property rights',
+      8 => 'Does not support implementation of Common Core Standards and/or formative assessment process',
+      9 => 'Resource is not available free of charge'
+    ),
+    'weight' => array(
+      0 => -10,
+      1 => -9,
+      2 => -8,
+      3 => -7,
+      4 => -6,
+      5 => -5,
+      6 => -4,
+      7 => -3,
+      8 => -2,
+      9 => -1,
+    ),
+  );
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'resource_flags'))->fetchAssoc();
+  if ($vocab) {
+    foreach ($flags['name'] as $index => $flag) {
+      taxonomy_term_save((object) array(
+        'name' => $flag,
+        'description' => '',
+        'weight' => $flags['weight'][$index],
+        'vid' => $vocab['vid'],
+      ));
+    }
+  }
+
+  return $return;
+}
+
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter's table from varchar(255) to varchar(650)
+ */
+function sbac_flag_update_7005() {
+  db_query('ALTER TABLE eck_flag MODIFY flag_comment VARCHAR(650)');
+  return 'Success updating flag';
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Adds node ID's to eck_flag table as well.
+ */
+function sbac_flag_update_7006() {
+  $query = "SELECT * FROM {eck_flag} WHERE target_type = 'review'";
+  $result = db_query($query);
+  foreach ($result as $row) {
+    $eck_flag_entity = entity_load_single('flag', $row->id);
+    if ($eck_flag_entity) {
+      $eck_flag_wrapper = entity_metadata_wrapper('flag', $eck_flag_entity);
+      if ($eck_flag_wrapper) {
+        $eck_review_entity = entity_load_single('review', $row->target_id);
+        if ($eck_review_entity) {
+          $eck_review_wrapper = entity_metadata_wrapper('review', $eck_review_entity);
+          if ($eck_review_wrapper) {
+            $nid = $eck_review_wrapper->node_id->value();
+            if ($nid) {
+              $node = node_load($nid);
+              if ($node) {
+                $eck_flag_wrapper->nid->set($nid);
+                $eck_flag_wrapper->save();
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return 'Success updating node ids';
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter's table from varchar(255) to varchar(1000)
+ */
+function sbac_flag_update_7007() {
+  db_query('ALTER TABLE {eck_flag} MODIFY moderation_comment VARCHAR(1000)');
+  return 'Updated moderation size';
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Adds taxonomy terms for forum flagging.
+ */
+function sbac_flag_update_7008() {
+  $vocab = array(
+    'name' => 'Forum Flags',
+    'machine_name' => 'forum_flags',
+    'description' => 'The flags that are available when a user wishes to flag a forum topic or comment.',
+    'hierarchy' => 0,
+  );
+
+  taxonomy_vocabulary_save($vocab);
+
+  $flag_obj = taxonomy_vocabulary_machine_name_load($vocab['machine_name']);
+
+  $forum_flags = array(
+    'Outdated or inactive',
+    'Inaccurate / misleading',
+    'Unintelligible',
+    'Biased and objectionable or culturally insensitive. <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>',
+    'Contains personally identifiable information (PII)',
+    'Appears to be spam',
+  );
+
+  foreach ($forum_flags as $idx => $flag) {
+    $flag_term = new stdClass();
+    $flag_term->vid = $flag_obj->vid;
+    $flag_term->name = $flag;
+    $flag_term->weight = $idx - count($forum_flags);
+    taxonomy_term_save($flag_term);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Adds new taxonomy terms for resource flagging.
+ */
+function sbac_flag_update_7009() {
+  if (!($vocab = taxonomy_vocabulary_machine_name_load('resource_flags'))) {
+    return;
+  }
+
+  $needs_update = array(
+    'May be in violation of intellectual property rights' => array(
+      'May be in violation of intellectual property rights (i.e., copyright infringement)',
+    ),
+    'Does not support implementation of Common Core Standards and/or formative assessment process' => array(
+      'Does not support implementation of Common Core Standards',
+      'Does not support the formative assessment process',
+    ),
+  );
+
+  foreach ($needs_update AS $old_name => $new_names) {
+    $updated = FALSE;
+    if ($current_term = array_pop(taxonomy_get_term_by_name($old_name, 'resource_flags'))) {
+      foreach ($new_names AS $idx => $new_name) {
+        $update = new stdClass();
+        $update->vid = $current_term->vid;
+        $update->name = $new_name;
+        if (!$updated) {
+          $update->tid = $current_term->tid;
+          $updated = TRUE;
+        }
+        taxonomy_term_save($update);
+      }
+    }
+  }
+
+  $new_order = array(
+    'Outdated',
+    'Duplicate', // NEW TERM
+    'Inaccurate / misleading',
+    'Unintelligible / not viewable / technology does not function properly',
+    'Accessibility and accommodation issues',
+    'Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>',
+    'Contains personally identifiable information (PII)',
+    'Summary information does not match the resource',
+    'May be in violation of intellectual property rights (i.e., copyright infringement)', // UPDATED TERM
+    'Does not support implementation of Common Core Standards', // UPDATED TERM
+    'Does not support the formative assessment process', // UPDATED TERM
+    'Resource is not available free of charge',
+  );
+
+  foreach ($new_order as $idx => $name) {
+    $update = new stdClass();
+    $update->vid = $vocab->vid;
+    $update->weight = $idx;
+    $update->name = $name;
+    if ($term = array_pop(taxonomy_get_term_by_name($name, 'resource_flags'))) {
+      $update->tid = $term->tid;
+    }
+    taxonomy_term_save($update);
+  }
+}
+

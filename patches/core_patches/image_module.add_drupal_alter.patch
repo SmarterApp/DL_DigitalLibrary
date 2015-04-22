@@ -1,0 +1,14 @@
+diff --git a/docroot/modules/image/image.module b/docroot/modules/image/image.module
+index c6a23f2..a29fa99 100644
+--- a/docroot/modules/image/image.module
++++ b/docroot/modules/image/image.module
+@@ -860,6 +860,9 @@ function image_style_deliver($style, $scheme) {
+     }
+   }
+
++  // Added drupal alter to modify local or external image thumbnails.
++  drupal_alter('image_style_create_derivative', $style, $image_uri, $derivative_uri);
++
+   // Try to generate the image, unless another thread just did it while we were
+   // acquiring the lock.
+   $success = file_exists($derivative_uri) || image_style_create_derivative($style, $image_uri, $derivative_uri);
