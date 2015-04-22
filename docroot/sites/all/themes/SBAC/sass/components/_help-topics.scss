@@ -1,4 +1,234 @@
 @import "colors.scss";
 /* Landing Page Help Topics */
 #lp-help-topics-wrapper {
+  .welcome-topic-container{
+    a.ctools-modal-sbac-help-welcome-tutorial {
+      display: block;
+      position: relative;
+      width: 18.75rem;
+      padding: 0.625rem 0 0.625rem 0.625rem;
+      margin:10px;
+      float: left;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #ffffff;
+      border-radius: 0.25rem;
+      box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
+      transition: background-color 0.3s ease;
+      float: left;
+      &:hover{
+        background: rgba(255, 255, 255, 1);
+        .welcome-tutorial-topic-title{
+          text-decoration: underline;
+        }
+      }
+      .welcome-container-image{
+        outline: 1px solid #999999;
+        float: left;
+      }
+      .welcome-tutorial-topic-title{
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 18px;
+        color: $off-black;
+        text-decoration: none;
+        margin-left: 15px;
+        float: left;
+        width: 135px;
+      }
+    }
+  }
+}
+
+// Welcom Tutorial Modal
+#modalContent {
+  .ctools-modal-content.sbac-welcome {
+    padding: 0;
+    height: 650px !important;
+
+    .modal-header {
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+      padding: 20px 40px;
+      position: relative;
+      z-index: 3;
+
+      #modal-title {
+        color: $dark-blue;
+        font-size: 22px;
+        padding: 0;
+        font-weight: 600;
+      }
+
+      .close {
+        display: block;
+        background: url('../images/icons/icon-close.png') no-repeat right center;
+        width: 30px;
+        height: 30px;
+        text-indent: -9999px;
+        border: none;
+        box-shadow: none;
+
+        img {
+          display: none;
+        }
+      }
+    }
+
+    .modal-content {
+      padding: 0;
+    }
+
+    .sbac-tutorial-header-cont {
+      overflow: auto;
+      border-bottom: 1px solid $header-borders;
+      margin-bottom: 20px;
+      padding: 10px 0;
+
+      h2 {
+        float: left;
+        margin: 0;
+        font-size: 18px;
+        color: $dark-blue;
+      }
+
+      .welcome-tutorial-edit-topics {
+        float: right;
+        margin-top: 5px;
+        background: url('../images/icons/icon-edit.png') no-repeat left center;
+        padding-left: 25px;
+
+        a {
+          font-size: 14px;
+          color: $teal;
+        }
+      }
+    }
+
+    .sbac-welcome-update-cont {
+      @include border-radius (12px);
+      padding: 10px 30px;
+      border: 1px solid $darkgreen;
+      background-color: rgba(237, 243, 224, 1);
+      font-weight: normal;
+      position: relative;
+      margin: 15px 0;
+
+      #edit-profile-updated {
+        margin: 10px 0;
+
+        label {
+          font-weight: bold;
+          font-size: 16px;
+        }
+
+        a {
+          color: $teal;
+          text-decoration: underline;
+        }
+      }
+
+      .ajax-processed {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        display: block;
+        background: url('../images/icons/icon-close.png') no-repeat right center;
+        background-size: 100%;
+        width: 30px;
+        height: 30px;
+        text-indent: -9999px;
+      }
+    }
+
+    .welcome-modal-container {
+      height: 532px;
+      overflow-y: scroll;
+      padding: 30px 40px 20px 40px;
+      background-color: #F2F2F2;
+      .welcome-tutorial-node-container {
+        overflow:auto;
+        .welcome-tutorial-post-content{
+          width:520px;
+          margin-right:20px;
+          float:left;
+        }
+        .tutorial-image{
+          margin-left:20px;
+          display:block;
+          float:left;
+        }
+      }
+    }
+
+    .welcome-topic-container {
+      @include clearfix();
+      background: $white;
+      border-radius: (5px);
+      padding: 15px;
+      border: 1px solid #F2F2F2;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);      
+      margin-bottom: 20px;
+    }
+
+    .welcome-container-left {
+      float: left;
+      width: 75%;
+    }
+
+    .welcome-tutorial-topic-title {
+      a {
+        color: $teal;
+        font-size: 16px;
+      }
+    }
+
+    .welcome-tutorial-topic-summary {
+      line-height: 1.2;
+      color: $text;
+    }
+
+    .welcome-tutorial-node-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: $dark-blue;
+      margin-bottom: 25px;
+    }
+
+    .welcome-tutorial-back-button {
+      background: url('../images/icons/back-blue.png') no-repeat left -6px;
+      margin: 20px 0 35px;
+      padding-left: 30px;
+
+      a {
+        color: $teal;
+      }
+    }
+
+    .welcome-modal-buttons {
+      border-top: 1px solid #F2F2F2;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+      display: block;
+      position: relative;
+      width: 100%;
+      z-index: 4;
+      background: $white;
+      overflow: hidden;
+      height:40px;
+      .form-item.form-type-checkbox {
+        float: left;
+      }
+
+      .button {
+        float: right;
+        background: none;
+        border: none;
+        font-size:14px;
+        color: $blue-text;
+        text-transform: uppercase;
+        width: 110px;
+        overflow:hidden;
+        padding: 0px;
+        margin: 0px;
+      }
+    }
+  }
 }
