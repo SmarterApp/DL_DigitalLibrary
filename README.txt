@@ -4,7 +4,7 @@ CONTENTS OF THIS FILE
 
  * About Drupal
  * Configuration and features
- * Installation profiles
+ * Installation Instructions
  * Appearance
  * Developing for Drupal
 
@@ -44,39 +44,35 @@ More about configuration:
    http://drupal.org/project/modules
  * See also: "Developing for Drupal" for writing your own modules, below.
 
-INSTALLATION PROFILES
+INSTALLATION INSTRUCTIONS
 ---------------------
 
-Installation profiles define additional steps (such as enabling modules,
-defining content types, etc.) that run after the base installation provided
-by core when Drupal is first installed. There are two basic installation
-profiles provided with Drupal core.
+To install this edition of the Digital Library first ensure you have PHP 5.2.5 or higher (5.4 or higher recommended) as well as MySQL 5.0.15 or higher (or MySQL 5.1.30 or higher), and the PDO database extension for PHP installed to your web server.
 
-Installation profiles from the Drupal community modify the installation process
-to provide a website for a specific use case, such as a CMS for media
-publishers, a web-based project tracking tool, or a full-fledged CRM for
-non-profit organizations raising money and accepting donations. They can be
-distributed as bare installation profiles or as "distributions". Distributions
-include Drupal core, the installation profile, and all other required
-extensions, such as contributed and custom modules, themes, and third-party
-libraries. Bare installation profiles require you to download Drupal Core and
-the required extensions separately; place the downloaded profile in the
-/profiles directory before you start the installation process. Note that the
-contents of this directory may be overwritten during updates of Drupal core;
-it is advised to keep code backups or use a version control system.
+The root of this GIT contains a SQL dump which you must then restore to a database on your MySQL Server as follows:
 
-Additionally, modules and themes may be placed inside subdirectories in a
-specific installation profile such as profiles/your_site_profile/modules and
-profiles/your_site_profile/themes respectively to restrict their usage to only
-sites that were installed with that specific profile.
+mysql -u root -p[root_password] [database_name] < DigitalLibrary.sql
 
-More about installation profiles and distributions:
- * Read about the difference between installation profiles and distributions:
-   http://drupal.org/node/1089736
- * Download contributed installation profiles and distributions:
-   http://drupal.org/project/distributions
- * Develop your own installation profile or distribution:
-   http://drupal.org/developing/distributions
+Subsequently, direct your web browser to the root of the site which will activate the installation script. Choose a “Standard” installation.
+
+Next, direct the installation process to the database you preformed the SQL dump restore to and provide login credentials then click “Save and Continue”.
+
+You’ll see a message which says “Drupal already installed”. From there simply click the link “View your existing site.” and you’ll be directed to the Digital Library login screen. The user credentials “admin/password” will provide you access.
+
+The Digital Library relies on Google Cloud Storage to deliver content and this dependency requires these configuration additions (with set values) to be added to the site’s settings.php file to function.
+
+
+$conf['google_cdn_bucket_name'] = '';
+$conf['google_cdn_extensions'] = '';
+$conf['google_cdn_client_id'] = '';
+$conf['google_cdn_service_account_name'] = '';
+$conf['google_cdn_signed_url_expiry'] = 300;
+$conf['google_cdn_library_version'] = 2;
+$conf['oscaddie_gcs_bucket_name'] = '';
+$conf['oscaddie_gcs_extensions'] = '';
+$conf['oscaddie_gcs_client_id'] = '';
+$conf['oscaddie_gcs_service_account_name'] = '';
+
 
 APPEARANCE
 ----------
