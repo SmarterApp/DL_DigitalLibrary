@@ -7,6 +7,9 @@
  */
 
 ?>
+<?php if($edit): ?>
+  <div id="edit-featured"><?php print $edit;?></div>
+<?php endif; ?>
 <div class="featured-content-container">
   <?php print $featured_content;?>
 </div>

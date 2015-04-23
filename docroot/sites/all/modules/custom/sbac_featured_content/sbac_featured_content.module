@@ -50,10 +50,14 @@ function current_posts_block_view($delta = '') {
 }
   
 function sbac_featured_content(){
+  global $user;
   $variables = array();
   $variables['featured_content'] = '';
-  $variables['test'] = 'Featured Content TPL is returning';
   
+  if(user_access('flag-featured-node')){
+      $variables['edit'] = l('Edit Features','/admin/help-topics');
+  }
+
   $featured_content = sbac_featured_content_flagged();
   
   foreach($featured_content as $content){

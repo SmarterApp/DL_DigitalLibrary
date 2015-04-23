@@ -1,9 +1,24 @@
 /* Landing Page Featured Content */
 #lp-featured-content{
-    max-width: 43.75rem;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 1.875rem;
+  max-width: 43.75rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.875rem;
+  #edit-featured{
+    float:right;
+    height:25px;
+    margin-top:-25px;
+    a{
+      padding: 5px 5px 5px 27px;
+      background: url('../images/icons/icon-edit.png') no-repeat left center;
+      font-size:14px;
+      color: $teal;
+      border-radius: 0.25rem;
+      &:hover{
+        background-color: $white;
+      }
+    }
+  }
   .featured-content-container{
     .featured-content-wrapper{
       display:block;
