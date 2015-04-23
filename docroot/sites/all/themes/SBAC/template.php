@@ -205,8 +205,8 @@
 //  $form['actions']['preview']['#attributes']['class'][] = array('class' => array('secondary', 'button', 'radius'));
 //}
 
-//drupal_add_js(libraries_get_path('flexslider') . '/jquery.flexslider-min.js');
-//drupal_add_css(libraries_get_path('flexslider') . '/flexslider.css');
+drupal_add_js(libraries_get_path('flexslider') . '/jquery.flexslider-min.js');
+drupal_add_css(libraries_get_path('flexslider') . '/flexslider.css');
 
 /**
  * Implements hook_css_alter()

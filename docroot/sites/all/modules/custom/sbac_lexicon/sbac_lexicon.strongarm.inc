@@ -14,14 +14,14 @@ function sbac_lexicon_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_message';
-  $strongarm->value = 0;
+  $strongarm->value = 1429808785;
   $export['cache_flush_cache_entity_message'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_message_type';
-  $strongarm->value = 0;
+  $strongarm->value = 1429808785;
   $export['cache_flush_cache_entity_message_type'] = $strongarm;
 
   $strongarm = new stdClass();
