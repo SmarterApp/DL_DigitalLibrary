@@ -73,3 +73,4 @@ features_exclude[field][node-help_page-field_help_icon] = node-help_page-field_h
 features_exclude[field][node-help_page-field_summary] = node-help_page-field_summary
 feauture[image][] = welcome_tutorial
 mtime = 1430348309
+

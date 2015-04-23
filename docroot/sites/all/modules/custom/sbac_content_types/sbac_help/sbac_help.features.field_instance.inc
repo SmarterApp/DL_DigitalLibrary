@@ -156,7 +156,7 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
     'bundle' => 'help_page',
     'default_value' => array(
       0 => array(
-        'tid' => 60402,
+        'tid' => 60536,
       ),
     ),
     'deleted' => 0,
