@@ -5,6 +5,13 @@
  */
 
 /**
+ * Implements hook_views_api().
+ */
+function sbac_featured_content_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
+}
+
+/**
  * Implements hook_flag_default_flags().
  */
 function sbac_featured_content_flag_default_flags() {
@@ -35,6 +42,7 @@ function sbac_featured_content_flag_default_flags() {
       'diff_standard' => 0,
       'print' => 0,
       'token' => 0,
+      'node_term_user' => 0,
       'secondary_teaser' => 0,
       'revision' => 0,
     ),
@@ -43,11 +51,11 @@ function sbac_featured_content_flag_default_flags() {
     'access_author' => '',
     'show_contextual_link' => 0,
     'i18n' => 0,
-    'api_version' => 3,
     'module' => 'sbac_featured_content',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 3,
   );
   return $flags;
 

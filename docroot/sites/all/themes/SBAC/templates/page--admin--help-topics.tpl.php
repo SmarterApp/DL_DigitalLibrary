@@ -103,13 +103,28 @@
     if ($user->uid == 1 || array_intersect(array('DLRB member', 'help desk', 'administrator'), $user->roles)) {
         $sections = array();
 
+        // Featured Resources
+        $view_feature = views_get_view('featured_content');
+        $view_feature->set_display('page');
+        $view_feature->execute();
+
+        $sections['tab1'] = array(
+          'title' => t('Featured ('. count($view_feature->result) . ') '),
+          'content' => '<div id="tab1">' . $view_feature->render(). '</div>',
+          'disabled' => FALSE,
+          'class' => 'tab1 class',
+          'no-ajax' => TRUE,
+          'section_loaded' => 'section-loaded',
+        );
+
+        // Help Topics
         $view_help = views_get_view('help_topics');
         $view_help->set_display('page_2');
         $view_help->execute();
 
-        $sections['tab1'] = array(
+        $sections['tab2'] = array(
           'title' => t('Help Topics ('. count($view_help->result) . ') '),
-          'content' => '<div id="tab1">' . $view_help->render(). '</div>',
+          'content' => '<div id="tab2">' . $view_help->render(). '</div>',
           'disabled' => FALSE,
           'class' => 'tab1 class',
           'no-ajax' => TRUE,
@@ -120,13 +135,14 @@
         </h3><p>Welcome Tutorial consists of help topics. You can create a help topic in <a href='/admin/help-topics'>
         help topics tab</a> and mark it for display in Welcome Tutorial.</p></div>";
 
+        // Welcome Help Topics
         $view_welcome = views_get_view('help_topics');
         $view_welcome->set_display('page_4');
         $view_welcome->execute();
 
-        $sections['tab2'] = array(
+        $sections['tab3'] = array(
           'title' => t('Welcome Tutorial ('. count($view_welcome->result) . ') '),
-          'content' => '<div id="tab2">' . $welcome_block . $view_welcome->render() . '</div>',
+          'content' => '<div id="tab3">' . $welcome_block . $view_welcome->render() . '</div>',
           'disabled' => FALSE,
           'class' => 'tab2 class',
           'no-ajax' => TRUE,

@@ -118,7 +118,13 @@ function sbac_featured_resource($node){
 function sbac_featured_content_flagged(){
   $featured_content = array();
   $limit = 1;
-  $flags = db_query("SELECT  entity_type,  entity_id FROM  {flagging}")->fetchAll();
+  $query = db_select('flagging', 'f');
+    $query->leftJoin('draggableviews_structure', 'dv', 'f.entity_id = dv.entity_id');
+    $query->fields('f', array('entity_type', 'entity_id'));
+    $query->fields('dv', array('entity_id', 'weight'));
+    $query->orderBy('dv.weight','ASC');
+    $query->range('0','1'); // UPDATE WHEN TURNING INTO CAROUSEL
+  $flags = $query->execute()->fetchAll();
   foreach($flags as $flagged){
     switch ($flagged->entity_type) {
       case 'node':
