@@ -21,7 +21,7 @@ function sbac_lexicon_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_message_type';
-  $strongarm->value = 1429808785;
+  $strongarm->value = 0;
   $export['cache_flush_cache_entity_message_type'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -57,6 +57,13 @@ function sbac_lexicon_strongarm() {
     ),
   );
   $export['field_bundle_settings_message__comment_insert'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'flag_subscribe_node_default_topic';
+  $strongarm->value = 0;
+  $export['flag_subscribe_node_default_topic'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -385,6 +392,36 @@ function sbac_lexicon_strongarm() {
   $strongarm->name = 'reroute_email_enable_message';
   $strongarm->value = 1;
   $export['reroute_email_enable_message'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'update_notify_emails';
+  $strongarm->value = array(
+    0 => 'brandont@appnovation.com',
+  );
+  $export['update_notify_emails'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_mail_status_activated_notify';
+  $strongarm->value = 0;
+  $export['user_mail_status_activated_notify'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_mail_status_blocked_notify';
+  $strongarm->value = 0;
+  $export['user_mail_status_blocked_notify'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_mail_status_canceled_notify';
+  $strongarm->value = 0;
+  $export['user_mail_status_canceled_notify'] = $strongarm;
 
   return $export;
 }
