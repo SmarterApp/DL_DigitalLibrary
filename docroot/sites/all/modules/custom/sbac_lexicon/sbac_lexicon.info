@@ -92,5 +92,5 @@ features[variable][] = message_subscribe_user
 features[variable][] = message_use_queue
 features[variable][] = reroute_email_enable_message
 features_exclude[menu_links][management_message-types:admin/structure/messages] = management_message-types:admin/structure/messages
-mtime = 1429812086
+mtime = 1429812294
 project path = sites/all/modules/custom
