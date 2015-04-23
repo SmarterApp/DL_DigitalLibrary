@@ -88,5 +88,5 @@ features[variable][] = message_subscribe_user
 features[variable][] = message_use_queue
 features[variable][] = reroute_email_enable_message
 features_exclude[dependencies][options] = options
-mtime = 1429796313
+mtime = 1429797906
 project path = sites/all/modules/custom

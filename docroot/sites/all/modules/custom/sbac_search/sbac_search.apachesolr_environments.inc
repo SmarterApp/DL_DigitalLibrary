@@ -25,8 +25,6 @@ function sbac_search_apachesolr_environments() {
     'acquia_search_key' => 'fd919846b89046b75e2403a5a492b5e40f37124c',
     'apachesolr_access_always_add_grants' => 0,
     'apachesolr_direct_commit' => 0,
-    'apachesolr_index_updated' => 1384530583,
-    'apachesolr_last_optimize' => 1384530583,
     'apachesolr_read_only' => '1',
     'apachesolr_soft_commit' => 0,
   );
