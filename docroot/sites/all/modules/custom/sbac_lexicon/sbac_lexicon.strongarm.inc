@@ -13,6 +13,20 @@ function sbac_lexicon_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'cache_flush_cache_entity_message';
+  $strongarm->value = 0;
+  $export['cache_flush_cache_entity_message'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'cache_flush_cache_entity_message_type';
+  $strongarm->value = 0;
+  $export['cache_flush_cache_entity_message_type'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'lexicon_allow_no_description';
   $strongarm->value = 0;
   $export['lexicon_allow_no_description'] = $strongarm;
@@ -232,6 +246,111 @@ function sbac_lexicon_strongarm() {
   $strongarm->name = 'lexicon_term_class';
   $strongarm->value = 'lexicon-term';
   $export['lexicon_term_class'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_delete_on_entity_delete';
+  $strongarm->value = array(
+    'node' => 'node',
+    'taxonomy_term' => 'taxonomy_term',
+    'comment' => 'comment',
+    'user' => 'user',
+  );
+  $export['message_delete_on_entity_delete'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_purge_days';
+  $strongarm->value = '30';
+  $export['message_purge_days'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_purge_enable';
+  $strongarm->value = 1;
+  $export['message_purge_enable'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_purge_quota';
+  $strongarm->value = '500';
+  $export['message_purge_quota'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_default_notifiers';
+  $strongarm->value = array(
+    'email' => 'email',
+  );
+  $export['message_subscribe_default_notifiers'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_flag_prefix';
+  $strongarm->value = 'subscribe';
+  $export['message_subscribe_flag_prefix'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_node';
+  $strongarm->value = 'subscribe_node:default';
+  $export['message_subscribe_node'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_notify_own_actions';
+  $strongarm->value = 0;
+  $export['message_subscribe_notify_own_actions'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_og';
+  $strongarm->value = 'subscribe_node_email:default';
+  $export['message_subscribe_og'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_term';
+  $strongarm->value = 'subscribe_taxonomy_term_email:default';
+  $export['message_subscribe_term'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_user';
+  $strongarm->value = 'subscribe_user_email:default';
+  $export['message_subscribe_user'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_subscribe_use_queue';
+  $strongarm->value = 1;
+  $export['message_subscribe_use_queue'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'message_use_queue';
+  $strongarm->value = 0;
+  $export['message_use_queue'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'reroute_email_enable_message';
+  $strongarm->value = 1;
+  $export['reroute_email_enable_message'] = $strongarm;
 
   return $export;
 }

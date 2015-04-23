@@ -32,5 +32,30 @@ function sbac_lexicon_user_default_permissions() {
     'module' => 'lexicon',
   );
 
+  // Exported permission: 'administer message subscribe'.
+  $permissions['administer message subscribe'] = array(
+    'name' => 'administer message subscribe',
+    'roles' => array(),
+    'module' => 'message_subscribe',
+  );
+
+  // Exported permission: 'administer message types'.
+  $permissions['administer message types'] = array(
+    'name' => 'administer message types',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'message',
+  );
+
+  // Exported permission: 'create messages'.
+  $permissions['create messages'] = array(
+    'name' => 'create messages',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'message',
+  );
+
   return $permissions;
 }
