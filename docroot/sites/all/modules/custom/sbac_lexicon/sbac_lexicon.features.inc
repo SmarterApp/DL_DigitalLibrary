@@ -56,8 +56,6 @@ function sbac_lexicon_default_message_type() {
         }
       ]
     },
-    "entity_type" : "message_type",
-    "entity_id" : "4",
     "rdf_mapping" : []
   }');
   return $items;
