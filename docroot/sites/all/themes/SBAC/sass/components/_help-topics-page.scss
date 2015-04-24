@@ -1,0 +1,67 @@
+@import "colors.scss";
+body.page-help-topics{
+  h1{
+    margin-bottom: 20px;
+    margin-top: 30px;
+  }
+  .help-topics-wrapper{
+    margin-bottom: 20px;
+    .help-topic-wrapper{
+      margin-bottom: 20px;
+      .help-topic-title{
+        font-size: 18px;
+        font-weight: bold;
+        color: $green;
+      }
+      .help-topic-body{
+        p{
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}
+.help-topic-link,
+.welcome-tutorial-topic-link {
+/*  background: none repeat scroll 0 0 #DDDDDD;
+  border: 1px solid;
+  border-radius: 5px 5px 5px 5px;
+  display: block;
+  padding: 8px 20px;*/
+  background: none repeat scroll 0 0 #BFD8E5;
+  border: 1px solid rgba(0, 98, 152, 0.5);
+  border-radius: 6px 6px 6px 6px;
+  color: #006298;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 18px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  margin-top:-62px;
+  float:right;
+}
+
+.help-topic-link:hover,
+.welcome-tutorial-topic-link:hover {
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+  background: #0085ad;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.help-topic-link:focus,
+.welcome-tutorial-topic-link:focus {
+  background: #bfd8e5;
+  color: #006298;
+}
+
+.page-welcome-tutorial-topics .help-topic-link,
+.page-help-topics .help-topic-link {
+  top: 10px;
+  position: absolute;
+  right: 40px;
+}

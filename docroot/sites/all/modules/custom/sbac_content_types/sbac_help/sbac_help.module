@@ -33,6 +33,15 @@ function sbac_help_update_projects_alter(&$projects) {
 function sbac_help_theme($existing, $type, $theme, $path) {
   $themes = array();
 
+  $themes['sbac-help-topics'] = array(
+    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'template' => 'help-topics',
+  );
+  $themes['sbac-help-topic'] = array(
+    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'template' => 'help-topic',
+  );
+
   $themes['views_view__help_topics__block'] = array(
     'template' => 'templates/views-view--help-topics--block',
     'arguments' => array('view' => NULL),
@@ -83,6 +92,13 @@ function sbac_help_theme($existing, $type, $theme, $path) {
  * Implements hook_menu().
  */
 function sbac_help_menu() {
+  $items['help-topics'] = array(
+    'title'         => 'Help Topics',
+    'page callback' => 'sbac_help_topics',
+    'access arguments'  => array('access content'),
+    'type'          => MENU_CALLBACK,
+  );
+
   $items['get-node-content'] = array(
     'title'         => 'Get Node Content',
     'page callback' => 'sbac_help_get_node_content',
@@ -129,6 +145,33 @@ function sbac_help_menu() {
   );
 
   return $items;
+}
+
+
+function sbac_help_topics(){
+  $topics = '';
+  $variables = array();
+  
+  $query = db_select('node', 'n');
+  $query->join('draggableviews_structure', 'dv', 'n.nid = dv.entity_id');
+  $query->fields('n', array('nid'));
+  $query->orderBy('dv.weight','ASC');
+  $query->condition('n.type', 'help_page');
+  $query->condition('n.status', '1');
+  $query->condition('dv.view_name', 'sort_content');
+  $query->condition('dv.view_display', 'sort_help_topics');
+  $result = $query->execute()->fetchAll();
+  foreach($result as $topic){
+    $node = node_load($topic->nid);
+    $variables['title'] = $node->title;
+    $variables['body'] = more_less_text($node->body['und'][0]['value'], 300,FALSE);
+    $topics .= theme('sbac-help-topic', $variables);
+  }
+  $vars['topics'] = $topics;
+  if(user_access('administer nodes')){
+    $vars['edit'] = '<a class="help-topic-link" href="/sort-content/help-topics">Edit Help Topics</a>';
+  }
+  return theme('sbac-help-topics', $vars);
 }
 
 /**
@@ -681,26 +724,22 @@ function sbac_help_welcome_tutorial_topics($limit = NULL) {
                 AND   weight.view_name = :view_name
                 AND   weight.view_display = :view_page
             WHERE     n.type = :type
-              AND     topic.field_help_page_topic_tid = :tid
-              AND     roles.field_help_user_roles_tid IN (:roles)
             ORDER BY COALESCE(weight.weight, 10000) ASC
            ';
   if($limit){
     $query .="LIMIT $limit";
   }
   $results = db_query($query, array(
-    ':view_name' => 'help_topics',
-    ':view_page' => 'page_4',
+    ':view_name' => 'sort_content',
+    ':view_page' => 'welcome_topics',
     ':type' => 'help_page',
-    ':tid' => $welcome_term->tid,
-    ':roles' => $roles,
     )
   );
 
   while ($result = $results->fetchAssoc()) {
     $topics[] = $result;
   }
-
+    
   return $topics;
 }
 

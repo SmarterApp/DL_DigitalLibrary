@@ -131,9 +131,12 @@
           'section_loaded' => 'section-loaded',
         );
 
-        $welcome_block = "<div id='admin-welcome-tab-message'><h3>Helpful Information
-        </h3><p>Welcome Tutorial consists of help topics. You can create a help topic in <a href='/admin/help-topics'>
-        help topics tab</a> and mark it for display in Welcome Tutorial.</p></div>";
+        $welcome_block = "<div id='admin-welcome-tab-message'>
+            <h3>Helpful Information </h3>
+            <p>Welcome Topics are the three help items displayed on the landing page.</p>
+            <p>You must remove exising items to allow room for new items</p>
+            <p>You can add new items by editing Help Topics</p>
+          </div>";
 
         // Welcome Help Topics
         $view_welcome = views_get_view('help_topics');
@@ -141,7 +144,7 @@
         $view_welcome->execute();
 
         $sections['tab3'] = array(
-          'title' => t('Welcome Tutorial ('. count($view_welcome->result) . ') '),
+          'title' => t('Welcome Topics ('. count($view_welcome->result) . ') '),
           'content' => '<div id="tab3">' . $welcome_block . $view_welcome->render() . '</div>',
           'disabled' => FALSE,
           'class' => 'tab2 class',
