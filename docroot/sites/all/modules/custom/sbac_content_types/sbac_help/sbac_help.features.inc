@@ -24,6 +24,56 @@ function sbac_help_views_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_flag_default_flags().
+ */
+function sbac_help_flag_default_flags() {
+  $flags = array();
+  // Exported flag: "Welcome Help Topic".
+  $flags['welcome_help_topic'] = array(
+    'entity_type' => 'node',
+    'title' => 'Welcome Help Topic',
+    'global' => 0,
+    'types' => array(
+      0 => 'help_page',
+    ),
+    'flag_short' => 'Make this a Welcome Help Topic',
+    'flag_long' => '',
+    'flag_message' => '',
+    'unflag_short' => 'Remove from Welcome Help Topics',
+    'unflag_long' => '',
+    'unflag_message' => '',
+    'unflag_denied_text' => '',
+    'link_type' => 'toggle',
+    'weight' => 0,
+    'show_in_links' => array(
+      'full' => 0,
+      'teaser' => 0,
+      'rss' => 0,
+      'search_index' => 0,
+      'search_result' => 0,
+      'diff_standard' => 0,
+      'print' => 0,
+      'token' => 0,
+      'node_term_user' => 0,
+      'secondary_teaser' => 0,
+      'revision' => 0,
+    ),
+    'show_as_field' => 0,
+    'show_on_form' => 1,
+    'access_author' => '',
+    'show_contextual_link' => 0,
+    'i18n' => 0,
+    'api_version' => 3,
+    'module' => 'sbac_help',
+    'locked' => array(
+      0 => 'name',
+    ),
+  );
+  return $flags;
+
+}
+
+/**
  * Implements hook_image_default_styles().
  */
 function sbac_help_image_default_styles() {
