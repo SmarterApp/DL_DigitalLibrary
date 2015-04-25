@@ -1,0 +1,49 @@
+<?php
+/**
+ * @file
+ * Code for the Message notify example feature.
+ */
+
+include_once('sbac_email.features.inc');
+
+/**
+ * Implements hook_node_insert().
+ */
+function sbac_email_node_insert($node) {
+  global $user;
+  $flag = flag_get_flag('subscribe_node');
+  $flag->flag('flag', $node->nid, user_load($user->uid), TRUE);
+}
+
+/**
+ * Implements hook_comment_insert().
+ *
+ * Send a message to the node author when a new comment is created.
+ */
+function sbac_email_comment_insert($comment) {
+  $node = node_load($comment->nid);
+
+  if ($comment->uid == $node->uid) {
+    // return;
+  }
+
+  $options = array(
+    'rendered fields' => array(
+      'message_notify_email_subject' => 'field_message_rendered_subject',
+      'message_notify_email_body' => 'field_message_rendered_body',
+    ),
+  );
+
+  if (module_exists('message_notify')) {
+    $flags = flag_get_entity_flags('node', $node->nid, 'subscribe_node');
+
+
+    foreach ($flags as $flag) {
+      $message = message_create('comment_insert', array('uid' => $flag->uid));
+      $wrapper = entity_metadata_wrapper('message', $message);
+      $wrapper->field_comment_ref->set($comment);
+      message_notify_send_message($message, $options);
+    }
+
+  }
+}
