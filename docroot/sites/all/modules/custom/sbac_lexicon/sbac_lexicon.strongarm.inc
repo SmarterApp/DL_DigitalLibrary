@@ -14,14 +14,14 @@ function sbac_lexicon_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_message';
-  $strongarm->value = 1429905719;
+  $strongarm->value = 0;
   $export['cache_flush_cache_entity_message'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_message_type';
-  $strongarm->value = 1429905719;
+  $strongarm->value = 0;
   $export['cache_flush_cache_entity_message_type'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -72,6 +72,7 @@ function sbac_lexicon_strongarm() {
   $strongarm->value = array(
     'subscribe_node' => TRUE,
     'email_node' => FALSE,
+    'email_term' => TRUE,
   );
   $export['flag_default_flag_status'] = $strongarm;
 

@@ -5,10 +5,19 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function sbac_email_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
+}
+
+/**
  * Implements hook_views_api().
  */
-function sbac_email_views_api() {
-  return array("version" => "3.0");
+function sbac_email_views_api($module = NULL, $api = NULL) {
+  return array("api" => "3.0");
 }
 
 /**
@@ -22,22 +31,27 @@ function sbac_email_default_message_type() {
     "argument_keys" : [],
     "argument" : [],
     "category" : "message_type",
-    "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
     "language" : "",
     "arguments" : null,
     "message_text" : { "und" : [
         {
-          "value" : "[message:field-comment-ref:author] commented on [message:field-comment-ref:node:title]",
+          "value" : "[message:field-node-ref:author:field_first_name] [message:field-node-ref:author:field_last_name] posted new discussion [message:field-node-ref:title] for [message:field-node-ref:field_topic_forum_parent]",
           "format" : "filtered_html",
-          "safe_value" : "\u003Cp\u003E[message:field-node-ref:author] commented on [message:field-comment-ref:node:title]\u003C\/p\u003E\n"
+          "safe_value" : "\\u003Cp\\u003E[message:field-node-ref:author:field_first_name] [message:field-node-ref:author:field_last_name] posted new discussion [message:field-node-ref:title] for [message:field-node-ref:field_topic_forum_parent]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "Hello [message:field-comment-ref:node:author],\r\n\r\n\u003Ca href=\u0022[message:field-comment-ref:author:url]\u0022\u003E[message:field-comment-ref:author:name]\u003C\/a\u003E has commented on your post \u003Ca href=\u0022[message:field-comment-ref:node:url]\u0022\u003E[message:field-comment-ref:node:title]\u003C\/a\u003E.\r\n\r\nCheers,\r\nMessage notify example robot\r\n",
+          "value" : "\\u003Cp\\u003E[message:field-node-ref:author:field-first-name] [message:field-node-ref:author:field_last_name] posted new discussion \\u0022\\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022[message:field-node-ref:field-topic-forum-parent:url]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\u003Cp\u003EHello [message:field-comment-ref:node:author],\u003C\/p\u003E\n\u003Cp\u003E\u003Ca href=\u0022[message:field-comment-ref:author:url]\u0022\u003E[message:field-comment-ref:author:name]\u003C\/a\u003E has commented on your post \u003Ca href=\u0022[message:field-comment-ref:node:url]\u0022\u003E[message:field-comment-ref:node:title]\u003C\/a\u003E.\u003C\/p\u003E\n\u003Cp\u003ECheers,\u003Cbr \/\u003E\nMessage notify example robot\u003C\/p\u003E\n"
+          "safe_value" : "\\u003Cp\\u003E[message:field-node-ref:author:field-first-name] [message:field-node-ref:author:field_last_name] posted new discussion \\u0022\\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022[message:field-node-ref:field-topic-forum-parent:url]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
+    "entity_type" : "message_type",
+    "entity_id" : "15",
     "rdf_mapping" : []
   }');
   return $items;
