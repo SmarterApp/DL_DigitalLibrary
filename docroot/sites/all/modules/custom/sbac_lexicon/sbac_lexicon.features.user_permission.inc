@@ -53,18 +53,14 @@ function sbac_lexicon_user_default_permissions() {
   // Exported permission: 'administer message types'.
   $permissions['administer message types'] = array(
     'name' => 'administer message types',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'message',
   );
 
   // Exported permission: 'create messages'.
   $permissions['create messages'] = array(
     'name' => 'create messages',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'message',
   );
 
@@ -104,27 +100,9 @@ function sbac_lexicon_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'flag subscribe_comments'.
-  $permissions['flag subscribe_comments'] = array(
-    'name' => 'flag subscribe_comments',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'flag',
-  );
-
   // Exported permission: 'flag subscribe_node'.
   $permissions['flag subscribe_node'] = array(
     'name' => 'flag subscribe_node',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'unflag subscribe_comments'.
-  $permissions['unflag subscribe_comments'] = array(
-    'name' => 'unflag subscribe_comments',
     'roles' => array(
       'authenticated user' => 'authenticated user',
     ),

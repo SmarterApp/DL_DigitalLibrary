@@ -16,9 +16,9 @@ function sbac_email_views_api() {
  */
 function sbac_email_default_message_type() {
   $items = array();
-  $items['comment_insert'] = entity_import('message_type', '{
-    "name" : "comment_insert",
-    "description" : "Comment insert",
+  $items['node_insert'] = entity_import('message_type', '{
+    "name" : "node_insert",
+    "description" : "Node insert",
     "argument_keys" : [],
     "argument" : [],
     "category" : "message_type",
@@ -29,7 +29,7 @@ function sbac_email_default_message_type() {
         {
           "value" : "[message:field-comment-ref:author] commented on [message:field-comment-ref:node:title]",
           "format" : "filtered_html",
-          "safe_value" : "\u003Cp\u003E[message:field-comment-ref:author] commented on [message:field-comment-ref:node:title]\u003C\/p\u003E\n"
+          "safe_value" : "\u003Cp\u003E[message:field-node-ref:author] commented on [message:field-comment-ref:node:title]\u003C\/p\u003E\n"
         },
         {
           "value" : "Hello [message:field-comment-ref:node:author],\r\n\r\n\u003Ca href=\u0022[message:field-comment-ref:author:url]\u0022\u003E[message:field-comment-ref:author:name]\u003C\/a\u003E has commented on your post \u003Ca href=\u0022[message:field-comment-ref:node:url]\u0022\u003E[message:field-comment-ref:node:title]\u003C\/a\u003E.\r\n\r\nCheers,\r\nMessage notify example robot\r\n",

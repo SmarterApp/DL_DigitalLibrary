@@ -1,10 +1,20 @@
 <?php
 /**
  * @file
- * Code for the Message notify example feature.
+ * sbac_email module file.
  */
 
 include_once('sbac_email.features.inc');
+
+/**
+ * Implements hook_node_insert().
+ */
+function sbac_email_taxonomy_term_insert($term) {
+  global $user;
+  $term_flag = flag_get_flag('subscribe_term');
+  $term_flag->flag('flag', $term->tid, user_load($user->uid), TRUE);
+}
+
 
 /**
  * Implements hook_node_insert().
@@ -13,6 +23,25 @@ function sbac_email_node_insert($node) {
   global $user;
   $flag = flag_get_flag('subscribe_node');
   $flag->flag('flag', $node->nid, user_load($user->uid), TRUE);
+
+  if (module_exists('message_notify')) {
+    $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
+    $term_flags = flag_get_entity_flags('taxonomy_term', $tid, 'subscribe_term');
+    $options = array(
+      'rendered fields' => array(
+        'message_notify_email_subject' => 'field_message_rendered_subject',
+        'message_notify_email_body' => 'field_message_rendered_body',
+      ),
+    );
+    foreach ($term_flags as $term_flag) {
+      if ($node->uid !== $term_flag->uid) {
+        $message = message_create('node_insert', array('uid' => $term_flag->uid));
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->field_node_ref->set($node);
+        message_notify_send_message($message, $options);
+      }
+    }
+  }
 }
 
 /**
@@ -23,10 +52,9 @@ function sbac_email_node_insert($node) {
 function sbac_email_comment_insert($comment) {
   $node = node_load($comment->nid);
 
-  if ($comment->uid == $node->uid) {
-    // return;
-  }
-
+  global $user;
+  $flag = flag_get_flag('subscribe_node');
+  $flag->flag('flag', $node->nid, user_load($user->uid), TRUE);
   $options = array(
     'rendered fields' => array(
       'message_notify_email_subject' => 'field_message_rendered_subject',
@@ -37,13 +65,13 @@ function sbac_email_comment_insert($comment) {
   if (module_exists('message_notify')) {
     $flags = flag_get_entity_flags('node', $node->nid, 'subscribe_node');
 
-
     foreach ($flags as $flag) {
-      $message = message_create('comment_insert', array('uid' => $flag->uid));
-      $wrapper = entity_metadata_wrapper('message', $message);
-      $wrapper->field_comment_ref->set($comment);
-      message_notify_send_message($message, $options);
+      if ($comment->uid !== $flag->uid) {
+        $message = message_create('comment_insert', array('uid' => $flag->uid));
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->field_comment_ref->set($comment);
+        message_notify_send_message($message, $options);
+      }
     }
-
   }
 }

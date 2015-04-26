@@ -14,14 +14,14 @@ function sbac_lexicon_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_message';
-  $strongarm->value = 0;
+  $strongarm->value = 1429905719;
   $export['cache_flush_cache_entity_message'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'cache_flush_cache_entity_message_type';
-  $strongarm->value = 0;
+  $strongarm->value = 1429905719;
   $export['cache_flush_cache_entity_message_type'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -379,7 +379,7 @@ function sbac_lexicon_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'message_subscribe_node';
-  $strongarm->value = 'subscribe_node_email:default';
+  $strongarm->value = 'subscribe_node:default';
   $export['message_subscribe_node'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -414,7 +414,7 @@ function sbac_lexicon_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'message_subscribe_use_queue';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['message_subscribe_use_queue'] = $strongarm;
 
   $strongarm = new stdClass();
