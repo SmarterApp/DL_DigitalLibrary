@@ -15,7 +15,10 @@
     </div>
   <?php endif; ?>
 </div>
-<div class="sbac-forum-vp-top clearfix">
+   <div class="sbac-forum-vp-top clearfix">
+<?php $term = taxonomy_term_load(arg(2)); ?>
+<?php print flag_create_link('subscribe_term', $term->tid);?>
+
   <?php if (!empty($fields['resource_link'])): ?>
     <div class="col wide">
       <?php if (!empty($fields['description'])): ?>
