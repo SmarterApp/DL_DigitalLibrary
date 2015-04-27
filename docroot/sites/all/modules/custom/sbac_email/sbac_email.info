@@ -14,4 +14,4 @@ features[field_instance][] = message-node_insert-field_message_rendered_subject
 features[field_instance][] = message-node_insert-field_node_ref
 features[message_type][] = node_insert
 features[variable][] = field_bundle_settings_message__node_insert
-mtime = 1430086311
+mtime = 1430087647
