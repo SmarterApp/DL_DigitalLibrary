@@ -41,38 +41,41 @@
   <?php if ($warning): ?>
     <h2><?php print $warning; ?></h2>
   <?php endif; ?>
-	<div class="review-it">
-  	<?php if($review): ?>
-	    <p><?php print $review; ?></p>
+  <div class="review-it">
+    <?php if($review): ?>
+      <p><?php print $review; ?></p>
       <?php print $rating; ?>
       <?php print $review_count; ?>
-	  <?php endif; ?>
-	</div>
-	<div class="filter-bar">
-  	<?php if ($topic_count): ?>
-			<div class="topic-count">
-	    <?php print $topic_count; ?> Topics:
-			</div>
-	  <?php endif; ?>
+    <?php endif; ?>
+  </div>
+  <div class="filter-bar">
+    <?php $node = node_load($view->result[0]->nid); ?>
+    <?php  $tid = $node->field_topic_forum_parent[$node->language][0]['tid']; ?>
+    <?php print flag_create_link('subscribe_term', $tid);?>
+    <?php if ($topic_count): ?>
+      <div class="topic-count">
+	<?php print $topic_count; ?> Topics:
+      </div>
+    <?php endif; ?>
 
-	  <?php if ($exposed): ?>
-	    <div class="view-filters">
-	      <?php print $exposed; ?>
-	    </div>
-	  <?php endif; ?>
+    <?php if ($exposed): ?>
+      <div class="view-filters">
+	<?php print $exposed; ?>
+      </div>
+    <?php endif; ?>
 
-	  <?php if(isset($participants)): ?>
-			<div class="participants-count">
-	    <?php print $participants; ?>
-			</div>
-	  <?php endif; ?>
+    <?php if(isset($participants)): ?>
+      <div class="participants-count">
+	<?php print $participants; ?>
+      </div>
+    <?php endif; ?>
 
-	  <?php if ($join_button): ?>
-	    <div id="join-forum-form-wrapper">
-	      <?php print $join_button; ?>
-	    </div>
-	  <?php endif; ?>
-	</div>
+    <?php if ($join_button): ?>
+      <div id="join-forum-form-wrapper">
+	<?php print $join_button; ?>
+      </div>
+    <?php endif; ?>
+  </div>
 
   <?php if ($attachment_before): ?>
     <div class="attachment attachment-before">
@@ -84,36 +87,36 @@
     <div class="view-content">
       <?php print $rows; ?>
     </div>
-  <?php elseif ($empty): ?>
-    <div class="view-empty">
-      <?php print $empty; ?>
-    </div>
-  <?php endif; ?>
+    <?php elseif ($empty): ?>
+      <div class="view-empty">
+	<?php print $empty; ?>
+      </div>
+    <?php endif; ?>
 
-  <?php if ($pager): ?>
-    <?php print $pager; ?>
-  <?php endif; ?>
+    <?php if ($pager): ?>
+      <?php print $pager; ?>
+    <?php endif; ?>
 
-  <?php if ($attachment_after): ?>
-    <div class="attachment attachment-after">
-      <?php print $attachment_after; ?>
-    </div>
-  <?php endif; ?>
+    <?php if ($attachment_after): ?>
+      <div class="attachment attachment-after">
+	<?php print $attachment_after; ?>
+      </div>
+    <?php endif; ?>
 
-  <?php if ($more): ?>
-    <?php print $more; ?>
-  <?php endif; ?>
+    <?php if ($more): ?>
+      <?php print $more; ?>
+    <?php endif; ?>
 
-  <?php if ($footer): ?>
-    <div class="view-footer">
-      <?php print $footer; ?>
-    </div>
-  <?php endif; ?>
+    <?php if ($footer): ?>
+      <div class="view-footer">
+	<?php print $footer; ?>
+      </div>
+    <?php endif; ?>
 
-  <?php if ($feed_icon): ?>
-    <div class="feed-icon">
-      <?php print $feed_icon; ?>
-    </div>
-  <?php endif; ?>
+    <?php if ($feed_icon): ?>
+      <div class="feed-icon">
+	<?php print $feed_icon; ?>
+      </div>
+    <?php endif; ?>
 
 </div><?php /* class view */ ?>
