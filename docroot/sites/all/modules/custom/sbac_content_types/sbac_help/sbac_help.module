@@ -191,7 +191,7 @@ function sbac_help_preprocess_views_view__help_topics__block(&$vars){
 function sbac_help_preprocess_help_dropdown(&$vars) {
   ctools_include('modal');
   drupal_add_js(drupal_get_path('module', 'sbac_help') . '/js/sbac_help.ctools.js');
-  $js_settings = array('sbac-help-welcome-tutorial' => array('modalSize' => array('type' => 'fixed', 'width' => 960, 'height' => 650), 'modalTheme' => 'CtoolSbacWelcomeTutorial'));
+  $js_settings = array('sbac-help-welcome-tutorial' => array('modalSize' => array('type' => 'fixed', 'width' => 925, 'height' => 650), 'modalTheme' => 'CtoolSbacWelcomeTutorial'));
   drupal_add_js($js_settings, 'setting');
   ctools_modal_add_js();
 }
@@ -231,7 +231,7 @@ function sbac_help_preprocess_welcome_tutorial_post(&$vars) {
     $file = file_load($vars['node']->field_help_icon['und'][0]['fid']);
     if ($file) {
       $tut_image = array(
-        'style_name' => 'welcome_tutorial',
+        'style_name' => 'help_topics_modal_image',
         'path' => $file->uri,
         'alt' => $vars['img_alt'],
       );
