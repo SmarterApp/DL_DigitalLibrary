@@ -1458,11 +1458,6 @@ function sbac_user_preprocess_page(&$vars) {
   if (isset($_SESSION['user_setup']) && arg(0) != 'sbac-user') {
     drupal_goto('sbac-user/setup');
   }
-  if (!isset($_SESSION['critical-first-then-welcome-tutorial'])) {
-    if (($last_session && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
-      drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
-    }
-  }
 }
 
 /**

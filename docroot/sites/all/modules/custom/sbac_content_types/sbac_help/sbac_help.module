@@ -574,32 +574,6 @@ function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
     '#prefix' => '<div class="welcome-modal-container" id="welcome-modal-container">',
   );
 
-  if (($account->data['login_count'] == 1 && !$account->data['disable_recent']) || isset($_SESSION['welcome-update'])) {
-    $form ['profile_updated_container'] = array(
-      '#markup' => '<div class="sbac-welcome-update-cont">',
-    );
-
-    $form['profile_updated'] = array(
-      '#type' => 'item',
-      '#title' => t('Your profile has been updated. Thank you.'),
-      '#markup' => t(
-        'You can always change your profile settings on the <a href="@url">account screen</a>.',
-        array(
-          '@url' => url('user/' . $user->uid),
-        )
-      ),
-    );
-
-    $form['close_update'] = array(
-      '#markup' => l('Dismiss', 'welcome-tutorial/nojs', array('attributes' => array('class' => 'use-ajax'))),
-    );
-
-    $form['profile_updated_container_suffix'] = array(
-      '#markup' => '</div>',
-    );
-    unset($_SESSION['welcome-update']);
-  }
-
   if (!($form_state['packages']['node'])) {
     $form['tutorial_header'] = array(
       '#markup' => '<div class="sbac-tutorial-header-cont">',
