@@ -55,7 +55,7 @@ function sbac_featured_content(){
   $variables['featured_content'] = '';
   
   if(user_access('flag-featured-node')){
-      $variables['edit'] = l('Edit Features','/admin/help-topics');
+      $variables['edit'] = l('Edit Features','/sort-content/featured');
   }
 
   $featured_content = sbac_featured_content_flagged();
