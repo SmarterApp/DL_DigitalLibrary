@@ -1119,11 +1119,11 @@ function sbac_user_redirect_on_login($edit = array()) {
         drupal_goto($alias_path);
       }
       else {
-        drupal_goto('digital-library-resources');
+        drupal_goto('<front>');
       }
     }
     else {
-      drupal_goto('digital-library-resources');
+      drupal_goto('<front>');
     }
   }
 }
