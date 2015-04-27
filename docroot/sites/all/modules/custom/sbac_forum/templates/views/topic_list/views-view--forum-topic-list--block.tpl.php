@@ -49,9 +49,17 @@
     <?php endif; ?>
   </div>
   <div class="filter-bar">
-    <?php $node = node_load($view->result[0]->nid); ?>
-    <?php  $tid = $node->field_topic_forum_parent[$node->language][0]['tid']; ?>
-    <?php print flag_create_link('subscribe_term', $tid);?>
+    <?php
+
+    if(arg(1) == 'term' && is_numeric(arg(2))) {
+      $tid = arg(2);
+    }
+    else {
+      $node = node_load($view->result[0]->nid);
+      $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
+    }
+    print flag_create_link('subscribe_term', $tid);
+    ?>
     <?php if ($topic_count): ?>
       <div class="topic-count">
 	<?php print $topic_count; ?> Topics:
