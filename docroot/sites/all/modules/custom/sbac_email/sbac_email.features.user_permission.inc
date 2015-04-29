@@ -10,6 +10,15 @@
 function sbac_email_user_default_permissions() {
   $permissions = array();
 
+  // Exported permission: 'administer smtp module'.
+  $permissions['administer smtp module'] = array(
+    'name' => 'administer smtp module',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'smtp',
+  );
+
   // Exported permission: 'flag email'.
   $permissions['flag email'] = array(
     'name' => 'flag email',
