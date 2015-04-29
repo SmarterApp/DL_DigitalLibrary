@@ -21,6 +21,45 @@ function sbac_email_views_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_flag_default_flags().
+ */
+function sbac_email_flag_default_flags() {
+  $flags = array();
+  // Exported flag: "Email receive".
+  $flags['email'] = array(
+    'entity_type' => 'flag',
+    'title' => 'Email receive',
+    'global' => 0,
+    'types' => array(),
+    'flag_short' => 'Turn on email notices',
+    'flag_long' => 'Turn on email notices',
+    'flag_message' => '',
+    'unflag_short' => 'Turn off Email notices',
+    'unflag_long' => 'Turn off email notices',
+    'unflag_message' => '',
+    'unflag_denied_text' => '',
+    'link_type' => 'toggle',
+    'weight' => 0,
+    'show_in_links' => array(
+      'teaser' => 'teaser',
+      'diff_standard' => 0,
+      'token' => 0,
+    ),
+    'show_as_field' => 0,
+    'show_on_form' => 0,
+    'access_author' => '',
+    'show_contextual_link' => 0,
+    'api_version' => 3,
+    'module' => 'sbac_email',
+    'locked' => array(
+      0 => 'name',
+    ),
+  );
+  return $flags;
+
+}
+
+/**
  * Implements hook_default_message_type().
  */
 function sbac_email_default_message_type() {
@@ -50,8 +89,6 @@ function sbac_email_default_message_type() {
         }
       ]
     },
-    "entity_type" : "message_type",
-    "entity_id" : "15",
     "rdf_mapping" : []
   }');
   return $items;
