@@ -10,7 +10,7 @@
 function sbac_lexicon_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: 'access lexicon'.
+  // Exported permission: access lexicon.
   $permissions['access lexicon'] = array(
     'name' => 'access lexicon',
     'roles' => array(
@@ -19,7 +19,7 @@ function sbac_lexicon_user_default_permissions() {
     'module' => 'lexicon',
   );
 
-  // Exported permission: 'administer lexicon'.
+  // Exported permission: administer lexicon.
   $permissions['administer lexicon'] = array(
     'name' => 'administer lexicon',
     'roles' => array(
