@@ -46,5 +46,14 @@ function sbac_email_user_default_permissions() {
     'module' => 'flag',
   );
 
+  // Exported permission: 'use text format filtered_html'.
+  $permissions['use text format filtered_html'] = array(
+    'name' => 'use text format filtered_html',
+    'roles' => array(
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'filter',
+  );
+
   return $permissions;
 }
