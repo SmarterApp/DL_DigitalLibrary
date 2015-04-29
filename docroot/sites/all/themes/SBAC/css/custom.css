@@ -34428,3 +34428,46 @@ form#sbac-user-filter-form #edit-email {
   max-width: 1280px;
   margin: 0 auto;
 }
+
+/* -----------------------------------------
+  Notifications Tab
+  ------------------------------------------ */
+/* line 3884, ../sass/custom.scss */
+.view-message table {
+  width: 100%;
+  border: none;
+  background-color: none;
+}
+/* line 3888, ../sass/custom.scss */
+.view-message table td, .view-message table tr, .view-message table th {
+  background-color: transparent;
+}
+
+/* line 3893, ../sass/custom.scss */
+#taskithide {
+  display: none;
+}
+
+/* -----------------------------------------
+  Flags
+  ------------------------------------------ */
+/* line 3901, ../sass/custom.scss */
+.filter-bar .flag-wrapper {
+  position: absolute;
+  top: 25px;
+  right: 250px;
+}
+
+/* line 3909, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right .flag-wrapper {
+  position: absolute;
+  top: 47px;
+  right: 150px;
+}
+
+/* line 3917, ../sass/custom.scss */
+#section-collaboration .flag-wrapper {
+  position: absolute;
+  top: 125px;
+  right: 280px;
+}

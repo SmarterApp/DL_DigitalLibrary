@@ -3876,3 +3876,47 @@ form#sbac-user-filter-form #edit-email {
   max-width:1280px;
   margin:0 auto;
 }
+
+/* -----------------------------------------
+  Notifications Tab
+  ------------------------------------------ */
+.view-message {
+  table {
+    width: 100%;
+    border:none;
+    background-color:none;
+    td,tr,th {
+      background-color:transparent;
+    }
+  }
+}
+#taskithide {
+  display:none;
+}
+
+/* -----------------------------------------
+  Flags
+  ------------------------------------------ */
+.filter-bar {
+  .flag-wrapper {
+    position: absolute;
+    top: 25px;
+    right: 250px;
+  } 
+}
+
+.topic-node-view-tertiary-nav-right {
+  .flag-wrapper {
+    position: absolute;
+    top: 47px;
+    right: 150px;
+  } 
+}
+
+#section-collaboration {
+  .flag-wrapper {
+    position: absolute;
+    top: 125px;
+    right: 280px;
+  } 
+}
