@@ -44,9 +44,7 @@ function sbac_lexicon_user_default_permissions() {
   // Exported permission: 'administer message subscribe'.
   $permissions['administer message subscribe'] = array(
     'name' => 'administer message subscribe',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'message_subscribe',
   );
 
@@ -104,11 +102,20 @@ function sbac_lexicon_user_default_permissions() {
     'module' => 'taxonomy',
   );
 
-  // Exported permission: 'flag subscribe_comments'.
-  $permissions['flag subscribe_comments'] = array(
-    'name' => 'flag subscribe_comments',
+  // Exported permission: 'flag email_node'.
+  $permissions['flag email_node'] = array(
+    'name' => 'flag email_node',
     'roles' => array(
       'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
+  );
+
+  // Exported permission: 'flag featured_node'.
+  $permissions['flag featured_node'] = array(
+    'name' => 'flag featured_node',
+    'roles' => array(
+      'administrator' => 'administrator',
     ),
     'module' => 'flag',
   );
@@ -122,11 +129,20 @@ function sbac_lexicon_user_default_permissions() {
     'module' => 'flag',
   );
 
-  // Exported permission: 'unflag subscribe_comments'.
-  $permissions['unflag subscribe_comments'] = array(
-    'name' => 'unflag subscribe_comments',
+  // Exported permission: 'unflag email_node'.
+  $permissions['unflag email_node'] = array(
+    'name' => 'unflag email_node',
     'roles' => array(
       'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'flag',
+  );
+
+  // Exported permission: 'unflag featured_node'.
+  $permissions['unflag featured_node'] = array(
+    'name' => 'unflag featured_node',
+    'roles' => array(
+      'administrator' => 'administrator',
     ),
     'module' => 'flag',
   );
