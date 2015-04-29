@@ -1,0 +1,31 @@
+<?php
+/**
+ * @file
+ * sbac_email install file.
+ */
+
+/**
+ * Implements hook_update().
+ */
+function sbac_email_update_7001(&$sandbox) {
+  $schema['sbac_email_user_unread_notifications_count'] = array(
+    'description' => 'The unread count of sbac_email notifications for a given user',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'count' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('uid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+  );
+
+  db_create_table('sbac_email_user_unread_notifications_count', $schema['sbac_email_user_unread_notifications_count']);
+}
