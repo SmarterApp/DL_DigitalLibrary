@@ -3880,7 +3880,7 @@ form#sbac-user-filter-form #edit-email {
 /* -----------------------------------------
   Notifications Tab
   ------------------------------------------ */
-.view-message {
+.view-sbac-email-message {
   table {
     width: 100%;
     border:none;
@@ -3918,10 +3918,6 @@ form#sbac-user-filter-form #edit-email {
     position: absolute;
     top: 125px;
     right: 280px;
-<<<<<<< HEAD
-  } 
-}
-=======
   }
 }
 
@@ -3931,4 +3927,3 @@ form#sbac-user-filter-form #edit-email {
 .form-item-message-subscribe-email-und {
   display:none;
 }
->>>>>>> Updating features to catch notifications view block for user page.
