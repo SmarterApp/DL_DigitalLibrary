@@ -119,39 +119,22 @@ function sbac_featured_resource($node){
  * Retreives all flagged enttities, and builds an array of featured entities
  * with respective templates
  */
-function sbac_featured_content_flagged(){
-  $featured_content = array();
-  $limit = 1;
-  // Get Featured flag ID
-  $query = db_select('flag', 'f');
-    $query->join('flagging', 'fl', 'fl.fid = f.fid');
-    $query->join('draggableviews_structure', 'dv', 'fl.entity_id = dv.entity_id');
-    $query->fields('fl', array('entity_type', 'entity_id'));
-    $query->fields('fl', array('entity_type', 'entity_id'));
-    $query->fields('dv', array('entity_id', 'weight'));
-    $query->orderBy('dv.weight','ASC');
-    $query->range('0','1'); // UPDATE WHEN TURNING INTO CAROUSEL
-    $query->condition('f.name', 'featured_node');
-    $query->condition('dv.view_name', 'sort_content');
+function sbac_featured_content_flagged($entity_type,$entity_id){
+  switch ($entity_type) {
+    case 'node':
+      $node = node_load($entity_id);
+      switch ($node->type) {
+        case "resource":
+          $featured_content = sbac_featured_resource($node);
+          break;
 
-    $flags = $query->execute()->fetchAll();
-  foreach($flags as $flagged){
-    switch ($flagged->entity_type) {
-      case 'node':
-        $node = node_load($flagged->entity_id);
-        switch ($node->type) {
-          case "resource":
-            $featured_content[] = sbac_featured_resource($node);
-            break;
+        default:
+          break;
+      }
+      break;
 
-          default:
-            break;
-        }
-        break;
-
-      default:
-        break;
-    }
+    default:
+      break;
   }
   return $featured_content;
 }
@@ -231,4 +214,15 @@ function _sbac_featured_resource_image($node, $view_display = 'grid') {
   else {
     return NULL;
   }
+}
+
+/**
+* Implements hook_views_api().
+*/
+function sbac_featured_content_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'sbac_featured_content') . '/views',
+    'template path' => drupal_get_path('module', 'sbac_featured_content') . '/templates',
+  );
 }
