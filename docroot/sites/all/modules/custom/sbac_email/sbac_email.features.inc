@@ -49,11 +49,11 @@ function sbac_email_flag_default_flags() {
     'show_on_form' => 0,
     'access_author' => '',
     'show_contextual_link' => 0,
-    'api_version' => 3,
     'module' => 'sbac_email',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 3,
   );
   return $flags;
 
@@ -89,6 +89,8 @@ function sbac_email_default_message_type() {
         }
       ]
     },
+    "entity_type" : "message_type",
+    "entity_id" : "18",
     "rdf_mapping" : []
   }');
   return $items;

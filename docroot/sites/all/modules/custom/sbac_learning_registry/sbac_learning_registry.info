@@ -10,5 +10,5 @@ dependencies[] = learning_resource_metadata_initiative
 dependencies[] = strongarm
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
-mtime = 1430087659
+mtime = 1430146145
 project path = sites/all/modules/custom
