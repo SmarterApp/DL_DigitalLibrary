@@ -19,13 +19,6 @@ function sbac_email_user_default_permissions() {
     'module' => 'flag',
   );
 
-  // Exported permission: 'flag email_term'.
-  $permissions['flag email_term'] = array(
-    'name' => 'flag email_term',
-    'roles' => array(),
-    'module' => 'flag',
-  );
-
   // Exported permission: 'flag subscribe_term'.
   $permissions['flag subscribe_term'] = array(
     'name' => 'flag subscribe_term',
@@ -41,13 +34,6 @@ function sbac_email_user_default_permissions() {
     'roles' => array(
       'authenticated user' => 'authenticated user',
     ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'unflag email_term'.
-  $permissions['unflag email_term'] = array(
-    'name' => 'unflag email_term',
-    'roles' => array(),
     'module' => 'flag',
   );
 
