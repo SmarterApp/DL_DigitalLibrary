@@ -124,11 +124,11 @@ function sbac_email_flag_default_flags() {
     'show_on_form' => 0,
     'access_author' => '',
     'show_contextual_link' => 0,
-    'api_version' => 3,
     'module' => 'sbac_email',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 3,
   );
   return $flags;
 
@@ -166,6 +166,35 @@ function sbac_email_default_message_type() {
     },
     "entity_type" : "message_type",
     "entity_id" : "18",
+    "rdf_mapping" : []
+  }');
+  $items['sbac_email_comment_insert'] = entity_import('message_type', '{
+    "name" : "sbac_email_comment_insert",
+    "description" : "SBAC Email Comment Insert",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field-last-name] wrote a post in discussion [message:field-comment-ref:node:title]",
+          "format" : "filtered_html",
+          "safe_value" : "\\u003Cp\\u003E[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field-last-name] wrote a post in discussion [message:field-comment-ref:node:title]\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003E[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote a post in discussion \\u0022\\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022[message:field-comment-ref:node:field-topic-forum-parent:url]\\u0022\\u003E[message:field-comment-ref:node:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u0026gt;\\u0026gt;\\u0026gt; \\u003Ca href=\\u0022[message:field-comment-ref:url]\\u0022\\u003E[message:field-comment-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003E[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote a post in discussion \\u0022\\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022[message:field-comment-ref:node:field-topic-forum-parent:url]\\u0022\\u003E[message:field-comment-ref:node:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u0026gt;\\u0026gt;\\u0026gt; \\u003Ca href=\\u0022[message:field-comment-ref:url]\\u0022\\u003E[message:field-comment-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "entity_type" : "message_type",
+    "entity_id" : "19",
     "rdf_mapping" : []
   }');
   return $items;

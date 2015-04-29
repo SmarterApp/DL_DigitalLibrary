@@ -38,7 +38,14 @@ function sbac_email_node_insert($node) {
         $message = message_create('node_insert', array('uid' => $term_flag->uid));
         $wrapper = entity_metadata_wrapper('message', $message);
         $wrapper->field_node_ref->set($node);
-        message_notify_send_message($message, $options);
+
+        sbac_email_update_user_unread_count($term_flag->uid);
+        if (!empty($email_user['email'])) {
+          message_notify_send_message($message, $options);
+        }
+        else {
+          message_subscribe_send_message('node', $node, $message);
+        }
       }
     }
   }
@@ -67,10 +74,17 @@ function sbac_email_comment_insert($comment) {
 
     foreach ($flags as $flag) {
       if ($comment->uid !== $flag->uid) {
-        $message = message_create('comment_insert', array('uid' => $flag->uid));
+        $email_user = flag_get_user_flags('flag', $entity_id = NULL, $flag->uid);
+        $message = message_create('sbac_email_comment_insert', array('uid' => $flag->uid));
         $wrapper = entity_metadata_wrapper('message', $message);
         $wrapper->field_comment_ref->set($comment);
-        message_notify_send_message($message, $options);
+        sbac_email_update_user_unread_count($flag->uid);
+        if (!empty($email_user)) {
+          message_notify_send_message($message, $options);
+        }
+        else {
+          message_subscribe_send_message('comment', $comment, $message);
+        }
       }
     }
   }
