@@ -1,6 +1,5 @@
 # Ignore paths that contain user-generated content.
 docroot/files
-docroot/default/settings.php
 #config
 .idea
 docroot/phpinfo.php
