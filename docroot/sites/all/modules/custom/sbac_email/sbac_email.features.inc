@@ -55,6 +55,81 @@ function sbac_email_flag_default_flags() {
     ),
     'api_version' => 3,
   );
+  // Exported flag: "Discussion subscribe".
+  $flags['subscribe_node'] = array(
+    'entity_type' => 'node',
+    'title' => 'Discussion subscribe',
+    'global' => 0,
+    'types' => array(
+      0 => 'resource',
+      1 => 'topic',
+    ),
+    'flag_short' => 'Subscribe',
+    'flag_long' => '',
+    'flag_message' => 'You are now subscribed to this item.',
+    'unflag_short' => 'Unsubscribe',
+    'unflag_long' => '',
+    'unflag_message' => 'You are no longer subscribed to this item.',
+    'unflag_denied_text' => '',
+    'link_type' => 'toggle',
+    'weight' => -9,
+    'show_in_links' => array(
+      'full' => 0,
+      'teaser' => 0,
+      'rss' => 0,
+      'search_index' => 0,
+      'search_result' => 0,
+      'diff_standard' => 0,
+      'print' => 0,
+      'token' => 0,
+      'secondary_teaser' => 0,
+      'revision' => 0,
+    ),
+    'show_as_field' => 0,
+    'show_on_form' => 0,
+    'access_author' => '',
+    'show_contextual_link' => 0,
+    'i18n' => 0,
+    'module' => 'sbac_email',
+    'locked' => array(
+      0 => 'name',
+    ),
+    'api_version' => 3,
+  );
+  // Exported flag: "Forum Subscribe".
+  $flags['subscribe_term'] = array(
+    'entity_type' => 'taxonomy_term',
+    'title' => 'Forum Subscribe',
+    'global' => 0,
+    'types' => array(
+      0 => 'forum',
+    ),
+    'flag_short' => 'Subscribe',
+    'flag_long' => '',
+    'flag_message' => 'You are now subscribed to this item.',
+    'unflag_short' => 'Unsubscribe',
+    'unflag_long' => '',
+    'unflag_message' => 'You are no longer subscribed to this item.',
+    'unflag_denied_text' => '',
+    'link_type' => 'toggle',
+    'weight' => -8,
+    'show_in_links' => array(
+      'full' => 0,
+      'diff_standard' => 0,
+      'token' => 0,
+      'tooltip' => 0,
+      'forum_page_card' => 0,
+    ),
+    'show_as_field' => 0,
+    'show_on_form' => 0,
+    'access_author' => '',
+    'show_contextual_link' => 0,
+    'api_version' => 3,
+    'module' => 'sbac_email',
+    'locked' => array(
+      0 => 'name',
+    ),
+  );
   return $flags;
 
 }
