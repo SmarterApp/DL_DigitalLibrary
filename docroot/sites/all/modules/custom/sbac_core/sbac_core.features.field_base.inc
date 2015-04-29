@@ -328,11 +328,7 @@ function sbac_core_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_quality_set',
     'foreign keys' => array(),
-    'indexes' => array(
-      'revision_id' => array(
-        0 => 'revision_id',
-      ),
-    ),
+    'indexes' => array(),
     'locked' => 0,
     'module' => 'field_collection',
     'settings' => array(
@@ -406,11 +402,7 @@ function sbac_core_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_review_set',
     'foreign keys' => array(),
-    'indexes' => array(
-      'revision_id' => array(
-        0 => 'revision_id',
-      ),
-    ),
+    'indexes' => array(),
     'locked' => 0,
     'module' => 'field_collection',
     'settings' => array(

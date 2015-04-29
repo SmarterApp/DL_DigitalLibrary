@@ -1,10 +1,4 @@
 <?php
-/**
- * @file
- * Code for the SBAC Share feature.
- */
-
-include_once 'sbac_share.features.inc';
 
 /**
  * @file.
