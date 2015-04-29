@@ -27,13 +27,6 @@ function sbac_lexicon_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'ds_extras_flag';
-  $strongarm->value = 1;
-  $export['ds_extras_flag'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_message__comment_insert';
   $strongarm->value = array(
     'view_modes' => array(),
@@ -64,23 +57,6 @@ function sbac_lexicon_strongarm() {
     ),
   );
   $export['field_bundle_settings_message__comment_insert'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'flag_default_flag_status';
-  $strongarm->value = array(
-    'subscribe_node' => TRUE,
-    'email_node' => TRUE,
-  );
-  $export['flag_default_flag_status'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'flag_email_node_default_topic';
-  $strongarm->value = 0;
-  $export['flag_email_node_default_topic'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -416,13 +392,6 @@ function sbac_lexicon_strongarm() {
   $strongarm->name = 'reroute_email_enable_message';
   $strongarm->value = 1;
   $export['reroute_email_enable_message'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'sbac_resource_flag_guide';
-  $strongarm->value = '';
-  $export['sbac_resource_flag_guide'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

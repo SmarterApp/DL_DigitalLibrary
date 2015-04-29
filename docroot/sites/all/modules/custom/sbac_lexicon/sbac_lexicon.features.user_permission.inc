@@ -19,15 +19,6 @@ function sbac_lexicon_user_default_permissions() {
     'module' => 'lexicon',
   );
 
-  // Exported permission: 'administer flags'.
-  $permissions['administer flags'] = array(
-    'name' => 'administer flags',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'flag',
-  );
-
   // Exported permission: 'administer lexicon'.
   $permissions['administer lexicon'] = array(
     'name' => 'administer lexicon',
@@ -64,105 +55,6 @@ function sbac_lexicon_user_default_permissions() {
       'administrator' => 'administrator',
     ),
     'module' => 'message',
-  );
-
-  // Exported permission: 'delete terms in forum_flags'.
-  $permissions['delete terms in forum_flags'] = array(
-    'name' => 'delete terms in forum_flags',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'delete terms in resource_flags'.
-  $permissions['delete terms in resource_flags'] = array(
-    'name' => 'delete terms in resource_flags',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in forum_flags'.
-  $permissions['edit terms in forum_flags'] = array(
-    'name' => 'edit terms in forum_flags',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'edit terms in resource_flags'.
-  $permissions['edit terms in resource_flags'] = array(
-    'name' => 'edit terms in resource_flags',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'taxonomy',
-  );
-
-  // Exported permission: 'flag email_node'.
-  $permissions['flag email_node'] = array(
-    'name' => 'flag email_node',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'flag featured_node'.
-  $permissions['flag featured_node'] = array(
-    'name' => 'flag featured_node',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'flag subscribe_node'.
-  $permissions['flag subscribe_node'] = array(
-    'name' => 'flag subscribe_node',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'unflag email_node'.
-  $permissions['unflag email_node'] = array(
-    'name' => 'unflag email_node',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'unflag featured_node'.
-  $permissions['unflag featured_node'] = array(
-    'name' => 'unflag featured_node',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'unflag subscribe_node'.
-  $permissions['unflag subscribe_node'] = array(
-    'name' => 'unflag subscribe_node',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-    ),
-    'module' => 'flag',
-  );
-
-  // Exported permission: 'use flag import'.
-  $permissions['use flag import'] = array(
-    'name' => 'use flag import',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
-    'module' => 'flag',
   );
 
   return $permissions;
