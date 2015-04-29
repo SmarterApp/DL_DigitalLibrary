@@ -7,7 +7,7 @@
 /**
  * Implements hook_update().
  */
-function sbac_email_update_7001(&$sandbox) {
+function sbac_email_update_7004(&$sandbox) {
   $schema['sbac_email_user_unread_notifications_count'] = array(
     'description' => 'The unread count of sbac_email notifications for a given user',
     'fields' => array(
