@@ -70,7 +70,6 @@ class MigrateDestinationFieldCollection extends MigrateDestinationEntity {
    */
   public function fields() {
     $fields = migrate_handler_invoke_all('Entity', 'fields', $this->entityType, $this->bundle);
-    $fields['item_id'] = t('Field collection entity ID');
     $fields['host_entity_id'] = t('Field collection host ID');
     return $fields;
   }
