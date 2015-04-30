@@ -119,22 +119,37 @@ function sbac_featured_resource($node){
  * Retreives all flagged enttities, and builds an array of featured entities
  * with respective templates
  */
-function sbac_featured_content_flagged($entity_type,$entity_id){
-  switch ($entity_type) {
-    case 'node':
-      $node = node_load($entity_id);
-      switch ($node->type) {
-        case "resource":
-          $featured_content = sbac_featured_resource($node);
-          break;
+function sbac_featured_content_flagged(){
+  $featured_content = array();
+  $limit = 4;
+  $query = db_select('flagging', 'f');
+    $query->leftJoin('draggableviews_structure', 'dv', 'f.entity_id = dv.entity_id');
+    $query->leftJoin('flag', 'fl', 'f.fid = fl.fid');
+    $query->fields('f', array('entity_type', 'entity_id'));
+    $query->fields('dv', array('entity_id', 'weight'));
+    $query->condition('fl.name', 'featured_node');
+    $query->condition('dv.view_name', 'sort_content');
+    $query->condition('dv.view_display', 'featured');
+    $query->orderBy('dv.weight','ASC');
+    $query->range('0',$limit); // UPDATE WHEN TURNING INTO CAROUSEL
+  $flags = $query->execute()->fetchAll();
+  foreach($flags as $flagged){
+    switch ($flagged->entity_type) {
+      case 'node':
+        $node = node_load($flagged->entity_id);
+        switch ($node->type) {
+          case "resource":
+            $featured_content[] = sbac_featured_resource($node);
+            break;
 
-        default:
-          break;
-      }
-      break;
+          default:
+            break;
+        }
+        break;
 
-    default:
-      break;
+      default:
+        break;
+    }
   }
   return $featured_content;
 }
@@ -217,8 +232,12 @@ function _sbac_featured_resource_image($node, $view_display = 'grid') {
 }
 
 /**
-* Implements hook_views_api().
-*/
+ * Implements hook_views_api().
+ * 
+ * Impliment once ready to add other Entity types to Featured Content
+ * sbac_featured_content.views.inc adds a view to join off the flag table
+ * allowing us to create a draggable view with multiple entity types
+ * 
 function sbac_featured_content_views_api() {
   return array(
     'api' => 3,
@@ -226,3 +245,4 @@ function sbac_featured_content_views_api() {
     'template path' => drupal_get_path('module', 'sbac_featured_content') . '/templates',
   );
 }
+*/

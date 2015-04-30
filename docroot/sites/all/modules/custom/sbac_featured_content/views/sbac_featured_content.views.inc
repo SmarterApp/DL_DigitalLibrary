@@ -1,7 +1,15 @@
 <?php
 /**
-* Implements hook_views_data().
-*/
+ * All of this is in progress, nothing is complete
+ */
+
+/**
+ * Implements hook_views_data().
+ * 
+ * Use the flagging table as the base table to allow for collecting all flagged
+ * content regardless of entity type.
+ * 
+ */
 function sbac_featured_content_views_data() {
 
   $data['flagging']['table']['base'] = array(
@@ -16,21 +24,13 @@ function sbac_featured_content_views_data() {
     'title' => t('Flagging Flag ID'),
     'help' => t('Flag ID the flag is coming from'),
     'filter' => array(
-      'handler' => 'views_handler_filter',
+      'handler' => 'views_handler_filter_numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument',
+      'handler' => 'views_handler_argument_numeric',
     ),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
-    ),
-    'relationship' => array(
-      'base' => 'flagging',
-      'base field' => 'fid',
-      'relationship field' => 'fid',
-      'handler' => 'sbac_flag_handler_relationship_flags',
-      //'handler' => 'flag_handler_relationship_content', // WORKS
-      'label' => t('user flagged content'),
     ),
   );
   $data['flagging']['entity_id'] = array(
@@ -65,16 +65,10 @@ function sbac_featured_content_views_data() {
   return $data;
 }
 
-function sbac_featured_content_views_data_alter(&$data) {
-  $data['flag']['flag_user_content_rel'] = array(
-    'group' => t('Flags'),
-    'title' => t("Flag flaggings"),
-    'help' => t('Relate flags to the flaggings they have made on objects, using a particular flag.'),
-  );
-}
-
-
 function sbac_featured_content_views_default_views() {
+  
+  $flag_node = flag_get_flag('featured_node');
+
   $view = new view();
   $view->name = 'sbac_featured_content';
   $view->description = '';
@@ -106,13 +100,17 @@ function sbac_featured_content_views_default_views() {
   $handler->display->display_options['fields']['entity_id']['table'] = 'flagging';
   $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['label'] = 'Entity ID Entity ID';
-  $handler->display->display_options['fields']['entity_id']['separator'] = '';
   /* Sort criterion: Draggableviews: Weight */
   $handler->display->display_options['sorts']['weight']['id'] = 'weight';
   $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
   $handler->display->display_options['sorts']['weight']['field'] = 'weight';
   $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'testing:page_1';
   $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
+  /* Filter criterion: Flags: Flagging Flag ID */
+  $handler->display->display_options['filters']['fid']['id'] = 'fid';
+  $handler->display->display_options['filters']['fid']['table'] = 'flagging';
+  $handler->display->display_options['filters']['fid']['field'] = 'fid';
+  $handler->display->display_options['filters']['fid']['value']['value'] = $flag_node->fid;
 
   /* Display: Draggable Flags */
   $handler = $view->new_display('page', 'Draggable Flags', 'page_1');
@@ -124,11 +122,6 @@ function sbac_featured_content_views_default_views() {
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
-    'entity_type' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
     'entity_id' => array(
       'align' => '',
       'separator' => '',
@@ -139,16 +132,11 @@ function sbac_featured_content_views_default_views() {
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Flags: Entity Type */
-  $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
-  $handler->display->display_options['fields']['entity_type']['table'] = 'flagging';
-  $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
   /* Field: Flags: Array */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['table'] = 'flagging';
   $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  $handler->display->display_options['fields']['entity_id']['label'] = 'Entity ID';
-  $handler->display->display_options['fields']['entity_id']['separator'] = '';
+  $handler->display->display_options['fields']['entity_id']['label'] = 'Title';
   /* Field: Draggableviews: Flags */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'flagging';
@@ -158,11 +146,26 @@ function sbac_featured_content_views_default_views() {
   $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
-  $handler->display->display_options['path'] = 'testing/sort';
-
-  /* Display: Block */
-  $handler = $view->new_display('block', 'Flexslider for Featured Content', 'featured_flexslider');
-
+  /* Field: Flags: Array */
+  $handler->display->display_options['fields']['entity_id_1']['id'] = 'entity_id_1';
+  $handler->display->display_options['fields']['entity_id_1']['table'] = 'flagging';
+  $handler->display->display_options['fields']['entity_id_1']['field'] = 'entity_id';
+  $handler->display->display_options['fields']['entity_id_1']['label'] = 'Status';
+  /* Field: Flags: Array */
+  $handler->display->display_options['fields']['entity_id_2']['id'] = 'entity_id_2';
+  $handler->display->display_options['fields']['entity_id_2']['table'] = 'flagging';
+  $handler->display->display_options['fields']['entity_id_2']['field'] = 'entity_id';
+  $handler->display->display_options['fields']['entity_id_2']['label'] = 'Action';
+  $handler->display->display_options['fields']['entity_id_2']['element_label_colon'] = FALSE;
+  $handler->display->display_options['path'] = 'sort-content/featured';
+  $handler->display->display_options['menu']['type'] = 'default tab';
+  $handler->display->display_options['menu']['title'] = 'Featured Content';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
+  $handler->display->display_options['tab_options']['type'] = 'normal';
+  $handler->display->display_options['tab_options']['title'] = 'Featured Content';
+  $handler->display->display_options['tab_options']['weight'] = '0';
   // (Export ends here.)
 
   // Add view to list of views to provide.

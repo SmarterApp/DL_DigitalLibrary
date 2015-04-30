@@ -8,8 +8,6 @@
   flexslider_add();
 
 ?>
-</div>  
-    </div>  
   <?php if($edit): ?>
   <div id="edit-featured"><?php print $edit;?></div>
 <?php endif; ?>
