@@ -133,6 +133,7 @@ function sbac_featured_content_flagged(){
     $query->range('0','1'); // UPDATE WHEN TURNING INTO CAROUSEL
     $query->condition('f.name', 'featured_node');
     $query->condition('dv.view_name', 'sort_content');
+    $query->condition('dv.view_display', 'sort_featured');
 
     $flags = $query->execute()->fetchAll();
   foreach($flags as $flagged){

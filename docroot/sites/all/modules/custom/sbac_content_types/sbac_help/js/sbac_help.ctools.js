@@ -26,7 +26,3 @@ var html = ''
 
   return html;
 }
-
-$('#modalBackdrop').click(function() {
-   Drupal.CTools.Modal.dismiss();
-});

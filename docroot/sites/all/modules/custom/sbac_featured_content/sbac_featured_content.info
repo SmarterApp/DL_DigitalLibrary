@@ -4,6 +4,7 @@ package = ~SBAC
 dependencies[] = features
 dependencies[] = flag
 dependencies[] = views
+dependencies[] = sbac_content_manager
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
 features[flag][] = featured_node
