@@ -557,6 +557,7 @@ function sbac_help_welcome_callback($js = FALSE, $node = FALSE) {
 
 /**
  * Implements hook_form().
+ * 
  * Generates form for SBAC Welcome tutorial.
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
@@ -793,3 +794,34 @@ function sbac_help_topic_ctas($limit){
   return $topics;
 }
 
+/*
+ * Implements hook_flag_flag().
+ * 
+ * Check to see if help topic has been registered to the draggable views table,
+ * and if not add to ensure the topic displays on landing page.
+ */
+
+function sbac_help_flag_flag($flag, $content_id, $account, $flagging) {
+  $view_name = 'sort_content';
+  $view_display = 'welcome_topics';
+  
+  $query = db_select('draggableviews_structure', 'dv');
+  $query->fields('dv', array('entity_id'));
+  $query->orderBy('dv.weight','ASC');
+  $query->condition('dv.view_name', $view_name);
+  $query->condition('dv.view_display', $view_display);
+  $query->condition('dv.entity_id', $content_id);
+
+  $result = $query->execute()->fetchAll();
+    if(empty($result)){
+      $sort = db_insert('draggableviews_structure') // Table name no longer needs {}
+        ->fields(array(
+          'view_name' => $view_name,
+          'view_display' => $view_display,
+          'entity_id' => $content_id,
+          'args' => '[]',
+          'weight' => '0',
+        ))
+        ->execute();
+  }
+}
