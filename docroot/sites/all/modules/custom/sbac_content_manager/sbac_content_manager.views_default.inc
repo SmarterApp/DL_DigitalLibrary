@@ -289,7 +289,7 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = 'Reorder items in the order you would like them to appear in the help topics section of the site';
+  $handler->display->display_options['header']['area']['content'] = '<a href="/node/add/help-page?destination=/sort-content/help-topics" class="help-topic-link help-topic-link1">Add New Help Topic</a> Reorder items in the order you would like them to appear in the help topics section of the site';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Flags: welcome_help_topic */

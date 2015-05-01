@@ -37,6 +37,20 @@
       }
     }
   }
+  #edit-help-topics{
+    float:right;
+    padding-right: 10px;
+    a{
+      padding: 5px 5px 5px 27px;
+      background: url('../images/icons/icon-edit.png') no-repeat left center rgba(255, 255, 255, 0.85);
+      font-size:14px;
+      color: $teal;
+      border-radius: 0.25rem;
+      &:hover{
+        background-color: $white;
+      }
+    }
+  }
 }
 
 // Welcom Tutorial Modal

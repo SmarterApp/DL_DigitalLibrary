@@ -29397,27 +29397,44 @@ body.page-sbac .ajax-progress-throbber .throbber {
   float: left;
   width: 135px;
 }
+/* line 40, ../sass/components/_help-topics.scss */
+#lp-help-topics-wrapper #edit-help-topics {
+  float: right;
+  padding-right: 10px;
+}
+/* line 43, ../sass/components/_help-topics.scss */
+#lp-help-topics-wrapper #edit-help-topics a {
+  padding: 5px 5px 5px 27px;
+  background: url("../images/icons/icon-edit.png") no-repeat left center rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  color: #0085ad;
+  border-radius: 0.25rem;
+}
+/* line 49, ../sass/components/_help-topics.scss */
+#lp-help-topics-wrapper #edit-help-topics a:hover {
+  background-color: #FFF;
+}
 
-/* line 44, ../sass/components/_help-topics.scss */
+/* line 58, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome {
   padding: 0;
   height: 650px !important;
 }
-/* line 48, ../sass/components/_help-topics.scss */
+/* line 62, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
   padding: 20px 40px;
   position: relative;
   z-index: 3;
 }
-/* line 54, ../sass/components/_help-topics.scss */
+/* line 68, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header #modal-title {
   color: #04384e;
   font-size: 22px;
   padding: 0;
   font-weight: 600;
 }
-/* line 61, ../sass/components/_help-topics.scss */
+/* line 75, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header .close {
   display: block;
   background: url("../images/icons/icon-close.png") no-repeat right center;
@@ -29427,41 +29444,41 @@ body.page-sbac .ajax-progress-throbber .throbber {
   border: none;
   box-shadow: none;
 }
-/* line 70, ../sass/components/_help-topics.scss */
+/* line 84, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header .close img {
   display: none;
 }
-/* line 76, ../sass/components/_help-topics.scss */
+/* line 90, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-content {
   padding: 0;
 }
-/* line 80, ../sass/components/_help-topics.scss */
+/* line 94, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont {
   overflow: auto;
   border-bottom: 1px solid #cfcece;
   margin-bottom: 20px;
   padding: 10px 0;
 }
-/* line 86, ../sass/components/_help-topics.scss */
+/* line 100, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont h2 {
   float: left;
   margin: 0;
   font-size: 18px;
   color: #04384e;
 }
-/* line 93, ../sass/components/_help-topics.scss */
+/* line 107, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont .welcome-tutorial-edit-topics {
   float: right;
   margin-top: 5px;
   background: url("../images/icons/icon-edit.png") no-repeat left center;
   padding-left: 25px;
 }
-/* line 99, ../sass/components/_help-topics.scss */
+/* line 113, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont .welcome-tutorial-edit-topics a {
   font-size: 14px;
   color: #0085ad;
 }
-/* line 106, ../sass/components/_help-topics.scss */
+/* line 120, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont {
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -29473,21 +29490,21 @@ body.page-sbac .ajax-progress-throbber .throbber {
   position: relative;
   margin: 15px 0;
 }
-/* line 115, ../sass/components/_help-topics.scss */
+/* line 129, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated {
   margin: 10px 0;
 }
-/* line 118, ../sass/components/_help-topics.scss */
+/* line 132, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated label {
   font-weight: bold;
   font-size: 16px;
 }
-/* line 123, ../sass/components/_help-topics.scss */
+/* line 137, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated a {
   color: #0085ad;
   text-decoration: underline;
 }
-/* line 129, ../sass/components/_help-topics.scss */
+/* line 143, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont .ajax-processed {
   position: absolute;
   top: 5px;
@@ -29499,34 +29516,34 @@ body.page-sbac .ajax-progress-throbber .throbber {
   height: 30px;
   text-indent: -9999px;
 }
-/* line 142, ../sass/components/_help-topics.scss */
+/* line 156, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container {
   height: 532px;
   overflow-y: scroll;
   padding: 30px 40px 20px 40px;
   background-color: #F2F2F2;
 }
-/* line 147, ../sass/components/_help-topics.scss */
+/* line 161, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container {
   overflow: auto;
 }
-/* line 149, ../sass/components/_help-topics.scss */
+/* line 163, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .welcome-tutorial-post-content {
   width: 520px;
   margin-right: 20px;
   float: left;
 }
-/* line 154, ../sass/components/_help-topics.scss */
+/* line 168, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .tutorial-image {
   margin-left: 20px;
   display: block;
   float: left;
 }
-/* line 158, ../sass/components/_help-topics.scss */
+/* line 172, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .tutorial-image img {
   border: 1px solid #999999;
 }
-/* line 166, ../sass/components/_help-topics.scss */
+/* line 180, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-topic-container {
   *zoom: 1;
   background: #FFF;
@@ -29545,39 +29562,39 @@ body.page-sbac .ajax-progress-throbber .throbber {
 #modalContent .ctools-modal-content.sbac-welcome .welcome-topic-container:after {
   clear: both;
 }
-/* line 176, ../sass/components/_help-topics.scss */
+/* line 190, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-container-left {
   float: left;
   width: 75%;
 }
-/* line 182, ../sass/components/_help-topics.scss */
+/* line 196, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-topic-title a {
   color: #0085ad;
   font-size: 16px;
 }
-/* line 188, ../sass/components/_help-topics.scss */
+/* line 202, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-topic-summary {
   line-height: 1.2;
   color: #5a5a5a;
 }
-/* line 193, ../sass/components/_help-topics.scss */
+/* line 207, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-node-title {
   font-size: 18px;
   font-weight: bold;
   color: #04384e;
   margin-bottom: 25px;
 }
-/* line 200, ../sass/components/_help-topics.scss */
+/* line 214, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-back-button {
   background: url("../images/icons/back-blue.png") no-repeat left -6px;
   margin: 20px 0 35px;
   padding-left: 30px;
 }
-/* line 205, ../sass/components/_help-topics.scss */
+/* line 219, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-back-button a {
   color: #0085ad;
 }
-/* line 210, ../sass/components/_help-topics.scss */
+/* line 224, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons {
   border-top: 1px solid #F2F2F2;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
@@ -29589,11 +29606,11 @@ body.page-sbac .ajax-progress-throbber .throbber {
   overflow: hidden;
   height: 40px;
 }
-/* line 220, ../sass/components/_help-topics.scss */
+/* line 234, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons .form-item.form-type-checkbox {
   float: left;
 }
-/* line 224, ../sass/components/_help-topics.scss */
+/* line 238, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons .button {
   float: right;
   background: none;
@@ -29855,20 +29872,29 @@ body.page-help-topics .help-topics-wrapper .help-topic-wrapper .help-topic-body 
   color: #006298;
 }
 
-/* line 4, ../sass/components/_sort-content.scss */
-body.section-sort-content .button-group:before {
+/* line 1, ../sass/components/_sort-content.scss */
+body.section-sort-content {
+  /* -----------------------------------------
+    Horizontal Tabs
+    ------------------------------------------ */
+}
+/* line 3, ../sass/components/_sort-content.scss */
+body.section-sort-content .columns {
+  padding: 40px;
+}
+/* line 10, ../sass/components/_sort-content.scss */
+body.section-sort-content ul.button-group:after {
   background: none repeat scroll 0 0 #FFFFFF;
-  top: 45px;
-  box-shadow: 0 1px 6px 0 rgba(0, 95, 130, 0.75);
+  box-shadow: 0 -3px 6px -4px rgba(0, 95, 130, 0.75);
   content: " ";
   display: block;
-  height: 10px;
-  width: 930px;
-  z-index: 1;
-  position: absolute;
+  height: 11px;
+  width: 100%;
+  z-index: 5000;
+  position: relative;
 }
-/* line 18, ../sass/components/_sort-content.scss */
-body.section-sort-content .button-group li a {
+/* line 21, ../sass/components/_sort-content.scss */
+body.section-sort-content ul.button-group > li a {
   font-family: "Open Sans", sans-serif;
   /*font-size: emCalc(16px);*/
   font-size: 15px;
@@ -29876,26 +29902,24 @@ body.section-sort-content .button-group li a {
   color: #0583AC;
   height: 48px;
   line-height: 45px;
-  padding: 4px 30px;
+  padding: 13px 30px;
   background: none repeat scroll 0 0 #FAFAFA;
-  border-left: 1px solid #FFFFFF;
-  border-right: 1px solid #CECECE;
-  border-top: 1px solid #CECECE;
+  border: 1px solid #CECECE;
   white-space: nowrap;
   cursor: pointer;
 }
-/* line 34, ../sass/components/_sort-content.scss */
-body.section-sort-content .button-group li a:hover {
+/* line 35, ../sass/components/_sort-content.scss */
+body.section-sort-content ul.button-group > li a:hover {
   background-color: #FAFAFA;
   background-image: -moz-linear-gradient(center top, rgba(0, 95, 130, 0) 20%, rgba(0, 95, 130, 0.1) 70%);
   text-shadow: 0 1px 0 #FFFFFF;
 }
-/* line 40, ../sass/components/_sort-content.scss */
-body.section-sort-content .button-group li a:focus {
+/* line 41, ../sass/components/_sort-content.scss */
+body.section-sort-content ul.button-group > li a:focus {
   outline: 0;
 }
-/* line 45, ../sass/components/_sort-content.scss */
-body.section-sort-content .button-group li.active a {
+/* line 49, ../sass/components/_sort-content.scss */
+body.section-sort-content .button-group > li.active > a {
   /*font-size: emCalc(16px);*/
   background: none repeat scroll 0 0 #FFFFFF;
   border-left: 1px solid #CECECE;
@@ -29905,8 +29929,8 @@ body.section-sort-content .button-group li.active a {
   position: relative;
   z-index: 9;
 }
-/* line 56, ../sass/components/_sort-content.scss */
-body.section-sort-content .button-group li.active a:after {
+/* line 60, ../sass/components/_sort-content.scss */
+body.section-sort-content .button-group > li.active > a:after {
   background: none repeat scroll 0 0 #FFFFFF;
   bottom: -6px;
   content: " ";
@@ -29917,6 +29941,15 @@ body.section-sort-content .button-group li.active a:after {
   position: absolute;
   width: 100%;
   z-index: 1;
+}
+/* line 73, ../sass/components/_sort-content.scss */
+body.section-sort-content .button-group > section.section-about-this-resource > .title a {
+  border-left: 1px solid #CECECE;
+}
+/* line 76, ../sass/components/_sort-content.scss */
+body.section-sort-content .button-group > * {
+  margin: 0;
+  padding: 0;
 }
 
 /* ==========================================================================

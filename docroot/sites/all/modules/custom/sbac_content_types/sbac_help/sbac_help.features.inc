@@ -36,10 +36,10 @@ function sbac_help_flag_default_flags() {
     'types' => array(
       0 => 'help_page',
     ),
-    'flag_short' => 'Make this a Welcome Help Topic',
+    'flag_short' => 'Display on Landing Page',
     'flag_long' => '',
     'flag_message' => '',
-    'unflag_short' => 'Remove from Welcome Help Topics',
+    'unflag_short' => 'Remove from Landing Page',
     'unflag_long' => '',
     'unflag_message' => '',
     'unflag_denied_text' => '',
