@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 ?>
-<div class="featured-content-wrapper featured-resource-wrapper">
+<div class="slide featured-content-wrapper">
   <a href="<?php print $link;?>" class="featured-content-url featured-resource-url">
       <div class="col-resource">
         <?php if($thumbnail):?>

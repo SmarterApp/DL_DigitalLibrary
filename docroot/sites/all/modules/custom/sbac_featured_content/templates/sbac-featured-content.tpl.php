@@ -5,8 +5,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-  flexslider_add();
-
 ?>
   <?php if($edit): ?>
   <div id="edit-featured"><?php print $edit;?></div>

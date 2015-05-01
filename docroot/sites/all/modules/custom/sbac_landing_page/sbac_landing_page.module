@@ -45,12 +45,12 @@ function sbac_landing_page_theme($existing, $type, $theme, $path) {
     'render element' => 'content',
     'template' => 'landing-page',
     'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
-   );
+  );
   $theme['sbac_help_topics'] = array(
     'render element' => 'content',
     'template' => 'help-topics',
     'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
-   );
+  );
   return $theme;
 }
 function sbac_landing_page_preprocess_page(&$variables) {
@@ -59,11 +59,11 @@ function sbac_landing_page_preprocess_page(&$variables) {
 function lp_help_topics(){
   $variables = array();
   if(module_exists('sbac_help')){
-    if(node_access('update','help_topic')){
-        $variables['edit_help'] = l('Edit Help','/sort-content/welcome-topics');
-    }
-    $variables['topics'] = sbac_help_topic_ctas('3');
-    return  theme('sbac_help_topics', $variables);
+    $help_topics =  theme('sbac_help_topics',
+                    array(
+                      'topics'     => sbac_help_topic_ctas('3')
+                    ));
+    return $help_topics;
   }else{
     return 'Help Topics Comming Soon';
   }
@@ -78,10 +78,18 @@ function lp_featured_content(){
 }
 
 function lp_find_resource(){
-  if(module_exists('sbac_find_resources')){
-    return 'Embed Find Resources Content Block Here';
-  }else{
-    return 'More Resources Comming Soon';    
-  }
+  /*
+   * @TODO - determine whether or not we are going to use this logic.
+   *
+   * if(module_exists('sbac_find_resources')){
+   * return 'Embed Find Resources Content Block Here';
+   * }else{
+   * return 'More Resources Comming Soon';    
+   * }
+   */
+  $output = '<div class="resources-wrap"><div class="resources-wrap-inner">';
+  $output .= '<div class="resources-link">' . t('What resources are you looking for?') . '</div>';
+  $output .= '<div class="resources-link-button"><a href="/digital-library-resources">' . t('FIND RESOURCES') . '</a></div></div></div>';
+  return $output;
 }
 
