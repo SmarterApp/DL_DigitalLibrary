@@ -121,7 +121,7 @@ function sbac_featured_resource($node){
  */
 function sbac_featured_content_flagged(){
   $featured_content = array();
-  $limit = 1;
+  $limit = 4;
   // Get Featured flag ID
   $query = db_select('flag', 'f');
     $query->join('flagging', 'fl', 'fl.fid = f.fid');
@@ -130,7 +130,7 @@ function sbac_featured_content_flagged(){
     $query->fields('fl', array('entity_type', 'entity_id'));
     $query->fields('dv', array('entity_id', 'weight'));
     $query->orderBy('dv.weight','ASC');
-    $query->range('0','1'); // UPDATE WHEN TURNING INTO CAROUSEL
+    $query->range('0',$limit); // UPDATE WHEN TURNING INTO CAROUSEL
     $query->condition('f.name', 'featured_node');
     $query->condition('dv.view_name', 'sort_content');
     $query->condition('dv.view_display', 'sort_featured');
@@ -231,5 +231,37 @@ function _sbac_featured_resource_image($node, $view_display = 'grid') {
   }
   else {
     return NULL;
+  }
+}
+
+/*
+ * Implements hook_flag_flag().
+ * 
+ * Check to see if featured content has been registered to the draggable views
+ * table, and if not add to ensure the entity displays on the landing page.
+ */
+
+function sbac_featured_content_flag_flag($flag, $content_id, $account, $flagging) {
+  $view_name = 'sort_content';
+  $view_display = 'sort_featured';
+  
+  $query = db_select('draggableviews_structure', 'dv');
+  $query->fields('dv', array('entity_id'));
+  $query->orderBy('dv.weight','ASC');
+  $query->condition('dv.view_name', $view_name);
+  $query->condition('dv.view_display', $view_display);
+  $query->condition('dv.entity_id', $content_id);
+
+  $result = $query->execute()->fetchAll();
+    if(empty($result)){
+      $sort = db_insert('draggableviews_structure') // Table name no longer needs {}
+        ->fields(array(
+          'view_name' => $view_name,
+          'view_display' => $view_display,
+          'entity_id' => $content_id,
+          'args' => '[]',
+          'weight' => '0',
+        ))
+        ->execute();
   }
 }
