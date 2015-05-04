@@ -1204,6 +1204,7 @@ function sbac_media_html5_element_upload($form, $form_state) {
     $no_errors = sbac_media_check_zip($file_attributes, $form, $form_state);
     error_log('no errors: ' . $no_errors);
     if ($no_errors) {
+      sbac_media_delete_media_record($file_attributes['nid']);
       $valid = sbac_media_save_html5_record($file_attributes, $form_state);
       error_log('valid: ' . $valid);
       if ($valid) {
