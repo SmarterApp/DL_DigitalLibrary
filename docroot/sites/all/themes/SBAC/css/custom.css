@@ -29326,41 +29326,47 @@ body.page-sbac #lp-help-topics-wrapper {
   z-index: 9;
   padding: 20px 0;
 }
-/* line 10, ../sass/components/_landing-page.scss */
+/* line 11, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-help-topics-wrapper #lp-help-topics.row {
+  max-width: 1280px;
+}
+/* line 13, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-help-topics-wrapper #lp-help-topics.row .welcome-container-left {
+  min-height: 100px;
+}
+/* line 17, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-help-topics-wrapper .help-topics-header {
   font-size: 14px;
   font-weight: 400;
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
-/* line 15, ../sass/components/_landing-page.scss */
+/* line 22, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-help-topics-wrapper .help-topics-header strong {
   font-size: 18px;
   font-weight: 600;
 }
-/* line 21, ../sass/components/_landing-page.scss */
+/* line 28, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-featured-content-wrapper {
-  padding: 5px 0;
-  height: 28.125rem;
   position: relative;
-  background-image: url("../images/bg1.jpg");
-  background-repeat: no-repeat;
-  background-position: top;
-  background-size: cover;
 }
 /* line 30, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-featured-content-wrapper #lp-featured-content {
+  position: relative;
+}
+/* line 34, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper {
   height: 8rem;
 }
-/* line 35, ../sass/components/_landing-page.scss */
+/* line 39, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 37, ../sass/components/_landing-page.scss */
+/* line 41, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
-/* line 43, ../sass/components/_landing-page.scss */
+/* line 45, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slider {
   position: relative;
   display: block;
@@ -29375,7 +29381,7 @@ body.page-sbac .slick-slider {
   -ms-touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
-/* line 57, ../sass/components/_landing-page.scss */
+/* line 59, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-list {
   position: relative;
   overflow: hidden;
@@ -29383,20 +29389,20 @@ body.page-sbac .slick-list {
   margin: 0;
   padding: 0;
 }
-/* line 64, ../sass/components/_landing-page.scss */
+/* line 66, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-list:focus {
   outline: none;
 }
-/* line 67, ../sass/components/_landing-page.scss */
+/* line 69, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-loading .slick-list {
   background: #ffffff url("./ajax-loader.gif") center center no-repeat;
 }
-/* line 70, ../sass/components/_landing-page.scss */
+/* line 72, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-list.dragging {
   cursor: pointer;
   cursor: hand;
 }
-/* line 74, ../sass/components/_landing-page.scss */
+/* line 76, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slider .slick-list,
 body.page-sbac .slick-track,
 body.page-sbac .slick-slide,
@@ -29407,7 +29413,7 @@ body.page-sbac .slick-slide img {
   -o-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
-/* line 84, ../sass/components/_landing-page.scss */
+/* line 86, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-track {
   position: relative;
   left: 0;
@@ -29415,54 +29421,54 @@ body.page-sbac .slick-track {
   display: block;
   zoom: 1;
 }
-/* line 91, ../sass/components/_landing-page.scss */
+/* line 93, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-track:before,
 body.page-sbac .slick-track:after {
   content: "";
   display: table;
 }
-/* line 96, ../sass/components/_landing-page.scss */
+/* line 98, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-track:after {
   clear: both;
 }
-/* line 99, ../sass/components/_landing-page.scss */
+/* line 101, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-loading .slick-track {
   visibility: hidden;
 }
-/* line 102, ../sass/components/_landing-page.scss */
+/* line 104, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide {
   float: left;
   height: 28.125rem;
   min-height: 1px;
   display: none;
 }
-/* line 108, ../sass/components/_landing-page.scss */
+/* line 110, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide img {
   display: block;
 }
-/* line 111, ../sass/components/_landing-page.scss */
+/* line 113, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide.slick-loading img {
   display: none;
 }
-/* line 114, ../sass/components/_landing-page.scss */
+/* line 116, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide.dragging img {
   pointer-events: none;
 }
-/* line 117, ../sass/components/_landing-page.scss */
+/* line 119, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-initialized .slick-slide {
   display: block;
 }
-/* line 120, ../sass/components/_landing-page.scss */
+/* line 122, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-loading .slick-slide {
   visibility: hidden;
 }
-/* line 123, ../sass/components/_landing-page.scss */
+/* line 125, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-vertical .slick-slide {
   display: block;
   height: auto;
   border: 1px solid transparent;
 }
-/* line 128, ../sass/components/_landing-page.scss */
+/* line 130, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots {
   list-style: none !important;
   overflow: visible !important;
@@ -29475,8 +29481,9 @@ body.page-sbac .slick-dots {
   border-bottom: 0.0625rem solid #c2c2c2 !important;
   box-shadow: 0 -0.125rem 0.125rem rgba(16, 16, 16, 0.15) !important;
   text-align: center !important;
+  margin-bottom: 0 !important;
 }
-/* line 141, ../sass/components/_landing-page.scss */
+/* line 144, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li {
   display: inline-block !important;
   position: relative !important;
@@ -29487,12 +29494,12 @@ body.page-sbac .slick-dots li {
   cursor: pointer !important;
   padding: 0 !important;
 }
-/* line 151, ../sass/components/_landing-page.scss */
+/* line 154, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li + li {
   margin-left: 0.5rem !important;
   padding: 0 !important;
 }
-/* line 155, ../sass/components/_landing-page.scss */
+/* line 158, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li button {
   border: 0 !important;
   display: block !important;
@@ -29506,7 +29513,7 @@ body.page-sbac .slick-dots li button {
   border: 0.0625rem solid #c2c2c2 !important;
   padding: 0 !important;
 }
-/* line 168, ../sass/components/_landing-page.scss */
+/* line 171, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li button:hover {
   background: #464b54 !important;
   border: 0 !important;
@@ -29521,7 +29528,7 @@ body.page-sbac .slick-dots li button:hover {
   padding: 0 !important;
   color: black;
 }
-/* line 182, ../sass/components/_landing-page.scss */
+/* line 185, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li.slick-active button {
   background: #464b54 !important;
   border: 0 !important;
@@ -29536,23 +29543,23 @@ body.page-sbac .slick-dots li.slick-active button {
   padding: 0 !important;
   color: black;
 }
-/* line 196, ../sass/components/_landing-page.scss */
+/* line 199, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-wrap {
   width: 100%;
 }
-/* line 199, ../sass/components/_landing-page.scss */
+/* line 202, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-wrap-inner {
   width: 960px;
   margin: 0 auto;
 }
-/* line 203, ../sass/components/_landing-page.scss */
+/* line 206, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-link {
   font-size: 1.125rem;
   color: #101010;
   font-weight: 600;
   margin-top: 1.25rem;
 }
-/* line 210, ../sass/components/_landing-page.scss */
+/* line 213, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-link-button a {
   display: block;
   background: #2aa549;
@@ -29571,41 +29578,51 @@ body.page-sbac .resources-link-button a {
   border: 0.0625rem solid rgba(16, 16, 16, 0.2);
   box-shadow: 0 0.0625rem 0 rgba(16, 16, 16, 0.6);
 }
-/* line 227, ../sass/components/_landing-page.scss */
+/* line 230, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-link-button a:hover {
   background: #7cc549;
 }
 
 /* Landing Page Help Topics */
-/* line 5, ../sass/components/_help-topics.scss */
+/* line 4, ../sass/components/_help-topics.scss */
+#lp-help-topics-wrapper .welcome-topic-container {
+  display: inline-block;
+  min-width: 280px;
+  width: 30%;
+  margin: 1.2%;
+}
+@media (min-width: 1100px) {
+  /* line 4, ../sass/components/_help-topics.scss */
+  #lp-help-topics-wrapper .welcome-topic-container {
+    width: 32%;
+    margin: 0.5%;
+  }
+}
+/* line 13, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial {
   display: block;
   position: relative;
-  width: 18.75rem;
   padding: 0.625rem 0 0.625rem 0.625rem;
-  margin: 10px;
-  float: left;
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid #ffffff;
   border-radius: 0.25rem;
   box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
   transition: background-color 0.3s ease;
-  float: left;
 }
-/* line 18, ../sass/components/_help-topics.scss */
+/* line 22, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial:hover {
   background: white;
 }
-/* line 20, ../sass/components/_help-topics.scss */
+/* line 24, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial:hover .welcome-tutorial-topic-title {
   text-decoration: underline;
 }
-/* line 24, ../sass/components/_help-topics.scss */
+/* line 28, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial .welcome-container-image {
   outline: 1px solid #999999;
   float: left;
 }
-/* line 28, ../sass/components/_help-topics.scss */
+/* line 32, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial .welcome-tutorial-topic-title {
   font-size: 13px;
   font-weight: 400;
@@ -29616,12 +29633,12 @@ body.page-sbac .resources-link-button a:hover {
   float: left;
   width: 135px;
 }
-/* line 40, ../sass/components/_help-topics.scss */
+/* line 44, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper #edit-help-topics {
   float: right;
   padding-right: 10px;
 }
-/* line 43, ../sass/components/_help-topics.scss */
+/* line 47, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper #edit-help-topics a {
   padding: 5px 5px 5px 27px;
   background: url("../images/icons/icon-edit.png") no-repeat left center rgba(255, 255, 255, 0.85);
@@ -29629,31 +29646,31 @@ body.page-sbac .resources-link-button a:hover {
   color: #0085ad;
   border-radius: 0.25rem;
 }
-/* line 49, ../sass/components/_help-topics.scss */
+/* line 53, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper #edit-help-topics a:hover {
   background-color: #FFF;
 }
 
-/* line 58, ../sass/components/_help-topics.scss */
+/* line 62, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome {
   padding: 0;
   height: 650px !important;
 }
-/* line 62, ../sass/components/_help-topics.scss */
+/* line 66, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
   padding: 20px 40px;
   position: relative;
   z-index: 3;
 }
-/* line 68, ../sass/components/_help-topics.scss */
+/* line 72, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header #modal-title {
   color: #04384e;
   font-size: 22px;
   padding: 0;
   font-weight: 600;
 }
-/* line 75, ../sass/components/_help-topics.scss */
+/* line 79, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header .close {
   display: block;
   background: url("../images/icons/icon-close.png") no-repeat right center;
@@ -29663,41 +29680,41 @@ body.page-sbac .resources-link-button a:hover {
   border: none;
   box-shadow: none;
 }
-/* line 84, ../sass/components/_help-topics.scss */
+/* line 88, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header .close img {
   display: none;
 }
-/* line 90, ../sass/components/_help-topics.scss */
+/* line 94, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-content {
   padding: 0;
 }
-/* line 94, ../sass/components/_help-topics.scss */
+/* line 98, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont {
   overflow: auto;
   border-bottom: 1px solid #cfcece;
   margin-bottom: 20px;
   padding: 10px 0;
 }
-/* line 100, ../sass/components/_help-topics.scss */
+/* line 104, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont h2 {
   float: left;
   margin: 0;
   font-size: 18px;
   color: #04384e;
 }
-/* line 107, ../sass/components/_help-topics.scss */
+/* line 111, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont .welcome-tutorial-edit-topics {
   float: right;
   margin-top: 5px;
   background: url("../images/icons/icon-edit.png") no-repeat left center;
   padding-left: 25px;
 }
-/* line 113, ../sass/components/_help-topics.scss */
+/* line 117, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont .welcome-tutorial-edit-topics a {
   font-size: 14px;
   color: #0085ad;
 }
-/* line 120, ../sass/components/_help-topics.scss */
+/* line 124, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont {
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -29709,21 +29726,21 @@ body.page-sbac .resources-link-button a:hover {
   position: relative;
   margin: 15px 0;
 }
-/* line 129, ../sass/components/_help-topics.scss */
+/* line 133, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated {
   margin: 10px 0;
 }
-/* line 132, ../sass/components/_help-topics.scss */
+/* line 136, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated label {
   font-weight: bold;
   font-size: 16px;
 }
-/* line 137, ../sass/components/_help-topics.scss */
+/* line 141, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated a {
   color: #0085ad;
   text-decoration: underline;
 }
-/* line 143, ../sass/components/_help-topics.scss */
+/* line 147, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont .ajax-processed {
   position: absolute;
   top: 5px;
@@ -29735,34 +29752,34 @@ body.page-sbac .resources-link-button a:hover {
   height: 30px;
   text-indent: -9999px;
 }
-/* line 156, ../sass/components/_help-topics.scss */
+/* line 160, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container {
   height: 532px;
   overflow-y: scroll;
   padding: 30px 40px 20px 40px;
   background-color: #F2F2F2;
 }
-/* line 161, ../sass/components/_help-topics.scss */
+/* line 165, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container {
   overflow: auto;
 }
-/* line 163, ../sass/components/_help-topics.scss */
+/* line 167, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .welcome-tutorial-post-content {
   width: 520px;
   margin-right: 20px;
   float: left;
 }
-/* line 168, ../sass/components/_help-topics.scss */
+/* line 172, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .tutorial-image {
   margin-left: 20px;
   display: block;
   float: left;
 }
-/* line 172, ../sass/components/_help-topics.scss */
+/* line 176, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .tutorial-image img {
   border: 1px solid #999999;
 }
-/* line 180, ../sass/components/_help-topics.scss */
+/* line 184, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-topic-container {
   *zoom: 1;
   background: #FFF;
@@ -29781,39 +29798,39 @@ body.page-sbac .resources-link-button a:hover {
 #modalContent .ctools-modal-content.sbac-welcome .welcome-topic-container:after {
   clear: both;
 }
-/* line 190, ../sass/components/_help-topics.scss */
+/* line 194, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-container-left {
   float: left;
   width: 75%;
 }
-/* line 196, ../sass/components/_help-topics.scss */
+/* line 200, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-topic-title a {
   color: #0085ad;
   font-size: 16px;
 }
-/* line 202, ../sass/components/_help-topics.scss */
+/* line 206, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-topic-summary {
   line-height: 1.2;
   color: #5a5a5a;
 }
-/* line 207, ../sass/components/_help-topics.scss */
+/* line 211, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-node-title {
   font-size: 18px;
   font-weight: bold;
   color: #04384e;
   margin-bottom: 25px;
 }
-/* line 214, ../sass/components/_help-topics.scss */
+/* line 218, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-back-button {
   background: url("../images/icons/back-blue.png") no-repeat left -6px;
   margin: 20px 0 35px;
   padding-left: 30px;
 }
-/* line 219, ../sass/components/_help-topics.scss */
+/* line 223, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-back-button a {
   color: #0085ad;
 }
-/* line 224, ../sass/components/_help-topics.scss */
+/* line 228, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons {
   border-top: 1px solid #F2F2F2;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
@@ -29825,11 +29842,11 @@ body.page-sbac .resources-link-button a:hover {
   overflow: hidden;
   height: 40px;
 }
-/* line 234, ../sass/components/_help-topics.scss */
+/* line 238, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons .form-item.form-type-checkbox {
   float: left;
 }
-/* line 238, ../sass/components/_help-topics.scss */
+/* line 242, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons .button {
   float: right;
   background: none;
@@ -29845,22 +29862,22 @@ body.page-sbac .resources-link-button a:hover {
 }
 
 /* Landing Page Featured Content */
-/* line 2, ../sass/components/_featured-content.scss */
-#lp-featured-content {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: .95rem;
+/* line 3, ../sass/components/_featured-content.scss */
+#lp-featured-content #edit-featured-wrap {
   position: relative;
+  height: 0;
+  overflow: visible;
+  max-width: 1280px;
+  margin: 0 auto;
 }
-/* line 8, ../sass/components/_featured-content.scss */
+/* line 10, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured {
   position: absolute;
-  bottom: 5px;
-  right: 10px;
+  top: 5px;
+  right: 25px;
   z-index: 9;
 }
-/* line 14, ../sass/components/_featured-content.scss */
+/* line 16, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a {
   padding: 5px 5px 5px 27px;
   background: url("../images/icons/icon-edit.png") no-repeat left center;
@@ -29868,15 +29885,35 @@ body.page-sbac .resources-link-button a:hover {
   color: #0085ad;
   border-radius: 0.25rem;
 }
-/* line 20, ../sass/components/_featured-content.scss */
+/* line 22, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a:hover {
   background-color: #FFF;
 }
-/* line 25, ../sass/components/_featured-content.scss */
+/* line 27, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container {
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  padding: 5px 0;
+  background-image: url("../images/bg1.jpg");
+  overflow: visible;
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: cover;
+  position: relative;
+  padding-top: 30px;
   /* Featured Resource */
 }
-/* line 28, ../sass/components/_featured-content.scss */
+/* line 39, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .slick-list {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+/* line 44, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .featured-content-wrapper {
+  position: relative;
+}
+/* line 47, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a {
   display: block;
   position: absolute;
@@ -29889,26 +29926,33 @@ body.page-sbac .resources-link-button a:hover {
   border-radius: 0.25rem;
   box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
   transition: background-color 0.3s ease;
-  right: 5%;
+  right: 40px;
 }
-/* line 41, ../sass/components/_featured-content.scss */
+@media (min-width: 1100px) {
+  /* line 47, ../sass/components/_featured-content.scss */
+  #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a {
+    right: 15px;
+    width: 800px;
+  }
+}
+/* line 64, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a:hover {
   background: white;
   box-shadow: 0 2px 4px fade(16, 16, 16, 0.3);
   transition: background-color 0.2s ease;
 }
-/* line 45, ../sass/components/_featured-content.scss */
+/* line 68, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a:hover .featured-title {
   text-decoration: underline;
 }
-/* line 51, ../sass/components/_featured-content.scss */
+/* line 74, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url {
   max-height: 366px;
   padding: 20px 30px 30px 30px;
   display: block;
   overflow: hidden;
 }
-/* line 56, ../sass/components/_featured-content.scss */
+/* line 80, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-title {
   font-size: 18px;
   line-height: 22px;
@@ -29916,14 +29960,14 @@ body.page-sbac .resources-link-button a:hover {
   color: #0583ac;
   margin-top: 10px;
 }
-/* line 63, ../sass/components/_featured-content.scss */
+/* line 87, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-summary {
   line-height: 1.4;
   color: #101010;
   font-weight: 400;
   font-size: 13px;
 }
-/* line 70, ../sass/components/_featured-content.scss */
+/* line 94, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-label {
   margin-top: 1.25rem;
   margin-bottom: -0.25rem;
@@ -29935,20 +29979,20 @@ body.page-sbac .resources-link-button a:hover {
   text-transform: uppercase;
   font-size: 11px;
 }
-/* line 81, ../sass/components/_featured-content.scss */
+/* line 105, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-type {
   margin-top: 15px;
 }
-/* line 84, ../sass/components/_featured-content.scss */
+/* line 108, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 87, ../sass/components/_featured-content.scss */
+/* line 111, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 89, ../sass/components/_featured-content.scss */
+/* line 113, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
@@ -29999,30 +30043,36 @@ body.page-sbac .resources-link-button a:hover {
   margin-left: 1.875rem;
   float: right;
 }
+@media (min-width: 1100px) {
+  /* line 27, ../sass/components/_featured-resource.scss */
+  .col-details {
+    width: 22rem;
+  }
+}
 
-/* line 33, ../sass/components/_featured-resource.scss */
+/* line 36, ../sass/components/_featured-resource.scss */
 .featured-resource-image {
   display: block;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-/* line 38, ../sass/components/_featured-resource.scss */
+/* line 41, ../sass/components/_featured-resource.scss */
 .featured-resource-title {
   display: block;
 }
 
-/* line 42, ../sass/components/_featured-resource.scss */
+/* line 45, ../sass/components/_featured-resource.scss */
 .featured-resource-summary {
   display: block;
 }
 
-/* line 46, ../sass/components/_featured-resource.scss */
+/* line 49, ../sass/components/_featured-resource.scss */
 .featured-resource-grades {
   display: block;
 }
 
-/* line 50, ../sass/components/_featured-resource.scss */
+/* line 53, ../sass/components/_featured-resource.scss */
 .featured-resource-formative {
   display: block;
 }

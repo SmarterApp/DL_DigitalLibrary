@@ -7,6 +7,13 @@ body.page-sbac{
     position:relative;
     z-index:9;
     padding: 20px 0;
+    #lp-help-topics {
+      &.row {
+	max-width:1280px;
+	.welcome-container-left {
+	min-height:100px;}
+      }
+    }
     .help-topics-header{
       font-size:14px;
       font-weight: 400;
@@ -19,13 +26,10 @@ body.page-sbac{
     }
   }
   #lp-featured-content-wrapper {
-    padding:5px 0;
-    height:28.125rem;
     position:relative;
-    background-image: url('../images/bg1.jpg');
-    background-repeat: no-repeat;
-    background-position: top;
-    background-size: cover;
+    #lp-featured-content {
+      position:relative;
+    }
   }
   #lp-find-resource-wrapper{
     height:8rem;
@@ -36,10 +40,8 @@ body.page-sbac{
     display:none;
     .throbber  {
       display:none;
-
     }
   }
-
   .slick-slider {
     position: relative;
     display: block;
@@ -137,6 +139,7 @@ body.page-sbac{
     border-bottom: 0.0625rem solid #c2c2c2 !important;
     box-shadow: 0 -0.125rem 0.125rem rgba(16, 16, 16, 0.15) !important;
     text-align: center !important;
+    margin-bottom:0 !important;
   }
   .slick-dots li {
     display: inline-block !important;

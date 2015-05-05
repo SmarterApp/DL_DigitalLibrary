@@ -2,19 +2,23 @@
 /* Landing Page Help Topics */
 #lp-help-topics-wrapper {
   .welcome-topic-container{
+    display:inline-block;
+    min-width:280px;
+    width:30%;
+    margin:1.2%;
+    @media (min-width : 1100px) {
+      width:32%;
+      margin:.5%
+    }
     a.ctools-modal-sbac-help-welcome-tutorial {
       display: block;
-      position: relative;
-      width: 18.75rem;
-      padding: 0.625rem 0 0.625rem 0.625rem;
-      margin:10px;
-      float: left;
+      position: relative;   
+      padding: 0.625rem 0 0.625rem 0.625rem;  
       background: rgba(255, 255, 255, 0.85);
       border: 1px solid #ffffff;
       border-radius: 0.25rem;
       box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
       transition: background-color 0.3s ease;
-      float: left;
       &:hover{
         background: rgba(255, 255, 255, 1);
         .welcome-tutorial-topic-title{

@@ -28,6 +28,9 @@ a.featured-resource-url:hover{
   width: 16.75rem;
   margin-left: 1.875rem;
   float:right;
+  @media (min-width: 1100px) {
+    width:22rem;
+  }
 }
 
 .featured-resource-image {
