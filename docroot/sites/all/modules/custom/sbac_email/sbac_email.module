@@ -4,7 +4,7 @@
  * sbac_email module file.
  */
 
-include_once('sbac_email.features.inc');
+include_once 'sbac_email.features.inc';
 
 /**
  * Implements hook_node_insert().
@@ -86,6 +86,49 @@ function sbac_email_comment_insert($comment) {
           message_subscribe_send_message('comment', $comment, $message);
         }
       }
+    }
+  }
+}
+
+/**
+ * Add to our notifcations table.
+ */
+function sbac_email_update_user_unread_count($uid) {
+  $sql = db_query('SELECT uid FROM {sbac_email_user_unread_notifications_count} WHERE uid = :uid', array(':uid' => $uid));
+  $result = db_query($sql)->fetchField();
+  if ($result) {
+    // Add 1 to count.
+    db_update('sbac_email_user_unread_notifications_count')
+      ->expression('count', 'count + :count', array(':count' => 1))
+      ->condition('uid', $uid)
+      ->execute();
+  }
+  else {
+    // Initialize count to 1.
+    db_insert('sbac_email_user_unread_notifications_count')
+      ->fields(array(
+        'uid' => $uid,
+        'count' => 1,
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Reset our notifcations table.
+ */
+function sbac_email_init() {
+  if (arg(0) == 'user' && is_numeric(arg(1))) {
+    global $user;
+
+    // Reset unread count.
+    $sql = db_query('SELECT uid FROM {sbac_email_user_unread_notifications_count} WHERE uid = :uid', array(':uid' => $user->uid));
+    $result = db_query($sql)->fetchField();
+    if ($result) {
+      db_update('sbac_email_user_unread_notifications_count')
+        ->fields(array('count' => 0))
+        ->condition('uid', $user->uid)
+        ->execute();
     }
   }
 }
