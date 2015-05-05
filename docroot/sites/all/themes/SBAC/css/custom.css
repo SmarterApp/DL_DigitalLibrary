@@ -34397,3 +34397,9 @@ form#sbac-user-filter-form #edit-email {
 .ui-widget-content.autologout-dialog .ui-dialog-buttonpane.ui-widget-content button + button:hover {
   background-color: #64696e;
 }
+
+/* line 3875, ../sass/custom.scss */
+.inner-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+}

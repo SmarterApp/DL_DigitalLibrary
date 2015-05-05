@@ -1,6 +1,7 @@
 <!-- Header and Nav -->
 <div class="page-wrap">
-<nav class="top-bar main-top clearfix">
+   <nav class="top-bar main-top clearfix">
+   <div class="inner-wrap">
   <ul class="title-area">
     <li class="name"><h1>
         <a title="Smarter Balanced Assessment Consortium" href="<?php echo $home_url; ?>">
@@ -56,10 +57,12 @@
         <a title='Sign In' href="/user">Sign In</a>
       </li>
     </ul>
-  <?php endif; ?>
+<?php endif; ?>
+            </div>
 </nav>
 
-<div class="top-bar sub-top">
+            <div class="top-bar sub-top">
+            <div class="inner-wrap">
   <nav class="main-nav left">
     <?php if ($main_menu_links && !in_array(SBAC_SHARE_GUEST, $user->roles) && !$conflicting_profile) : ?>
       <?php print $main_menu_links; ?>
@@ -69,12 +72,15 @@
     <div class="search right">
       <?php print render($page['search']); ?>
     </div>
-  <?php endif; ?>
+<?php endif; ?>
+            </div>
 </div>
 
 <?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
-  <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
-    <?php print render($page['filter']); ?>
+            <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
+            <div class="inner-wrap">
+<?php print render($page['filter']); ?>
+            </div>
   </div>
 <?php endif; ?>
 
