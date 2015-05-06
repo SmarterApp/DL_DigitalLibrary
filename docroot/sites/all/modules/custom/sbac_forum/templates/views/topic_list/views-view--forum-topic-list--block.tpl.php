@@ -51,14 +51,16 @@
   <div class="filter-bar">
     <?php
 
-    if(arg(1) == 'term' && is_numeric(arg(2))) {
+    if (arg(1) == 'term' && is_numeric(arg(2))) {
       $tid = arg(2);
+      print flag_create_link('subscribe_term', $tid);
     }
     else {
       $node = node_load($view->result[0]->nid);
       $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
+      print flag_create_link('subscribe_node', $node->nid);
     }
-    print flag_create_link('subscribe_term', $tid);
+    
     ?>
     <?php if ($topic_count): ?>
       <div class="topic-count">
