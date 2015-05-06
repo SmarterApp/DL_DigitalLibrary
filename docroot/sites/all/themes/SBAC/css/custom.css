@@ -29604,7 +29604,7 @@ body.page-sbac .resources-link-button a:hover {
   /* line 4, ../sass/components/_help-topics.scss */
   #lp-help-topics-wrapper .welcome-topic-container {
     width: 32%;
-    margin: 0.5%;
+    margin: .5%;
   }
 }
 /* line 21, ../sass/components/_help-topics.scss */
@@ -30147,6 +30147,9 @@ body.section-sort-content {
   /* -----------------------------------------
     Horizontal Tabs
     ------------------------------------------ */
+  /* -----------------------------------------
+    Sort Tables
+    ------------------------------------------ */
 }
 /* line 3, ../sass/components/_sort-content.scss */
 body.section-sort-content .columns {
@@ -30220,6 +30223,27 @@ body.section-sort-content .button-group > section.section-about-this-resource > 
 body.section-sort-content .button-group > * {
   margin: 0;
   padding: 0;
+}
+/* line 85, ../sass/components/_sort-content.scss */
+body.section-sort-content #draggableviews-table-sort_content-sort_help_topics,
+body.section-sort-content #draggableviews-table-sort_content-welcome_topics,
+body.section-sort-content #draggableviews-table-sort_content-sort_featured {
+  width: 100%;
+}
+/* line 89, ../sass/components/_sort-content.scss */
+body.section-sort-content #draggableviews-table-sort_content-sort_help_topics .views-field-ops,
+body.section-sort-content #draggableviews-table-sort_content-sort_help_topics .views-field-status,
+body.section-sort-content #draggableviews-table-sort_content-sort_help_topics .views-field-fields-combine,
+body.section-sort-content #draggableviews-table-sort_content-welcome_topics .views-field-ops,
+body.section-sort-content #draggableviews-table-sort_content-welcome_topics .views-field-status,
+body.section-sort-content #draggableviews-table-sort_content-welcome_topics .views-field-fields-combine,
+body.section-sort-content #draggableviews-table-sort_content-sort_featured .views-field-ops,
+body.section-sort-content #draggableviews-table-sort_content-sort_featured .views-field-status,
+body.section-sort-content #draggableviews-table-sort_content-sort_featured .views-field-fields-combine {
+  white-space: nowrap;
+  width: 125px;
+  text-align: center;
+  padding: 0 15px;
 }
 
 /* ==========================================================================

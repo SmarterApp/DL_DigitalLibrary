@@ -265,3 +265,17 @@ function sbac_featured_content_flag_flag($flag, $content_id, $account, $flagging
         ->execute();
   }
 }
+
+function sbac_featured_content_preprocess_flag(&$variables){
+  $menu_item = menu_get_item($_GET['q']);
+  $page_arg = $menu_item['page_arguments'];
+  if($page_arg[0] == 'sort_content'){
+    if($variables['action'] == 'unflag'){
+      $variables['link_text'] = 'Remove';
+    }
+    elseif($variables['action'] == 'flag'){
+      $variables['link_text'] = 'Add';
+    }
+  }
+  return $variables;
+}
