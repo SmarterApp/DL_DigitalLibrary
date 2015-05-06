@@ -75,6 +75,8 @@ DirectoryIndex index.php index.html index.htm
   RewriteCond %{HTTP_HOST} ^integration.smarterbalancedlibrary.org$ [OR]
   RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [OR]
   RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} ^www.smarterbalancedlibrary.org$
+  
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
