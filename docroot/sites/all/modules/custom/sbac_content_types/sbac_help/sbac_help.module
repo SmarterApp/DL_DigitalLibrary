@@ -680,39 +680,31 @@ function sbac_help_welcome_tutorial_topics($limit = NULL) {
   $all_roles = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
   $roles[] = array_pop($all_roles)->tid;
 
-  $query = 'SELECT    n.nid AS nid,
-                      n.title AS title,
-                      body.body_value AS body,
-                      icon.field_help_icon_fid AS img_fid,
-                      icon.field_help_icon_alt AS img_alt
-            FROM      {node} n
-            LEFT JOIN {field_data_body} body
-              ON      n.nid = body.entity_id
-            LEFT JOIN {field_data_field_help_page_topic} topic
-              ON      n.nid = topic.entity_id
-            LEFT JOIN {field_data_field_help_user_roles} roles
-              ON      n.nid = roles.entity_id
-            LEFT JOIN {field_data_field_help_icon} icon
-              ON      n.nid = icon.entity_id
-            LEFT JOIN {draggableviews_structure} weight
-              ON      n.nid = weight.entity_id
-                AND   weight.view_name = :view_name
-                AND   weight.view_display = :view_page
-            WHERE     n.type = :type
-            ORDER BY COALESCE(weight.weight, 10000) ASC
-           ';
+  $query = db_select('node', 'n');
+  $query->join('draggableviews_structure', 'dv', 'n.nid = dv.entity_id');
+  $query->join('flagging', 'fl', 'fl.entity_id = dv.entity_id');
+  $query->join('flag', 'f', 'fl.fid = f.fid');
+  $query->fields('n', array('nid'));
+  $query->fields('dv', array('entity_id', 'weight'));
+  $query->orderBy('dv.weight','ASC');
   if($limit){
-    $query .="LIMIT $limit";
+    $query->range('0',$limit);
   }
-  $results = db_query($query, array(
-    ':view_name' => 'sort_content',
-    ':view_page' => 'welcome_topics',
-    ':type' => 'help_page',
-    )
-  );
+  $query->condition('f.name', 'welcome_help_topic');
+  $query->condition('dv.view_name', 'sort_content');
+  $query->condition('dv.view_display', 'welcome_topics');
 
+  $results = $query->execute();
   while ($result = $results->fetchAssoc()) {
-    $topics[] = $result;
+    $node = node_load($result['entity_id']);
+    $topic = array(
+      'nid'     => $node->nid,
+      'title'   => $node->title,
+      'img_fid' => $node->field_help_icon['und'][0]['fid'],
+      'img_alt' => $node->field_help_icon['und'][0]['alt'],
+
+    );
+    $topics[] = $topic;
   }
     
   return $topics;
@@ -824,4 +816,16 @@ function sbac_help_flag_flag($flag, $content_id, $account, $flagging) {
         ))
         ->execute();
   }
+}
+
+function sbac_help_flag_unflag($flag, $content_id, $account, $flagging) {
+
+  $view_name = 'sort_content';
+  $view_display = 'welcome_topics';
+  
+  $query = db_delete('draggableviews_structure');
+  $query->condition('view_name', $view_name);
+  $query->condition('view_display', $view_display);
+  $query->condition('entity_id', $content_id);
+  $query->execute();
 }
