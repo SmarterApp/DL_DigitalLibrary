@@ -29332,7 +29332,7 @@ body.page-sbac #lp-help-topics-wrapper #lp-help-topics.row {
 }
 /* line 13, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-help-topics-wrapper #lp-help-topics.row .welcome-container-left {
-  min-height: 100px;
+  min-height: 65px;
 }
 /* line 17, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-help-topics-wrapper .help-topics-header {
@@ -29590,6 +29590,15 @@ body.page-sbac .resources-link-button a:hover {
   min-width: 280px;
   width: 30%;
   margin: 1.2%;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #ffffff;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
+  transition: background-color 0.3s ease;
+}
+/* line 14, ../sass/components/_help-topics.scss */
+#lp-help-topics-wrapper .welcome-topic-container:hover {
+  background: white;
 }
 @media (min-width: 1100px) {
   /* line 4, ../sass/components/_help-topics.scss */
@@ -29598,31 +29607,22 @@ body.page-sbac .resources-link-button a:hover {
     margin: 0.5%;
   }
 }
-/* line 13, ../sass/components/_help-topics.scss */
+/* line 21, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial {
   display: block;
   position: relative;
   padding: 0.625rem 0 0.625rem 0.625rem;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid #ffffff;
-  border-radius: 0.25rem;
-  box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
-  transition: background-color 0.3s ease;
 }
-/* line 22, ../sass/components/_help-topics.scss */
-#lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial:hover {
-  background: white;
-}
-/* line 24, ../sass/components/_help-topics.scss */
+/* line 26, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial:hover .welcome-tutorial-topic-title {
   text-decoration: underline;
 }
-/* line 28, ../sass/components/_help-topics.scss */
+/* line 30, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial .welcome-container-image {
   outline: 1px solid #999999;
   float: left;
 }
-/* line 32, ../sass/components/_help-topics.scss */
+/* line 34, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper .welcome-topic-container a.ctools-modal-sbac-help-welcome-tutorial .welcome-tutorial-topic-title {
   font-size: 13px;
   font-weight: 400;
@@ -29633,12 +29633,12 @@ body.page-sbac .resources-link-button a:hover {
   float: left;
   width: 135px;
 }
-/* line 44, ../sass/components/_help-topics.scss */
+/* line 46, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper #edit-help-topics {
   float: right;
   padding-right: 10px;
 }
-/* line 47, ../sass/components/_help-topics.scss */
+/* line 49, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper #edit-help-topics a {
   padding: 5px 5px 5px 27px;
   background: url("../images/icons/icon-edit.png") no-repeat left center rgba(255, 255, 255, 0.85);
@@ -29646,31 +29646,31 @@ body.page-sbac .resources-link-button a:hover {
   color: #0085ad;
   border-radius: 0.25rem;
 }
-/* line 53, ../sass/components/_help-topics.scss */
+/* line 55, ../sass/components/_help-topics.scss */
 #lp-help-topics-wrapper #edit-help-topics a:hover {
   background-color: #FFF;
 }
 
-/* line 62, ../sass/components/_help-topics.scss */
+/* line 64, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome {
   padding: 0;
   height: 650px !important;
 }
-/* line 66, ../sass/components/_help-topics.scss */
+/* line 68, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
   padding: 20px 40px;
   position: relative;
   z-index: 3;
 }
-/* line 72, ../sass/components/_help-topics.scss */
+/* line 74, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header #modal-title {
   color: #04384e;
   font-size: 22px;
   padding: 0;
   font-weight: 600;
 }
-/* line 79, ../sass/components/_help-topics.scss */
+/* line 81, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header .close {
   display: block;
   background: url("../images/icons/icon-close.png") no-repeat right center;
@@ -29680,41 +29680,41 @@ body.page-sbac .resources-link-button a:hover {
   border: none;
   box-shadow: none;
 }
-/* line 88, ../sass/components/_help-topics.scss */
+/* line 90, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-header .close img {
   display: none;
 }
-/* line 94, ../sass/components/_help-topics.scss */
+/* line 96, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .modal-content {
   padding: 0;
 }
-/* line 98, ../sass/components/_help-topics.scss */
+/* line 100, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont {
   overflow: auto;
   border-bottom: 1px solid #cfcece;
   margin-bottom: 20px;
   padding: 10px 0;
 }
-/* line 104, ../sass/components/_help-topics.scss */
+/* line 106, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont h2 {
   float: left;
   margin: 0;
   font-size: 18px;
   color: #04384e;
 }
-/* line 111, ../sass/components/_help-topics.scss */
+/* line 113, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont .welcome-tutorial-edit-topics {
   float: right;
   margin-top: 5px;
   background: url("../images/icons/icon-edit.png") no-repeat left center;
   padding-left: 25px;
 }
-/* line 117, ../sass/components/_help-topics.scss */
+/* line 119, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-tutorial-header-cont .welcome-tutorial-edit-topics a {
   font-size: 14px;
   color: #0085ad;
 }
-/* line 124, ../sass/components/_help-topics.scss */
+/* line 126, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont {
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -29726,21 +29726,21 @@ body.page-sbac .resources-link-button a:hover {
   position: relative;
   margin: 15px 0;
 }
-/* line 133, ../sass/components/_help-topics.scss */
+/* line 135, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated {
   margin: 10px 0;
 }
-/* line 136, ../sass/components/_help-topics.scss */
+/* line 138, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated label {
   font-weight: bold;
   font-size: 16px;
 }
-/* line 141, ../sass/components/_help-topics.scss */
+/* line 143, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont #edit-profile-updated a {
   color: #0085ad;
   text-decoration: underline;
 }
-/* line 147, ../sass/components/_help-topics.scss */
+/* line 149, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .sbac-welcome-update-cont .ajax-processed {
   position: absolute;
   top: 5px;
@@ -29752,34 +29752,34 @@ body.page-sbac .resources-link-button a:hover {
   height: 30px;
   text-indent: -9999px;
 }
-/* line 160, ../sass/components/_help-topics.scss */
+/* line 162, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container {
   height: 532px;
   overflow-y: scroll;
   padding: 30px 40px 20px 40px;
   background-color: #F2F2F2;
 }
-/* line 165, ../sass/components/_help-topics.scss */
+/* line 167, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container {
   overflow: auto;
 }
-/* line 167, ../sass/components/_help-topics.scss */
+/* line 169, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .welcome-tutorial-post-content {
   width: 520px;
   margin-right: 20px;
   float: left;
 }
-/* line 172, ../sass/components/_help-topics.scss */
+/* line 174, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .tutorial-image {
   margin-left: 20px;
   display: block;
   float: left;
 }
-/* line 176, ../sass/components/_help-topics.scss */
+/* line 178, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-container .welcome-tutorial-node-container .tutorial-image img {
   border: 1px solid #999999;
 }
-/* line 184, ../sass/components/_help-topics.scss */
+/* line 186, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-topic-container {
   *zoom: 1;
   background: #FFF;
@@ -29798,39 +29798,39 @@ body.page-sbac .resources-link-button a:hover {
 #modalContent .ctools-modal-content.sbac-welcome .welcome-topic-container:after {
   clear: both;
 }
-/* line 194, ../sass/components/_help-topics.scss */
+/* line 196, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-container-left {
   float: left;
   width: 75%;
 }
-/* line 200, ../sass/components/_help-topics.scss */
+/* line 202, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-topic-title a {
   color: #0085ad;
   font-size: 16px;
 }
-/* line 206, ../sass/components/_help-topics.scss */
+/* line 208, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-topic-summary {
   line-height: 1.2;
   color: #5a5a5a;
 }
-/* line 211, ../sass/components/_help-topics.scss */
+/* line 213, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-node-title {
   font-size: 18px;
   font-weight: bold;
   color: #04384e;
   margin-bottom: 25px;
 }
-/* line 218, ../sass/components/_help-topics.scss */
+/* line 220, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-back-button {
   background: url("../images/icons/back-blue.png") no-repeat left -6px;
   margin: 20px 0 35px;
   padding-left: 30px;
 }
-/* line 223, ../sass/components/_help-topics.scss */
+/* line 225, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-tutorial-back-button a {
   color: #0085ad;
 }
-/* line 228, ../sass/components/_help-topics.scss */
+/* line 230, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons {
   border-top: 1px solid #F2F2F2;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
@@ -29842,11 +29842,11 @@ body.page-sbac .resources-link-button a:hover {
   overflow: hidden;
   height: 40px;
 }
-/* line 238, ../sass/components/_help-topics.scss */
+/* line 240, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons .form-item.form-type-checkbox {
   float: left;
 }
-/* line 242, ../sass/components/_help-topics.scss */
+/* line 244, ../sass/components/_help-topics.scss */
 #modalContent .ctools-modal-content.sbac-welcome .welcome-modal-buttons .button {
   float: right;
   background: none;
