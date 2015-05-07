@@ -8,3 +8,11 @@ sites/*/private
 .gitignore
 .htaccess
 sites/*/*private*
+*.sass-cache*
+*.sass-cache*
+*.sass-cache/*
+*.sass-cache/*
+*.sass-cache
+*.sass-cache
+*.sass-cache/
+*.sass-cache/
