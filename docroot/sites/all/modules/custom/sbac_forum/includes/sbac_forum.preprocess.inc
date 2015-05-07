@@ -63,7 +63,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       ),
     );
     $link_url = 'forums/term/' . $forum_term->tid;
-    $back_link = '<span class="tertiary-back-link-img"></span>' . l('All Topics', $link_url, $link_ops);
+    $back_link = '<span class="tertiary-back-link-img"></span>' . l('All Discussions', $link_url, $link_ops);
   }
 
   // Access Check this.
@@ -76,7 +76,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   } catch (EntityMetadataWrapperException $e) {
   }
   if ($can_edit) {
-    $edit_link = '<span class="tertiary-edit-link">' . l('Edit Topic', $node_data->edit_url->value()) . '</span>';
+    $edit_link = '<span class="tertiary-edit-link">' . l('Edit Discussion', $node_data->edit_url->value()) . '</span>';
   }
 
   if ($can_delete) {
@@ -88,7 +88,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
       ),
     );
     $delete_link = 'sbac-forum/nojs/topic-delete/' . $forum_term->tid . '/' . $node_data->nid->value();
-    $delete_link = '<span class="tertiary-delete-link">' . l('Delete Topic', $delete_link, $link_ops) . '</span>';
+    $delete_link = '<span class="tertiary-delete-link">' . l('Delete Discussion', $delete_link, $link_ops) . '</span>';
     $js_settings = array(
       'sbac-forum-delete-topic-link' => array( // Link has to have ctools-modal- namespace class along with this id.
         'modalSize' => array(
@@ -177,7 +177,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     $reply_to = 'Resource Contributor';
   }
   else {
-    $reply_to = 'Topic Creator';
+    $reply_to = 'Discussion Creator';
   }
   $action_section = l('Reply to ' . $reply_to . ', ' . $topic_author_first_name, $new_comment_url, $action_link_ops);
   if (isset($forum_term->field_forum_resource_ref) && !empty($forum_term->field_forum_resource_ref[LANGUAGE_NONE])) {
@@ -262,7 +262,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
               'id' => 'sbac-flag-resolve-button',
             ),
           ));
-        $remove_button = l(t('Remove Topic'), 'sbac-forum/flag/remove/nojs/topic/' . $node_data->nid->value() . '/' . $_GET['cid'], array(
+        $remove_button = l(t('Remove Discussion'), 'sbac-forum/flag/remove/nojs/topic/' . $node_data->nid->value() . '/' . $_GET['cid'], array(
             'attributes' => array(
               'class' => 'ctools-use-modal red button use-ajax ctools-modal-sbac-flag-remove-button',
               'id' => 'sbac-flag-remove-button',
@@ -915,7 +915,7 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
   if (isset($count_values['block_3']) && !empty($count_values['block_3'])) {
     $my_forums_count_text = ' (' . $count_values['block_3'] . ')';
   }
-  $link_my_forums = l('Topic Forums' . $my_forums_count_text, 'keyword-search-redirect/topic-forums', $link_ops);
+  $link_my_forums = l('Discussion Forums' . $my_forums_count_text, 'keyword-search-redirect/topic-forums', $link_ops);
 
   $kw_subnav = $link_all_forums . $link_my_forums;
   $vars['keyword_subnav'] = $kw_subnav;
@@ -972,6 +972,7 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
 function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$vars) {
   $current_user = $vars['user'];
   $row_info = $vars['row'];
+      dpm($row_info);
 
   switch ($row_info->entity_type) {
     case 'taxonomy_term':

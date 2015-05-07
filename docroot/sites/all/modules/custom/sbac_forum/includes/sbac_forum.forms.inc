@@ -336,8 +336,8 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   }
   $form['topic_forums'] = array(
     '#type' => 'submit',
-    '#value' => t('Topic Forums') . ' ' . $topic_forums_count_text,
-    '#title' => t('Topic forums'),
+    '#value' => t('Discussion Forums') . ' ' . $topic_forums_count_text,
+    '#title' => t('Discussion forums'),
     '#attributes' => array(
       'class' => array($topic_forums_classes),
     ),
@@ -653,12 +653,12 @@ function sbac_forum_delete_topic_confirm($form, &$form_state) {
 
   $form['submit_description'] = array(
     '#markup' => '<p>' . t('
-    If you continue, all discusson information (including topic details and any replies) will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
+    If you continue, all discusson information (including discussion details and any replies) will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
   );
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Delete Topic',
+    '#value' => 'Delete Discussion',
     '#attributes' => array('class' => array('edit-delete-topic-overlay', 'red'))
   );
 
@@ -686,7 +686,7 @@ function sbac_forum_delete_comment_confirm($form, &$form_state, $target_comment_
   );
 
   $form['submit_description'] = array(
-    '#markup' => '<h2>' . t('You are about to delete this discussion topic reply') . '</h2><p>' . t('
+    '#markup' => '<h2>' . t('You are about to delete this discussion reply') . '</h2><p>' . t('
     If you continue, this reply along with all related replies will be permanently deleted and a notification will be sent to the originating user.') . '</p>',
   );
 

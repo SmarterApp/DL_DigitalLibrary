@@ -260,7 +260,7 @@ function sbac_forum__ajax__delete_topic_modal_callback($js = FALSE, $term, $topi
         // Then finally, delete the Topic.
         $name = $topic->title;
         $delete = node_delete($topic->nid);
-        $message = 'Topic: "'. $name .'" has been deleted successfully';
+        $message = 'Discussion: "'. $name .'" has been deleted successfully';
         $type = 'status';
         drupal_set_message($message, $type);
 

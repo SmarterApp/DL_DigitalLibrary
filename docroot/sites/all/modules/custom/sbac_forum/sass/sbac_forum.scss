@@ -3573,7 +3573,7 @@ h2.title {
 	width: 480px;
 	background-color: #2AA549;
 	border: 1px solid #268A16;
-	@inculd border-radius(6px);
+	@include border-radius(6px);
 	box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
 	font-size: 16px;
 	font-weight: normal;
