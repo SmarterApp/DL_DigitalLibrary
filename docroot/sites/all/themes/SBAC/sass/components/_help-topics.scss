@@ -6,6 +6,14 @@
     min-width:280px;
     width:30%;
     margin:1.2%;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid #ffffff;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
+    transition: background-color 0.3s ease;
+    &:hover{
+      background: rgba(255, 255, 255, 1);
+    }
     @media (min-width : 1100px) {
       width:32%;
       margin:.5%;
@@ -14,16 +22,10 @@
       display: block;
       position: relative;   
       padding: 0.625rem 0 0.625rem 0.625rem;  
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid #ffffff;
-      border-radius: 0.25rem;
-      box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
-      transition: background-color 0.3s ease;
-      &:hover{
-        background: rgba(255, 255, 255, 1);
+      &:hover {
         .welcome-tutorial-topic-title{
           text-decoration: underline;
-        }
+	}
       }
       .welcome-container-image{
         outline: 1px solid #999999;
@@ -43,7 +45,8 @@
   }
   #edit-help-topics{
     float:right;
-    padding-right: 10px;
+      padding-right: 10px;
+        margin-right:15px;
     a{
       padding: 5px 5px 5px 27px;
       background: url('../images/icons/icon-edit.png') no-repeat left center rgba(255, 255, 255, 0.85);
