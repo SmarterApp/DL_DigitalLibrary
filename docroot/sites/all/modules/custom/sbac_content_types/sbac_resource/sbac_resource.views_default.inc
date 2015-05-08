@@ -84,7 +84,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['current']['field'] = 'current';
   $handler->display->display_options['filters']['current']['value'] = '1';
   $handler->display->display_options['filters']['current']['group'] = 1;
-  /* Filter criterion: Field: Grade(s) (field_grades) */
+  /* Filter criterion: Field: Grades (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -244,7 +244,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Field: Grades */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -252,7 +252,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_grades']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_grades']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_grades']['delta_offset'] = '0';
-  /* Field: Field: Digital Media Type(s) */
+  /* Field: Field: Media Types */
   $handler->display->display_options['fields']['field_digital_media_type']['id'] = 'field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['field'] = 'field_digital_media_type';
@@ -361,7 +361,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Field: Grades */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -369,7 +369,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_grades']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_grades']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_grades']['delta_offset'] = '0';
-  /* Field: Field: Digital Media Type(s) */
+  /* Field: Field: Media Types */
   $handler->display->display_options['fields']['field_digital_media_type']['id'] = 'field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['field'] = 'field_digital_media_type';
@@ -518,7 +518,7 @@ function sbac_resource_views_default_views() {
     26 => 0,
     31 => 0,
   );
-  /* Filter criterion: Field: Grade(s) (field_grades) */
+  /* Filter criterion: Field: Grades (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -580,7 +580,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
-  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -692,7 +692,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Field: Grades */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -700,7 +700,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_grades']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_grades']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_grades']['delta_offset'] = '0';
-  /* Field: Field: Digital Media Type(s) */
+  /* Field: Field: Media Types */
   $handler->display->display_options['fields']['field_digital_media_type']['id'] = 'field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['field'] = 'field_digital_media_type';
@@ -803,7 +803,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Field: Grades */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -811,7 +811,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_grades']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_grades']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_grades']['delta_offset'] = '0';
-  /* Field: Field: Digital Media Type(s) */
+  /* Field: Field: Media Types */
   $handler->display->display_options['fields']['field_digital_media_type']['id'] = 'field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['field'] = 'field_digital_media_type';
@@ -914,8 +914,11 @@ function sbac_resource_views_default_views() {
   );
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
-  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['type'] = 'infinite_scroll';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Relationship: Content: Author */
@@ -990,7 +993,7 @@ function sbac_resource_views_default_views() {
     'published' => 'published',
   );
   $handler->display->display_options['filters']['state']['group'] = 1;
-  /* Filter criterion: Field: Grade(s) (field_grades) */
+  /* Filter criterion: Field: Grades (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -1023,7 +1026,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended Student Population(s) (field_intended_student) */
+  /* Filter criterion: Field: Student Populations (field_intended_student) */
   $handler->display->display_options['filters']['field_intended_student_tid']['id'] = 'field_intended_student_tid';
   $handler->display->display_options['filters']['field_intended_student_tid']['table'] = 'field_data_field_intended_student';
   $handler->display->display_options['filters']['field_intended_student_tid']['field'] = 'field_intended_student_tid';
@@ -1056,7 +1059,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_intended_student_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_intended_student_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_intended_student_tid']['vocabulary'] = 'intended_student_populations';
-  /* Filter criterion: Field: Digital Media Type(s) (field_digital_media_type) */
+  /* Filter criterion: Field: Media Types (field_digital_media_type) */
   $handler->display->display_options['filters']['field_digital_media_type_tid']['id'] = 'field_digital_media_type_tid';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['field'] = 'field_digital_media_type_tid';
@@ -1122,7 +1125,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
-  /* Filter criterion: Field: Geographical Setting(s) (field_geographical_settings) */
+  /* Filter criterion: Field: Geographic Settings (field_geographical_settings) */
   $handler->display->display_options['filters']['field_geographical_settings_tid']['id'] = 'field_geographical_settings_tid';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['table'] = 'field_data_field_geographical_settings';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['field'] = 'field_geographical_settings_tid';
@@ -1188,7 +1191,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
-  /* Filter criterion: Field: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -1287,7 +1290,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_focus_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_focus_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_focus_tid']['vocabulary'] = 'focus';
-  /* Filter criterion: Field: Attributes (field_attributes) */
+  /* Filter criterion: Field: Attributes of the Formative Assessment Process (field_attributes) */
   $handler->display->display_options['filters']['field_attributes_tid']['id'] = 'field_attributes_tid';
   $handler->display->display_options['filters']['field_attributes_tid']['table'] = 'field_data_field_attributes';
   $handler->display->display_options['filters']['field_attributes_tid']['field'] = 'field_attributes_tid';
@@ -1470,16 +1473,14 @@ function sbac_resource_views_default_views() {
   /* Display: Grid View */
   $handler = $view->new_display('block', 'Grid View', 'grid_view');
   $handler->display->display_options['defaults']['pager'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'load_more';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '12';
+  $handler->display->display_options['pager']['type'] = 'infinite_scroll';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
-  $handler->display->display_options['style_plugin'] = 'list';
-  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
-  $handler->display->display_options['style_options']['class'] = 'grid-library';
-  $handler->display->display_options['style_options']['wrapper_class'] = '';
+  $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
@@ -1522,7 +1523,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Field: Grades */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -1530,7 +1531,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_grades']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_grades']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_grades']['delta_offset'] = '0';
-  /* Field: Field: Digital Media Type(s) */
+  /* Field: Field: Media Types */
   $handler->display->display_options['fields']['field_digital_media_type']['id'] = 'field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['field'] = 'field_digital_media_type';
@@ -1584,11 +1585,12 @@ function sbac_resource_views_default_views() {
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
   $handler->display->display_options['defaults']['pager'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'load_more';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '12';
+  $handler->display->display_options['pager']['type'] = 'infinite_scroll';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['pager']['options']['expose']['items_per_page_options_all'] = TRUE;
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
@@ -1634,7 +1636,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grade(s) */
+  /* Field: Field: Grades */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -1642,7 +1644,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_grades']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_grades']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_grades']['delta_offset'] = '0';
-  /* Field: Field: Digital Media Type(s) */
+  /* Field: Field: Media Types */
   $handler->display->display_options['fields']['field_digital_media_type']['id'] = 'field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['table'] = 'field_data_field_digital_media_type';
   $handler->display->display_options['fields']['field_digital_media_type']['field'] = 'field_digital_media_type';
