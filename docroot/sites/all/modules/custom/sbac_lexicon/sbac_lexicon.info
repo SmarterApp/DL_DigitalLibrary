@@ -116,5 +116,5 @@ features[variable][] = update_notify_emails
 features[variable][] = user_mail_status_activated_notify
 features[variable][] = user_mail_status_blocked_notify
 features[variable][] = user_mail_status_canceled_notify
-mtime = 1430855517
+mtime = 1431046719
 project path = sites/all/modules/custom

@@ -16,8 +16,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -4,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 1,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -41,8 +39,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 13,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -66,8 +62,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -9,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 2,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -91,8 +85,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -8,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 3,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -116,8 +108,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 14,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -141,8 +131,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 15,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -166,8 +154,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 16,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -191,8 +177,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -10,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 4,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -216,8 +200,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 17,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -241,8 +223,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -3,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 5,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -266,8 +246,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -6,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 6,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -291,8 +269,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 19,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -316,8 +292,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 31,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -341,8 +315,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -5,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 7,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -366,8 +338,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 8,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -391,8 +361,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => -7,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 9,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -416,8 +384,6 @@ function sbac_resource_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 21,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
