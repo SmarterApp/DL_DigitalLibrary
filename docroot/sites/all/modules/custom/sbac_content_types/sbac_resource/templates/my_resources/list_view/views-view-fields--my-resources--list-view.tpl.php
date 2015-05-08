@@ -3,8 +3,10 @@
   <div class="row">
     <div class="column large-2">
       <?php if (isset($fields['image'])): ?>
-        <?php print $fields['image']; ?>
-        <?php print '<span class="' . $fields['file-type-icon'] . '"></span>'; ?>
+        <a href="<?php print $fields['path']->content; ?>">
+          <?php print $fields['image']; ?>
+          <?php print '<span class="' . $fields['file-type-icon'] . '"></span>'; ?>
+        </a>
       <?php endif; ?>
 
     </div>
