@@ -34479,3 +34479,67 @@ form#sbac-user-filter-form #edit-email {
 .form-item-message-subscribe-email-und {
   display: none;
 }
+
+/* -----------------------------------------
+   Responsive Grid
+   ----------------------------------------- */
+/* line 3934, ../sass/custom.scss */
+.view-display-id-grid_view .view-content {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 3939, ../sass/custom.scss */
+.view-display-id-grid_view .view-content .views-row {
+  max-width: 290px !important;
+  float: left;
+  margin: 0 10px 10px;
+  display: block;
+}
+
+@media all and (min-width: 1281px) {
+  /* line 3947, ../sass/custom.scss */
+  .main-row {
+    max-width: 1280px !important;
+  }
+
+  /* line 3950, ../sass/custom.scss */
+  .main-row .results-view {
+    width: 960px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  /* line 3956, ../sass/custom.scss */
+  .ex-resource-card:nth-child(4n+1) {
+    clear: left;
+  }
+}
+@media all and (max-width: 1280px) and (min-width: 961px) {
+  /* line 3961, ../sass/custom.scss */
+  .main-row {
+    max-width: 960px;
+  }
+
+  /* line 3965, ../sass/custom.scss */
+  .ex-resource-card:nth-child(4n+1) {
+    clear: left;
+  }
+}
+@media all and (max-width: 960px) {
+  /* line 3970, ../sass/custom.scss */
+  .main-row {
+    max-width: 696px;
+  }
+
+  /* line 3973, ../sass/custom.scss */
+  .main-row .results-view {
+    width: 696px;
+    margin: 0 auto;
+  }
+
+  /* line 3977, ../sass/custom.scss */
+  .ex-resource-card:nth-child(3n+1) {
+    clear: left;
+  }
+}

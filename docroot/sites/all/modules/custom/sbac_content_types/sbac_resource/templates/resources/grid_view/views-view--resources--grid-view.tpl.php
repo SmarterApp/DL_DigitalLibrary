@@ -53,7 +53,8 @@
 
 <?php if ($rows): ?>
   <div class="view-content">
-    <?php print $rows; ?>
+<?php print $rows; ?>
+  <div style="clear:both;display:block;width:100%;"></div>
   </div>
 <?php elseif ($empty): ?>
   <div class="view-empty">
