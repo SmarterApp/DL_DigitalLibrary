@@ -59,11 +59,12 @@ function sbac_landing_page_preprocess_page(&$variables) {
 function lp_help_topics(){
   $variables = array();
   if(module_exists('sbac_help')){
-    $help_topics =  theme('sbac_help_topics',
-                    array(
-                      'topics'     => sbac_help_topic_ctas('3')
-                    ));
-    return $help_topics;
+    if(node_access('update','help_topic')){
+      $variables['edit_help'] = l('Edit Help','/sort-content/welcome-topics');
+    }
+    $variables['topics'] = sbac_help_topic_ctas('3');
+    return  theme('sbac_help_topics', $variables);
+
   }else{
     return 'Help Topics Comming Soon';
   }
