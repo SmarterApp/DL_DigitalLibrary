@@ -142,18 +142,16 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
 
-  /* Display: Featured */
-  $handler = $view->new_display('page', 'Featured', 'featured');
+  /* Display: Sort All Content */
+  $handler = $view->new_display('page', 'Sort All Content', 'featured');
   $handler->display->display_options['defaults']['pager'] = FALSE;
-  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['type'] = 'load_more';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
   $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Flags: featured_node */
-  $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
-  $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
-  $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
-  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'featured_node';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -163,20 +161,13 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['filters']['status']['value'] = 1;
   $handler->display->display_options['filters']['status']['group'] = 1;
   $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
-  /* Filter criterion: Content: Type */
-  $handler->display->display_options['filters']['type']['id'] = 'type';
-  $handler->display->display_options['filters']['type']['table'] = 'node';
-  $handler->display->display_options['filters']['type']['field'] = 'type';
-  $handler->display->display_options['filters']['type']['value'] = array(
-    'resource' => 'resource',
-  );
   $handler->display->display_options['path'] = 'sort-content';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Sort Content';
   $handler->display->display_options['menu']['name'] = 'devel';
 
-  /* Display: Featured */
-  $handler = $view->new_display('page', 'Featured', 'sort_featured');
+  /* Display: Landing Features */
+  $handler = $view->new_display('page', 'Landing Features', 'sort_featured');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = '<none>';
   $handler->display->display_options['defaults']['pager'] = FALSE;
@@ -224,19 +215,6 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['fields']['delete_node']['label'] = '';
   $handler->display->display_options['fields']['delete_node']['exclude'] = TRUE;
   $handler->display->display_options['fields']['delete_node']['element_label_colon'] = FALSE;
-  /* Field: Global: Combined fields */
-  $handler->display->display_options['fields']['fields_combine']['id'] = 'fields_combine';
-  $handler->display->display_options['fields']['fields_combine']['table'] = 'views';
-  $handler->display->display_options['fields']['fields_combine']['field'] = 'fields_combine';
-  $handler->display->display_options['fields']['fields_combine']['label'] = 'Actions';
-  $handler->display->display_options['fields']['fields_combine']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['fields_combine']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['fields_combine']['combined_fields'] = array(
-    'edit_node' => 'edit_node',
-    'delete_node' => 'delete_node',
-    'title' => 0,
-    'status' => 0,
-  );
   /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
@@ -251,9 +229,11 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
-  $handler->display->display_options['fields']['ops']['label'] = 'Remove';
+  $handler->display->display_options['fields']['ops']['label'] = 'Actions';
+  $handler->display->display_options['fields']['ops']['alter']['text'] = 'Remove';
+  $handler->display->display_options['fields']['ops']['alter']['path'] = '[ops]';
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['ops']['link_type'] = 'toggle';
+  $handler->display->display_options['fields']['ops']['link_type'] = 'normal';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -271,9 +251,9 @@ function sbac_content_manager_views_default_views() {
     'resource' => 'resource',
   );
   $handler->display->display_options['path'] = 'sort-content/featured';
-  $handler->display->display_options['menu']['type'] = 'default tab';
-  $handler->display->display_options['menu']['title'] = 'Featured';
-  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['type'] = 'tab';
+  $handler->display->display_options['menu']['title'] = 'Landing Features';
+  $handler->display->display_options['menu']['weight'] = '10';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $handler->display->display_options['tab_options']['weight'] = '0';
@@ -314,8 +294,9 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['fields']['ops']['table'] = 'flagging';
   $handler->display->display_options['fields']['ops']['field'] = 'ops';
   $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
-  $handler->display->display_options['fields']['ops']['label'] = 'On Landing Page';
+  $handler->display->display_options['fields']['ops']['label'] = 'Landing Page';
   $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['ops']['link_type'] = 'normal';
   /* Field: Content: Published */
   $handler->display->display_options['fields']['status']['id'] = 'status';
   $handler->display->display_options['fields']['status']['table'] = 'node';
@@ -352,8 +333,11 @@ function sbac_content_manager_views_default_views() {
     'edit_node' => 'edit_node',
     'delete_node' => 'delete_node',
     'title' => 0,
+    'ops' => 0,
     'status' => 0,
+    'draggableviews' => 0,
   );
+  $handler->display->display_options['fields']['fields_combine']['separator'] = ' ';
   /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
@@ -386,8 +370,8 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
 
-  /* Display: Welcome Topics */
-  $handler = $view->new_display('page', 'Welcome Topics', 'welcome_topics');
+  /* Display: Landing Topics */
+  $handler = $view->new_display('page', 'Landing Topics', 'welcome_topics');
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '3';
@@ -416,13 +400,6 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['title']['link_to_node'] = FALSE;
-  /* Field: Flags: Flag link */
-  $handler->display->display_options['fields']['ops']['id'] = 'ops';
-  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
-  $handler->display->display_options['fields']['ops']['field'] = 'ops';
-  $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
-  $handler->display->display_options['fields']['ops']['label'] = 'On Landing Page';
-  $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
   /* Field: Content: Published */
   $handler->display->display_options['fields']['status']['id'] = 'status';
   $handler->display->display_options['fields']['status']['table'] = 'node';
@@ -433,34 +410,14 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['fields']['status']['type_custom_true'] = 'Active';
   $handler->display->display_options['fields']['status']['type_custom_false'] = 'Inactive';
   $handler->display->display_options['fields']['status']['not'] = 0;
-  /* Field: Content: Edit link */
-  $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
-  $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['edit_node']['field'] = 'edit_node';
-  $handler->display->display_options['fields']['edit_node']['label'] = '';
-  $handler->display->display_options['fields']['edit_node']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['edit_node']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['edit_node']['element_default_classes'] = FALSE;
-  /* Field: Content: Delete link */
-  $handler->display->display_options['fields']['delete_node']['id'] = 'delete_node';
-  $handler->display->display_options['fields']['delete_node']['table'] = 'views_entity_node';
-  $handler->display->display_options['fields']['delete_node']['field'] = 'delete_node';
-  $handler->display->display_options['fields']['delete_node']['label'] = '';
-  $handler->display->display_options['fields']['delete_node']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['delete_node']['element_label_colon'] = FALSE;
-  /* Field: Global: Combined fields */
-  $handler->display->display_options['fields']['fields_combine']['id'] = 'fields_combine';
-  $handler->display->display_options['fields']['fields_combine']['table'] = 'views';
-  $handler->display->display_options['fields']['fields_combine']['field'] = 'fields_combine';
-  $handler->display->display_options['fields']['fields_combine']['label'] = 'Actions';
-  $handler->display->display_options['fields']['fields_combine']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['fields_combine']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['fields_combine']['combined_fields'] = array(
-    'edit_node' => 'edit_node',
-    'delete_node' => 'delete_node',
-    'title' => 0,
-    'status' => 0,
-  );
+  /* Field: Flags: Flag link */
+  $handler->display->display_options['fields']['ops']['id'] = 'ops';
+  $handler->display->display_options['fields']['ops']['table'] = 'flagging';
+  $handler->display->display_options['fields']['ops']['field'] = 'ops';
+  $handler->display->display_options['fields']['ops']['relationship'] = 'flag_content_rel';
+  $handler->display->display_options['fields']['ops']['label'] = 'Landing Page';
+  $handler->display->display_options['fields']['ops']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['ops']['link_type'] = 'normal';
   /* Field: Draggableviews: Content */
   $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
   $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
@@ -488,8 +445,8 @@ function sbac_content_manager_views_default_views() {
   );
   $handler->display->display_options['path'] = 'sort-content/welcome-topics';
   $handler->display->display_options['menu']['type'] = 'tab';
-  $handler->display->display_options['menu']['title'] = 'Welcome Topics';
-  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['title'] = 'Landing Topics';
+  $handler->display->display_options['menu']['weight'] = '5';
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['sort_content'] = $view;
