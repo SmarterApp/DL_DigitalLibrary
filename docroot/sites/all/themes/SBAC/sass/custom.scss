@@ -3938,9 +3938,9 @@ form#sbac-user-filter-form #edit-email {
 
 .view-display-id-grid_view .view-content .views-row {
   max-width: 290px !important;
-  float: left;
-  margin: 0 10px 10px;
-  display:block;
+  margin: 0 5px 10px 10px;
+  display: inline-block;
+  vertical-align: top;
 }
 
 @media all and (min-width: 1281px) {
