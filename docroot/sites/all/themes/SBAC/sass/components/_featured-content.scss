@@ -44,39 +44,34 @@
     .featured-content-wrapper{
       position:relative;
       &.slick-slide {
-        a {
+        a.featured-content-url {
           display:block;
           position:absolute;
-	  border: 1px solid #ffffff;
-	  border-radius: 0.25rem;
-	  box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
-	  overflow:hidden;
-	  background: rgba(255, 255, 255, 0.85);
-	  border: 1px solid #ffffff;
-	  border-radius: 0.25rem;
-	  box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
-	  transition: background-color 0.3s ease;
-	  right:40px;
-	  @media (min-width: 1100px) {
-	    right:15px;
-	    width:800px;
-	  }
-	  &:hover{
+          border: 1px solid #ffffff;
+          border-radius: 0.25rem;
+          box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
+          overflow:hidden;
+          background: rgba(255, 255, 255, 0.85);
+          border: 1px solid #ffffff;
+          border-radius: 0.25rem;
+          box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
+          transition: background-color 0.3s ease;
+          right:40px;
+          max-height:366px;
+          padding: 20px 30px 30px 30px;
+          @media (min-width: 1100px) {
+            right:15px;
+            width:800px;
+          }
+          &:hover{
             background:rgba(255,255,255,1);
             box-shadow:0 2px 4px fade(16,16,16,0.3);
             transition: background-color 0.2s ease;
             .featured-title{
               text-decoration: underline;
-              
+
             }
-	  }
-	}
-	a.featured-content-url{
-          max-height:366px;
-          padding: 20px 30px 30px 30px;
-          display:block;
-          overflow:hidden;
-	  
+          }
           .featured-title{
             font-size: 18px;
             line-height: 22px;
@@ -111,21 +106,20 @@
             ul.featured-content-terms{
               display: block;
               li{
-		color: #000000;
-		line-height: 1.25rem;
-		padding: 0 0.4375rem;
-		background: rgba(16, 16, 16, 0.07);
-		font-size: 12px;
-		font-weight: 600;
-		margin-top: 0.4375rem;
-		margin-right: 0.4375rem;
-		float: left;
-		list-style: none;
+                color: #000000;
+                line-height: 1.25rem;
+                padding: 0 0.4375rem;
+                background: rgba(16, 16, 16, 0.07);
+                font-size: 12px;
+                font-weight: 600;
+                margin-top: 0.4375rem;
+                margin-right: 0.4375rem;
+                float: left;
+                list-style: none;
               }
             }
           }
-
-	}
+        }
       }
     }
 

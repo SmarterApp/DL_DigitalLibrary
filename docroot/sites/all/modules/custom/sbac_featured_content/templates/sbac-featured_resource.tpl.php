@@ -18,6 +18,11 @@
               <?php print $title; ?>
             </div>
           <?php endif; ?>
+          <?php if($mini_profile):?>
+            <div class="featured-resource-mini-profile featured-mini-profile">
+              <?php print $mini_profile; ?>
+            </div>
+          <?php endif; ?>
       </div>
       <div class="col-details">
           <?php if($summary):?>

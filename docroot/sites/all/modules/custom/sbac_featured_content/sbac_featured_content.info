@@ -4,6 +4,7 @@ package = ~SBAC
 dependencies[] = features
 dependencies[] = flag
 dependencies[] = sbac_content_manager
+dependencies[] = sbac_user
 dependencies[] = views
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
