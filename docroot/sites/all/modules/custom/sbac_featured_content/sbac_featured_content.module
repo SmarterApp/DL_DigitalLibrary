@@ -280,8 +280,8 @@ function sbac_featured_content_preprocess_flag(&$variables){
  * Implements views_pre_render().
  */
 function sbac_featured_content_views_pre_render(&$view){
-  // Hide last name if not check for display in their privacy settings.
-  if($view->result[0]->field_field_privacy){
+  // Show/hide profile components based on user's privacy settings.
+  if($view->name == 'users' && $view->current_display == 'mini_profile'){
     $privacy = $view->result[0]->field_field_privacy;
     $privacy_key = array();
     foreach($privacy as $pr){
@@ -289,6 +289,9 @@ function sbac_featured_content_views_pre_render(&$view){
     }
     if(!in_array('field_last_name',$privacy_key)){
       unset($view->result[0]->field_field_last_name);
+    }
+    if(!in_array('picture',$privacy_key)){
+      unset($view->result[0]->users_picture);
     }
   }
   return $view;
