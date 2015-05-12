@@ -12,10 +12,10 @@ function sbac_email_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
-  $export['views-message-block_1'] = array(
+  $export['views-sbac_email_message-block_1'] = array(
     'cache' => -1,
     'custom' => 0,
-    'delta' => 'message-block_1',
+    'delta' => 'sbac_email_message-block_1',
     'module' => 'views',
     'node_types' => array(),
     'pages' => '',

@@ -46,7 +46,7 @@ function sbac_email_node_insert($node) {
 
     // Let's make sure the user has flag on and subscriptions on, then send notice.
     foreach ($term_flags as $term_flag) {
-      if ($node->uid !== $term_flag->uid) {       
+      if ($node->uid !== $term_flag->uid) {   
         $email_user = flag_get_user_flags('flag', $entity_id = NULL, $term_flag->uid);
         $message = message_create('node_insert', array('uid' => $term_flag->uid));
         $wrapper = entity_metadata_wrapper('message', $message);
