@@ -111,7 +111,12 @@
         <?php echo $materials; ?>
         <div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>
       </div>
-      <div class="column large-7">
+<div class="column large-7">
+<?php
+if ($viewer_filename == "Understanding The Smarter Balanced Individual Student Report"):
+      $viewer_filename = str_replace("Understanding The Smarter Balanced Individual Student Report", "Understanding the Smarter Balanced Individual Student Report", $viewer_filename);
+endif;
+?>
         <p><span id="sbac-filename"><?php echo $viewer_filename; ?></span></p>
       </div>
       <div class="column large-2">
