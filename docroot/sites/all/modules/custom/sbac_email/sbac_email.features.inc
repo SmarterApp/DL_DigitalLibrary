@@ -64,12 +64,12 @@ function sbac_email_flag_default_flags() {
       0 => 'resource',
       1 => 'topic',
     ),
-    'flag_short' => 'Subscribe',
-    'flag_long' => '',
-    'flag_message' => 'You are now subscribed to this item.',
-    'unflag_short' => 'Unsubscribe',
-    'unflag_long' => '',
-    'unflag_message' => 'You are no longer subscribed to this item.',
+    'flag_short' => 'Subscribe to Discussion',
+    'flag_long' => 'Receive notifications of new posts in this discussion',
+    'flag_message' => '',
+    'unflag_short' => 'Unsubscribe from Discussion',
+    'unflag_long' => 'Don\'t Receive notifications of new posts in this discussion',
+    'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
     'weight' => -9,
@@ -104,12 +104,12 @@ function sbac_email_flag_default_flags() {
     'types' => array(
       0 => 'forum',
     ),
-    'flag_short' => 'Subscribe',
-    'flag_long' => '',
-    'flag_message' => 'You are now subscribed to this item.',
-    'unflag_short' => 'Unsubscribe',
-    'unflag_long' => '',
-    'unflag_message' => 'You are no longer subscribed to this item.',
+    'flag_short' => 'Subscribe to Forum',
+    'flag_long' => 'Receive notifications of new discussions in this forum',
+    'flag_message' => '',
+    'unflag_short' => 'Unsubscribe from Forum',
+    'unflag_long' => 'Don\'t Receive notifications of new discussions in this forum',
+    'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
     'weight' => -8,
@@ -164,6 +164,8 @@ function sbac_email_default_message_type() {
         }
       ]
     },
+    "entity_type" : "message_type",
+    "entity_id" : "121",
     "rdf_mapping" : []
   }');
   $items['sbac_email_comment_insert'] = entity_import('message_type', '{
@@ -191,6 +193,8 @@ function sbac_email_default_message_type() {
         }
       ]
     },
+    "entity_type" : "message_type",
+    "entity_id" : "122",
     "rdf_mapping" : []
   }');
   return $items;

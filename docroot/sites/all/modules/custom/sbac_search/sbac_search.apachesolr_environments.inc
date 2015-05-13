@@ -14,7 +14,7 @@ function sbac_search_apachesolr_environments() {
   $environment->api_version = 1;
   $environment->env_id = 'acquia_search_server_1';
   $environment->name = 'Acquia Search';
-  $environment->url = 'http://useast1-c1.acquia-search.com/solr/BVWZ-37038';
+  $environment->url = 'http://useast1-c1.acquia-search.com/solr/BVWZ-37038_sbacstg';
   $environment->service_class = 'AcquiaSearchService';
   $environment->conf = array(
     'acquia_override_auto_switch' => 1,
