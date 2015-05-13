@@ -1735,13 +1735,13 @@ html.js .category-hide {
 
 /* line 1677, ../sass/sbac_resource.scss */
 #resource-element {
-  width: 880px;
+  width: 100%;
   height: auto;
 }
 /* line 1681, ../sass/sbac_resource.scss */
 #resource-element img {
-  width: 880px;
-  height: 455px;
+  width: 100%;
+  height: auto;
   /*background-size: cover;*/
 }
 /* line 1687, ../sass/sbac_resource.scss */
