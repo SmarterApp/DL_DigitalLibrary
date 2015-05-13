@@ -1737,6 +1737,7 @@ html.js .category-hide {
 #resource-element {
   width: 100%;
   height: auto;
+  text-align: center;
 }
 /* line 1681, ../sass/sbac_resource.scss */
 #resource-element img {
