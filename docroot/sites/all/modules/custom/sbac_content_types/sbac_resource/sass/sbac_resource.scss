@@ -1675,12 +1675,12 @@ html.js .category-hide {
 }
 
 #resource-element {
-	width: 880px;
+	width: 100%;
 	height: auto;
-
+	text-align:center;
 	img {
-		width: 880px;
-		height: 455px;
+		width: 100%;
+		height: auto;
 		/*background-size: cover;*/
 	}
 
@@ -1699,7 +1699,6 @@ html.js .category-hide {
     font-weight: bold;
     margin: 0 25px 5px 25px;
     padding: 20px 0 0;
-    text-transform: capitalize;
   }
 
 	.resource-type {

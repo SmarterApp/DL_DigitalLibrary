@@ -19,6 +19,16 @@ function sbac_email_user_default_permissions() {
     'module' => 'smtp',
   );
 
+  // Exported permission: 'edit mimemail user settings'.
+  $permissions['edit mimemail user settings'] = array(
+    'name' => 'edit mimemail user settings',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'mimemail',
+  );
+
   // Exported permission: 'flag email'.
   $permissions['flag email'] = array(
     'name' => 'flag email',
@@ -35,6 +45,15 @@ function sbac_email_user_default_permissions() {
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'flag',
+  );
+
+  // Exported permission: 'send arbitrary files'.
+  $permissions['send arbitrary files'] = array(
+    'name' => 'send arbitrary files',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'mimemail',
   );
 
   // Exported permission: 'unflag email'.

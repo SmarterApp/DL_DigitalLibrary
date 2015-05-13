@@ -16,6 +16,8 @@ function sbac_lexicon_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => '',
       'weight' => 0,
+      'entity_type' => 'taxonomy_vocabulary',
+      'entity_id' => 46,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -39,6 +41,8 @@ function sbac_lexicon_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
+      'entity_type' => 'taxonomy_vocabulary',
+      'entity_id' => 22,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

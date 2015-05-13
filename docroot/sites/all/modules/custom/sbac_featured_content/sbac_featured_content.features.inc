@@ -42,7 +42,6 @@ function sbac_featured_content_flag_default_flags() {
       'diff_standard' => 0,
       'print' => 0,
       'token' => 0,
-      'node_term_user' => 0,
       'secondary_teaser' => 0,
       'revision' => 0,
     ),

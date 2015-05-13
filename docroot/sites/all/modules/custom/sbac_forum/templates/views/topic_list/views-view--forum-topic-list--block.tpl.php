@@ -37,17 +37,25 @@
     <div class="view-header">
       <?php print $header; ?>
     </div>
-  <?php endif; ?>
-  <?php if ($warning): ?>
-    <h2><?php print $warning; ?></h2>
-  <?php endif; ?>
+<?php endif; ?>
   <div class="review-it">
+<?php
+  if ($view->exposed_input['section_id'] == "section-collaboration") {
+    $lang = $view->result[0]->_field_data['nid']['entity']->language;
+    $tid = $view->result[0]->_field_data['nid']['entity']->field_topic_forum_parent[$lang][0]['tid'];
+    print flag_create_link('subscribe_term', $tid);
+  }
+?>
     <?php if($review): ?>
       <p><?php print $review; ?></p>
       <?php print $rating; ?>
       <?php print $review_count; ?>
     <?php endif; ?>
   </div>
+  <?php if ($warning): ?>
+    <h2><?php print $warning; ?></h2>
+  <?php endif; ?>
+
   <div class="filter-bar">
     <?php
 
@@ -56,9 +64,11 @@
       print flag_create_link('subscribe_term', $tid);
     }
     else {
-      $node = node_load($view->result[0]->nid);
-      $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
-      print flag_create_link('subscribe_node', $node->nid);
+      if ($view->exposed_input['section_id'] !== "section-collaboration") {
+        $node = node_load($view->result[0]->nid);
+        $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
+        print flag_create_link('subscribe_node', $node->nid);
+      }
     }
     
     ?>

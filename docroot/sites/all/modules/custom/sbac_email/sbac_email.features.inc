@@ -64,12 +64,12 @@ function sbac_email_flag_default_flags() {
       0 => 'resource',
       1 => 'topic',
     ),
-    'flag_short' => 'Subscribe',
-    'flag_long' => '',
-    'flag_message' => 'You are now subscribed to this item.',
-    'unflag_short' => 'Unsubscribe',
-    'unflag_long' => '',
-    'unflag_message' => 'You are no longer subscribed to this item.',
+    'flag_short' => 'Subscribe to Discussion',
+    'flag_long' => 'Receive notifications of new posts in this discussion',
+    'flag_message' => '',
+    'unflag_short' => 'Unsubscribe from Discussion',
+    'unflag_long' => 'Don\'t Receive notifications of new posts in this discussion',
+    'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
     'weight' => -9,
@@ -104,12 +104,12 @@ function sbac_email_flag_default_flags() {
     'types' => array(
       0 => 'forum',
     ),
-    'flag_short' => 'Subscribe',
-    'flag_long' => '',
-    'flag_message' => 'You are now subscribed to this item.',
-    'unflag_short' => 'Unsubscribe',
-    'unflag_long' => '',
-    'unflag_message' => 'You are no longer subscribed to this item.',
+    'flag_short' => 'Subscribe to Forum',
+    'flag_long' => 'Receive notifications of new discussions in this forum',
+    'flag_message' => '',
+    'unflag_short' => 'Unsubscribe from Forum',
+    'unflag_long' => 'Don\'t Receive notifications of new discussions in this forum',
+    'unflag_message' => '',
     'unflag_denied_text' => '',
     'link_type' => 'toggle',
     'weight' => -8,
@@ -153,17 +153,19 @@ function sbac_email_default_message_type() {
     "arguments" : null,
     "message_text" : { "und" : [
         {
-          "value" : "[message:field-node-ref:author:field_first_name] [message:field-node-ref:author:field_last_name] posted new discussion [message:field-node-ref:title] for [message:field-node-ref:field_topic_forum_parent]",
+          "value" : "New discussion [message:field-node-ref:title] posted to [message:field-node-ref:field_topic_forum_parent]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003Cp\\u003E[message:field-node-ref:author:field_first_name] [message:field-node-ref:author:field_last_name] posted new discussion [message:field-node-ref:title] for [message:field-node-ref:field_topic_forum_parent]\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003ENew discussion [message:field-node-ref:title] posted to [message:field-node-ref:field_topic_forum_parent]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003E[message:field-node-ref:author:field-first-name] [message:field-node-ref:author:field_last_name] posted new discussion \\u0022\\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-node-ref:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EYou have subscribed to receive email notifications for new discussion threads posted to forum \\u0022[message:field-node-ref:field_topic_forum_parent].\\u0022\\u003C\\/p\\u003E\\u003Cp\\u003EOn [current-date:custom:F j \\\\a\\\\t g:i a], [message:field-node-ref:author:field-first-name] [message:field-node-ref:author:field_last_name] wrote:\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; [message:field-node-ref:body]\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EView this discussion in the Digital Library: [message:field-node-ref:url]\\u003C\\/p\\u003E\\u003Cp\\u003EView this forum in the Digital Library: \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-node-ref:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EUnsubscribe to this forum: \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-node-ref:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003EOpt-out of all email notifications: [message:user:edit-url]",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003E[message:field-node-ref:author:field-first-name] [message:field-node-ref:author:field_last_name] posted new discussion \\u0022\\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-node-ref:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EYou have subscribed to receive email notifications for new discussion threads posted to forum \\u0022[message:field-node-ref:field_topic_forum_parent].\\u0022\\u003C\\/p\\u003E\\n\\u003Cp\\u003EOn [current-date:custom:F j \\\\a\\\\t g:i a], [message:field-node-ref:author:field-first-name] [message:field-node-ref:author:field_last_name] wrote:\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; [message:field-node-ref:body]\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this discussion in the Digital Library: [message:field-node-ref:url]\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this forum in the Digital Library: \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-node-ref:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EUnsubscribe to this forum: \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-node-ref:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-node-ref:field_topic_forum_parent]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003EOpt-out of all email notifications: [message:user:edit-url]\\u003C\\/p\\u003E\\n"
         }
       ]
     },
+    "entity_type" : "message_type",
+    "entity_id" : "121",
     "rdf_mapping" : []
   }');
   $items['sbac_email_comment_insert'] = entity_import('message_type', '{
@@ -180,17 +182,19 @@ function sbac_email_default_message_type() {
     "arguments" : null,
     "message_text" : { "und" : [
         {
-          "value" : "[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field-last-name] wrote a post in discussion [message:field-comment-ref:node:title]",
+          "value" : "New response posted to discussion [message:field-comment-ref:node:title] in forum [message:field-comment-ref:node:field_topic_forum_parent]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003Cp\\u003E[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field-last-name] wrote a post in discussion [message:field-comment-ref:node:title]\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003ENew response posted to discussion [message:field-comment-ref:node:title] in forum [message:field-comment-ref:node:field_topic_forum_parent]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003E[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote a post in discussion \\u0022\\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-comment-ref:node:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-comment-ref:node:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u0026gt;\\u0026gt;\\u0026gt; \\u003Ca href=\\u0022[message:field-comment-ref:url]\\u0022\\u003E[message:field-comment-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp style=\\u0022font-family: \\u0027Open Sans\\u0027, sans-serif; font-size: 16px;\\u0022\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EYou have subscribed to receive email notifications for posts to the discussion thread\\u0026nbsp;\\u003C\\/span\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E\\u0026nbsp;\\u0022\\u003C\\/span\\u003E\\u003Ca style=\\u0022line-height: 19.2000007629395px;\\u0022 href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:title]\\u003C\\/a\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E\\u0022 in forum \\u0022\\u003C\\/span\\u003E[message:field-comment-ref:node:field_topic_forum_parent].\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E\\u0022\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EOn [current-date:custom:F j \\\\a\\\\t g:i a], [message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote:\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp;\\u0026nbsp;\\u003Cspan style=\\u0022font-family: inherit;\\u0022\\u003E\\u003Cspan style=\\u0022line-height: 1.2; font-size: 1em;\\u0022\\u003E[message:field-comment-ref:body]\\u003C\\/span\\u003E\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EView this discussion post int the Digital Library:\\u0026nbsp;\\u003C\\/span\\u003E\\u003Ca style=\\u0022line-height: 19.2000007629395px;\\u0022 href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:url]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EUnsubscribe to this discussion:\\u0026nbsp;\\u003C\\/span\\u003E\\u003Ca style=\\u0022line-height: 19.2000007629395px;\\u0022 href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:url]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EOpt-out of all email notifications:\\u0026nbsp;\\u003C\\/span\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E[message:user:edit-url]\\u003C\\/span\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003E[message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote a post in discussion \\u0022\\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:title]\\u003C\\/a\\u003E\\u0022 for \\u003Ca href=\\u0022\\/forums\\/term\\/[message:field-comment-ref:node:field-topic-forum-parent:tid]\\u0022\\u003E[message:field-comment-ref:node:field_topic_forum_parent]:\\u003C\\/a\\u003E \\u0026gt;\\u0026gt;\\u0026gt; \\u003Ca href=\\u0022[message:field-comment-ref:url]\\u0022\\u003E[message:field-comment-ref:body]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp style=\\u0022font-family: \\u0027Open Sans\\u0027, sans-serif; font-size: 16px;\\u0022\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EYou have subscribed to receive email notifications for posts to the discussion thread\\u0026nbsp;\\u003C\\/span\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E\\u0026nbsp;\\u0022\\u003C\\/span\\u003E\\u003Ca style=\\u0022line-height: 19.2000007629395px;\\u0022 href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:title]\\u003C\\/a\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E\\u0022 in forum \\u0022\\u003C\\/span\\u003E[message:field-comment-ref:node:field_topic_forum_parent].\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E\\u0022\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EOn [current-date:custom:F j \\\\a\\\\t g:i a], [message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote:\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp;\\u0026nbsp;\\u003Cspan style=\\u0022font-family: inherit;\\u0022\\u003E\\u003Cspan style=\\u0022line-height: 1.2; font-size: 1em;\\u0022\\u003E[message:field-comment-ref:body]\\u003C\\/span\\u003E\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EView this discussion post int the Digital Library:\\u0026nbsp;\\u003C\\/span\\u003E\\u003Ca style=\\u0022line-height: 19.2000007629395px;\\u0022 href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:url]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EUnsubscribe to this discussion:\\u0026nbsp;\\u003C\\/span\\u003E\\u003Ca style=\\u0022line-height: 19.2000007629395px;\\u0022 href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003E[message:field-comment-ref:node:url]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EOpt-out of all email notifications:\\u0026nbsp;\\u003C\\/span\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003E[message:user:edit-url]\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
+    "entity_type" : "message_type",
+    "entity_id" : "122",
     "rdf_mapping" : []
   }');
   return $items;
