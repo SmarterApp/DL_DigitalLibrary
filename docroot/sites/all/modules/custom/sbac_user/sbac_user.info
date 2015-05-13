@@ -58,6 +58,11 @@ features[field_base][] = field_subject_s_
 features[field_group][] = group_expertise|user|user|form
 features[field_group][] = group_personal_information|user|user|form
 features[field_group][] = group_privacy|user|user|form
+
+features[field_group][] = group_email_settings|user|user|form
+features[field_instance][] = user-user-sbac_user_email_options
+features[field_instance][] = user-user-mimemail
+
 features[field_instance][] = user-user-field_alternate_email_address
 features[field_instance][] = user-user-field_district_name
 features[field_instance][] = user-user-field_feedback_flag
