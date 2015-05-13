@@ -5,11 +5,6 @@
  */
 
 include_once 'sbac_landing_page.features.inc';
-/* 
- * 
- * 
- * 
- */
 /**
  * Implements hook_menu().
  */
@@ -79,18 +74,13 @@ function lp_featured_content(){
 }
 
 function lp_find_resource(){
-  /*
-   * @TODO - determine whether or not we are going to use this logic.
-   *
-   * if(module_exists('sbac_find_resources')){
-   * return 'Embed Find Resources Content Block Here';
-   * }else{
-   * return 'More Resources Comming Soon';    
-   * }
-   */
-  $output = '<div class="resources-wrap"><div class="resources-wrap-inner">';
-  $output .= '<div class="resources-link">' . t('What resources are you looking for?') . '</div>';
-  $output .= '<div class="resources-link-button"><a href="/digital-library-resources">' . t('FIND RESOURCES') . '</a></div></div></div>';
-  return $output;
+   if(module_exists('sbac_search')){
+      $resource_filters = drupal_get_form('sbac_search_landing_page_resources_form');
+      return drupal_render($resource_filters);
+    }else{
+      $output = '<div class="resources-wrap"><div class="resources-wrap-inner">';
+      $output .= '<div class="resources-link">' . t('What resources are you looking for?') . '</div>';
+      $output .= '<div class="resources-link-button"><a href="/digital-library-resources">' . t('FIND RESOURCES') . '</a></div></div></div>';
+      return $output;
+    }
 }
-
