@@ -34452,30 +34452,233 @@ form#sbac-user-filter-form #edit-email {
   Flags
   ------------------------------------------ */
 /* line 3901, ../sass/custom.scss */
+.filter-bar {
+  position: relative;
+}
+/* line 3903, ../sass/custom.scss */
+.filter-bar a.flag {
+  font-size: 16px !important;
+  color: #5a5a5a;
+  padding-left: 30px;
+  height: 20px;
+  position: relative;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -2px;
+}
+/* line 3910, ../sass/custom.scss */
+.filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
+  color: #5a5a5a;
+}
+/* line 3915, ../sass/custom.scss */
+.filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
+  color: #8a1538;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -22px;
+}
+/* line 3920, ../sass/custom.scss */
+.filter-bar a.flag:hover {
+  color: #0684ad;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -42px;
+}
+/* line 3925, ../sass/custom.scss */
+.filter-bar a[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  color: red;
+  background: black;
+  border: white solid 2px;
+  padding: 10px;
+  color: white;
+  width: 450px;
+  text-align: center;
+  top: -70px;
+  right: -120px;
+  z-index: 99;
+  -webkit-box-shadow: -1px 3px 34px -6px #787278;
+  -moz-box-shadow: -1px 3px 34px -6px #787278;
+  box-shadow: -1px 3px 34px -6px #787278;
+}
+/* line 3942, ../sass/custom.scss */
+.filter-bar a[title]:hover:before {
+  content: ' ';
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -40px;
+  z-index: 100;
+  right: 70px;
+  border-style: solid;
+  border-width: 30px 30px 0 30px;
+  border-color: #000000 transparent transparent transparent;
+}
+/* line 3954, ../sass/custom.scss */
+.filter-bar .flag-message {
+  background: none;
+}
+/* line 3957, ../sass/custom.scss */
 .filter-bar .flag-wrapper {
   position: absolute;
-  top: 25px;
-  right: 250px;
+  top: -7px;
+  right: -3px;
 }
 
-/* line 3909, ../sass/custom.scss */
+/* line 3965, ../sass/custom.scss */
+.flag-email-1 .flag-message {
+  background: none;
+}
+
+/* line 3971, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right .flag-wrapper {
   position: absolute;
   top: 47px;
   right: 150px;
 }
 
-/* line 3917, ../sass/custom.scss */
+/* line 3979, ../sass/custom.scss */
+#section-collaboration .review-it {
+  position: relative;
+}
+/* line 3982, ../sass/custom.scss */
 #section-collaboration .flag-wrapper {
   position: absolute;
-  top: 125px;
-  right: 280px;
+  top: 60px;
+  right: 0px;
+}
+/* line 3986, ../sass/custom.scss */
+#section-collaboration .flag-wrapper .flag-message {
+  background: none;
+}
+/* line 3990, ../sass/custom.scss */
+#section-collaboration a.flag {
+  font-size: 16px !important;
+  color: #5a5a5a;
+  padding-left: 30px;
+  height: 20px;
+  position: relative;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -2px;
+}
+/* line 3997, ../sass/custom.scss */
+#section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
+  color: #5a5a5a;
+}
+/* line 4002, ../sass/custom.scss */
+#section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
+  color: #8a1538;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -22px;
+}
+/* line 4007, ../sass/custom.scss */
+#section-collaboration a.flag:hover {
+  color: #0684ad;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -42px;
+}
+/* line 4012, ../sass/custom.scss */
+#section-collaboration a[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  color: red;
+  background: black;
+  border: white solid 2px;
+  padding: 10px;
+  color: white;
+  width: 450px;
+  text-align: center;
+  top: -70px;
+  right: -120px;
+  z-index: 99;
+  -webkit-box-shadow: -1px 3px 34px -6px #787278;
+  -moz-box-shadow: -1px 3px 34px -6px #787278;
+  box-shadow: -1px 3px 34px -6px #787278;
+}
+/* line 4029, ../sass/custom.scss */
+#section-collaboration a[title]:hover:before {
+  content: ' ';
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -40px;
+  z-index: 100;
+  right: 70px;
+  border-style: solid;
+  border-width: 30px 30px 0 30px;
+  border-color: #000000 transparent transparent transparent;
+}
+
+/* line 4043, ../sass/custom.scss */
+.topic-node-view-tertiary-nav {
+  position: relative;
+}
+
+/* line 4046, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right {
+  position: relative;
+}
+/* line 4048, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right .flag-wrapper {
+  position: absolute;
+  top: 10px;
+  right: 120px;
+}
+/* line 4052, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right .flag-wrapper .flag-message {
+  background: none;
+}
+/* line 4056, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right a.flag {
+  font-size: 16px !important;
+  color: #5a5a5a;
+  padding-left: 30px;
+  height: 20px;
+  position: relative;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -2px;
+}
+/* line 4063, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
+  color: #5a5a5a;
+}
+/* line 4068, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
+  color: #8a1538;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -22px;
+}
+/* line 4073, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right a.flag:hover {
+  color: #0684ad;
+  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -42px;
+}
+/* line 4078, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right a[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  color: red;
+  background: black;
+  border: white solid 2px;
+  padding: 10px;
+  color: white;
+  width: 450px;
+  text-align: center;
+  top: -70px;
+  right: -120px;
+  z-index: 99;
+  -webkit-box-shadow: -1px 3px 34px -6px #787278;
+  -moz-box-shadow: -1px 3px 34px -6px #787278;
+  box-shadow: -1px 3px 34px -6px #787278;
+}
+/* line 4095, ../sass/custom.scss */
+.topic-node-view-tertiary-nav-right a[title]:hover:before {
+  content: ' ';
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: -40px;
+  z-index: 100;
+  right: 70px;
+  border-style: solid;
+  border-width: 30px 30px 0 30px;
+  border-color: #000000 transparent transparent transparent;
 }
 
 /* -----------------------------------------
   Other
   ------------------------------------------ */
-/* line 3927, ../sass/custom.scss */
+/* line 4112, ../sass/custom.scss */
 .form-item-message-subscribe-email-und {
   display: none;
 }
@@ -34483,13 +34686,13 @@ form#sbac-user-filter-form #edit-email {
 /* -----------------------------------------
    Responsive Grid
    ----------------------------------------- */
-/* line 3934, ../sass/custom.scss */
+/* line 4119, ../sass/custom.scss */
 .view-display-id-grid_view .view-content {
   margin: 0;
   padding: 0;
 }
 
-/* line 3939, ../sass/custom.scss */
+/* line 4124, ../sass/custom.scss */
 .view-display-id-grid_view .view-content .views-row {
   max-width: 290px !important;
   margin: 0 5px 10px 10px;
@@ -34498,48 +34701,53 @@ form#sbac-user-filter-form #edit-email {
 }
 
 @media all and (min-width: 1281px) {
-  /* line 3947, ../sass/custom.scss */
+  /* line 4132, ../sass/custom.scss */
   .main-row {
     max-width: 1280px !important;
   }
 
-  /* line 3950, ../sass/custom.scss */
+  /* line 4135, ../sass/custom.scss */
   .main-row .results-view {
     width: 960px;
     margin: 0 auto;
     padding: 0 15px;
   }
 
-  /* line 3956, ../sass/custom.scss */
+  /* line 4141, ../sass/custom.scss */
   .ex-resource-card:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 1280px) and (min-width: 961px) {
-  /* line 3961, ../sass/custom.scss */
+  /* line 4146, ../sass/custom.scss */
   .main-row {
     max-width: 960px;
   }
 
-  /* line 3965, ../sass/custom.scss */
+  /* line 4150, ../sass/custom.scss */
   .ex-resource-card:nth-child(4n+1) {
     clear: left;
   }
 }
 @media all and (max-width: 960px) {
-  /* line 3970, ../sass/custom.scss */
+  /* line 4155, ../sass/custom.scss */
   .main-row {
     max-width: 696px;
   }
 
-  /* line 3973, ../sass/custom.scss */
+  /* line 4158, ../sass/custom.scss */
   .main-row .results-view {
     width: 696px;
     margin: 0 auto;
   }
 
-  /* line 3977, ../sass/custom.scss */
+  /* line 4162, ../sass/custom.scss */
   .ex-resource-card:nth-child(3n+1) {
     clear: left;
   }
+}
+/* SBAC Forum styles */
+/* line 4169, ../sass/custom.scss */
+.node-type-resource .view-forum-topic-list h2 {
+  clear: both;
 }

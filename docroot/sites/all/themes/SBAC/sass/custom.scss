@@ -3897,11 +3897,73 @@ form#sbac-user-filter-form #edit-email {
 /* -----------------------------------------
   Flags
   ------------------------------------------ */
+
 .filter-bar {
+  position:relative;
+  a.flag {
+    font-size:16px !important;
+    color: #5a5a5a;
+    padding-left:30px;
+    height:20px;
+    position:relative;
+    background: image-url('subscribe_icons.png') no-repeat 0 -2px;
+    &.unflagged,
+    &.flag-action {
+      color: #5a5a5a;
+    }
+
+    &.flagged,
+    &.unflag-action {
+      color:#8a1538;
+      background: image-url('subscribe_icons.png') no-repeat 0 -22px;
+    }
+    &:hover {
+      color:#0684ad;
+      background: image-url('subscribe_icons.png') no-repeat 0 -42px;
+    }
+  }
+  a[title]:hover:after {
+    content: attr(title);
+    position: absolute;
+    color:red;
+    background: black;
+    border:white solid 2px;
+    padding:10px;
+    color:white;
+    width:450px;
+    text-align:center;
+    top:-70px;
+    right:-120px;
+    z-index:99;
+    -webkit-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    -moz-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+  }
+  a[title]:hover:before {
+    content: ' ';
+    width: 0;
+    height: 0;
+    position:absolute;
+    top:-40px;
+    z-index:100;
+    right:70px;
+    border-style: solid;
+    border-width: 30px 30px 0 30px;
+    border-color: #000000 transparent transparent transparent;
+  }
+  .flag-message {
+    background:none;
+  }
   .flag-wrapper {
     position: absolute;
-    top: 25px;
-    right: 250px;
+    top: -7px;
+    right: -3px;
+  }
+}
+
+.flag-email-1{
+  .flag-message {
+    background:none;
   }
 }
 
@@ -3914,10 +3976,133 @@ form#sbac-user-filter-form #edit-email {
 }
 
 #section-collaboration {
+  .review-it {
+    position:relative;
+  }
   .flag-wrapper {
     position: absolute;
-    top: 125px;
-    right: 280px;
+    top: 60px;
+    right: 0px;
+    .flag-message {
+      background:none;
+    }
+  }
+  a.flag {
+    font-size:16px !important;
+    color: #5a5a5a;
+    padding-left:30px;
+    height:20px;
+    position:relative;
+    background: image-url('subscribe_icons.png') no-repeat 0 -2px;
+    &.unflagged,
+    &.flag-action {
+      color: #5a5a5a;
+    }
+
+    &.flagged,
+    &.unflag-action {
+      color:#8a1538;
+      background: image-url('subscribe_icons.png') no-repeat 0 -22px;
+    }
+    &:hover {
+      color:#0684ad;
+      background: image-url('subscribe_icons.png') no-repeat 0 -42px;
+    }
+  }
+  a[title]:hover:after {
+    content: attr(title);
+    position: absolute;
+    color:red;
+    background: black;
+    border:white solid 2px;
+    padding:10px;
+    color:white;
+    width:450px;
+    text-align:center;
+    top:-70px;
+    right:-120px;
+    z-index:99;
+    -webkit-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    -moz-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+  }
+  a[title]:hover:before {
+    content: ' ';
+    width: 0;
+    height: 0;
+    position:absolute;
+    top:-40px;
+    z-index:100;
+    right:70px;
+    border-style: solid;
+    border-width: 30px 30px 0 30px;
+    border-color: #000000 transparent transparent transparent;
+  }
+}
+
+.topic-node-view-tertiary-nav {
+  position:relative;
+}
+.topic-node-view-tertiary-nav-right {
+    position:relative;
+   .flag-wrapper {
+    position: absolute;
+    top: 10px;
+    right:120px;
+    .flag-message {
+      background:none;
+    }
+   }
+   a.flag {
+     font-size:16px !important;
+     color: #5a5a5a;
+     padding-left:30px;
+     height:20px;
+     position:relative;
+     background: image-url('subscribe_icons.png') no-repeat 0 -2px;
+     &.unflagged,
+     &.flag-action {
+       color: #5a5a5a;
+     }
+
+     &.flagged,
+     &.unflag-action {
+       color:#8a1538;
+       background: image-url('subscribe_icons.png') no-repeat 0 -22px;
+     }
+     &:hover {
+       color:#0684ad;
+       background: image-url('subscribe_icons.png') no-repeat 0 -42px;
+     }
+   }
+  a[title]:hover:after {
+    content: attr(title);
+    position: absolute;
+    color:red;
+    background: black;
+    border:white solid 2px;
+    padding:10px;
+    color:white;
+    width:450px;
+    text-align:center;
+    top:-70px;
+    right:-120px;
+    z-index:99;
+    -webkit-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    -moz-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+  }
+  a[title]:hover:before {
+    content: ' ';
+    width: 0;
+    height: 0;
+    position:absolute;
+    top:-40px;
+    z-index:100;
+    right:70px;
+    border-style: solid;
+    border-width: 30px 30px 0 30px;
+    border-color: #000000 transparent transparent transparent;
   }
 }
 
@@ -3977,4 +4162,10 @@ form#sbac-user-filter-form #edit-email {
   .ex-resource-card:nth-child(3n+1) {
     clear: left;
   }
+}
+
+
+/* SBAC Forum styles */
+.node-type-resource .view-forum-topic-list h2 {
+  clear:both;
 }
