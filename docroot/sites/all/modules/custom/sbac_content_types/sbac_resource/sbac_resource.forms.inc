@@ -1776,7 +1776,7 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
   // Title.
   $form['title']['#title'] = t('Title') . ' ' . theme('form_required_marker');
   $form['title']['#theme_options']['description at top'] = t('Enter a user-friendly name for the resource.');
-  $form['title']['#maxlength'] = 75;
+  $form['title']['#maxlength'] = 120;
   $form['title']['#attributes']['maxlength_js_label'][0] = 'Character count: @remaining';
   $form['title']['#maxlength_js'] = TRUE;
   $form['title']['#required'] = FALSE;
