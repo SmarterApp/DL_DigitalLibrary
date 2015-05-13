@@ -1,5 +1,6 @@
 /* Landing Page Featured Content */
 #lp-featured-content{
+
   #edit-featured-wrap {
     position:relative;
     height:0;
@@ -42,6 +43,9 @@
     }
 
     .featured-content-wrapper{
+      &:hover a {
+	text-decoration:underline;
+      }
       position:relative;
       &.slick-slide {
         a.featured-content-url {

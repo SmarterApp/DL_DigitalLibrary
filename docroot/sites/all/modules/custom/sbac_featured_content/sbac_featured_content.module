@@ -103,7 +103,7 @@ function sbac_featured_resource($node){
   $variables['thumbnail'] = $img_data['image'];
   $variables['title'] = $node->title;
   $variables['summary'] = truncate_utf8($node->field_alt_body['und'][0]['value'], 300, TRUE, TRUE, 1);
-  $variables['mini_profile'] = views_embed_view('users', 'mini_profile',$node->uid);
+  $variables['mini_profile'] = views_embed_view('users', 'mini_profile', $node->uid);
   $variables['grades'] = sbac_resource_terms($node->field_grades['und']);
   $variables['formative_process'] = sbac_resource_terms($node->field_attributes['und']);
   return theme('sbac_featured_resource',$variables);

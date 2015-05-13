@@ -6,8 +6,9 @@
  */
 ?>
 <div class="slide featured-content-wrapper">
+  
+  <div class="col-resource">
   <a href="<?php print $link;?>" class="featured-content-url featured-resource-url">
-      <div class="col-resource">
         <?php if($thumbnail):?>
           <div class="featured-resource-image" style="background-image: url(<?php print $thumbnail; ?>)">
           </div>
@@ -17,14 +18,16 @@
             <div class="featured-resource-title featured-title">
               <?php print $title; ?>
             </div>
-          <?php endif; ?>
+<?php endif; ?>
+  </a>
           <?php if($mini_profile):?>
             <div class="featured-resource-mini-profile featured-mini-profile">
               <?php print $mini_profile; ?>
             </div>
           <?php endif; ?>
       </div>
-      <div class="col-details">
+  <div class="col-details">
+  <a href="<?php print $link;?>" class="featured-content-url featured-resource-url">
           <?php if($summary):?>
             <div class="featured-resource-summary featured-summary">
               <?php print $summary; ?>
@@ -41,7 +44,8 @@
               <p class="featured-label">Formative Attributes</p>
               <?php print $formative_process; ?>
             </div>
-          <?php endif; ?>
+<?php endif; ?>
+   </a>
       </div>
-  </a>
+ 
 </div>
