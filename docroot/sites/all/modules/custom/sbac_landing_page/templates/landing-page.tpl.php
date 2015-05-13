@@ -21,6 +21,7 @@
 <?php if($find_resource): ?>
 <div id="lp-find-resource-wrapper">
   <div id="lp-find-resource">
+    <div id="lp-find-resource-lable">What resources are you looking for?</div>
     <?php print $find_resource; ?>
   </div>
 </div>

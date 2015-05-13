@@ -29355,18 +29355,6 @@ body.page-sbac #lp-featured-content-wrapper #lp-featured-content {
   position: relative;
 }
 /* line 34, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper {
-  height: 8rem;
-}
-/* line 39, ../sass/components/_landing-page.scss */
-body.page-sbac .ajax-progress-throbber {
-  display: none;
-}
-/* line 41, ../sass/components/_landing-page.scss */
-body.page-sbac .ajax-progress-throbber .throbber {
-  display: none;
-}
-/* line 45, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slider {
   position: relative;
   display: block;
@@ -29381,7 +29369,7 @@ body.page-sbac .slick-slider {
   -ms-touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
-/* line 59, ../sass/components/_landing-page.scss */
+/* line 48, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-list {
   position: relative;
   overflow: hidden;
@@ -29389,20 +29377,20 @@ body.page-sbac .slick-list {
   margin: 0;
   padding: 0;
 }
-/* line 66, ../sass/components/_landing-page.scss */
+/* line 55, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-list:focus {
   outline: none;
 }
-/* line 69, ../sass/components/_landing-page.scss */
+/* line 58, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-loading .slick-list {
   background: #ffffff url("./ajax-loader.gif") center center no-repeat;
 }
-/* line 72, ../sass/components/_landing-page.scss */
+/* line 61, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-list.dragging {
   cursor: pointer;
   cursor: hand;
 }
-/* line 76, ../sass/components/_landing-page.scss */
+/* line 65, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slider .slick-list,
 body.page-sbac .slick-track,
 body.page-sbac .slick-slide,
@@ -29413,7 +29401,7 @@ body.page-sbac .slick-slide img {
   -o-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
-/* line 86, ../sass/components/_landing-page.scss */
+/* line 75, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-track {
   position: relative;
   left: 0;
@@ -29421,54 +29409,54 @@ body.page-sbac .slick-track {
   display: block;
   zoom: 1;
 }
-/* line 93, ../sass/components/_landing-page.scss */
+/* line 82, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-track:before,
 body.page-sbac .slick-track:after {
   content: "";
   display: table;
 }
-/* line 98, ../sass/components/_landing-page.scss */
+/* line 87, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-track:after {
   clear: both;
 }
-/* line 101, ../sass/components/_landing-page.scss */
+/* line 90, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-loading .slick-track {
   visibility: hidden;
 }
-/* line 104, ../sass/components/_landing-page.scss */
+/* line 93, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide {
   float: left;
   height: 28.125rem;
   min-height: 1px;
   display: none;
 }
-/* line 110, ../sass/components/_landing-page.scss */
+/* line 99, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide img {
   display: block;
 }
-/* line 113, ../sass/components/_landing-page.scss */
+/* line 102, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide.slick-loading img {
   display: none;
 }
-/* line 116, ../sass/components/_landing-page.scss */
+/* line 105, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-slide.dragging img {
   pointer-events: none;
 }
-/* line 119, ../sass/components/_landing-page.scss */
+/* line 108, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-initialized .slick-slide {
   display: block;
 }
-/* line 122, ../sass/components/_landing-page.scss */
+/* line 111, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-loading .slick-slide {
   visibility: hidden;
 }
-/* line 125, ../sass/components/_landing-page.scss */
+/* line 114, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-vertical .slick-slide {
   display: block;
   height: auto;
   border: 1px solid transparent;
 }
-/* line 130, ../sass/components/_landing-page.scss */
+/* line 119, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots {
   list-style: none !important;
   overflow: visible !important;
@@ -29483,7 +29471,7 @@ body.page-sbac .slick-dots {
   text-align: center !important;
   margin-bottom: 0 !important;
 }
-/* line 144, ../sass/components/_landing-page.scss */
+/* line 133, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li {
   display: inline-block !important;
   position: relative !important;
@@ -29494,12 +29482,12 @@ body.page-sbac .slick-dots li {
   cursor: pointer !important;
   padding: 0 !important;
 }
-/* line 154, ../sass/components/_landing-page.scss */
+/* line 143, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li + li {
   margin-left: 0.5rem !important;
   padding: 0 !important;
 }
-/* line 158, ../sass/components/_landing-page.scss */
+/* line 147, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li button {
   border: 0 !important;
   display: block !important;
@@ -29513,7 +29501,7 @@ body.page-sbac .slick-dots li button {
   border: 0.0625rem solid #c2c2c2 !important;
   padding: 0 !important;
 }
-/* line 171, ../sass/components/_landing-page.scss */
+/* line 160, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li button:hover {
   background: #464b54 !important;
   border: 0 !important;
@@ -29528,7 +29516,7 @@ body.page-sbac .slick-dots li button:hover {
   padding: 0 !important;
   color: black;
 }
-/* line 185, ../sass/components/_landing-page.scss */
+/* line 174, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-dots li.slick-active button {
   background: #464b54 !important;
   border: 0 !important;
@@ -29543,23 +29531,23 @@ body.page-sbac .slick-dots li.slick-active button {
   padding: 0 !important;
   color: black;
 }
-/* line 199, ../sass/components/_landing-page.scss */
+/* line 188, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-wrap {
   width: 100%;
 }
-/* line 202, ../sass/components/_landing-page.scss */
+/* line 191, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-wrap-inner {
   width: 960px;
   margin: 0 auto;
 }
-/* line 206, ../sass/components/_landing-page.scss */
+/* line 195, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-link {
   font-size: 1.125rem;
   color: #101010;
   font-weight: 600;
   margin-top: 1.25rem;
 }
-/* line 213, ../sass/components/_landing-page.scss */
+/* line 202, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-link-button a {
   display: block;
   background: #2aa549;
@@ -29578,9 +29566,73 @@ body.page-sbac .resources-link-button a {
   border: 0.0625rem solid rgba(16, 16, 16, 0.2);
   box-shadow: 0 0.0625rem 0 rgba(16, 16, 16, 0.6);
 }
-/* line 230, ../sass/components/_landing-page.scss */
+/* line 219, ../sass/components/_landing-page.scss */
 body.page-sbac .resources-link-button a:hover {
   background: #7cc549;
+}
+/* line 227, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px;
+}
+/* line 231, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper #lp-find-resource-lable {
+  color: #5a5a5a;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+/* line 239, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul {
+  list-style: none;
+}
+/* line 241, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul > li {
+  box-shadow: 0px 1px 5px #888888;
+  background-color: #fafafa;
+  border-radius: 5px;
+  min-height: 12px;
+  padding: 10px;
+}
+/* line 247, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul > li > div {
+  background: url("../images/button-select.png") no-repeat right center;
+}
+/* line 250, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul > li.expanded > div {
+  background-image: none;
+}
+/* line 256, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper div.category-filter-name.large-4 {
+  width: 25%;
+}
+/* line 259, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper div.category-filter-name .foundicon-remove {
+  position: absolute;
+  top: 13px;
+  right: 25px;
+  width: 100%;
+  text-align: right;
+}
+/* line 265, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper div.category-filter-name .foundicon-remove:before {
+  content: url("../images/button-close.png");
+}
+/* line 271, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .sbac-search-filter-custom-link a {
+  display: block;
+  width: 100%;
+  color: #5a5a5a;
+}
+/* line 278, ../sass/components/_landing-page.scss */
+body.page-sbac .ajax-progress-throbber {
+  display: none;
+}
+/* line 280, ../sass/components/_landing-page.scss */
+body.page-sbac .ajax-progress-throbber .throbber {
+  display: none;
 }
 
 /* Landing Page Help Topics */
@@ -34462,7 +34514,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -2px;
 }
 /* line 3910, ../sass/custom.scss */
 .filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
@@ -34471,12 +34523,12 @@ form#sbac-user-filter-form #edit-email {
 /* line 3915, ../sass/custom.scss */
 .filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
   color: #8a1538;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -22px;
 }
 /* line 3920, ../sass/custom.scss */
 .filter-bar a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -42px;
 }
 /* line 3925, ../sass/custom.scss */
 .filter-bar a[title]:hover:after {
@@ -34553,7 +34605,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -2px;
 }
 /* line 3997, ../sass/custom.scss */
 #section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
@@ -34562,12 +34614,12 @@ form#sbac-user-filter-form #edit-email {
 /* line 4002, ../sass/custom.scss */
 #section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
   color: #8a1538;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -22px;
 }
 /* line 4007, ../sass/custom.scss */
 #section-collaboration a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -42px;
 }
 /* line 4012, ../sass/custom.scss */
 #section-collaboration a[title]:hover:after {
@@ -34627,7 +34679,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -2px;
 }
 /* line 4063, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
@@ -34636,12 +34688,12 @@ form#sbac-user-filter-form #edit-email {
 /* line 4068, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
   color: #8a1538;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -22px;
 }
 /* line 4073, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431461378') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431536442') no-repeat 0 -42px;
 }
 /* line 4078, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a[title]:hover:after {
