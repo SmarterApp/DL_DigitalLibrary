@@ -29295,6 +29295,15 @@ nav.main-nav ul li.last {
 }
 
 /* line 10, ../sass/components/_flags.scss */
+.flag-category-row-container .flag-message {
+  clear: both;
+  padding: inherit;
+  background-color: transparent;
+  color: inherit;
+  border-radius: 0;
+}
+
+/* line 18, ../sass/components/_flags.scss */
 .featured-resource-link {
   display: inline-block;
   width: auto;
@@ -29303,7 +29312,7 @@ nav.main-nav ul li.last {
   margin-top: 3px;
   margin-right: 26px;
 }
-/* line 17, ../sass/components/_flags.scss */
+/* line 25, ../sass/components/_flags.scss */
 .featured-resource-link a {
   display: block;
   padding-left: 20px;
