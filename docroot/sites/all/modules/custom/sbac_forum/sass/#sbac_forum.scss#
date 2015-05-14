@@ -2934,6 +2934,7 @@ View Topic Page, Comment Page
 				position:relative;
 				top:15px;
 
+				
 				a  {
 					color: #5A5A5A;
 					opacity: 0.5;

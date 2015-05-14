@@ -415,7 +415,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
           'id' => 'vertical-tabs-default',
         ),
       );
-      
+      unset($form['mimemail']);
       global $user;
       $form['sbac_user_email_options'] = array(
         '#type' => 'fieldset',

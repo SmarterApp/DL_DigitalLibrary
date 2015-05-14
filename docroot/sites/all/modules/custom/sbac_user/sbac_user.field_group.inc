@@ -20,11 +20,10 @@ function sbac_user_field_group_info() {
   $field_group->mode = 'form';
   $field_group->parent_name = '';
   $field_group->data = array(
-    'label' => 'Email',
+    'label' => 'Email Settings',
     'weight' => '3',
     'children' => array(
       0 => 'sbac_user_email_options',
-      1 => 'mimemail',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

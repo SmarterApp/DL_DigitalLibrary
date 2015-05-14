@@ -74,6 +74,7 @@ function sbac_lexicon_strongarm() {
     'email_node' => FALSE,
     'email_term' => TRUE,
     'subscribe_term' => TRUE,
+    'email' => TRUE,
   );
   $export['flag_default_flag_status'] = $strongarm;
 

@@ -34867,8 +34867,54 @@ form#sbac-user-filter-form #edit-email {
   vertical-align: top;
 }
 
+@media all and (min-width: 1281px) {
+  /* line 4132, ../sass/custom.scss */
+  .main-row {
+    max-width: 1280px !important;
+  }
+
+  /* line 4135, ../sass/custom.scss */
+  .main-row .results-view {
+    width: 960px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  /* line 4141, ../sass/custom.scss */
+  .ex-resource-card:nth-child(4n+1) {
+    clear: left;
+  }
+}
+@media all and (max-width: 1280px) and (min-width: 961px) {
+  /* line 4146, ../sass/custom.scss */
+  .main-row {
+    max-width: 960px;
+  }
+
+  /* line 4150, ../sass/custom.scss */
+  .ex-resource-card:nth-child(4n+1) {
+    clear: left;
+  }
+}
+@media all and (max-width: 960px) {
+  /* line 4155, ../sass/custom.scss */
+  .main-row {
+    max-width: 696px;
+  }
+
+  /* line 4158, ../sass/custom.scss */
+  .main-row .results-view {
+    width: 696px;
+    margin: 0 auto;
+  }
+
+  /* line 4162, ../sass/custom.scss */
+  .ex-resource-card:nth-child(3n+1) {
+    clear: left;
+  }
+}
 /* SBAC Forum styles */
-/* line 4134, ../sass/custom.scss */
+/* line 4169, ../sass/custom.scss */
 .node-type-resource .view-forum-topic-list h2 {
   clear: both;
 }
