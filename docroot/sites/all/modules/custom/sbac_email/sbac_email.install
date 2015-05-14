@@ -29,3 +29,26 @@ function sbac_email_schema() {
 
   return $schema;
 }
+
+function sbac_email_update_7001(){
+ $user_update = db_update('users')
+
+  ->condition('uid', 0, '<>')
+  ->condition('uid', 1, '<>')
+  ->condition('uid', 429522, '<>')
+  ->condition('uid', 429521, '<>')
+  ->condition('uid', 429496, '<>')
+  ->condition('uid', 429421, '<>')
+  ->condition('uid', 429426, '<>')
+  ->condition('uid', 429436, '<>')
+  ->condition('uid', 429446, '<>')
+  ->condition('uid', 429451, '<>')
+  ->condition('uid', 429461, '<>')
+  ->expression('status', 'REPLACE(status, :old, :new)', array(
+      ':old' => 1,
+      ':new' => 0,
+    ))
+  ->expression('mail', ':mail', array(':mail' => 'fake@email.com'))
+  ->execute();
+
+}
