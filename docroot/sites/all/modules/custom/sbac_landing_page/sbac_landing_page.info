@@ -8,4 +8,4 @@ dependencies[] = features
 dependencies[] = image
 features[features_api][] = api:2
 features[image][] = landing_page_featured_resource
-mtime = 1431628300
+mtime = 1431633403

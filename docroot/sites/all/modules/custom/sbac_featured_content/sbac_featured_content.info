@@ -13,4 +13,4 @@ features[user_permission][] = flag featured_node
 features[user_permission][] = unflag featured_node
 features[views_view][] = featured_content
 features_exclude[dependencies][ctools] = ctools
-mtime = 1431628296
+mtime = 1431633399
