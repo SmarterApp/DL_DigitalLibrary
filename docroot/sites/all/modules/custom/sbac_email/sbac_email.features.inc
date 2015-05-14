@@ -165,7 +165,7 @@ function sbac_email_default_message_type() {
       ]
     },
     "entity_type" : "message_type",
-    "entity_id" : "121",
+    "entity_id" : "173",
     "rdf_mapping" : []
   }');
   $items['sbac_email_comment_insert'] = entity_import('message_type', '{
@@ -194,7 +194,7 @@ function sbac_email_default_message_type() {
       ]
     },
     "entity_type" : "message_type",
-    "entity_id" : "122",
+    "entity_id" : "174",
     "rdf_mapping" : []
   }');
   return $items;

@@ -44,7 +44,7 @@ function sbac_central_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 1,
     'expanded' => 0,
-    'weight' => -42,
+    'weight' => -40,
     'customized' => 1,
   );
   // Exported menu link: main-menu_home:<front>
@@ -81,7 +81,7 @@ function sbac_central_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -44,
+    'weight' => -42,
     'customized' => 1,
   );
   // Exported menu link: main-menu_reports:reports
@@ -98,7 +98,7 @@ function sbac_central_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -40,
+    'weight' => -38,
     'customized' => 1,
   );
   // Exported menu link: main-menu_resource-review:resource-review
@@ -118,7 +118,7 @@ function sbac_central_menu_default_menu_links() {
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'weight' => -46,
+    'weight' => -44,
     'customized' => 1,
   );
   // Translatables
