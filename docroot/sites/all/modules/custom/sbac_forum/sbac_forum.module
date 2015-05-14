@@ -1734,7 +1734,7 @@ function sbac_forum_node_insert($node) {
 
           $recipients = array_unique($recipients);
 
-          foreach ($recipients as $recipient) {
+          /*  foreach ($recipients as $recipient) {
             if ($recipient && $recipient != $node->uid) { // don't send to yourself
               if ($task = taskit_get_object('created_topic_node')) {
                 $task->addVisibility($task::VISIBILITY_USER);
@@ -1744,7 +1744,7 @@ function sbac_forum_node_insert($node) {
                 $task->save();
               }
             }
-          }
+            } */
         } catch (EntityMetadataWrapperException $e) {
         }
 
@@ -1988,7 +1988,7 @@ function sbac_forum_comment_insert($comment) {
 
         $recipients = array_unique($recipients);
 
-        foreach ($recipients as $recipient) {
+        /* foreach ($recipients as $recipient) {
           if ($recipient != $comment_author_id) { // don't send to yourself
             if ($task = taskit_get_object('created_forum_comment')) {
               $task->addVisibility($task::VISIBILITY_USER);
@@ -1999,7 +1999,7 @@ function sbac_forum_comment_insert($comment) {
               $task->save();
             }
           }
-        }
+        }*/
       }
     }
   }
