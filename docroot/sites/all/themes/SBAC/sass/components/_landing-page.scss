@@ -275,6 +275,60 @@ body.page-sbac{
       }
     }
   }
+  // Landing Page Notification
+  #lp-notifications-wrapper{
+    background-color: #fdf2b1;
+    display:none;
+    #close-notifications{
+      content:url('../images/icons/icon-close.png');
+      background-color: #fdf2b1;
+      height:15px;
+      width:15px;
+      position:absolute;
+      right: 10px;
+      cursor: pointer;
+    }
+    .view-sbac-alerts{
+      max-width: 1280px;
+      margin:0 auto;
+      .ui-accordion{
+        .ui-accordion-header{
+          background: none;
+          border: none;
+          .ui-accordion-header-icon{
+            background-image: url(../images/icons/icon-info.png);
+            background-position:0;
+            width: 20px;
+            height: 20px;
+          }
+        }
+        .ui-accordion-content{
+          border:none;
+          background:none;
+          border-top: 2px solid #555;
+          border-bottom: 2px solid #555;
+          padding:20px 0;
+          border-radius: 0;
+          .views-field-body{
+            .field-content{
+              ul{
+                font-size: 0.75em;
+              }
+            }
+          }
+        }
+      } 
+      .views-row{
+        .field-content{
+          .more{
+            color:$blue-text;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
   .ajax-progress-throbber {
     display:none;
     .throbber  {

@@ -24,7 +24,8 @@ function sbac_landing_page_menu() {
 function sbac_landing_page(){
   global $user;
   $variables = array();
-
+  
+  $variables['notifications'] = views_embed_view('sbac_alerts','important_notifications');
   $variables['featured_content'] = lp_featured_content();
   $variables['help_topics'] = lp_help_topics();
   $variables['find_resource'] = lp_find_resource();  
