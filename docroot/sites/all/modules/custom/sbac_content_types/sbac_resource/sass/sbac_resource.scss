@@ -345,7 +345,7 @@ a.sbac-grid-layout {
 
   .resource-card {
     @include border-radius(6px);
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.85);
     border: 1px solid #cecece;
     position: relative;
     padding: 0px;
@@ -581,10 +581,10 @@ a.sbac-grid-layout {
             @include box-shadow(inset 1px 2px 5px rgba(0,0,0,.4));*/ // inner shadow
 			height:138px;
 			width: 258px;
-			border: 1px #cecece solid;
+			outline: 1px #cecece solid;
       margin: 10px 0 0;
       &:hover{
-        border: 3px #0583AC solid;
+        outline: 3px #0583AC solid;
       }
     }
 
@@ -679,7 +679,7 @@ a.sbac-grid-layout {
 				width: 140px;
 				height: 72px;
         &:hover{
-          border: 3px #0583AC solid;
+          outline: 3px #0583AC solid;
         }
 			}
 
