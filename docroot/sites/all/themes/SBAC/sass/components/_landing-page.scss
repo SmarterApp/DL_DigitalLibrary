@@ -228,6 +228,7 @@ body.page-sbac{
     max-width: 1280px;
     margin:0 auto;
     padding: 20px;
+    min-height:185px;
     #lp-find-resource-lable{
       color: $text;
       font-size:18px;
@@ -235,37 +236,56 @@ body.page-sbac{
       margin-bottom: 10px;
       cursor: pointer;
     }
-    div.category-filter-name{
-      >ul{
-        list-style: none;
-        >li{
-          box-shadow: 0px 1px 5px #888888;
-          background-color: #fafafa;
-          border-radius: (5px);
-          min-height: 12px;
-          padding: 10px;
-          >div{
-            background: url('../images/button-select.png') no-repeat right center;
-          }
-          &.expanded>div{
-            background-image: none;
-          }
+    .categories-container{
+      height: 75px;
+      div.category-filter-name{
+        z-index: 100;
+        >ul{
+          list-style: none;
+          >li{
+            box-shadow: 0px 1px 5px #888888;
+            background-color: #fafafa;
+            border-radius: (5px);
+            min-height: 12px;
+            padding: 10px;
+            ul{
+              li{
+                overflow:hidden;
+                a{
+                  &:hover{
+                    position: absolute;
+                    background-color: #FFF;
+                  }
+                }
+              }
+            }
+            >div{
+              background: url('../images/button-select.png') no-repeat right center;
+            }
+            &.expanded>div{
+              background-image: none;
+            }
 
+          }
+        }
+        &.large-4{
+          width:25%;
+        }
+        .foundicon-remove {
+          position: absolute;
+          top: 13px;
+          right: 25px;
+          width: 100%;
+          text-align: right;
+          &:before{
+            content:url('../images/button-close.png');
+          }
         }
       }
-      &.large-4{
-        width:25%;
-      }
-      .foundicon-remove {
-        position: absolute;
-        top: 13px;
-        right: 25px;
-        width: 100%;
-        text-align: right;
-        &:before{
-          content:url('../images/button-close.png');
-        }
-      }
+    }
+    .category-buttons{
+      position: absolute;
+      z-index: 20;
     }
     .sbac-search-filter-custom-link {
       a {
@@ -336,4 +356,3 @@ body.page-sbac{
     }
   }
 }
-

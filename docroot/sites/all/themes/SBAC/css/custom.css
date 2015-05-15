@@ -29584,8 +29584,9 @@ body.page-sbac #lp-find-resource-wrapper {
   max-width: 1280px;
   margin: 0 auto;
   padding: 20px;
+  min-height: 185px;
 }
-/* line 231, ../sass/components/_landing-page.scss */
+/* line 232, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper #lp-find-resource-lable {
   color: #5a5a5a;
   font-size: 18px;
@@ -29594,53 +29595,75 @@ body.page-sbac #lp-find-resource-wrapper #lp-find-resource-lable {
   cursor: pointer;
 }
 /* line 239, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul {
-  list-style: none;
+body.page-sbac #lp-find-resource-wrapper .categories-container {
+  height: 75px;
 }
 /* line 241, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul > li {
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name {
+  z-index: 100;
+}
+/* line 243, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul {
+  list-style: none;
+}
+/* line 245, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li {
   box-shadow: 0px 1px 5px #888888;
   background-color: #fafafa;
   border-radius: 5px;
   min-height: 12px;
   padding: 10px;
 }
-/* line 247, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul > li > div {
+/* line 252, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li ul li {
+  overflow: hidden;
+}
+/* line 255, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li ul li a:hover {
+  position: absolute;
+  background-color: #FFF;
+}
+/* line 262, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li > div {
   background: url("../images/button-select.png") no-repeat right center;
 }
-/* line 250, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper div.category-filter-name > ul > li.expanded > div {
+/* line 265, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li.expanded > div {
   background-image: none;
 }
-/* line 256, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper div.category-filter-name.large-4 {
+/* line 271, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name.large-4 {
   width: 25%;
 }
-/* line 259, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper div.category-filter-name .foundicon-remove {
+/* line 274, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name .foundicon-remove {
   position: absolute;
   top: 13px;
   right: 25px;
   width: 100%;
   text-align: right;
 }
-/* line 265, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper div.category-filter-name .foundicon-remove:before {
+/* line 280, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name .foundicon-remove:before {
   content: url("../images/button-close.png");
 }
-/* line 271, ../sass/components/_landing-page.scss */
+/* line 286, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .category-buttons {
+  position: absolute;
+  z-index: 20;
+}
+/* line 291, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .sbac-search-filter-custom-link a {
   display: block;
   width: 100%;
   color: #5a5a5a;
 }
-/* line 279, ../sass/components/_landing-page.scss */
+/* line 299, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper {
   background-color: #fdf2b1;
   display: none;
 }
-/* line 282, ../sass/components/_landing-page.scss */
+/* line 302, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper #close-notifications {
   content: url("../images/icons/icon-close.png");
   background-color: #fdf2b1;
@@ -29650,24 +29673,24 @@ body.page-sbac #lp-notifications-wrapper #close-notifications {
   right: 10px;
   cursor: pointer;
 }
-/* line 291, ../sass/components/_landing-page.scss */
+/* line 311, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts {
   max-width: 1280px;
   margin: 0 auto;
 }
-/* line 295, ../sass/components/_landing-page.scss */
+/* line 315, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header {
   background: none;
   border: none;
 }
-/* line 298, ../sass/components/_landing-page.scss */
+/* line 318, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header .ui-accordion-header-icon {
   background-image: url(../images/icons/icon-info.png);
   background-position: 0;
   width: 20px;
   height: 20px;
 }
-/* line 305, ../sass/components/_landing-page.scss */
+/* line 325, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content {
   border: none;
   background: none;
@@ -29676,20 +29699,20 @@ body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-acc
   padding: 20px 0;
   border-radius: 0;
 }
-/* line 314, ../sass/components/_landing-page.scss */
+/* line 334, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content .views-field-body .field-content ul {
   font-size: 0.75em;
 }
-/* line 323, ../sass/components/_landing-page.scss */
+/* line 343, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 332, ../sass/components/_landing-page.scss */
+/* line 352, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 334, ../sass/components/_landing-page.scss */
+/* line 354, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
@@ -34629,7 +34652,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -2px;
 }
 /* line 3910, ../sass/custom.scss */
 .filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
@@ -34638,12 +34661,12 @@ form#sbac-user-filter-form #edit-email {
 /* line 3915, ../sass/custom.scss */
 .filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
   color: #8a1538;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -22px;
 }
 /* line 3920, ../sass/custom.scss */
 .filter-bar a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -42px;
 }
 /* line 3925, ../sass/custom.scss */
 .filter-bar a[title]:hover:after {
@@ -34720,7 +34743,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -2px;
 }
 /* line 3997, ../sass/custom.scss */
 #section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
@@ -34729,12 +34752,12 @@ form#sbac-user-filter-form #edit-email {
 /* line 4002, ../sass/custom.scss */
 #section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
   color: #8a1538;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -22px;
 }
 /* line 4007, ../sass/custom.scss */
 #section-collaboration a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -42px;
 }
 /* line 4012, ../sass/custom.scss */
 #section-collaboration a[title]:hover:after {
@@ -34794,7 +34817,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -2px;
 }
 /* line 4063, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
@@ -34803,12 +34826,12 @@ form#sbac-user-filter-form #edit-email {
 /* line 4068, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
   color: #8a1538;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -22px;
 }
 /* line 4073, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431714466') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -42px;
 }
 /* line 4078, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a[title]:hover:after {
