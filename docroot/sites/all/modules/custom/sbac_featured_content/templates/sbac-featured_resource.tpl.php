@@ -5,10 +5,12 @@
  * and open the template in the editor.
  */
 ?>
+
 <div class="slide featured-content-wrapper">
-  
-  <div class="col-resource">
+  <div class="featured-content-inner">
   <a href="<?php print $link;?>" class="featured-content-url featured-resource-url">
+  <div class="col-resource">
+  
         <?php if($thumbnail):?>
           <div class="featured-resource-image" style="background-image: url(<?php print $thumbnail; ?>)">
           </div>
@@ -19,15 +21,9 @@
               <?php print $title; ?>
             </div>
 <?php endif; ?>
-  </a>
-          <?php if($mini_profile):?>
-            <div class="featured-resource-mini-profile featured-mini-profile">
-              <?php print $mini_profile; ?>
-            </div>
-          <?php endif; ?>
+
       </div>
   <div class="col-details">
-  <a href="<?php print $link;?>" class="featured-content-url featured-resource-url">
           <?php if($summary):?>
             <div class="featured-resource-summary featured-summary">
               <?php print $summary; ?>
@@ -45,7 +41,12 @@
               <?php print $formative_process; ?>
             </div>
 <?php endif; ?>
-   </a>
-      </div>
- 
+  </div>
+  </a>
+            <?php if($mini_profile):?>
+            <div class="featured-resource-mini-profile featured-mini-profile">
+              <?php print $mini_profile; ?>
+            </div>
+<?php endif; ?>
+  </div>
 </div>

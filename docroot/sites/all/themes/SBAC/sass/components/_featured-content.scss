@@ -1,6 +1,28 @@
 /* Landing Page Featured Content */
 #lp-featured-content{
-
+  .featured-content-inner {
+    width:700px;
+    position:absolute;
+    right:0;
+    @media (min-width: 1100px) {
+      width:800px;
+    }
+  }
+  .featured-resource-mini-profile {
+    position:relative;
+    background:none;
+    z-index:9;
+    left:10px;
+    bottom:10px;
+    .view-users {
+      background:none;
+      .views-field-nid,
+      .views-field-fields-combine-1 {
+	font-size:80%;
+      }
+    }
+  }
+  
   #edit-featured-wrap {
     position:relative;
     height:0;

@@ -3914,7 +3914,6 @@ form#sbac-user-filter-form #edit-email {
 
     &.flagged,
     &.unflag-action {
-      color:#8a1538;
       background: image-url('subscribe_icons.png') no-repeat 0 -22px;
     }
     &:hover {
@@ -3956,8 +3955,8 @@ form#sbac-user-filter-form #edit-email {
   }
   .flag-wrapper {
     position: absolute;
-    top: -7px;
-    right: -3px;
+    top: 25px;
+    right: 250px;
   }
 }
 
@@ -4001,7 +4000,6 @@ form#sbac-user-filter-form #edit-email {
 
     &.flagged,
     &.unflag-action {
-      color:#8a1538;
       background: image-url('subscribe_icons.png') no-repeat 0 -22px;
     }
     &:hover {
@@ -4054,7 +4052,7 @@ form#sbac-user-filter-form #edit-email {
     }
    }
    a.flag {
-     font-size:16px !important;
+     font-size:13px !important;
      color: #5a5a5a;
      padding-left:30px;
      height:20px;
@@ -4067,7 +4065,6 @@ form#sbac-user-filter-form #edit-email {
 
      &.flagged,
      &.unflag-action {
-       color:#8a1538;
        background: image-url('subscribe_icons.png') no-repeat 0 -22px;
      }
      &:hover {
@@ -4128,44 +4125,12 @@ form#sbac-user-filter-form #edit-email {
   vertical-align: top;
 }
 
-@media all and (min-width: 1281px) {
-  .main-row {
-    max-width: 1280px !important;
-  }
-  .main-row .results-view {
-    width: 960px;
-    margin: 0 auto;
-    padding: 0 15px;
-  } 
-
-  .ex-resource-card:nth-child(4n+1) { 
-    clear: left;
-  }
-}
-@media all and (max-width: 1280px) and (min-width: 961px) {
-  .main-row {
-    max-width: 960px;
-  }
-
-  .ex-resource-card:nth-child(4n+1) {
-    clear: left;
-  }
-}
-@media all and (max-width: 960px) {
-  .main-row {
-    max-width: 696px;
-  }
-  .main-row .results-view {
-    width: 696px;
-    margin: 0 auto;
-  }
-  .ex-resource-card:nth-child(3n+1) {
-    clear: left;
-  }
-}
-
 
 /* SBAC Forum styles */
 .node-type-resource .view-forum-topic-list h2 {
   clear:both;
+}
+
+.view-display-id-collaboration h2 {
+  font-size:13px;
 }
