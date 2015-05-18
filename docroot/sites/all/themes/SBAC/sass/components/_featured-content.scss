@@ -8,16 +8,20 @@
       width:800px;
     }
   }
-  .featured-resource-mini-profile {
-    position:relative;
-    background:none;
-    z-index:9;
-    color: $text;
-    margin-top: 20px;
-    .view-users {
+  .col-resource{
+    max-height: 314px;
+    overflow: hidden;
+    .featured-resource-mini-profile {
+      position:relative;
       background:none;
-      .views-field-nid,
-      .views-field-fields-combine-1 {
+      z-index:9;
+      color: $text;
+      margin-top: 10px;
+      .view-users {
+        background:none;
+        .views-field-nid,
+        .views-field-fields-combine-1 {
+        }
       }
     }
   }

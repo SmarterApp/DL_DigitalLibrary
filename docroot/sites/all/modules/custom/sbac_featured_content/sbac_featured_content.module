@@ -99,7 +99,7 @@ function sbac_featured_content_preprocess_page(&$variables) {
 function sbac_featured_resource($node){
   $variables = array();
   // Retrieve resource image
-//  $img_data = _sbac_featured_resource_image($node);
+  $img_data = _sbac_featured_resource_image($node);
   // Define TPL Variables
   $variables['link'] = drupal_get_path_alias('node/' . $node->nid);
   $variables['thumbnail'] = $img_data['image'];

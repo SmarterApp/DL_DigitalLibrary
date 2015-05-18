@@ -30010,18 +30010,23 @@ body.page-sbac .ajax-progress-throbber .throbber {
   }
 }
 /* line 11, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-resource-mini-profile {
+#lp-featured-content .col-resource {
+  max-height: 314px;
+  overflow: hidden;
+}
+/* line 14, ../sass/components/_featured-content.scss */
+#lp-featured-content .col-resource .featured-resource-mini-profile {
   position: relative;
   background: none;
   z-index: 9;
   color: #5a5a5a;
-  margin-top: 20px;
+  margin-top: 10px;
 }
-/* line 17, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-resource-mini-profile .view-users {
+/* line 20, ../sass/components/_featured-content.scss */
+#lp-featured-content .col-resource .featured-resource-mini-profile .view-users {
   background: none;
 }
-/* line 25, ../sass/components/_featured-content.scss */
+/* line 29, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured-wrap {
   position: relative;
   height: 0;
@@ -30029,14 +30034,14 @@ body.page-sbac .ajax-progress-throbber .throbber {
   max-width: 1280px;
   margin: 0 auto;
 }
-/* line 32, ../sass/components/_featured-content.scss */
+/* line 36, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured {
   position: absolute;
   top: 5px;
   right: 25px;
   z-index: 9;
 }
-/* line 38, ../sass/components/_featured-content.scss */
+/* line 42, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a {
   padding: 5px 5px 5px 27px;
   background: url("../images/icons/icon-edit.png") no-repeat left center;
@@ -30044,11 +30049,11 @@ body.page-sbac .ajax-progress-throbber .throbber {
   color: #0085ad;
   border-radius: 0.25rem;
 }
-/* line 44, ../sass/components/_featured-content.scss */
+/* line 48, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a:hover {
   background-color: #FFF;
 }
-/* line 49, ../sass/components/_featured-content.scss */
+/* line 53, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container {
   max-width: 100%;
   margin: 0 auto;
@@ -30063,20 +30068,20 @@ body.page-sbac .ajax-progress-throbber .throbber {
   padding-top: 30px;
   /* Featured Resource */
 }
-/* line 61, ../sass/components/_featured-content.scss */
+/* line 65, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .slick-list {
   max-width: 1280px;
   margin: 0 auto;
 }
-/* line 66, ../sass/components/_featured-content.scss */
+/* line 70, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper {
   position: relative;
 }
-/* line 67, ../sass/components/_featured-content.scss */
+/* line 71, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper:hover a {
   text-decoration: underline;
 }
-/* line 72, ../sass/components/_featured-content.scss */
+/* line 76, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url {
   display: block;
   position: absolute;
@@ -30094,23 +30099,23 @@ body.page-sbac .ajax-progress-throbber .throbber {
   padding: 20px 30px 30px 30px;
 }
 @media (min-width: 1100px) {
-  /* line 72, ../sass/components/_featured-content.scss */
+  /* line 76, ../sass/components/_featured-content.scss */
   #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url {
     right: 15px;
     width: 800px;
   }
 }
-/* line 91, ../sass/components/_featured-content.scss */
+/* line 95, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url:hover {
   background: white;
   box-shadow: 0 2px 4px fade(16, 16, 16, 0.3);
   transition: background-color 0.2s ease;
 }
-/* line 95, ../sass/components/_featured-content.scss */
+/* line 99, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url:hover .featured-title {
   text-decoration: underline;
 }
-/* line 100, ../sass/components/_featured-content.scss */
+/* line 104, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-title {
   font-size: 18px;
   line-height: 22px;
@@ -30118,14 +30123,14 @@ body.page-sbac .ajax-progress-throbber .throbber {
   color: #0583ac;
   margin-top: 10px;
 }
-/* line 107, ../sass/components/_featured-content.scss */
+/* line 111, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-summary {
   line-height: 1.4;
   color: #101010;
   font-weight: 400;
   font-size: 13px;
 }
-/* line 114, ../sass/components/_featured-content.scss */
+/* line 118, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-label {
   margin-top: 1.25rem;
   margin-bottom: -0.25rem;
@@ -30137,20 +30142,20 @@ body.page-sbac .ajax-progress-throbber .throbber {
   text-transform: uppercase;
   font-size: 11px;
 }
-/* line 125, ../sass/components/_featured-content.scss */
+/* line 129, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-type {
   margin-top: 15px;
 }
-/* line 128, ../sass/components/_featured-content.scss */
+/* line 132, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 131, ../sass/components/_featured-content.scss */
+/* line 135, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 133, ../sass/components/_featured-content.scss */
+/* line 137, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
