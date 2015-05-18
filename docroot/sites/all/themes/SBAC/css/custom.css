@@ -30014,19 +30014,14 @@ body.page-sbac .ajax-progress-throbber .throbber {
   position: relative;
   background: none;
   z-index: 9;
-  left: 10px;
-  bottom: 10px;
+  color: #5a5a5a;
+  margin-top: 20px;
 }
 /* line 17, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-resource-mini-profile .view-users {
   background: none;
 }
-/* line 19, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-resource-mini-profile .view-users .views-field-nid,
-#lp-featured-content .featured-resource-mini-profile .view-users .views-field-fields-combine-1 {
-  font-size: 80%;
-}
-/* line 26, ../sass/components/_featured-content.scss */
+/* line 25, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured-wrap {
   position: relative;
   height: 0;
@@ -30034,14 +30029,14 @@ body.page-sbac .ajax-progress-throbber .throbber {
   max-width: 1280px;
   margin: 0 auto;
 }
-/* line 33, ../sass/components/_featured-content.scss */
+/* line 32, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured {
   position: absolute;
   top: 5px;
   right: 25px;
   z-index: 9;
 }
-/* line 39, ../sass/components/_featured-content.scss */
+/* line 38, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a {
   padding: 5px 5px 5px 27px;
   background: url("../images/icons/icon-edit.png") no-repeat left center;
@@ -30049,11 +30044,11 @@ body.page-sbac .ajax-progress-throbber .throbber {
   color: #0085ad;
   border-radius: 0.25rem;
 }
-/* line 45, ../sass/components/_featured-content.scss */
+/* line 44, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a:hover {
   background-color: #FFF;
 }
-/* line 50, ../sass/components/_featured-content.scss */
+/* line 49, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container {
   max-width: 100%;
   margin: 0 auto;
@@ -30068,20 +30063,20 @@ body.page-sbac .ajax-progress-throbber .throbber {
   padding-top: 30px;
   /* Featured Resource */
 }
-/* line 62, ../sass/components/_featured-content.scss */
+/* line 61, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .slick-list {
   max-width: 1280px;
   margin: 0 auto;
 }
-/* line 67, ../sass/components/_featured-content.scss */
+/* line 66, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper {
   position: relative;
 }
-/* line 68, ../sass/components/_featured-content.scss */
+/* line 67, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper:hover a {
   text-decoration: underline;
 }
-/* line 73, ../sass/components/_featured-content.scss */
+/* line 72, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url {
   display: block;
   position: absolute;
@@ -30099,23 +30094,23 @@ body.page-sbac .ajax-progress-throbber .throbber {
   padding: 20px 30px 30px 30px;
 }
 @media (min-width: 1100px) {
-  /* line 73, ../sass/components/_featured-content.scss */
+  /* line 72, ../sass/components/_featured-content.scss */
   #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url {
     right: 15px;
     width: 800px;
   }
 }
-/* line 92, ../sass/components/_featured-content.scss */
+/* line 91, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url:hover {
   background: white;
   box-shadow: 0 2px 4px fade(16, 16, 16, 0.3);
   transition: background-color 0.2s ease;
 }
-/* line 96, ../sass/components/_featured-content.scss */
+/* line 95, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url:hover .featured-title {
   text-decoration: underline;
 }
-/* line 101, ../sass/components/_featured-content.scss */
+/* line 100, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-title {
   font-size: 18px;
   line-height: 22px;
@@ -30123,14 +30118,14 @@ body.page-sbac .ajax-progress-throbber .throbber {
   color: #0583ac;
   margin-top: 10px;
 }
-/* line 108, ../sass/components/_featured-content.scss */
+/* line 107, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-summary {
   line-height: 1.4;
   color: #101010;
   font-weight: 400;
   font-size: 13px;
 }
-/* line 115, ../sass/components/_featured-content.scss */
+/* line 114, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-label {
   margin-top: 1.25rem;
   margin-bottom: -0.25rem;
@@ -30142,20 +30137,20 @@ body.page-sbac .ajax-progress-throbber .throbber {
   text-transform: uppercase;
   font-size: 11px;
 }
-/* line 126, ../sass/components/_featured-content.scss */
+/* line 125, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-type {
   margin-top: 15px;
 }
-/* line 129, ../sass/components/_featured-content.scss */
+/* line 128, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 132, ../sass/components/_featured-content.scss */
+/* line 131, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 134, ../sass/components/_featured-content.scss */
+/* line 133, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide a.featured-content-url .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
@@ -34681,7 +34676,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
 }
 /* line 3910, ../sass/custom.scss */
 .filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
@@ -34689,12 +34684,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 3915, ../sass/custom.scss */
 .filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
 }
 /* line 3919, ../sass/custom.scss */
 .filter-bar a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
 }
 /* line 3924, ../sass/custom.scss */
 .filter-bar a[title]:hover:after {
@@ -34771,7 +34766,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
 }
 /* line 3996, ../sass/custom.scss */
 #section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
@@ -34779,12 +34774,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4001, ../sass/custom.scss */
 #section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
 }
 /* line 4005, ../sass/custom.scss */
 #section-collaboration a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
 }
 /* line 4010, ../sass/custom.scss */
 #section-collaboration a[title]:hover:after {
@@ -34844,7 +34839,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
 }
 /* line 4061, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
@@ -34852,12 +34847,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4066, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
 }
 /* line 4070, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431728449') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
 }
 /* line 4075, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a[title]:hover:after {

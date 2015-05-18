@@ -74,16 +74,18 @@ function sbac_featured_content(){
  */
 function sbac_featured_content_theme($existing, $type, $theme, $path) {
   $theme = array();
+  $tpl_dir = drupal_get_path('module', 'sbac_featured_content') . '/templates';
   $theme['sbac_featured_content'] = array(
     'render element' => 'content',
     'template' => 'sbac-featured-content',
-    'path' => drupal_get_path('module', 'sbac_featured_content') . '/templates',
+    'path' => $tpl_dir,
    );
   $theme['sbac_featured_resource'] = array(
     'render element' => 'content',
     'template' => 'sbac-featured_resource',
-    'path' => drupal_get_path('module', 'sbac_featured_content') . '/templates',
+    'path' => $tpl_dir,
    );
+
   return $theme;
 }
 

@@ -325,6 +325,17 @@ function sbac_user_views_default_views() {
   $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Field: HIDDEN - Privacy */
+  $handler->display->display_options['fields']['field_privacy']['id'] = 'field_privacy';
+  $handler->display->display_options['fields']['field_privacy']['table'] = 'field_data_field_privacy';
+  $handler->display->display_options['fields']['field_privacy']['field'] = 'field_privacy';
+  $handler->display->display_options['fields']['field_privacy']['ui_name'] = 'HIDDEN - Privacy';
+  $handler->display->display_options['fields']['field_privacy']['label'] = '';
+  $handler->display->display_options['fields']['field_privacy']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_privacy']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_privacy']['type'] = 'list_key';
+  $handler->display->display_options['fields']['field_privacy']['group_column'] = 'entity_id';
+  $handler->display->display_options['fields']['field_privacy']['delta_offset'] = '0';
   /* Field: HIDDEN - First Name */
   $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
   $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
@@ -414,15 +425,14 @@ function sbac_user_views_default_views() {
     'nid' => 0,
   );
   $handler->display->display_options['fields']['fields_combine_1']['separator'] = ', ';
-  /* Field: COUNT(Resources) */
+  /* Field: COUNT(DISTINCT Resources) */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['nid']['group_type'] = 'count';
+  $handler->display->display_options['fields']['nid']['group_type'] = 'count_distinct';
   $handler->display->display_options['fields']['nid']['ui_name'] = 'Resources';
   $handler->display->display_options['fields']['nid']['label'] = '';
-  $handler->display->display_options['fields']['nid']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['nid']['alter']['path'] = 'digital-library-resources?contributor=[uid]';
   $handler->display->display_options['fields']['nid']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
