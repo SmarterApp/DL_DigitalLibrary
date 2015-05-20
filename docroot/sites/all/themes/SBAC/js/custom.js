@@ -14,20 +14,20 @@
         });
       });
 	
-	$('#featured-content-container').slick({
-	    dots:true,
-	    arrows:false,
-	    autoplay:true,
-	    autoplaySpeed:4000,
-	    pauseOnHover:true,
-	    pauseOnDotsHover:true,
-	    swipe:false
-	});
-	
-	$('.disabled').click(function (e) {
-            e.preventDefault();
-            //do other stuff when a click happens
-	});
+      $('#featured-content-container').slick({
+          dots:true,
+          arrows:false,
+          autoplay:true,
+          autoplaySpeed:4000,
+          pauseOnHover:true,
+          pauseOnDotsHover:true,
+          swipe:false
+      });
+
+      $('.disabled').click(function (e) {
+                e.preventDefault();
+                //do other stuff when a click happens
+      });
     }
   };
 })(jQuery);

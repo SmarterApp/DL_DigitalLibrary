@@ -1,38 +1,44 @@
-<div class="categories-container clearfix">
-  <?php ($cf_value ? $hide_filters = 'js-hide' : $hide_filters = 'js-show'); ?>
-  <div class="categories-filter clearfix slideable" >
-    <?php
+<?php
     $count = 1;
     $total_cols = 4;
     $cols = 4;
     $category_count = count($categories);
     $mod = ceil($category_count / $cols);
+    ($cf_value ? $hide_filters = 'js-hide' : $hide_filters = 'js-show');
+?>
+<div class="categories-container clearfix">
+  <div class="categories-filter clearfix slideable" >
+    <?php
     foreach ($categories as $category) {
       // Initialize the loop.
       if ($count == 1) {
         echo '<div class="category-filter-name column large-4">';
         echo '<ul>';
       }
-
       // Added a different type of entry.
-      if (isset($category['link']) && !empty($category['vocabulary'])) {
+      if (isset($category['link']) && !empty($category['vocabulary'])) :
         echo '<li><div class="sbac-search-filter-custom-link">' . $category['link'] . '</div></li>';
-      }
-      else {
+      else:
         $category_vid = $category['vocabulary']->vid;
         $display_name = $category['display_name'];
-        echo "<li id='filter-header-$category_vid' class='collapsed'><div class='sbac-search-filter-name' id='sbac-search-filter-name-$category_vid' vid='$category_vid'>" . $display_name;
-        // The choices per vocabulary.
-        echo '<div class="categories-filter-choices">';
-        echo "<div class='category-filter-list category-filter-list-$category_vid' vid='$category_vid'>";
-        echo "<h2 class='category-filter-header' vid='$category_vid'><i class='gen-enclosed foundicon-remove right'></i></h2>";
-        echo "<div vid='$category_vid' class='jstree clearfix " . strtolower($display_name) . "' id='filter-$category_vid'>";
-        print render($category['tree']);
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div></li>';
-      }
+        ?>
+        <li id='filter-header-<?php print $category_vid; ?>' class='collapsed'>
+          <div class='sbac-search-filter-name' id='sbac-search-filter-name-<?php print $category_vid; ?>' vid='<?php print $category_vid; ?>'>
+            <span class="display-name"><?php print $display_name; ?></span>
+            <div class="categories-filter-choices">
+              <div class='category-filter-list category-filter-list-<?php print $category_vid; ?> vid='<?php print $category_vid;?>'>
+                <h2 class='category-filter-header' vid='<?php print $category_vid; ?>'>
+                  <i class='gen-enclosed foundicon-remove right'></i>
+                </h2>
+                <div vid='<?php print $category_vid;?>' class='jstree clearfix <?php print strtolower($display_name); ?>' id='filter-<?php print $category_vid; ?>'>
+                  <?php print render($category['tree']);?>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <?php 
+      endif;
 
       // Close of the loop.
       if ($count == $mod) {

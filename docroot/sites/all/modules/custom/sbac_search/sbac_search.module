@@ -793,8 +793,22 @@ function sbac_search_landing_page_resources_form() {
     '#value' => $current_keywords,
     '#attributes' => array('id' => 'sbac-search-keywords'),
   );
+  $form['more']= array (
+    '#type' => 'fieldset', 
+    '#prefix' => '<div class="more-buttons">',
+    '#suffix' => '</div>',
+  );
+  $form['more']['more-filters'] = array(
+    '#type' => 'link',
+    '#title' => t('More Filters'),
+    '#href' => '/digital-library-resources',
+    '#id' => 'more-filters-link',
+    '#prefix' => '<div class="more-filters">',
+    '#suffix' => '</div>',
 
-  $form['filter'] = array(
+  );
+
+  $form['more']['filter'] = array(
     '#type' => 'submit',
     '#value' => t('Find Resources'),
     '#attributes' => array(
@@ -948,7 +962,7 @@ function sbac_search_digital_library_categories() {
 function sbac_search_landing_page_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
+  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.landing-page.categories.js');
   libraries_load('jstree');
 
   _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Attributes');
