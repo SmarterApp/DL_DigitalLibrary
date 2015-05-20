@@ -27,24 +27,25 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  if (sbac_central_user_has_role(array('reports administrator'))) {
+  /* if (sbac_central_user_has_role(array('reports administrator'))) {
     $form['state'] = array_merge($form['state'], array(
       '#multiple' => FALSE,
       '#attributes' => array('class' => array()),
       '#disabled' => TRUE,
     ));
   }
-
+  */
   $user_group_options = sbac_report_user_group_options();
   array_push($user_group_options, 'SNE Members');
   array_push($user_group_options, 'SLT Members');
-  if (sbac_central_user_has_role(array('reports administrator'))) {
+  /* if (sbac_central_user_has_role(array('reports administrator'))) {
     foreach($user_group_options as $index => $option){
       if(!in_array($option, array('resource contributor', 'resource reviewer', 'all'))){
         unset($user_group_options[$index]);
       }
     }
   }
+  */
   sbac_csv_report_prettify($user_group_options);
 
   $form['user_group_dropdown'] = array(
@@ -325,7 +326,7 @@ function sbac_csv_report_prettify(&$user_group_options) {
         break;
     }
   }
-  if (!sbac_central_user_has_role(array('reports administrator'))) {
+  /* if (!sbac_central_user_has_role(array('reports administrator'))) {
     $res = $user_group_options;
     $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
     if (isset($user_group_options[37]) && $user_group_options[37] == 'SNE Members') {
@@ -334,7 +335,7 @@ function sbac_csv_report_prettify(&$user_group_options) {
     if (isset($user_group_options[38]) && $user_group_options[38] == 'SLT Members') {
       unset($user_group_options[38]);
     }
-  }
+    }*/
 }
 
 /*
@@ -355,27 +356,15 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   // look for the 'all' option being set:
   else {
     if (array_key_exists(0, $user_groups_ids)) {
-      if (sbac_central_user_has_role(array('reports administrator'))) {
-        $roles = array(
-          'resource contributor',
-          'resource reviewer',
-        );
-        foreach ($roles as $role_name) {
-          $role = user_role_load_by_name($role_name);
-          if ($role) {
-            $user_groups_ids[$role->rid] = $role->rid;
-          }
-        }
+
+      $admins = sbac_report_user_group_admins();
+      foreach ($admins as $key => $value) {
+        $user_groups_ids[$key] = $key;
       }
-      else {
-        $admins = sbac_report_user_group_admins();
-        foreach ($admins as $key => $value) {
-          $user_groups_ids[$key] = $key;
-        }
-        $all = sbac_report_user_group_options();
-        foreach ($all as $key => $value) {
-          $user_groups_ids[$key] = $key;
-        }
+      $all = sbac_report_user_group_options();
+      foreach ($all as $key => $value) {
+        $user_groups_ids[$key] = $key;
+        
       }
     }
   }
