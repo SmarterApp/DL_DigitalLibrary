@@ -6,7 +6,7 @@
   background: white;
   &.view-display-id-mini_profile{
     display:block;
-    overflow: auto;
+    overflow: visible;
     width: 340px;
     .views-field-picture{
       float:left;
@@ -19,16 +19,23 @@
         &.views-label-fields-combine{
           display: block;
           text-transform: uppercase;
-          font-size:12px;
+          font-size: 10px;
+          line-height:1;
+          color:#858585;
         }
         &.field-content{
-          color: $off-black;
-          font-weight: bold;
+          font-size:13px;
+          font-weight:600;
+          color:#101010;
         }
         
       }
     }
     .views-field-fields-combine-1{
+      font-size:12px;
+      font-weight:400;
+      color:#858585;
+      line-height:1;
       display: inline-block;
       border-right: 1px solid;
       padding-right: 10px;
@@ -36,10 +43,24 @@
     }
     .views-field-nid{
       display: inline-block;
+      font-size:12px;
+      font-weight:400;
+      line-height:1;
       a{
-        color: $blue-text;
+        color:#858585;
         &:hover{
           text-decoration: underline;
+        }
+      }
+    }
+    .views-row{
+      .views-row-last{
+        &:after{
+          content: ".";
+          visibility: hidden;
+          display: block;
+          height: 0;
+          clear: both;	
         }
       }
     }

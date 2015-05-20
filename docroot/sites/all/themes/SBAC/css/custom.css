@@ -30011,10 +30011,9 @@ body.page-sbac .ajax-progress-throbber .throbber {
 }
 /* line 11, ../sass/components/_featured-content.scss */
 #lp-featured-content .col-resource {
-  max-height: 314px;
   overflow: hidden;
 }
-/* line 14, ../sass/components/_featured-content.scss */
+/* line 13, ../sass/components/_featured-content.scss */
 #lp-featured-content .col-resource .featured-resource-mini-profile {
   position: relative;
   background: none;
@@ -30022,11 +30021,11 @@ body.page-sbac .ajax-progress-throbber .throbber {
   color: #5a5a5a;
   margin-top: 10px;
 }
-/* line 20, ../sass/components/_featured-content.scss */
+/* line 19, ../sass/components/_featured-content.scss */
 #lp-featured-content .col-resource .featured-resource-mini-profile .view-users {
   background: none;
 }
-/* line 29, ../sass/components/_featured-content.scss */
+/* line 28, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured-wrap {
   position: relative;
   height: 0;
@@ -30034,14 +30033,14 @@ body.page-sbac .ajax-progress-throbber .throbber {
   max-width: 1280px;
   margin: 0 auto;
 }
-/* line 36, ../sass/components/_featured-content.scss */
+/* line 35, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured {
   position: absolute;
   top: 5px;
   right: 25px;
   z-index: 9;
 }
-/* line 42, ../sass/components/_featured-content.scss */
+/* line 41, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a {
   padding: 5px 5px 5px 27px;
   background: url("../images/icons/icon-edit.png") no-repeat left center;
@@ -30049,11 +30048,11 @@ body.page-sbac .ajax-progress-throbber .throbber {
   color: #0085ad;
   border-radius: 0.25rem;
 }
-/* line 48, ../sass/components/_featured-content.scss */
+/* line 47, ../sass/components/_featured-content.scss */
 #lp-featured-content #edit-featured a:hover {
   background-color: #FFF;
 }
-/* line 53, ../sass/components/_featured-content.scss */
+/* line 52, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container {
   max-width: 100%;
   margin: 0 auto;
@@ -30068,20 +30067,20 @@ body.page-sbac .ajax-progress-throbber .throbber {
   padding-top: 30px;
   /* Featured Resource */
 }
-/* line 65, ../sass/components/_featured-content.scss */
+/* line 64, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .slick-list {
   max-width: 1280px;
   margin: 0 auto;
 }
-/* line 70, ../sass/components/_featured-content.scss */
+/* line 69, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper {
   position: relative;
 }
-/* line 71, ../sass/components/_featured-content.scss */
+/* line 70, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper:hover a {
   text-decoration: underline;
 }
-/* line 76, ../sass/components/_featured-content.scss */
+/* line 75, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner {
   display: block;
   position: absolute;
@@ -30095,56 +30094,57 @@ body.page-sbac .ajax-progress-throbber .throbber {
   box-shadow: 0 0.0625rem 0.125rem rgba(16, 16, 16, 0.4);
   transition: background-color 0.3s ease;
   right: 40px;
-  max-height: 366px;
-  padding: 20px 30px 30px 30px;
+  max-height: 415px;
+  padding: 20px 30px;
 }
 @media (min-width: 1100px) {
-  /* line 76, ../sass/components/_featured-content.scss */
+  /* line 75, ../sass/components/_featured-content.scss */
   #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner {
     right: 15px;
     width: 800px;
   }
 }
-/* line 95, ../sass/components/_featured-content.scss */
+/* line 94, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner:hover {
   background: white;
   box-shadow: 0 2px 4px fade(16, 16, 16, 0.3);
   transition: background-color 0.2s ease;
 }
-/* line 99, ../sass/components/_featured-content.scss */
+/* line 98, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner:hover .featured-title {
   text-decoration: underline;
 }
-/* line 105, ../sass/components/_featured-content.scss */
+/* line 103, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-title {
+  margin-top: 5px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #cccccc;
+}
+/* line 107, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-title a {
   font-size: 18px;
-  line-height: 22px;
+  line-height: 1.2;
   font-weight: 600;
-  color: #0583ac;
-  margin-top: 10px;
+  color: #000000;
 }
-/* line 113, ../sass/components/_featured-content.scss */
+/* line 114, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-summary {
   line-height: 1.4;
   color: #101010;
   font-weight: 400;
   font-size: 13px;
 }
-/* line 120, ../sass/components/_featured-content.scss */
+/* line 121, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-label {
-  margin-top: 1.25rem;
-  margin-bottom: -0.25rem;
+  margin-top: 10px;
+  margin-bottom: 2px;
   font-weight: 400;
-  color: #101010;
-  line-height: 1.4;
+  color: #858585;
+  line-height: 1;
   clear: both;
   padding: 1px;
   text-transform: uppercase;
-  font-size: 11px;
-}
-/* line 131, ../sass/components/_featured-content.scss */
-#lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-type {
-  margin-top: 15px;
+  font-size: 10px;
 }
 /* line 134, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper {
@@ -30419,7 +30419,7 @@ body.section-sort-content #draggableviews-table-sort_content-sort_featured .view
 /* line 7, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile {
   display: block;
-  overflow: auto;
+  overflow: visible;
   width: 340px;
 }
 /* line 11, ../sass/components/_users.scss */
@@ -30439,31 +30439,49 @@ body.section-sort-content #draggableviews-table-sort_content-sort_featured .view
 .view-users.view-display-id-mini_profile .views-field-fields-combine span.views-label-fields-combine {
   display: block;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 10px;
+  line-height: 1;
+  color: #858585;
 }
-/* line 24, ../sass/components/_users.scss */
+/* line 26, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile .views-field-fields-combine span.field-content {
+  font-size: 13px;
+  font-weight: 600;
   color: #101010;
-  font-weight: bold;
 }
-/* line 31, ../sass/components/_users.scss */
+/* line 34, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile .views-field-fields-combine-1 {
+  font-size: 12px;
+  font-weight: 400;
+  color: #858585;
+  line-height: 1;
   display: inline-block;
   border-right: 1px solid;
   padding-right: 10px;
   margin-right: 10px;
 }
-/* line 37, ../sass/components/_users.scss */
+/* line 44, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile .views-field-nid {
   display: inline-block;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
 }
-/* line 39, ../sass/components/_users.scss */
+/* line 49, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile .views-field-nid a {
-  color: #0684AD;
+  color: #858585;
 }
-/* line 41, ../sass/components/_users.scss */
+/* line 51, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile .views-field-nid a:hover {
   text-decoration: underline;
+}
+/* line 58, ../sass/components/_users.scss */
+.view-users.view-display-id-mini_profile .views-row .views-row-last:after {
+  content: ".";
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both;
 }
 
 /* ==========================================================================
