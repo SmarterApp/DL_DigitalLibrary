@@ -145,10 +145,8 @@ function sbac_user_views_default_views() {
   $handler->display->display_options['title'] = 'Mini Profile Dev';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['group_by'] = TRUE;
-  $handler->display->display_options['access']['type'] = 'role';
-  $handler->display->display_options['access']['role'] = array(
-    2 => '2',
-  );
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'access user profiles';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -428,6 +426,7 @@ function sbac_user_views_default_views() {
   $handler->display->display_options['fields']['nid']['group_type'] = 'count_distinct';
   $handler->display->display_options['fields']['nid']['ui_name'] = 'Resources';
   $handler->display->display_options['fields']['nid']['label'] = '';
+  $handler->display->display_options['fields']['nid']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['nid']['alter']['path'] = 'digital-library-resources?contributor=[uid]';
   $handler->display->display_options['fields']['nid']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;

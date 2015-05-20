@@ -73,7 +73,7 @@
       }
       position:relative;
       &.slick-slide {
-        a.featured-content-url {
+        .featured-content-inner {
           display:block;
           position:absolute;
           border: 1px solid #ffffff;
@@ -102,11 +102,13 @@
             }
           }
           .featured-title{
-            font-size: 18px;
-            line-height: 22px;
-            font-weight: 600;
-            color: #0583ac;
-            margin-top: 10px;
+            a{
+              font-size: 18px;
+              line-height: 22px;
+              font-weight: 600;
+              color: #0583ac;
+              margin-top: 10px;
+            }
           }
           .featured-summary{
             line-height: 1.4;
