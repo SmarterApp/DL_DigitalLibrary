@@ -20,7 +20,7 @@ function sbac_featured_content_flag_default_flags() {
   $flags['featured_node'] = array(
     'entity_type' => 'node',
     'title' => 'Featured',
-    'global' => 0,
+    'global' => 1,
     'types' => array(
       0 => 'resource',
     ),
