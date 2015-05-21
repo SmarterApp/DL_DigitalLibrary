@@ -405,7 +405,7 @@ a.sbac-grid-layout {
   padding: 10px 15px 0;
   color: #246a34;
   font-size: 12px;
-  /*border-top: 1px #b7bfc4 solid;*/
+  border-top: 1px #b7bfc4 solid;
 }
 /* line 374, ../sass/sbac_resource.scss */
 .digital-library .resource-card .resoruce-bottom.rejected, .page-digital-library-resources .resource-card .resoruce-bottom.rejected, .node-resource .resource-card .resoruce-bottom.rejected {
