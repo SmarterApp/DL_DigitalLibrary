@@ -53,8 +53,8 @@ function sbac_featured_content(){
   global $user;
   $variables = array();
   $variables['featured_content'] = '';
-  
-  if(user_access('flag-featured-node')){
+  $flag = flag_get_flag('featured_node');
+  if($flag->user_access()){
       $variables['edit'] = l('Edit Features','/sort-content/featured');
   }
 
