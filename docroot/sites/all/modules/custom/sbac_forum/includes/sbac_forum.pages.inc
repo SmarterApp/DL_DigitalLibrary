@@ -154,7 +154,7 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
 
       case SBAC_FORUM_SUBNAV_TOPIC:
 				$output .= '<p class="topic-forums">';
-        $output .= t('<strong>Discussion Forums</strong> provide opportunities to discuss the formative assessment process, standards, curriculum, summative and interim assessments, professional development, and other topics with colleagues across the country. The title reflects the focus of the discussion. View the <a href="@help-topics"> Help Topics</a> to learn more about Discussion Forums.' , array(
+        $output .= t('<strong>Topic Forums</strong> provide opportunities to discuss the formative assessment process, standards, curriculum, summative and interim assessments, professional development, and other topics with colleagues across the country. The title reflects the focus of the discussion. View the <a href="@help-topics"> Help Topics</a> to learn more about Topic Forums.' , array(
         '@help-topics' => '/help-topics',
         ));
         break;

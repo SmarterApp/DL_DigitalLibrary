@@ -336,8 +336,8 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   }
   $form['topic_forums'] = array(
     '#type' => 'submit',
-    '#value' => t('Discussion Forums') . ' ' . $topic_forums_count_text,
-    '#title' => t('Discussion forums'),
+    '#value' => t('Topic Forums') . ' ' . $topic_forums_count_text,
+    '#title' => t('Topic Forums'),
     '#attributes' => array(
       'class' => array($topic_forums_classes),
     ),
