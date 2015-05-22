@@ -5,14 +5,24 @@
     $category_count = count($categories);
     $mod = ceil($category_count / $cols);
     ($cf_value ? $hide_filters = 'js-hide' : $hide_filters = 'js-show');
+    $i = 0;
 ?>
 <div class="categories-container clearfix">
   <div class="categories-filter clearfix slideable" >
     <?php
     foreach ($categories as $category) {
       // Initialize the loop.
+      $i++;
+      $class = array();
+      $class[] = 'col-' . $i;
+      if($i === 1){
+        $class[] = 'col-first';
+      }
+      if($i === $total_cols) {
+        $class[] = 'col-last';
+      }
       if ($count == 1) {
-        echo '<div class="category-filter-name column large-4">';
+        echo '<div class="category-filter-name column large-4 ' . implode(' ', $class) .'">';
         echo '<ul>';
       }
       // Added a different type of entry.

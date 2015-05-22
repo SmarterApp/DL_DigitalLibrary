@@ -6,12 +6,13 @@ body.page-sbac{
     box-shadow: 0px 1px 5px #888888;
     position:relative;
     z-index:9;
-    padding: 20px 0;
+    padding: 20px 15px;
     #lp-help-topics {
       &.row {
-	max-width:1280px;
-	.welcome-container-left {
-	min-height:65px;}
+        width:994px;
+        .welcome-container-left {
+          min-height:65px;
+        }
       }
     }
     .help-topics-header{
@@ -19,6 +20,7 @@ body.page-sbac{
       font-weight: 400;
       color: $white;
       text-shadow: rgba(0,0,0,0.3) 0px 1px 1px;
+      margin-bottom:15px;
       strong{
         font-size:18px;
         font-weight:600;
@@ -26,7 +28,17 @@ body.page-sbac{
     }
   }
   #lp-featured-content-wrapper {
+    max-width: 100%;
+    margin:0 auto;
     position:relative;
+    padding:5px 0;
+    background-image: url('../images/bg1.jpg');
+    overflow:visible;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    position:relative;
+    padding-top:30px;
     #lp-featured-content {
       position:relative;
     }
@@ -129,6 +141,7 @@ body.page-sbac{
     box-shadow: 0 -0.125rem 0.125rem rgba(16, 16, 16, 0.15) !important;
     text-align: center !important;
     margin-bottom:0 !important;
+    min-width:994px;
   }
   .slick-dots li {
     display: inline-block !important;
@@ -225,7 +238,7 @@ body.page-sbac{
   
 // Landing Page Resource Filters
   #lp-find-resource-wrapper{
-    max-width: 1280px;
+    width: 994px;
     margin:0 auto;
     padding: 20px;
     min-height:185px;
@@ -239,6 +252,17 @@ body.page-sbac{
     .categories-container{
       height: 35px;
       div.category-filter-name{
+        &.column{
+          margin-right:20px;
+          padding:0px;
+        }
+        &.col-last{
+          margin-right:0px;
+        }
+        &.large-4{
+          width:223px;
+        }
+
         .sbac-search-filter-name{
           &.filters-selected{
               background: url('../images/icons/filterCheck.png') no-repeat left 5px top 5px !IMPORTANT;
@@ -398,12 +422,6 @@ body.page-sbac{
               }
             }
           }
-        }
-        &.large-4{
-          width:25%;
-        }
-        &.column{
-          padding: 0 10px;
         }
       }
     }

@@ -1,4 +1,4 @@
-<div class="welcome-topic-container" id="welcome-topic-container-<?php echo $nid; ?>">
+<div class="welcome-topic-container <?php print $class; ?>" id="welcome-topic-container-<?php echo $nid; ?>">
   <?php print $link_open; ?>
     <div class="welcome-container-image" id="welcome-container-image-<?php echo $nid; ?>">
       <?php echo $image; ?>

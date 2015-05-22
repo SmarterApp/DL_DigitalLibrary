@@ -5,8 +5,8 @@
 
 nav.main-nav {
   ul {
-    margin-left: 26px;
-
+    border-left: 1px #cfcece solid;
+    border-right: 1px #cfcece solid;
     li {
       display: inline-block;
       margin: 0px;
@@ -31,17 +31,18 @@ nav.main-nav {
       }
       &.first {
         text-indent:-10000px;
-        width:50px;
-        border-left: 1px $header-borders solid;
         a {
           background: url('../images/icons/home.png') no-repeat center center;
+          width:50px;
           &.active {
             display: none;
+            width:0;
           }
         }
       }
       &.last {
         content: none;
+        border:none;
       }
     }
   }

@@ -773,14 +773,30 @@ function sbac_help_resource_help_form($form, $form_state) {
  */
 function sbac_help_topic_ctas($limit){
   $topics = '';
+  $i = 0;  
   $help_topics = sbac_help_welcome_tutorial_topics($limit);
+  $topic_count = count($help_topics);
   foreach($help_topics as $topic){
+    $class = array();
+    $i = ++$i;
+    if($i === 1){
+      $class[] = 'first';
+    }
+    if($i === $topic_count) {
+      $class[] = 'last';
+    }
+    if($i % 2 == 0){
+      $class[] = 'even';
+    }else{
+      $class[] = 'odd';
+    }
     $topics .= theme('welcome_tutorial_list',
           array(
             'nid'     => $topic['nid'],
             'title'   => $topic['title'],
             'image'   => $topic['img_fid'],
             'img_alt' => $topic['img_alt'],
+            'class'   => implode(' ', $class)
           ));
   }
   return $topics;
