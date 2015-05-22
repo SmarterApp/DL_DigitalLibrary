@@ -465,6 +465,7 @@ body.page-sbac{
   #lp-notifications-wrapper{
     background-color: #fdf2b1;
     display:none;
+    padding: 0 15px;
     #close-notifications{
       content:url('../images/icons/icon-close.png');
       background-color: #fdf2b1;
@@ -475,7 +476,8 @@ body.page-sbac{
       cursor: pointer;
     }
     .view-sbac-alerts{
-      max-width: 1280px;
+      max-width: 1250px;
+      min-width:994px;
       margin:0 auto;
       .ui-accordion{
         .ui-accordion-header{

@@ -29849,8 +29849,9 @@ body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters a:
 body.page-sbac #lp-notifications-wrapper {
   background-color: #fdf2b1;
   display: none;
+  padding: 0 15px;
 }
-/* line 468, ../sass/components/_landing-page.scss */
+/* line 469, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper #close-notifications {
   content: url("../images/icons/icon-close.png");
   background-color: #fdf2b1;
@@ -29860,24 +29861,25 @@ body.page-sbac #lp-notifications-wrapper #close-notifications {
   right: 10px;
   cursor: pointer;
 }
-/* line 477, ../sass/components/_landing-page.scss */
+/* line 478, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts {
-  max-width: 1280px;
+  max-width: 1250px;
+  min-width: 994px;
   margin: 0 auto;
 }
-/* line 481, ../sass/components/_landing-page.scss */
+/* line 483, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header {
   background: none;
   border: none;
 }
-/* line 484, ../sass/components/_landing-page.scss */
+/* line 486, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header .ui-accordion-header-icon {
   background-image: url(../images/icons/icon-info.png);
   background-position: 0;
   width: 20px;
   height: 20px;
 }
-/* line 491, ../sass/components/_landing-page.scss */
+/* line 493, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content {
   border: none;
   background: none;
@@ -29886,20 +29888,20 @@ body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-acc
   padding: 20px 0;
   border-radius: 0;
 }
-/* line 500, ../sass/components/_landing-page.scss */
+/* line 502, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content .views-field-body .field-content ul {
   font-size: 0.75em;
 }
-/* line 509, ../sass/components/_landing-page.scss */
+/* line 511, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 518, ../sass/components/_landing-page.scss */
+/* line 520, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 520, ../sass/components/_landing-page.scss */
+/* line 522, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
