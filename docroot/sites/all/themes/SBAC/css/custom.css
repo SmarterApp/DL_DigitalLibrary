@@ -35121,3 +35121,16 @@ form#sbac-user-filter-form #edit-email {
 .view-display-id-collaboration h2 {
   font-size: 13px;
 }
+
+/* -----------------------------------------
+   Content Admin Page
+   ----------------------------------------- */
+/* line 4142, ../sass/custom.scss */
+.page-admin-content {
+  /* Fix Content overflow on "Content" page */
+}
+/* line 4147, ../sass/custom.scss */
+.page-admin-content .table-select-processed tbody tr td:nth-child(2) {
+  max-width: 300px;
+  overflow: hidden;
+}
