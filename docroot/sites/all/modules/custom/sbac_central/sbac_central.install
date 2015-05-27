@@ -1344,14 +1344,12 @@ function sbac_central_update_7093() {
           'sbac_learning_registry'
         );
         module_enable($modules);
-        variable_set('learning_registry_key_location', 'https://www.smarterbalancedlibrary.org/id_rsa.pub.prod.txt');
         variable_set('learning_registry_node_types', array(
           'resource' => 'resource',
           'alignment' => 0,
           'topic' => 0,
           'help_page' => 0,
         ));
-        variable_set('learning_registry_node_url', 'https://node01.public.learningregistry.net');
         variable_set('learning_registry_queuing', 0);
         variable_set('learning_registry_schema_type', array(
           'name' => 'LRMI',
