@@ -622,23 +622,6 @@ else {
   $conf['file_default_scheme'] = 'private';
 }
 
-// Google CDN variables.
-## WLV1 - removed the following cdn strings for whitelabeling the distribution 
-$conf['google_cdn_bucket_name'] = '';
-$conf['google_cdn_extensions'] = '';
-$conf['google_cdn_client_id'] = '';
-$conf['google_cdn_service_account_name'] = '';
-$conf['google_cdn_signed_url_expiry'] = 300;
-$conf['google_cdn_library_version'] = 2;
-
-// osCaddie GCS variables.
-$conf['oscaddie_gcs_bucket_name'] = '';
-$conf['oscaddie_gcs_extensions'] = '';
-$conf['oscaddie_gcs_client_id'] = '';
-$conf['oscaddie_gcs_service_account_name'] = '';
-$conf['oscaddie_gcs_signed_url_expiry'] = 300;
-$conf['oscaddie_gcs_library_version'] = 2;
-
 /**
  * Fast 404 settings:
  *

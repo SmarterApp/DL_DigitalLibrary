@@ -56,6 +56,40 @@ function sbac_central_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['admin/config/sbac-central'] = array(
+    'title' => 'SBAC Central Configuration',
+    'description' => '',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_central_google_cdn_admin'),
+    'access arguments' => array('administer sbac_central settings'),
+    'file'=> 'sbac_central.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+   );
+  $items['admin/config/sbac-central/google-cdn'] = array(
+    'title' => 'Google CDN Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10
+  );
+
+  $items['admin/config/sbac-central/oscaddie'] = array(
+    'title' => 'osCaddie Settings',
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_central_google_cdn_admin'),
+    'file'=> 'sbac_central.admin.inc',
+    'access arguments' => array('administer sbac_central settings')
+  );
+
+  $items['admin/config/sbac-central/google-cdn-migrate'] = array(
+    'title' => 'Google CDN Migrate',
+    'description' => 'Migrates old files to new Google CDN',
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_central_google_cdn_migrate_admin'),
+    'file'=> 'sbac_central.admin.inc',
+    'access arguments' => array('administer sbac_central settings'),
+    'weight' => 50
+  );
 
   return $items;
 }
@@ -647,4 +681,194 @@ function sbac_central_get_user_first_last_name($uid) {
   $query->condition('f.entity_id', $uid);
   $query->addExpression('concat(f.field_first_name_value, \' \', l.field_last_name_value)', 'name');
   return $query->execute()->fetchField();
+}
+
+
+/**
+ * Migrates old files to new Google CDN.
+ */
+function sbac_central_migrate_files() {
+  $service = NULL;
+  $client = NULL;
+  $cred = NULL;
+
+  sbac_central_connect_to_google_bucket($service, $client, $cred);
+  if ($service && $client && $cred) {
+    $nids = sbac_central_get_resource_nids();
+    if ($nids) {
+      $chunks = array_chunk($nids, 50);
+      foreach ($chunks as $chunk) {
+        $files_to_upload = array();
+        for ($i = 0; $i < 50; $i++) {
+          $nid = $chunk[$i];
+          // Get all the files for this chunk of nodes.
+          $node_files_to_upload = sbac_central_get_node_files_to_upload($nid);
+          if ($node_files_to_upload) {
+            $files_to_upload[$nid] = $node_files_to_upload;
+          }
+        }
+
+        // Upload the files.
+        if ($files_to_upload) {
+          sbac_central_process_files_to_upload($files_to_upload, $client, $service, $cred);
+        }
+      }
+    }
+  }
+}
+/**
+ * Connect to the Google Cloud Storage.
+ *
+ * @param $service
+ * @param $client
+ */
+function sbac_central_connect_to_google_bucket(&$service, &$client, &$cred) {
+  try {
+    if (libraries_load('google-api-php-client')) {
+      $service_account_name = variable_get('oscaddie_gcs_service_account_name');
+      $key_file_path = variable_get('oscaddie_gcs_public_key_file_path');
+
+      $client = new Google_Client();
+      // Replace this with your application name.
+      $client->setApplicationName($service_account_name);
+      // Replace this with the service you are using.
+      $service = new Google_Service_Storage($client);
+      // This file location should point to the private key file.
+      $key = file_get_contents($key_file_path);
+      $cred = new Google_Auth_AssertionCredentials(
+      // Replace this with the email address from the client.
+        $service_account_name,
+        // Replace this with the scopes you are requesting.
+        array('https://www.googleapis.com/auth/devstorage.full_control'),
+        $key
+      );
+
+      $client->setAssertionCredentials($cred);
+      if ($client->getAuth()->isAccessTokenExpired()) {
+        $client->getAuth()->refreshTokenWithAssertion($cred);
+      }
+
+      $services['client'] = $client;
+      $services['service'] = $service;
+    }
+  }
+  catch (Exception $e) {
+    watchdog_exception('oscaddie_gcs', $e);
+  }
+}
+
+/**
+ * Get the files to upload from each node.
+ *
+ * @param $nid
+ * @return array
+ */
+function sbac_central_get_node_files_to_upload($nid) {
+  $files_to_upload = array();
+  $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid", array(':nid' => $nid));
+  foreach ($result as $document) {
+    if ($document->fid) {
+      $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $document->fid))->fetchObject();
+      if ($file && strpos($file->uri, 'gs://') === FALSE && strpos($file->uri, 'html5/') !== TRUE) {
+        $google_uri = NULL;
+        if (strpos($file->uri, 'private://') !== FALSE) {
+          $google_uri = str_replace('private://', '', $file->uri);
+        }
+
+        if (strpos($file->uri, 'public://') !== FALSE) {
+          $google_uri = str_replace('public://', '', $file->uri);
+        }
+
+        if ($google_uri) {
+          $old_path = drupal_realpath($file->uri);
+          if (file_exists($old_path)) {
+            $files_to_upload['files'][$file->fid]['fid'] = $file->fid;
+          }
+        }
+      }
+    }
+  }
+
+  return $files_to_upload;
+}
+
+/**
+ * Gets an array of nids;
+ *
+ * @return array
+ */
+function sbac_central_get_resource_nids() {
+  $sql = "SELECT nid FROM {node} WHERE type = 'resource'";
+  $result = db_query($sql);
+  $nids = array();
+  foreach ($result as $row) {
+    $nids[] = $row->nid;
+  }
+  return $nids;
+}
+
+/**
+ * Process the files to upload and send em to Google Cloud.
+ *
+ * @param $files_to_upload
+ * @param $client
+ * @param $service
+ */
+function sbac_central_process_files_to_upload($files_to_upload, $client, $service, $cred) {
+  $bucket = variable_get('google_cdn_bucket_name');
+  $folder = variable_get('google_cdn_folder');
+  foreach ($files_to_upload as $nid => $files) {
+    foreach ($files as $file_info) {
+      foreach ($file_info as $fid => $file) {
+        try {
+          $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $fid))->fetchObject();
+          if ($file) {
+            $old_path = drupal_realpath($file->uri);
+            if ($client->getAuth()->isAccessTokenExpired()) {
+              $client->getAuth()->refreshTokenWithAssertion($cred);
+            }
+            $chunk_size_bytes = 1 * 1024 * 1024;
+            $media = new Google_MediaFileUpload(file_get_mimetype($file->uri), NULL, true, $chunk_size_bytes);
+            $media->setFileSize(filesize($old_path));
+            $postbody = array(
+              'mimeType' => file_get_mimetype($file->uri),
+              'data' => NULL,
+              'mediaUpload' => $media,
+            );
+            $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file->filename;
+
+            $gso = new Google_StorageObject();
+            $gso->setName($folder . '/' . $google_uri);
+            $response = $service->objects->insert($bucket, $gso, $postbody);
+            if ($response) {
+              // Now upload the file in chunks.
+              $upload_result = false;
+              $handle = fopen($old_path, "rb");
+              while (!$upload_result && !feof($handle)) {
+                $chunk = fread($handle, $chunk_size_bytes);
+                $upload_result = $media->nextChunk($response, $chunk);
+              }
+              fclose($handle);
+
+              // file uploaded successfully, set the new URI.
+              if ($upload_result) {
+                $new_uri = 'gs://' . $google_uri;
+                db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
+              }
+            }
+
+            unset($media);
+            unset($gso);
+            unset($response);
+            unset($postbody);
+            unset($google_uri);
+            unset($handle);
+          }
+        }
+        catch (Exception $e) {
+          watchdog('google_cdn', $e);
+        }
+      }
+    }
+  }
 }
