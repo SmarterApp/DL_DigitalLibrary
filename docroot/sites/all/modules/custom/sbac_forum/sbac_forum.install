@@ -243,3 +243,7 @@ function sbac_forum_update_7011() {
     'default' => '',
   ));
 }
+
+function sbac_forum_uninstall(){
+  variable_del('date_format_');
+}

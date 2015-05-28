@@ -140,3 +140,17 @@ function sbac_alignment_update_7006() {
   variable_set('sbac_alignment_import_data', array());
   variable_set('sbac_alignment_import_bad_terms', array());
 }
+
+function sbac_alignment_uninstall(){
+	variable_del('sbac_alignment_import_counter');
+	variable_del('sbac_alignment_import_data');
+	variable_del('sbac_alignment_import_bad_terms');
+	variable_del('sbac_alignment_import_counter');
+	variable_del('sbac_alignment_import_data');
+	variable_del('sbac_alignment_import_counter');
+	variable_del('sbac_alignment_import_data');
+	variable_del('sbac_alignment_import_bad_terms');
+	variable_del('sbac_alignment_import_counter');
+	variable_del('sbac_alignment_import_data');
+	variable_del('sbac_alignment_import_bad_terms');
+}

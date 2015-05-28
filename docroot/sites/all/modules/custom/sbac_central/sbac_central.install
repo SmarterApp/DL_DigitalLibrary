@@ -1241,4 +1241,17 @@ function sbac_central_uninstall() {
   variable_del('oscaddie_gcs_service_account_name');
   variable_del('oscaddie_gcs_signed_url_expiry');
   variable_del('oscaddie_gcs_library_version');
+  variable_del('theme_default');
+  variable_del('admin_theme');
+  variable_del('learning_registry_node_types');
+  variable_del('learning_registry_queuing');
+  variable_del('learning_registry_schema_type');
+  variable_del('learning_registry_schema_type_default_value');
+  variable_del('learning_registry_signing_method');
+  variable_del('learning_registry_submitter');
+  variable_del('learning_registry_tos');
+  variable_del('learning_registry_url_type');
+  variable_del('learning_registry_oauth_salt');
+  variable_del('feedback_block_body');
+  variable_del('enable_feedback');
 }
