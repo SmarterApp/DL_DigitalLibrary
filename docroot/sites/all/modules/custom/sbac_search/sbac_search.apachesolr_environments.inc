@@ -6,28 +6,21 @@
 
 /**
  * Implements hook_apachesolr_environments().
+ * 
+ * Variables are set in the ENV_settings.inc file.
+ * @TODO Add an admin interface to set variables.
+ * 
  */
 function sbac_search_apachesolr_environments() {
   $export = array();
 
   $environment = new stdClass();
   $environment->api_version = 1;
-  $environment->env_id = 'acquia_search_server_1';
-  $environment->name = 'Acquia Search';
-  $environment->url = 'http://useast1-c1.acquia-search.com/solr/BVWZ-37038_sbacstg';
-  $environment->service_class = 'AcquiaSearchService';
-  $environment->conf = array(
-    'acquia_override_auto_switch' => 1,
-    'acquia_override_selector' => 'BVWZ-37038_sbacdev',
-    'acquia_override_subscription_corename' => 'BVWZ-37038_sbacdev',
-    'acquia_override_subscription_id' => 'BVWZ-37038',
-    'acquia_override_subscription_key' => '9becc29baa4f91fac0900c6625c59534',
-    'acquia_search_key' => 'fd919846b89046b75e2403a5a492b5e40f37124c',
-    'apachesolr_access_always_add_grants' => 0,
-    'apachesolr_direct_commit' => 0,
-    'apachesolr_read_only' => '1',
-    'apachesolr_soft_commit' => 0,
-  );
+  $environment->env_id = variable_get('sbac_search_env_env_id');
+  $environment->name = variable_get('sbac_search_env_name');
+  $environment->url = variable_get('sbac_search_env_url');
+  $environment->service_class = variable_get('sbac_search_env_service_class');
+  $environment->conf = variable_get('sbac_search_env_conf');
   $environment->index_bundles = array(
     'node' => array(
       0 => 'alignment',
