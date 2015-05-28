@@ -6,3 +6,15 @@
 function sbac_search_update_7001(){
   module_enable(array('jqmulti'));
 }
+
+/**
+ * Impliments hook_uninstall().
+ */
+
+function sbac_search_uninstall(){
+  variable_del('sbac_search_env_env_id');
+  variable_del('sbac_search_env_name');
+  variable_del('sbac_search_env_url');
+  variable_del('sbac_search_env_service_class');
+  variable_del('sbac_search_env_conf');
+}
