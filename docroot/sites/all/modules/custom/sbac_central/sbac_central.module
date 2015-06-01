@@ -56,8 +56,8 @@ function sbac_central_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/config/sbac-central'] = array(
-    'title' => 'SBAC Central Configuration',
+  $items['admin/sbac/sbac-central'] = array(
+    'title' => 'Central Configuration',
     'description' => '',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sbac_central_google_cdn_admin'),
@@ -65,13 +65,13 @@ function sbac_central_menu() {
     'file'=> 'sbac_central.admin.inc',
     'type' => MENU_NORMAL_ITEM,
    );
-  $items['admin/config/sbac-central/google-cdn'] = array(
+  $items['admin/sbac/sbac-central/google-cdn'] = array(
     'title' => 'Google CDN Settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10
   );
 
-  $items['admin/config/sbac-central/oscaddie'] = array(
+  $items['admin/sbac/sbac-central/oscaddie'] = array(
     'title' => 'osCaddie Settings',
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'drupal_get_form',
@@ -80,7 +80,7 @@ function sbac_central_menu() {
     'access arguments' => array('administer sbac_central')
   );
 
-  $items['admin/config/sbac-central/google-cdn-migrate'] = array(
+  $items['admin/sbac/sbac-central/google-cdn-migrate'] = array(
     'title' => 'Google CDN Migrate',
     'description' => 'Migrates old files to new Google CDN',
     'type' => MENU_LOCAL_TASK,
@@ -95,7 +95,7 @@ function sbac_central_menu() {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements permissions().
  */
 function sbac_central_permission() {
   return array(
