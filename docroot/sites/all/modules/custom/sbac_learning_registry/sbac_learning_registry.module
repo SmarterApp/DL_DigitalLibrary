@@ -50,17 +50,30 @@ function sbac_learning_registry_menu() {
     'access arguments' => array('administer nodes'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/sbac-learning-registry'] = array(
-    'title' => 'SBAC Learning Registry Configuration',
+  $items['admin/sbac/sbac-learning-registry'] = array(
+    'title' => 'Learning Registry Configuration',
     'description' => '',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sbac_learning_registry_admin'),
-    'access arguments' => array('administer sbac_learning_registry settings'),
+    'access arguments' => array('administer sbac_learning_registry'),
     'type' => MENU_NORMAL_ITEM,
    );
   
   return $items;
 }
+
+/**
+ * Implements permissions().
+ */
+function sbac_learning_registry_permission() {
+  return array(
+    'administer sbac_learning_registry' => array(
+      'title' => t('Administer SBAC Learning Registry'),
+      'description' => t('Perform administration tasks for SBAC Learning Registry.'),
+    ),
+  );
+}
+
 
 /**
  * Page callback: SBAC Learning Registry Settings

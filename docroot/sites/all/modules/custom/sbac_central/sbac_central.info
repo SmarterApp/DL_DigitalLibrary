@@ -49,6 +49,7 @@ features[menu_links][] = main-menu_home:<front>
 features[menu_links][] = main-menu_my-resources:my-resources
 features[menu_links][] = main-menu_reports:reports
 features[menu_links][] = main-menu_resource-review:resource-review
+features[user_permission][] = administer sbac_central
 features[variable][] = admin_theme
 features[variable][] = cron_safe_threshold
 features[variable][] = file_default_scheme
