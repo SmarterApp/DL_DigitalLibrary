@@ -4152,3 +4152,23 @@ form#sbac-user-filter-form #edit-email {
     }
   }
 }
+
+/* -----------------------------------------
+   Modules Admin Page
+   ----------------------------------------- */
+.page-admin-modules{
+  /* Fix fixed top anchor */
+  #module-filter-submit {
+    top: auto;
+    #edit-submit {
+      margin: 0;
+    }
+  }
+  /* Fix Content overflow on "Module" table */
+  table{
+    td.description {
+      max-width:200px;
+    }
+  }
+}
+
