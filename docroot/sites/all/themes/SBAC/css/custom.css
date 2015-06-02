@@ -35139,3 +35139,24 @@ form#sbac-user-filter-form #edit-email {
   max-width: 225px;
   overflow: hidden;
 }
+
+/* -----------------------------------------
+   Modules Admin Page
+   ----------------------------------------- */
+/* line 4159, ../sass/custom.scss */
+.page-admin-modules {
+  /* Fix fixed top anchor */
+  /* Fix Content overflow on "Module" table */
+}
+/* line 4161, ../sass/custom.scss */
+.page-admin-modules #module-filter-submit {
+  top: auto;
+}
+/* line 4163, ../sass/custom.scss */
+.page-admin-modules #module-filter-submit #edit-submit {
+  margin: 0;
+}
+/* line 4169, ../sass/custom.scss */
+.page-admin-modules table td.description {
+  max-width: 200px;
+}
