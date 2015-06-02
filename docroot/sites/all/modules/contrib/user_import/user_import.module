@@ -54,6 +54,10 @@ function user_import_permission() {
       'title'       => t('Import users'),
       'description' => t('Import users.'),
     ),
+    'limited user import' => array(
+      'title'       => t('Import users Reports'),
+      'description' => t('View import error reports.'),
+    ),
   );
 }
 
@@ -84,23 +88,26 @@ function user_import_menu() {
     'type'             => MENU_LOCAL_TASK,
     'file'             => 'user_import.admin.inc',
   );
-  $items['admin/people/user_import/continue']  = array(
+  $items['admin/people/user_import/continue/%']  = array(
     'title'            => 'Continue',
-    'page callback'    => 'user_import_continue',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'    => array('user_import_confirm_continue', 4),
     'access arguments' => array('import users'),
     'type'             => MENU_CALLBACK,
     'file'             => 'user_import.admin.inc',
   );
-  $items['admin/people/user_import/import']    = array(
+  $items['admin/people/user_import/import/%']    = array(
     'title'            => 'Import',
-    'page callback'    => 'user_import_import',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'    => array('user_import_confirm_import', 4),
     'access arguments' => array('import users'),
     'type'             => MENU_CALLBACK,
     'file'             => 'user_import.admin.inc',
   );
-  $items['admin/people/user_import/delete']    = array(
+  $items['admin/people/user_import/delete/%']    = array(
     'title'            => 'Delete Import',
-    'page callback'    => 'user_import_delete',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'    => array('user_import_confirm_delete', 4),
     'access arguments' => array('import users'),
     'type'             => MENU_CALLBACK,
     'file'             => 'user_import.admin.inc',
@@ -113,15 +120,10 @@ function user_import_menu() {
     'type'             => MENU_LOCAL_TASK,
     'file'             => 'user_import.admin.inc',
   );
-  $items['user_import/delete']                 = array(
-    'title'            => 'Remove Info',
-    'page callback'    => 'user_import_limited_delete',
-    'type'             => MENU_CALLBACK,
-    'access arguments' => array('limited user import'),
-  );
-  $items['user_import/errors']                 = array(
+  $items['admin/people/user_import/errors/%']                 = array(
     'title'            => 'Import Errors',
     'page callback'    => 'user_import_limited_errors',
+    'page arguments'    => array(4),
     'type'             => MENU_CALLBACK,
     'access arguments' => array('limited user import'),
   );
@@ -212,10 +214,7 @@ function user_import_trigger_imports() {
     }
   }
 
-
   return;
-
-
 
   // Get template.
   $settings = _user_import_settings_select(2);
@@ -277,17 +276,17 @@ function user_import_content_type_submit($form, &$form_state) {
 // - - - - - - - -  PAGES - - - - - - - -
 
 function user_import_limited_errors($import_id = NULL, $template_id = NULL) {
-
   if (empty($import_id) || !is_numeric($import_id)) {
-    drupal_goto('user_import/' . $template_id);
+    drupal_goto('admin/people/user_import/' . $template_id);
   }
 
   $pager_id = 1;
   $max      = 25;
   $import   = _user_import_settings_select($import_id);
   $output   = '';
+  $file_lines = array();
 
-  $total = db_query('SELECT count(data) FROM {user_import_errors} WHERE :import_id = %d', array(':import_id' => $import['import_id']))->fetchField();
+  $total = db_query('SELECT count(data) FROM {user_import_errors} WHERE import_id = :import_id', array(':import_id' => $import_id))->fetchField();
 
   if (empty($total)) {
 
@@ -301,12 +300,13 @@ function user_import_limited_errors($import_id = NULL, $template_id = NULL) {
       array('data' => t('Errors'), 'field' => 'errors')
     );
 
-    $query = db_select('user_import_errors')
+    $query = db_select('user_import_errors', 'uie')
+      ->fields('uie')
       ->extend('PagerDefault')
       ->extend('TableSort');
 
     $query
-      ->condition('import_id', $import['import_id'])
+      ->condition('import_id', $import_id, '=')
       ->limit($max)
       ->orderByHeader($header);
 
@@ -317,10 +317,9 @@ function user_import_limited_errors($import_id = NULL, $template_id = NULL) {
     }
 
     $output .= theme('user_import_errors_display', array('import' => $import, 'file_lines' => $file_lines, 'total' => $total));
-    $output .= theme('pager', array('max' => $max, 'pager_id' => $pager_id));
   }
 
-  $output .= l(t('Return'), "user_import/$template_id/$import_id");
+  $output .= l(t('Return'), "admin/people/user_import");
 
   return $output;
 }
@@ -331,7 +330,8 @@ function user_import_limited_errors($import_id = NULL, $template_id = NULL) {
  * @param null $template_id
  */
 function user_import_limited_delete($import_id = NULL, $template_id = NULL) {
-  user_import_delete($import_id, "user_import/$template_id");
+  module_load_include('inc', 'user_import', 'user_import.admin');
+  user_import_delete($import_id, "admin/people/user_import");
 }
 
 // - - - - - - - -  THEMES - - - - - - - -
