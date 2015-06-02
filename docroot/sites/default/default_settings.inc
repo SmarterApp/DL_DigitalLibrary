@@ -12,9 +12,9 @@ $databases['default']['default'] = array(
 $conf['google_cdn_folder'] = 'local';
 $conf['oscaddie_gcs_folder'] = 'local';
 
-/*
- *
+/**
  * SBAC SSO Settings
+ * 
  * define('SBAC_SSO_URL', '');
  * define('SBAC_SSO_PROGRAM_REQUEST_AUTH', '');
  * define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', '');
@@ -23,7 +23,7 @@ $conf['oscaddie_gcs_folder'] = 'local';
  * define('SBAC_SSO_LOGOUT_REDIRECT_URL', '');
  * 
  */
-  
+
 /**
  * SBAC Search Settings
  * 
