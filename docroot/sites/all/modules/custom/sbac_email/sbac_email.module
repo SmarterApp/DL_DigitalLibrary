@@ -11,7 +11,7 @@ include_once 'sbac_email.features.inc';
  */
 function sbac_email_taxonomy_term_insert($term) {
   global $user;
-  
+
   // Associciate user with forum they have created.
   $term_flag = flag_get_flag('subscribe_term');
   $term_flag->flag('flag', $term->tid, user_load($user->uid), TRUE);
@@ -46,7 +46,7 @@ function sbac_email_node_insert($node) {
 
     // Let's make sure the user has flag on and subscriptions on, then send notice.
     foreach ($term_flags as $term_flag) {
-      if ($node->uid !== $term_flag->uid) {   
+      if ($node->uid !== $term_flag->uid) {
         $email_user = flag_get_user_flags('flag', $entity_id = NULL, $term_flag->uid);
         $message = message_create('node_insert', array('uid' => $term_flag->uid));
         $wrapper = entity_metadata_wrapper('message', $message);
@@ -65,9 +65,6 @@ function sbac_email_node_insert($node) {
         if (!empty($email_user['email'])) {
           message_notify_send_message($message, $options);
         }
-        else {
-          message_subscribe_send_message('node', $node, $message);
-        }
       }
     }
   }
@@ -83,7 +80,7 @@ function sbac_email_comment_insert($comment) {
   $node = node_load($comment->nid);
   global $user;
 
-  //This is where we subscribe to a comment.
+  // This is where we subscribe to a comment.
   $flag = flag_get_flag('subscribe_node');
   $flag->flag('flag', $node->nid, user_load($user->uid), TRUE);
   $options = array(
@@ -113,12 +110,9 @@ function sbac_email_comment_insert($comment) {
           $task->addTriggeringUser($user->uid);
           $task->save();
         }
-        
+
         if (!empty($email_user)) {
           message_notify_send_message($message, $options);
-        }
-        else {
-          message_subscribe_send_message('comment', $comment, $message);
         }
       }
     }
@@ -129,12 +123,12 @@ function sbac_email_comment_insert($comment) {
  * Add to our notifcations table.
  */
 function sbac_email_update_user_unread_count($uid) {
-  
+
   // This builds the count for the red notices pop-up.
   $sql = db_query('SELECT uid FROM {sbac_email_user_unread_notifications_count} WHERE uid = :uid', array(':uid' => $uid));
   $result = db_query($sql)->fetchField();
   if ($result) {
-    
+
     // Add 1 to count.
     db_update('sbac_email_user_unread_notifications_count')
       ->expression('count', 'count + :count', array(':count' => 1))
@@ -142,7 +136,7 @@ function sbac_email_update_user_unread_count($uid) {
       ->execute();
   }
   else {
-    
+
     // Initialize count to 1.
     db_insert('sbac_email_user_unread_notifications_count')
       ->fields(array(
@@ -157,7 +151,7 @@ function sbac_email_update_user_unread_count($uid) {
  * Reset our notifcations table.
  */
 function sbac_email_init() {
-  
+
   // When the user visits their profile, consider the notice stale.
   if (arg(0) == 'user' && is_numeric(arg(1))) {
     global $user;
