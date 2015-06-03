@@ -352,7 +352,6 @@ body.page-sbac{
 
               .jstree-node,
               .jstree-anchor {
-                white-space: normal;
                 
               }
 
@@ -388,16 +387,22 @@ body.page-sbac{
                 .jstree-node {
                   margin-left: 0px;
                   >ul > li{
-                    margin-bottom:10px;
                   }
 
                 }
                 .jstree-anchor {
                   padding-right: 10px;
                   height: auto;
-                  line-height: 1;
+                  line-height: 24px;
                   position: relative;
                   margin-left: 10px;
+                  width: 160px;
+                  white-space: auto;
+                  .filter-name{
+                    white-space: normal;
+                    display:inline-block;
+                    line-height: 13px;
+                  }
                 }
                 .jstree-icon:empty {
                   width: 30px;

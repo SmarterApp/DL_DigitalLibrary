@@ -29730,104 +29730,103 @@ body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filt
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree .jstree-open > .jstree-children {
   margin-left: 50px;
 }
-/* line 353, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-node,
-body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-anchor {
-  white-space: normal;
-}
-/* line 359, ../sass/components/_landing-page.scss */
+/* line 358, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-clicked,
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-hovered {
   background: none;
   border-radius: 0;
   box-shadow: none;
 }
-/* line 367, ../sass/components/_landing-page.scss */
+/* line 366, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node.jstree-closed {
   background: url(../images/filter/icon-plus-sign.png) no-repeat 0 8px;
 }
-/* line 370, ../sass/components/_landing-page.scss */
+/* line 369, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node.jstree-open {
   background: url(../images/filter/icon-minus-sign.png) no-repeat 0 8px;
 }
-/* line 373, ../sass/components/_landing-page.scss */
+/* line 372, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-checkbox {
   background: url(../images/filter/icon-checkbox.png) no-repeat 0 3px !important;
   position: absolute;
   left: -20px;
 }
-/* line 378, ../sass/components/_landing-page.scss */
+/* line 377, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-clicked .jstree-checkbox {
   background: url(../images/filter/icon-check-mark.png) no-repeat 0 3px !important;
 }
-/* line 381, ../sass/components/_landing-page.scss */
+/* line 380, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-anchor > .jstree-undetermined {
   background: url(../images/filter/icon-undetermined.png) no-repeat 0 3px !important;
 }
-/* line 384, ../sass/components/_landing-page.scss */
+/* line 383, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node,
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-icon {
   background: none;
 }
-/* line 388, ../sass/components/_landing-page.scss */
+/* line 387, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node {
   margin-left: 0px;
 }
-/* line 390, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node > ul > li {
-  margin-bottom: 10px;
-}
-/* line 395, ../sass/components/_landing-page.scss */
+/* line 393, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-anchor {
   padding-right: 10px;
   height: auto;
-  line-height: 1;
+  line-height: 24px;
   position: relative;
   margin-left: 10px;
+  width: 125px;
+  white-space: auto;
 }
-/* line 402, ../sass/components/_landing-page.scss */
+/* line 401, ../sass/components/_landing-page.scss */
+body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-anchor .filter-name {
+  white-space: normal;
+  display: inline-block;
+  line-height: 13px;
+}
+/* line 407, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-icon:empty {
   width: 30px;
 }
-/* line 405, ../sass/components/_landing-page.scss */
+/* line 410, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-leaf > .jstree-ocl {
   width: 0;
 }
-/* line 408, ../sass/components/_landing-page.scss */
+/* line 413, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-themeicon {
   background: none;
   width: 0 !important;
   height: 1px;
 }
-/* line 414, ../sass/components/_landing-page.scss */
+/* line 419, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default li.jstree-node.jstree-leaf .jstree-ocl {
   width: 30px;
 }
-/* line 418, ../sass/components/_landing-page.scss */
+/* line 423, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-open li.jstree-node.jstree-leaf > .jstree-ocl,
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-closed li.jstree-node.jstree-leaf > .jstree-ocl {
   width: 0;
 }
-/* line 429, ../sass/components/_landing-page.scss */
+/* line 434, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .sbac-search-filter-custom-link a {
   display: block;
   width: 100%;
   color: #5a5a5a;
 }
-/* line 435, ../sass/components/_landing-page.scss */
+/* line 440, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons {
   position: absolute;
 }
-/* line 437, ../sass/components/_landing-page.scss */
+/* line 442, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset {
   border: none;
   padding: 0;
 }
-/* line 440, ../sass/components/_landing-page.scss */
+/* line 445, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters {
   margin-bottom: 15px;
 }
-/* line 442, ../sass/components/_landing-page.scss */
+/* line 447, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters:before {
   display: inline-block;
   content: url("../images/icons/icon-arrow-right.png");
@@ -29835,23 +29834,23 @@ body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters:be
   width: 5px;
   margin-right: 5px;
 }
-/* line 449, ../sass/components/_landing-page.scss */
+/* line 454, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters a {
   font-size: 11px;
   text-transform: uppercase;
   color: #04384E;
 }
-/* line 453, ../sass/components/_landing-page.scss */
+/* line 458, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters a:hover {
   text-decoration: underline;
 }
-/* line 465, ../sass/components/_landing-page.scss */
+/* line 470, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper {
   background-color: #fdf2b1;
   display: none;
   padding: 0 15px;
 }
-/* line 469, ../sass/components/_landing-page.scss */
+/* line 474, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper #close-notifications {
   content: url("../images/icons/icon-close.png");
   background-color: #fdf2b1;
@@ -29861,25 +29860,25 @@ body.page-sbac #lp-notifications-wrapper #close-notifications {
   right: 10px;
   cursor: pointer;
 }
-/* line 478, ../sass/components/_landing-page.scss */
+/* line 483, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts {
   max-width: 1250px;
   min-width: 994px;
   margin: 0 auto;
 }
-/* line 483, ../sass/components/_landing-page.scss */
+/* line 488, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header {
   background: none;
   border: none;
 }
-/* line 486, ../sass/components/_landing-page.scss */
+/* line 491, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header .ui-accordion-header-icon {
   background-image: url(../images/icons/icon-info.png);
   background-position: 0;
   width: 20px;
   height: 20px;
 }
-/* line 493, ../sass/components/_landing-page.scss */
+/* line 498, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content {
   border: none;
   background: none;
@@ -29888,20 +29887,20 @@ body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-acc
   padding: 20px 0;
   border-radius: 0;
 }
-/* line 502, ../sass/components/_landing-page.scss */
+/* line 507, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content .views-field-body .field-content ul {
   font-size: 0.75em;
 }
-/* line 511, ../sass/components/_landing-page.scss */
+/* line 516, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 520, ../sass/components/_landing-page.scss */
+/* line 525, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 522, ../sass/components/_landing-page.scss */
+/* line 527, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
