@@ -157,10 +157,10 @@ function sbac_forum__ajax__delete_forum_modal_callback($js = FALSE, $term) {
         $name = $term->name;
         $delete = taxonomy_term_delete($term->tid);
         if ($delete) {
-          $message = 'Forum: "'. $name .'" has been deleted successfully';
+          $message = t('Forum: "'. $name .'" has been deleted successfully');
           $type = 'status';
         } else {
-          $message = 'There was a problem deleting forum '. $name .'. Contact Administrator';
+          $message = t('There was a problem deleting forum '. $name .'. Contact Administrator');
           $type = 'error';
         }
         drupal_set_message($message, $type);
@@ -258,9 +258,9 @@ function sbac_forum__ajax__delete_topic_modal_callback($js = FALSE, $term, $topi
         }
 
         // Then finally, delete the Topic.
-        $name = $topic->title;
+        $name = check_plain($topic->title);
         $delete = node_delete($topic->nid);
-        $message = 'Discussion: "'. $name .'" has been deleted successfully';
+        $message = t('Discussion: "'. $name .'" has been deleted successfully');
         $type = 'status';
         drupal_set_message($message, $type);
 
