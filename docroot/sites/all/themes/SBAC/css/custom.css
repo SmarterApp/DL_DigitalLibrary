@@ -29811,7 +29811,7 @@ body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filt
 /* line 435, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .sbac-search-filter-custom-link a {
   display: block;
-  width: 100%;
+  width: 120%;
   color: #5a5a5a;
 }
 /* line 441, ../sass/components/_landing-page.scss */
