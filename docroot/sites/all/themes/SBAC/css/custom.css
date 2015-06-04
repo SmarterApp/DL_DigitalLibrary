@@ -29653,7 +29653,7 @@ body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filt
 /* line 282, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .display-name,
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .sbac-search-filter-custom-link {
-  font-size: 13px;
+  font-size: 12px;
   margin: 0 10px;
   height: 30px;
   line-height: 32px;
@@ -29775,7 +29775,7 @@ body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filt
   line-height: 24px;
   position: relative;
   margin-left: 10px;
-  width: 125px;
+  width: 160px;
   white-space: auto;
 }
 /* line 401, ../sass/components/_landing-page.scss */
@@ -34877,7 +34877,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
 }
 /* line 3911, ../sass/custom.scss */
 .filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
@@ -34885,12 +34885,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 3916, ../sass/custom.scss */
 .filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
 }
 /* line 3920, ../sass/custom.scss */
 .filter-bar a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
 }
 /* line 3925, ../sass/custom.scss */
 .filter-bar a[title]:hover:after {
@@ -34967,7 +34967,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
 }
 /* line 3997, ../sass/custom.scss */
 #section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
@@ -34975,12 +34975,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4002, ../sass/custom.scss */
 #section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
 }
 /* line 4006, ../sass/custom.scss */
 #section-collaboration a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
 }
 /* line 4011, ../sass/custom.scss */
 #section-collaboration a[title]:hover:after {
@@ -35040,7 +35040,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
 }
 /* line 4062, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
@@ -35048,12 +35048,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4067, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
 }
 /* line 4071, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
 }
 /* line 4076, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a[title]:hover:after {

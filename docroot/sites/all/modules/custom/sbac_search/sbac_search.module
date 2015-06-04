@@ -965,7 +965,7 @@ function sbac_search_landing_page_categories() {
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.landing-page.categories.js');
   libraries_load('jstree');
 
-  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Attributes');
+  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
   _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
   _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
 
