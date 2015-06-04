@@ -19,9 +19,27 @@ function sbac_featured_content_user_default_permissions() {
     'module' => 'flag',
   );
 
+  // Exported permission: 'flag welcome_help_topic'.
+  $permissions['flag welcome_help_topic'] = array(
+    'name' => 'flag welcome_help_topic',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'flag',
+  );
+
   // Exported permission: 'unflag featured_node'.
   $permissions['unflag featured_node'] = array(
     'name' => 'unflag featured_node',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'flag',
+  );
+
+  // Exported permission: 'unflag welcome_help_topic'.
+  $permissions['unflag welcome_help_topic'] = array(
+    'name' => 'unflag welcome_help_topic',
     'roles' => array(
       'administrator' => 'administrator',
     ),
