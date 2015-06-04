@@ -40,7 +40,7 @@
       <?php endif; ?>
       <?php if($formative_process):?>
         <div class="featured-content-terms-wrapper featured-resource-formative featured-formative">
-          <p class="featured-label">Formative Attributes</p>
+          <p class="featured-label">Formative Assessment Attributes</p>
           <?php print $formative_process; ?>
         </div>
       <?php endif; ?>

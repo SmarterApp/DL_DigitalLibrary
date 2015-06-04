@@ -894,7 +894,7 @@ function sbac_search_digital_library_categories() {
 
   _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
   _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
-  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Attributes of the Formative Assessment Process');
+  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
   _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
   _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
   _sbac_search_create_taxonomy_filter($categories, 'intended_end_user', 'Intended End Users');

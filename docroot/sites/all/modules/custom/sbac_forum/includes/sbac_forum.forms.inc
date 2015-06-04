@@ -96,7 +96,7 @@ function _sbac_forum_filter_categories() {
 
   _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
   _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
-  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Attributes of the Formative Assessment Process');
+  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
   _sbac_search_create_taxonomy_filter($categories, 'intended_end_user', 'Intended End Users');
   _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
   _sbac_search_create_taxonomy_filter($categories, 'geographical_settings', 'Geographic Settings');
