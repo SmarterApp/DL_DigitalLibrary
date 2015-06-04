@@ -29365,7 +29365,7 @@ body.page-sbac #lp-featured-content-wrapper {
   max-width: 100%;
   margin: 0 auto;
   position: relative;
-  padding: 5px 0;
+  padding: 5px 0 0 0;
   background-image: url("../images/bg1.jpg");
   overflow: visible;
   background-repeat: no-repeat;
@@ -34878,7 +34878,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -2px;
 }
 /* line 3911, ../sass/custom.scss */
 .filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
@@ -34886,12 +34886,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 3916, ../sass/custom.scss */
 .filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -22px;
 }
 /* line 3920, ../sass/custom.scss */
 .filter-bar a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -42px;
 }
 /* line 3925, ../sass/custom.scss */
 .filter-bar a[title]:hover:after {
@@ -34968,7 +34968,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -2px;
 }
 /* line 3997, ../sass/custom.scss */
 #section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
@@ -34976,12 +34976,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4002, ../sass/custom.scss */
 #section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -22px;
 }
 /* line 4006, ../sass/custom.scss */
 #section-collaboration a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -42px;
 }
 /* line 4011, ../sass/custom.scss */
 #section-collaboration a[title]:hover:after {
@@ -35041,7 +35041,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -2px;
 }
 /* line 4062, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
@@ -35049,12 +35049,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4067, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -22px;
 }
 /* line 4071, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1432313377') no-repeat 0 -42px;
 }
 /* line 4076, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a[title]:hover:after {
