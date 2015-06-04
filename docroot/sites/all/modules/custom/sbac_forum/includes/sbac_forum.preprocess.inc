@@ -972,7 +972,6 @@ function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
 function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$vars) {
   $current_user = $vars['user'];
   $row_info = $vars['row'];
-      dpm($row_info);
 
   switch ($row_info->entity_type) {
     case 'taxonomy_term':
