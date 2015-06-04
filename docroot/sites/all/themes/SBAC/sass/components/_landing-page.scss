@@ -440,18 +440,16 @@ body.page-sbac{
     }
     .more-buttons{
       position:absolute;
+      width:100%;
       fieldset{
         border:none;
         padding:0;
         .more-filters{
-          margin-bottom: 15px;
-          &:before{
-            display: inline-block;
-            content:url('../images/icons/icon-arrow-right.png');
-            height:5px;
-            width:5px;
-            margin-right: 5px;
-          }
+	  position: absolute;
+	  right: 270px;
+	  margin-bottom: 15px;
+	  top: 0;
+	  z-index: 101;
           a{
             font-size: 11px;
             text-transform: uppercase;
