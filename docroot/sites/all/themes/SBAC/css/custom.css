@@ -29817,41 +29817,38 @@ body.page-sbac #lp-find-resource-wrapper .sbac-search-filter-custom-link a {
 /* line 441, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons {
   position: absolute;
+  width: 100%;
 }
-/* line 443, ../sass/components/_landing-page.scss */
+/* line 444, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset {
   border: none;
   padding: 0;
 }
-/* line 446, ../sass/components/_landing-page.scss */
+/* line 447, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters {
+  position: absolute;
+  right: 270px;
   margin-bottom: 15px;
+  top: 0;
+  z-index: 101;
 }
-/* line 448, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters:before {
-  display: inline-block;
-  content: url("../images/icons/icon-arrow-right.png");
-  height: 5px;
-  width: 5px;
-  margin-right: 5px;
-}
-/* line 455, ../sass/components/_landing-page.scss */
+/* line 453, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters a {
   font-size: 11px;
   text-transform: uppercase;
   color: #04384E;
 }
-/* line 459, ../sass/components/_landing-page.scss */
+/* line 457, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters a:hover {
   text-decoration: underline;
 }
-/* line 471, ../sass/components/_landing-page.scss */
+/* line 469, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper {
   background-color: #fdf2b1;
   display: none;
   padding: 0 15px;
 }
-/* line 475, ../sass/components/_landing-page.scss */
+/* line 473, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper #close-notifications {
   background: url('../images/icons/icon-close.png?1433439200') no-repeat top center;
   position: absolute;
@@ -29859,25 +29856,25 @@ body.page-sbac #lp-notifications-wrapper #close-notifications {
   padding: 15px 20px;
   cursor: pointer;
 }
-/* line 482, ../sass/components/_landing-page.scss */
+/* line 480, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts {
   max-width: 1250px;
   min-width: 994px;
   margin: 0 auto;
 }
-/* line 487, ../sass/components/_landing-page.scss */
+/* line 485, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header {
   background: none;
   border: none;
 }
-/* line 490, ../sass/components/_landing-page.scss */
+/* line 488, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header .ui-accordion-header-icon {
   background-image: url(../images/icons/icon-info.png);
   background-position: 0;
   width: 20px;
   height: 20px;
 }
-/* line 497, ../sass/components/_landing-page.scss */
+/* line 495, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content {
   border: none;
   background: none;
@@ -29886,20 +29883,20 @@ body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-acc
   padding: 20px 0;
   border-radius: 0;
 }
-/* line 506, ../sass/components/_landing-page.scss */
+/* line 504, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content .views-field-body .field-content ul {
   font-size: 0.75em;
 }
-/* line 515, ../sass/components/_landing-page.scss */
+/* line 513, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 524, ../sass/components/_landing-page.scss */
+/* line 522, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 526, ../sass/components/_landing-page.scss */
+/* line 524, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
