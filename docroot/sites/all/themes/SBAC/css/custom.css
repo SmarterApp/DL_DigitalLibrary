@@ -30300,7 +30300,7 @@ body.page-sbac .ajax-progress-throbber .throbber {
 }
 /* line 99, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-title a {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.2;
   font-weight: 600;
   color: #000000;
@@ -30315,25 +30315,26 @@ body.page-sbac .ajax-progress-throbber .throbber {
 /* line 113, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-label {
   margin-top: 10px;
-  margin-bottom: 2px;
+  margin-bottom: 10px;
   font-weight: 400;
-  color: #858585;
+  color: #6F6A6A;
+  font-weight: bold;
   line-height: 1;
   clear: both;
   padding: 1px;
   text-transform: uppercase;
-  font-size: 10px;
+  font-size: 14px;
 }
-/* line 126, ../sass/components/_featured-content.scss */
+/* line 127, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 129, ../sass/components/_featured-content.scss */
+/* line 130, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 131, ../sass/components/_featured-content.scss */
+/* line 132, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
