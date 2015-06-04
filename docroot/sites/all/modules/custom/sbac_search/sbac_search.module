@@ -976,8 +976,8 @@ function sbac_search_landing_page_categories() {
       'title' => 'Filter Alignment',
     ),
   );
-  $link = l('Common Core Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
-  $categories['education_alignment']['display_name'] = 'Common Core Standards';
+  $link = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
+  $categories['education_alignment']['display_name'] = 'Common Core State Standards';
   $vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
   $categories['education_alignment']['vocabulary'] = $vocab;
   $categories['education_alignment']['terms'] = array();
