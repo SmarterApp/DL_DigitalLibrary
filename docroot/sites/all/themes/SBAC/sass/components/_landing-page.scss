@@ -473,12 +473,10 @@ body.page-sbac{
     display:none;
     padding: 0 15px;
     #close-notifications{
-      content:url('../images/icons/icon-close.png');
-      background-color: #fdf2b1;
-      height:15px;
-      width:15px;
+      background:image-url('../images/icons/icon-close.png') no-repeat top center;
       position:absolute;
       right: 10px;
+      padding:15px 20px;
       cursor: pointer;
     }
     .view-sbac-alerts{
