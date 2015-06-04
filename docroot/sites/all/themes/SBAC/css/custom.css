@@ -29689,16 +29689,17 @@ body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filt
   background: #fff;
   border-top: 1px solid #cccccc;
   padding-bottom: 10px;
-  position: relative;
+  position: absolute;
+  width: 100%;
 }
-/* line 315, ../sass/components/_landing-page.scss */
+/* line 316, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .category-filter-list h2 {
   cursor: pointer;
   font-weight: normal;
   margin: 0;
   color: #0684ad;
 }
-/* line 321, ../sass/components/_landing-page.scss */
+/* line 322, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .category-filter-list .foundicon-remove {
   position: absolute;
   top: -30px;
@@ -29706,69 +29707,69 @@ body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filt
   height: 30px;
   text-align: right;
 }
-/* line 328, ../sass/components/_landing-page.scss */
+/* line 329, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .category-filter-list [class*="enclosed foundicon-"]:before {
   content: none;
 }
-/* line 332, ../sass/components/_landing-page.scss */
+/* line 333, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .category-filter-list div.status {
   background-color: transparent;
   background-image: none;
 }
-/* line 338, ../sass/components/_landing-page.scss */
+/* line 339, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices ul.jstree-container-ul {
   border-bottom: 1px solid #cccccc;
   max-height: 220px;
   overflow-y: scroll;
   padding: 12px 10px 0 10px;
 }
-/* line 344, ../sass/components/_landing-page.scss */
+/* line 345, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices ul.jstree-container-ul > li {
   margin-bottom: 0;
 }
-/* line 349, ../sass/components/_landing-page.scss */
+/* line 350, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree .jstree-open > .jstree-children {
   margin-left: 50px;
 }
-/* line 358, ../sass/components/_landing-page.scss */
+/* line 359, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-clicked,
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-hovered {
   background: none;
   border-radius: 0;
   box-shadow: none;
 }
-/* line 366, ../sass/components/_landing-page.scss */
+/* line 367, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node.jstree-closed {
   background: url(../images/filter/icon-plus-sign.png) no-repeat 0 8px;
 }
-/* line 369, ../sass/components/_landing-page.scss */
+/* line 370, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node.jstree-open {
   background: url(../images/filter/icon-minus-sign.png) no-repeat 0 8px;
 }
-/* line 372, ../sass/components/_landing-page.scss */
+/* line 373, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-checkbox {
   background: url(../images/filter/icon-checkbox.png) no-repeat 0 3px !important;
   position: absolute;
   left: -20px;
 }
-/* line 377, ../sass/components/_landing-page.scss */
+/* line 378, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-clicked .jstree-checkbox {
   background: url(../images/filter/icon-check-mark.png) no-repeat 0 3px !important;
 }
-/* line 380, ../sass/components/_landing-page.scss */
+/* line 381, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-anchor > .jstree-undetermined {
   background: url(../images/filter/icon-undetermined.png) no-repeat 0 3px !important;
 }
-/* line 383, ../sass/components/_landing-page.scss */
+/* line 384, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node,
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-icon {
   background: none;
 }
-/* line 387, ../sass/components/_landing-page.scss */
+/* line 388, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-node {
   margin-left: 0px;
 }
-/* line 393, ../sass/components/_landing-page.scss */
+/* line 394, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-anchor {
   padding-right: 10px;
   height: auto;
@@ -29778,55 +29779,55 @@ body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filt
   width: 160px;
   white-space: auto;
 }
-/* line 401, ../sass/components/_landing-page.scss */
+/* line 402, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-anchor .filter-name {
   white-space: normal;
   display: inline-block;
   line-height: 13px;
 }
-/* line 407, ../sass/components/_landing-page.scss */
+/* line 408, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-icon:empty {
   width: 30px;
 }
-/* line 410, ../sass/components/_landing-page.scss */
+/* line 411, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-leaf > .jstree-ocl {
   width: 0;
 }
-/* line 413, ../sass/components/_landing-page.scss */
+/* line 414, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-themeicon {
   background: none;
   width: 0 !important;
   height: 1px;
 }
-/* line 419, ../sass/components/_landing-page.scss */
+/* line 420, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default li.jstree-node.jstree-leaf .jstree-ocl {
   width: 30px;
 }
-/* line 423, ../sass/components/_landing-page.scss */
+/* line 424, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-open li.jstree-node.jstree-leaf > .jstree-ocl,
 body.page-sbac #lp-find-resource-wrapper .categories-container div.category-filter-name > ul > li .categories-filter-choices .jstree-default .jstree-closed li.jstree-node.jstree-leaf > .jstree-ocl {
   width: 0;
 }
-/* line 434, ../sass/components/_landing-page.scss */
+/* line 435, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .sbac-search-filter-custom-link a {
   display: block;
   width: 100%;
   color: #5a5a5a;
 }
-/* line 440, ../sass/components/_landing-page.scss */
+/* line 441, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons {
   position: absolute;
 }
-/* line 442, ../sass/components/_landing-page.scss */
+/* line 443, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset {
   border: none;
   padding: 0;
 }
-/* line 445, ../sass/components/_landing-page.scss */
+/* line 446, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters {
   margin-bottom: 15px;
 }
-/* line 447, ../sass/components/_landing-page.scss */
+/* line 448, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters:before {
   display: inline-block;
   content: url("../images/icons/icon-arrow-right.png");
@@ -29834,23 +29835,23 @@ body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters:be
   width: 5px;
   margin-right: 5px;
 }
-/* line 454, ../sass/components/_landing-page.scss */
+/* line 455, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters a {
   font-size: 11px;
   text-transform: uppercase;
   color: #04384E;
 }
-/* line 458, ../sass/components/_landing-page.scss */
+/* line 459, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters a:hover {
   text-decoration: underline;
 }
-/* line 470, ../sass/components/_landing-page.scss */
+/* line 471, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper {
   background-color: #fdf2b1;
   display: none;
   padding: 0 15px;
 }
-/* line 474, ../sass/components/_landing-page.scss */
+/* line 475, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper #close-notifications {
   content: url("../images/icons/icon-close.png");
   background-color: #fdf2b1;
@@ -29860,25 +29861,25 @@ body.page-sbac #lp-notifications-wrapper #close-notifications {
   right: 10px;
   cursor: pointer;
 }
-/* line 483, ../sass/components/_landing-page.scss */
+/* line 484, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts {
   max-width: 1250px;
   min-width: 994px;
   margin: 0 auto;
 }
-/* line 488, ../sass/components/_landing-page.scss */
+/* line 489, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header {
   background: none;
   border: none;
 }
-/* line 491, ../sass/components/_landing-page.scss */
+/* line 492, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-header .ui-accordion-header-icon {
   background-image: url(../images/icons/icon-info.png);
   background-position: 0;
   width: 20px;
   height: 20px;
 }
-/* line 498, ../sass/components/_landing-page.scss */
+/* line 499, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content {
   border: none;
   background: none;
@@ -29887,20 +29888,20 @@ body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-acc
   padding: 20px 0;
   border-radius: 0;
 }
-/* line 507, ../sass/components/_landing-page.scss */
+/* line 508, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-accordion-content .views-field-body .field-content ul {
   font-size: 0.75em;
 }
-/* line 516, ../sass/components/_landing-page.scss */
+/* line 517, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 525, ../sass/components/_landing-page.scss */
+/* line 526, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 527, ../sass/components/_landing-page.scss */
+/* line 528, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
@@ -34877,7 +34878,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -2px;
 }
 /* line 3911, ../sass/custom.scss */
 .filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
@@ -34885,12 +34886,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 3916, ../sass/custom.scss */
 .filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -22px;
 }
 /* line 3920, ../sass/custom.scss */
 .filter-bar a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -42px;
 }
 /* line 3925, ../sass/custom.scss */
 .filter-bar a[title]:hover:after {
@@ -34967,7 +34968,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -2px;
 }
 /* line 3997, ../sass/custom.scss */
 #section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
@@ -34975,12 +34976,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4002, ../sass/custom.scss */
 #section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -22px;
 }
 /* line 4006, ../sass/custom.scss */
 #section-collaboration a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -42px;
 }
 /* line 4011, ../sass/custom.scss */
 #section-collaboration a[title]:hover:after {
@@ -35040,7 +35041,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -2px;
 }
 /* line 4062, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
@@ -35048,12 +35049,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4067, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -22px;
 }
 /* line 4071, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1431734712') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1433439200') no-repeat 0 -42px;
 }
 /* line 4076, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a[title]:hover:after {
