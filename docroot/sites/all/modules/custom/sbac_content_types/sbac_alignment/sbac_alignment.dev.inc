@@ -124,7 +124,7 @@ function sbac_alignment_batch_importer_page() {
  * BATCH API. Imports the ccss tags.
  */
 function sbac_alignment_batch($vid, $json, $grade_terms, $api_type, &$context) {
-  ini_set('max_execution_time', 9999);
+  ini_set('max_execution_time', 1800);
   ini_set('memory_limit', '1024M');
   
   if (empty($context['sandbox'])) {
@@ -336,7 +336,7 @@ function sbac_alignment_get_file($filename) {
  * Imports ccss tagger based on GET params
  */
 function sbac_alignment_import_ccss() {
-  ini_set('max_execution_time', '9999');
+  ini_set('max_execution_time', '1800');
   ini_set('memory_limit', '2048M');
   
   if(isset($_GET['vocab'])) {
