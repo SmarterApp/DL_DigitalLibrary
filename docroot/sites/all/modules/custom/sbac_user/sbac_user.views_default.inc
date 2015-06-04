@@ -432,7 +432,7 @@ function sbac_user_views_default_views() {
   $handler->display->display_options['fields']['nid']['alter']['path'] = 'digital-library-resources?contributor=[uid]';
   $handler->display->display_options['fields']['nid']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['nid']['suffix'] = ' Resources';
+  $handler->display->display_options['fields']['nid']['suffix'] = ' Posted Resources';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: User: Uid */
   $handler->display->display_options['arguments']['uid']['id'] = 'uid';

@@ -30649,13 +30649,14 @@ body.section-sort-content #draggableviews-table-sort_content-sort_featured .view
 }
 /* line 49, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile .views-field-nid a {
-  color: #858585;
-}
-/* line 51, ../sass/components/_users.scss */
-.view-users.view-display-id-mini_profile .views-field-nid a:hover {
+  color: #0085ad;
   text-decoration: underline;
 }
-/* line 58, ../sass/components/_users.scss */
+/* line 52, ../sass/components/_users.scss */
+.view-users.view-display-id-mini_profile .views-field-nid a:hover {
+  text-decoration: none;
+}
+/* line 59, ../sass/components/_users.scss */
 .view-users.view-display-id-mini_profile .views-row .views-row-last:after {
   content: ".";
   visibility: hidden;

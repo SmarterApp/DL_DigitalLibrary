@@ -47,9 +47,10 @@
       font-weight:400;
       line-height:1;
       a{
-        color:#858585;
+        color:#0085ad;
+	text-decoration: underline;
         &:hover{
-          text-decoration: underline;
+          text-decoration: none;
         }
       }
     }
