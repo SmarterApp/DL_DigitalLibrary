@@ -21,7 +21,9 @@
           autoplaySpeed:4000,
           pauseOnHover:true,
           pauseOnDotsHover:true,
-          swipe:false
+          swipe:false,
+	  speed:1000,
+	  fade:true,
       });
 
       $('.disabled').click(function (e) {
