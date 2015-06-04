@@ -30318,23 +30318,26 @@ body.page-sbac .ajax-progress-throbber .throbber {
   margin-bottom: 10px;
   font-weight: 400;
   color: #6F6A6A;
-  font-weight: bold;
   line-height: 1;
   clear: both;
   padding: 1px;
   text-transform: uppercase;
-  font-size: 14px;
 }
-/* line 127, ../sass/components/_featured-content.scss */
+/* line 123, ../sass/components/_featured-content.scss */
+#lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-label.featured-type {
+  font-size: 14px;
+  font-weight: bold;
+}
+/* line 130, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 130, ../sass/components/_featured-content.scss */
+/* line 133, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 132, ../sass/components/_featured-content.scss */
+/* line 135, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
