@@ -642,9 +642,16 @@ function sbac_central_cron(){
  * @return mixed
  */
 function sbac_central_get_user_first_last_name($uid) {
-  $query = db_select('field_data_field_first_name', 'f');
-  $query->leftJoin('field_data_field_last_name', 'l', 'f.entity_id = l.entity_id');
-  $query->condition('f.entity_id', $uid);
-  $query->addExpression('concat(f.field_first_name_value, \' \', l.field_last_name_value)', 'name');
-  return $query->execute()->fetchField();
+  $user = user_load($uid);
+  $name = $user->field_first_name['und'][0]['value']; 
+  $privacy = $user->field_privacy['und'];
+  $privacy_key = array();
+  foreach($privacy as $pr){
+    $privacy_key[]= $pr['value'];
+  }
+  if(in_array('field_last_name',$privacy_key)){
+    $last_name = $user->field_last_name['und'][0]['value'];
+    $name .= ' ' . $last_name;
+  }
+  return $name;
 }
