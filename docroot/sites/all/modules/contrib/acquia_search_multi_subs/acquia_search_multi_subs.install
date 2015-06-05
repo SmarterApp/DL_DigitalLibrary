@@ -32,6 +32,18 @@ function acquia_search_multi_subs_uninstall() {
       apachesolr_environment_variable_del($environment['env_id'], 'acquia_override_subscription_key');
       apachesolr_environment_variable_del($environment['env_id'], 'acquia_override_subscription_id');
       apachesolr_environment_variable_del($environment['env_id'], 'acquia_override_auto_switch');
+      apachesolr_environment_variable_del($environment['env_id'], 'acquia_override_failover');
+    }
+  }
+  if (module_exists('search_api_solr')) {
+    $servers = db_select('search_api_server', 's')
+      ->fields('s')
+      ->execute()
+      ->fetchCol();
+    foreach ($servers as $server_id) {
+      $server = search_api_server_load($server_id);
+      unset($server->options['acquia_override_subscription']);
+      $server->save();
     }
   }
 }

@@ -15,63 +15,66 @@
  * Implements hook_form_alter().
  */
 function label_help_form_alter(&$form, &$form_state, $form_id) {
-  $form = label_help_set_description($form);
+  $children = array_intersect_key($form, array_flip(element_children($form)));
+  foreach ($children as $key => $item) {
+    if (is_array($item) && isset($item['#language']) && isset($item[$item['#language']])
+        && isset($form['#entity_type']) && isset($form['#bundle'])
+        && ($instance = field_info_instance($form['#entity_type'], $key, $form['#bundle']))) {
+      if (!isset($instance['widget']['settings']['label_help_description'])) {
+        continue;
+      }
+      $theme_option = array(
+        'description at top' => $instance['widget']['settings']['label_help_description'],
+      );
+      // Put comments above the label for field forms of type 'container'
+      // that are specifically configured.
+      if (isset($item['#type']) && $item['#type'] == 'container' && isset($item[$item['#language']][0])) {
+        // For reasons best known to the lunatics who designed the Forms API,
+        // $form[$key][$item['#language']][0]['#theme_options'] has to be set to get
+        // this working for textarea fields, and
+        // form[$key][$item['#language']][0]['value']['#theme_options'] has to be set
+        // to get this working for one-line text fields, and
+        // form[$key][$item['#language']][0]['default']['#theme_options'] has to be set
+        // to get this working for some other fields.
+        if (isset($form[$key][$item['#language']][0]['default'])) {
+          $form[$key][$item['#language']][0]['default']['#theme_options'] = $theme_option;
+        }
+        elseif (isset($form[$key][$item['#language']][0]['value'])) {
+          $form[$key][$item['#language']][0]['value']['#theme_options'] = $theme_option;
+        }
+        // Oh, and here's what you do for entity references. That's different too. Sheesh!
+        elseif (isset($form[$key][$item['#language']][0]['target_id'])) {
+          $form[$key][$item['#language']][0]['target_id']['#theme_options'] = $theme_option;
+        }
+        // One more for cshs module.
+        elseif (isset($form[$key][$item['#language']][0]['tid'])) {
+          $form[$key][$item['#language']][0]['tid']['#theme_options'] = $theme_option;
+        }
+        else {
+          $form[$key][$item['#language']][0]['#theme_options'] = $theme_option;
+        }
+      }
+      // Move comments to the top for other field forms that
+      // are specifically configured.
+      else {
+        $form[$key][$item['#language']]['#theme_options'] = $form[$key][$item['#language']]['value']['#theme_options'] = $theme_option;
+      }
+    }
+  }
 }
 
 /**
- * Recursively loops through form elements and sets the appropriate label_help description.
+ * Implements hook_orm_profile2_form_alter().
  * 
- * @param  [type] $form [description]
- * @return [type]       [description]
+ * @see profile2.tpl.php
+ * @see https://drupal.org/project/profile2
  */
-function label_help_set_description($form) {
-  foreach ($form as $key => &$field) {
-    if ($key{0} != '#' && is_array($field)) {
-      $lang = isset($field['#language']) ? $field['#language'] : LANGUAGE_NONE;
-
-      if (isset($field[$lang][0])) {
-        $target = &$field[$lang][0];
-      }
-      elseif(isset($field[$lang])) {
-        $target = &$field[$lang];
-      }
-      else {
-        $target = &$field;
-      } 
-
-      if (!isset($target['#entity_type']) || !isset($target['#field_name']) || !isset($target['#bundle'])) {
-        continue;
-      }
-
-      $entity_type = $target['#entity_type'];
-      $field_name = $target['#field_name'];
-      $bundle_name = $target['#bundle'];
-
-      if (isset($field['#type']) && $field['#type'] == 'container' && isset($form['#entity_type']) && isset($form['#bundle'])) {
-        $entity_type = $form['#entity_type'];
-        $bundle_name = $form['#bundle'];
-      }
-
-      $instance = field_info_instance($entity_type, $field_name, $bundle_name);
-
-      if (isset($instance['widget']['settings']['label_help_description'])) {
-        $target['#theme_options']['description at top']          = $instance['widget']['settings']['label_help_description'];
-        $target['value']['#theme_options']['description at top'] = $instance['widget']['settings']['label_help_description'];
-      }
-
-      if (isset($field[$lang])) {
-        foreach ($field[$lang] as &$child) {
-          if (is_array($child)) {
-            $child = label_help_set_description($child);
-          }
-      }
-      }
-
-      $form[$key] = $field;
+function label_help_form_profile2_form_alter(&$form, &$form_state) {
+  foreach ($form as $key => $item) {
+    if (is_array($item) && isset($form[$key]['#entity_type']) && $form[$key]['#entity_type'] == 'profile2') {
+      label_help_form_alter($form[$key], $form_state, 'profile2');
     }
   }
-
-  return $form;
 }
 
 /**
@@ -109,7 +112,7 @@ function label_help_theme_registry_alter(&$theme_registry) {
 /**
  * Replacement for core theme_form_element_label function.
  *
- * Prints #description at top of field output.
+ * Prints help text at top of field output.
  * Because of jujitsu happening in FAPI theming/wrapping,
  * ctools and WYSIWYG, we have to jump through some hoops 
  * to pull this off.
@@ -120,7 +123,7 @@ function label_help_theme_registry_alter(&$theme_registry) {
 function label_help_theme_form_element_label($variables) {
   $desc = '';
   if (isset($variables['element']['#theme_options']['description at top']) && !empty($variables['element']['#theme_options']['description at top'])) {
-    $desc = '<div class="description">' . t($variables['element']['#theme_options']['description at top']) . '</div>';
+    $desc = '<div class="description label-description">' . t($variables['element']['#theme_options']['description at top']) . '</div>';
   }
 
   // Pass element through the "real" theme hook.

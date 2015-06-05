@@ -6,9 +6,9 @@ files[] = dialog_contextual.module
 dependencies[] = dialog
 dependencies[] = contextual
 
-; Information added by drupal.org packaging script on 2012-01-17
+; Information added by drupal.org packaging script on 2013-09-30
 version = "7.x-1.x-dev"
 core = "7.x"
 project = "dialog"
-datestamp = "1326759426"
+datestamp = "1380569460"
 

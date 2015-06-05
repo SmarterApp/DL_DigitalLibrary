@@ -14,7 +14,7 @@ function joyride_requirements($phase) {
   $library = $library = libraries_detect('joyride');
   $library_installed = $library && !empty($library['installed']);
 
-  $js_name = 'jquery.joyride.js';
+  $js_name = 'jquery.joyride-'.JOYRIDE_LIBRARY_VERSION.'.js';
   $base_path = 'sites/all/libraries/joyride';
 
   switch ($phase) {

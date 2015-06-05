@@ -7,9 +7,9 @@ dependencies[] = context
 dependencies[] = context_ui
 dependencies[] = libraries (>=7.x-2.0)
 
-; Information added by drupal.org packaging script on 2013-01-16
-version = "7.x-1.0-alpha2"
+; Information added by drupal.org packaging script on 2013-08-14
+version = "7.x-1.0-alpha3"
 core = "7.x"
 project = "joyride"
-datestamp = "1358335920"
+datestamp = "1376521894"
 

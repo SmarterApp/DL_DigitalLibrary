@@ -25,14 +25,18 @@ class SearchApiAcquiaSearchMultiService extends SearchApiAcquiaSearchService {
    * {@inheritdoc}
    */
   public function setConnectionOptions() {
-    if (isset($this->options['acquia_override_subscription'])) {
+    $has_id = (isset($this->options['acquia_override_subscription']['acquia_override_subscription_id'])) ? true : false;
+    $has_key = (isset($this->options['acquia_override_subscription']['acquia_override_subscription_key'])) ? true : false;
+    $has_corename = (isset($this->options['acquia_override_subscription']['acquia_override_subscription_corename'])) ? true : false;
+
+    if ($has_id && $has_key && $has_corename) {
       $identifier = $this->options['acquia_override_subscription']['acquia_override_subscription_id'];
       $key = $this->options['acquia_override_subscription']['acquia_override_subscription_key'];
       $corename = $this->options['acquia_override_subscription']['acquia_override_subscription_corename'];
 
       $this->options['path'] = '/solr/' . $corename;
       // Set the derived key for this environment.
-      $subscription = acquia_agent_get_subscription(array(), $identifier, $key);
+      $subscription = $this->getAcquiaSubscription($identifier, $key);
       $derived_key_salt = $subscription['derived_key_salt'];
       $derived_key = _acquia_search_multi_subs_create_derived_key($derived_key_salt, $corename, $key);
       $this->options['derived_key'] = $derived_key;
@@ -123,16 +127,21 @@ class SearchApiAcquiaSearchMultiService extends SearchApiAcquiaSearchService {
 
     // If we do not have auto switch enabled, statically configure the right
     // core to options.
-    $form_values = $values['acquia_override_subscription'];
-    if (!$form_values['acquia_override_auto_switch']) {
-      $identifier = $form_values['acquia_override_subscription_id'];
-      $key = $form_values['acquia_override_subscription_key'];
-      $corename = $form_values['acquia_override_subscription_corename'];
+    $has_id = (isset($form_state['values']['acquia_override_subscription_id'])) ? true : false;
+    $has_key = (isset($form_state['values']['acquia_override_subscription_key'])) ? true : false;
+    $has_corename = (isset($form_state['values']['acquia_override_subscription_corename'])) ? true : false;
+    $has_auto_switch = !empty($form_state['values']['acquia_override_auto_switch']) ? true : false;
 
+    if (!$has_auto_switch && $has_id && $has_key && $has_corename) {
+      $identifier = $form_state['values']['acquia_override_subscription_id'];
+      $key = $form_state['values']['acquia_override_subscription_key'];
+      $corename = $form_state['values']['acquia_override_subscription_corename'];
+
+      // Set our solr path
       $this->options['path'] = '/solr/' . $corename;
 
       // Set the derived key for this environment
-      $subscription = acquia_agent_get_subscription(array(), $identifier, $key);
+      $subscription = $this->getAcquiaSubscription($identifier, $key);
       $derived_key_salt = $subscription['derived_key_salt'];
       $derived_key = _acquia_search_multi_subs_create_derived_key($derived_key_salt, $corename, $key);
       $this->options['derived_key'] = $derived_key;
@@ -140,5 +149,37 @@ class SearchApiAcquiaSearchMultiService extends SearchApiAcquiaSearchService {
       $search_host = acquia_search_multi_subs_get_hostname($corename);
       $this->options['host'] = $search_host;
     }
+  }
+
+  /**
+   * Get subscription info from the acquia_connector module, and cache it for
+   * 5 minutes.
+   *
+   * @param $acquia_identifier
+   * @param $acquia_key
+   * @return array
+   *   Subscription data
+   */
+  protected function getAcquiaSubscription($acquia_identifier, $acquia_key) {
+    $subscription_cache = &drupal_static(__FUNCTION__, array());
+    // Get subscription and use cache.
+    $cid = 'asms-subscription-' . $acquia_identifier . ':' . $acquia_key;
+    if (isset($subscription_cache[$cid])) {
+      $subscription = $subscription_cache[$cid];
+    }
+    else {
+      $cached = cache_get($cid);
+      if ($cached && $cached->data && REQUEST_TIME < $cached->expire) {
+        $subscription = $cached->data;
+        $subscription_cache[$cid] = $subscription;
+      }
+    }
+    if (empty($subscription)) {
+      $subscription = acquia_agent_get_subscription(array(), $acquia_identifier, $acquia_key);
+      $subscription_cache[$cid] = $subscription;
+      // Cache this for 5 minutes.
+      cache_set($cid, $subscription, 'cache', REQUEST_TIME + 300);
+    }
+    return $subscription;
   }
 }

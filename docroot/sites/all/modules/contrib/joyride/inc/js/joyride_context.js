@@ -21,7 +21,6 @@
       } else joyride_options.cookieMonster = true;
 
       $('ol#joyride-tips-content').joyride(joyride_options);
-      $('ol#joyride-tips-content').joyride();
     }
   };
 }(jQuery));

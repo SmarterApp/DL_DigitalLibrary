@@ -21,6 +21,7 @@ function acquia_search_multi_subs_apachesolr_init() {
   $acquia_identifier = acquia_agent_settings('acquia_identifier');
   $ah_site_environment = isset($_ENV['AH_SITE_ENVIRONMENT']) ? $_ENV['AH_SITE_ENVIRONMENT'] : '';
   $ah_site_name = isset($_ENV['AH_SITE_NAME']) ? $_ENV['AH_SITE_NAME'] : '';
+  $ah_region = isset($_ENV['AH_CURRENT_REGION']) ? $_ENV['AH_CURRENT_REGION'] : '';
   $sites_foldername = substr(conf_path(), strrpos(conf_path(), '/') + 1);
   $subscription_expected_search_cores = acquia_search_multi_subs_get_expected_search_cores($acquia_identifier, $ah_site_environment, $ah_site_name, $sites_foldername);
   // Get the search cores available in the subscription.
@@ -35,12 +36,15 @@ function acquia_search_multi_subs_apachesolr_init() {
     }
     $env_id = $environment['env_id'];
 
+    // Get some variables
     $environment_core_name = apachesolr_environment_variable_get($env_id, 'acquia_override_subscription_corename');
     $environment_core_url = $environment['url'];
     $expected_core_host = acquia_search_multi_subs_get_hostname($environment_core_name);
     $acquia_override_auto_switch = apachesolr_environment_variable_get($env_id, 'acquia_override_auto_switch', TRUE);
+    $acquia_override_failover = apachesolr_environment_variable_get($env_id, 'acquia_override_failover', FALSE);
     $acquia_override_selector = apachesolr_environment_variable_get($env_id, 'acquia_override_selector');
-    // If auto switch is enabled, search thru all the subscription's search cores
+
+    // If auto switch is enabled, search through all the subscription's search cores
     // to find best match.
     if ($acquia_override_auto_switch) {
       $expected_core_names = $subscription_expected_search_cores;
@@ -50,22 +54,51 @@ function acquia_search_multi_subs_apachesolr_init() {
       if ($acquia_override_selector == 'other') {
         $expected_core_names = array($environment_core_name);
       }
+      elseif ($acquia_override_selector == 'default') {
+        $expected_core_names = array(acquia_agent_settings('acquia_identifier'));
+      }
       else {
         $expected_core_names = array($acquia_override_selector);
+      }
+    }
+
+    // Remove available cores from other regions if multiregion is enabled.
+    if ($acquia_override_failover) {
+      foreach ($available_search_cores as $core_id => $available_search_core) {
+        $expected_search_core_region = str_replace('-', '', $ah_region);
+        $matches = array();
+        preg_match("/^([^-]*)/", $available_search_core['balancer'], $matches);
+        $search_core_region = reset($matches);
+        if ($search_core_region != $expected_search_core_region) {
+          unset($available_search_cores[$core_id]);
+        }
+      }
+    }
+    else {
+      // if not enabled, remove all failover indexes from being a possible candidate
+      foreach ($subscription_expected_search_cores as $search_core_id => $search_core) {
+        if (strstr($search_core, 'failover')) {
+          unset($subscription_expected_search_cores[$search_core_id]);
+        }
       }
     }
 
     $match_found = false;
     foreach ($expected_core_names as $expected_core_name) {
       // This allows us to break from the 2-level deep foreach.
+      // @see the foreach loop below.
       if ($match_found) {
         break;
       }
+
       // Note it's OK to use http:// on the following since it will be replaced
       // later with https:// if needed.
       $expected_environment_core_url = 'http://' . $expected_core_host . '/solr/' . $expected_core_name;
+
       // Loop over all the available search cores.
       foreach ($available_search_cores as $available_search_core) {
+
+        // Checking if we need to switch to another core.
         if ($available_search_core['core_id'] == $expected_core_name) {
           // If the core is already the same, don't do anything.
           if ($expected_environment_core_url != $environment_core_url) {
