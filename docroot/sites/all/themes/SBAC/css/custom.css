@@ -29817,7 +29817,7 @@ body.page-sbac #lp-find-resource-wrapper .sbac-search-filter-custom-link a {
 /* line 441, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons {
   position: absolute;
-  width: 100%;
+  width: 960px;
 }
 /* line 444, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset {
@@ -29827,7 +29827,7 @@ body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset {
 /* line 447, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-find-resource-wrapper .more-buttons fieldset .more-filters {
   position: absolute;
-  right: 270px;
+  right: 5px;
   margin-bottom: 15px;
   top: 0;
   z-index: 101;

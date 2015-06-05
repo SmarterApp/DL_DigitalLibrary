@@ -440,13 +440,13 @@ body.page-sbac{
     }
     .more-buttons{
       position:absolute;
-      width:100%;
+      width:960px;
       fieldset{
         border:none;
         padding:0;
         .more-filters{
 	  position: absolute;
-	  right: 270px;
+	  right: 5px;
 	  margin-bottom: 15px;
 	  top: 0;
 	  z-index: 101;
