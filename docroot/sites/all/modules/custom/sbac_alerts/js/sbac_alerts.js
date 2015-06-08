@@ -13,7 +13,9 @@
         $("#close-notifications").click(function () {
           setCookie('user-token', alert_settings.token);
           setCookie('display-notifications', 'hidden');
-          $("#lp-notifications-wrapper").fadeOut("slow");
+            $("#lp-notifications-wrapper").fadeOut("slow");
+	    $('#close-notifications').fadeOut("slow");
+	    
         });
       }
     }
