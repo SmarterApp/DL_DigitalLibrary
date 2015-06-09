@@ -27,7 +27,8 @@
  * @ingroup views_templates
  */
 ?>
-<div id="close-notifications" class="close-notifications"></div>
+<?php if (!empty($rows)) : ?>
+<div id="close-notifications" class="close-notifications show-x"></div>
 <div class="<?php print $classes; ?>">
   <?php print render($title_prefix); ?>
   <?php if ($title): ?>
@@ -89,3 +90,4 @@
   <?php endif; ?>
 
 </div><?php /* class view */ ?>
+<?php endif; ?>

@@ -5,17 +5,16 @@
       if(alert_settings){
         if(getCookie('user-token') != alert_settings.token){
           setCookie('user-token', '');
-          setCookie('display-notifications', '');
+            setCookie('display-notifications', '');
         }        
         if(getCookie('display-notifications') != 'hidden'){
-          $("#lp-notifications-wrapper").show(); 
+            $("#lp-notifications-wrapper").show();
         }
         $("#close-notifications").click(function () {
           setCookie('user-token', alert_settings.token);
           setCookie('display-notifications', 'hidden');
             $("#lp-notifications-wrapper").fadeOut("slow");
-	    $('#close-notifications').fadeOut("slow");
-	    
+	    $('#close-notifications').removeClass('show-x');	    
         });
       }
     }
