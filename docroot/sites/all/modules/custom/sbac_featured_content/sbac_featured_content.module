@@ -206,8 +206,10 @@ function _sbac_featured_resource_image($node, $view_display = 'grid') {
   }
   elseif(isset($node->field_thumbnail_uri['und'][0]['value'])){
     $locations = explode('::', $node->field_thumbnail_uri['und'][0]['value']);
-    if (file_exists($locations[0] && exif_imagetype($locations[0]))) {
-      $uri = $locations[0];
+    if (file_exists($locations[0])) {
+      if(exif_imagetype($locations[0])){
+        $uri = $locations[0];
+      }
     }
     else{
       $uri = $default_img;
@@ -290,10 +292,10 @@ function sbac_featured_content_views_pre_render(&$view){
       $privacy_key[]= $pr['raw']['value'];
     }
     if(!in_array('field_last_name',$privacy_key)){
-      unset($view->result[0]->field_field_last_name);
+      $view->result[0]->field_field_last_name[0]['rendered']['#access'] = FALSE;
     }
     if(!in_array('picture',$privacy_key)){
-      unset($view->result[0]->users_picture);
+      $view->result[0]->users_picture = '';
     }
   }
   return $view;
