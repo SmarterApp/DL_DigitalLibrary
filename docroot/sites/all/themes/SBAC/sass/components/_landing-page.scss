@@ -39,6 +39,9 @@ body.page-sbac{
     background-size: cover;
     position:relative;
     padding-top:30px;
+    -webkit-box-shadow: 0px -2px 2px rgba(16, 16, 16, .3);
+    -moz-box-shadow: 0px -2px 2px rgba(16, 16, 16, .3);
+    box-shadow: 0px -2px 2px rgba(16, 16, 16, .3);
     #lp-featured-content {
       position:relative;
     }
@@ -240,8 +243,8 @@ body.page-sbac{
   #lp-find-resource-wrapper{
     width: 994px;
     margin:0 auto;
-    padding: 20px;
-    min-height:185px;
+    padding: 20px 20px 0 20px;
+    min-height:152px;
     #lp-find-resource-lable{
       color: $text;
       font-size:18px;
@@ -281,20 +284,38 @@ body.page-sbac{
             min-height: 12px;
             .display-name,
             .sbac-search-filter-custom-link{
-              font-size: 11px;
+              font-size: 13px;
               margin:0 10px;
-              height:30px;
-              line-height: 32px;
+	      color: #101010;
+              height:40px;
+              line-height: 1;
               display:block;
               padding-right: 15px;
               cursor: pointer;
             }
+	    #sbac-search-filter-name-13 .display-name {
+	      top:6px;
+	      position:relative;
+	    }
+
+
+	    #sbac-search-filter-name-9 .display-name,
+	    #sbac-search-filter-name-16 .display-name{
+	      top:11px;
+	      position:relative;
+	    }
+
+	    .sbac-search-filter-custom-link a{
+	      top:6px;
+	      position:relative;
+	    }
+	    
             &.collapsed,
             .sbac-search-filter-custom-link{
-              background: url('../images/icons/filterArrowDown.png') no-repeat right 5px top 5px;
+              background: url('../images/icons/filterArrowDown.png') no-repeat 95% center;
             }
             &.expanded{
-              background: url('../images/icons/filterArrowUp.png') no-repeat right 5px top 5px;
+              background: url('../images/icons/filterArrowUp.png') no-repeat 95% center;
             }
 
             .categories-filter-choices {
@@ -430,11 +451,18 @@ body.page-sbac{
           }
         }
       }
+      .category-filter-name.column.large-4.col-4.col-last {
+	&.collapsed,
+        .sbac-search-filter-custom-link{
+          background: url('../images/icons/filterArrowDown.png') no-repeat 100% center;
+        }
+      }
     }
     .sbac-search-filter-custom-link {
       a {
         display:block;
         width:120%;
+	padding-right:100px;
         color: $text;
       }
     }
@@ -448,7 +476,7 @@ body.page-sbac{
 	  position: absolute;
 	  right: 5px;
 	  margin-bottom: 15px;
-	  top: 0;
+	  top: 12px;
 	  z-index: 101;
           a{
             font-size: 11px;
@@ -461,6 +489,8 @@ body.page-sbac{
         }
       }
       .category-buttons{
+	position:relative;
+	top:10px;
       }
 
     }
