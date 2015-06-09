@@ -6,11 +6,9 @@
         if(getCookie('user-token') != alert_settings.token){
           setCookie('user-token', '');
             setCookie('display-notifications', '');
-	    $('#close-notifications').addClass('show-x');
         }        
         if(getCookie('display-notifications') != 'hidden'){
             $("#lp-notifications-wrapper").show();
-	    $('#close-notifications').addClass('show-x');
         }
         $("#close-notifications").click(function () {
           setCookie('user-token', alert_settings.token);
