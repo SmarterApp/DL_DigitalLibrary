@@ -17,10 +17,10 @@ function sbac_email_taxonomy_term_insert($term) {
   $loaded_user = $loaded_node->uid;
 
   // Make sure the poster is the author.
-  if ($loaded_user == $user->uid) {
+  if ($loaded_user == $user->uid || arg(0) == 'forums') {
     $term_flag = flag_get_flag('subscribe_term');
     $term_flag->flag('flag', $term->tid, user_load($user->uid), TRUE);
-  }
+    }
 }
 
 
