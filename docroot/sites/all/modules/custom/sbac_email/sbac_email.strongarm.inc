@@ -48,7 +48,34 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_message__sbac_email_comment_insert';
-  $strongarm->value = array();
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
   $export['field_bundle_settings_message__sbac_email_comment_insert'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -63,8 +90,7 @@ function sbac_email_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'mail_system';
   $strongarm->value = array(
-    'default-system' => 'MimeMailSystem',
-    'mimemail' => 'MimeMailSystem',
+    'default-system' => 'SmtpMailSystem',
   );
   $export['mail_system'] = $strongarm;
 
@@ -107,14 +133,14 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'mimemail_mail';
-  $strongarm->value = 'info@smarterbalancedlibrary.org';
+  $strongarm->value = 'DoNotReply@smarterbalancedlibrary.org';
   $export['mimemail_mail'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'mimemail_name';
-  $strongarm->value = 'Digital Library';
+  $strongarm->value = 'Smarter Balance Digital Library';
   $export['mimemail_name'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -156,14 +182,14 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'site_mail';
-  $strongarm->value = 'info@smarterbalancedlibrary.org';
+  $strongarm->value = 'DoNotReply@smarterbalancedlibrary.org';
   $export['site_mail'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'smtp_allowhtml';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['smtp_allowhtml'] = $strongarm;
 
   $strongarm = new stdClass();
