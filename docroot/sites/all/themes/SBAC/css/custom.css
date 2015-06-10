@@ -31078,7 +31078,6 @@ button.blue:hover, .button.blue:hover, button.blue:active, .button.blue:active, 
 /* line 323, ../sass/custom.scss */
 .alert-box ul {
   list-style-type: none;
-  margin: 0 !important;
 }
 /* line 328, ../sass/custom.scss */
 .alert-box.alert {
