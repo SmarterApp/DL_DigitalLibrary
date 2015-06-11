@@ -393,19 +393,6 @@ function sbac_central_update_7034() {
 /**
  * Implementation of hook_update_N().
  *
- * Enables Acquia Connector modules.
- */
-function sbac_central_update_7035() {
-  $modules = array(
-    'acquia_agent',
-    'acquia_search',
-  );
-  module_enable($modules);
-}
-
-/**
- * Implementation of hook_update_N().
- *
  * Enables Views Load More module.
  */
 function sbac_central_update_7036() {
