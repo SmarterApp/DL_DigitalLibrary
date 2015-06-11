@@ -1,6 +1,7 @@
 name = SBAC Featured Content
 core = 7.x
 package = ~SBAC
+scripts[] = js/sbac_featured_content.js
 dependencies[] = features
 dependencies[] = flag
 dependencies[] = sbac_content_manager

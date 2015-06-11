@@ -111,20 +111,19 @@
           }
 
           .featured-label{
-	    margin-top: 10px;
-	    margin-bottom: 10px;
-	    font-weight: 400;
-	    color:#6F6A6A;
-	   
-	    line-height: 1;
-	    clear: both;
-	    padding: 1px;
-	    text-transform: uppercase;
-	    &.featured-type {
-	      font-size: 12px;
-	      color:#e1632f;
-	      font-weight:1;
-	    }
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-weight: 400;
+            color:#6F6A6A;
+            line-height: 1;
+            clear: both;
+            padding: 1px;
+            text-transform: uppercase;
+            &.featured-type {
+              font-size: 12px;
+              color:#e1632f;
+              font-weight:600;
+            }
           }
           .featured-type{
           }
