@@ -443,16 +443,6 @@ function sbac_central_update_7039() {
 }
 
 /**
- * Disables Acquia Search.
- */
-function sbac_central_update_7040() {
-  $modules = array(
-    'acquia_search',
-  );
-  module_disable($modules);
-}
-
-/**
  * Enable m4032404 module
  */
 function sbac_central_update_7041() {
@@ -665,16 +655,6 @@ function sbac_central_update_7058() {
   module_enable($modules);
 }
 
-/**
- * Enables Acquia Search Multi Subs module
- */
-function sbac_central_update_7059() {
-  $modules = array(
-    'acquia_search',
-    'acquia_search_multi_subs',
-  );
-  module_enable($modules);
-}
 
 /**
  * Enables Transliteration module.

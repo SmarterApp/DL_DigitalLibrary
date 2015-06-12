@@ -171,7 +171,6 @@ features[views_view][] = forum_list
 features[views_view][] = forum_list_empty
 features[views_view][] = forum_member_list
 features[views_view][] = forum_topic_list
-features[views_view][] = forums_keyword_search
 features_exclude[dependencies][file] = file
 features_exclude[dependencies][entityreference] = entityreference
 features_exclude[dependencies][link] = link

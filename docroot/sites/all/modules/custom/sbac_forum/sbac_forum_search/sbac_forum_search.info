@@ -1,0 +1,12 @@
+name = SBAC Forum Search
+description = Forum - Keyword Search
+core = 7.x
+package = ~SBAC
+version = 7.x-1.0-beta1
+project = sbac_forum_search
+dependencies[] = apachesolr
+dependencies[] = sbac_forum
+dependencies[] = views
+dependencies[] = views_load_more
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
