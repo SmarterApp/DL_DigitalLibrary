@@ -544,7 +544,8 @@ body.page-sbac{
       } 
       .views-row{
         .field-content{
-          .more{
+          .more,
+          .less {
             color:$blue-text;
             text-decoration: underline;
           }

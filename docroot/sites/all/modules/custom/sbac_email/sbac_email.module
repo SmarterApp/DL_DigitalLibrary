@@ -13,8 +13,14 @@ function sbac_email_taxonomy_term_insert($term) {
   global $user;
 
   // Associciate user with forum they have created.
-  $term_flag = flag_get_flag('subscribe_term');
-  $term_flag->flag('flag', $term->tid, user_load($user->uid), TRUE);
+  $loaded_node = node_load($term->field_forum_resource_ref[LANGUAGE_NONE][0]['target_id']);
+  $loaded_user = $loaded_node->uid;
+
+  // Make sure the poster is the author.
+  if ($loaded_user == $user->uid || arg(0) == 'forums') {
+    $term_flag = flag_get_flag('subscribe_term');
+    $term_flag->flag('flag', $term->tid, user_load($user->uid), TRUE);
+  }
 }
 
 

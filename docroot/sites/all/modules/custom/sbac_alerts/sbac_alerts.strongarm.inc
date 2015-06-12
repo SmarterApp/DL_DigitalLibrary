@@ -137,7 +137,7 @@ function sbac_alerts_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'scheduler_publish_past_date_sbac_alerts';
-  $strongarm->value = 'publish';
+  $strongarm->value = 'error';
   $export['scheduler_publish_past_date_sbac_alerts'] = $strongarm;
 
   $strongarm = new stdClass();

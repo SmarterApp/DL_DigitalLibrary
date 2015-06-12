@@ -29939,15 +29939,16 @@ body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-acc
   font-size: 0.75em;
 }
 /* line 547, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more {
+body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more,
+body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .less {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 556, ../sass/components/_landing-page.scss */
+/* line 557, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 558, ../sass/components/_landing-page.scss */
+/* line 559, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
@@ -30369,22 +30370,22 @@ body.page-sbac .ajax-progress-throbber .throbber {
   padding: 1px;
   text-transform: uppercase;
 }
-/* line 123, ../sass/components/_featured-content.scss */
+/* line 122, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-label.featured-type {
   font-size: 12px;
   color: #e1632f;
-  font-weight: 1;
+  font-weight: 600;
 }
-/* line 131, ../sass/components/_featured-content.scss */
+/* line 130, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper {
   clear: both;
   padding: 1px;
 }
-/* line 134, ../sass/components/_featured-content.scss */
+/* line 133, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper ul.featured-content-terms {
   display: block;
 }
-/* line 136, ../sass/components/_featured-content.scss */
+/* line 135, ../sass/components/_featured-content.scss */
 #lp-featured-content .featured-content-container .featured-content-wrapper.slick-slide .featured-content-inner .featured-content-terms-wrapper ul.featured-content-terms li {
   color: #000000;
   line-height: 1.25rem;
@@ -31078,7 +31079,6 @@ button.blue:hover, .button.blue:hover, button.blue:active, .button.blue:active, 
 /* line 323, ../sass/custom.scss */
 .alert-box ul {
   list-style-type: none;
-  margin: 0 !important;
 }
 /* line 328, ../sass/custom.scss */
 .alert-box.alert {
