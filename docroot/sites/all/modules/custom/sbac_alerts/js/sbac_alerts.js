@@ -13,8 +13,22 @@
         $("#close-notifications").click(function () {
           setCookie('user-token', alert_settings.token);
           setCookie('display-notifications', 'hidden');
-            $("#lp-notifications-wrapper").fadeOut("slow");
-	    $('#close-notifications').removeClass('show-x');	    
+          $("#lp-notifications-wrapper").fadeOut("slow");
+          $('#close-notifications').removeClass('show-x');	    
+        });
+        // Toggle "Show More" / "Show Less".
+        $(".views-field-title.views-accordion-header").click(function (){
+          var id = "#" + $(this).attr('id');
+          // Set timeout to allow views accordian to first change aria-selected.
+          setTimeout(function(){
+            var selected = $(id).attr('aria-selected');
+            if(selected == 'true'){
+              $( id + " span.more" ).replaceWith( '<span class="less">Show Less</span>' );
+            }
+            if(selected == 'false'){
+              $( id + " span.less" ).replaceWith( '<span class="more">Show More</span>' );
+            }
+          }, 1);
         });
       }
     }

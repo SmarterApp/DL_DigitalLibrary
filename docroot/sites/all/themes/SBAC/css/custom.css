@@ -29939,15 +29939,16 @@ body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .ui-accordion .ui-acc
   font-size: 0.75em;
 }
 /* line 547, ../sass/components/_landing-page.scss */
-body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more {
+body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .more,
+body.page-sbac #lp-notifications-wrapper .view-sbac-alerts .views-row .field-content .less {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 556, ../sass/components/_landing-page.scss */
+/* line 557, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber {
   display: none;
 }
-/* line 558, ../sass/components/_landing-page.scss */
+/* line 559, ../sass/components/_landing-page.scss */
 body.page-sbac .ajax-progress-throbber .throbber {
   display: none;
 }
