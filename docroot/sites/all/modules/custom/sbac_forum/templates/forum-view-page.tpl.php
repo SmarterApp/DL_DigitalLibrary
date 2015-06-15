@@ -83,52 +83,54 @@
     </div>
   <?php else: ?>
     <div class="no-resource">
-			<div class="col narrow">
-     	 <?php if (!empty($fields['description'])): ?>
-	        <div class="vp-desc-field">
-	          <?php print $fields['description']; ?>
-	        </div>
-	      <?php endif; ?>
-	      <?php if (!empty($fields['facilitators'])): ?>
-	        <div class="vp-faci-field">
-	          <div class="title-tags"><?php print t('Facilitator(s):'); ?></div>
-	          <?php print $fields['facilitators']; ?>
-	        </div>
-	      <?php endif; ?>
-			</div>
-			<div class="col wide">
-				<?php if (isset($fields['favorites_link'])): ?>
-	        <?php print $fields['favorites_link']; ?>
-	      <?php endif; ?>
-	      <?php if (!empty($fields['subjects'])): ?>
-	        <div class="vp-subjects-field  whole">
-	          <div class="title-tags"><?php print t('Subjects and Domains'); ?></div>
-	          <?php print $fields['subjects']; ?>
-	        </div>
-	      <?php endif; ?>
-	      <?php if (!empty($fields['grades'])): ?>
-	        <div class="vp-grades-field">
-	          <div class="title-tags"><?php print t('Grades'); ?></div>
-	          <?php print $fields['grades']; ?>
-	        </div>
-	      <?php endif; ?>
+      <div class="col narrow">
+     	<?php if (!empty($fields['description'])): ?>
+	  <div class="vp-desc-field">
+	    <?php print $fields['description']; ?>
+	  </div>
+	<?php endif; ?>
+	<?php if (!empty($fields['facilitators'])): ?>
+	  <div class="vp-faci-field">
+	    <div class="title-tags"><?php print t('Facilitator(s):'); ?></div>
+	    <?php print $fields['facilitators']; ?>
+	  </div>
+	<?php endif; ?>
+      </div>
+      <div class="col wide">
+	<?php if (isset($fields['favorites_link'])): ?>
 
-	      <?php if (!empty($fields['end_users'])): ?>
-	        <div class="vp-end-users-field">
-	          <div class="title-tags"><?php print t('Intended End Users'); ?></div>
-	          <?php print $fields['end_users']; ?>
-	        </div>
-	      <?php endif; ?>
-	      <?php if (!empty($fields['students'])): ?>
-	        <div class="vp-students-field read-more">
-	          <div class="title-tags"><?php print t('Intended Student Populations'); ?></div>
-	          <?php print $fields['students']; ?>
-	        </div>
-	        <a class="read-more-link">More Attributes</a>
-	      <?php endif; ?>
-			</div>
+
+	  <?php print $fields['favorites_link']; ?>
+	<?php endif; ?>
+	<?php if (!empty($fields['subjects'])): ?>
+	  <div class="vp-subjects-field  whole">
+	    <div class="title-tags"><?php print t('Subjects and Domains'); ?></div>
+	    <?php print $fields['subjects']; ?>
+	  </div>
+	  <?php endif; ?>
+	  <?php if (!empty($fields['grades'])): ?>
+	  <div class="vp-grades-field">
+	    <div class="title-tags"><?php print t('Grades'); ?></div>
+	    <?php print $fields['grades']; ?>
+	  </div>
+	  <?php endif; ?>
+
+	  <?php if (!empty($fields['end_users'])): ?>
+	  <div class="vp-end-users-field">
+	    <div class="title-tags"><?php print t('Intended End Users'); ?></div>
+	    <?php print $fields['end_users']; ?>
+	  </div>
+	  <?php endif; ?>
+	  <?php if (!empty($fields['students'])): ?>
+	  <div class="vp-students-field read-more">
+	    <div class="title-tags"><?php print t('Intended Student Populations'); ?></div>
+	    <?php print $fields['students']; ?>
+	  </div>
+	  <a class="read-more-link">More Attributes</a>
+	  <?php endif; ?>
+      </div>
     </div>
-  <?php endif; ?>
+	<?php endif; ?>
 </div>
 <div class="sbac-forum-vp-tabs">
   <?php print $fields['tabs']; ?>

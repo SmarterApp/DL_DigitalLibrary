@@ -3,8 +3,10 @@
   <div class="row clearfix">
     <div class="column large-2">
       <?php if (isset($fields['image'])): ?>
-      <?php print $fields['image']; ?>
-      <?php print '<span class="' . $fields['file-type-icon'] . '"></span>'; ?>
+      <a href="<?php print $fields['path']->content; ?>">
+        <?php print $fields['image']; ?>
+        <?php print '<span class="' . $fields['file-type-icon'] . '"></span>'; ?>
+      </a>
       <?php endif; ?>
 
     </div>
@@ -27,13 +29,13 @@
       <?php print l(truncate_utf8(htmlspecialchars_decode($fields['title']->raw), 70, TRUE, TRUE), $fields['path']->content); ?>
     </h3>
 
-		
+
 		<div class="resource-stats">
           <?php if (isset($fields['field_alt_body'])): ?>
             <?php echo $fields['field_alt_body']->content; ?>
           <?php endif; ?>
 		</div>
-		
+
     <div class="shield-drop"><?php print $image; ?></div>
     <?php if (isset($fields['favorites_link'])): ?>
       <div class="favorites-link">
@@ -131,8 +133,8 @@
       </div>
 
     <?php endif; ?>
-       
+
       </div>
     </div>-->
   </div>
-</div>  
+</div>

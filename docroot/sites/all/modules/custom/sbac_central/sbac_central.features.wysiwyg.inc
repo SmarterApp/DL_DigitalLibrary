@@ -17,7 +17,7 @@ function sbac_central_wysiwyg_default_profiles() {
     'settings' => array(
       'default' => 1,
       'user_choose' => 0,
-      'show_toggle' => 0,
+      'show_toggle' => 1,
       'theme' => 'advanced',
       'language' => 'en',
       'buttons' => array(
@@ -65,6 +65,8 @@ function sbac_central_wysiwyg_default_profiles() {
       'css_path' => '',
       'css_classes' => '',
     ),
+    'entity_type' => 'wysiwyg_profile',
+    'entity_id' => 'full_html',
     'rdf_mapping' => array(),
   );
 

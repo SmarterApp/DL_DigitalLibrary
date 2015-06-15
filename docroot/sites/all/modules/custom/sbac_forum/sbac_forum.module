@@ -496,7 +496,7 @@ function sbac_forum_delete_orphaned_topics_process($item_nid) {
     if ($topic_node) {
       $deleted_node_title = $topic_node->title;
       node_delete($item_nid);
-      watchdog('action', 'Cleanup Task: Deleted Orphaned Topic "%name". Triggered by a Forum Deletion. ', array('%name' => $deleted_node_title));
+      watchdog('action', 'Cleanup Task: Deleted Orphaned Discussion "%name". Triggered by a Forum Deletion. ', array('%name' => $deleted_node_title));
     }
   }
 }
@@ -1058,7 +1058,7 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
         ),
         'query' => array('target-forum' => $tid),
       );
-      $url = l('Post a Topic', 'node/add/topic', $link_ops);
+      $url = l('Post a Discussion', 'node/add/topic', $link_ops);
       $message = 'Congratulations! You created a forum! ' . $url . ' to start a discussion';
       drupal_get_messages();
       drupal_set_message($message);
@@ -1429,7 +1429,7 @@ function _sbac_forum__topic_form__default_parent_term_validate($form, &$form_sta
         $form_state['values']['field_topic_forum_parent'][LANGUAGE_NONE][0] = get_object_vars($parent_term);
       }
       else {
-        form_set_error('', 'You do not have access to add a topic to this forum.'); // Forum is either restricted or user is not a member.
+        form_set_error('', 'You do not have access to add a discussion to this forum.'); // Forum is either restricted or user is not a member.
       }
     }
     else {
@@ -1437,7 +1437,7 @@ function _sbac_forum__topic_form__default_parent_term_validate($form, &$form_sta
     }
   }
   else {
-    form_set_error('', 'There is no Forum associated with this topic post.'); // Default forum parent should be passed in. Otherwise it will be an orphan
+    form_set_error('', 'There is no Forum associated with this discussion post.'); // Default forum parent should be passed in. Otherwise it will be an orphan
   }
 }
 
@@ -1451,7 +1451,7 @@ function _sbac_forum__topic_form__title_profanity_validate(&$form, &$form_state)
   $title = $form_state['values']['title'];
   $bad_words = profanity_validate_text($title);
   if ($bad_words) {
-    $error = 'Please remove any inappropriate language from Topic Title.';
+    $error = 'Please remove any inappropriate language from Discussion Title.';
     form_set_error('title', $error);
   }
 }
@@ -1734,7 +1734,7 @@ function sbac_forum_node_insert($node) {
 
           $recipients = array_unique($recipients);
 
-          foreach ($recipients as $recipient) {
+          /*  foreach ($recipients as $recipient) {
             if ($recipient && $recipient != $node->uid) { // don't send to yourself
               if ($task = taskit_get_object('created_topic_node')) {
                 $task->addVisibility($task::VISIBILITY_USER);
@@ -1744,7 +1744,7 @@ function sbac_forum_node_insert($node) {
                 $task->save();
               }
             }
-          }
+            } */
         } catch (EntityMetadataWrapperException $e) {
         }
 
@@ -1774,7 +1774,8 @@ function sbac_forum_node_insert($node) {
         // Update user's topic count
         foreach ($forum_wrapper->field_fc_forum_members as $member_wrapper) {
           try {
-            if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid) {
+            if ($member_wrapper->field_fc_forum_member->uid->value() == $node->uid && db_table_exists('cache_entity_field_collection_item
+')) {
               // Increment the recommend count
               $current_topic_count = $member_wrapper->field_fc_forum_member_tpic_count->value();
               $current_topic_count++;
@@ -1987,7 +1988,7 @@ function sbac_forum_comment_insert($comment) {
 
         $recipients = array_unique($recipients);
 
-        foreach ($recipients as $recipient) {
+        /* foreach ($recipients as $recipient) {
           if ($recipient != $comment_author_id) { // don't send to yourself
             if ($task = taskit_get_object('created_forum_comment')) {
               $task->addVisibility($task::VISIBILITY_USER);
@@ -1998,7 +1999,7 @@ function sbac_forum_comment_insert($comment) {
               $task->save();
             }
           }
-        }
+        }*/
       }
     }
   }

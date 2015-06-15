@@ -5,17 +5,20 @@ global $user;
 <div class="page-wrap">
 
   <div class="top-bar sub-top">
+  <div class="inner-wrap">
     <div class="sbac-external-logo"><h1>Search External Resources</h1></div>
     <?php if (isset($page['search']) && $page['search']): ?>
       <div class="search right">
         <?php print render($page['search']); ?>
       </div>
-    <?php endif; ?>
+<?php endif; ?>
   </div>
 
   <?php if (!in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
-    <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
-      <?php print render($page['filter']); ?>
+  <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
+  <div class="inner-wrap">
+<?php print render($page['filter']); ?>
+  </div>
     </div>
   <?php endif; ?>
 

@@ -210,7 +210,7 @@ function sbac_core_field_default_field_bases() {
       'allowed_values' => array(
         'inaccurate' => 'Inaccurate / misleading',
         'unintelligible' => 'Unintelligible',
-        'biased' => 'Biased and objectionable or culturally insensitive <p class="new-line">(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>',
+        'biased' => 'Biased, objectionable, or culturally insensitive material<p class="new-line">(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>',
         'pii' => 'Contains personally identifiable information (PII)',
         'spam' => 'Appears to be spam',
       ),
@@ -328,7 +328,11 @@ function sbac_core_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_quality_set',
     'foreign keys' => array(),
-    'indexes' => array(),
+    'indexes' => array(
+      'revision_id' => array(
+        0 => 'revision_id',
+      ),
+    ),
     'locked' => 0,
     'module' => 'field_collection',
     'settings' => array(
@@ -402,7 +406,11 @@ function sbac_core_field_default_field_bases() {
     'entity_types' => array(),
     'field_name' => 'field_review_set',
     'foreign keys' => array(),
-    'indexes' => array(),
+    'indexes' => array(
+      'revision_id' => array(
+        0 => 'revision_id',
+      ),
+    ),
     'locked' => 0,
     'module' => 'field_collection',
     'settings' => array(

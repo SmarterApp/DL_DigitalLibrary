@@ -1,4 +1,10 @@
 <?php
+/**
+ * @file
+ * Code for the SBAC Favorites feature.
+ */
+
+include_once 'sbac_favorites.features.inc';
 
 /**
  * @file.

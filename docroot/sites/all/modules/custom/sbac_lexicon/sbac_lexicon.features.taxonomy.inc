@@ -9,6 +9,31 @@
  */
 function sbac_lexicon_taxonomy_default_vocabularies() {
   return array(
+    'forum_flags' => array(
+      'name' => 'Forum Flags',
+      'machine_name' => 'forum_flags',
+      'description' => 'The flags that are available when a user wishes to flag a forum topic or comment.',
+      'hierarchy' => 0,
+      'module' => '',
+      'weight' => 0,
+      'entity_type' => 'taxonomy_vocabulary',
+      'entity_id' => 46,
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          0 => 'skos:ConceptScheme',
+        ),
+        'name' => array(
+          'predicates' => array(
+            0 => 'dc:title',
+          ),
+        ),
+        'description' => array(
+          'predicates' => array(
+            0 => 'rdfs:comment',
+          ),
+        ),
+      ),
+    ),
     'glossary_terms' => array(
       'name' => 'Glossary Terms',
       'machine_name' => 'glossary_terms',
@@ -16,6 +41,8 @@ function sbac_lexicon_taxonomy_default_vocabularies() {
       'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
+      'entity_type' => 'taxonomy_vocabulary',
+      'entity_id' => 22,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

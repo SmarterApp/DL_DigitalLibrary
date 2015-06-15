@@ -856,13 +856,13 @@ function sbac_user_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('About me');
   t('Alternate email address');
   t('District Name');
   t('Feedback flag');
   t('Grade(s)');
   t('Last name');
   t('Name');
+  t('Other Professional Experiences and Accomplishments');
   t('Privacy');
   t('Records the number of successful logins for the user.');
   t('Retired');

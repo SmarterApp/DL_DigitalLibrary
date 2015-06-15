@@ -345,11 +345,16 @@ a.sbac-grid-layout {
 
   .resource-card {
     @include border-radius(6px);
-    background: $white;
+    background: rgba(255, 255, 255, 0.85);
     border: 1px solid #cecece;
     position: relative;
     padding: 0px;
     margin-bottom: 2em;
+    transition: background-color 0.3s ease;
+
+    &:hover{
+      background: $white;
+    }
 
 		.resource-top {
     	padding: 10px 15px;
@@ -364,7 +369,7 @@ a.sbac-grid-layout {
 			padding: 10px 15px 0;
     	color: $darkgreen;
       font-size: 12px;
-			/*border-top: 1px #b7bfc4 solid;*/
+			border-top: 1px #b7bfc4 solid;
 
     	&.rejected{
     		background-color: #eee2e5;
@@ -478,6 +483,10 @@ a.sbac-grid-layout {
 				font-weight: bold;
 				padding-right: 5px;
 				display: block;
+         &:hover{
+          color:#0583AC;
+          text-decoration: underline;
+        }
       }
 
 			span a {width: 92% \9\0; } /*for IE 9, 10*/
@@ -567,13 +576,16 @@ a.sbac-grid-layout {
       }
     }
 
-    img {
+    img.grid-image {
       /*@include border-radius(2px);
             @include box-shadow(inset 1px 2px 5px rgba(0,0,0,.4));*/ // inner shadow
 			height:138px;
 			width: 258px;
-			border: 1px #cecece solid;
+			outline: 1px #cecece solid;
       margin: 10px 0 0;
+      &:hover{
+        outline: 3px #0583AC solid;
+      }
     }
 
     .resource-stats {
@@ -647,6 +659,12 @@ a.sbac-grid-layout {
        /* border-bottom: 1px solid #aaaaaa;
                padding-bottom: 2px;
                margin-top: 0;*/
+       a{
+         &:hover{
+          color:#0583AC;
+          text-decoration: underline;
+        }
+       }
       }
 
       h3 {
@@ -657,9 +675,12 @@ a.sbac-grid-layout {
 				a {width: 100%;}
       }
 
-			img {
+			img.list-image {
 				width: 140px;
 				height: 72px;
+        &:hover{
+          outline: 3px #0583AC solid;
+        }
 			}
 
     .distinction span a {
@@ -749,6 +770,23 @@ a.sbac-grid-layout {
 
     p {
       font-size: 1em;
+    }
+  }
+  
+  .list-image{
+    border:20px;
+    img{
+      &:hover{
+        border: #0583AC 3px;
+      }
+    }
+  }
+  .grid-image{
+    border:20px;
+    img{
+      &:hover{
+        border: #0583AC 3px;
+      }
     }
   }
 }
@@ -1637,12 +1675,12 @@ html.js .category-hide {
 }
 
 #resource-element {
-	width: 880px;
+	width: 100%;
 	height: auto;
-
+	text-align:center;
 	img {
-		width: 880px;
-		height: 455px;
+		width: 100%;
+		height: auto;
 		/*background-size: cover;*/
 	}
 

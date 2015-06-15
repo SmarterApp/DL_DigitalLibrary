@@ -1,6 +1,7 @@
 <!-- Header and Nav -->
 <div class="page-wrap">
-<nav class="top-bar main-top clearfix">
+   <nav class="top-bar main-top clearfix">
+   <div class="inner-wrap">
   <ul class="title-area">
     <li class="name"><h1>
         <a title="Smarter Balanced Assessment Consortium" href="<?php echo $home_url; ?>">
@@ -56,10 +57,12 @@
       <a title='Sign In' href="/user">Sign In</a>
     </li>
   </ul>
-  <?php endif; ?>
+<?php endif; ?>
+            </div>
 </nav>
 
-<div class="top-bar sub-top">
+            <div class="top-bar sub-top">
+            <div class="inner-wrap">
   <nav class="main-nav left">
     <?php if ($main_menu_links && !in_array(SBAC_SHARE_GUEST, $user->roles)) : ?>
       <?php print $main_menu_links; ?>
@@ -69,12 +72,14 @@
     <div class="search right">
       <?php print render($page['search']); ?>
     </div>
-  <?php endif; ?>
+<?php endif; ?>
 </div>
 
 <?php if (!in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
-  <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
-    <?php print render($page['filter']); ?>
+            <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
+            <div class="inner-wrap">
+<?php print render($page['filter']); ?>
+            </div>
   </div>
 <?php endif; ?>
 
@@ -103,30 +108,49 @@
     if ($user->uid == 1 || array_intersect(array('DLRB member', 'help desk', 'administrator'), $user->roles)) {
         $sections = array();
 
-        $view_help = views_get_view('help_topics');
-        $view_help->set_display('page_2');
-        $view_help->execute();
+        // Featured Resources
+        $view_feature = views_get_view('featured_content');
+        $view_feature->set_display('page');
+        $view_feature->execute();
 
         $sections['tab1'] = array(
-          'title' => t('Help Topics ('. count($view_help->result) . ') '),
-          'content' => '<div id="tab1">' . $view_help->render(). '</div>',
+          'title' => t('Featured ('. count($view_feature->result) . ') '),
+          'content' => '<div id="tab1">' . $view_feature->render(). '</div>',
           'disabled' => FALSE,
           'class' => 'tab1 class',
           'no-ajax' => TRUE,
           'section_loaded' => 'section-loaded',
         );
 
-        $welcome_block = "<div id='admin-welcome-tab-message'><h3>Helpful Information
-        </h3><p>Welcome Tutorial consists of help topics. You can create a help topic in <a href='/admin/help-topics'>
-        help topics tab</a> and mark it for display in Welcome Tutorial.</p></div>";
+        // Help Topics
+        $view_help = views_get_view('help_topics');
+        $view_help->set_display('page_2');
+        $view_help->execute();
 
+        $sections['tab2'] = array(
+          'title' => t('Help Topics ('. count($view_help->result) . ') '),
+          'content' => '<div id="tab2">' . $view_help->render(). '</div>',
+          'disabled' => FALSE,
+          'class' => 'tab1 class',
+          'no-ajax' => TRUE,
+          'section_loaded' => 'section-loaded',
+        );
+
+        $welcome_block = "<div id='admin-welcome-tab-message'>
+            <h3>Helpful Information </h3>
+            <p>Welcome Topics are the three help items displayed on the landing page.</p>
+            <p>You must remove exising items to allow room for new items</p>
+            <p>You can add new items by editing Help Topics</p>
+          </div>";
+
+        // Welcome Help Topics
         $view_welcome = views_get_view('help_topics');
         $view_welcome->set_display('page_4');
         $view_welcome->execute();
 
-        $sections['tab2'] = array(
-          'title' => t('Welcome Tutorial ('. count($view_welcome->result) . ') '),
-          'content' => '<div id="tab2">' . $welcome_block . $view_welcome->render() . '</div>',
+        $sections['tab3'] = array(
+          'title' => t('Welcome Topics ('. count($view_welcome->result) . ') '),
+          'content' => '<div id="tab3">' . $welcome_block . $view_welcome->render() . '</div>',
           'disabled' => FALSE,
           'class' => 'tab2 class',
           'no-ajax' => TRUE,

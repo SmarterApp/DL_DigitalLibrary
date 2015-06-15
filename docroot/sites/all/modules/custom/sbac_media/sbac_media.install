@@ -61,7 +61,11 @@ function sbac_media_update_7002() {
   $ret = array();
   //Check if table exists, if not install the schema.
   if(db_table_exists('sbac_html5_progress') == FALSE) {
-    drupal_install_schema('sbac_media');
+    /*
+     * This is no longer necessary, and results in errors
+     * see: https://www.drupal.org/node/876250
+     * drupal_install_schema('sbac_media');
+     */
   }
   return $ret;
 }

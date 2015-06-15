@@ -33,8 +33,10 @@
     <div class="shield-drop"><?php print $image; ?></div>
 
     <?php if (isset($fields['image'])): ?>
-      <?php print $fields['image']; ?>
-      <?php print '<span class="' . $fields['file-type-icon'] . '"></span>'; ?>
+      <a href="<?php print $fields['path']->content; ?>">
+        <?php print $fields['image']; ?>
+        <?php print '<span class="' . $fields['file-type-icon'] . '"></span>'; ?>
+      </a>
     <?php endif; ?>
 
     <div class='resource-stats'>
@@ -144,4 +146,3 @@
 
   </div>
 </div>
-

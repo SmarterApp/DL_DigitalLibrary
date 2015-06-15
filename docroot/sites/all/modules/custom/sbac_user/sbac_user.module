@@ -415,6 +415,17 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
           'id' => 'vertical-tabs-default',
         ),
       );
+      unset($form['mimemail']);
+      global $user;
+      $form['sbac_user_email_options'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Email Notification Options'),
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      );
+      $form['sbac_user_email_options']['sbac_user_email_options_toggle'] = array(
+        '#prefix' => flag_create_link('email', $user->uid),
+      );
 
       // form modifications to field_privacy
       $default_privacy = array(
@@ -1119,11 +1130,11 @@ function sbac_user_redirect_on_login($edit = array()) {
         drupal_goto($alias_path);
       }
       else {
-        drupal_goto('digital-library-resources');
+        drupal_goto('<front>');
       }
     }
     else {
-      drupal_goto('digital-library-resources');
+      drupal_goto('<front>');
     }
   }
 }
@@ -1457,11 +1468,6 @@ function sbac_user_preprocess_page(&$vars) {
   $last_session = $user->login > $last_welcome;
   if (isset($_SESSION['user_setup']) && arg(0) != 'sbac-user') {
     drupal_goto('sbac-user/setup');
-  }
-  if (!isset($_SESSION['critical-first-then-welcome-tutorial'])) {
-    if (($last_session && !$disable_help && !isset($_SESSION['user_setup'])) || isset($_SESSION['welcome-update'])) {
-      drupal_add_js("jQuery(document).ready( function () { jQuery('#sbac-help-welcome-tutorial').click(); });", array('type' => 'inline'));
-    }
   }
 }
 

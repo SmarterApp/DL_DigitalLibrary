@@ -2,6 +2,9 @@
 @import "colors.scss";
 @import "compass/css3/";
 @import url(../css/sbac_icons.css);
+@import "components/_components.scss";
+@import "layout/_layout.scss";
+
 
 /* ==========================================================================
    Table of Contents
@@ -20,17 +23,6 @@
 :: Legal
 :: Admin theme fixes
 */
-
-/* -----------------------------------------
-   Color Variables
-   ----------------------------------------- */
-$white: #FFF;
-$text: #5a5a5a;
-$header: #18577e;
-$teal: #0085ad;
-$darkgreen: #246a34;
-$dark-blue: #04384e;
-
 
 /** Font Face **/
 
@@ -330,7 +322,7 @@ button.blue:hover, .button.blue:hover, button.blue:active, .button.blue:active, 
 
   ul {
     list-style-type: none;
-    margin: 0 !important;
+    //margin: 0 !important;
   }
 
   &.alert {
@@ -529,159 +521,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   }
 }
 
-.top-bar {
-  margin: 0;
-	line-height: 44px;
-
-  &.main-top {
-    background-color: #f2f2f2;
-    border-top:5px solid #0980a8;
-    border-bottom: 1px solid $header-borders;
-    height: auto;
-
-  }
-
-  &.sub-top {
-    background-color: $white; // color overlay
-    height: auto;
-    border-bottom: 1px solid #006082;
-  }
-
-  &.last-top {
-    height: auto;
-    background-color: $white; // color overlay
-  }
-
-  h1.title {
-    color: #fcfcfc;
-    padding: 0;
-    margin: 0;
-    margin-left: 30px;
-    font-size: emCalc(18px);
-    font-weight: normal;
-    font-family: "Franklin Gothic Medium", Franklin, sans-serif;
-    background-color: #0980a8;
-    position: relative;
-
-    &:before {
-      content: '';
-      display:inline-block;
-      width: 33px;
-      height: 25px;
-      background:url('../images/tab-left.svg') top left no-repeat;
-      position: absolute;
-      top:0;
-      left: -30px;
-    }
-
-    &:after {
-      content: '';
-      display:inline-block;
-      width: 33px;
-      height: 25px;
-      background:url('../images/tab-right.svg') top left no-repeat;
-      position: absolute;
-      top: 0;
-      right: -32px;
-    }
-  }
-
-  /*.button {
-   		@include border-radius (6px);
-        @include transition (all 500ms ease);
-        @include box-shadow(none);
-        padding: 8px 18px;
-        margin-left: 10px;
-        background: rgba(191, 216, 229, 1);
-        border: 1px rgba(0, 98, 152, .5) solid;
-        font-size: 1em;
-        font-weight: bold;
-        color: rgba(0, 98, 152, 1);
-        text-shadow: 0px -1px 0px rgba(000,000,000,0), 0px 1px 0px rgba(255,255,255,.5);
-        cursor: pointer;
-        line-height: 1em;
-        height: auto;
-
-      &:hover, &:focus, &.form-submit.ajax-processed {
-  			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
-  			@include background-image(linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%));
-
-        color: rgba(255, 255, 255, 1);
-        background: rgba(0, 133, 173, 1);
-        text-shadow: 0px -1px 0px rgba(000,000,000,1), 0px 1px 0px rgba(255,255,255,0);
-       }
-    }*/
-
-		.button {
-			float: left;
-			top: 18px;
-			margin-left: 8px;
-		}
-
-  .user-nav {
-    font-size: 1em;
-    color: #333;
-    line-height: 45px;
-
-    li {
-      border-left:1px solid $header-borders;
-      padding: 0px;
-      margin: 0px;
-      &:hover {
-        background: #c9eaf8;
-      }
-
-      li {
-        a {
-          padding-left: 20px;
-          padding-right: 20px;
-          color: black;
-          height: auto;
-          line-height: normal;
-        }
-
-        border:none;
-      }
-    }
-
-    a {
-      color: inherit;
-      padding-left: 20px;
-      padding-right: 20px;
-      height: 50px;
-      line-height: 50px;
-    }
-
-
-    .notifications {
-      span {
-        display: inline-block;
-        width: 27px;
-        height: 40px;
-        background: url('../images/icons/notification-number.png') center 13px no-repeat;
-        text-align: center;
-        color: white;
-        font-weight: bold;
-      }
-    }
-
-    .user-info {
-      img {
-        margin: 12px 10px 0 0;
-      }
-    }
-
-    .sbac-question {
-      background: url('../images/icons/help-small.png') center no-repeat;
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-      background-size: contain;
-			vertical-align: middle;
-    }
-  }
-}
-
 .bottom-bar {
   background: #006184;
 
@@ -699,7 +538,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
     }
 
     ul {
-      width: 325px;
+      width: 445px;
       height: 42px;
       margin: 0;
       padding: 0;
@@ -814,40 +653,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   /*background-color: #f9f9f9; */// layer fill content + color overlay
 	background-color: #FFF;
   padding: 15px 0;
-}
-
-nav.main-nav {
-  ul {
-    margin-left: 26px;
-
-    li {
-      display: inline-block;
-      margin: 0px;
-      padding: 0px;
-      border-right: 1px $header-borders solid;
-
-      &:hover {
-        background: #b0e6f4;
-      }
-
-      a {
-        display: block;
-        padding: 0 10px 1px;
-        height: 44px;
-        line-height: 44px;
-        color: $header-text; // text color
-
-        &.active {
-          background-color: #93d8f3; // color overlay
-          color: #063e5f; // text color + color overlay
-        }
-      }
-    }
-  }
-
-  li.last {
-    content: none;
-  }
 }
 
 #drop3 {
@@ -2384,208 +2189,7 @@ a.tabledrag-handle .handle {
 	}
 }*/
 
-// Welcom Tutorial Modal
-#modalContent {
-  .ctools-modal-content.sbac-welcome {
-    padding: 0;
-    height: 650px !important;
 
-    .modal-header {
-      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-      padding: 20px 40px;
-      position: relative;
-      z-index: 3;
-    }
-
-    #modal-title {
-      color: $dark-blue;
-      font-size: 22px;
-      padding: 0;
-    }
-
-    .close {
-      display: block;
-      background: url('../images/icons/icon-close.png') no-repeat right center;
-      width: 30px;
-      height: 30px;
-      text-indent: -9999px;
-      border: none;
-      box-shadow: none;
-
-      img {
-        display: none;
-      }
-    }
-
-    .modal-content {
-      padding: 0;
-    }
-
-    .sbac-tutorial-header-cont {
-      overflow: auto;
-      border-bottom: 1px solid $header-borders;
-      margin-bottom: 20px;
-      padding: 10px 0;
-
-      h2 {
-        float: left;
-        margin: 0;
-        font-size: 18px;
-        color: $dark-blue;
-      }
-
-      .welcome-tutorial-edit-topics {
-        float: right;
-        margin-top: 5px;
-        background: url('../images/icons/icon-edit.png') no-repeat left center;
-        padding-left: 25px;
-
-        a {
-          font-size: 14px;
-          color: $teal;
-        }
-      }
-    }
-
-    .sbac-welcome-update-cont {
-      @include border-radius (12px);
-      padding: 10px 30px;
-      border: 1px solid $darkgreen;
-      background-color: rgba(237, 243, 224, 1);
-      font-weight: normal;
-      position: relative;
-      margin: 15px 0;
-
-      #edit-profile-updated {
-        margin: 10px 0;
-
-        label {
-          font-weight: bold;
-          font-size: 16px;
-        }
-
-        a {
-          color: $teal;
-          text-decoration: underline;
-        }
-      }
-
-      .ajax-processed {
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        display: block;
-        background: url('../images/icons/icon-close.png') no-repeat right center;
-        background-size: 100%;
-        width: 30px;
-        height: 30px;
-        text-indent: -9999px;
-      }
-    }
-
-    .welcome-modal-container {
-      height: 500px;
-      overflow-y: scroll;
-      padding: 10px 40px;
-      background-color: #F2F2F2;
-    }
-
-    .welcome-topic-container {
-      @include clearfix();
-      background: $white;
-      border-radius: (5px);
-      padding: 15px;
-      border: 1px solid #F2F2F2;
-      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);      
-      margin-bottom: 20px;
-    }
-
-    .welcome-container-left {
-      float: left;
-      width: 75%;
-    }
-
-    .welcome-container-image {
-
-      img {
-        display: block;
-        float: left;
-        width: 180px;
-        height: 90px;
-        border: 1px solid $header-borders;
-      }
-    }
-
-    .welcome-tutorial-topic-title {
-      a {
-        color: $teal;
-        font-size: 16px;
-      }
-    }
-
-    .welcome-tutorial-topic-summary {
-      line-height: 1.2;
-      color: $text;
-    }
-
-    .welcome-tutorial-node-container {
-      background: $white;
-      border-radius: (5px);
-      border-top: 1px solid #F2F2F2;
-      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-      padding: 20px;
-      margin-bottom: 20px;      
-    }
-
-    .welcome-tutorial-node-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: $dark-blue;
-      margin-bottom: 25px;
-    }
-
-    .welcome-tutorial-back-button {
-      background: url('../images/icons/back-blue.png') no-repeat left -6px;
-      margin: 20px 0 35px;
-      padding-left: 30px;
-
-      a {
-        color: $teal;
-      }
-    }
-
-    .tutorial-image {
-      img {
-        margin: 0 20px 20px 0;
-        border: 1px solid $header-borders;
-        float: left;
-        width: 300px;
-        height: 150px;
-        display: block;
-      }
-    }
-
-    .welcome-modal-buttons {
-      border-top: 1px solid #F2F2F2;
-      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
-      display: block;
-      padding: 17px 40px;
-      position: relative;
-      width: 100%;
-      z-index: 4;
-      background: $white;
-      overflow: auto;
-
-      .form-item.form-type-checkbox {
-        float: left;
-      }
-
-      .button {
-        float: right;
-      }
-    }
-  }
-}
 /* -----------------------------------------
   Textify
   ------------------------------------------  */
@@ -2795,48 +2399,6 @@ a.tabledrag-handle .handle {
 	padding-bottom: 10px;
 }
 
-.help-topic-link,
-.welcome-tutorial-topic-link {
-/*  background: none repeat scroll 0 0 #DDDDDD;
-  border: 1px solid;
-  border-radius: 5px 5px 5px 5px;
-  display: block;
-  padding: 8px 20px;*/
-  background: none repeat scroll 0 0 #BFD8E5;
-  border: 1px solid rgba(0, 98, 152, 0.5);
-  border-radius: 6px 6px 6px 6px;
-  color: #006298;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 8px 18px;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.help-topic-link:hover,
-.welcome-tutorial-topic-link:hover {
-  -webkit-transition: all 500ms ease;
-  -moz-transition: all 500ms ease;
-  -o-transition: all 500ms ease;
-  transition: all 500ms ease;
-  background: #0085ad;
-  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5);
-  color: white;
-}
-
-.help-topic-link:focus,
-.welcome-tutorial-topic-link:focus {
-  background: #bfd8e5;
-  color: #006298;
-}
-
-.page-welcome-tutorial-topics .help-topic-link,
-.page-help-topics .help-topic-link {
-  top: 10px;
-  position: absolute;
-  right: 40px;
-}
 
 .view-id-help_topics .help-topic-link1 {
 
@@ -2867,33 +2429,6 @@ a.tabledrag-handle .handle {
 #draggableviews-table-help_topics-page_2,
 #draggableviews-table-help_topics-page_4 {
   width: 100%;
-}
-
-.view-help-topics ul li.views-row {
-  list-style: none;
-  margin-bottom: 20px;
-}
-
-.view-help-topics ul li .views-field-title{
-  display: block;
-  font-size: 18px;
-  font-weight: bold;
-  color: #42a747;
-}
-
-.view-help-topics ul li .views-field-body {
-  p {
-    font-size: 15px;
-  }
-}
-
-.view-help-topics ul li .views-field-field-summary {
-  margin-bottom: 20px;
-}
-
-.page-help-topics h1#page-title {
-  margin-bottom: 20px;
-  margin-top: 30px;
 }
 
 #admin-welcome-tab-message {
@@ -4333,6 +3868,286 @@ form#sbac-user-filter-form #edit-email {
       
       &:hover {
     		background-color: #64696e;
+      }
+    }
+  }
+}
+.inner-wrap {
+  max-width:1250px;
+  min-width:994px;
+  margin:0 auto;
+}
+
+/* -----------------------------------------
+  Notifications Tab
+  ------------------------------------------ */
+.view-sbac-email-message {
+  table {
+    width: 100%;
+    border:none;
+    background-color:none;
+    td,tr,th {
+      background-color:transparent;
+    }
+  }
+}
+#taskithide {
+  display:none;
+}
+
+/* -----------------------------------------
+  Flags
+  ------------------------------------------ */
+
+.filter-bar {
+  position:relative;
+  a.flag {
+    font-size:16px !important;
+    color: #5a5a5a;
+    padding-left:30px;
+    height:20px;
+    position:relative;
+    background: image-url('subscribe_icons.png') no-repeat 0 -2px;
+    &.unflagged,
+    &.flag-action {
+      color: #5a5a5a;
+    }
+
+    &.flagged,
+    &.unflag-action {
+      background: image-url('subscribe_icons.png') no-repeat 0 -22px;
+    }
+    &:hover {
+      color:#0684ad;
+      background: image-url('subscribe_icons.png') no-repeat 0 -42px;
+    }
+  }
+  a[title]:hover:after {
+    content: attr(title);
+    position: absolute;
+    color:red;
+    background: black;
+    border:white solid 2px;
+    padding:10px;
+    color:white;
+    width:450px;
+    text-align:center;
+    top:-70px;
+    right:-120px;
+    z-index:99;
+    -webkit-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    -moz-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+  }
+  a[title]:hover:before {
+    content: ' ';
+    width: 0;
+    height: 0;
+    position:absolute;
+    top:-40px;
+    z-index:100;
+    right:70px;
+    border-style: solid;
+    border-width: 30px 30px 0 30px;
+    border-color: #000000 transparent transparent transparent;
+  }
+  .flag-message {
+    background:none;
+  }
+  .flag-wrapper {
+    position: absolute;
+    top: 25px;
+    right: 250px;
+  }
+}
+
+.flag-email-1{
+  .flag-message {
+    background:none;
+  }
+}
+
+.topic-node-view-tertiary-nav-right {
+  .flag-wrapper {
+    position: absolute;
+    top: 47px;
+    right: 150px;
+  }
+}
+
+#section-collaboration {
+  .review-it {
+    position:relative;
+  }
+  .flag-wrapper {
+    position: absolute;
+    top: 60px;
+    right: 0px;
+    .flag-message {
+      background:none;
+    }
+  }
+  a.flag {
+    font-size:16px !important;
+    color: #5a5a5a;
+    padding-left:30px;
+    height:20px;
+    position:relative;
+    background: image-url('subscribe_icons.png') no-repeat 0 -2px;
+    &.unflagged,
+    &.flag-action {
+      color: #5a5a5a;
+    }
+
+    &.flagged,
+    &.unflag-action {
+      background: image-url('subscribe_icons.png') no-repeat 0 -22px;
+    }
+    &:hover {
+      color:#0684ad;
+      background: image-url('subscribe_icons.png') no-repeat 0 -42px;
+    }
+  }
+  a[title]:hover:after {
+    content: attr(title);
+    position: absolute;
+    color:red;
+    background: black;
+    border:white solid 2px;
+    padding:10px;
+    color:white;
+    width:450px;
+    text-align:center;
+    top:-70px;
+    right:-120px;
+    z-index:99;
+    -webkit-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    -moz-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+  }
+  a[title]:hover:before {
+    content: ' ';
+    width: 0;
+    height: 0;
+    position:absolute;
+    top:-40px;
+    z-index:100;
+    right:70px;
+    border-style: solid;
+    border-width: 30px 30px 0 30px;
+    border-color: #000000 transparent transparent transparent;
+  }
+}
+
+.topic-node-view-tertiary-nav {
+  position:relative;
+}
+.topic-node-view-tertiary-nav-right {
+    position:relative;
+   .flag-wrapper {
+    position: absolute;
+    top: 10px;
+    right:120px;
+    .flag-message {
+      background:none;
+    }
+   }
+   a.flag {
+     font-size:13px !important;
+     color: #5a5a5a;
+     padding-left:30px;
+     height:20px;
+     position:relative;
+     background: image-url('subscribe_icons.png') no-repeat 0 -2px;
+     &.unflagged,
+     &.flag-action {
+       color: #5a5a5a;
+     }
+
+     &.flagged,
+     &.unflag-action {
+       background: image-url('subscribe_icons.png') no-repeat 0 -22px;
+     }
+     &:hover {
+       color:#0684ad;
+       background: image-url('subscribe_icons.png') no-repeat 0 -42px;
+     }
+   }
+  a[title]:hover:after {
+    content: attr(title);
+    position: absolute;
+    color:red;
+    background: black;
+    border:white solid 2px;
+    padding:10px;
+    color:white;
+    width:450px;
+    text-align:center;
+    top:-70px;
+    right:-120px;
+    z-index:99;
+    -webkit-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    -moz-box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+    box-shadow: -1px 3px 34px -6px rgba(120,114,120,1);
+  }
+  a[title]:hover:before {
+    content: ' ';
+    width: 0;
+    height: 0;
+    position:absolute;
+    top:-40px;
+    z-index:100;
+    right:70px;
+    border-style: solid;
+    border-width: 30px 30px 0 30px;
+    border-color: #000000 transparent transparent transparent;
+  }
+}
+
+/* -----------------------------------------
+  Other
+  ------------------------------------------ */
+.form-item-message-subscribe-email-und {
+  display:none;
+}
+
+/* -----------------------------------------
+   Responsive Grid
+   ----------------------------------------- */
+.view-display-id-grid_view .view-content{
+  margin: 0;
+  padding: 0;
+} 
+
+.view-display-id-grid_view .view-content .views-row {
+  max-width: 290px !important;
+  margin: 0 5px 10px 10px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+
+/* SBAC Forum styles */
+.node-type-resource .view-forum-topic-list h2 {
+  clear:both;
+}
+
+.view-display-id-collaboration h2 {
+  font-size:13px;
+}
+
+/* -----------------------------------------
+   Content Admin Page
+   ----------------------------------------- */
+.page-admin-content{
+  /* Fix Content overflow on "Content" page */
+  .table-select-processed{
+    tbody{
+      tr{
+        td:nth-child(2) {
+          max-width:225px;
+          overflow:hidden;
+        }
       }
     }
   }

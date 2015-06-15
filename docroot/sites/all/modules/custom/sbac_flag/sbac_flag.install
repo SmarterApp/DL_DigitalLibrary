@@ -201,3 +201,41 @@ function sbac_flag_update_7009() {
   }
 }
 
+/**
+ * Implements hook_update_N().
+ *
+ * Updates taxonomy terms for resource flagging.
+ */
+function sbac_flag_update_7010() {
+
+  $needs_update = array(
+    'Accessibility and accommodation issues' => array(
+      'Accessibility or accommodation issues',
+    ),
+    'Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>' => array(
+      'Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)',
+    ),
+
+    'Does not support implementation of Common Core Standards' => array(
+      'Does not support implementation of Common Core State Standards',
+    ),
+  );
+
+  foreach ($needs_update as $old_name => $new_names) {
+    $updated = FALSE;
+    if ($current_term = array_pop(taxonomy_get_term_by_name($old_name, 'resource_flags'))) {
+      foreach ($new_names as $idx => $new_name) {
+        $update = new stdClass();
+        $update->vid = $current_term->vid;
+        $update->name = $new_name;
+        if (!$updated) {
+          $update->tid = $current_term->tid;
+          $updated = TRUE;
+        }
+        taxonomy_term_save($update);
+      }
+    }
+  }
+}
+
+

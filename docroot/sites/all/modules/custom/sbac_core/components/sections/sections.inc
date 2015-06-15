@@ -64,7 +64,11 @@ function section_get_content() {
   $tab = $_GET['tab'];
   if ($source == 'people') {
     if ($tab == 'notifications') {
+      global $user;
+      //$content = views_embed_view('sbac_email_message');
       $content = sbac_core_notifications_get_html_content();
+
+      // taskit_mark_all_read($user);
     }
     elseif ($tab == 'favorites') {
       $content = sbac_favorites_get_html_content();

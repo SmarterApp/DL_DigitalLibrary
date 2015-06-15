@@ -109,8 +109,10 @@
     <div class="topic-node-view-tertiary-nav-left">
       <?php print $tertiary_nav['back']; ?>
     </div>
-    <div class="topic-node-view-tertiary-nav-right">
-      <?php print $tertiary_nav['favorite'];?>
+  <div class="topic-node-view-tertiary-nav-right">
+<?php $node = node_load(arg(1)); ?>
+<?php print flag_create_link('subscribe_node', $node->nid);?>
+<?php print $tertiary_nav['favorite'];?>
       <div class="action">
         <?php print $tertiary_nav['edit']; ?>
         <?php print $tertiary_nav['delete']; ?>

@@ -2109,7 +2109,7 @@ function sbac_resource_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_resource_thumbnail',
-    'label' => 'Add Resource Card Cover Image',
+    'label' => 'Add Resource Card Image',
     'required' => 0,
     'settings' => array(
       'alt_field' => 0,
@@ -2126,7 +2126,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'image',
       'settings' => array(
-        'label_help_description' => 'Please add a resource card cover image that best represents your resource. Acceptable file types include png, gif, jpg, jpeg',
+        'label_help_description' => 'Please add a resource card cover image that best represents your resource. Acceptable file types include png, jpg, jpeg',
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
         'preview_image_style' => 'thumbnail',
         'progress_indicator' => 'throbber',
@@ -2198,7 +2198,7 @@ function sbac_resource_field_default_field_instances() {
     'bundle' => 'resource',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'Describe how this resource enables students to actively engage in the formative assessment process, if applicable.',
+    'description' => 'Describe how this resource enables students/educators to actively engage in the formative assessment process.',
     'display' => array(
       'default' => array(
         'label' => 'above',
@@ -2240,7 +2240,7 @@ function sbac_resource_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Describe how this resource enables students to actively engage in the formative assessment process, if applicable.',
+        'label_help_description' => 'Describe how this resource enables students/educators to actively engage in the formative assessment process.',
         'maxlength_js' => 1000,
         'maxlength_js_enforce' => 1,
         'maxlength_js_label' => 'Character count: @remaining',
@@ -3008,7 +3008,7 @@ function sbac_resource_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Add Resource Card Cover Image');
+  t('Add Resource Card Image');
   t('Alignment Tags');
   t('Asset Downloads');
   t('Attributes');
@@ -3019,7 +3019,7 @@ function sbac_resource_field_default_field_instances() {
   t('Connection to FAP');
   t('Contexts');
   t('Copyright Clearance Form(s)');
-  t('Describe how this resource enables students to actively engage in the formative assessment process, if applicable.');
+  t('Describe how this resource enables students/educators to actively engage in the formative assessment process.');
   t('Describe the likely context(s) in which the resource could be used (e.g. PLCs, individual, ongoing learning, small group, whole class).');
   t('Digital Media Type(s)');
   t('Document ID');

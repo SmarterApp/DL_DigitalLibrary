@@ -6,3 +6,6 @@ docroot/phpinfo.php
 _settings.php
 .DS_Store
 atlassian-ide-plugin.xml
+docroot/sites/default/settings.php
+docroot/sites/default/settings.local.php
+docroot/sites/default/files-private/

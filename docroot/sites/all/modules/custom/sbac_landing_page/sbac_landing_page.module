@@ -1,0 +1,87 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Landing Page.
+ */
+
+include_once 'sbac_landing_page.features.inc';
+/**
+ * Implements hook_menu().
+ */
+
+function sbac_landing_page_menu() {
+  $items = array();
+
+  $items['sbac'] = array(
+    'title' => 'Smarter Balanced Assessments Consortium',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'sbac_landing_page',
+    'access arguments' => array('access content'),    
+  );
+  return $items;
+}
+
+function sbac_landing_page(){
+  global $user;
+  $variables = array();
+  
+  $variables['notifications'] = views_embed_view('sbac_alerts','important_notifications');
+  $variables['featured_content'] = lp_featured_content();
+  $variables['help_topics'] = lp_help_topics();
+  $variables['find_resource'] = lp_find_resource();  
+  return theme('sbac_landing_page',$variables);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sbac_landing_page_theme($existing, $type, $theme, $path) {
+  $theme = array();
+  $theme['sbac_landing_page'] = array(
+    'render element' => 'content',
+    'template' => 'landing-page',
+    'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
+  );
+  $theme['sbac_help_topics'] = array(
+    'render element' => 'content',
+    'template' => 'help-topics',
+    'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
+  );
+  return $theme;
+}
+function sbac_landing_page_preprocess_page(&$variables) {
+}
+
+function lp_help_topics(){
+  $variables = array();
+  if(module_exists('sbac_help')){
+    if(node_access('update','help_topic')){
+      $variables['edit_help'] = l('Edit Help','/sort-content/welcome-topics');
+    }
+    $variables['topics'] = sbac_help_topic_ctas('3');
+    return  theme('sbac_help_topics', $variables);
+
+  }else{
+    return 'Help Topics Comming Soon';
+  }
+}
+
+function lp_featured_content(){
+  if(module_exists('sbac_featured_content')){
+    return sbac_featured_content();
+  }else{
+    return 'Featured Content Comming Soon';    
+  }
+}
+
+function lp_find_resource(){
+   if(module_exists('sbac_search')){
+      $resource_filters = drupal_get_form('sbac_search_landing_page_resources_form');
+      return drupal_render($resource_filters);
+    }else{
+      $output = '<div class="resources-wrap"><div class="resources-wrap-inner">';
+      $output .= '<div class="resources-link">' . t('What resources are you looking for?') . '</div>';
+      $output .= '<div class="resources-link-button"><a href="/digital-library-resources">' . t('FIND RESOURCES') . '</a></div></div></div>';
+      return $output;
+    }
+}

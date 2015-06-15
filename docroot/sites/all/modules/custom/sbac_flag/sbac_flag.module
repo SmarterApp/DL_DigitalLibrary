@@ -1038,14 +1038,14 @@ function sbac_flag_determine_urgent($flag_option, $type = 'resource') {
       if (strstr($term->name, 'May be in violation of intellectual property rights')) {
         return TRUE;
       }
-      if ($term->name == "Biased and objectionable or culturally insensitive material <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>") {
+      if ($term->name == "Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)") {
         return TRUE;
       }
     }
   }
   elseif ($type == 'comment' || $type == 'topic') {
     if ($term) {
-      if ($term->name == 'Biased and objectionable or culturally insensitive. <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>') {
+      if ($term->name == "Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)") {
         return TRUE;
       }
       if ($term->name == 'Contains personally identifiable information (PII)') {
@@ -1305,7 +1305,7 @@ function sbac_flag_determine_status_for_resource($flags) {
 
   foreach ($flags as $flag) {
     if ($flag->being_moderated) {
-      $status = 'Resource is Being Moderated';
+      $status = 'Resource is being moderated';
       break;
     }
   }
@@ -1329,7 +1329,7 @@ function sbac_flag_determine_status_for_resource_review($flags) {
 
   foreach ($flags as $flag) {
     if ($flag->being_moderated) {
-      $status = 'Resource Review is Being Moderated';
+      $status = 'Resource Review is being moderated';
       break;
     }
   }
@@ -1410,7 +1410,7 @@ function sbac_flag_resource_review_profile_view($node, $flags) {
         $category_label = 'Unintelligible';
         break;
       case 'biased':
-        $category_label = 'Biased and objectionable or culturally insensitive <p class="new-line">(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>';
+        $category_label = 'Biased, objectionable, or culturally insensitive material<p class="new-line">((e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>';
         break;
       case 'pii':
         $category_label = 'Contains personally identifiable information (PII)';
@@ -1552,7 +1552,7 @@ function sbac_flag_list_flag_categories($flags, $type = 'resource') {
           $category_label = 'Unintelligible';
           break;
         case 'biased':
-          $category_label = 'Biased and objectionable or culturally insensitive <p class="new-line">(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>';
+          $category_label = 'Biased, objectionable, or culturally insensitive material<p class="new-line">((e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</p>';
           break;
         case 'pii':
           $category_label = 'Contains personally identifiable information (PII)';

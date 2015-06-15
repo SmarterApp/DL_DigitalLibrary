@@ -1,0 +1,175 @@
+<?php
+/**
+ * @file
+ * sbac_email module file.
+ */
+
+include_once 'sbac_email.features.inc';
+
+/**
+ * Implements hook_node_insert().
+ */
+function sbac_email_taxonomy_term_insert($term) {
+  global $user;
+
+  // Associciate user with forum they have created.
+  $loaded_node = node_load($term->field_forum_resource_ref[LANGUAGE_NONE][0]['target_id']);
+  $loaded_user = $loaded_node->uid;
+
+  // Make sure the poster is the author.
+  if ($loaded_user == $user->uid || arg(0) == 'forums') {
+    $term_flag = flag_get_flag('subscribe_term');
+    $term_flag->flag('flag', $term->tid, user_load($user->uid), TRUE);
+  }
+}
+
+
+/**
+ * Implements hook_node_insert().
+ */
+function sbac_email_node_insert($node) {
+  global $user;
+
+  // This is where we subscribe to a forum discussion (topic or resource).
+  $flag = flag_get_flag('subscribe_node');
+  if (!empty($node->nid)) {
+    $flag->flag('flag', $node->nid, user_load($node->uid), TRUE);
+    $node_flags = flag_get_entity_flags('node', $node->nid, 'subscribe_node');
+  }
+  else {
+    $flag->flag('flag', $node->nid, user_load($user->uid), TRUE);
+  }
+
+  if (module_exists('message_notify')) {
+    $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
+    $term_flags = flag_get_entity_flags('taxonomy_term', $tid, 'subscribe_term');
+    $options = array(
+      'rendered fields' => array(
+        'message_notify_email_subject' => 'field_message_rendered_subject',
+        'message_notify_email_body' => 'field_message_rendered_body',
+      ),
+    );
+
+    // Let's make sure the user has flag on and subscriptions on, then send notice.
+    foreach ($term_flags as $term_flag) {
+      if ($node->uid !== $term_flag->uid) {
+        $email_user = flag_get_user_flags('flag', $entity_id = NULL, $term_flag->uid);
+        $message = message_create('node_insert', array('uid' => $term_flag->uid));
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->field_node_ref->set($node);
+
+        sbac_email_update_user_unread_count($term_flag->uid);
+
+        if ($task = taskit_get_object('created_topic_node')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $node->nid);
+          $task->addOwningUser($term_flag->uid);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+
+        if (!empty($email_user['email'])) {
+          message_notify_send_message($message, $options);
+        }
+      }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_comment_insert().
+ *
+ * Send a message to the node author when a new comment is created.
+ */
+function sbac_email_comment_insert($comment) {
+  $node = node_load($comment->nid);
+  global $user;
+
+  // This is where we subscribe to a comment.
+  $flag = flag_get_flag('subscribe_node');
+  $flag->flag('flag', $node->nid, user_load($user->uid), TRUE);
+  $options = array(
+    'rendered fields' => array(
+      'message_notify_email_subject' => 'field_message_rendered_subject',
+      'message_notify_email_body' => 'field_message_rendered_body',
+    ),
+  );
+
+  if (module_exists('message_notify')) {
+    $flags = flag_get_entity_flags('node', $node->nid, 'subscribe_node');
+
+    // Let's make sure the user has flag on and subscriptions on, then send notice.
+    foreach ($flags as $flag) {
+      if ($comment->uid !== $flag->uid) {
+        $email_user = flag_get_user_flags('flag', $entity_id = NULL, $flag->uid);
+        $message = message_create('sbac_email_comment_insert', array('uid' => $flag->uid));
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->field_comment_ref->set($comment);
+        sbac_email_update_user_unread_count($flag->uid);
+
+        if ($task = taskit_get_object('created_forum_comment')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('node', $node->nid);
+          $task->addEntity('comment', $comment->cid);
+          $task->addOwningUser($flag->uid);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+
+        if (!empty($email_user)) {
+          message_notify_send_message($message, $options);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Add to our notifcations table.
+ */
+function sbac_email_update_user_unread_count($uid) {
+
+  // This builds the count for the red notices pop-up.
+  $sql = db_query('SELECT uid FROM {sbac_email_user_unread_notifications_count} WHERE uid = :uid', array(':uid' => $uid));
+  $result = db_query($sql)->fetchField();
+  if ($result) {
+
+    // Add 1 to count.
+    db_update('sbac_email_user_unread_notifications_count')
+      ->expression('count', 'count + :count', array(':count' => 1))
+      ->condition('uid', $uid)
+      ->execute();
+  }
+  else {
+
+    // Initialize count to 1.
+    db_insert('sbac_email_user_unread_notifications_count')
+      ->fields(array(
+          'uid' => $uid,
+          'count' => 1,
+        ))
+      ->execute();
+  }
+}
+
+/**
+ * Reset our notifcations table.
+ */
+function sbac_email_init() {
+
+  // When the user visits their profile, consider the notice stale.
+  if (arg(0) == 'user' && is_numeric(arg(1))) {
+    global $user;
+
+    // Reset unread count.
+    $sql = db_query('SELECT uid FROM {sbac_email_user_unread_notifications_count} WHERE uid = :uid', array(':uid' => $user->uid));
+    $result = db_query($sql)->fetchField();
+    if ($result) {
+      db_update('sbac_email_user_unread_notifications_count')
+        ->fields(array('count' => 0))
+        ->condition('uid', $user->uid)
+        ->execute();
+    }
+  }
+}

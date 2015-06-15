@@ -70,7 +70,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
   // Reports administrator only sees their own state
   if (sbac_central_user_has_role(array('reports administrator'))) {
     $form['resource_state_dropdown']['#multiple'] = FALSE;
-    $form['resource_state_dropdown']['#disabled'] = TRUE;
+    // $form['resource_state_dropdown']['#disabled'] = TRUE;
   }
 
   $form['submit'] = array(
