@@ -266,7 +266,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-education_alignment-field_alignment_grade'
+  // Exported field_instance:
+  // 'taxonomy_term-education_alignment-field_alignment_grade'
   $field_instances['taxonomy_term-education_alignment-field_alignment_grade'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -309,7 +310,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-education_alignment-field_alignment_key'
+  // Exported field_instance:
+  // 'taxonomy_term-education_alignment-field_alignment_key'
   $field_instances['taxonomy_term-education_alignment-field_alignment_key'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -352,7 +354,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-education_alignment-field_alignment_publication'
+  // Exported field_instance:
+  // 'taxonomy_term-education_alignment-field_alignment_publication'
   $field_instances['taxonomy_term-education_alignment-field_alignment_publication'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -395,7 +398,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-education_alignment-field_alignment_shortname'
+  // Exported field_instance:
+  // 'taxonomy_term-education_alignment-field_alignment_shortname'
   $field_instances['taxonomy_term-education_alignment-field_alignment_shortname'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -586,7 +590,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbacpublication'
+  // Exported field_instance:
+  // 'taxonomy_term-sbac_alignment-field_sbacpublication'
   $field_instances['taxonomy_term-sbac_alignment-field_sbacpublication'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,
