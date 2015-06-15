@@ -37,17 +37,9 @@ function sbac_forum_image_default_styles() {
 
   // Exported image style: forum_profile_image_120x120.
   $styles['forum_profile_image_120x120'] = array(
-    'name' => 'forum_profile_image_120x120',
     'label' => 'forum_profile_image_120x120',
     'effects' => array(
       1 => array(
-        'label' => 'Scale and crop',
-        'help' => 'Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.',
-        'effect callback' => 'image_scale_and_crop_effect',
-        'dimensions callback' => 'image_resize_dimensions',
-        'form callback' => 'image_resize_form',
-        'summary theme' => 'image_resize_summary',
-        'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 120,
@@ -60,17 +52,9 @@ function sbac_forum_image_default_styles() {
 
   // Exported image style: forum_profile_image_60x60.
   $styles['forum_profile_image_60x60'] = array(
-    'name' => 'forum_profile_image_60x60',
     'label' => 'forum_profile_image_60x60',
     'effects' => array(
       1 => array(
-        'label' => 'Scale and crop',
-        'help' => 'Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.',
-        'effect callback' => 'image_scale_and_crop_effect',
-        'dimensions callback' => 'image_resize_dimensions',
-        'form callback' => 'image_resize_form',
-        'summary theme' => 'image_resize_summary',
-        'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => 60,
@@ -98,5 +82,6 @@ function sbac_forum_node_info() {
       'help' => '',
     ),
   );
+  drupal_alter('node_info', $items);
   return $items;
 }
