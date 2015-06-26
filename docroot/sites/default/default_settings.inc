@@ -1,16 +1,26 @@
 <?php
-$databases['default']['default'] = array(
-  'driver' => '',
-  'database' => '',
-  'username' => '',
-  'password' => '',
-  'host' => '',
-  'collation' => '',
-);
 
+/*
+ * Environment specific Site Settings.
+ * 
+ * $databases['default']['default'] = array(
+ *   'driver' => '',
+ *   'database' => '',
+ *   'username' => '',
+ *   'password' => '',
+ *   'host' => '',
+ *   'collation' => '',
+ * );
+ * 
+ * $conf['file_private_path'] = '';
+ */
 
-$conf['google_cdn_folder'] = 'local';
-$conf['oscaddie_gcs_folder'] = 'local';
+/**
+ * Google OSCaddie Environment Sepecific Settings.
+ * 
+ * $conf['google_cdn_folder'] = 'local';
+ * $conf['oscaddie_gcs_folder'] = 'local';
+ */
 
 /**
  * SBAC SSO Settings
