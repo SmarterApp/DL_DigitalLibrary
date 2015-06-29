@@ -1,19 +1,17 @@
 <?php
 /**
- * @file
  * Field handler to present a link to the entity content.
+ *
  */
-
-// @codingStandardsIgnoreStart
 class eck_views_handler_field_link extends views_handler_field_entity {
 
-  public function option_definition() {
+  function option_definition() {
     $options = parent::option_definition();
     $options['text'] = array('default' => '', 'translatable' => TRUE);
     return $options;
   }
 
-  public function options_form(&$form, &$form_state) {
+  function options_form(&$form, &$form_state) {
     $form['text'] = array(
       '#type' => 'textfield',
       '#title' => t('Text to display'),
@@ -26,22 +24,18 @@ class eck_views_handler_field_link extends views_handler_field_entity {
     $form['alter']['external'] = array('#access' => FALSE);
   }
 
-  /**
-   * Render.
-   */
-  public function render($values) {
+  function render($values) {
     if ($entity = $this->get_value($values)) {
       return $this->render_link($entity, $values);
-    }
+    }    
   }
 
   function render_link($entity, $values) {
+    $crud_info = get_bundle_crud_info($entity->entityType(), $entity->type);
     $this->options['alter']['make_link'] = TRUE;
-    $uri = entity_uri($entity->entityType(), $entity);
-    $this->options['alter']['path'] = $uri['path'];
+    $this->options['alter']['path'] = str_replace('%', $entity->id, $crud_info['view']['path']);
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
-
+    
     return $text;
   }
 }
-// @codingStandardsIgnoreEnd
