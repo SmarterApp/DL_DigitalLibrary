@@ -2488,10 +2488,10 @@ function sbac_resource_get_state(&$entity, $nid, $uid = NULL, $state = NULL, $fl
  */
 function sbac_resource_node_update($node) {
   if ($node->type == 'resource') {
+    sbac_resource_determine_thumbnail_uri($node);
     if (isset($node->workbench_moderation['published'])) {
       $node->workbench_moderation['published']->vid = $node->vid;
     }
-    sbac_resource_determine_thumbnail_uri($node);
 
     // update the states setting of the resource forums
     $forum_ids = db_select('field_data_field_forum_resource_ref', 'r')
