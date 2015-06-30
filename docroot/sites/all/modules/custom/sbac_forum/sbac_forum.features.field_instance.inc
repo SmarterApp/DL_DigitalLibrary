@@ -51,7 +51,8 @@ function sbac_forum_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'comment-comment_node_topic-field_topic_comment_files'
+  // Exported field_instance:
+  // 'comment-comment_node_topic-field_topic_comment_files'
   $field_instances['comment-comment_node_topic-field_topic_comment_files'] = array(
     'bundle' => 'comment_node_topic',
     'deleted' => 0,
@@ -89,7 +90,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'comment-comment_node_topic-field_topic_comment_links'
+  // Exported field_instance:
+  // 'comment-comment_node_topic-field_topic_comment_links'
   $field_instances['comment-comment_node_topic-field_topic_comment_links'] = array(
     'bundle' => 'comment_node_topic',
     'default_value' => NULL,
@@ -109,6 +111,7 @@ function sbac_forum_field_default_field_instances() {
     'label' => 'Topic Comment Links',
     'required' => 0,
     'settings' => array(
+      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -122,6 +125,7 @@ function sbac_forum_field_default_field_instances() {
       'enable_tokens' => 1,
       'rel_remove' => 'default',
       'title' => 'optional',
+      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -140,7 +144,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'comment-comment_node_topic-field_topic_comment_recommended'
+  // Exported field_instance:
+  // 'comment-comment_node_topic-field_topic_comment_recommended'
   $field_instances['comment-comment_node_topic-field_topic_comment_recommended'] = array(
     'bundle' => 'comment_node_topic',
     'default_value' => NULL,
@@ -176,7 +181,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -215,7 +221,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_is_removed'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_is_removed'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_is_removed'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => array(
@@ -254,7 +261,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_joined'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_joined'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_joined'] = array(
     'bundle' => 'field_fc_forum_members',
     'deleted' => 0,
@@ -303,7 +311,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -346,7 +355,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -389,7 +399,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'] = array(
     'bundle' => 'field_fc_forum_members',
     'deleted' => 0,
@@ -438,7 +449,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => array(
@@ -485,7 +497,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'] = array(
     'bundle' => 'field_fc_forum_members',
     'deleted' => 0,
@@ -534,7 +547,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -575,7 +589,8 @@ function sbac_forum_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'
+  // Exported field_instance:
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -824,6 +839,7 @@ function sbac_forum_field_default_field_instances() {
     'label' => 'Links',
     'required' => 0,
     'settings' => array(
+      'absolute_url' => 1,
       'attributes' => array(
         'class' => '',
         'configurable_title' => 0,
@@ -837,6 +853,7 @@ function sbac_forum_field_default_field_instances() {
       'enable_tokens' => 1,
       'rel_remove' => 'default',
       'title' => 'optional',
+      'title_label_use_field_label' => FALSE,
       'title_maxlength' => 128,
       'title_value' => '',
       'url' => 0,
@@ -1140,7 +1157,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_access_user_roles'
+  // Exported field_instance:
+  // 'taxonomy_term-forum-field_forum_access_user_roles'
   $field_instances['taxonomy_term-forum-field_forum_access_user_roles'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1431,7 +1449,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_removed_member_count'
+  // Exported field_instance:
+  // 'taxonomy_term-forum-field_forum_removed_member_count'
   $field_instances['taxonomy_term-forum-field_forum_removed_member_count'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1524,7 +1543,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_topic_comment_count'
+  // Exported field_instance:
+  // 'taxonomy_term-forum-field_forum_topic_comment_count'
   $field_instances['taxonomy_term-forum-field_forum_topic_comment_count'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1794,7 +1814,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_smarter_balanced_keyword'
+  // Exported field_instance:
+  // 'taxonomy_term-forum-field_smarter_balanced_keyword'
   $field_instances['taxonomy_term-forum-field_smarter_balanced_keyword'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,

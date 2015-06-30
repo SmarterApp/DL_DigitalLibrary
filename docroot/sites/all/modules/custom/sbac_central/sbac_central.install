@@ -393,19 +393,6 @@ function sbac_central_update_7034() {
 /**
  * Implementation of hook_update_N().
  *
- * Enables Acquia Connector modules.
- */
-function sbac_central_update_7035() {
-  $modules = array(
-    'acquia_agent',
-    'acquia_search',
-  );
-  module_enable($modules);
-}
-
-/**
- * Implementation of hook_update_N().
- *
  * Enables Views Load More module.
  */
 function sbac_central_update_7036() {
@@ -453,16 +440,6 @@ function sbac_central_update_7039() {
     'upload_qc',
   );
   module_enable($modules);
-}
-
-/**
- * Disables Acquia Search.
- */
-function sbac_central_update_7040() {
-  $modules = array(
-    'acquia_search',
-  );
-  module_disable($modules);
 }
 
 /**
@@ -678,16 +655,6 @@ function sbac_central_update_7058() {
   module_enable($modules);
 }
 
-/**
- * Enables Acquia Search Multi Subs module
- */
-function sbac_central_update_7059() {
-  $modules = array(
-    'acquia_search',
-    'acquia_search_multi_subs',
-  );
-  module_enable($modules);
-}
 
 /**
  * Enables Transliteration module.
@@ -968,33 +935,7 @@ function sbac_central_update_7073() {
  * Migrates old files to new Google CDN.
  */
 function sbac_central_update_7074() {
-  $service = NULL;
-  $client = NULL;
-  $cred = NULL;
-
-  sbac_central_connect_to_google_bucket($service, $client, $cred);
-  if ($service && $client && $cred) {
-    $nids = sbac_central_get_resource_nids();
-    if ($nids) {
-      $chunks = array_chunk($nids, 50);
-      foreach ($chunks as $chunk) {
-        $files_to_upload = array();
-        for ($i = 0; $i < 50; $i++) {
-          $nid = $chunk[$i];
-          // Get all the files for this chunk of nodes.
-          $node_files_to_upload = sbac_central_get_node_files_to_upload($nid);
-          if ($node_files_to_upload) {
-            $files_to_upload[$nid] = $node_files_to_upload;
-          }
-        }
-
-        // Upload the files.
-        if ($files_to_upload) {
-          sbac_central_process_files_to_upload($files_to_upload, $client, $service, $cred);
-        }
-      }
-    }
-  }
+  drupal_set_message('Run /admin/settings/sbac-central/google-cdn-migrate');
 }
 
 /**
@@ -1051,158 +992,6 @@ function sbac_central_update_7080() {
   }
 }
 
-/**
- * Connect to the Google Cloud Storage.
- *
- * @param $service
- * @param $client
- */
-function sbac_central_connect_to_google_bucket(&$service, &$client, &$cred) {
-  try {
-    libraries_load('google-api-php-client');
-    $service_account_name = variable_get('google_cdn_service_account_name');
-    $key_file_path = variable_get('google_cdn_public_key_file_path');
-
-    $client = new Google_Client();
-    // Replace this with your application name.
-    $client->setApplicationName($service_account_name);
-    // Replace this with the service you are using.
-    $service = new Google_StorageService($client);
-    // This file location should point to the private key file.
-    $key = file_get_contents($key_file_path);
-    $cred = new Google_AssertionCredentials(
-    // Replace this with the email address from the client.
-      $service_account_name,
-      // Replace this with the scopes you are requesting.
-      array('https://www.googleapis.com/auth/devstorage.full_control'),
-      $key
-    );
-
-    $client->setAssertionCredentials($cred);
-    if ($client->getAuth()->isAccessTokenExpired()) {
-      $client->getAuth()->refreshTokenWithAssertion($cred);
-    }
-  }
-  catch (Exception $e) {
-    watchdog_exception('google_cdn', $e);
-  }
-}
-
-/**
- * Get the files to upload from each node.
- *
- * @param $nid
- * @return array
- */
-function sbac_central_get_node_files_to_upload($nid) {
-  $files_to_upload = array();
-  $result = db_query("SELECT * FROM {eck_media} WHERE nid = :nid", array(':nid' => $nid));
-  foreach ($result as $document) {
-    if ($document->fid) {
-      $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $document->fid))->fetchObject();
-      if ($file && strpos($file->uri, 'gs://') === FALSE && strpos($file->uri, 'html5/') !== TRUE) {
-        $google_uri = NULL;
-        if (strpos($file->uri, 'private://') !== FALSE) {
-          $google_uri = str_replace('private://', '', $file->uri);
-        }
-
-        if (strpos($file->uri, 'public://') !== FALSE) {
-          $google_uri = str_replace('public://', '', $file->uri);
-        }
-
-        if ($google_uri) {
-          $old_path = drupal_realpath($file->uri);
-          if (file_exists($old_path)) {
-            $files_to_upload['files'][$file->fid]['fid'] = $file->fid;
-          }
-        }
-      }
-    }
-  }
-
-  return $files_to_upload;
-}
-
-/**
- * Gets an array of nids;
- *
- * @return array
- */
-function sbac_central_get_resource_nids() {
-  $sql = "SELECT nid FROM {node} WHERE type = 'resource'";
-  $result = db_query($sql);
-  $nids = array();
-  foreach ($result as $row) {
-    $nids[] = $row->nid;
-  }
-  return $nids;
-}
-
-/**
- * Process the files to upload and send em to Google Cloud.
- *
- * @param $files_to_upload
- * @param $client
- * @param $service
- */
-function sbac_central_process_files_to_upload($files_to_upload, $client, $service, $cred) {
-  $bucket = variable_get('google_cdn_bucket_name');
-  $folder = variable_get('google_cdn_folder');
-  foreach ($files_to_upload as $nid => $files) {
-    foreach ($files as $file_info) {
-      foreach ($file_info as $fid => $file) {
-        try {
-          $file = db_query("SELECT * FROM {file_managed} WHERE fid = :fid", array(':fid' => $fid))->fetchObject();
-          if ($file) {
-            $old_path = drupal_realpath($file->uri);
-            if ($client->getAuth()->isAccessTokenExpired()) {
-              $client->getAuth()->refreshTokenWithAssertion($cred);
-            }
-            $chunk_size_bytes = 1 * 1024 * 1024;
-            $media = new Google_MediaFileUpload(file_get_mimetype($file->uri), NULL, true, $chunk_size_bytes);
-            $media->setFileSize(filesize($old_path));
-            $postbody = array(
-              'mimeType' => file_get_mimetype($file->uri),
-              'data' => NULL,
-              'mediaUpload' => $media,
-            );
-            $google_uri = "resources/" . floor($nid/32000) . "/" . $nid . '/' . $file->filename;
-
-            $gso = new Google_StorageObject();
-            $gso->setName($folder . '/' . $google_uri);
-            $response = $service->objects->insert($bucket, $gso, $postbody);
-            if ($response) {
-              // Now upload the file in chunks.
-              $upload_result = false;
-              $handle = fopen($old_path, "rb");
-              while (!$upload_result && !feof($handle)) {
-                $chunk = fread($handle, $chunk_size_bytes);
-                $upload_result = $media->nextChunk($response, $chunk);
-              }
-              fclose($handle);
-
-              // file uploaded successfully, set the new URI.
-              if ($upload_result) {
-                $new_uri = 'gs://' . $google_uri;
-                db_query('UPDATE {file_managed} SET uri = :uri WHERE fid = :fid', array(':uri' => $new_uri, ':fid' => $fid));
-              }
-            }
-
-            unset($media);
-            unset($gso);
-            unset($response);
-            unset($postbody);
-            unset($google_uri);
-            unset($handle);
-          }
-        }
-        catch (Exception $e) {
-          watchdog('google_cdn', $e);
-        }
-      }
-    }
-  }
-}
 
 /**
  * Enable sbac_forum module
@@ -1344,14 +1133,12 @@ function sbac_central_update_7093() {
           'sbac_learning_registry'
         );
         module_enable($modules);
-        variable_set('learning_registry_key_location', 'https://www.smarterbalancedlibrary.org/id_rsa.pub.prod.txt');
         variable_set('learning_registry_node_types', array(
           'resource' => 'resource',
           'alignment' => 0,
           'topic' => 0,
           'help_page' => 0,
         ));
-        variable_set('learning_registry_node_url', 'https://node01.public.learningregistry.net');
         variable_set('learning_registry_queuing', 0);
         variable_set('learning_registry_schema_type', array(
           'name' => 'LRMI',
@@ -1370,14 +1157,6 @@ function sbac_central_update_7093() {
         variable_set('learning_registry_url_type', 1);
         $salt = 'KrP7FgnpjK4hXfVDIAwC';
         variable_set('learning_registry_oauth_salt', $salt);
-        variable_set('learning_registry_oauth_consumer', array(
-          'key' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'seant@appnovation.com', MCRYPT_MODE_ECB),
-          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'jnnE8OkgLdOR3Jo8CH3aJil2Buz131Dp', MCRYPT_MODE_ECB),
-        ));
-        variable_set('learning_registry_oauth_token', array(
-          'key' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), 'node_sign_token', MCRYPT_MODE_ECB),
-          'secret' => mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($salt), '2vV4UxfyKfZLxtlr+s5pizucH8xGo0bv', MCRYPT_MODE_ECB),
-        ));
         sbac_learning_registry_queue_all_resources();
         break;
     }
@@ -1410,4 +1189,36 @@ function sbac_central_update_7095() {
     db_add_index('eck_flag', 'being_moderated', array('being_moderated'));
     db_add_index('eck_flag', 'urgent', array('urgent'));
   }
+}
+
+/**
+ * Impliments hook_uninstall().
+ */
+
+function sbac_central_uninstall() {
+  variable_del('google_cdn_bucket_name');
+  variable_del('google_cdn_extensions');
+  variable_del('google_cdn_client_id');
+  variable_del('google_cdn_service_account_name');
+  variable_del('google_cdn_signed_url_expiry');
+  variable_del('google_cdn_library_version');
+  variable_del('oscaddie_gcs_bucket_name');
+  variable_del('oscaddie_gcs_extensions');
+  variable_del('oscaddie_gcs_client_id');
+  variable_del('oscaddie_gcs_service_account_name');
+  variable_del('oscaddie_gcs_signed_url_expiry');
+  variable_del('oscaddie_gcs_library_version');
+  variable_del('theme_default');
+  variable_del('admin_theme');
+  variable_del('learning_registry_node_types');
+  variable_del('learning_registry_queuing');
+  variable_del('learning_registry_schema_type');
+  variable_del('learning_registry_schema_type_default_value');
+  variable_del('learning_registry_signing_method');
+  variable_del('learning_registry_submitter');
+  variable_del('learning_registry_tos');
+  variable_del('learning_registry_url_type');
+  variable_del('learning_registry_oauth_salt');
+  variable_del('feedback_block_body');
+  variable_del('enable_feedback');
 }

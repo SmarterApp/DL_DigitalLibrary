@@ -6,3 +6,10 @@
 function sbac_learning_registry_update_7001(){
   sbac_learning_registry_queue_all_resources();
 }
+
+/**
+ * Impliments hook_uninstall().
+ */
+function sbac_learning_registry_uninstall() {
+  variable_del('sbac_learning_registry_inbloom_url');
+}

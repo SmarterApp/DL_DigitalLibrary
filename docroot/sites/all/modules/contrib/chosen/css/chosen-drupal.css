@@ -5,18 +5,22 @@
 
 .chosen-container.error .chosen-single,
 .chosen-container.error .chosen-single span {
-	line-height: inherit;
+  line-height: inherit;
+}
+
+.chosen-container-single .chosen-search {
+  display: block;
 }
 
 .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
   height: auto;
 }
 
-.container-inline div.chosen-container {
-	display: inline-block;
+.chosen-container {
+  display: inline-block !important;
 }
 .container-inline div.chosen-container div {
-	display: block;
+  display: block;
 }
 
 /* Error handling. */

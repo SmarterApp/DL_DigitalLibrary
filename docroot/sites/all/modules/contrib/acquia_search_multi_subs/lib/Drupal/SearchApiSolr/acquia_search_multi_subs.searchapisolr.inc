@@ -21,6 +21,7 @@ function acquia_search_multi_subs_searchapi_init() {
   $acquia_identifier = acquia_agent_settings('acquia_identifier');
   $ah_site_environment = isset($_ENV['AH_SITE_ENVIRONMENT']) ? $_ENV['AH_SITE_ENVIRONMENT'] : '';
   $ah_site_name = isset($_ENV['AH_SITE_NAME']) ? $_ENV['AH_SITE_NAME'] : '';
+  $ah_region = isset($_ENV['AH_CURRENT_REGION']) ? $_ENV['AH_CURRENT_REGION'] : '';
   $sites_foldername = substr(conf_path(), strrpos(conf_path(), '/') + 1);
   $subscription_expected_search_cores = acquia_search_multi_subs_get_expected_search_cores($acquia_identifier, $ah_site_environment, $ah_site_name, $sites_foldername);
   // Get the search cores available in the subscription.
@@ -35,9 +36,12 @@ function acquia_search_multi_subs_searchapi_init() {
     $options += array('acquia_override_subscription' => array());
     $options['acquia_override_subscription'] += acquia_search_multi_subs_default_configuration();
 
+    // Get some variables
     $environment_core_name = $options['acquia_override_subscription']['acquia_override_subscription_corename'];
     $acquia_override_auto_switch = $options['acquia_override_subscription']['acquia_override_auto_switch'];
     $acquia_override_selector = $options['acquia_override_subscription']['acquia_override_selector'];
+    $acquia_override_failover = $options['acquia_override_subscription']['acquia_override_failover'];
+
     // If auto switch is enabled, search thru all the subscription's search cores
     // to find best match.
     if ($acquia_override_auto_switch) {
@@ -48,8 +52,32 @@ function acquia_search_multi_subs_searchapi_init() {
       if ($acquia_override_selector == 'other') {
         $expected_core_names = array($environment_core_name);
       }
+      elseif ($acquia_override_selector == 'default') {
+        $expected_core_names = array(acquia_agent_settings('acquia_identifier'));
+      }
       else {
         $expected_core_names = array($acquia_override_selector);
+      }
+    }
+
+    // Remove available cores from other regions if multiregion is enabled.
+    if ($acquia_override_failover) {
+      foreach ($available_search_cores as $core_id => $available_search_core) {
+        $expected_search_core_region = str_replace('-', '', $ah_region);
+        $matches = array();
+        preg_match("/^([^-]*)/", $available_search_core['balancer'], $matches);
+        $search_core_region = reset($matches);
+        if ($search_core_region != $expected_search_core_region) {
+          unset($available_search_cores[$core_id]);
+        }
+      }
+    }
+    else {
+      // if not enabled, remove all failover indexes from being a possible candidate
+      foreach ($subscription_expected_search_cores as $search_core_id => $search_core) {
+        if (strstr($search_core, 'failover')) {
+          unset($subscription_expected_search_cores[$search_core_id]);
+        }
       }
     }
 
@@ -94,13 +122,4 @@ function acquia_search_multi_subs_searchapi_set_default_core(SearchApiServer &$s
   $derived_key = _acquia_search_multi_subs_create_derived_key($derived_key_salt, $search_core['core_id'], $key);
   $server->options['derived_key'] = $derived_key;
   $server->save();
-}
-
-/**
- * Implements hook_search_api_service_info_alter().
- *
- * Overrides the service class used to connect to Acquia Search.
- */
-function acquia_search_multi_subs_search_api_service_info_alter(array &$service_info) {
-  $service_info['acquia_search_service']['class'] = 'SearchApiAcquiaSearchMultiService';
 }

@@ -243,6 +243,10 @@ function sbac_js_alter(&$js) {
  * Implements hook_preprocess().
  */
 function sbac_preprocess(&$variables, $hook) {
+  // TPL needs SSO variable even when SSO is not enabled.
+  if (!module_exists('sbac_sso')) {
+    $variables['conflicting_profile'] = FALSE;
+  }
   // some theme() invocations (specifically within Resources view) are missing keys which Drupal
   // expects to be present, resulting in PHP notices; this workaround adds those defaults when
   // they're missing

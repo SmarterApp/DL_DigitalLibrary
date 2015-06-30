@@ -540,11 +540,30 @@ function sbac_user_user_default_permissions() {
     'module' => 'workbench_moderation',
   );
 
+  // Exported permission: 'moderate content from needs_review to approved'.
+  $permissions['moderate content from needs_review to approved'] = array(
+    'name' => 'moderate content from needs_review to approved',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'resource reviewer' => 'resource reviewer',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
   // Exported permission: 'moderate content from needs_review to being_reviewed'.
   $permissions['moderate content from needs_review to being_reviewed'] = array(
     'name' => 'moderate content from needs_review to being_reviewed',
     'roles' => array(
       'resource reviewer' => 'resource reviewer',
+    ),
+    'module' => 'workbench_moderation',
+  );
+
+  // Exported permission: 'moderate content from published to removed'.
+  $permissions['moderate content from published to removed'] = array(
+    'name' => 'moderate content from published to removed',
+    'roles' => array(
+      'administrator' => 'administrator',
     ),
     'module' => 'workbench_moderation',
   );

@@ -1,0 +1,14 @@
+name = SBAC Acquia
+description = Features and configurations for Acquia Hosted Sites
+core = 7.x
+package = ~SBAC
+version = 7.x-1.0-beta1
+project = sbac_acquia
+dependencies[] = acquia_agent
+dependencies[] = acquia_search
+dependencies[] = ctools
+dependencies[] = elysia_cron
+features[ctools][] = elysia_cron:default_elysia_cron_rules:1
+features[elysia_cron][] = acquia_agent_cron
+features[elysia_cron][] = acquia_spi_cron
+features[features_api][] = api:2

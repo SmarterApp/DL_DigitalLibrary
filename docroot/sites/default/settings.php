@@ -563,79 +563,31 @@ if (file_exists('/var/www/site-php')) {
   require('/var/www/site-php/sbac/sbac-settings.inc');
 }
 
-// Local DB settings
-$file = __DIR__ . '/dev_settings.inc';
-if (file_exists($file)) {
-  include_once($file);
-}
-
 // Local Environment settings
 $file = __DIR__ . '/local_settings.inc';
 if (file_exists($file)) {
   include_once($file);
 }
-
-// Sets the Apache Solr Environment
-if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
-    case 'dev':
-      $conf['file_private_path'] = '/mnt/files/sbacdev/files-private';
-      $conf['google_cdn_folder'] = 'dev';
-      $conf['oscaddie_gcs_folder'] = 'dev';
-      // do something on dev
-      break;
-    case 'test':
-      // do something on staging
-      $conf['file_private_path'] = '/mnt/files/sbacstg/files-private';
-      $conf['google_cdn_folder'] = 'stage';
-      $conf['oscaddie_gcs_folder'] = 'stage';
-      break;
-    case 'stage2':
-      // do something on staging2
-      $conf['file_private_path'] = '/mnt/files/sbacstg2/files-private';
-      $conf['google_cdn_folder'] = 'stage2';
-      $conf['oscaddie_gcs_folder'] = 'stage2';
-      break;
-    case 'stage3':
-      // do something on staging3
-      $conf['file_private_path'] = '/mnt/files/sbacstg3/files-private';
-      $conf['google_cdn_folder'] = 'integration';
-      $conf['oscaddie_gcs_folder'] = 'integration';
-      break;
-    case 'prod':
-      // do something on prod
-      $conf['file_private_path'] = '/mnt/files/sbac/files-private';
-      $conf['google_cdn_folder'] = 'production';
-      $conf['oscaddie_gcs_folder'] = 'production';
-      break;
-    case 'loadtest':
-      $conf['file_private_path'] = '/mnt/files/sbacloadtest/files-private';
-      $conf['google_cdn_folder'] = 'performance';
-      $conf['oscaddie_gcs_folder'] = 'performance';
-      break;
-  }
+// Development Environment settings
+$file = __DIR__ . '/dev_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
 }
-else {
-  $conf['google_cdn_folder'] = 'local';
-  $conf['oscaddie_gcs_folder'] = 'local';
-  $conf['file_default_scheme'] = 'private';
+// Stage Environment settings
+$file = __DIR__ . '/stage_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
 }
-
-// Google CDN variables.
-$conf['google_cdn_bucket_name'] = 'sbac_media';
-$conf['google_cdn_extensions'] = 'all';
-$conf['google_cdn_client_id'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot.apps.googleusercontent.com';
-$conf['google_cdn_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot@developer.gserviceaccount.com';
-$conf['google_cdn_signed_url_expiry'] = 300;
-$conf['google_cdn_library_version'] = 2;
-
-// osCaddie GCS variables.
-$conf['oscaddie_gcs_bucket_name'] = 'sbac_media';
-$conf['oscaddie_gcs_extensions'] = 'all';
-$conf['oscaddie_gcs_client_id'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot.apps.googleusercontent.com';
-$conf['oscaddie_gcs_service_account_name'] = '363452670531-qfh0aklr59p6h86jcq0hkgfq6fpjd7ot@developer.gserviceaccount.com';
-$conf['oscaddie_gcs_signed_url_expiry'] = 300;
-$conf['oscaddie_gcs_library_version'] = 2;
+// Production Environment settings
+$file = __DIR__ . '/prod_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
+}
+// Load Test Environment settings
+$file = __DIR__ . '/loadtest_settings.inc';
+if (file_exists($file)) {
+  include_once($file);
+}
 
 /**
  * Fast 404 settings:

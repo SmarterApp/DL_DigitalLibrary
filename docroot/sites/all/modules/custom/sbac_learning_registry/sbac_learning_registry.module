@@ -16,7 +16,6 @@ include_once 'sbac_learning_registry.features.inc';
  */
 
 define('SBAC_LEARNING_REGISTRY_PUBLISHER', 'Smarter Balanced Assessment Consortium');
-define('SBAC_LEARNING_REGISTRY_INBLOOM_URL', 'http://maps-sandbox.inbloom.org:8080/lri-reboot/resources/search');
 define('SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE', 12);
 define('SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS', 'sbac-learning-registry-external-solr-keywords');
 define('SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS', 'No Results');
@@ -51,12 +50,54 @@ function sbac_learning_registry_menu() {
     'access arguments' => array('administer nodes'),
     'type' => MENU_CALLBACK,
   );
+  $items['admin/sbac/sbac-learning-registry'] = array(
+    'title' => 'Learning Registry Configuration',
+    'description' => '',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_learning_registry_admin'),
+    'access arguments' => array('administer sbac_learning_registry'),
+    'type' => MENU_NORMAL_ITEM,
+   );
+  
   return $items;
 }
 
 /**
- * Load the next SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE items from the LRI
- * starting at $start
+ * Implements permissions().
+ */
+function sbac_learning_registry_permission() {
+  return array(
+    'administer sbac_learning_registry' => array(
+      'title' => t('Administer SBAC Learning Registry'),
+      'description' => t('Perform administration tasks for SBAC Learning Registry.'),
+    ),
+  );
+}
+
+
+/**
+ * Page callback: SBAC Learning Registry Settings
+ * 
+ *  @see current_posts_menu()
+ */
+function sbac_learning_registry_admin() {
+  $form = array();
+
+  $form['sbac_learning_registry_inbloom_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('In Bloom URL'),
+    '#default_value' => variable_get('sbac_learning_registry_inbloom_url', ''),
+    '#maxlength' => 255,
+    '#description' => t(""),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Load the next SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE items from the
+ * LRI starting at $start
  *
  * @param int $start
  * The starting point to load from
@@ -187,7 +228,7 @@ function sbac_learning_registry_inbloom_construct_request_url($parameters) {
       'query' => implode(' AND ', $inbloom_query),
     ),
   );
-  return url(SBAC_LEARNING_REGISTRY_INBLOOM_URL, $options);
+  return url(variable_get('sbac_learning_registry_inbloom_url', ''), $options);
 }
 
 /**
@@ -833,4 +874,12 @@ function sbac_learning_registry_view_database() {
   ));
   $output .= theme('pager');
   return $output;
+}
+
+/*
+ * Adding a missing function. Not sure what its functionality was.
+ */
+
+function sbac_search_hide_category_style(){
+  return '';
 }

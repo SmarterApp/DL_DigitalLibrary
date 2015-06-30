@@ -1,4 +1,4 @@
-name = Acquia Search Multi Subscription
+name = Acquia Search Multi Index
 description = "Acquia Search UI for connecting to other Acquia Search Indexes."
 package = Acquia Network Connector
 core = 7.x
@@ -7,9 +7,9 @@ dependencies[] = acquia_agent
 
 files[] = lib/Drupal/SearchApiSolr/SearchApiAcquiaSearchMultiService.php
 
-; Information added by Drupal.org packaging script on 2014-03-13
-version = "7.x-1.1"
+; Information added by Drupal.org packaging script on 2015-04-14
+version = "7.x-1.4"
 core = "7.x"
 project = "acquia_search_multi_subs"
-datestamp = "1394735315"
+datestamp = "1429031062"
 

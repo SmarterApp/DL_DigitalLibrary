@@ -526,7 +526,8 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_quality_set-field_comments'
+  // Exported field_instance:
+  // 'field_collection_item-field_quality_set-field_comments'
   $field_instances['field_collection_item-field_quality_set-field_comments'] = array(
     'bundle' => 'field_quality_set',
     'default_value' => NULL,
@@ -568,7 +569,8 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'field_collection_item-field_quality_set-field_contributor_comment'
+  // Exported field_instance:
+  // 'field_collection_item-field_quality_set-field_contributor_comment'
   $field_instances['field_collection_item-field_quality_set-field_contributor_comment'] = array(
     'bundle' => 'field_quality_set',
     'default_value' => NULL,
@@ -609,7 +611,8 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'field_collection_item-field_quality_set-field_contributor_comment_date'
+  // Exported field_instance:
+  // 'field_collection_item-field_quality_set-field_contributor_comment_date'
   $field_instances['field_collection_item-field_quality_set-field_contributor_comment_date'] = array(
     'bundle' => 'field_quality_set',
     'deleted' => 0,
@@ -651,7 +654,8 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_quality_set-field_meets_criterion'
+  // Exported field_instance:
+  // 'field_collection_item-field_quality_set-field_meets_criterion'
   $field_instances['field_collection_item-field_quality_set-field_meets_criterion'] = array(
     'bundle' => 'field_quality_set',
     'default_value' => NULL,
@@ -685,7 +689,8 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_review_set-field_comments'
+  // Exported field_instance:
+  // 'field_collection_item-field_review_set-field_comments'
   $field_instances['field_collection_item-field_review_set-field_comments'] = array(
     'bundle' => 'field_review_set',
     'default_value' => NULL,
@@ -726,7 +731,8 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'field_collection_item-field_review_set-field_contributor_comment'
+  // Exported field_instance:
+  // 'field_collection_item-field_review_set-field_contributor_comment'
   $field_instances['field_collection_item-field_review_set-field_contributor_comment'] = array(
     'bundle' => 'field_review_set',
     'default_value' => NULL,
@@ -767,7 +773,8 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'field_collection_item-field_review_set-field_contributor_comment_date'
+  // Exported field_instance:
+  // 'field_collection_item-field_review_set-field_contributor_comment_date'
   $field_instances['field_collection_item-field_review_set-field_contributor_comment_date'] = array(
     'bundle' => 'field_review_set',
     'deleted' => 0,
@@ -816,7 +823,8 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'field_collection_item-field_review_set-field_level'
+  // Exported field_instance:
+  // 'field_collection_item-field_review_set-field_level'
   $field_instances['field_collection_item-field_review_set-field_level'] = array(
     'bundle' => 'field_review_set',
     'default_value' => NULL,

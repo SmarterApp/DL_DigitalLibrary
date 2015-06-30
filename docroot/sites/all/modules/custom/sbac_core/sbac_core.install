@@ -296,3 +296,9 @@ function sbac_core_update_7017() {
             (4, 'flag', 'Flag', '{\"uid\":{\"label\":\"Author\",\"type\":\"integer\",\"behavior\":\"author\"},\"created\":{\"label\":\"Created\",\"type\":\"integer\",\"behavior\":\"created\"},\"changed\":{\"label\":\"Changed\",\"type\":\"integer\",\"behavior\":\"changed\"},\"target_type\":{\"label\":\"Target Type\",\"type\":\"text\",\"behavior\":\"textfield\"},\"target_id\":{\"label\":\"Target ID\",\"type\":\"integer\",\"behavior\":\"textfield\"}}');
   ");
 }
+
+function sbac_core_uninstall(){
+  variable_del('sbac_core_cmis_creds_default');
+  variable_del('cmis_repositories');
+  variable_del('taskit_visibility');
+}

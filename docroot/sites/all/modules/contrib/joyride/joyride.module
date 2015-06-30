@@ -1,5 +1,7 @@
 <?php
 
+define('JOYRIDE_LIBRARY_VERSION', '2.0.3');
+
 /**
  * Implements hook_libraries_info().
  * Return information about external libraries.
@@ -11,24 +13,54 @@ function joyride_libraries_info() {
     'name' => 'Joyride',
     'vendor url' => 'http://www.zurb.com/',
     'download url' => 'https://github.com/zurb/joyride',
+    'version callback' => 'joyride_version',
     'version arguments' => array(
-      'file' => 'jquery.joyride.js',
+      'file' => 'jquery.joyride-'.JOYRIDE_LIBRARY_VERSION.'.js',
       // jQuery Foundation Joyride Plugin 2.0.2
-      'pattern' => '/jQuery Foundation Joyride Plugin (\d+\.+\d+\.+\d)/',
+      'pattern' => '/jQuery Foundation Joyride Plugin ([\d][\d\.\0]+)/',
       'lines' => 2,
     ),
     'files' => array(
       'js' => array(
-        'jquery.joyride.js',
+        'jquery.joyride-'.JOYRIDE_LIBRARY_VERSION.'.js',
         'modernizr.mq.js'
       ),
       'css' => array(
-        'joyride.css',
+        'joyride-'.JOYRIDE_LIBRARY_VERSION.'.css',
       ),
     ),
   );
 
   return $libraries;
+}
+
+/**
+ * Library version callback. Make sure the library version is correct.
+ */
+function joyride_version($library, $options) {
+  // Provide defaults.
+  $options += array(
+    'file' => '',
+    'pattern' => '',
+    'lines' => 20,
+    'cols' => 200,
+  );
+
+  $file = DRUPAL_ROOT . '/' . $library['library path'] . '/' . $options['file'];
+  if (empty($options['file']) || !file_exists($file)) {
+    return;
+  }
+  $file = fopen($file, 'r');
+  while ($options['lines'] && $line = fgets($file, $options['cols'])) {
+    if (preg_match($options['pattern'], $line, $version)) {
+      if ($version[1] == JOYRIDE_LIBRARY_VERSION) {
+        fclose($file);
+        return $version[1];
+      }
+    }
+    $options['lines']--;
+  }
+  fclose($file);
 }
 
 /**
@@ -390,4 +422,13 @@ function joyride_block_view($delta = '') {
       break;
   }
   return $block;
+}
+
+/**
+ * Implements hook_context_page_reaction().
+ */
+function joyride_context_page_reaction(){
+  if ($plugin = context_get_plugin('reaction', 'joyride_add')) {
+    $plugin->execute();
+  }
 }

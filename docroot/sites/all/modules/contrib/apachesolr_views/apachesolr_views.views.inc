@@ -1,11 +1,12 @@
 <?php
 
-/*
- * Load files with base classes of the contained classes.
+/**
+ * @file
+ * Contains Views hooks to register Views plugins and handlers.
  */
 
 /**
- * Implementation of hook_views_plugins().
+ * Implements of hook_views_plugins().
  */
 function apachesolr_views_views_plugins() {
   return array(
@@ -23,7 +24,7 @@ function apachesolr_views_views_plugins() {
 }
 
 /**
- * Implementation of hook_views_data().
+ * Implements of hook_views_data().
  */
 function apachesolr_views_views_data() {
   foreach (apachesolr_load_all_environments() as $env_id => $environment) {
@@ -44,7 +45,7 @@ function apachesolr_views_views_data() {
     }
     catch (Exception $e) {
       $solr_fields = array();
-      watchdog('Apache Solr Views', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_ERROR);
+      watchdog('Apache Solr Views', nl2br(check_plain($e->getMessage())), NULL, WATCHDOG_WARNING);
     }
 
     foreach ($solr_fields as $solr_field_name => $solr_field) {
@@ -56,11 +57,14 @@ function apachesolr_views_views_data() {
 
       $field_type = $solr_field->type;
 
+      $field_handler = 'apachesolr_views_handler_field';
       $filter_handler = 'apachesolr_views_handler_filter';
       switch ($field_type) {
         case 'tdate':
+          $field_handler = 'apachesolr_views_handler_field_date';
           $filter_handler = 'apachesolr_views_handler_filter_date';
           break;
+
         case 'text':
         case 'string':
           $filter_handler = 'apachesolr_views_handler_filter_string';
@@ -69,9 +73,9 @@ function apachesolr_views_views_data() {
 
       $data[$apachesolr_base_table][$solr_field_name] = array(
         'title' => $solr_field_name,
-        'help' => $solr_field_name,
+        'help' => filter_xss(apachesolr_field_name_map($solr_field_name)),
         'field' => array(
-          'handler' => 'apachesolr_views_handler_field',
+          'handler' => $field_handler,
           'click sortable' => TRUE,
         ),
         'filter' => array(
@@ -127,6 +131,9 @@ function apachesolr_views_views_data() {
       'field' => array(
         'handler' => 'apachesolr_views_handler_field',
         'click sortable' => TRUE,
+      ),
+      'sort' => array(
+        'handler' => 'apachesolr_views_handler_sort',
       ),
     );
   }

@@ -16,6 +16,16 @@ function sbac_resource_install() {
 
 function sbac_resource_uninstall() {
   $delete = db_query("drop table if exists `node_user_paradata`");
+  variable_del('sbac_resource_general_guide');				
+  variable_del('sbac_resource_materials_guide');				
+  variable_del('sbac_resource_summary_guide');				
+  variable_del('sbac_resource_tags_guide');				
+  variable_del('sbac_resource_advanced_guide');				
+  variable_del('sbac_resource_flag_guide');				
+  variable_del(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME);		
+  variable_del(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME);
+  variable_del(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME);
+
 }
 
 /**

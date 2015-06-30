@@ -697,11 +697,12 @@ function sbac_help_welcome_tutorial_topics($limit = NULL) {
   $results = $query->execute();
   while ($result = $results->fetchAssoc()) {
     $node = node_load($result['entity_id']);
+    $lang = $node->language;
     $topic = array(
       'nid'     => $node->nid,
       'title'   => $node->title,
-      'img_fid' => $node->field_help_icon['und'][0]['fid'],
-      'img_alt' => $node->field_help_icon['und'][0]['alt'],
+      'img_fid' => ($node->field_help_icon ? $node->field_help_icon[$lang][0]['fid'] : NULL),
+      'img_alt' => ($node->field_help_icon ? $node->field_help_icon[$lang][0]['alt'] : NULL),
 
     );
     $topics[] = $topic;

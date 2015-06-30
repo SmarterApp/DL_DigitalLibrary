@@ -11,9 +11,9 @@ files[] = views/contextual_range_filter_plugin_argument_validate_string_range.in
 configure = admin/config/content/contextual-range-filter
 core = 7.x
 
-; Information added by Drupal.org packaging script on 2014-01-25
-version = "7.x-1.6"
+; Information added by Drupal.org packaging script on 2015-04-08
+version = "7.x-1.7"
 core = "7.x"
 project = "contextual_range_filter"
-datestamp = "1390623229"
+datestamp = "1428468182"
 
