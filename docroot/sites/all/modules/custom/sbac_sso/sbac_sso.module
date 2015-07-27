@@ -1115,6 +1115,7 @@ function sbac_sso_cron() {
   if ($access_token) {
     $post = SBAC_SSO_PROGRAM_OAUTH_API_LIST;
     $curl = curl_init();
+
     curl_setopt($curl, CURLOPT_URL, $post);
     curl_setopt($curl, CURLOPT_HTTPHEADER, array(
       'Authorization: Bearer ' . $access_token,
@@ -1126,13 +1127,16 @@ function sbac_sso_cron() {
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
     if ($result && $http_status == 200) {
-      $json_responses = drupal_json_decode($result);
+      $json_responses = json_decode($result);
       $cached_results = variable_get('sbac_sso_pm_cached_results');
-      foreach ($json_responses as $json) {
-        $cached_results[$json['type']][$json['id']] = $json;
+      if(is_array($json_responses)){
+        foreach ($json_responses as $json) {
+          $cached_results[$json->type][$json->id] = $json;
+        }
       }
-      variable_set('sbac_sso_pm_cached_results', $cached_results);
+      $cached_results = variable_get('sbac_sso_pm_cached_results');
     }
+    variable_set('sbac_sso_pm_cached_results', $cached_results);
   }
 }
 
