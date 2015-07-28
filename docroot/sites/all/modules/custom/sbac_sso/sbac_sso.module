@@ -1127,12 +1127,10 @@ function sbac_sso_cron() {
     $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
     if ($result && $http_status == 200) {
-      $json_responses = json_decode($result);
+      $json_responses = drupal_json_decode($result);
       $cached_results = variable_get('sbac_sso_pm_cached_results');
-      if(is_array($json_responses)){
-        foreach ($json_responses as $json) {
-          $cached_results[$json->type][$json->id] = $json;
-        }
+      foreach ($json_responses as $json) {
+        $cached_results[$json['type']][$json['id']] = $json;
       }
     }
     variable_set('sbac_sso_pm_cached_results', $cached_results);
