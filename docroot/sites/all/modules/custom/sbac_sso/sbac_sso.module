@@ -1134,7 +1134,6 @@ function sbac_sso_cron() {
           $cached_results[$json->type][$json->id] = $json;
         }
       }
-      $cached_results = variable_get('sbac_sso_pm_cached_results');
     }
     variable_set('sbac_sso_pm_cached_results', $cached_results);
   }
