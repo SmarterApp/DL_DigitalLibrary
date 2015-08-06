@@ -7,8 +7,8 @@ $conf['file_private_path'] = '/mnt/files/sbac/files-private';
 /**
  * Google OSCaddie Environment Sepecific Settings.
  */
-$conf['google_cdn_folder'] = 'production';
-$conf['oscaddie_gcs_folder'] = 'production';
+$conf['google_cdn_folder'] = 'stage';
+$conf['oscaddie_gcs_folder'] = 'stage';
 
 /**
  * SBAC SSO Settings.
