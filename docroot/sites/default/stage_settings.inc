@@ -2,7 +2,7 @@
 /*
  * Environment specific Site Settings.
  */
-$conf['file_private_path'] = '/mnt/files/sbac/files-private';
+$conf['file_private_path'] = '/mnt/files/sbac.test/files-private';
 
 /**
  * Google OSCaddie Environment Sepecific Settings.
