@@ -1459,11 +1459,9 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
       $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
       $qc_account = user_load($qc->uid);
 
-      $location = l(full_name($qc_account), 'user/' . $qc_account->uid);
-
       if ($states = field_entity_value($qc_account, 'field_state')) {
         $term = current($states);
-        $location .= t(', State of !state', array(
+        $location = t('State of !state', array(
           '!state' => $term->name
         ));
       }
