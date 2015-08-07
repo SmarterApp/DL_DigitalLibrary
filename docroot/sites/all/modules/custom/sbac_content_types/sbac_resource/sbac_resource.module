@@ -2900,7 +2900,7 @@ function sbac_resource_block_view($delta = '') {
           break;
       }
       if ($js) {
-        $block['content'] = '<span class="button" onclick="window.history.back(-1);">Back</span>';
+        $block['content'] = '<span class="button" onclick="parent.history.back();">Back</span>';
       }
       else {
         $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
