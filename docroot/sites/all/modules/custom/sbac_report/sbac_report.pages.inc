@@ -1456,7 +1456,6 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
     $qc_rec_slide = '';
     $qc_count = 1;
     foreach ($qc_entities as $qc) {
-      $qc_rec_slide .= '<div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . '</div>';
       $qc_account = user_load($qc->uid);
 
       if ($states = field_entity_value($qc_account, 'field_state')) {
@@ -1468,14 +1467,10 @@ function sbac_report_ct_individual_modal_form($form, &$form_state) {
 
       $qc_rec_slide .= '
                         <div class="qc-item">
-                          <div class="qc-rec-name">
-                            ' . $location . '
-                          </div>
-
+                          <div class="slide-title">' . t('Reviewer !count', array('!count' => $qc_count)) . ', ' . $location .'</div>
                           <div class="qc-rec-value">
-                           <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
+                            <span>' . t('Recommendation:') . '</span> ' . rec_friendly_name($qc) . '
                           </div>
-
                           <div class="qc-rec-con">
                             <span>' . t('Resource Consistency Rate:') . '</span> ' .
         rec_consistency_rate($qc_entities, $qc) . '

@@ -74,8 +74,8 @@ dl {
   list-style-position: inside; /* this can create issues */
 }
 
-/** Tables **/
 .page-reports{
+/** Tables **/
   table {
     $cellpad: 18px 2px; //defines the padding on the table cells
     $linkcolor: #056b8d;
@@ -137,6 +137,9 @@ dl {
         }
       }
     }
+  }
+  .qc-item{
+    padding-bottom:15px;
   }
 }
 
