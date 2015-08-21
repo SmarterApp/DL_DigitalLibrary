@@ -39,5 +39,5 @@ $conf['sbac_search_env_conf'] = array(
   'apachesolr_access_always_add_grants' => 0,
   'apachesolr_direct_commit' => 0,
   'apachesolr_read_only' => '1',
-  'apachesolr_soft_commit' => 0,
+  'apachesolr_soft_commit' => 0, 
 );
