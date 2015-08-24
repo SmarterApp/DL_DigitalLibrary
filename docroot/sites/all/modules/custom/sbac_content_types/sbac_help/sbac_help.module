@@ -168,7 +168,7 @@ function sbac_help_topics(){
     $topics .= theme('sbac-help-topic', $variables);
   }
   $vars['topics'] = $topics;
-  if(user_access('administer nodes')){
+  if(user_access('Help Page: Edit any content')){
     $vars['edit'] = '<a class="help-topic-link" href="/sort-content/help-topics">Edit Help Topics</a>';
   }
   return theme('sbac-help-topics', $vars);
