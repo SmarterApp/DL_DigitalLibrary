@@ -89,6 +89,42 @@ function sbac_core_theme_registry_alter(&$theme_registry) {
  */
 function sbac_core_form_alter(&$form, &$form_state, $form_id) {
   \sbac_core\Core::hook('form_alter', NULL, $form, $form_state, $form_id);
+  if ($form_id == 'legal_administration') {
+    $form['sbac-core-pdf-upload'] = array(
+      '#type' => 'managed_file',
+      '#weight' => -28,
+      '#title' => 'PDF Upload',
+      '#default_value' => variable_get('sbac-core-pdf-upload-fid'),
+      '#upload_location' => 'public://',
+      '#description' => 'For user to download and print',
+      '#upload_validators' => array(
+        'file_validate_extensions' => array('gif png jpg jpeg pdf'),
+        'file_validate_size' => array(MAX_FILE_SIZE * 1024 * 1024),
+      ),
+    );
+    $form['#submit'][] = 'sbac_core_form_alter_submit';
+  }
+
+  if ($form_id == 'legal_login') {
+    $uri = file_create_url(variable_get('sbac-core-pdf-upload-uri'));
+    unset($form['download']);
+    $form['download'] = array(
+      '#title' => 'Download as PDF',
+      '#prefix' => '<div id="download-button"><h1 class="left page-title">Terms of Service</h1>',
+      '#suffix' => '</div>',
+      '#markup' => '<a href="' . $uri . '" class="right button small"><i class="gen-enclosed foundicon-inbox"></i> Download</a>',
+
+    );
+  }
+}
+
+/**
+ * Our callback.
+ */
+function sbac_core_form_alter_submit(&$form, &$form_state) {
+  $fileload = file_load($form_state['values']['sbac-core-pdf-upload']);
+  variable_set('sbac-core-pdf-upload-fid', $fileload->fid);
+  variable_set('sbac-core-pdf-upload-uri', $fileload->uri);
 }
 
 /**
