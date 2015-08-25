@@ -103,7 +103,6 @@ function sbac_core_form_alter(&$form, &$form_state, $form_id) {
         'file_validate_size' => array(MAX_FILE_SIZE * 1024 * 1024),
       ),
     );
-
     $form['#submit'][] = 'sbac_core_form_alter_submit';
   }
 
