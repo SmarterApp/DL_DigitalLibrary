@@ -97,6 +97,7 @@ function sbac_core_form_alter(&$form, &$form_state, $form_id) {
       '#default_value' => variable_get('sbac-core-pdf-upload-fid'),
       '#upload_location' => 'public://',
       '#description' => 'For user to download and print',
+      '#required' => TRUE,
       '#upload_validators' => array(
         'file_validate_extensions' => array('gif png jpg jpeg pdf'),
         'file_validate_size' => array(MAX_FILE_SIZE * 1024 * 1024),
