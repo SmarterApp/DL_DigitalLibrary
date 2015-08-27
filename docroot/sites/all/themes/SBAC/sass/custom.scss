@@ -2246,14 +2246,16 @@ a.tabledrag-handle .handle {
    Legal
    ----------------------------------------- */
 
-   #terms-and-conditions-body {
-    clear: both;
-   }
+#terms-and-conditions-body {
+  clear: both;
+  font-size:12px;
+  line-height:18px;
+}
 
-   .terms {
-    max-height: 400px;
-    overflow-y:auto;
-   }
+.terms {
+  max-height: 400px;
+  overflow-y:auto;
+}
 
 /* -----------------------------------------
    Admin Theme Fixes
