@@ -51,10 +51,8 @@
   display: inline-block;
   padding: 3px 5px;
   border: 1px solid #ccc;
-  -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  -ms-border-radius: 3px;
-  -o-border-radius: 3px;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
   background-color: #eee;
   color: #0085ad;
@@ -70,7 +68,7 @@
 }
 /* line 65, ../sass/feedback.scss */
 .feedback-wrap .gate-keeper-intro {
-  border-bottom: 1px #cccccc solid;
+  border-bottom: 1px #ccc solid;
   margin-bottom: 1em;
   padding-bottom: 1em;
   padding: 10px 30px 0;
@@ -79,7 +77,7 @@
 .feedback-wrap .dialog-trigger-gk {
   margin-left: 30px;
 }
-/* line 76, ../sass/feedback.scss */
+/* line 75, ../sass/feedback.scss */
 .feedback-wrap input[type="checkbox"],
 .feedback-wrap input[type="radio"] {
   margin-bottom: 0;
@@ -88,7 +86,7 @@
 /* line 82, ../sass/feedback.scss */
 .feedback-wrap .helpful-info {
   background: #eee;
-  border: 1px #cccccc solid;
+  border: 1px #ccc solid;
   margin: 10px 0;
   padding: 1em 2em 0;
 }
@@ -97,7 +95,7 @@
   color: #666;
   font-size: 1.3em;
 }
-/* line 96, ../sass/feedback.scss */
+/* line 95, ../sass/feedback.scss */
 .feedback-wrap .button,
 .feedback-wrap button {
   margin: 10px 10px 10px 0;
@@ -106,12 +104,12 @@
 .feedback-wrap #edit-tags-cancel {
   margin-left: 2em;
 }
-/* line 107, ../sass/feedback.scss */
+/* line 105, ../sass/feedback.scss */
 .feedback-wrap .ajax-progress,
 .feedback-wrap .alert-box {
   display: none;
 }
-/* line 115, ../sass/feedback.scss */
+/* line 114, ../sass/feedback.scss */
 .feedback-wrap .field-name-field-review-set .sticky-header,
 .feedback-wrap .field-name-field-review-set .tabledrag-toggle-weight-wrapper,
 .feedback-wrap .field-name-field-quality-set .sticky-header,
@@ -155,7 +153,7 @@
   /* comments field */
   /* radios */
 }
-/* line 142, ../sass/feedback.scss */
+/* line 140, ../sass/feedback.scss */
 .feedback-wrap .field-name-field-review-set .field-multiple-table tbody tr td.field-multiple-drag, .feedback-wrap .field-name-field-review-set .field-multiple-table tbody tr td.delta-order,
 .feedback-wrap .field-name-field-review-set .field-multiple-table tbody tr td .grippie,
 .feedback-wrap .field-name-field-quality-set .field-multiple-table tbody tr td.field-multiple-drag,
@@ -203,7 +201,7 @@
 .feedback-wrap .field-name-field-quality-set .field-multiple-table tbody tr td .criteria-set-comments .counter {
   position: absolute;
   right: 25px;
-  top: 15px;
+  top: 0px;
   font-size: 12px;
 }
 /* line 190, ../sass/feedback.scss */
@@ -305,7 +303,7 @@
 .feedback-wrap .field-name-field-rec-rationale textarea {
   min-height: 75px;
 }
-/* line 296, ../sass/feedback.scss */
+/* line 293, ../sass/feedback.scss */
 .feedback-wrap .field-name-field-to-contributor,
 .feedback-wrap .field-name-field-to-reviewer-1,
 .feedback-wrap .field-name-field-to-reviewer-2,
@@ -331,7 +329,7 @@
   right: 0;
   top: 15px;
 }
-/* line 314, ../sass/feedback.scss */
+/* line 313, ../sass/feedback.scss */
 .feedback-wrap .field-name-field-to-reviewer-1,
 .feedback-wrap .field-name-field-to-reviewer-3 {
   float: right;
@@ -349,7 +347,7 @@
 }
 /* line 330, ../sass/feedback.scss */
 .feedback-wrap .form-item-error-holder.error + .form-item {
-  background: white url("/sites/all/themes/SBAC/images/icon-validation-fail.png") right 30px no-repeat;
+  background: #fff url("/sites/all/themes/SBAC/images/icon-validation-fail.png") right 30px no-repeat;
 }
 /* line 333, ../sass/feedback.scss */
 .feedback-wrap .form-item-error-holder.error + .form-item .form-item {
@@ -393,7 +391,7 @@
   border-right: 1px solid #ccc;
   /* ie fix */
 }
-/* line 391, ../sass/feedback.scss */
+/* line 390, ../sass/feedback.scss */
 .feedback-wrap .feedback-items .feedback-item .feedback-review:last-child, .feedback-wrap .feedback-items .feedback-item .feedback-review.feedback-review-3 {
   margin-right: 0;
   border-right: none;
@@ -608,13 +606,11 @@
   font-size: 1.4em;
   margin: 0 auto;
   max-width: 834px;
-  -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
+  -webkit-border-radius: 0;
   border-radius: 0;
-  -webkit-box-shadow: none;
   -moz-box-shadow: none;
+  -webkit-box-shadow: none;
   box-shadow: none;
 }
 /* line 620, ../sass/feedback.scss */
