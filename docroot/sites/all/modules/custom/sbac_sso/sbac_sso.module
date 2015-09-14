@@ -178,7 +178,7 @@ function sbac_sso_error() {
       break;
   }
 
-  drupal_set_title('');
+  drupal_set_title(''); 
   $output = '<p><span class="error-code">' . $possible_error_codes[$code] . '</span></p>';
   return $output;
 }
