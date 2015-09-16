@@ -13,12 +13,21 @@ $conf['oscaddie_gcs_folder'] = 'production';
 /**
  * SBAC SSO Settings.
  */
+<<<<<<< 3a687d50b51682dc7f8637ce9f63431df6a81342:docroot/sites/default/prod_settings.inc
 define('SBAC_SSO_URL', 'https://sso.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
 define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
 define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
 define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
 define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso.smarterbalanced.org/auth/UI/Logout');
 define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+=======
+  define('SBAC_SSO_URL', 'https://sso-uat.smarterbalanced.org/auth/SSORedirect/metaAlias/sbac/idp');
+  define('SBAC_SSO_PROGRAM_REQUEST_AUTH', 'https://sso.smarterbalanced.org/auth/oauth2/access_token?realm=/sbac');
+  define('SBAC_SSO_PROGRAM_OAUTH_API_LIST', 'https://pm.smarterbalanced.org/rest/tenants');
+  define('SBAC_SSO_PROGRAM_OAUTH_API', 'https://pm.smarterbalanced.org/rest/tenantchain');
+  define('SBAC_SSO_DESTROY_SESSION_URL', 'https://sso-uat.smarterbalanced.org/auth/UI/Logout');
+  define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://sso-uat.smarterbalanced.org/auth/IDPSloRedirect/metaAlias/sbac/idp');
+>>>>>>> Changing sso urls back in stage_settings.inc:docroot/sites/default/stage_settings.inc
 
 
 /**
