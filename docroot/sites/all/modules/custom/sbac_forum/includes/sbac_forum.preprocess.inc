@@ -881,6 +881,29 @@ function sbac_forum_preprocess_views_view_field__forum_member_list__uid(&$vars) 
 /** ---------- Forum keyword search view ---------
  *
  */
+
+/**
+ * Implements hook_views_pre_render(&$view)
+ * 
+ * Apache Solr is returning "ghost" nodes that no longer exist, breaking further
+ * code. Stripping out results that do not have an existing node.
+ */
+function sbac_forum_views_pre_render(&$view){
+  // Store Results
+  $results = $view->result;
+  // Clear out all results to eliminate "ghost" results
+  $view->result = array();
+
+  foreach ($results as $result) {
+    // Check for associated entity
+    $entity = entity_load_single($result->entity_type, $result->entity_id);
+    if($entity){
+      $view->result[] = $result;
+    }
+  }
+  return $view;
+}
+
 function sbac_forum_preprocess_views_view__forums_keyword_search__page(&$vars) {
   drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   $link_ops = array(
@@ -1046,37 +1069,38 @@ function sbac_forum_preprocess_views_view_fields__forums_keyword_search__page(&$
     case 'node':
       if ($row_info->bundle_name == "Topic") {
         $topic_node = node_load($row_info->entity_id);
-        $topic_wrapper = entity_metadata_wrapper('node', $topic_node);
+        if($topic_node){
+          $topic_wrapper = entity_metadata_wrapper('node', $topic_node);
+          // Title
+          $node_title = $topic_wrapper->title->value();
+          $params['title'] = l($node_title, 'node/' . $topic_node->nid);
 
-        // Title
-        $node_title = $topic_wrapper->title->value();
-        $params['title'] = l($node_title, 'node/' . $topic_node->nid);
+          // Forum parent
+          $forum_parent = $topic_wrapper->field_topic_forum_parent->value();
+          $term_name = $forum_parent->name;
+          $link_path = 'forums/term/' . $forum_parent->tid;
+          $link_to_term = l($term_name, $link_path);
+          $params['forum_parent'] = $link_to_term;
 
-        // Forum parent
-        $forum_parent = $topic_wrapper->field_topic_forum_parent->value();
-        $term_name = $forum_parent->name;
-        $link_path = 'forums/term/' . $forum_parent->tid;
-        $link_to_term = l($term_name, $link_path);
-        $params['forum_parent'] = $link_to_term;
+          // Author
+          $auth_hover = sbac_forum__api__get_authpane_hoverover($topic_wrapper->author->uid->value());
+          $params['started'] = $auth_hover;
 
-        // Author
-        $auth_hover = sbac_forum__api__get_authpane_hoverover($topic_wrapper->author->uid->value());
-        $params['started'] = $auth_hover;
+          // Last comment time
+          $last_activity = date('M jS Y, g:i a', $topic_node->last_comment_timestamp);
+          $params['last_activity'] = $last_activity;
 
-        // Last comment time
-        $last_activity = date('M jS Y, g:i a', $topic_node->last_comment_timestamp);
-        $params['last_activity'] = $last_activity;
+          $params['reply_count'] = $topic_node->comment_count;
 
-        $params['reply_count'] = $topic_node->comment_count;
-
-        $output = theme('sbac_forum_keyword_search_render_topic', array('fields' => $params));
-        $new_fields = new stdClass();
-        $new_fields->separator = '';
-        $new_fields->wrapper_prefix = '';
-        $new_fields->wrapper_suffix = '';
-        $new_fields->label_html = '';
-        $new_fields->content = $output;
-        $vars['fields'] = array('topic_entity' => $new_fields);
+          $output = theme('sbac_forum_keyword_search_render_topic', array('fields' => $params));
+          $new_fields = new stdClass();
+          $new_fields->separator = '';
+          $new_fields->wrapper_prefix = '';
+          $new_fields->wrapper_suffix = '';
+          $new_fields->label_html = '';
+          $new_fields->content = $output;
+          $vars['fields'] = array('topic_entity' => $new_fields);
+        }
       }
       break;
     case 'comment':
