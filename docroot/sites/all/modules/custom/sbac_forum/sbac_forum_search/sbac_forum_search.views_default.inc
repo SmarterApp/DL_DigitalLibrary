@@ -50,29 +50,29 @@ function sbac_forum_search_views_default_views() {
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = 'Empty';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
-  /* Field: Broken/missing handler */
+  /* Field: Apache Solr: entity_type */
   $handler->display->display_options['fields']['entity_type']['id'] = 'entity_type';
   $handler->display->display_options['fields']['entity_type']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['fields']['entity_type']['field'] = 'entity_type';
-  /* Field: Broken/missing handler */
+  /* Field: Apache Solr: bundle_name */
   $handler->display->display_options['fields']['bundle_name']['id'] = 'bundle_name';
   $handler->display->display_options['fields']['bundle_name']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['fields']['bundle_name']['field'] = 'bundle_name';
-  /* Field: Broken/missing handler */
+  /* Field: Apache Solr: entity_id */
   $handler->display->display_options['fields']['entity_id']['id'] = 'entity_id';
   $handler->display->display_options['fields']['entity_id']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['fields']['entity_id']['field'] = 'entity_id';
-  /* Field: Broken/missing handler */
+  /* Field: Apache Solr: content */
   $handler->display->display_options['fields']['content']['id'] = 'content';
   $handler->display->display_options['fields']['content']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['fields']['content']['field'] = 'content';
-  /* Filter criterion: Broken/missing handler */
+  /* Filter criterion: Apache Solr: entity_type */
   $handler->display->display_options['filters']['entity_type']['id'] = 'entity_type';
   $handler->display->display_options['filters']['entity_type']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['entity_type']['field'] = 'entity_type';
   $handler->display->display_options['filters']['entity_type']['operator'] = 'word';
   $handler->display->display_options['filters']['entity_type']['value'] = 'node taxonomy_term comment';
-  /* Filter criterion: Broken/missing handler */
+  /* Filter criterion: Apache Solr: bundle */
   $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
   $handler->display->display_options['filters']['bundle']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
