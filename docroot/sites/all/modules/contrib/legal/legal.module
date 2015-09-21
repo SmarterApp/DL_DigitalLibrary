@@ -657,7 +657,7 @@ function theme_legal_login($variables) {
   $form = $variables['form'];
   $form = theme('legal_display', array('form' => $form));
 
-  $output = '<p>' . t('To continue to use this site please read the Terms of Service below, and complete the form to confirm your acceptance.') . '</p>';
+  $output = '<p>' . t('To continue to use this site please read the Terms & Conditions below, and complete the form to confirm your acceptance.') . '</p>';
 
   if (isset($form['changes']['#value'])) {
     foreach (element_children($form['changes']) as $key) {
@@ -716,7 +716,7 @@ function legal_get_conditions($language = NULL) {
 
   if (!empty($language)) {
     $result = db_select('legal_conditions', 'lc')
-      ->fields('lc', $keys)
+      ->fields('lc')
       ->condition('language', $language)
       ->orderBy('version', 'DESC')
       ->orderBy('revision', 'DESC')
@@ -727,13 +727,12 @@ function legal_get_conditions($language = NULL) {
   }
   else {
     $result = db_select('legal_conditions', 'lc')
-      ->fields('lc', $keys)
+      ->fields('lc')
       ->orderBy('tc_id', 'DESC')
       ->execute()
       ->fetchAllAssoc('tc_id');
     $result = (array)array_shift($result);
   }
-
 
   foreach ($keys as $key) {
     $conditions[$key] = isset($result[$key]) ? $result[$key] : '';
