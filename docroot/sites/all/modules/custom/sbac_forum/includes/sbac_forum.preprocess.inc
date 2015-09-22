@@ -890,15 +890,18 @@ function sbac_forum_preprocess_views_view_field__forum_member_list__uid(&$vars) 
  */
 function sbac_forum_views_pre_render(&$view){
   // Store Results
+  // dpm($view);
   $results = $view->result;
   // Clear out all results to eliminate "ghost" results
   $view->result = array();
 
   foreach ($results as $result) {
     // Check for associated entity
-    $entity = entity_load_single($result->entity_type, $result->entity_id);
-    if($entity){
-      $view->result[] = $result;
+    if (!empty($result->entity_type)) {
+      $entity = entity_load_single($result->entity_type, $result->entity_id);
+      if($entity){
+        $view->result[] = $result;
+      }
     }
   }
   return $view;
