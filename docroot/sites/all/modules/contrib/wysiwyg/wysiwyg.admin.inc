@@ -35,7 +35,7 @@ function wysiwyg_profile_form($form, &$form_state, $profile) {
     'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
     'verify_html' => TRUE,
     'preformatted' => FALSE,
-    'convert_fonts_to_spans' => FALSE,
+    'convert_fonts_to_spans' => TRUE,
     'remove_linebreaks' => TRUE,
     'apply_source_formatting' => FALSE,
     'paste_auto_cleanup_on_paste' => FALSE,
