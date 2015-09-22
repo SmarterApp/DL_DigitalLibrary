@@ -63,21 +63,12 @@ class QuickQuicktabs extends QuickRenderer {
     $settings = $quickset->getSettings();
     $tabs = array();
     foreach ($quickset->getContents() as $i => $tab) {
-
-      $class_text = '';
-      if (!empty($settings['list_classes'])) {
-        if (isset($settings['list_classes'][$i])) {
-          $class_text = $settings['list_classes'][$i];
-        }
-      }
-
       if (!empty($tab)) {
         $tablink = array(
           '#type' => 'link',
           '#title' => $quickset->translateString($tab->getTitle(), 'tab', $i),
           '#href' =>  $_GET['q'],
           '#options' => $this->construct_link_options($i),
-          '#link_class' => $class_text,
         );
         if ($settings['ajax']) {
           $tab_settings = $tab->getSettings();

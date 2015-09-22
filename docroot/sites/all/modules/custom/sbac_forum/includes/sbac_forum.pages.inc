@@ -383,7 +383,6 @@ function sbac_forum_view_forum_page($term) {
     'sorted' => TRUE, // TRUE or FALSE.
     'ajax' => TRUE, // TRUE or FALSE.
     'default_tab' => $default_tab, // Id of the tab - 0/1/2/etc.
-    'list_classes' => $tab_classes,
   );
   $taxonomy_tabs = quicktabs_build_quicktabs($qtname, $overrides, $tabs);
   $tab_output = drupal_render($taxonomy_tabs);
