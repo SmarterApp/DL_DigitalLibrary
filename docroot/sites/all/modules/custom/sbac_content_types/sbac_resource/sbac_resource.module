@@ -249,9 +249,8 @@ function sbac_resource_print_about_this_tab($node) {
   $content = print_pdf_generate_html($print, $html);
   $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/';
   $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-  if ($writable) {
-    file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_REPLACE);
-  }
+  file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_REPLACE);
+
   return '';
 }
 
