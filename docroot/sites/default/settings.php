@@ -605,7 +605,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
         'apachesolr_read_only' => '1',
         'apachesolr_soft_commit' => 0,
       );
-
+      
       break;
 
     case 'test':
