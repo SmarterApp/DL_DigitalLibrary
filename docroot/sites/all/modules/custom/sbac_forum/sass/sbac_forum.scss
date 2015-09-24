@@ -2382,6 +2382,9 @@ form[id*='sbac-flag-collaboration-form']{
 	    position: absolute;
 	    right: 0;
 	    top: 16px;
+      &.warning{
+        top: -12px;
+      }
 		}
 	}
 
