@@ -12,7 +12,6 @@ dependencies[] = legal
 dependencies[] = menu
 dependencies[] = phonetic
 dependencies[] = sbac_central
-dependencies[] = seckit
 dependencies[] = strongarm
 dependencies[] = wysiwyg
 features[ctools][] = elysia_cron:default_elysia_cron_rules:1
