@@ -233,6 +233,17 @@ function sbac_user_user_default_permissions() {
     'module' => 'user',
   );
 
+  // Exported permission: 'administer search'.
+  $permissions['administer search'] = array(
+    'name' => 'administer search',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
+    ),
+    'module' => 'search',
+  );
+
   // Exported permission: 'administer site configuration'.
   $permissions['administer site configuration'] = array(
     'name' => 'administer site configuration',
@@ -592,6 +603,29 @@ function sbac_user_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: 'search content'.
+  $permissions['search content'] = array(
+    'name' => 'search content',
+    'roles' => array(
+      'DLRB member' => 'DLRB member',
+      'administrator' => 'administrator',
+      'advanced end user' => 'advanced end user',
+      'basic end user' => 'basic end user',
+      'digital library administrator' => 'digital library administrator',
+      'facilitator' => 'facilitator',
+      'guest' => 'guest',
+      'help desk' => 'help desk',
+      'moderator' => 'moderator',
+      'on-boarding' => 'on-boarding',
+      'reports administrator' => 'reports administrator',
+      'resource contributor' => 'resource contributor',
+      'resource publisher' => 'resource publisher',
+      'resource reviewer' => 'resource reviewer',
+      'system administrator' => 'system administrator',
+    ),
+    'module' => 'search',
+  );
+
   // Exported permission: 'select account cancellation method'.
   $permissions['select account cancellation method'] = array(
     'name' => 'select account cancellation method',
@@ -614,6 +648,17 @@ function sbac_user_user_default_permissions() {
       'system administrator' => 'system administrator',
     ),
     'module' => 'sbac_help',
+  );
+
+  // Exported permission: 'use advanced search'.
+  $permissions['use advanced search'] = array(
+    'name' => 'use advanced search',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'digital library administrator' => 'digital library administrator',
+      'system administrator' => 'system administrator',
+    ),
+    'module' => 'search',
   );
 
   // Exported permission: 'use text format full_html'.
