@@ -17,7 +17,6 @@ dependencies[] = list
 dependencies[] = number
 dependencies[] = options
 dependencies[] = print
-dependencies[] = rate
 dependencies[] = strongarm
 dependencies[] = taskit
 dependencies[] = taxonomy

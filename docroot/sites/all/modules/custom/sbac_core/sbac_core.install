@@ -297,6 +297,18 @@ function sbac_core_update_7017() {
   ");
 }
 
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disables and uninstalls no longer used Rate module
+ */
+function sbac_core_update_7018() {
+  if (module_exists('rate')) {
+    module_disable(array('rate'));
+    drupal_uninstall_modules(array('rate'));
+  }
+}
+
 function sbac_core_uninstall(){
   variable_del('sbac_core_cmis_creds_default');
   variable_del('cmis_repositories');
