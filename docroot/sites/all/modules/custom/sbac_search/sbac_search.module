@@ -203,6 +203,12 @@ function sbac_search_apachesolr_index_document_build_user(ApacheSolrDocument $do
 }
 
 
+function sbac_search_apachesolr_index_document_build_node(ApacheSolrDocument $document, $node, $env_id) {
+  if ($node->type == 'resource' && $node->field_posting_options) {
+    $document->addField('is_field_posting_options', $node->field_posting_options['und'][0]['value']);
+  }
+}
+
 /**
  * Implements hook_facetapi_facet_info().
  */
@@ -252,6 +258,32 @@ function sbac_search_facetapi_facet_info($searcher_info) {
     // Add facets for all fields attached to the user entity.
     $facets = array_merge($facets, apachesolr_entity_field_facets('user'));
   }
+  if (isset($searcher_info['types']['node'])) {
+    $facets['posting_options'] = array(
+      'name' => 'posting_options',
+      'label' => t('Posting Options'),
+      'description' => t('The last saved posting determination.'),
+      'field' => 'is_field_posting_options',
+      'field alias' => 'is_field_posting_options',
+      'field api name' => FALSE,
+      'field api bundles' => array(),
+      'allowed operators' => array(FACETAPI_OPERATOR_AND => TRUE, FACETAPI_OPERATOR_OR => TRUE),
+      'facet missing allowed' => TRUE,
+      'facet mincount allowed' => FALSE,
+      'weight' => 0,
+      'map options' => array('field_posting_options_1', 'field_posting_options_2'),
+      'hierarchy callback' => FALSE,
+      'values callback' => FALSE,
+      'min callback' => FALSE,
+      'max callback' => FALSE,
+      'default sorts' => array(
+        array('active', SORT_DESC),
+        array('count', SORT_DESC),
+        array('display', SORT_ASC),
+      ),
+    );
+  }
+
   return $facets;
 }
 

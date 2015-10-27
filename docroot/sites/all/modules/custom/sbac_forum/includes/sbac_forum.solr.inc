@@ -6,7 +6,7 @@
  * Implements hook_apachesolr_index_document_build().
  */
 function sbac_forum_apachesolr_index_document_build(ApacheSolrDocument $document, $entity, $entity_type, $env_id) {
-  $valid_document = FALSE;
+  $valid_document = TRUE;
   $forum_data = NULL;
   switch($entity_type) {
     case 'taxonomy_term':
@@ -146,13 +146,18 @@ function sbac_forum_build_state_subquery($account) {
 }
 
 /**
+ * The following function is breaking and preventing resource nodes from being
+ * indexed. Needs investigation and fix.
+ */
+
+/**
  * Implements hook_apachesolr_query_alter().
  *
  * Alter the query to include the access subquery
  *
  * @param DrupalSolrQueryInterface $query
  *
- */
+
 function sbac_forum_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
   global $user;
   try {
@@ -166,3 +171,4 @@ function sbac_forum_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
     $query->abort_search = TRUE;
   }
 }
+ */
