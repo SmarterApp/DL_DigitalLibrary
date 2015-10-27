@@ -18,6 +18,7 @@ dependencies[] = list
 dependencies[] = number
 dependencies[] = options
 dependencies[] = print
+dependencies[] = redirect
 dependencies[] = strongarm
 dependencies[] = taskit
 dependencies[] = taxonomy
