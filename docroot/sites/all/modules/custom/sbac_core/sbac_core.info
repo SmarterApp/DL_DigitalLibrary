@@ -13,6 +13,7 @@ dependencies[] = eck
 dependencies[] = features
 dependencies[] = field_collection
 dependencies[] = fivestar
+dependencies[] = globalredirect
 dependencies[] = list
 dependencies[] = number
 dependencies[] = options
