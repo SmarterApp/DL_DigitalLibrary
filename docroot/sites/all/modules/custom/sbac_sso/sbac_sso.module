@@ -60,6 +60,15 @@ function sbac_sso_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  // This is our Program Management Creds page.
+  $items['admin/config/program-management'] = array(
+    'title' => 'Program Management',
+    'description' => 'Sets Oauth program Management creds',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_sso_form'),
+    'access callback' => TRUE,
+  );
+
   return $items;
 }
 
@@ -747,6 +756,37 @@ function sbac_sso_get_program_management_response(&$response, $query_string) {
 }
 
 /**
+ * Create our Program Management Form.
+ */
+function sbac_sso_form($form, &$form_state) {
+  $form['sbac_sso_username'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Username',
+    '#default_value' => variable_get('sbac_sso_username'),
+  );
+
+  $form['sbac_sso_password'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Password',
+    '#default_value' => variable_get('sbac_sso_password'),
+  );
+
+  $form['sbac_sso_client_id'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Client ID',
+    '#default_value' => variable_get('sbac_sso_client_id'),
+  );
+
+  $form['sbac_sso_client_secret'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Client Secret',
+    '#default_value' => variable_get('sbac_sso_client_secret'),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
  * Get the oauth access token.
  *
  * @return null
@@ -762,10 +802,11 @@ function sbac_sso_get_program_management_oauth_access_token() {
   // client_secret=sbac12345
   $request_creds = array(
     'grant_type' => 'password',
-    'username' => 'pm.client@example.com',
-    'password' => 'sbac12345',
-    'client_id' => 'pm',
-    'client_secret' => 'sbac12345'
+    'username' => variable_get('sbac_sso_username'),
+    'password' => variable_get('sbac_sso_password'),
+    'client_id' => variable_get('sbac_sso_client_id'),
+    'client_secret' => variable_get('sbac_sso_client_secret'),
+    
   );
   $post = SBAC_SSO_PROGRAM_REQUEST_AUTH;
   $curl = curl_init();
