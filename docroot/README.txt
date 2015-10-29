@@ -6,6 +6,8 @@ database created during installation process. This codebase is heavily config de
 and many of the items required (terms, etc.) can not be saved in features, making this
 approach necessary.
 
+This project currently runs on the Acquia platform, and to this end, is configured to be served
+from the /docroot directory, with default Acquia utilities in the base directory.
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -29,7 +31,6 @@ Legal information about Drupal:
    See LICENSE.txt in the same directory as this document.
  * Learn about the Drupal trademark and logo policy:
    http://drupal.com/trademark
-
 CONFIGURATION AND FEATURES
 --------------------------
 
