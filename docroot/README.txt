@@ -1,3 +1,11 @@
+APPROACH TO CREATE SBAC TYPE SITE
+---------------------------------
+This project includes a sanitized sql file: docroot/profiles/sbac/sbac.sql.gz
+This file should be used after vanilla or any profile type installation to replace
+database created during installation process. This codebase is heavily config dependent,
+and many of the items required (terms, etc.) can not be saved in features, making this
+approach necessary.
+
 
 CONTENTS OF THIS FILE
 ---------------------
