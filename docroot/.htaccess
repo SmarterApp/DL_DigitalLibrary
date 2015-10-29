@@ -3,7 +3,7 @@
 #
 
 # Protect files and directories from prying eyes.
-<FilesMatch "\.(engine|inc|info|install|make|module|profile|test|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)(~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\..*|Entries.*|Repository|Root|Tag|Template)$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig\.save)$">
+<FilesMatch "\.(engine|inc|info|install|make|module|profile|test|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)(~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\..*|Entries.*|Repository|Root|Tag|Template|CHANGELOG.txt|composer\.(json|lock))$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig\.save)$">
   Order allow,deny
 </FilesMatch>
 
@@ -67,18 +67,6 @@ DirectoryIndex index.php index.html index.htm
   # even when running as CGI or FastCGI.
   RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-  # Redirect to HTTPS
-  RewriteCond %{HTTP_HOST} ^dev.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} ^stage.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} ^staging.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} ^training.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} ^integration.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} ^beta.smarterbalancedlibrary.org$ [OR]
-  RewriteCond %{HTTP_HOST} ^smarterbalancedlibrary.org$
-  RewriteCond %{HTTPS} off
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
   # Block access to "hidden" directories whose names begin with a period. This
   # includes directories used by version control systems such as Subversion or
   # Git to store control files. Files whose names begin with a period, as well
@@ -93,20 +81,23 @@ DirectoryIndex index.php index.html index.htm
   # directories from your webroot or otherwise protect them from being
   # downloaded.
   RewriteRule "(^|/)\." - [F]
-  RewriteCond %{HTTP_HOST} !sbac.dev$
-  RewriteCond %{HTTP_HOST} !dev.smarterbalancedlibrary.org$
-  RewriteCond %{HTTP_HOST} !integration.smarterbalancedlibrary.org$
-  RewriteCond %{HTTP_HOST} !stage.smarterbalancedlibrary.org$
-  RewriteCond %{HTTP_HOST} !staging.smarterbalancedlibrary.org$
-  RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$
-  RewriteCond %{HTTP_HOST} !beta.smarterbalancedlibrary.org$
-  RewriteCond %{HTTP_HOST} !(.*).acquia-sites.com$
-  RewriteCond %{HTTP_HOST} !amplify.localhost$
-  RewriteCond %{HTTP_HOST} !sbac.localhost$ 
-  RewriteCond %{HTTP_HOST} !^www\. [NC]
-  RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  RewriteBase /
+  # Whitelist files downloadable via Apache - this only applies to regular
+  # files in the codebase and public files directory (not Drupal paths or
+  # private file downloads).
+  # This should only list static files (except index.php) that are safe for
+  # users to download (no executable or html files).
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteCond %{REQUEST_URI} !^/index.php$
+  RewriteCond %{REQUEST_FILENAME} !.+\.(css(\.gz)?|gif|ico|jpe?g|js(\.gz)?|png|svg|swf|ttf)$ [NC]
+  RewriteRule ^ - [F]
+
+  # Whitelist file extensions downloadable from private files directory
+  # (served by Drupal, rather than Apache). This should only list static files
+  # that are safe for users to download (no executable or html files).
+  RewriteCond %{REQUEST_URI} ^/system/files/
+  RewriteCond %{REQUEST_URI} !.+\.(avi|docx?|flv|gif|ico|jpe?g|mov|mpeg|mp[34gv]|m4[av]|notebook|od[pts]|og[agv]|pdf|png|pp[st]x?|pub|swf|txt|web[apm]|wmv|xlsx?|zip)$ [NC]
+  RewriteRule ^ - [F]
 
   # If your site can be accessed both with and without the 'www.' prefix, you
   # can use one of the following settings to redirect users to your preferred
@@ -138,10 +129,10 @@ DirectoryIndex index.php index.html index.htm
   # Pass all requests not referring directly to files in the filesystem to
   # index.php. Clean URLs are handled in drupal_environment_initialize().
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d 
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico
-  RewriteRule ^ index.php [L] 
- 
+  RewriteRule ^ index.php [L]
+
   # Rules to correctly serve gzip compressed CSS and JS files.
   # Requires both mod_rewrite and mod_headers to be enabled.
   <IfModule mod_headers.c>
@@ -166,4 +157,10 @@ DirectoryIndex index.php index.html index.htm
       Header append Vary Accept-Encoding
     </FilesMatch>
   </IfModule>
+</IfModule>
+
+# Add headers to all responses.
+<IfModule mod_headers.c>
+  # Disable content sniffing, since it's an attack vector.
+  Header always set X-Content-Type-Options nosniff
 </IfModule>
