@@ -560,3 +560,28 @@ function sbac_preprocess_rate_template_yesno(&$variables) {
   }
   $variables['info'] = implode(' ', $info);
 }
+
+/**
+ * Preprocess function for page template.
+ */
+function sbac_preprocess_page(&$variables) {
+  if (arg(0) == 'digital-library-resources') {
+    $variables['page']['search'] = '';
+    $variables['page']['filter'] = '';
+    $variables['page']['sub-header'] = '';
+  }
+}
+
+/**
+ * Preprocess function for views.
+ */
+function sbac_preprocess_views_view_fields(&$variables) {
+  $node = node_load($variables['fields']['entity_id']->raw);
+  // dpm($node);
+  $output = '<div>';
+  $output .= l($node->title, 'node/' . $node->nid);
+  $output .= truncate_utf8($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'], 250, TRUE, TRUE, $min_wordsafe_length = 1);
+  $output .= '</div>';
+
+  $variables['fields']['entity_id']->content = $output;
+}

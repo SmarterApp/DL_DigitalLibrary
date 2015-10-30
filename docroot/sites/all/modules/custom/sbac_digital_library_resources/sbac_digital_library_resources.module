@@ -6,16 +6,16 @@
 
 include_once 'sbac_digital_library_resources.features.inc';
 
-/*
- * Impliments hook_theme
+/**
+ * Implements hook_theme().
  */
 function sbac_digital_library_resources_theme($existing, $type, $theme, $path) {
   $items = array();
-  // Digital Library Resources search templates
+  // Digital Library Resources search templates.
   $items['views_view__digital_library_resources'] = array(
     'template' => 'views-view--digital-library-resources',
     'path' => drupal_get_path('module', 'sbac_digital_library_resources') . '/templates/views',
-    'arguments' => array('view' => NULL,),
+    'arguments' => array('view' => NULL),
     'original hook' => 'views_view',
     'preprocess functions' => array(
       'template_preprocess',
