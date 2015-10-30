@@ -577,8 +577,6 @@ function sbac_preprocess_page(&$variables) {
  */
 function sbac_preprocess_views_view_fields(&$variables) {
   $node = node_load($variables['fields']['entity_id']->raw);
-  dpm($node);
-
   $output = '<div>';
   $output .= l($node->title, 'node/' . $node->nid);
   $output .= truncate_utf8($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'], 250, TRUE, TRUE, $min_wordsafe_length = 1);
