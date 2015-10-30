@@ -576,54 +576,88 @@ function sbac_preprocess_page(&$variables) {
  * Preprocess function for views.
  */
 function sbac_preprocess_views_view_fields(&$variables) {
-  $node = node_load($variables['fields']['entity_id']->raw);
-  $output = '<div>';
-  $output .= l($node->title, 'node/' . $node->nid);
-  $output .= truncate_utf8($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'], 250, TRUE, TRUE, $min_wordsafe_length = 1);
-
-  $subject = $node->field_subject[LANGUAGE_NONE];
-  $subject_count = count($subject);
-  $subject_i = 1;
-  foreach ($subject as $subject_term) {
-    $subject_comma = '';
-    if ($subject_i < $subject_count) {
-      $subject_comma = ', ';
+  if ($variables['view']->name == 'digital_library_resources') {
+    $node = node_load($variables['fields']['entity_id']->raw);
+    $output = '';
+    $output .= '<div class="resource-top">';
+    if (!empty($node->title)) {
+      $output .= '<h3>';
+      $output .= l($node->title, 'node/' . $node->nid);
+      $output .= '</h3>';
     }
-    $subject_term_full = taxonomy_term_load($subject_term['tid']);
-    $output .= $subject_term_full->name . $subject_comma;
-    $subject_i++;
-  }
 
-  $grade = $node->field_grades[LANGUAGE_NONE];
-  $grade_count = count($grade);
-  $grade_i = 1;
-  foreach ($grade as $grade_term) {
-    $grade_comma = '';
-    if ($grade_i < $grade_count) {
-      $grade_comma = ', ';
+    if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE][0]['safe_value'])) {
+      $image = explode("::", $node->field_thumbnail_uri[LANGUAGE_NONE][0]['safe_value']);
+      $output .= l('<img src="' . file_create_url($image[0]) . '" />', 'node/' . $node->nid, array('html' => TRUE));
     }
-    $grade_term_full = taxonomy_term_load($grade_term['tid']);
-    $output .= $grade_term_full->name . $grade_comma;
-    $grade_i++;
-  }
-
-  $media = $node->field_digital_media_type[LANGUAGE_NONE];
-  $media_count = count($media);
-  $media_i = 1;
-  foreach ($media as $media_term) {
-    $media_comma = '';
-    if ($media_i < $media_count) {
-      $media_comma = ', ';
+    
+    if (!empty($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'])) {
+      $output .= truncate_utf8($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'], 250, TRUE, TRUE, $min_wordsafe_length = 1);
     }
-    $media_term_full = taxonomy_term_load($media_term['tid']);
-    $output .= $media_term_full->name . $media_comma;
-    $media_i++;
+
+    $output .= '</div>';
+
+    $output .= '<div class="resource-bottom">';
+    if (!empty($node->field_subject[LANGUAGE_NONE])) {
+      $subject = $node->field_subject[LANGUAGE_NONE];
+      $subject_count = count($subject);
+      $subject_i = 1;
+      $output .= '<div class="search-item-break">';
+      $output .= t('<span class="bold">Subjects:</span>');
+      foreach ($subject as $subject_term) {
+        $subject_comma = '';
+        if ($subject_i < $subject_count) {
+          $subject_comma = ', ';
+        }
+        $subject_term_full = taxonomy_term_load($subject_term['tid']);
+        $output .= $subject_term_full->name . $subject_comma;
+        $subject_i++;
+      }
+      $output .= '</div>';
+    }
+
+    if (!empty($node->field_grades[LANGUAGE_NONE])) {
+      $grade = $node->field_grades[LANGUAGE_NONE];
+      $grade_count = count($grade);
+      $grade_i = 1;
+      $output .= '<div class="search-item-break">';
+      $output .= t('<span class="bold">Grades:</span>');
+      foreach ($grade as $grade_term) {
+        $grade_comma = '';
+        if ($grade_i < $grade_count) {
+          $grade_comma = ', ';
+        }
+        $grade_term_full = taxonomy_term_load($grade_term['tid']);
+        $output .= $grade_term_full->name . $grade_comma;
+        $grade_i++;
+      }
+      $output .= '</div>';
+    }
+
+    if (!empty($node->field_digital_media_type[LANGUAGE_NONE])) {
+      $media = $node->field_digital_media_type[LANGUAGE_NONE];
+      $media_count = count($media);
+      $media_i = 1;
+      $output .= '<div class="search-item-break">';
+      $output .= t('<span class="bold">Media Types:</span>');
+      foreach ($media as $media_term) {
+        $media_comma = '';
+        if ($media_i < $media_count) {
+          $media_comma = ', ';
+        }
+        $media_term_full = taxonomy_term_load($media_term['tid']);
+        $output .= $media_term_full->name . $media_comma;
+        $media_i++;
+      }
+      $output .= '</div>';
+    }
+    $output .= $node->field_total_views[LANGUAGE_NONE][0]['value'];
+    $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
+    $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
+    $output .= '</div>';
+    
+    $variables['fields']['entity_id']->wrapper_prefix = '<div class="resource-card">';
+    $variables['fields']['entity_id']->wrapper_suffix = '</div>';
+    $variables['fields']['entity_id']->content = $output;
   }
-  $output .= $node->field_total_views[LANGUAGE_NONE][0]['value'];
-  $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
-  $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
-
-  $output .= '</div>';
-
-  $variables['fields']['entity_id']->content = $output;
 }
