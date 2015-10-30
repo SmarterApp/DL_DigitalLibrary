@@ -115,25 +115,6 @@
 
       <a id="main-content"></a>
 
-      <?php // if ($breadcrumb): print $breadcrumb; endif; ?>
-      <?php if ($title && !$is_front && arg(0) != 'user' && arg(0) != 'legal_accept'): ?>
-        <?php if ($html5) : ?>
-          <div class="html5-identifier clearfix" id="html5-identifier-node"><p class="html5-content right"><span><i class="general foundicon-website"></i> Content Module</span></p></div>
-        <?php endif; ?>
-        <?php print render($title_prefix); ?>
-        <h1 id="page-title" class="title"><?php print $title; ?></h1>
-        <?php print render($title_suffix); ?>
-        <?php if (isset($flag)): ?>
-          <div class="resource-preview">
-            <?php echo $flag['button']; ?>
-          </div>
-          <div class="flag-information">
-            <div class="flag-status"><?php echo $flag['status']; ?></div>
-            <div class="flag-count"><?php echo $flag['count_message']; ?></div>
-          </div>
-        <?php endif; ?>
-      <?php endif; ?>
-
       <?php if (!empty($tabs) && arg(0) != 'user'): ?>
         <?php print render($tabs); ?>
         <?php if (!empty($tabs2)): print render($tabs2); endif; ?>
