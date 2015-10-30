@@ -35261,51 +35261,64 @@ form#sbac-user-filter-form #edit-email {
 }
 
 /* line 4182, ../sass/custom.scss */
-.page-digital-library-resources .row {
-  padding: 0 15px;
+.page-digital-library-resources .main-container, .page-digital-library-resources .row {
+  background: none;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -moz-border-radius: none;
+  -webkit-border-radius: none;
+  border-radius: none;
 }
 @media (min-width: 1280px) {
-  /* line 4186, ../sass/custom.scss */
+  /* line 4192, ../sass/custom.scss */
   .page-digital-library-resources .row {
     max-width: 1280px;
   }
 }
 @media (max-width: 1280px) and (min-width: 961px) {
-  /* line 4191, ../sass/custom.scss */
+  /* line 4197, ../sass/custom.scss */
   .page-digital-library-resources .row {
     max-width: 960px;
   }
 }
 @media (max-width: 960px) {
-  /* line 4196, ../sass/custom.scss */
+  /* line 4202, ../sass/custom.scss */
   .page-digital-library-resources .row {
     max-width: 656px;
   }
 }
-/* line 4200, ../sass/custom.scss */
-.page-digital-library-resources .main-container {
+/* line 4206, ../sass/custom.scss */
+.page-digital-library-resources .view {
+  padding-top: 15px;
+  padding-bottom: 15px;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
   border-bottom: 1px solid rgba(0, 0, 0, 0.7);
   margin-bottom: 30px;
   background-color: #3b9ebe;
-  background-size: 100%;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.3)), color-stop(100%, rgba(255, 255, 255, 0.2)));
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
-  background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
 }
-/* line 4214, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row {
+/* line 4215, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content {
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 1280px) {
+  /* line 4215, ../sass/custom.scss */
+  .page-digital-library-resources .view .view-content {
+    margin-left: 5px;
+  }
+}
+/* line 4221, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row {
   max-width: 290px !important;
-  margin: 0 5px 10px 5px;
+  margin: 0 5px 10px 10px;
   display: inline-block;
   vertical-align: top;
 }
-/* line 4219, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card {
+/* line 4226, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
@@ -35317,19 +35330,19 @@ form#sbac-user-filter-form #edit-email {
   margin-bottom: 2em;
   transition: background-color 0.3s ease;
 }
-/* line 4220, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .bold {
+/* line 4227, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .bold {
   font-weight: bold;
   padding-right: 5px;
 }
-/* line 4224, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .search-item-break {
+/* line 4231, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .search-item-break {
   margin-top: 10px;
   margin-bottom: 20px;
   color: #62676e;
 }
-/* line 4239, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .resource-top {
+/* line 4246, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-top {
   clear: both;
   padding-bottom: 10px;
   font-size: 13px;
@@ -35339,8 +35352,8 @@ form#sbac-user-filter-form #edit-email {
   position: relative;
   min-height: 280px;
 }
-/* line 4245, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .resource-top h3 {
+/* line 4252, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 {
   margin: 0;
   padding: 0;
   font-size: 1em;
@@ -35352,29 +35365,29 @@ form#sbac-user-filter-form #edit-email {
   height: 60px;
   vertical-align: middle;
 }
-/* line 4256, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .resource-top h3 a {
+/* line 4263, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 a {
   color: #101010;
   font-size: 14px;
   font-weight: bold;
   padding-right: 5px;
   display: block;
 }
-/* line 4262, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .resource-top h3 a:hover {
+/* line 4269, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 a:hover {
   text-decoration: underline;
   color: #3b9ebe;
 }
-/* line 4271, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .resource-top img {
+/* line 4278, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-top img {
   height: 138px;
   width: 258px;
   outline: 1px #cecece solid;
   margin: 10px 0;
   display: block;
 }
-/* line 4279, ../sass/custom.scss */
-.page-digital-library-resources .main-container .views-row .resource-card .resource-bottom {
+/* line 4286, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom {
   -moz-border-radius: 0 0 6px 6px;
   -webkit-border-radius: 0;
   border-radius: 0 0 6px 6px;

@@ -655,7 +655,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
     $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
     $output .= '</div>';
-    
+
     $variables['fields']['entity_id']->wrapper_prefix = '<div class="resource-card">';
     $variables['fields']['entity_id']->wrapper_suffix = '</div>';
     $variables['fields']['entity_id']->content = $output;
