@@ -6,35 +6,6 @@
 
 include_once 'sbac_digital_library_resources.features.inc';
 
-
-/**
- * Implements hook_block_info().
- */
-function sbac_digital_library_resources_block_info() {
-  $blocks['dlr_filters'] = array(
-    // The name that will appear in the block list.
-    'info' => t('Digital Library Resources Filters'),
-    // Default setting.
-    'cache' => DRUPAL_CACHE_PER_ROLE,
-  );
-  return $blocks;
-}
-
-/**
- * Implements hook_block_view().
- */
-
-function sbac_digital_library_resources_block_view($delta = '') {
-  switch ($delta) {
-    case 'dlr_filters':
-      $block['subject'] = t('Digital Library Resources Filters');
-      if (user_access('access content')) {
-        $block['content'] = "This will be the facet filters";  
-      }
-    return $block;
-  }
-}
-
 /*
  * Impliments hook_theme
  */
@@ -43,13 +14,12 @@ function sbac_digital_library_resources_theme($existing, $type, $theme, $path) {
   // Digital Library Resources search templates
   $items['views_view__digital_library_resources'] = array(
     'template' => 'views-view--digital-library-resources',
-    'path' => drupal_get_path('module', 'sbac_digital_library_resources') . '/templates',
+    'path' => drupal_get_path('module', 'sbac_digital_library_resources') . '/templates/views',
     'arguments' => array('view' => NULL,),
     'original hook' => 'views_view',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view',
-      //'sbac_digital_library_resources_views_view__digital_library_resources',
     ),
   );
 
