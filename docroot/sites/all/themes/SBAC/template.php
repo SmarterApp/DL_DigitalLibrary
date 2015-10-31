@@ -712,7 +712,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
     if (!empty($node->field_total_views[LANGUAGE_NONE][0]['value'])) {
       $output .= '<div class="stat-views">';
       $output .= '<a href="#" data-tooltipp="Views">';
-      $output .= '<img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statviews.png" alt="Views">';
+      $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statviews.png" alt="Views">';
       $output .= '</a>';
       $output .= '<span>';
       $output .= $node->field_total_views[LANGUAGE_NONE][0]['value'];
@@ -720,10 +720,17 @@ function sbac_preprocess_views_view_fields(&$variables) {
       $output .= '</div>';
     }
     if (!empty($node->field_asset_downloads[LANGUAGE_NONE][0]['value'])) {
-      $output .= '<span class="digital-lib-counts-span asset-downloads">';
+      $output .= '<div class="stat-downloads">';
+      $output .= '<a href="#" data-tooltipp="Downloads">';
+      $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statdownloads.png" alt="Views">';
+      $output .= '</a>';
+      $output .= '<span>';
+      $output .= '<span>';
       $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
       $output .= '</span>';
+      $output .= '</div>';
     }
+    dpm($node);
     if (!empty($node->field_avg_rating[LANGUAGE_NONE][0]['value'])) {
       $output .= '<span class="digital-lib-counts-span avg-rating">';
       $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
