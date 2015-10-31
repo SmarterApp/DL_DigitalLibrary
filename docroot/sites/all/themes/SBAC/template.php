@@ -651,9 +651,30 @@ function sbac_preprocess_views_view_fields(&$variables) {
       }
       $output .= '</div>';
     }
-    $output .= $node->field_total_views[LANGUAGE_NONE][0]['value'];
-    $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
-    $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
+
+    $output .= '<div class="paradata-numbers">';
+    if (!empty($node->field_total_views[LANGUAGE_NONE][0]['value'])) {
+      $output .= '<div class="stat-views">';
+      $output .= '<a href="#" data-tooltipp="Views">';
+      $output .= '<img src="/sites/all/modules/custom/sbac_content_types/sbac_resource/images/icons/icon-statviews.png" alt="Views">';
+      $output .= '</a>';
+      $output .= '<span>';
+      $output .= $node->field_total_views[LANGUAGE_NONE][0]['value'];
+      $output .= '</span>';
+      $output .= '</div>';
+    }
+    if (!empty($node->field_asset_downloads[LANGUAGE_NONE][0]['value'])) {
+      $output .= '<span class="digital-lib-counts-span asset-downloads">';
+      $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
+      $output .= '</span>';
+    }
+    if (!empty($node->field_avg_rating[LANGUAGE_NONE][0]['value'])) {
+      $output .= '<span class="digital-lib-counts-span avg-rating">';
+      $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
+      $output .= '</span>';
+    }
+    $output .= '</div>';
+
     $output .= '</div>';
 
     $variables['fields']['entity_id']->wrapper_prefix = '<div class="resource-card">';

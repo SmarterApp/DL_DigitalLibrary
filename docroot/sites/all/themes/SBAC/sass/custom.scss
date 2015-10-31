@@ -4293,6 +4293,88 @@ form#sbac-user-filter-form #edit-email {
 	    font-size: 12px;
 	    border-top: 1px #b7bfc4 solid;
 	    padding-bottom: 50px;
+	    position:relative;
+
+	    .paradata-numbers {
+	      span {
+		position:relative;
+		left:3px;
+		top:2px;
+	      }
+	      padding: 10px 15px;
+	      font-size: 13px;
+	      -moz-border-radius: 0 0 5px 5px;
+	      -webkit-border-radius: 0;
+	      border-radius: 0 0 5px 5px;
+	      border-top: 1px solid #FFFFFF;
+	      box-shadow: 0 -1px 0 0 #CECECE,0 1px 5px 0 rgba(0,0,0,0.3);
+	      height: 46px;
+	      line-height: 26px;
+	      width: 100%;
+	      -moz-box-sizing: border-box;
+	      background-color: #F2F2F2;
+	      color: #62676e;
+	      display: block;
+	      letter-spacing: 1px;
+	      position: absolute;
+	      bottom: 0;
+	      left: 0;
+	    }
+	    [data-tooltipp] {
+	      position: relative;
+	      z-index: 2;
+	      cursor: pointer;
+	    }
+
+	    /* Hide the tooltip content by default */
+	    [data-tooltipp]:before,
+	    [data-tooltipp]:after {
+	      visibility: hidden;
+	      opacity: 0;
+	      pointer-events: none;
+	    }
+
+	    /* Position tooltip above the element */
+	    [data-tooltipp]:before {
+	      position: absolute;
+	      bottom: 150%;
+	      left: -20px;
+	      margin-bottom: 5px;
+	      padding: 10px 5px;
+	      width: 80px;
+	      -webkit-border-radius: 5px;
+	      -moz-border-radius: 5px;
+	      border-radius: 5px;
+	      box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+	      background-color: #fff;
+	      color: #5a5a5a;
+	      content: attr(data-tooltipp);
+	      text-align: center;
+	      font-size: 16px;
+	      line-height: 1.2;
+	    }
+
+	    /* Triangle hack to make tooltip look like a speech bubble */
+	    [data-tooltipp]:after {
+	      position: absolute;
+	      bottom: 150%;
+	      left: 15px;
+	      width: 0;
+	      border-top: 5px solid #fff;
+	      border-right: 5px solid transparent;
+	      border-left: 5px solid transparent;
+	      content: " ";
+	      font-size: 0;
+	      line-height: 0;
+	    }
+
+	    /* Show tooltip content on hover */
+	    [data-tooltipp]:hover:before,
+	    [data-tooltipp]:hover:after {
+	      visibility: visible;
+	      opacity: 1;
+	    }
+	    
 	  }
 	}
       }
