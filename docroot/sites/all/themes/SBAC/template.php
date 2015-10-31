@@ -629,7 +629,7 @@ function sbac_preprocess_page(&$variables) {
 }
 
 /**
- * Preprocess function for views.
+ * Preprocess function for views fields.
  */
 function sbac_preprocess_views_view_fields(&$variables) {
   if ($variables['view']->name == 'digital_library_resources') {
@@ -646,7 +646,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
       $image = explode("::", $node->field_thumbnail_uri[LANGUAGE_NONE][0]['safe_value']);
       $output .= l('<img src="' . file_create_url($image[0]) . '" />', 'node/' . $node->nid, array('html' => TRUE));
     }
-    
+
     if (!empty($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'])) {
       $output .= truncate_utf8($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'], 250, TRUE, TRUE, $min_wordsafe_length = 1);
     }
@@ -654,12 +654,13 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $output .= '</div>';
 
     $output .= '<div class="resource-bottom">';
+
+    $output .= '<div class="search-item-break">';
+    $output .= t('<span class="bold">Subjects:</span>');
     if (!empty($node->field_subject[LANGUAGE_NONE])) {
       $subject = $node->field_subject[LANGUAGE_NONE];
       $subject_count = count($subject);
       $subject_i = 1;
-      $output .= '<div class="search-item-break">';
-      $output .= t('<span class="bold">Subjects:</span>');
       foreach ($subject as $subject_term) {
         $subject_comma = '';
         if ($subject_i < $subject_count) {
@@ -669,15 +670,19 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $output .= $subject_term_full->name . $subject_comma;
         $subject_i++;
       }
-      $output .= '</div>';
     }
+    else {
+      $output .= 'Not Subject Specific';
+    }
+    $output .= '</div>';
 
+    $output .= '<div class="search-item-break">';
+    $output .= t('<span class="bold">Grades:</span>');
     if (!empty($node->field_grades[LANGUAGE_NONE])) {
       $grade = $node->field_grades[LANGUAGE_NONE];
       $grade_count = count($grade);
       $grade_i = 1;
-      $output .= '<div class="search-item-break">';
-      $output .= t('<span class="bold">Grades:</span>');
+
       foreach ($grade as $grade_term) {
         $grade_comma = '';
         if ($grade_i < $grade_count) {
@@ -687,15 +692,19 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $output .= $grade_term_full->name . $grade_comma;
         $grade_i++;
       }
-      $output .= '</div>';
     }
+    else {
+      $output .= 'Not Grade Specific';
+    }
+    $output .= '</div>';
 
+    $output .= '<div class="search-item-break">';
+    $output .= t('<span class="bold">Media Types:</span>');
     if (!empty($node->field_digital_media_type[LANGUAGE_NONE])) {
       $media = $node->field_digital_media_type[LANGUAGE_NONE];
       $media_count = count($media);
       $media_i = 1;
-      $output .= '<div class="search-item-break">';
-      $output .= t('<span class="bold">Media Types:</span>');
+
       foreach ($media as $media_term) {
         $media_comma = '';
         if ($media_i < $media_count) {
@@ -705,39 +714,56 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $output .= $media_term_full->name . $media_comma;
         $media_i++;
       }
-      $output .= '</div>';
     }
-
-    $output .= '<div class="paradata-numbers">';
-    if (!empty($node->field_total_views[LANGUAGE_NONE][0]['value'])) {
-      $output .= '<div class="stat-views">';
-      $output .= '<a href="#" data-tooltipp="Views">';
-      $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statviews.png" alt="Views">';
-      $output .= '</a>';
-      $output .= '<span>';
-      $output .= $node->field_total_views[LANGUAGE_NONE][0]['value'];
-      $output .= '</span>';
-      $output .= '</div>';
-    }
-    if (!empty($node->field_asset_downloads[LANGUAGE_NONE][0]['value'])) {
-      $output .= '<div class="stat-downloads">';
-      $output .= '<a href="#" data-tooltipp="Downloads">';
-      $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statdownloads.png" alt="Views">';
-      $output .= '</a>';
-      $output .= '<span>';
-      $output .= '<span>';
-      $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
-      $output .= '</span>';
-      $output .= '</div>';
-    }
-    
-    if (!empty($node->field_avg_rating[LANGUAGE_NONE][0]['value'])) {
-      $output .= '<span class="digital-lib-counts-span avg-rating">';
-      $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
-      $output .= '</span>';
+    else {
+      $output .= 'Not Media Specific';
     }
     $output .= '</div>';
 
+    $output .= '<div class="paradata-numbers">';
+
+    $output .= '<div class="stat-views">';
+    $output .= '<a href="#" data-tooltipp="Views">';
+    $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statviews.png" alt="Views">';
+    $output .= '</a>';
+    $output .= '<span>';
+    if (!empty($node->field_total_views[LANGUAGE_NONE][0]['value'])) {
+      $output .= $node->field_total_views[LANGUAGE_NONE][0]['value'];
+    }
+    else {
+      $output .= '0';
+    }
+    $output .= '</span>';
+    $output .= '</div>';
+
+    $output .= '<div class="stat-downloads">';
+    $output .= '<a href="#" data-tooltipp="Downloads">';
+    $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statdownloads.png" alt="Views">';
+    $output .= '</a>';
+    $output .= '<span>';
+    if (!empty($node->field_asset_downloads[LANGUAGE_NONE][0]['value'])) {
+      $output .= $node->field_asset_downloads[LANGUAGE_NONE][0]['value'];
+    }
+    else {
+      $output .= '0';
+    }
+    $output .= '</span>';
+    $output .= '</div>';
+
+    $rate_count = db_query('SELECT COUNT(*) FROM eck_review WHERE node_id = :nid', array(':nid' => $node->nid))->fetchColumn();
+    $output .= '<div class="rating-count">';
+
+    $output .= '<span class="rating-item star-image">';
+    $output .= '<a href="#" data-tooltipp="Rating">';
+    $output .= sbac_resource_display_fivestar_rating($node->field_node_avg_rating[LANGUAGE_NONE][0]['value']);
+    $output .= '</a>';
+    $output .= '</span>';
+    $output .= '<span class="rating-item">';
+    $output .= '(' . $rate_count . ')';
+    $output .= '</span>';
+    $output .= '</div>';
+
+    $output .= '</div>';
     $output .= '</div>';
 
     $variables['fields']['entity_id']->wrapper_prefix = '<div class="resource-card">';
