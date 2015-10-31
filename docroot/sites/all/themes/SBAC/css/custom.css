@@ -35428,35 +35428,59 @@ form#sbac-user-filter-form #edit-email {
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div {
   display: inline;
 }
-/* line 4301, ../sass/custom.scss */
-.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-downloads {
-  margin-left: 25px;
-  margin-right: 25px;
-}
-/* line 4306, ../sass/custom.scss */
-.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers span {
+/* line 4302, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-views span {
   position: relative;
   left: 3px;
   top: 2px;
 }
-/* line 4330, ../sass/custom.scss */
+/* line 4308, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-downloads {
+  margin-left: 25px;
+  margin-right: 25px;
+}
+/* line 4311, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-downloads span {
+  position: relative;
+  left: 3px;
+  top: 2px;
+}
+/* line 4317, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count {
+  float: right;
+}
+/* line 4319, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count [data-tooltipp]:after {
+  bottom: 34px;
+}
+/* line 4322, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count span.rating-item {
+  display: block;
+  float: left;
+}
+/* line 4326, ../sass/custom.scss */
+.page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count span.rating-item.star-image .form-item {
+  margin-top: .4em;
+  margin-right: .5em;
+}
+/* line 4353, ../sass/custom.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp] {
   position: relative;
   z-index: 2;
   cursor: pointer;
 }
-/* line 4337, ../sass/custom.scss */
+/* line 4360, ../sass/custom.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:before,
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:after {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }
-/* line 4345, ../sass/custom.scss */
+/* line 4368, ../sass/custom.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:before {
   position: absolute;
   bottom: 150%;
-  left: -20px;
+  left: -40px;
   margin-bottom: 5px;
   padding: 10px 5px;
   width: 120px;
@@ -35471,11 +35495,11 @@ form#sbac-user-filter-form #edit-email {
   font-size: 16px;
   line-height: 1.2;
 }
-/* line 4365, ../sass/custom.scss */
+/* line 4388, ../sass/custom.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:after {
   position: absolute;
   bottom: 150%;
-  left: 35px;
+  left: 15px;
   width: 0;
   border-top: 5px solid #fff;
   border-right: 5px solid transparent;
@@ -35484,7 +35508,7 @@ form#sbac-user-filter-form #edit-email {
   font-size: 0;
   line-height: 0;
 }
-/* line 4379, ../sass/custom.scss */
+/* line 4402, ../sass/custom.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:hover:before,
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:hover:after {
   visibility: visible;

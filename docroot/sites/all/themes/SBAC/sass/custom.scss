@@ -4298,15 +4298,38 @@ form#sbac-user-filter-form #edit-email {
 	    .paradata-numbers {
 	      & > div {
 		display:inline;
+		&.stat-views {
+		  span {
+		    position:relative;
+		    left:3px;
+		    top:2px;
+		  }
+		}
 		&.stat-downloads {
 		  margin-left:25px;
 		  margin-right:25px;
+		  span {
+		    position:relative;
+		    left:3px;
+		    top:2px;
+		  }
 		}
-	      }
-	      span {
-		position:relative;
-		left:3px;
-		top:2px;
+		&.rating-count {
+		  float:right;
+		  [data-tooltipp]:after {
+		    bottom: 34px;
+		  }
+		  span.rating-item {
+		    display:block;
+		    float:left;
+		    &.star-image {
+		      .form-item {
+			margin-top: .4em;
+			margin-right: .5em;
+		      }
+		    }
+		  }
+		}
 	      }
 	      padding: 10px 15px;
 	      font-size: 13px;
@@ -4345,7 +4368,7 @@ form#sbac-user-filter-form #edit-email {
 	    [data-tooltipp]:before {
 	      position: absolute;
 	      bottom: 150%;
-	      left: -20px;
+	      left: -40px;
 	      margin-bottom: 5px;
 	      padding: 10px 5px;
 	      width: 120px;
@@ -4365,7 +4388,7 @@ form#sbac-user-filter-form #edit-email {
 	    [data-tooltipp]:after {
 	      position: absolute;
 	      bottom: 150%;
-	      left: 35px;
+	      left: 15px;
 	      width: 0;
 	      border-top: 5px solid #fff;
 	      border-right: 5px solid transparent;
