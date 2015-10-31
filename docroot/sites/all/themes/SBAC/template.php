@@ -569,6 +569,62 @@ function sbac_preprocess_page(&$variables) {
     $variables['page']['search'] = '';
     $variables['page']['filter'] = '';
     $variables['page']['sub-header'] = '';
+    
+    // Facet blocks DLR search page
+    $block_subjects = module_invoke('facetapi', 'block_view', 'nrsgXavatPXoRE97gHS2r1ESNWswbnCM') ?  module_invoke('facetapi', 'block_view', 'nrsgXavatPXoRE97gHS2r1ESNWswbnCM') : NULL ;
+    if($block_subjects) {
+      $variables['blocks']['subjects'] = render($block_subjects['content']);
+    }
+
+    $block_resource_type = module_invoke('facetapi', 'block_view', 'fRhMp2aUokH7KlAdfnq3f7c0FVV4fr4Q') ?  module_invoke('facetapi', 'block_view', 'fRhMp2aUokH7KlAdfnq3f7c0FVV4fr4Q') : NULL ;
+    if($block_resource_type) {
+      $variables['blocks']['resource_type'] = render($block_resource_type['content']);
+    }
+    
+    $block_module_type = module_invoke('facetapi', 'block_view', 'SV01DFPPCFVbU0JqswlVxgJCJhXbmcOy') ?  module_invoke('facetapi', 'block_view', 'SV01DFPPCFVbU0JqswlVxgJCJhXbmcOy') : NULL ;
+    if($block_module_type) {
+      $variables['blocks']['module_type'] = render($block_module_type['content']);
+    }
+    
+    $block_grades = module_invoke('facetapi', 'block_view', 'k204ecdKtRrzpYIMM7Zu0XeKxWWemUh5') ?  module_invoke('facetapi', 'block_view', 'k204ecdKtRrzpYIMM7Zu0XeKxWWemUh5') : NULL ;
+    if($block_grades) {
+      $variables['blocks']['grades'] = render($block_grades['content']);
+    }
+
+    $block_intended_end_users = module_invoke('facetapi', 'block_view', 'L6gAFTHWR0vscswQ685yyJJu1FITNoqS') ?  module_invoke('facetapi', 'block_view', 'L6gAFTHWR0vscswQ685yyJJu1FITNoqS') : NULL ;
+    if($block_intended_end_users) {
+      $variables['blocks']['intended_end_users'] = render($block_intended_end_users['content']);
+    }
+
+    $block_geographic_settings = module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') ?  module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') : NULL ;
+    if($block_geographic_settings) {
+      $variables['blocks']['geographic_settings'] = render($block_geographic_settings['content']);
+    }
+
+    $block_formative_assessment_attributes = module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') ?  module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') : NULL ;
+    if($block_formative_assessment_attributes) {
+      $variables['blocks']['formative_assessment_attributes'] = render($block_formative_assessment_attributes['content']);
+    }
+
+    $block_intended_student_populations = module_invoke('facetapi', 'block_view', '00LKPOl8iXFf0Xou1niewt0aXS4fppRM') ?  module_invoke('facetapi', 'block_view', '00LKPOl8iXFf0Xou1niewt0aXS4fppRM') : NULL ;
+    if($block_intended_student_populations) {
+      $variables['blocks']['intended_student_populations'] = render($block_intended_student_populations['content']);
+    }
+
+    $block_common_core_state_standards = module_invoke('facetapi', 'block_view', 'UPdv5417AehtcIuC8o5n3oR4NI4SXwXG') ?  module_invoke('facetapi', 'block_view', 'UPdv5417AehtcIuC8o5n3oR4NI4SXwXG') : NULL ;
+    if($block_common_core_state_standards) {
+      $variables['blocks']['common_core_state_standards'] = render($block_common_core_state_standards['content']);
+    }
+
+    $block_media_types = module_invoke('facetapi', 'block_view', 'UrOlQvUwcdlf2A0eLTIoIux0Jkne1XA1') ?  module_invoke('facetapi', 'block_view', 'UrOlQvUwcdlf2A0eLTIoIux0Jkne1XA1') : NULL ;
+    if($block_media_types) {
+      $variables['blocks']['media_types'] = render($block_media_types['content']);
+    }
+
+    $block_educational_use = module_invoke('facetapi', 'block_view', 'OIPuW0AWUGbaUEzkfMhRrqgVcNchlQfM') ?  module_invoke('facetapi', 'block_view', 'OIPuW0AWUGbaUEzkfMhRrqgVcNchlQfM') : NULL ;
+    if($block_educational_use) {
+      $variables['blocks']['educational_use'] = render($block_educational_use['content']);
+    }
   }
 }
 
