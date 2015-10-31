@@ -4296,6 +4296,13 @@ form#sbac-user-filter-form #edit-email {
 	    position:relative;
 
 	    .paradata-numbers {
+	      & > div {
+		display:inline;
+		&.stat-downloads {
+		  margin-left:25px;
+		  margin-right:25px;
+		}
+	      }
 	      span {
 		position:relative;
 		left:3px;
@@ -4341,7 +4348,7 @@ form#sbac-user-filter-form #edit-email {
 	      left: -20px;
 	      margin-bottom: 5px;
 	      padding: 10px 5px;
-	      width: 80px;
+	      width: 120px;
 	      -webkit-border-radius: 5px;
 	      -moz-border-radius: 5px;
 	      border-radius: 5px;
@@ -4358,7 +4365,7 @@ form#sbac-user-filter-form #edit-email {
 	    [data-tooltipp]:after {
 	      position: absolute;
 	      bottom: 150%;
-	      left: 15px;
+	      left: 35px;
 	      width: 0;
 	      border-top: 5px solid #fff;
 	      border-right: 5px solid transparent;
