@@ -730,7 +730,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
       $output .= '</span>';
       $output .= '</div>';
     }
-    dpm($node);
+    
     if (!empty($node->field_avg_rating[LANGUAGE_NONE][0]['value'])) {
       $output .= '<span class="digital-lib-counts-span avg-rating">';
       $output .= $node->field_node_avg_rating[LANGUAGE_NONE][0]['value'];
