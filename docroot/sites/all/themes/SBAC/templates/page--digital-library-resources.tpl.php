@@ -173,6 +173,7 @@
 <div class="row main-row">
   <div class="main-container clearfix">
     <div id="main" class="<?php print $main_grid; ?> columns">
+            <div id="click-toggle"><a id="click-toggle-a" class="click-toggle-items" href="#">List View</a></div>
       <?php if ($messages): print $messages; endif; ?>
       <?php if (!empty($page['help'])): print render($page['help']); endif; ?>
       <?php if (!empty($page['highlighted'])): ?>

@@ -37,5 +37,24 @@
     }
   };
 
+  Drupal.behaviors.toggleGrid = {
+    attach: function (context, settings) {
+      $(document).ready(function(){
+	$('#click-toggle-a').click(function(){
+	  $(this).toggleClass('list');
+	  $('.view-digital-library-resources .views-row').toggleClass('list');
+	  
+	  if (!$(this).hasClass('list')) {
+	    $(this).text('List View');	    
+	  }
+	  else{
+	    $(this).text('Grid View');
+	    
+	  }
+	});
+      })
+    }
+  };
+  
 })(jQuery);
 
