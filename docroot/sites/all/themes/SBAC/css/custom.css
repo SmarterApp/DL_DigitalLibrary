@@ -35622,3 +35622,10 @@ form#sbac-user-filter-form #edit-email {
   padding-bottom: 0;
   padding-top: 20px;
 }
+/* line 4510, ../sass/custom.scss */
+.page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
+  color: #0684ad;
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.1em;
+}

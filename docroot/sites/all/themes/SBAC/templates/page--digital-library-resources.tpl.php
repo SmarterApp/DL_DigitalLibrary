@@ -1,6 +1,10 @@
+
+<?php
+drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+?>
 <!-- Header and Nav -->
 <div class="page-wrap">
-   <nav class="top-bar main-top clearfix">
+  <nav class="top-bar main-top clearfix">
    <div class="inner-wrap">
   <ul class="title-area">
     <li class="name"><h1>
@@ -101,75 +105,80 @@
   </div>
 <?php endif; ?>
 
+<div class="filters sbac-filter-cat-area active">
+            <div class="inner-wrap">
   <div class="facet-blocks">
     <?php if($blocks['subjects']):?>
       <div class="facet-block" id="facet-subjects">
-        <div class="facet-label">Subjects</div>
+        <div class="facet-label"><a class="category-hide">Filters</a></div>
         <?php print $blocks['subjects']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['resource_type']):?>
-      <div class="facet-block" id="facet-resource-type">
+      <div class="facet-block js-tree" id="facet-resource-type">
         <div class="facet-label">Resource Type</div>
         <?php print $blocks['resource_type']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['module_type']):?>
-      <div class="facet-block" id="facet-module-type">
+      <div class="facet-block js-tree" id="facet-module-type">
         <div class="facet-label">Module Type</div>
         <?php print $blocks['module_type']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['grades']):?>
-      <div class="facet-block" id="facet-grades">
+      <div class="facet-block js-tree" id="facet-grades">
         <div class="facet-label">Grades</div>
         <?php print $blocks['grades']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['intended_end_users']):?>
-      <div class="facet-block" id="facet-intended-end-users">
+      <div class="facet-block js-tree" id="facet-intended-end-users">
         <div class="facet-label">Intended End Users</div>
         <?php print $blocks['intended_end_users']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['geographic_settings']):?>
-      <div class="facet-block" id="facet-geographic-settings">
+      <div class="facet-block js-tree" id="facet-geographic-settings">
         <div class="facet-label">Geographic Settings</div>
         <?php print $blocks['geographic_settings']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['formative_assessment_attributes']):?>
-      <div class="facet-block" id="facet-formative-assessment-attributes">
+      <div class="facet-block js-tree" id="facet-formative-assessment-attributes">
         <div class="facet-label">Formative Assessment Attributes</div>
         <?php print $blocks['formative_assessment_attributes']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['intended_student_populations']):?>
-      <div class="facet-block" id="facet-intended-student-populations">
+      <div class="facet-block js-tree" id="facet-intended-student-populations">
         <div class="facet-label">Intended Student Populations</div>
         <?php print $blocks['intended_student_populations']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['common_core_state_standards']):?>
-      <div class="facet-block" id="facet-common-core-state-standards">
+      <div class="facet-block js-tree" id="facet-common-core-state-standards">
         <div class="facet-label">Common Core State Standards</div>
         <?php print $blocks['common_core_state_standards']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['media_types']):?>
-      <div class="facet-block" id="facet-media-types">
+      <div class="facet-block js-tree" id="facet-media-types">
         <div class="facet-label">Media Types</div>
         <?php print $blocks['media_types']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['educational_use']):?>
-      <div class="facet-block" id="facet-educational-use">
+      <div class="facet-block js-tree" id="facet-educational-use">
         <div class="facet-label">Educational Use</div>
         <?php print $blocks['educational_use']; ?>
       </div>
     <?php endif; ?>
-  </div>
+            </div>
+            </div>
+            </div>
 
+            
 <div class="row main-row">
   <div class="main-container clearfix">
     <div id="main" class="<?php print $main_grid; ?> columns">

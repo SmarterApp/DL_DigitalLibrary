@@ -4504,4 +4504,14 @@ form#sbac-user-filter-form #edit-email {
       }
     } 
   }
+
+  // Filters
+  .filters {
+    li a, li.collapsed a {
+      color:#0684ad;
+      margin: 0;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+  }
 }
