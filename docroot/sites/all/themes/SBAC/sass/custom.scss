@@ -4179,6 +4179,33 @@ form#sbac-user-filter-form #edit-email {
 
 // Updated digital library page
 .page-digital-library-resources {
+  #click-toggle{
+    position: absolute;
+    right: 25px;
+    top: -25px;
+    a#click-toggle-a {
+      color: #fff;
+      font-size: 16px;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+      display: inline-block;
+      &:before {
+	content: "\e609";
+	display: inline-block;
+	float: left;
+	font-family: 'sbac';
+	font-size: 20px;
+	font-weight: normal;
+	margin-right: 5px;
+	position: relative;
+	top: -2px;
+      }
+      &.list {
+	&:before {
+	  content: "\e608";
+	}
+      }
+    }
+  }
   .main-container, .row {
     background: none;
     border:none;
@@ -4407,7 +4434,74 @@ form#sbac-user-filter-form #edit-email {
 	    
 	  }
 	}
+	&.list {
+	  display:block;
+	  max-width:none !important;
+	  @media (min-width: 1100px){
+	    width:98%;
+	  }
+	  
+	  .resource-card {
+	    width:auto;
+	    height:115px;
+	    position:relative;
+	    padding: 12px 25px 20px 29px;
+	    .resource-top {
+	      display:block;
+	      float:left;
+	      width:65%;
+	      min-height: auto;
+	      position:relative;
+	      left:150px;
+	      h3 {
+		display:inline;
+		position:relative;	
+	      } 
+	      img { 
+		height: 72px;
+		width: 140px;
+		position:absolute;
+		left:-160px;
+		top:0;
+	      }
+	    }
+	    .resource-bottom {
+	      width:20%;
+	      position:absolute;
+	      right:0;
+	      top:0;	      
+	      padding:0;
+	      height:113px;
+	      background-color: #F2F2F2;
+	      border-top:none;
+	      border-left: 1px solid #FFFFFF;
+	      border-radius: 0 6px 6px 0;
+	      box-shadow: -1px 0 0 0 #CECECE;
+	      .search-item-break {
+		display:none;
+	      }
+	      .paradata-numbers {
+		background:none;
+		border:none;
+		position:relative;
+		box-shadow:none;
+		border-radius:0;
+		border-bottom: 1px solid #CECECE;
+		& > div {
+		  position:relative;
+		  &.rating-count {
+		    float:none;
+		    display:block;  		    
+		    margin-top: 5px;
+		    padding-bottom: 0;
+		    padding-top: 20px;
+		  }
+		}
+	      }	      
+	    }
+	  }
+	}
       }
-    }
+    } 
   }
 }
