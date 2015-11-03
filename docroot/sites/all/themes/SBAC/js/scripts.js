@@ -55,6 +55,16 @@
       })
     }
   };
+
+  Drupal.behaviors.toggleFilters = {
+    attach: function (context, settings) {
+      $(document).ready(function(){
+	$('a.category-hide').click(function() {
+
+	});
+      })
+    }
+  };
   
 })(jQuery);
 

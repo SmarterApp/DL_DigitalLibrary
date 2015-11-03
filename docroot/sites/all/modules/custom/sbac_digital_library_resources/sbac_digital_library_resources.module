@@ -22,6 +22,5 @@ function sbac_digital_library_resources_theme($existing, $type, $theme, $path) {
       'template_preprocess_views_view',
     ),
   );
-
   return $items;
 }
