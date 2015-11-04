@@ -4179,6 +4179,22 @@ form#sbac-user-filter-form #edit-email {
 
 // Updated digital library page
 .page-digital-library-resources {
+  #sbac-digital-library-resources-form {
+    .form-item {
+      margin:0;
+    }
+    button.form-submit {
+      display:none;
+    }
+    #edit-sbac-digital-library-resources-text {
+      background: image-url('search.png') 5% center no-repeat;
+      border-radius: 20px;
+      width:200px;
+      top: 8px;
+      right:0;
+      padding-left: 25px;
+    }
+  }
   #click-toggle{
     position: absolute;
     right: 25px;

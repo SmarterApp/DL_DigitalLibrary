@@ -40,16 +40,18 @@
   Drupal.behaviors.toggleGrid = {
     attach: function (context, settings) {
       $(document).ready(function(){
-	$('#click-toggle-a').click(function(){
+	$('#click-toggle-a').click(function(e){
 	  $(this).toggleClass('list');
 	  $('.view-digital-library-resources .views-row').toggleClass('list');
-	  
 	  if (!$(this).hasClass('list')) {
-	    $(this).text('List View');	    
+	    $(this).text('List View');
+	    window.location.hash = 'grid';
+	    e.preventDefault();	    
 	  }
 	  else{
 	    $(this).text('Grid View');
-	    
+	    window.location.hash = 'list';
+	    e.preventDefault();
 	  }
 	});
       })
