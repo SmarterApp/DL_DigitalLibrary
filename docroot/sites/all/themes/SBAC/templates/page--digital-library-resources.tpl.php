@@ -67,16 +67,18 @@ drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
 
             <div class="top-bar sub-top">
             <div class="inner-wrap">
-  <nav class="main-nav left">
+            <nav class="main-nav left">
+<?php
+           
+            
+            ?>
     <?php if ($main_menu_links && !in_array(SBAC_SHARE_GUEST, $user->roles) && !$conflicting_profile) : ?>
       <?php print $main_menu_links; ?>
     <?php endif; ?>
   </nav>
-  <?php if (isset($page['search']) && $page['search']): ?>
     <div class="search right">
-      <?php print render($page['search']); ?>
+      <?php print drupal_render(drupal_get_form('sbac_digital_library_resources_form')); ?>
     </div>
-<?php endif; ?>
             </div>
 </div>
 
