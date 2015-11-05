@@ -178,12 +178,15 @@ drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
         <?php print $blocks['educational_use']; ?>
       </div>
 <?php endif; ?>
+
+<?if (isset($_GET['f'])): ?>
             <script>
             function clearSession(){
               sessionStorage.clear();
             }
             </script>
                         <div id="clear-all-facets"><a onclick="clearSession()" href="/digital-library-resources">Clear All</a></div>
+<? endif; ?>
             </div>
             </div>
 

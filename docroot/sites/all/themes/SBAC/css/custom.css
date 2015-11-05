@@ -35639,23 +35639,27 @@ form#sbac-user-filter-form #edit-email {
   padding-bottom: 0;
   padding-top: 20px;
 }
-/* line 4528, ../sass/custom.scss */
-.page-digital-library-resources .filters .inner-wrap.activated-filters a.category-hide {
-  background: url('../images/icon-arrow-up.png?1446141811') no-repeat 1%;
+/* line 4526, ../sass/custom.scss */
+.page-digital-library-resources .filters .inner-wrap {
+  overflow: hidden;
 }
-/* line 4533, ../sass/custom.scss */
+/* line 4529, ../sass/custom.scss */
+.page-digital-library-resources .filters .inner-wrap.activated-filters a.category-hide {
+  background: url('../images/icon-arrow-right.png?1446763045') no-repeat 1%;
+}
+/* line 4534, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap.not-activated-filters a.category-hide {
   background: url('../images/icon-arrow-down.png?1446141811') no-repeat 1%;
 }
-/* line 4538, ../sass/custom.scss */
+/* line 4539, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap a.category-hide.active, .page-digital-library-resources .filters .inner-wrap a.category-hide:before {
   content: '';
 }
-/* line 4540, ../sass/custom.scss */
+/* line 4541, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap a.category-hide.active:before, .page-digital-library-resources .filters .inner-wrap a.category-hide:before:before {
   content: '';
 }
-/* line 4546, ../sass/custom.scss */
+/* line 4547, ../sass/custom.scss */
 .page-digital-library-resources .filters #clear-all-facets {
   border-radius: 6px;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
@@ -35673,7 +35677,6 @@ form#sbac-user-filter-form #edit-email {
   display: block;
   clear: both;
   float: right;
-  width: 100px;
   margin: 15px;
 }
 /* line 4565, ../sass/custom.scss */
@@ -35731,16 +35734,16 @@ form#sbac-user-filter-form #edit-email {
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 4613, ../sass/custom.scss */
+/* line 4610, ../sass/custom.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 4616, ../sass/custom.scss */
+/* line 4613, ../sass/custom.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0 0 0.25em 1.5em;
 }
-/* line 4620, ../sass/custom.scss */
+/* line 4617, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
