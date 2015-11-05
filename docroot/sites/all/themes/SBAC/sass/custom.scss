@@ -4524,9 +4524,10 @@ form#sbac-user-filter-form #edit-email {
   // Facets
   .filters {
     .inner-wrap{
+      overflow:hidden;
       &.activated-filters{
 	a.category-hide {
-	  background:image-url('icon-arrow-up.png') no-repeat 1%;
+	  background:image-url('icon-arrow-right.png') no-repeat 1%;
 	}
       }
       &.not-activated-filters {
@@ -4560,7 +4561,6 @@ form#sbac-user-filter-form #edit-email {
       display:block;
       clear:both;
       float:right;
-      width:100px;
       margin:15px;
       a {
 	color:white;
@@ -4606,9 +4606,6 @@ form#sbac-user-filter-form #edit-email {
       margin: 0;
       font-weight: bold;
       font-size: 1.1em;
-    }
-    .leaf {
-     // height:27px;
     }
     .expanded {
       overflow:hidden;
