@@ -107,77 +107,87 @@ drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
   </div>
 <?php endif; ?>
 
-<div class="filters sbac-filter-cat-area active">
-            <div class="inner-wrap">
-  <div class="facet-blocks">
-    <?php if($blocks['subjects']):?>
-      <div class="facet-block" id="facet-subjects">
-        <div class="facet-label"><a class="category-hide">Filters</a></div>
+<div class="filters">
+
+            <div class="inner-wrap not-activated-filters">
+                        <div class="category-hide-container"><a class="category-hide filters-master" href="#">Filters</a></div>
+            <div class="facet-blocks">
+<?php if($blocks['subjects']):?>
+            <div class="facet-block" id="facet-subjects">
+            <div class="facet-label"><a class="category-hide subjects-hide">Subjects</a></div>
         <?php print $blocks['subjects']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['resource_type']):?>
-      <div class="facet-block js-tree" id="facet-resource-type">
-        <div class="facet-label">Resource Type</div>
+      <div class="facet-block" id="facet-resource-type">
+        <div class="facet-label"><a class="category-hide resource-hide">Resource Type</a></div>
         <?php print $blocks['resource_type']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['module_type']):?>
-      <div class="facet-block js-tree" id="facet-module-type">
-        <div class="facet-label">Module Type</div>
+      <div class="facet-block" id="facet-module-type">
+        <div class="facet-label"><a class="category-hide module-hide">Module Type</a></div>
         <?php print $blocks['module_type']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['grades']):?>
-      <div class="facet-block js-tree" id="facet-grades">
-        <div class="facet-label">Grades</div>
+      <div class="facet-block" id="facet-grades">
+        <div class="facet-label"><a class="category-hide grades-hide">Grades</a></div>
         <?php print $blocks['grades']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['intended_end_users']):?>
-      <div class="facet-block js-tree" id="facet-intended-end-users">
-        <div class="facet-label">Intended End Users</div>
+      <div class="facet-block" id="facet-intended-end-users">
+        <div class="facet-label"><a class="category-hide endusers-hide">Intended End Users</a></div>
         <?php print $blocks['intended_end_users']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['geographic_settings']):?>
-      <div class="facet-block js-tree" id="facet-geographic-settings">
-        <div class="facet-label">Geographic Settings</div>
+      <div class="facet-block" id="facet-geographic-settings">
+        <div class="facet-label"><a class="category-hide geo-hide">Geographic Settings</a></div>
         <?php print $blocks['geographic_settings']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['formative_assessment_attributes']):?>
       <div class="facet-block js-tree" id="facet-formative-assessment-attributes">
-        <div class="facet-label">Formative Assessment Attributes</div>
+        <div class="facet-label"><a class="category-hide formative-hide">Formative Assessment Attributes</a></div>
         <?php print $blocks['formative_assessment_attributes']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['intended_student_populations']):?>
-      <div class="facet-block js-tree" id="facet-intended-student-populations">
-        <div class="facet-label">Intended Student Populations</div>
+      <div class="facet-block" id="facet-intended-student-populations">
+        <div class="facet-label"><a class="category-hide populations-hide">Intended Student Populations</a></div>
         <?php print $blocks['intended_student_populations']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['common_core_state_standards']):?>
-      <div class="facet-block js-tree" id="facet-common-core-state-standards">
-        <div class="facet-label">Common Core State Standards</div>
+      <div class="facet-block" id="facet-common-core-state-standards">
+        <div class="facet-label"><a class="category-hide common-hide">Common Core State Standards</a></div>
         <?php print $blocks['common_core_state_standards']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['media_types']):?>
-      <div class="facet-block js-tree" id="facet-media-types">
-        <div class="facet-label">Media Types</div>
+      <div class="facet-block" id="facet-media-types">
+        <div class="facet-label"><a class="category-hide media-hide">Media Types</a></div>
         <?php print $blocks['media_types']; ?>
       </div>
     <?php endif; ?>
     <?php if($blocks['educational_use']):?>
-      <div class="facet-block js-tree" id="facet-educational-use">
-        <div class="facet-label">Educational Use</div>
+      <div class="facet-block" id="facet-educational-use">
+        <div class="facet-label"><a class="category-hide educational-hide">Educational Use</a></div>
         <?php print $blocks['educational_use']; ?>
       </div>
-    <?php endif; ?>
+<?php endif; ?>
+            <script>
+            function clearSession(){
+              sessionStorage.clear();
+            }
+            </script>
+                        <div id="clear-all-facets"><a onclick="clearSession()" href="/digital-library-resources">Clear All</a></div>
             </div>
             </div>
+
+            <div style="display:block;clear:both;width:100%"></div>
             </div>
 
             

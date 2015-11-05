@@ -39,7 +39,7 @@
 
   Drupal.behaviors.toggleGrid = {
     attach: function (context, settings) {
-      $(document).ready(function(){
+      $(document).ready(function() {
 	if (sessionStorage['gridview'] == 'list'){
 	  $('.view-digital-library-resources .views-row, #click-toggle-a').addClass('list');
 	}
@@ -55,6 +55,87 @@
 	    sessionStorage['gridview'] = 'list';
 	  }
 	});
+
+	$('a.category-hide.filters-master').click(function() {
+	  if ($('.filters .inner-wrap').hasClass('not-activated-filters')) {
+	    $('.filters .inner-wrap').removeClass('not-activated-filters');
+	    $('.filters .inner-wrap').addClass('activated-filters');
+	    
+	    $('.filters .inner-wrap').animate({
+	      'height': '45px'
+	    });
+	  }
+	    else {
+	      
+	      
+	      $('.filters .inner-wrap').removeClass('activated-filters');
+	      $('.filters .inner-wrap').addClass('not-activated-filters');
+	      $('.filters .inner-wrap').animate({
+		'height': '100%'
+	      });
+	    }
+	  
+	})
+	
+	$('a.category-hide').each(function() {
+	  var key = $(this).parents().parents().attr('id');
+	  var state = sessionStorage.getItem(key);
+	  if (state == 'activated') {
+	    $(this).addClass('activated');
+	    $(this).addClass('not-activated');
+	    $(this).parents().siblings('.item-list').css({
+	      'height': '300px',
+	      'overflow-y': 'auto'
+	    })
+	  }
+	  else {
+	    $(this).removeClass('activated');
+	    $(this).addClass('not-activated');
+	    $(this).parents().siblings('.item-list').css({
+	      'height': '0',
+	      'overflow-y': 'auto'
+	    })
+	  }
+	  
+	  $(this).click(function() {
+	    
+	    if ($(this).hasClass('activated')) {
+	      sessionStorage.setItem(key, 'not-activated');
+	      $(this).removeClass('activated');
+	      $(this).addClass('not-activated');
+	      $(this).parents().siblings('.item-list').animate({
+		'height': '0',
+		'overflow-y': 'auto'
+	      })
+	    }
+	    else {
+	      $(this).addClass('activated');
+	      $(this).removeClass('not-activated');
+	      sessionStorage.setItem(key, 'activated');   
+	      $(this).parents().siblings('.item-list').animate({
+		'height': '300px',
+		'overflow-y': 'auto'
+	      })
+	    }
+	  })
+	  
+	})
+
+	  
+	$('input.facetapi-checkbox').each(function() {
+	  if ($(this).is(':checked')) {
+	    
+	    $(this).siblings('.item-list').css({
+	      'height': 'auto',
+	    })
+	  }
+	  else {
+	    $(this).siblings('.item-list').css({
+	      'height': '0',
+	    })
+	  }
+	})
+	
       })
     }
   };
