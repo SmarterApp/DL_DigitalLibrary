@@ -43,6 +43,8 @@
 	if (sessionStorage['gridview'] == 'list'){
 	  $('.view-digital-library-resources .views-row, #click-toggle-a').addClass('list');
 	}
+	
+
 	$('#click-toggle-a').click(function(e){
 	  $(this).toggleClass('list');
 	  $('.view-digital-library-resources .views-row').toggleClass('list');
@@ -56,6 +58,17 @@
 	  }
 	});
 
+	$('.collapsed, .expanded').each(function(){
+	  if($(this).children('.facetapi-checkbox').hasClass('facetapi-inactive')){
+	    $(this).removeClass('minus-sign');
+	    $(this).addClass('plus-sign');	    	    
+	  }
+	  else{
+	    $(this).removeClass('plus-sign');
+	    $(this).addClass('minus-sign');
+	  }
+	})
+	
 	$('a.category-hide.filters-master').click(function() {
 	  if ($('.filters .inner-wrap').hasClass('not-activated-filters')) {	    
 	    $('.filters .inner-wrap').removeClass('not-activated-filters');
@@ -72,6 +85,11 @@
 	    });
 	  }	  
 	})
+
+	$('a.facetapi-checkbox').each(function(){
+	  $(this).text().replace('/(-)/', '');
+	})
+	
 	
 	$('a.category-hide').each(function() {
 	  var key = $(this).parents().parents().attr('id');
@@ -81,7 +99,6 @@
 	    $(this).removeClass('not-activated');
 	    $(this).parents().siblings('.item-list').css({
 	      'height': '300px',
-	      'overflow-y': 'auto'
 	    })
 	  }
 	  else {
@@ -89,7 +106,6 @@
 	    $(this).addClass('not-activated');
 	    $(this).parents().siblings('.item-list').css({
 	      'height': '0',
-	      'overflow-y': 'auto'
 	    })
 	  }
 	  
@@ -100,7 +116,6 @@
 	      $(this).addClass('not-activated');
 	      $(this).parents().siblings('.item-list').animate({
 		'height': '0',
-		'overflow-y': 'auto'
 	      })
 	    }
 	    else {
@@ -109,22 +124,22 @@
 	      sessionStorage.setItem(key, 'activated');   
 	      $(this).parents().siblings('.item-list').animate({
 		'height': '300px',
-		'overflow-y': 'auto'
 	      })
 	    }
 	  })	  
 	})
 	  
-	$('input.facetapi-checkbox').each(function() {
-	  if ($(this).is(':checked')) {	    
-	    $(this).siblings('.item-list').css({
-	      'height': 'auto',
-	    })
-	  }
-	  else {
-	    $(this).siblings('.item-list').css({
-	      'height': '0',
-	    })
+	  $('input.facetapi-checkbox').each(function() {
+	    
+	    if ($(this).is(':checked')) {
+	      $(this).siblings('.item-list').css({
+		'height': 'auto',
+	      })
+	    }
+	    else {
+	      $(this).siblings('.item-list').css({
+		'height': '0',
+	      })
 	  }
 	})	
       })
