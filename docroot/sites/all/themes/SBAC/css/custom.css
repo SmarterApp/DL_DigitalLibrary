@@ -35732,10 +35732,11 @@ form#sbac-user-filter-form #edit-email {
   color: black;
   font-weight: normal;
   padding-left: 15px;
+  text-indent: -9999px;
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
 }
-/* line 4612, ../sass/custom.scss */
+/* line 4613, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide {
   width: 100%;
   margin-left: 0;
@@ -35744,43 +35745,43 @@ form#sbac-user-filter-form #edit-email {
   line-height: 30px;
   border-radius: 3px;
 }
-/* line 4619, ../sass/custom.scss */
+/* line 4620, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active, .page-digital-library-resources .filters .facet-block a.category-hide:before {
   content: '';
 }
-/* line 4621, ../sass/custom.scss */
+/* line 4622, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active:before, .page-digital-library-resources .filters .facet-block a.category-hide:before:before {
   content: '';
 }
-/* line 4625, ../sass/custom.scss */
+/* line 4626, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
   background: white url('../images/icon-close.png?1446141811') no-repeat 95%;
 }
-/* line 4628, ../sass/custom.scss */
+/* line 4629, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95%;
 }
-/* line 4633, ../sass/custom.scss */
+/* line 4634, ../sass/custom.scss */
 .page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
   color: #0684ad;
   margin: 0;
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 4639, ../sass/custom.scss */
+/* line 4640, ../sass/custom.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 4642, ../sass/custom.scss */
+/* line 4643, ../sass/custom.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0;
 }
-/* line 4646, ../sass/custom.scss */
+/* line 4647, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
-/* line 4648, ../sass/custom.scss */
+/* line 4649, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap input {
   opacity: 0;
 }
