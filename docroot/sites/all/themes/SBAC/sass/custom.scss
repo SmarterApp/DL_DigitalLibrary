@@ -4524,7 +4524,7 @@ form#sbac-user-filter-form #edit-email {
   // Facets
   .filters {
     .inner-wrap{
-      overflow:hidden;
+      //overflow:hidden;
       &.activated-filters{
 	a.category-hide {
 	  background:image-url('icon-arrow-right.png') no-repeat 1%;
@@ -4567,6 +4567,7 @@ form#sbac-user-filter-form #edit-email {
       }
     }
     .facet-block {
+      position:relative;
       li.minus-sign{
 	background:image-url('filter/icon-minus-sign.png') no-repeat 0 5px;
       }
@@ -4577,15 +4578,33 @@ form#sbac-user-filter-form #edit-email {
       margin:10px 1.5%;
       float:left;
       ul {
-	overflow-y:scroll;
+	overflow-y:auto;
 	height:100%;
+	box-shadow: 2px 14px 29px -8px rgba(158,153,158,1);
 	li {
 	  background-image:none;
+	  .item-list{
+	    width:auto;
+	    ul { 
+	      box-shadow:none;
+	      li {
+		background-image:none;
+		.item-list{
+		  width:auto
+		  ul {
+		    box-shadow:none;
+		  }
+		}
+	      }    
+	    }
+	  }
 	}
       }
       .item-list {
-	overflow-y:auto;
 	background:white;
+	position:absolute;
+	width:100%;
+	z-index:5;
 	height:0;
 	ul{
 	  li{

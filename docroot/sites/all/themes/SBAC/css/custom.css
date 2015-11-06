@@ -35639,10 +35639,6 @@ form#sbac-user-filter-form #edit-email {
   padding-bottom: 0;
   padding-top: 20px;
 }
-/* line 4526, ../sass/custom.scss */
-.page-digital-library-resources .filters .inner-wrap {
-  overflow: hidden;
-}
 /* line 4529, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap.activated-filters a.category-hide {
   background: url('../images/icon-arrow-right.png?1446763045') no-repeat 1%;
@@ -35685,51 +35681,72 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4569, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block {
+  position: relative;
   width: 30%;
   margin: 10px 1.5%;
   float: left;
 }
-/* line 4570, ../sass/custom.scss */
+/* line 4571, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block li.minus-sign {
   background: url('../images/filter/icon-minus-sign.png?1446141811') no-repeat 0 5px;
 }
-/* line 4573, ../sass/custom.scss */
+/* line 4574, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block li.plus-sign {
   background: url('../images/filter/icon-plus-sign.png?1446141811') no-repeat 0 7px;
 }
-/* line 4579, ../sass/custom.scss */
+/* line 4580, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul {
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 100%;
+  box-shadow: 2px 14px 29px -8px #9e999e;
 }
-/* line 4582, ../sass/custom.scss */
+/* line 4584, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li {
   background-image: none;
 }
 /* line 4586, ../sass/custom.scss */
+.page-digital-library-resources .filters .facet-block ul li .item-list {
+  width: auto;
+}
+/* line 4588, ../sass/custom.scss */
+.page-digital-library-resources .filters .facet-block ul li .item-list ul {
+  box-shadow: none;
+}
+/* line 4590, ../sass/custom.scss */
+.page-digital-library-resources .filters .facet-block ul li .item-list ul li {
+  background-image: none;
+}
+/* line 4593, ../sass/custom.scss */
+.page-digital-library-resources .filters .facet-block ul li .item-list ul li .item-list width:auto
+ul {
+  box-shadow: none;
+}
+/* line 4603, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list {
-  overflow-y: auto;
   background: white;
+  position: absolute;
+  width: 100%;
+  z-index: 5;
   height: 0;
 }
-/* line 4591, ../sass/custom.scss */
+/* line 4610, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li {
   margin: 0 0 0 15px;
   padding-bottom: 10px;
   color: black;
 }
-/* line 4595, ../sass/custom.scss */
+/* line 4614, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a {
   color: black;
   font-weight: normal;
   padding-left: 25px;
   padding-bottom: 2px;
 }
-/* line 4600, ../sass/custom.scss */
+/* line 4619, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-inactive {
   background: url('../images/filter/icon-checkbox.png?1446141811') no-repeat 0 0;
 }
-/* line 4603, ../sass/custom.scss */
+/* line 4622, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
   color: black;
   font-weight: normal;
@@ -35738,7 +35755,7 @@ form#sbac-user-filter-form #edit-email {
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
 }
-/* line 4615, ../sass/custom.scss */
+/* line 4634, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide {
   width: 100%;
   margin-left: 0;
@@ -35747,43 +35764,43 @@ form#sbac-user-filter-form #edit-email {
   line-height: 30px;
   border-radius: 3px;
 }
-/* line 4622, ../sass/custom.scss */
+/* line 4641, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active, .page-digital-library-resources .filters .facet-block a.category-hide:before {
   content: '';
 }
-/* line 4624, ../sass/custom.scss */
+/* line 4643, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active:before, .page-digital-library-resources .filters .facet-block a.category-hide:before:before {
   content: '';
 }
-/* line 4628, ../sass/custom.scss */
+/* line 4647, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
   background: white url('../images/icon-close.png?1446141811') no-repeat 95%;
 }
-/* line 4631, ../sass/custom.scss */
+/* line 4650, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95%;
 }
-/* line 4636, ../sass/custom.scss */
+/* line 4655, ../sass/custom.scss */
 .page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
   color: #0684ad;
   margin: 0;
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 4642, ../sass/custom.scss */
+/* line 4661, ../sass/custom.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 4645, ../sass/custom.scss */
+/* line 4664, ../sass/custom.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0;
 }
-/* line 4649, ../sass/custom.scss */
+/* line 4668, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
-/* line 4651, ../sass/custom.scss */
+/* line 4670, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap input {
   opacity: 0;
 }
