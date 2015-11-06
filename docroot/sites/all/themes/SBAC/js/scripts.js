@@ -42,8 +42,7 @@
       $(document).ready(function() {
 	if (sessionStorage['gridview'] == 'list'){
 	  $('.view-digital-library-resources .views-row, #click-toggle-a').addClass('list');
-	}
-	
+	}	
 
 	$('#click-toggle-a').click(function(e){
 	  $(this).toggleClass('list');
@@ -129,8 +128,7 @@
 	  })	  
 	})
 	  
-	  $('input.facetapi-checkbox').each(function() {
-	    
+	  $('input.facetapi-checkbox').each(function() {	    
 	    if ($(this).is(':checked')) {
 	      $(this).siblings('.item-list').css({
 		'height': 'auto',
@@ -140,9 +138,10 @@
 	      $(this).siblings('.item-list').css({
 		'height': '0',
 	      })
-	  }
-	})	
-      })
+	    }
+	  });	
+      });
+      
     }
   };
 
