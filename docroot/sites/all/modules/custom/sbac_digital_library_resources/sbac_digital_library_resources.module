@@ -6,6 +6,36 @@
 
 include_once 'sbac_digital_library_resources.features.inc';
 
+function sbac_digital_library_resources_block_info() {
+  // This example comes from node.module.
+  $blocks['posted_w_distinction'] = array(
+    'info' => t('Posted with Distinction'),
+    'cache' => DRUPAL_NO_CACHE
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function sbac_digital_library_resources_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'posted_w_distinction':
+      if(arg(1) == 'distinguished'){
+        $block['content'] = l(t('Posted with Distinction Only'),'/digital-library-resources', array('attributes' => array('class' => array('distinguished'))));
+      }
+      else{
+        $block['content'] = l('Posted with Distinction Only','/digital-library-resources/distinguished', array('attributes' => array('class' => array('all-content'))));
+      }
+      
+      break;
+  }
+
+  return $block;
+}
+
 /**
  * Implements hook_theme().
  */
@@ -20,8 +50,24 @@ function sbac_digital_library_resources_theme($existing, $type, $theme, $path) {
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view',
+      'sbac_digital_library_resources_view',
     ),
   );
+  /**
+  $items['views_view_fields__digital_library_resources'] = array(
+    'template' => 'views-view-fields--digital-library-resources',
+    'path' => drupal_get_path('module', 'sbac_digital_library_resources') . '/templates/views',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_digital_library_resources_view_fields',
+    ),
+  );
+   * 
+   */
+  
   return $items;
 }
 
@@ -49,4 +95,19 @@ function sbac_digital_library_resources_form_submit($form, &$form_state) {
       ),
     ),
   );
+}
+
+function sbac_digital_library_resources_form_views_exposed_form_alter(&$form, &$form_state, $form_id){
+  switch ($form['#id']) {
+    case 'views-exposed-form-digital-library-resources-page':
+      // Hide extra search fields
+      $form['keyword']['#access'] = FALSE;
+      $form['sort_order']['#access'] = FALSE;
+      
+      break;
+  }
+}
+function sbac_digital_library_resources_apachesolr_query_alter(DrupalSolrQueryInterface $query) {
+  // Exclude all posts flagged as "removed"
+  $query->addFilter('is_field_posting_options', 2, $exclude = TRUE);
 }

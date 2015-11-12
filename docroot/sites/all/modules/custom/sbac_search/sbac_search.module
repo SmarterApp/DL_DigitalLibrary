@@ -202,13 +202,32 @@ function sbac_search_apachesolr_index_document_build_user(ApacheSolrDocument $do
   }
 }
 
+/**
+ * Implements hook_apachesolr_index_document_build(ApacheSolrDocument $document, $entity, $entity_type, $env_id)
+ * 
+ * @param ApacheSolrDocument $document
+ * @param type $node
+ * @param type $env_id
+ * 
+ *  */
 
-function sbac_search_apachesolr_index_document_build_node(ApacheSolrDocument $document, $node, $env_id) {
-  if ($node->type == 'resource' && $node->field_posting_options) {
-    $document->addField('is_field_posting_options', $node->field_posting_options['und'][0]['value']);
+function sbac_search_apachesolr_index_document_build(ApacheSolrDocument $document, $entity, $entity_type, $env_id) {
+  if($entity_type == 'node'){
+    if ($entity->type == 'resource') {
+      // Add posting option Field
+      if($entity->field_posting_options){
+        $document->addField('is_field_posting_options', $entity->field_posting_options[LANGUAGE_NONE][0]['value']);
+      }
+      // Add Total Views Field
+      if($entity->field_total_views){
+        $document->addField('is_field_total_views', $entity->field_total_views[LANGUAGE_NONE][0]['value']);
+      }
+      if($entity->field_node_avg_rating){
+        $document->addField('fs_field_node_avg_rating', $entity->field_node_avg_rating[LANGUAGE_NONE][0]['value']);
+      }
+    }
   }
 }
-
 /**
  * Implements hook_facetapi_facet_info().
  */

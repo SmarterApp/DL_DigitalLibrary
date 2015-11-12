@@ -17,7 +17,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_alignment_term';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '-1',
@@ -42,7 +42,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_attributes';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -67,7 +67,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_digital_media_type';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -92,7 +92,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_educational_use';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -115,7 +115,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_focus';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -140,7 +140,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_geographical_settings';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -163,7 +163,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_grades';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '-1',
@@ -188,7 +188,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_intended_end_user';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -213,7 +213,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_intended_student';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -236,7 +236,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_smarter_balanced_keywor';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '50',
@@ -259,7 +259,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->searcher = 'apachesolr@acquia_search_server_1';
   $facet->realm = '';
   $facet->facet = 'im_field_subject';
-  $facet->enabled = FALSE;
+  $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
     'hard_limit' => '-1',
