@@ -76,6 +76,13 @@ function sbac_search_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'apachesolr_default_environment';
+  $strongarm->value = 'acquia_search_server_1';
+  $export['apachesolr_default_environment'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'apachesolr_failure';
   $strongarm->value = 'apachesolr:show_error';
   $export['apachesolr_failure'] = $strongarm;

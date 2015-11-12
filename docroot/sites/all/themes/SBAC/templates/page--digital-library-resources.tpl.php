@@ -218,7 +218,7 @@ drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
           <?php print render($action_links); ?>
         </ul>
       <?php endif; ?>
-
+      <?php print drupal_render(drupal_get_form('views_exposed_form_digital_library_resources_page')); ?>
       <?php print render($page['content']); ?>
     </div>
     <?php if ($user->uid && !empty($page['sidebar_first'])): ?>
