@@ -29,6 +29,7 @@ features[facetapi][] = apachesolr@acquia_search_server_1::im_field_intended_end_
 features[facetapi][] = apachesolr@acquia_search_server_1::im_field_intended_student
 features[facetapi][] = apachesolr@acquia_search_server_1::im_field_smarter_balanced_keywor
 features[facetapi][] = apachesolr@acquia_search_server_1::im_field_subject
+features[fe_block_settings][] = current_search-resource_results
 features[fe_block_settings][] = sbac_digital_library_resources-posted_w_distinction
 features[fe_block_settings][] = views-cd1ce356b15a5ee4d63abaa1aa697e16
 features[features_api][] = api:2

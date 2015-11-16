@@ -12,6 +12,32 @@ function sbac_digital_library_resources_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
+  $export['current_search-resource_results'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'resource_results',
+    'module' => 'current_search',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -38,
+      ),
+      'seven' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'seven',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 0,
+  );
+
   $export['sbac_digital_library_resources-posted_w_distinction'] = array(
     'cache' => -1,
     'custom' => 0,
