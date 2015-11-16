@@ -123,12 +123,6 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['header']['view']['table'] = 'views';
   $handler->display->display_options['header']['view']['field'] = 'view';
   $handler->display->display_options['header']['view']['view_to_insert'] = 'digital_library_resources:attachment_1';
-  /* Header: Global: Text area */
-  $handler->display->display_options['header']['area']['id'] = 'area';
-  $handler->display->display_options['header']['area']['table'] = 'views';
-  $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<hr>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['path'] = 'digital-library-resources';
 
   /* Display: Atch. Posted w/Distinction */
