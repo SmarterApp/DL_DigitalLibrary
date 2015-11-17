@@ -75,7 +75,6 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
   $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -145,7 +144,6 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
   $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
   $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -205,7 +203,6 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
   $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
