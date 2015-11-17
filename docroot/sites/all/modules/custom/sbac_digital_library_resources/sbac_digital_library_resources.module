@@ -101,7 +101,8 @@ function sbac_digital_library_resources_form_views_exposed_form_alter(&$form, &$
   switch ($form['#id']) {
     case 'views-exposed-form-digital-library-resources-page':
       // Hide extra search fields
-      $form['keyword']['#access'] = FALSE;
+      $form['keyword']['#type'] = 'hidden';
+      // Setting to false hides and defaults to sort order in the view
       $form['sort_order']['#access'] = FALSE;
       
       break;
