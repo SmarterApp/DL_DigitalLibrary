@@ -239,7 +239,6 @@ function sbac_search_apachesolr_index_document_build(ApacheSolrDocument $documen
           $document->addField('tm_document_name', $value->filename);
         }
       }
-      drupal_set_message('<pre>' . print_r($document,1) . '</pre>');
     }
   }
 }
