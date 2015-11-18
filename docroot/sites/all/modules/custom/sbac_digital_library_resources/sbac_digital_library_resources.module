@@ -75,9 +75,10 @@ function sbac_digital_library_resources_theme($existing, $type, $theme, $path) {
  * Implements hook_form().
  */
 function sbac_digital_library_resources_form($form, &$form_state) {
-
+  $query = drupal_get_query_parameters();
   $form['sbac_digital_library_resources_text'] = array(
     '#type' => 'textfield',
+    '#default_value' => ($query['keyword'] ? $query['keyword'] : '' ),
   );
   $form['#submit'][] = 'sbac_digital_library_resources_form_submit';
   return system_settings_form($form);
@@ -87,12 +88,13 @@ function sbac_digital_library_resources_form($form, &$form_state) {
  * Form submit callback.
  */
 function sbac_digital_library_resources_form_submit($form, &$form_state) {
+  $query = array();
+  $query = drupal_get_query_parameters();
+  $query['keyword'] = $form_state['values']['sbac_digital_library_resources_text'];
   $form_state['redirect'] = array(
     'digital-library-resources',
     array(
-      'query' => array(
-        'keyword' => $form_state['values']['sbac_digital_library_resources_text'],
-      ),
+      'query' => $query,
     ),
   );
 }
