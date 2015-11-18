@@ -65,17 +65,16 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['sorts']['fs_field_node_avg_rating']['order'] = 'DESC';
   $handler->display->display_options['sorts']['fs_field_node_avg_rating']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['fs_field_node_avg_rating']['expose']['label'] = 'Highest Rated';
-  /* Filter criterion: Full Text Search */
-  $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__acquia_search_server_1';
-  $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['ui_name'] = 'Full Text Search';
-  $handler->display->display_options['filters']['keyword']['group'] = 1;
-  $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
-  $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
+  /* Filter criterion: Apache Solr: Search */
+  $handler->display->display_options['filters']['keyword_1']['id'] = 'keyword_1';
+  $handler->display->display_options['filters']['keyword_1']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['filters']['keyword_1']['field'] = 'keyword';
+  $handler->display->display_options['filters']['keyword_1']['group'] = 1;
+  $handler->display->display_options['filters']['keyword_1']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['keyword_1']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['keyword_1']['expose']['operator'] = 'keyword_1_op';
+  $handler->display->display_options['filters']['keyword_1']['expose']['identifier'] = 'keyword';
+  $handler->display->display_options['filters']['keyword_1']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
     3 => 0,
@@ -133,15 +132,13 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Full Text Search */
+  /* Filter criterion: Apache Solr: Search */
   $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
   $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['ui_name'] = 'Full Text Search';
   $handler->display->display_options['filters']['keyword']['group'] = 1;
   $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
-  $handler->display->display_options['filters']['keyword']['expose']['label'] = 'Search';
   $handler->display->display_options['filters']['keyword']['expose']['operator'] = 'keyword_op';
   $handler->display->display_options['filters']['keyword']['expose']['identifier'] = 'keyword';
   $handler->display->display_options['filters']['keyword']['expose']['remember_roles'] = array(
@@ -180,6 +177,7 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['is_field_posting_options']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['is_field_posting_options']['field'] = 'is_field_posting_options';
   $handler->display->display_options['filters']['is_field_posting_options']['value'] = '1';
+  $handler->display->display_options['filters']['is_field_posting_options']['group'] = 1;
 
   /* Display: Page Posted w/Distinction */
   $handler = $view->new_display('page', 'Page Posted w/Distinction', 'page_1');
@@ -193,11 +191,10 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Full Text Search */
+  /* Filter criterion: Apache Solr: Search */
   $handler->display->display_options['filters']['keyword']['id'] = 'keyword';
   $handler->display->display_options['filters']['keyword']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['keyword']['field'] = 'keyword';
-  $handler->display->display_options['filters']['keyword']['ui_name'] = 'Full Text Search';
   $handler->display->display_options['filters']['keyword']['group'] = 1;
   $handler->display->display_options['filters']['keyword']['exposed'] = TRUE;
   $handler->display->display_options['filters']['keyword']['expose']['operator_id'] = '';
@@ -239,6 +236,7 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['is_field_posting_options']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['filters']['is_field_posting_options']['field'] = 'is_field_posting_options';
   $handler->display->display_options['filters']['is_field_posting_options']['value'] = '1';
+  $handler->display->display_options['filters']['is_field_posting_options']['group'] = 1;
   $handler->display->display_options['path'] = 'digital-library-resources/distinguished';
   $export['digital_library_resources'] = $view;
 
