@@ -45,6 +45,10 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['fields']['entity_id']['alter']['path'] = 'node/[entity_id]';
   $handler->display->display_options['fields']['entity_id']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
+  /* Field: Apache Solr: is_field_posting_options */
+  $handler->display->display_options['fields']['is_field_posting_options']['id'] = 'is_field_posting_options';
+  $handler->display->display_options['fields']['is_field_posting_options']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['fields']['is_field_posting_options']['field'] = 'is_field_posting_options';
   /* Sort criterion: Apache Solr: ds_created */
   $handler->display->display_options['sorts']['ds_created']['id'] = 'ds_created';
   $handler->display->display_options['sorts']['ds_created']['table'] = 'apachesolr__acquia_search_server_1';
@@ -65,6 +69,10 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['sorts']['fs_field_node_avg_rating']['order'] = 'DESC';
   $handler->display->display_options['sorts']['fs_field_node_avg_rating']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['fs_field_node_avg_rating']['expose']['label'] = 'Highest Rated';
+  $handler->display->display_options['filter_groups']['groups'] = array(
+    1 => 'AND',
+    2 => 'OR',
+  );
   /* Filter criterion: Apache Solr: Search */
   $handler->display->display_options['filters']['keyword_1']['id'] = 'keyword_1';
   $handler->display->display_options['filters']['keyword_1']['table'] = 'apachesolr__acquia_search_server_1';
@@ -105,6 +113,12 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
   $handler->display->display_options['filters']['bundle']['value'] = 'resource';
   $handler->display->display_options['filters']['bundle']['group'] = 1;
+  /* Filter criterion: Apache Solr: bs_status */
+  $handler->display->display_options['filters']['bs_status']['id'] = 'bs_status';
+  $handler->display->display_options['filters']['bs_status']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['filters']['bs_status']['field'] = 'bs_status';
+  $handler->display->display_options['filters']['bs_status']['value'] = '1';
+  $handler->display->display_options['filters']['bs_status']['group'] = 1;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -178,6 +192,11 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['is_field_posting_options']['field'] = 'is_field_posting_options';
   $handler->display->display_options['filters']['is_field_posting_options']['value'] = '1';
   $handler->display->display_options['filters']['is_field_posting_options']['group'] = 1;
+  /* Filter criterion: Apache Solr: bs_status */
+  $handler->display->display_options['filters']['bs_status']['id'] = 'bs_status';
+  $handler->display->display_options['filters']['bs_status']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['filters']['bs_status']['field'] = 'bs_status';
+  $handler->display->display_options['filters']['bs_status']['value'] = '1';
 
   /* Display: Page Posted w/Distinction */
   $handler = $view->new_display('page', 'Page Posted w/Distinction', 'page_1');
@@ -237,6 +256,11 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['is_field_posting_options']['field'] = 'is_field_posting_options';
   $handler->display->display_options['filters']['is_field_posting_options']['value'] = '1';
   $handler->display->display_options['filters']['is_field_posting_options']['group'] = 1;
+  /* Filter criterion: Apache Solr: bs_status */
+  $handler->display->display_options['filters']['bs_status']['id'] = 'bs_status';
+  $handler->display->display_options['filters']['bs_status']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['filters']['bs_status']['field'] = 'bs_status';
+  $handler->display->display_options['filters']['bs_status']['value'] = '1';
   $handler->display->display_options['path'] = 'digital-library-resources/distinguished';
   $export['digital_library_resources'] = $view;
 
