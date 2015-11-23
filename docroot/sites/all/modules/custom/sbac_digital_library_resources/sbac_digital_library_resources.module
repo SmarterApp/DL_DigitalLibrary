@@ -80,8 +80,12 @@ function sbac_digital_library_resources_form($form, &$form_state) {
     '#type' => 'textfield',
     '#default_value' => ($query['keyword'] ? $query['keyword'] : '' ),
   );
+  $form['submit'] = array(
+     '#type' => 'submit',
+     '#value' => t('Submit'),
+  );
   $form['#submit'][] = 'sbac_digital_library_resources_form_submit';
-  return system_settings_form($form);
+  return $form;
 }
 
 /**
