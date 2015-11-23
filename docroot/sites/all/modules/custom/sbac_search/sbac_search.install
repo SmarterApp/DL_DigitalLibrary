@@ -6,7 +6,9 @@
 function sbac_search_update_7001(){
   module_enable(array('jqmulti'));
 }
-
+function sbac_search_update_7002(){
+  module_enable(array('apachesolr_workbench_moderation'));
+}
 /**
  * Impliments hook_uninstall().
  */
