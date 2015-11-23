@@ -45,10 +45,6 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['fields']['entity_id']['alter']['path'] = 'node/[entity_id]';
   $handler->display->display_options['fields']['entity_id']['alter']['absolute'] = TRUE;
   $handler->display->display_options['fields']['entity_id']['element_label_colon'] = FALSE;
-  /* Field: Apache Solr: is_field_posting_options */
-  $handler->display->display_options['fields']['is_field_posting_options']['id'] = 'is_field_posting_options';
-  $handler->display->display_options['fields']['is_field_posting_options']['table'] = 'apachesolr__acquia_search_server_1';
-  $handler->display->display_options['fields']['is_field_posting_options']['field'] = 'is_field_posting_options';
   /* Sort criterion: Apache Solr: ds_created */
   $handler->display->display_options['sorts']['ds_created']['id'] = 'ds_created';
   $handler->display->display_options['sorts']['ds_created']['table'] = 'apachesolr__acquia_search_server_1';
