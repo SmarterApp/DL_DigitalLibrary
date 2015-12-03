@@ -27,19 +27,14 @@ function sbac_search_landing_page_categories() {
       'title' => 'Filter Alignment',
     ),
   );
+  // Modal is configured in sbac_resource sbac_resource_filter_modal_callback()
   $link = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
   $categories['education_alignment']['display_name'] = 'Common Core State Standards';
   $vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
   $categories['education_alignment']['vocabulary'] = $vocab;
   $categories['education_alignment']['terms'] = array();
   $categories['education_alignment']['link'] = $link;
-  
-  // Add facet ids
-  $categories['attributes']['facet'] = 'field_alignment_term';
-  $categories['subject']['facet'] = 'field_subject';
-  $categories['grades']['facet'] = 'field_grades';
-  $categories['education_alignment']['facet'] = 'field_alignment_term';
-  
+    
   $output = NULL;
   if ($categories) {
     $output = theme('sbac_landing_page_categories', array('categories' => $categories));
