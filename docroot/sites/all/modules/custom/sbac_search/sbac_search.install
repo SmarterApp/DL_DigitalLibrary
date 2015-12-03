@@ -6,6 +6,12 @@
 function sbac_search_update_7001(){
   module_enable(array('jqmulti'));
 }
+
+/**
+ * Enables Apache Solr Workbench Moderation Module.
+ *
+ *  Implemnts hook_update_N().
+ */
 function sbac_search_update_7002(){
   module_enable(array('apachesolr_workbench_moderation'));
 }
