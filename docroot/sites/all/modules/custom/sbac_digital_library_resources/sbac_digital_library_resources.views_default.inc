@@ -115,6 +115,87 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['filters']['bs_status']['field'] = 'bs_status';
   $handler->display->display_options['filters']['bs_status']['value'] = '1';
   $handler->display->display_options['filters']['bs_status']['group'] = 1;
+  /* Filter criterion: Apache Solr: ts_field_author */
+  $handler->display->display_options['filters']['ts_field_author']['id'] = 'ts_field_author';
+  $handler->display->display_options['filters']['ts_field_author']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['filters']['ts_field_author']['field'] = 'ts_field_author';
+  $handler->display->display_options['filters']['ts_field_author']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['ts_field_author']['expose']['operator_id'] = 'ts_field_author_op';
+  $handler->display->display_options['filters']['ts_field_author']['expose']['operator'] = 'ts_field_author_op';
+  $handler->display->display_options['filters']['ts_field_author']['expose']['identifier'] = 'author';
+  $handler->display->display_options['filters']['ts_field_author']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  /* Filter criterion: Apache Solr: ts_field_publisher */
+  $handler->display->display_options['filters']['ts_field_publisher']['id'] = 'ts_field_publisher';
+  $handler->display->display_options['filters']['ts_field_publisher']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['filters']['ts_field_publisher']['field'] = 'ts_field_publisher';
+  $handler->display->display_options['filters']['ts_field_publisher']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['ts_field_publisher']['expose']['operator_id'] = 'ts_field_publisher_op';
+  $handler->display->display_options['filters']['ts_field_publisher']['expose']['operator'] = 'ts_field_publisher_op';
+  $handler->display->display_options['filters']['ts_field_publisher']['expose']['identifier'] = 'owner';
+  $handler->display->display_options['filters']['ts_field_publisher']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  /* Filter criterion: Apache Solr: is_uid */
+  $handler->display->display_options['filters']['is_uid']['id'] = 'is_uid';
+  $handler->display->display_options['filters']['is_uid']['table'] = 'apachesolr__acquia_search_server_1';
+  $handler->display->display_options['filters']['is_uid']['field'] = 'is_uid';
+  $handler->display->display_options['filters']['is_uid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['is_uid']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['is_uid']['expose']['operator'] = 'is_uid_op';
+  $handler->display->display_options['filters']['is_uid']['expose']['identifier'] = 'contributor_uid';
+  $handler->display->display_options['filters']['is_uid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');

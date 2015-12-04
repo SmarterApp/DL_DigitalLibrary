@@ -775,7 +775,7 @@ function sbac_resource_preprocess_node(&$vars) {
 
     $contributor_name = sbac_central_get_user_first_last_name($vars['uid']);
     if ('published' == $vars['node']->workbench_moderation['current']->state) {
-      $vars['contributor'] = l($contributor_name, 'digital-library-resources', array('query' => array('contributor' => $vars['uid'])));
+      $vars['contributor'] = l($contributor_name, 'digital-library-resources', array('query' => array('contributor_uid' => $vars['uid'])));
     }
 
     if (isset($vars['field_focus'][0]['tid'])) {
@@ -787,11 +787,11 @@ function sbac_resource_preprocess_node(&$vars) {
     }
     if (isset($vars['field_author'][0]['safe_value'])) {
       $author_name = htmlspecialchars_decode($vars['field_author'][0]['safe_value']);
-      $vars['author'] = l($author_name, 'digital-library-resources', array('query' => array('author' => $author_name, 'owner' => $author_name)));
+      $vars['author'] = l($author_name, 'digital-library-resources', array('query' => array('author' => $author_name)));
     }
     if (isset($vars['field_publisher'][0]['safe_value'])) {
       $owner_name = htmlspecialchars_decode($vars['field_publisher'][0]['safe_value']);
-      $vars['owner'] = l($owner_name, 'digital-library-resources', array('query' => array('owner' => $owner_name, 'author' => $owner_name)));
+      $vars['owner'] = l($owner_name, 'digital-library-resources', array('query' => array('owner' => $owner_name)));
     }
     if (isset($vars['field_license'][0]['taxonomy_term']->name)) {
       $vars['license'] = $vars['field_license'][0]['taxonomy_term']->name;
