@@ -242,6 +242,10 @@ function sbac_search_apachesolr_index_document_build(ApacheSolrDocument $documen
         }
       }
     }
+    if($entity->uid){
+      $contributor_name = sbac_central_get_user_first_last_name($entity->uid);
+      $document->addField('ts_contributor_name', $contributor_name);
+    }
   }
 }
 /** 
@@ -250,11 +254,12 @@ function sbac_search_apachesolr_index_document_build(ApacheSolrDocument $documen
 function sbac_search_apachesolr_field_name_map_alter(&$map) {
   // Alter 'Author' name to reflect SBAC terminology
   $map['tos_name_formatted'] = t('Contributor (formatted)');
-  $map['tos_name'] = t('Contributor');
+  $map['tos_name'] = t('Contributor (username)');
   
   // Map custom fields
+  $map['ts_contributor_name'] = t('Contributor Name (user first/last)');
   $map['ts_field_author'] = t('Author (field_author)'); 
-  $map['ts_field_publisher'] = t('Owner (field_publisher'); 
+  $map['ts_field_publisher'] = t('Owner (field_publisher)'); 
   $map['tm_document_name'] = t('Document Name'); 
 }
 /**
