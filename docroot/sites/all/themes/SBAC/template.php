@@ -719,7 +719,13 @@ function sbac_preprocess_views_view_fields(&$variables) {
       $output .= 'Not Media Specific';
     }
     $output .= '</div>';
-
+    // Edit Link
+    if (user_access('edit any resource content')){
+      $output .= '<div class="resource-button search-item-break">';
+      $path = 'node/' . $node->nid . '/edit';
+      $output .= l('Edit', $path, array('attributes' => array('class' => 'medium button'), 'query' => array('destination' => 'digital-library-resources')));
+      $output .= '</div>';
+    }
     $output .= '<div class="paradata-numbers">';
 
     $output .= '<div class="stat-views">';
