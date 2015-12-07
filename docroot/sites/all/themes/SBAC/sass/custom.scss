@@ -4275,6 +4275,12 @@ form#sbac-user-filter-form #edit-email {
 	    margin-top:10px;
 	    margin-bottom:20px;
 	    color: #62676e;
+      &.resource-button{
+        text-align: right;
+        a {
+          margin-bottom: 0px;
+        }
+      }
 	  }
 	  -moz-border-radius: 6px;
 	  -webkit-border-radius: 6px;
