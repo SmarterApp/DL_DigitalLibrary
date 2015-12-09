@@ -23,13 +23,15 @@ function sbac_digital_library_resources_block_view($delta = '') {
 
   switch ($delta) {
     case 'posted_w_distinction':
-      if(arg(1) == 'distinguished'){
-        $block['content'] = l(t('Posted with Distinction Only'),'/digital-library-resources', array('attributes' => array('class' => array('distinguished'))));
+      if (arg(1) == 'distinguished') {
+        $block['content'] = '<input id="faux-click-sbac" type="checkbox" checked="checked">';
+        $block['content'] .= l(t('Posted with Distinction Only'), '/digital-library-resources', array('attributes' => array('class' => array('distinguished'))));
       }
-      else{
-        $block['content'] = l('Posted with Distinction Only','/digital-library-resources/distinguished', array('attributes' => array('class' => array('all-content'))));
+      else {
+        $block['content'] = '<input id="faux-click-sbac" type="checkbox">';
+        $block['content'] .= l('Posted with Distinction Only', '/digital-library-resources/distinguished', array('attributes' => array('class' => array('all-content'))));
       }
-      
+
       break;
   }
 

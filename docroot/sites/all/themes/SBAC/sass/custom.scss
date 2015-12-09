@@ -4179,6 +4179,9 @@ form#sbac-user-filter-form #edit-email {
 
 // Updated digital library page
 .page-digital-library-resources {
+  .main-container {
+    margin-top:0;
+  }
   #sbac-digital-library-resources-form {
     .form-item {
       margin:0;
@@ -4198,7 +4201,7 @@ form#sbac-user-filter-form #edit-email {
   #click-toggle{
     position: absolute;
     right: 25px;
-    top: -25px;
+    top: 20px;
     a#click-toggle-a {
       color: #fff;
       font-size: 16px;
@@ -4298,6 +4301,9 @@ form#sbac-user-filter-form #edit-email {
 	    font-size: 13px;
 	    line-height: 1.4;
 	    padding: 6px 0;
+	    &.posted-with-distinction {
+	      background: image-url('icons/icon-distinction.png') no-repeat top right;
+	    }
 	    h3 {
 	      margin: 0;
 	      padding: 0;
@@ -4641,9 +4647,11 @@ form#sbac-user-filter-form #edit-email {
 	width:100%;
 	margin-left:0;
 	font-size:14px;
+	padding-left:22px;
 	height:30px;
 	line-height: 30px;
 	border-radius:3px;
+	background:white image-url('icon-arrow-down.png') no-repeat 95% !important;
 	&.active, &:before{
 	  content: '';
 	  &:before {
@@ -4651,10 +4659,20 @@ form#sbac-user-filter-form #edit-email {
 	  }
 	} 
 	&.activated{
-	  background:white image-url('icon-close.png') no-repeat 95%;
+	  background:white image-url('icon-close.png') no-repeat 95% !important;
 	}
 	&.not-activated {
 	  background:white image-url('icon-arrow-down.png') no-repeat 95%;
+	}
+	&.selected {
+	  background:#507483 image-url('icon-arrow-down-white.png') no-repeat 95% !important;
+	  color:white;
+	  &:before {
+	    background:image-url('checkmark.png') no-repeat !important;	   
+	    top: 7px;
+	    padding:12px;
+	    background-size: 90% !important;
+	  }
 	}
       }
     } 
@@ -4670,12 +4688,56 @@ form#sbac-user-filter-form #edit-email {
     .collapsed {
       padding:0;
       margin:0;
+      overflow:hidden;
     }
     .inner-wrap {
       height:100%;
       input {
 	opacity:0;
       }
+    }
+  }
+}
+
+.section-digital-library-resources {
+  #views-exposed-form-digital-library-resources-page {
+    .views-widget-sort-by {
+      .form-item {
+	margin-top:0;
+	margin-bottom: 0;
+      }
+      label {
+	display:none;
+      }
+    }
+    select#edit-sort-by {
+      position:relative;
+      left:35px;
+      border-radius:7px;
+      height:44px;
+      background-position: right 10px top 18px;
+    }
+
+  }
+
+  .current-search-item-results {
+    float:left;
+    font-size:16px;
+    position:relative;
+    left:15px;
+    top:10px;
+    color: #FFF;
+    text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
+  }
+
+  .block-sbac-digital-library-resources-posted-w-distinction {
+    position: absolute;
+    left: 450px;
+    top: 25px;
+    a{
+      font-size:16px;
+      color: #FFF;
+      text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
     }
   }
 }

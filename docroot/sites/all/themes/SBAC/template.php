@@ -633,9 +633,16 @@ function sbac_preprocess_page(&$variables) {
  */
 function sbac_preprocess_views_view_fields(&$variables) {
   if ($variables['view']->name == 'digital_library_resources') {
+   
     $node = node_load($variables['fields']['entity_id']->raw);
+    if ($node->field_posting_options[LANGUAGE_NONE][0]['value'] == 1) {
+      $distinction = 'posted-with-distinction';
+    }
+    else {
+      $distinction = 'not-posted-with-distinction';
+    }
     $output = '';
-    $output .= '<div class="resource-top">';
+    $output .= '<div class="resource-top ' . $distinction  . '">';
     if (!empty($node->title)) {
       $output .= '<h3>';
       $output .= l($node->title, 'node/' . $node->nid);
@@ -730,7 +737,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
 
     $output .= '<div class="stat-views">';
     $output .= '<a href="#" data-tooltipp="Views">';
-    $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statviews.png" alt="Views">';
+    $output .= '<img src="/' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statviews.png" alt="Views">';
     $output .= '</a>';
     $output .= '<span>';
     if (!empty($node->field_total_views[LANGUAGE_NONE][0]['value'])) {
@@ -744,7 +751,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
 
     $output .= '<div class="stat-downloads">';
     $output .= '<a href="#" data-tooltipp="Downloads">';
-    $output .= '<img src="' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statdownloads.png" alt="Views">';
+    $output .= '<img src="/' . drupal_get_path('module', 'sbac_resource') . '/images/icons/icon-statdownloads.png" alt="Views">';
     $output .= '</a>';
     $output .= '<span>';
     if (!empty($node->field_asset_downloads[LANGUAGE_NONE][0]['value'])) {

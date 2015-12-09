@@ -40,6 +40,15 @@
   Drupal.behaviors.toggleGrid = {
     attach: function (context, settings) {
       $(document).ready(function() {
+	$('#faux-click-sbac').click(function(){
+	  if (window.location.href.indexOf('distinguished') > -1) {	    
+	    location.href = '/digital-library-resources';
+	  }
+	  else{
+	    location.href = '/digital-library-resources/distinguished';
+	  }
+	  
+	})
 	if (sessionStorage['gridview'] == 'list'){
 	  $('.view-digital-library-resources .views-row, #click-toggle-a').addClass('list');
 	}	
@@ -68,7 +77,7 @@
 	  }
 	})
 	
-	$('a.category-hide.filters-master').click(function() {
+	$('a.category-hide.filters-master').hover(function() {
 	  if ($('.filters .inner-wrap').hasClass('not-activated-filters')) {	    
 	    $('.filters .inner-wrap').removeClass('not-activated-filters');
 	    $('.filters .inner-wrap').addClass('activated-filters');
@@ -91,55 +100,34 @@
 	
 	
 	$('a.category-hide').each(function() {
-	  var key = $(this).parents().parents().attr('id');
-	  var state = sessionStorage.getItem(key);
-	  if (state == 'activated') {
-	    $(this).addClass('activated');
-	    $(this).removeClass('not-activated');
-	    $(this).parents().siblings('.item-list').css({
-	      'height': '300px',
-	    })
+	  var targetList = $(this).parents().siblings().children().children().children(':checkbox:checked').length;	  
+	  if (targetList > 0) {
+	    $(this).addClass('selected');
+	    
 	  }
 	  else {
-	    $(this).removeClass('activated');
-	    $(this).addClass('not-activated');
-	    $(this).parents().siblings('.item-list').css({
-	      'height': '0',
-	    })
+	    $(this).removeClass('selected');
 	  }
 	  
-	  $(this).click(function() {	    
-	    if ($(this).hasClass('activated')) {
-	      sessionStorage.setItem(key, 'not-activated');
-	      $(this).removeClass('activated');
-	      $(this).addClass('not-activated');
-	      $(this).parents().siblings('.item-list').animate({
-		'height': '0',
-	      })
+	  $(this).parents().parents().hover(function() {	    
+	    if ($(this).children().children().hasClass('activated')) {
+	      $(this).children().children().removeClass('activated');
+	      $(this).children().children().addClass('not-activated');	   
+		$(this).children().children().parents().siblings('.item-list').stop().animate({
+		  'height': '0',
+		}, 'fast');
+	      
 	    }
 	    else {
-	      $(this).addClass('activated');
-	      $(this).removeClass('not-activated');
-	      sessionStorage.setItem(key, 'activated');   
-	      $(this).parents().siblings('.item-list').animate({
-		'height': '300px',
-	      })
+	      $(this).children().children().addClass('activated');
+	      $(this).children().children().removeClass('not-activated');	     
+		$(this).children().children().parents().siblings('.item-list').stop().animate({
+		  'height': '300px',
+		}, 'fast');
 	    }
 	  })	  
 	})
-	  
-	  $('input.facetapi-checkbox').each(function() {	    
-	    if ($(this).is(':checked')) {
-	      $(this).siblings('.item-list').css({
-		'height': 'auto',
-	      })
-	    }
-	    else {
-	      $(this).siblings('.item-list').css({
-		'height': '0',
-	      })
-	    }
-	  });	
+	
       });
       
     }
