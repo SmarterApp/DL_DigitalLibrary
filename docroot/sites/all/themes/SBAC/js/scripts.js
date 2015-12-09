@@ -96,7 +96,7 @@
 	  }
 	})
 	
-	$('a.category-hide.filters-master').hover(function() {
+	$('a.category-hide.filters-master').click(function() {
 	  if ($('.filters .inner-wrap').hasClass('not-activated-filters')) {	    
 	    $('.filters .inner-wrap').removeClass('not-activated-filters');
 	    $('.filters .inner-wrap').addClass('activated-filters');
@@ -109,6 +109,8 @@
 	    $('.filters .inner-wrap').addClass('not-activated-filters');
 	    $('.filters .inner-wrap').animate({
 	      'height': '100%'
+	    }).css({
+	      'overflow': 'visible'
 	    });
 	  }	  
 	})

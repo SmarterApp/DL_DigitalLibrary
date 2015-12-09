@@ -4255,9 +4255,12 @@ form#sbac-user-filter-form #edit-email {
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
-    border-bottom: 1px solid rgba(0,0,0,0.7);
+   
     margin-bottom: 30px;
-    background-color: #3b9ebe;
+    
+    .view-header {
+      background-color: #3b9ebe;
+    }
     .view-content {
       margin:0;
       padding:0;
