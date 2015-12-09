@@ -40,21 +40,24 @@
   Drupal.behaviors.toggleGrid = {
     attach: function (context, settings) {
       $(document).ready(function() {
-	$('#edit-sbac-digital-library-resources-text').keypress(function() {
-	  if ($('#edit-sbac-digital-library-resources-text').val().length > 0) {
+	$('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear"></div>');
+	if ($('#edit-sbac-digital-library-resources-text').val().length) {	  
+	  $('#search-x-clear').text('x');
+	}
+	$('#search-x-clear').click(function(){
+	  location.href = window.location.pathname;
+	})
+	
+	$('#edit-sbac-digital-library-resources-text').on('keyup', function() {
+	  if ($('#edit-sbac-digital-library-resources-text').val().length) {
 	    
-	    $('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear">x</div>');
-	    $('#search-x-clear').click(function(){
-	      location.href = window.location.pathname;
-	    })
+	    $('#search-x-clear').text('x');
+
 	  }
-	  else{
-	    $('#search-x-clear').remove();
+	  else {
+	    $('#search-x-clear').empty();
 	  }
 	})
-
-	
-
 	
 	$('#faux-click-sbac').click(function(){
 	  if (window.location.href.indexOf('distinguished') > -1) {	    
