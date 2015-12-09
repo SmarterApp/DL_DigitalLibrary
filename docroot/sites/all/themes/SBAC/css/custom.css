@@ -35875,3 +35875,14 @@ ul {
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
+/* line 4743, ../sass/custom.scss */
+.section-digital-library-resources #search-x-clear {
+  position: absolute;
+  z-index: 99999;
+  color: red;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  right: 25px;
+  top: -3px;
+}

@@ -3,12 +3,6 @@
   /**
    * Attach infinite scroll to the relevant views.
    */
-  
-  // Make sure that autopager plugin is loaded.
-  if (!$.autopager) {
-    alert(Drupal.t('Autopager jQuery plugin is not loaded.'));
-    return;
-  }
 
   var settings = settings.views_infinite_scroll[0];
 

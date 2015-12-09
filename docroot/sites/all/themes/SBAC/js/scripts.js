@@ -40,6 +40,22 @@
   Drupal.behaviors.toggleGrid = {
     attach: function (context, settings) {
       $(document).ready(function() {
+	$('#edit-sbac-digital-library-resources-text').keypress(function() {
+	  if ($('#edit-sbac-digital-library-resources-text').val().length > 0) {
+	    
+	    $('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear">x</div>');
+	    $('#search-x-clear').click(function(){
+	      location.href = window.location.pathname;
+	    })
+	  }
+	  else{
+	    $('#search-x-clear').remove();
+	  }
+	})
+
+	
+
+	
 	$('#faux-click-sbac').click(function(){
 	  if (window.location.href.indexOf('distinguished') > -1) {	    
 	    location.href = '/digital-library-resources';
