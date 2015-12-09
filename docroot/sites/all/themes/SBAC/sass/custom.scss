@@ -4584,16 +4584,16 @@ form#sbac-user-filter-form #edit-email {
       }
     }
     .facet-block {
-      position:relative;
       li.minus-sign{
 	background:image-url('filter/icon-minus-sign.png') no-repeat 0 5px;
       }
       li.plus-sign{
 	background:image-url('filter/icon-plus-sign.png') no-repeat 0 7px;
       }
-      width:30%;
-      margin:10px 1.5%;
-      float:left;
+      position: relative;
+      width: 30.5%;
+      margin: 5px 1.2%;
+      float: left;
       ul {
 	overflow-y:auto;
 	height:100%;
@@ -4650,11 +4650,12 @@ form#sbac-user-filter-form #edit-email {
       }
       a.category-hide {
 	width:100%;
+	color:#0684ad;
 	margin-left:0;
-	font-size:14px;
+	font-size:12.5px;
 	padding-left:22px;
-	height:30px;
-	line-height: 30px;
+	height:28px;
+	line-height: 28px;
 	border-radius:3px;
 	background:white image-url('icon-arrow-down.png') no-repeat 95% !important;
 	&.active, &:before{

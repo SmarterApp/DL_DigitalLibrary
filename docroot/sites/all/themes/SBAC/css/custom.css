@@ -35703,8 +35703,9 @@ form#sbac-user-filter-form #edit-email {
 /* line 4586, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block {
   position: relative;
-  width: 30%;
-  margin: 10px 1.5%;
+  position: relative;
+  width: 30.5%;
+  margin: 5px 1.2%;
   float: left;
 }
 /* line 4588, ../sass/custom.scss */
@@ -35715,34 +35716,34 @@ form#sbac-user-filter-form #edit-email {
 .page-digital-library-resources .filters .facet-block li.plus-sign {
   background: url('../images/filter/icon-plus-sign.png?1446141811') no-repeat 0 7px;
 }
-/* line 4597, ../sass/custom.scss */
+/* line 4598, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul {
   overflow-y: auto;
   height: 100%;
   box-shadow: 2px 14px 29px -8px #9e999e;
 }
-/* line 4601, ../sass/custom.scss */
+/* line 4602, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li {
   background-image: none;
 }
-/* line 4603, ../sass/custom.scss */
+/* line 4604, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list {
   width: auto;
 }
-/* line 4605, ../sass/custom.scss */
+/* line 4606, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul {
   box-shadow: none;
 }
-/* line 4607, ../sass/custom.scss */
+/* line 4608, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li {
   background-image: none;
 }
-/* line 4610, ../sass/custom.scss */
+/* line 4611, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li .item-list width:auto
 ul {
   box-shadow: none;
 }
-/* line 4620, ../sass/custom.scss */
+/* line 4621, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list {
   background: white;
   position: absolute;
@@ -35750,24 +35751,24 @@ ul {
   z-index: 5;
   height: 0;
 }
-/* line 4627, ../sass/custom.scss */
+/* line 4628, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li {
   margin: 0 0 0 15px;
   padding-bottom: 10px;
   color: black;
 }
-/* line 4631, ../sass/custom.scss */
+/* line 4632, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a {
   color: black;
   font-weight: normal;
   padding-left: 25px;
   padding-bottom: 2px;
 }
-/* line 4636, ../sass/custom.scss */
+/* line 4637, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-inactive {
   background: url('../images/filter/icon-checkbox.png?1446141811') no-repeat 0 0;
 }
-/* line 4639, ../sass/custom.scss */
+/* line 4640, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
   color: black;
   font-weight: normal;
@@ -35776,81 +35777,82 @@ ul {
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
 }
-/* line 4651, ../sass/custom.scss */
+/* line 4652, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide {
   width: 100%;
+  color: #0684ad;
   margin-left: 0;
-  font-size: 14px;
+  font-size: 12.5px;
   padding-left: 22px;
-  height: 30px;
-  line-height: 30px;
+  height: 28px;
+  line-height: 28px;
   border-radius: 3px;
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95% !important;
 }
-/* line 4660, ../sass/custom.scss */
+/* line 4662, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active, .page-digital-library-resources .filters .facet-block a.category-hide:before {
   content: '';
 }
-/* line 4662, ../sass/custom.scss */
+/* line 4664, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active:before, .page-digital-library-resources .filters .facet-block a.category-hide:before:before {
   content: '';
 }
-/* line 4666, ../sass/custom.scss */
+/* line 4668, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
   background: white url('../images/icon-close.png?1446141811') no-repeat 95% !important;
 }
-/* line 4669, ../sass/custom.scss */
+/* line 4671, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95%;
 }
-/* line 4672, ../sass/custom.scss */
+/* line 4674, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected {
   background: #507483 url('../images/icon-arrow-down-white.png?1449675474') no-repeat 95% !important;
   color: white;
 }
-/* line 4675, ../sass/custom.scss */
+/* line 4677, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected:before {
   background: url('../images/checkmark.png?1446141811') no-repeat !important;
   top: 7px;
   padding: 12px;
   background-size: 90% !important;
 }
-/* line 4684, ../sass/custom.scss */
+/* line 4686, ../sass/custom.scss */
 .page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
   color: #0684ad;
   margin: 0;
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 4690, ../sass/custom.scss */
+/* line 4692, ../sass/custom.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 4693, ../sass/custom.scss */
+/* line 4695, ../sass/custom.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0;
   overflow: hidden;
 }
-/* line 4698, ../sass/custom.scss */
+/* line 4700, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
-/* line 4700, ../sass/custom.scss */
+/* line 4702, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap input {
   opacity: 0;
 }
 
-/* line 4710, ../sass/custom.scss */
+/* line 4712, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page .views-widget-sort-by .form-item {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 4714, ../sass/custom.scss */
+/* line 4716, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page .views-widget-sort-by label {
   display: none;
 }
-/* line 4718, ../sass/custom.scss */
+/* line 4720, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page select#edit-sort-by {
   position: relative;
   left: 35px;
@@ -35858,7 +35860,7 @@ ul {
   height: 44px;
   background-position: right 10px top 18px;
 }
-/* line 4728, ../sass/custom.scss */
+/* line 4730, ../sass/custom.scss */
 .section-digital-library-resources .current-search-item-results {
   float: left;
   font-size: 16px;
@@ -35868,19 +35870,19 @@ ul {
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
-/* line 4738, ../sass/custom.scss */
+/* line 4740, ../sass/custom.scss */
 .section-digital-library-resources .block-sbac-digital-library-resources-posted-w-distinction {
   position: absolute;
   left: 450px;
   top: 25px;
 }
-/* line 4742, ../sass/custom.scss */
+/* line 4744, ../sass/custom.scss */
 .section-digital-library-resources .block-sbac-digital-library-resources-posted-w-distinction a {
   font-size: 16px;
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
-/* line 4748, ../sass/custom.scss */
+/* line 4750, ../sass/custom.scss */
 .section-digital-library-resources #search-x-clear {
   position: absolute;
   z-index: 99999;
