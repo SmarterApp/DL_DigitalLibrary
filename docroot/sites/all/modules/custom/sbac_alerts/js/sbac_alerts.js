@@ -55,5 +55,4 @@
     }
     return aString;
   }
-  console.log(listCookies());
 })(jQuery);
