@@ -4278,12 +4278,12 @@ form#sbac-user-filter-form #edit-email {
 	    margin-top:10px;
 	    margin-bottom:20px;
 	    color: #62676e;
-      &.resource-button{
-        text-align: right;
-        a {
-          margin-bottom: 0px;
-        }
-      }
+	    &.resource-button{
+              text-align: right;
+              a {
+		margin-bottom: 0px;
+              }
+	    }
 	  }
 	  -moz-border-radius: 6px;
 	  -webkit-border-radius: 6px;
@@ -4295,12 +4295,17 @@ form#sbac-user-filter-form #edit-email {
 	  width:290px;
 	  margin-bottom: 2em;
 	  transition: background-color 0.3s ease;
+	  overflow:hidden;
+	  &:hover {
+	    background-color:white;
+	  }
 	  .resource-top {
 	    clear: both;
 	    padding-bottom: 10px;
 	    font-size: 13px;
 	    line-height: 1.4;
 	    padding: 6px 0;
+
 	    &.posted-with-distinction {
 	      background: image-url('icons/icon-distinction.png') no-repeat top right;
 	    }
