@@ -314,3 +314,15 @@ function sbac_core_uninstall(){
   variable_del('cmis_repositories');
   variable_del('taskit_visibility');
 }
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Deletes redundant content from terms.
+ */
+function sbac_core_update_7019() {
+  $name = 'NA';
+  db_delete('taxonomy_term_data')
+    ->condition('name', $name, '=')
+    ->execute();
+}
