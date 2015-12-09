@@ -241,6 +241,26 @@ function sbac_search_apachesolr_index_document_build(ApacheSolrDocument $documen
           $document->addField('tm_document_name', $value->filename);
         }
       }
+      // If View permissions is set to all states
+      if($entity->field_view_permissions['und']['0']['value'] == 0){
+        $document->addField('im_field_view_permissions', '0');       
+      }
+      // If view permissions is restricted to specific states
+      else {
+        if($entity->field_view_permissions_per_state){
+          $states = array();
+          foreach ($entity->field_view_permissions_per_state as $state_terms) {
+            foreach($state_terms as $state_term){
+              $document->addField('im_field_view_permissions', $state_term['tid']);
+            }
+          }
+        }
+        else{
+          // Give default value if set to restric by states, but no states
+          // are selected
+          $document->addField('im_field_view_permissions', '0');
+        }
+      }
     }
     if($entity->uid){
       $contributor_name = sbac_central_get_user_first_last_name($entity->uid);
@@ -260,6 +280,7 @@ function sbac_search_apachesolr_field_name_map_alter(&$map) {
   $map['ts_contributor_name'] = t('Contributor Name (user first/last)');
   $map['ts_field_author'] = t('Author (field_author)'); 
   $map['ts_field_publisher'] = t('Owner (field_publisher)'); 
+  $map['im_field_view_permissions'] = t('Resource View Permissions'); 
   $map['tm_document_name'] = t('Document Name'); 
 }
 /**

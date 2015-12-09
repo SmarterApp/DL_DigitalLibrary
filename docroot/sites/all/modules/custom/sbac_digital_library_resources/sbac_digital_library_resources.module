@@ -130,4 +130,23 @@ function sbac_digital_library_resources_apachesolr_query_alter(DrupalSolrQueryIn
     $subquery->addFilterSubQuery($subsubquery, 'OR');
   }
   $query->addFilterSubQuery($subquery);
+
+  // Filter by state visability based on current user's state if not admin
+  global $user;
+  $profile = user_load($user->uid);
+  $roles = $profile->roles;
+  if (!in_array('administrator', $roles) && !in_array('digital library administrator', $roles) && !in_array('DLRB member', $roles)) {
+    $states = $roles->field_state['und'];
+    $state_subquery = apachesolr_drupal_query('apachesolr');
+    foreach ($states as $state) {
+      $state_subquery = apachesolr_drupal_query('apachesolr');
+      $state_subquery->addFilter('im_field_view_permissions', $state['tid']);
+      $state_subquery->addFilterSubQuery($subsubquery, 'OR');
+    }
+    // Display All non-state specific
+    $state_subquery = apachesolr_drupal_query('apachesolr');
+    $state_subquery->addFilter('im_field_view_permissions', '0');
+    $state_subquery->addFilterSubQuery($subsubquery, 'OR');
+    $query->addFilterSubQuery($state_subquery);
+  }
 }
