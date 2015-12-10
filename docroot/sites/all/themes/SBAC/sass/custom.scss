@@ -4255,9 +4255,9 @@ form#sbac-user-filter-form #edit-email {
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
-   
-    margin-bottom: 30px;
     
+    margin-bottom: 30px;
+    &.view-display-id-attachment_1,
     .view-header {
       background-color: #3b9ebe;
     }
@@ -4668,7 +4668,7 @@ form#sbac-user-filter-form #edit-email {
 	  }
 	} 
 	&.activated{
-	  background:white image-url('icon-close.png') no-repeat 95% !important;
+	  background:white image-url('icon-arrow-right.png') no-repeat 95% !important;
 	}
 	&.not-activated {
 	  background:white image-url('icon-arrow-down.png') no-repeat 95%;
@@ -4676,6 +4676,9 @@ form#sbac-user-filter-form #edit-email {
 	&.selected {
 	  background:#507483 image-url('icon-arrow-down-white.png') no-repeat 95% !important;
 	  color:white;
+	  &:hover {
+	    background:#507483 image-url('icon-arrow-right-white.png') no-repeat 95% !important;
+	  }
 	  &:before {
 	    background:image-url('checkmark.png') no-repeat !important;	   
 	    top: 7px;
@@ -4684,7 +4687,7 @@ form#sbac-user-filter-form #edit-email {
 	  }
 	}
       }
-    } 
+    }  
     li a, li.collapsed a {
       color:#0684ad;
       margin: 0;

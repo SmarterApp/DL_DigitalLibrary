@@ -35347,7 +35347,8 @@ form#sbac-user-filter-form #edit-email {
   border-radius: 6px;
   margin-bottom: 30px;
 }
-/* line 4261, ../sass/custom.scss */
+/* line 4260, ../sass/custom.scss */
+.page-digital-library-resources .view.view-display-id-attachment_1,
 .page-digital-library-resources .view .view-header {
   background-color: #3b9ebe;
 }
@@ -35800,7 +35801,7 @@ ul {
 }
 /* line 4670, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
-  background: white url('../images/icon-close.png?1446141811') no-repeat 95% !important;
+  background: white url('../images/icon-arrow-right.png?1449675474') no-repeat 95% !important;
 }
 /* line 4673, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
@@ -35812,48 +35813,52 @@ ul {
   color: white;
 }
 /* line 4679, ../sass/custom.scss */
+.page-digital-library-resources .filters .facet-block a.category-hide.selected:hover {
+  background: #507483 url('../images/icon-arrow-right-white.png?1449768473') no-repeat 95% !important;
+}
+/* line 4682, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected:before {
   background: url('../images/checkmark.png?1446141811') no-repeat !important;
   top: 7px;
   padding: 12px;
   background-size: 90% !important;
 }
-/* line 4688, ../sass/custom.scss */
+/* line 4691, ../sass/custom.scss */
 .page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
   color: #0684ad;
   margin: 0;
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 4694, ../sass/custom.scss */
+/* line 4697, ../sass/custom.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 4697, ../sass/custom.scss */
+/* line 4700, ../sass/custom.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0;
   overflow: hidden;
 }
-/* line 4702, ../sass/custom.scss */
+/* line 4705, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
-/* line 4704, ../sass/custom.scss */
+/* line 4707, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap input {
   opacity: 0;
 }
 
-/* line 4714, ../sass/custom.scss */
+/* line 4717, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page .views-widget-sort-by .form-item {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 4718, ../sass/custom.scss */
+/* line 4721, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page .views-widget-sort-by label {
   display: none;
 }
-/* line 4722, ../sass/custom.scss */
+/* line 4725, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page select#edit-sort-by {
   position: relative;
   left: 35px;
@@ -35861,7 +35866,7 @@ ul {
   height: 44px;
   background-position: right 10px top 18px;
 }
-/* line 4732, ../sass/custom.scss */
+/* line 4735, ../sass/custom.scss */
 .section-digital-library-resources .current-search-item-results {
   float: left;
   font-size: 16px;
@@ -35871,19 +35876,19 @@ ul {
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
-/* line 4742, ../sass/custom.scss */
+/* line 4745, ../sass/custom.scss */
 .section-digital-library-resources .block-sbac-digital-library-resources-posted-w-distinction {
   position: absolute;
   left: 450px;
   top: 25px;
 }
-/* line 4746, ../sass/custom.scss */
+/* line 4749, ../sass/custom.scss */
 .section-digital-library-resources .block-sbac-digital-library-resources-posted-w-distinction a {
   font-size: 16px;
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
-/* line 4752, ../sass/custom.scss */
+/* line 4755, ../sass/custom.scss */
 .section-digital-library-resources #search-x-clear {
   position: absolute;
   z-index: 99999;
