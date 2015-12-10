@@ -1,6 +1,7 @@
 
 <?php
 drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
+drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 ?>
 <!-- Header and Nav -->
 <div class="page-wrap">
@@ -196,6 +197,11 @@ drupal_add_css(drupal_get_path('module', 'sbac_forum') . '/css/sbac_forum.css');
             
 <div class="row main-row">
   <div class="main-container clearfix">
+  <?php if($blocks['block_applied_filters']):?>
+    <div class="block block-sbac-resource contextual-links-region block-sbac-resource-sbac-resource-quick-search">
+      <?php print $blocks['block_applied_filters']; ?>
+    </div>
+  <?php endif; ?>
     <div id="main" class="<?php print $main_grid; ?> columns">
             <div id="click-toggle"><a id="click-toggle-a" class="click-toggle-items" href="#">List View</a></div>
       <?php if ($messages): print $messages; endif; ?>
