@@ -207,11 +207,6 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['exposed_block'] = TRUE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Header: Global: View area */
-  $handler->display->display_options['header']['view']['id'] = 'view';
-  $handler->display->display_options['header']['view']['table'] = 'views';
-  $handler->display->display_options['header']['view']['field'] = 'view';
-  $handler->display->display_options['header']['view']['view_to_insert'] = 'digital_library_resources:attachment_1';
   $handler->display->display_options['path'] = 'digital-library-resources';
 
   /* Display: Atch. Posted w/Distinction */
