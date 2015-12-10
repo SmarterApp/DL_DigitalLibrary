@@ -20,9 +20,9 @@ function sbac_digital_library_resources_current_search_default_items() {
       'results' => array(
         'id' => 'text',
         'label' => 'Results',
-        'text' => '[facetapi_results:result-count] Resource',
+        'text' => '[facetapi_results:result-count] Resource:',
         'plural' => 1,
-        'text_plural' => '[facetapi_results:result-count] Resources',
+        'text_plural' => '[facetapi_results:result-count] Resources:',
         'plural_condition' => 'facetapi_results:result-count',
         'wrapper' => 0,
         'element' => '0',
