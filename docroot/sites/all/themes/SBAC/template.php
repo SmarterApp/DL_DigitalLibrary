@@ -625,6 +625,7 @@ function sbac_preprocess_page(&$variables) {
     if($block_educational_use) {
       $variables['blocks']['educational_use'] = render($block_educational_use['content']);
     }
+    $variables['blocks']['block_applied_filters'] = sbac_digital_library_resources_applied_filters();
   }
 }
 
@@ -783,4 +784,29 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->wrapper_suffix = '</div>';
     $variables['fields']['entity_id']->content = $output;
   }
+}
+
+function sbac_digital_library_resources_applied_filters(){
+  $output = '';
+  $query = drupal_get_query_parameters();
+  if(array_key_exists('author', $query)){
+    $output.= 'Showing resources authored by: '
+      . '<span>' . $query['author'] . '</span>';
+    unset($query['author']);
+    $output .= l('x','digital-library-resources',array('query'=>array($query)));
+    dpm($query);
+  }
+  if(array_key_exists('owner', $query)){
+    $output.= 'Showing resources owned by: '
+      . '<span>' . $query['author'] . '</span>';
+    unset($query['owner']);
+    $output .= l('x','digital-library-resources',array('query'=>array($query)));
+  }
+  if(array_key_exists('contributor_uid', $query)){
+    $output.= 'Showing resources contributed by: '
+      . '<span>' . sbac_central_get_user_first_last_name($query['contributor_uid']) . '</span>';
+    unset($query['contributor_uid']);
+    $output .= l('x','digital-library-resources',array('query'=>array($query)));
+  }
+  return $output;
 }
