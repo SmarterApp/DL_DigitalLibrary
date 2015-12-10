@@ -112,6 +112,7 @@ DirectoryIndex index.php index.html index.htm
   RewriteCond %{HTTP_HOST} !staging.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !training.smarterbalancedlibrary.org$
   RewriteCond %{HTTP_HOST} !beta.smarterbalancedlibrary.org$
+  RewriteCond %{HTTP_HOST} !(.*).acquia-sites.com$
   RewriteCond %{HTTP_HOST} !amplify.localhost$
   RewriteCond %{HTTP_HOST} !sbac.localhost$ 
   RewriteCond %{HTTP_HOST} !^www\. [NC]
