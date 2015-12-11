@@ -789,19 +789,19 @@ function sbac_preprocess_views_view_fields(&$variables) {
 function sbac_digital_library_resources_applied_filters(){
   $output = '';
   $query = drupal_get_query_parameters();
-  if(array_key_exists('author', $query)){
+  if($query['author']){
     $output.= 'Showing resources authored by: '
       . '<span>' . $query['author'] . '</span>';
     unset($query['author']);
     $output .= l('x','digital-library-resources',array('query'=>array($query)));
   }
-  if(array_key_exists('owner', $query)){
+  if($query['author']){
     $output.= 'Showing resources owned by: '
       . '<span>' . $query['author'] . '</span>';
     unset($query['owner']);
     $output .= l('x','digital-library-resources',array('query'=>array($query)));
   }
-  if(array_key_exists('contributor_uid', $query)){
+  if($query['contributor_uid']){
     $output.= 'Showing resources contributed by: '
       . '<span>' . sbac_central_get_user_first_last_name($query['contributor_uid']) . '</span>';
     unset($query['contributor_uid']);
