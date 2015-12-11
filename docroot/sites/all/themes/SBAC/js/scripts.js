@@ -88,7 +88,8 @@
 	$('.collapsed, .expanded').each(function(){
 	  if($(this).children('.facetapi-checkbox').hasClass('facetapi-inactive')){
 	    $(this).removeClass('minus-sign');
-	    $(this).addClass('plus-sign');	    	    
+	    $(this).addClass('plus-sign');
+	    
 	  }
 	  else{
 	    $(this).removeClass('plus-sign');
@@ -115,6 +116,7 @@
 	  }	  
 	})
 
+	
 	$('#' + sessionStorage.getItem('lastClicked') + ' .facet-label a.category-hide').addClass('activated');
 	$('#' + sessionStorage.getItem('lastClicked') + ' .item-list').css({
 	  'height': '300px',
@@ -141,20 +143,20 @@
 	    $(this).removeClass('selected');
 	  }
 	  
-	  $(this).click(function() {	    
+	  $(this).click(function() {
+	    $('*').removeClass('activated');
+	    $('.item-list').addClass('not-activated').css({
+	      'height': '0',
+	    });
 	    if ($(this).hasClass('activated')) {
-	      $(this).removeClass('activated');
-	      $(this).addClass('not-activated');	   
-		$(this).parents().siblings('.item-list').css({
-		  'height': '0',
-		});
+	      $(this).removeClass('activated').addClass('not-activated');	   
+	      $(this).parents().siblings('.item-list').css({
+		'height': '0',
+	      });
 	      
 	    }
 	    else {
-	      $('a.facetapi-checkbox').removeClass('activated');
-	      $('.item-list').css({
-		'height': '0',
-	      });
+
 	      $(this).addClass('activated');
 	      $(this).removeClass('not-activated');
 	      
