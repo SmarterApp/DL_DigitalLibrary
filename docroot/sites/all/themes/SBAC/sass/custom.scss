@@ -4620,6 +4620,7 @@ form#sbac-user-filter-form #edit-email {
       float: left;
       ul {
 	overflow-y:auto;
+	overflow-x:hidden;
 	height:100%;
 	box-shadow: 2px 14px 29px -8px rgba(158,153,158,1);
 	li {
