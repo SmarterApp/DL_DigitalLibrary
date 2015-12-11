@@ -4591,6 +4591,8 @@ form#sbac-user-filter-form #edit-email {
 	&:before {
 	  content: '-';//'☒';
 	  z-index:10;
+	  left:-8px;
+	  padding:0 10px;
 	  font-size:18px;
 	  color: #0684ad;
 	  position:absolute;
@@ -4601,6 +4603,8 @@ form#sbac-user-filter-form #edit-email {
       li.plus-sign{
 
 	&:before {
+	  left:-8px;
+	  padding:0 10px;
 	  content: '+';//'☑';
 	  z-index:10;
 	  font-size:18px;
@@ -4647,8 +4651,7 @@ form#sbac-user-filter-form #edit-email {
 	ul{
 	  li{
 	    position:relative;
-	    margin:0 0 0 15px;
-	    padding-bottom:10px;
+	    margin:0 0 10px 15px;
 	    color:black;
 	    a {
 	      color:black;
@@ -4729,9 +4732,8 @@ form#sbac-user-filter-form #edit-email {
     }
   }
   .item-list-size {
-    height:auto;
-    position:relative;
-    clear:both;
+    height:auto !important;
+    position:relative !important;
   }
 }
 
