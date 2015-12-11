@@ -794,7 +794,6 @@ function sbac_digital_library_resources_applied_filters(){
       . '<span>' . $query['author'] . '</span>';
     unset($query['author']);
     $output .= l('x','digital-library-resources',array('query'=>array($query)));
-    dpm($query);
   }
   if(array_key_exists('owner', $query)){
     $output.= 'Showing resources owned by: '

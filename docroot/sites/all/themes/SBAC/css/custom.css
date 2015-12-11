@@ -35714,13 +35714,17 @@ form#sbac-user-filter-form #edit-email {
 .page-digital-library-resources .filters .facet-block li.minus-sign:before {
   content: '-';
   z-index: 10;
+  left: -8px;
+  padding: 0 10px;
   font-size: 18px;
   color: #0684ad;
   position: absolute;
   cursor: pointer;
 }
-/* line 4603, ../sass/custom.scss */
+/* line 4605, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block li.plus-sign:before {
+  left: -8px;
+  padding: 0 10px;
   content: '+';
   z-index: 10;
   font-size: 18px;
@@ -35728,34 +35732,34 @@ form#sbac-user-filter-form #edit-email {
   position: absolute;
   cursor: pointer;
 }
-/* line 4617, ../sass/custom.scss */
+/* line 4621, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul {
   overflow-y: auto;
   height: 100%;
   box-shadow: 2px 14px 29px -8px #9e999e;
 }
-/* line 4621, ../sass/custom.scss */
+/* line 4625, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li {
   background-image: none;
 }
-/* line 4623, ../sass/custom.scss */
+/* line 4627, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list {
   width: auto;
 }
-/* line 4625, ../sass/custom.scss */
+/* line 4629, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul {
   box-shadow: none;
 }
-/* line 4627, ../sass/custom.scss */
+/* line 4631, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li {
   background-image: none;
 }
-/* line 4630, ../sass/custom.scss */
+/* line 4634, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li .item-list width:auto
 ul {
   box-shadow: none;
 }
-/* line 4640, ../sass/custom.scss */
+/* line 4644, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list {
   background: white;
   position: absolute;
@@ -35764,25 +35768,24 @@ ul {
   height: 0;
   overflow-x: hidden;
 }
-/* line 4648, ../sass/custom.scss */
+/* line 4652, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li {
   position: relative;
-  margin: 0 0 0 15px;
-  padding-bottom: 10px;
+  margin: 0 0 10px 15px;
   color: black;
 }
-/* line 4653, ../sass/custom.scss */
+/* line 4656, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a {
   color: black;
   font-weight: normal;
   padding-left: 25px;
   padding-bottom: 2px;
 }
-/* line 4658, ../sass/custom.scss */
+/* line 4661, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-inactive {
   background: url('../images/filter/icon-checkbox.png?1446141811') no-repeat 0 0;
 }
-/* line 4661, ../sass/custom.scss */
+/* line 4664, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
   color: black;
   font-weight: normal;
@@ -35791,7 +35794,7 @@ ul {
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
 }
-/* line 4673, ../sass/custom.scss */
+/* line 4676, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide {
   width: 100%;
   color: #0684ad;
@@ -35803,80 +35806,79 @@ ul {
   border-radius: 3px;
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95% !important;
 }
-/* line 4683, ../sass/custom.scss */
+/* line 4686, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active, .page-digital-library-resources .filters .facet-block a.category-hide:before {
   content: '';
 }
-/* line 4685, ../sass/custom.scss */
+/* line 4688, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active:before, .page-digital-library-resources .filters .facet-block a.category-hide:before:before {
   content: '';
 }
-/* line 4689, ../sass/custom.scss */
+/* line 4692, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
   background: white url('../images/icon-close.png?1446141811') no-repeat 95% !important;
 }
-/* line 4692, ../sass/custom.scss */
+/* line 4695, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95%;
 }
-/* line 4695, ../sass/custom.scss */
+/* line 4698, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected {
   background: #507483 url('../images/icon-arrow-down-white.png?1449771652') no-repeat 95% !important;
   color: white;
 }
-/* line 4698, ../sass/custom.scss */
+/* line 4701, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected.activated {
   background: #507483 url('../images/icon-close-white.png?1449771652') no-repeat 95% !important;
 }
-/* line 4701, ../sass/custom.scss */
+/* line 4704, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected:before {
   background: url('../images/checkmark.png?1446141811') no-repeat !important;
   top: 7px;
   padding: 12px;
   background-size: 90% !important;
 }
-/* line 4710, ../sass/custom.scss */
+/* line 4713, ../sass/custom.scss */
 .page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
   color: #0684ad;
   margin: 0;
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 4716, ../sass/custom.scss */
+/* line 4719, ../sass/custom.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 4719, ../sass/custom.scss */
+/* line 4722, ../sass/custom.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0;
   overflow: hidden;
 }
-/* line 4724, ../sass/custom.scss */
+/* line 4727, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
-/* line 4726, ../sass/custom.scss */
+/* line 4729, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap input {
   opacity: 0;
 }
-/* line 4731, ../sass/custom.scss */
+/* line 4734, ../sass/custom.scss */
 .page-digital-library-resources .item-list-size {
-  height: auto;
-  position: relative;
-  clear: both;
+  height: auto !important;
+  position: relative !important;
 }
 
-/* line 4741, ../sass/custom.scss */
+/* line 4743, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page .views-widget-sort-by .form-item {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 4745, ../sass/custom.scss */
+/* line 4747, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page .views-widget-sort-by label {
   display: none;
 }
-/* line 4749, ../sass/custom.scss */
+/* line 4751, ../sass/custom.scss */
 .section-digital-library-resources #views-exposed-form-digital-library-resources-page select#edit-sort-by {
   position: relative;
   left: 35px;
@@ -35884,7 +35886,7 @@ ul {
   height: 44px;
   background-position: right 10px top 18px;
 }
-/* line 4759, ../sass/custom.scss */
+/* line 4761, ../sass/custom.scss */
 .section-digital-library-resources .current-search-item-results {
   float: left;
   font-size: 16px;
@@ -35894,19 +35896,19 @@ ul {
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
-/* line 4769, ../sass/custom.scss */
+/* line 4771, ../sass/custom.scss */
 .section-digital-library-resources .block-sbac-digital-library-resources-posted-w-distinction {
   position: absolute;
   left: 450px;
   top: 25px;
 }
-/* line 4773, ../sass/custom.scss */
+/* line 4775, ../sass/custom.scss */
 .section-digital-library-resources .block-sbac-digital-library-resources-posted-w-distinction a {
   font-size: 16px;
   color: #FFF;
   text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
-/* line 4779, ../sass/custom.scss */
+/* line 4781, ../sass/custom.scss */
 .section-digital-library-resources #search-x-clear {
   position: absolute;
   z-index: 99999;

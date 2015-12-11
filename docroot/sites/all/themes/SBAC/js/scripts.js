@@ -100,7 +100,8 @@
 	})
 
 	  $('.expanded').each(function(){
-
+	    $(this).addClass('plus-sign');
+	    $(this).removeClass('minus-sign');
 	    $(this).click(function(){
 	      $(this).children('.item-list').toggleClass('item-list-size');
 
