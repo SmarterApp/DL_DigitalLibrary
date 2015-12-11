@@ -4588,10 +4588,27 @@ form#sbac-user-filter-form #edit-email {
     }
     .facet-block {
       li.minus-sign{
-	background:image-url('filter/icon-minus-sign.png') no-repeat 0 5px;
+	&:before {
+	  content: '-';//'☒';
+	  z-index:10;
+	  font-size:18px;
+	  color: #0684ad;
+	  position:absolute;
+	  cursor:pointer
+//	  background:image-url('filter/icon-minus-sign.png') no-repeat 0 0;
+	}
       }
       li.plus-sign{
-	background:image-url('filter/icon-plus-sign.png') no-repeat 0 7px;
+
+	&:before {
+	  content: '+';//'☑';
+	  z-index:10;
+	  font-size:18px;
+	  color: #0684ad;
+	  position:absolute;
+	  cursor:pointer;
+	  // background:image-url('filter/icon-plus-sign.png') no-repeat 0 0;
+	}
       }
       position: relative;
       width: 30.5%;
@@ -4626,8 +4643,10 @@ form#sbac-user-filter-form #edit-email {
 	width:100%;
 	z-index:5;
 	height:0;
+	overflow-x:hidden;
 	ul{
 	  li{
+	    position:relative;
 	    margin:0 0 0 15px;
 	    padding-bottom:10px;
 	    color:black;
@@ -4708,6 +4727,11 @@ form#sbac-user-filter-form #edit-email {
 	opacity:0;
       }
     }
+  }
+  .item-list-size {
+    height:auto;
+    position:relative;
+    clear:both;
   }
 }
 
