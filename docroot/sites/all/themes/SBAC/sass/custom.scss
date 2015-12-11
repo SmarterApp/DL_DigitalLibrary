@@ -4668,7 +4668,7 @@ form#sbac-user-filter-form #edit-email {
 	  }
 	} 
 	&.activated{
-	  background:white image-url('icon-arrow-right.png') no-repeat 95% !important;
+	  background:white image-url('icon-close.png') no-repeat 95% !important;
 	}
 	&.not-activated {
 	  background:white image-url('icon-arrow-down.png') no-repeat 95%;
@@ -4676,8 +4676,8 @@ form#sbac-user-filter-form #edit-email {
 	&.selected {
 	  background:#507483 image-url('icon-arrow-down-white.png') no-repeat 95% !important;
 	  color:white;
-	  &:hover {
-	    background:#507483 image-url('icon-arrow-right-white.png') no-repeat 95% !important;
+	  &.activated {
+	    background:#507483 image-url('icon-close-white.png') no-repeat 95% !important;
 	  }
 	  &:before {
 	    background:image-url('checkmark.png') no-repeat !important;	   
