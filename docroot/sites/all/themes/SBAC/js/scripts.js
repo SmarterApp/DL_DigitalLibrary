@@ -151,11 +151,16 @@
 	      
 	    }
 	    else {
+	      $('a.facetapi-checkbox').removeClass('activated');
+	      $('.item-list').css({
+		'height': '0',
+	      });
 	      $(this).addClass('activated');
-	      $(this).removeClass('not-activated');	     
-		$(this).parents().siblings('.item-list').css({
-		  'height': '300px',
-		});
+	      $(this).removeClass('not-activated');
+	      
+	      $(this).parents().siblings('.item-list').css({
+		'height': '300px',
+	      });
 	    }
 	  })	  
 	})
