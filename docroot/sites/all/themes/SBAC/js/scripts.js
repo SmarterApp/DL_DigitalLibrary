@@ -187,7 +187,8 @@
 		  $(this).addClass('activated');
 		  $(this).removeClass('not-activated');		  
 		  $(this).parents().siblings('.item-list').css({
-		    'height': '300px',
+		    'height': 'auto',
+		    'max-height': '300px'
 		  });
 		}
 	      });
