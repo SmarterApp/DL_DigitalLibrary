@@ -144,7 +144,7 @@
 	  }
 	  
 	  $(this).click(function() {
-	    $('*').removeClass('activated');
+	    $('*').not(this).removeClass('activated');
 	    $('.item-list').addClass('not-activated').css({
 	      'height': '0',
 	    });
