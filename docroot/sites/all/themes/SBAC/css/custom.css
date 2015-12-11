@@ -35665,7 +35665,7 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4549, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap.activated-filters a.category-hide {
-  background: url('../images/icon-arrow-right.png?1449675474') no-repeat 1%;
+  background: url('../images/icon-arrow-right.png?1449771652') no-repeat 1%;
 }
 /* line 4554, ../sass/custom.scss */
 .page-digital-library-resources .filters .inner-wrap.not-activated-filters a.category-hide {
@@ -35801,7 +35801,7 @@ ul {
 }
 /* line 4670, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
-  background: white url('../images/icon-arrow-right.png?1449675474') no-repeat 95% !important;
+  background: white url('../images/icon-arrow-right.png?1449771652') no-repeat 95% !important;
 }
 /* line 4673, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
@@ -35809,12 +35809,12 @@ ul {
 }
 /* line 4676, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected {
-  background: #507483 url('../images/icon-arrow-down-white.png?1449675474') no-repeat 95% !important;
+  background: #507483 url('../images/icon-arrow-down-white.png?1449771652') no-repeat 95% !important;
   color: white;
 }
 /* line 4679, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected:hover {
-  background: #507483 url('../images/icon-arrow-right-white.png?1449768473') no-repeat 95% !important;
+  background: #507483 url('../images/icon-arrow-right-white.png?1449857367') no-repeat 95% !important;
 }
 /* line 4682, ../sass/custom.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected:before {
