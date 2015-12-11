@@ -115,11 +115,22 @@
 	  }	  
 	})
 
+	$('#' + sessionStorage.getItem('lastClicked') + ' .facet-label a.category-hide').addClass('activated');
+	$('#' + sessionStorage.getItem('lastClicked') + ' .item-list').css({
+	  'height': '300px',
+	});
+	
 	$('a.facetapi-checkbox').each(function(){
 	  $(this).text().replace('/(-)/', '');
 	})
 	
-	
+	  $('.facetapi-checkbox').each(function(){
+	    $(this).click(function(){
+	      var theId = $(this).closest('.facet-block').attr('id');
+	      sessionStorage.setItem('lastClicked', theId)
+	    })
+	  })	
+	    
 	$('a.category-hide').each(function() {
 	  var targetList = $(this).parents().siblings().children().children().children(':checkbox:checked').length;	  
 	  if (targetList > 0) {
