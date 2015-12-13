@@ -7,6 +7,51 @@
    */
   Drupal.behaviors.sbac_search_categories = {
     attach: function (context, settings) {
+      $('.sbac-hover').hover(
+        function() {
+          $(this).next('ul').addClass('open');
+        },
+        function() {
+          $(this).next('ul').removeClass('open');
+        }
+      );
+
+      $('#edit-dl-sort-order').once('searchfilterbutton', function(){
+        $(this).click ( function () {
+          window.location.hash = '';
+        });
+      });
+
+      $(document).click(function () {
+        if (!$(this).hasClass('selectedDiv')) {
+          var selectedDiv = $('.selectedDiv');
+          var vid = selectedDiv.attr('vid');
+          $('.expanded').removeClass('expanded').addClass('collapsed');
+          selectedDiv.hide();
+          selectedDiv.removeClass('selectedDiv');
+        }
+      });
+
+      if ($('#sbac-search-current-filters').val() != '') {
+        $('#edit-reset-filters').removeClass('js-hide');
+      }
+      else {
+        $('.category-hide').removeClass('js-hide');
+        $('.category-hide').show();
+      }
+
+      // Close the individual filter list.
+      $('.category-filter-header').once('cmod-catfilterheader', function() {
+        $('.category-filter-header').click( function () {
+          var vid = $(this).attr('vid');
+          $('.category-filter-list').hide();
+          $('.category-filter-list').removeClass('selectedDiv');
+          $('#filter-header-' + vid).removeClass('expanded');
+          $('#filter-header-' + vid).addClass('collapsed');
+          return false;
+        });
+      });
+
       // Open / Close the individual filter lists.
       $('.sbac-search-filter-name').once('cmod-searchfiltername', function() {
         $('.sbac-search-filter-name').click( function (e) {
@@ -26,6 +71,50 @@
           return false;
         });
       });
+
+      // Open / Close the filter list.
+      $('#sbac-search-cat-button').once('cmod-searchcatbutton', function() {
+        $('#sbac-search-cat-button').click( function () {
+          // allow open/close category if not on no results page
+          close_categories_list();
+          $('.filters.sbac-filter-cat-area').show();
+          $('.selectedDiv').hide();
+          return false;
+        });
+      });
+
+      // Close the filter list.
+      $('#sbac-search-close-button').once('cmod-searchclosebutton', function() {
+        $('#sbac-search-close-button').click( function () {
+          close_categories_list();
+          $('.selectedDiv').hide();
+          return false;
+        });
+      });
+
+      // Close the filter list.
+      $('.category-hide').once('cmod-cathide', function () {
+        $('.category-hide').click(function () {
+          $('.expanded').removeClass('expanded').addClass('collapsed');
+          $(this).toggleClass('active');
+          close_categories_list();
+          $('.selectedDiv').hide();
+          return false;
+        });
+      });
+
+      // Open / Close the filter list.
+      close_categories_list = function () {
+        var slideableItems = $('.slideable');
+        if (slideableItems.is(':visible')) {
+          slideableItems.slideUp('slow');
+          $('.sbac-filter-cat-area').removeClass("active");
+        }
+        else{
+          slideableItems.slideDown('fast');
+          $('.sbac-filter-cat-area').addClass("active");
+        }
+      }
     }
   };
 })(jQuery);
@@ -41,6 +130,15 @@
       var $clear_all_div = $('<div id="clear-all"><span>Applied Filters</span></div>');
       var $clear_all_link = $('<a href="sbac-search/clear-all?location=digital-library-resources">Clear All</a>');
       $clear_all_div.append($clear_all_link);
+      current_filter_clicked = function () {
+        var tid = $(this).attr('tid');
+        var vid = $(this).attr('vid');
+        $.jstree.reference('filter-' + vid).deselect_node(vid + ':' + tid);
+        build_current_filters();
+        $('#sbac-search-filter-button').removeClass('js-hide');
+        $('#clear-all > span').html('Your selections');
+      };
+
       // build the current filter list
       build_current_filters = function () {
         var $filter_item = $('<div class="filter-type-item"></div>');
