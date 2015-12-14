@@ -4344,6 +4344,9 @@ form#sbac-user-filter-form #edit-email {
 	      outline: 1px #cecece solid;
 	      margin: 10px 0;
 	      display:block;
+        &:hover{
+          outline: 3px #0583AC solid;
+        }
 	    }
 	  }
 	  .resource-bottom {
