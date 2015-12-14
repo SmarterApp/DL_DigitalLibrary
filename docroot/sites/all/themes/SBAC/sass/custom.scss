@@ -4301,6 +4301,11 @@ form#sbac-user-filter-form #edit-email {
 	  overflow:hidden;
 	  &:hover {
 	    background-color:white;
+      a{
+        img{
+          outline: 3px #0583AC solid;
+        }
+      }
 	  }
 	  .resource-top {
 	    clear: both;
@@ -4324,15 +4329,15 @@ form#sbac-user-filter-form #edit-email {
 	      height: 60px;
 	      vertical-align: middle;
 	      a {
-		color: #101010;
-		font-size: 14px;
-		font-weight: bold;
-		padding-right: 5px;
-		display: block;
-		&:hover {
-		  text-decoration: underline;
-		  color: #3b9ebe;
-		}
+          color: #101010;
+          font-size: 14px;
+          font-weight: bold;
+          padding-right: 5px;
+          display: block;
+          &:hover {
+            text-decoration: underline;
+            color: #3b9ebe;
+          }
 	      }
 	    }
 	    padding: 10px 15px;
@@ -4344,9 +4349,6 @@ form#sbac-user-filter-form #edit-email {
 	      outline: 1px #cecece solid;
 	      margin: 10px 0;
 	      display:block;
-        &:hover{
-          outline: 3px #0583AC solid;
-        }
 	    }
 	  }
 	  .resource-bottom {
