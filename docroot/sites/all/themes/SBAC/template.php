@@ -728,12 +728,17 @@ function sbac_preprocess_views_view_fields(&$variables) {
     }
     $output .= '</div>';
     // Edit Link
-    if (user_access('edit any resource content')){
+    // Needing to add specific roles, as role permissions don't match permission
+    // resource behavior. Permissions need to be fixed to use user_access()
+  global $user;
+  if (in_array('administrator', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('DLRB member', $user->roles)) {
       $output .= '<div class="resource-button search-item-break">';
       $path = 'node/' . $node->nid . '/edit';
       $output .= l('Edit', $path, array('attributes' => array('class' => 'medium button'), 'query' => array('destination' => 'digital-library-resources')));
       $output .= '</div>';
     }
+    $account = $GLOBALS['user'];
+
     $output .= '<div class="paradata-numbers">';
 
     $output .= '<div class="stat-views">';
