@@ -20,13 +20,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '-1',
+    'hard_limit' => '30',
     'dependencies' => array(
       'roles' => array(),
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -45,13 +45,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -70,13 +70,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -95,11 +95,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -118,13 +120,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -143,11 +145,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -172,7 +176,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -191,13 +195,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -216,11 +220,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -239,11 +245,13 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '50',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
@@ -268,7 +276,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => 0,
     'flatten' => '0',
     'individual_parent' => '0',
