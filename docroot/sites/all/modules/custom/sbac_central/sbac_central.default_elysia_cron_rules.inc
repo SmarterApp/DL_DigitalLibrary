@@ -25,7 +25,7 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule->api_version = 1;
   $cron_rule->name = 'apachesolr_cron';
   $cron_rule->disable = NULL;
-  $cron_rule->rule = '6 4 * * *';
+  $cron_rule->rule = '*/1 * * * *';
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['apachesolr_cron'] = $cron_rule;
@@ -79,16 +79,6 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['node_cron'] = $cron_rule;
-
-  $cron_rule = new stdClass;
-  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
-  $cron_rule->api_version = 1;
-  $cron_rule->name = 'rate_cron';
-  $cron_rule->disable = NULL;
-  $cron_rule->rule = '11 * * * *';
-  $cron_rule->weight = NULL;
-  $cron_rule->context = NULL;
-  $cron_rules['rate_cron'] = $cron_rule;
 
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
@@ -149,16 +139,6 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['sbac_share_cron'] = $cron_rule;
-
-  $cron_rule = new stdClass;
-  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
-  $cron_rule->api_version = 1;
-  $cron_rule->name = 'sbac_sso_cron';
-  $cron_rule->disable = NULL;
-  $cron_rule->rule = '0 */3 * * *';
-  $cron_rule->weight = NULL;
-  $cron_rule->context = NULL;
-  $cron_rules['sbac_sso_cron'] = $cron_rule;
 
   $cron_rule = new stdClass;
   $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
@@ -229,6 +209,26 @@ function sbac_central_default_elysia_cron_rules() {
   $cron_rule->weight = NULL;
   $cron_rule->context = NULL;
   $cron_rules['votingapi_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'rate_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = '11 * * * *';
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['rate_cron'] = $cron_rule;
+
+  $cron_rule = new stdClass;
+  $cron_rule->disabled = FALSE; /* Edit this to true to make a default cron_rule disabled initially */
+  $cron_rule->api_version = 1;
+  $cron_rule->name = 'sbac_sso_cron';
+  $cron_rule->disable = NULL;
+  $cron_rule->rule = '0 */3 * * *';
+  $cron_rule->weight = NULL;
+  $cron_rule->context = NULL;
+  $cron_rules['sbac_sso_cron'] = $cron_rule;
 
   return $cron_rules;
 
