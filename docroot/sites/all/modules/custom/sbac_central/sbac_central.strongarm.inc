@@ -77,7 +77,7 @@ function sbac_central_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'file_temporary_path';
-  $strongarm->value = '/tmp';
+  $strongarm->value = '/mnt/tmp/sbac';
   $export['file_temporary_path'] = $strongarm;
 
   $strongarm = new stdClass();
