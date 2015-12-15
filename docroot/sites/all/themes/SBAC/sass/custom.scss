@@ -4301,9 +4301,11 @@ form#sbac-user-filter-form #edit-email {
 	  overflow:hidden;
 	  &:hover {
 	    background-color:white;
-      a{
-        img{
-          outline: 3px #0583AC solid;
+      .resource-top {
+        a{
+          img{
+            outline: 3px #0583AC solid;
+          }
         }
       }
 	  }
