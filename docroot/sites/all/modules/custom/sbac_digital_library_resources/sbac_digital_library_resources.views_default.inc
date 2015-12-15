@@ -49,6 +49,7 @@ function sbac_digital_library_resources_views_default_views() {
   $handler->display->display_options['sorts']['ds_created']['id'] = 'ds_created';
   $handler->display->display_options['sorts']['ds_created']['table'] = 'apachesolr__acquia_search_server_1';
   $handler->display->display_options['sorts']['ds_created']['field'] = 'ds_created';
+  $handler->display->display_options['sorts']['ds_created']['order'] = 'DESC';
   $handler->display->display_options['sorts']['ds_created']['exposed'] = TRUE;
   $handler->display->display_options['sorts']['ds_created']['expose']['label'] = 'Newest';
   /* Sort criterion: Apache Solr: is_field_total_views */
