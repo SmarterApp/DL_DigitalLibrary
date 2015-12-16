@@ -118,14 +118,18 @@
 	  })	
 
 	    // When user clicks outside of facets, close facet blocks.
-	    $('#main, .top-bar').click(function(){
-	      $('*').removeClass('activated');
+	    $('.filters, .top-bar, .page-wrap').click(function(){
+        if(event.target === this){
+          console.log('clicked');
+          $('*').removeClass('activated');
 	      
-	      $('.item-list').css({
-		'height': '0',
+          $('.item-list').css({
+          'height': '0',
 	      });
-	    })
-	
+        }
+      });
+  
+  
 	$('a.category-hide').each(function() {
 	  
 	  // Tracks active filter selections, changes styles accordingly.
