@@ -652,7 +652,9 @@ function sbac_preprocess_views_view_fields(&$variables) {
 
     if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE][0]['safe_value'])) {
       $image = explode("::", $node->field_thumbnail_uri[LANGUAGE_NONE][0]['safe_value']);
+      if(!in_array('no_img', $image)){
       $output .= l('<img src="' . file_create_url($image[0]) . '" />', 'node/' . $node->nid, array('html' => TRUE));
+      }
     }
 
     if (!empty($node->field_alt_body[LANGUAGE_NONE][0]['safe_value'])) {
