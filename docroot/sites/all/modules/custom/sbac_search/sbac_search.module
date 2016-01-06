@@ -892,19 +892,22 @@ function taxonomy_nested_tree_render($tree, $facet = FALSE, $recurring = FALSE) 
 function sbac_search_digital_library_categories() {
   $categories = array();
   drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
+
   libraries_load('jstree');
 
-  _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
-  _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
-  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
-  _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
-  _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
-  _sbac_search_create_taxonomy_filter($categories, 'intended_end_user', 'Intended End Users');
-  _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
-  _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
-  _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
-  _sbac_search_create_taxonomy_filter($categories, 'geographical_settings', 'Geographic Settings');
+  if (arg(0) !== 'digital-library-resources') {
+    drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
+    _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
+    _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
+    _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
+    _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
+    _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
+    _sbac_search_create_taxonomy_filter($categories, 'intended_end_user', 'Intended End Users');
+    _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
+    _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
+    _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
+    _sbac_search_create_taxonomy_filter($categories, 'geographical_settings', 'Geographic Settings');
+  }
 
   $attrs = array(
     'attributes' => array(

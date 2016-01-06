@@ -24,6 +24,27 @@
   Drupal.behaviors.toggleGrid = {
     attach: function (context, settings) {
       $(document).ready(function() {
+
+	// Switcharoo between Facets CCSS and custom CCSS filter.
+	url = window.location.href;
+	var s = url.split('f[').pop().charAt(0);
+
+	
+	urlLibArg = 'digital-library-resources';
+	console.log(url.indexOf(urlLibArg));
+	
+	if (url.indexOf(urlLibArg) == -1){
+	  sessionStorage.removeItem('lastClicked');
+	  sessionStorage.removeItem('ccssSet');
+	}
+	
+	if (sessionStorage.getItem("ccssSet")) {
+	  $('.facet-blocks .categories-container').hide();
+	}
+	else {
+	  $('#facet-common-core-state-standards').hide();
+	}
+	
 	// Controls the search box and plugs in a clear all x.
 	$('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear"></div>');
 	if ($('#edit-sbac-digital-library-resources-text').val().length) {	  
@@ -98,10 +119,10 @@
 	      }
 	      event.stopPropagation();
 	    })
-	  })	  
+	  })
 
-	    // Tracks the last active facet block to display open on page load.
-	    $('#' + sessionStorage.getItem('lastClicked') + ' .facet-label a.category-hide').addClass('activated');
+	// Tracks the last active facet block to display open on page load.	      
+	$('#' + sessionStorage.getItem('lastClicked') + ' .facet-label a.category-hide').addClass('activated');
 	$('#' + sessionStorage.getItem('lastClicked') + ' .item-list').css({
 	  'height': '300px',
 	});

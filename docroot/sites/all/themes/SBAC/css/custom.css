@@ -29898,7 +29898,7 @@ body.page-sbac #lp-notifications-wrapper {
 }
 /* line 503, ../sass/components/_landing-page.scss */
 body.page-sbac #lp-notifications-wrapper #close-notifications {
-  background: url('../images/icons/icon-close.png?1442861655') no-repeat top center;
+  background: url('../images/icons/icon-close.png?1446141811') no-repeat top center;
   position: absolute;
   right: 10px;
   padding: 15px 20px;
@@ -30757,40 +30757,75 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
 }
 
 /* line 3, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container {
+  position: relative;
+  width: 30.5%;
+  margin: 5px 1.2%;
+  float: left;
+}
+/* line 8, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter {
+  padding-bottom: 0;
+}
+/* line 10, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 {
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+}
+/* line 15, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul {
+  font-size: inherit;
+}
+/* line 17, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li {
+  height: 28px;
+  background: #FFF url("../images/icon-arrow-down.png") no-repeat 95% center;
+}
+/* line 20, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li a {
+  font-size: 12.5px;
+}
+/* line 22, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li a:hover {
+  text-decoration: none;
+}
+/* line 31, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .main-container {
   margin-top: 0;
 }
-/* line 7, ../sass/components/_page-digital-library-resources.scss */
+/* line 35, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #sbac-digital-library-resources-form .form-item {
   margin: 0;
 }
-/* line 10, ../sass/components/_page-digital-library-resources.scss */
+/* line 38, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #sbac-digital-library-resources-form button.form-submit {
   display: none;
 }
-/* line 13, ../sass/components/_page-digital-library-resources.scss */
+/* line 41, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #sbac-digital-library-resources-form #edit-sbac-digital-library-resources-text {
-  background: url('../images/search.png?1426875958') 5% center no-repeat;
+  background: url('../images/search.png?1446141811') 5% center no-repeat;
   border-radius: 20px;
   width: 200px;
   top: 8px;
   right: 0;
   padding-left: 25px;
 }
-/* line 22, ../sass/components/_page-digital-library-resources.scss */
+/* line 50, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle {
   position: absolute;
   right: 25px;
   top: 20px;
 }
-/* line 26, ../sass/components/_page-digital-library-resources.scss */
+/* line 54, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle a#click-toggle-a {
   color: #fff;
   font-size: 16px;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
   display: inline-block;
 }
-/* line 31, ../sass/components/_page-digital-library-resources.scss */
+/* line 59, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle a#click-toggle-a:before {
   content: "\e609";
   display: inline-block;
@@ -30802,11 +30837,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: relative;
   top: -2px;
 }
-/* line 43, ../sass/components/_page-digital-library-resources.scss */
+/* line 71, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle a#click-toggle-a.list:before {
   content: "\e608";
 }
-/* line 49, ../sass/components/_page-digital-library-resources.scss */
+/* line 77, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .main-container, .page-digital-library-resources .row {
   background: none;
   border: none;
@@ -30817,24 +30852,24 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: none;
 }
 @media (min-width: 1280px) {
-  /* line 59, ../sass/components/_page-digital-library-resources.scss */
+  /* line 87, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .row {
     max-width: 1280px;
   }
 }
 @media (max-width: 1280px) and (min-width: 961px) {
-  /* line 64, ../sass/components/_page-digital-library-resources.scss */
+  /* line 92, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .row {
     max-width: 960px;
   }
 }
 @media (max-width: 960px) {
-  /* line 69, ../sass/components/_page-digital-library-resources.scss */
+  /* line 97, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .row {
     max-width: 656px;
   }
 }
-/* line 73, ../sass/components/_page-digital-library-resources.scss */
+/* line 101, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view {
   padding-top: 15px;
   padding-bottom: 15px;
@@ -30843,30 +30878,30 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: 6px;
   margin-bottom: 30px;
 }
-/* line 80, ../sass/components/_page-digital-library-resources.scss */
+/* line 108, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view.view-display-id-attachment_1,
 .page-digital-library-resources .view .view-header {
   background-color: #3b9ebe;
 }
-/* line 84, ../sass/components/_page-digital-library-resources.scss */
+/* line 112, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content {
   margin: 0;
   padding: 0;
 }
 @media (min-width: 1280px) {
-  /* line 84, ../sass/components/_page-digital-library-resources.scss */
+  /* line 112, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .view .view-content {
     margin-left: 5px;
   }
 }
-/* line 90, ../sass/components/_page-digital-library-resources.scss */
+/* line 118, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row {
   max-width: 290px !important;
   margin: 0 5px 10px 10px;
   display: inline-block;
   vertical-align: top;
 }
-/* line 95, ../sass/components/_page-digital-library-resources.scss */
+/* line 123, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
@@ -30880,34 +30915,34 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   transition: background-color 0.3s ease;
   overflow: hidden;
 }
-/* line 96, ../sass/components/_page-digital-library-resources.scss */
+/* line 124, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .bold {
   font-weight: bold;
   padding-right: 5px;
 }
-/* line 100, ../sass/components/_page-digital-library-resources.scss */
+/* line 128, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .search-item-break {
   margin-top: 10px;
   margin-bottom: 20px;
   color: #62676e;
 }
-/* line 104, ../sass/components/_page-digital-library-resources.scss */
+/* line 132, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .search-item-break.resource-button {
   text-align: right;
 }
-/* line 106, ../sass/components/_page-digital-library-resources.scss */
+/* line 134, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .search-item-break.resource-button a {
   margin-bottom: 0px;
 }
-/* line 122, ../sass/components/_page-digital-library-resources.scss */
+/* line 150, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card:hover {
   background-color: white;
 }
-/* line 126, ../sass/components/_page-digital-library-resources.scss */
+/* line 154, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card:hover .resource-top a img {
   outline: 3px #0583AC solid;
 }
-/* line 132, ../sass/components/_page-digital-library-resources.scss */
+/* line 160, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top {
   clear: both;
   padding-bottom: 10px;
@@ -30918,11 +30953,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: relative;
   min-height: 280px;
 }
-/* line 138, ../sass/components/_page-digital-library-resources.scss */
+/* line 166, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top.posted-with-distinction {
-  background: url('../images/icons/icon-distinction.png?1426875958') no-repeat top right;
+  background: url('../images/icons/icon-distinction.png?1446141811') no-repeat top right;
 }
-/* line 141, ../sass/components/_page-digital-library-resources.scss */
+/* line 169, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 {
   margin: 0;
   padding: 0;
@@ -30935,7 +30970,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   height: 60px;
   vertical-align: middle;
 }
-/* line 152, ../sass/components/_page-digital-library-resources.scss */
+/* line 180, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 a {
   color: #101010;
   font-size: 14px;
@@ -30943,12 +30978,12 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   padding-right: 5px;
   display: block;
 }
-/* line 158, ../sass/components/_page-digital-library-resources.scss */
+/* line 186, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 a:hover {
   text-decoration: underline;
   color: #3b9ebe;
 }
-/* line 167, ../sass/components/_page-digital-library-resources.scss */
+/* line 195, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top img {
   height: 138px;
   width: 258px;
@@ -30956,7 +30991,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   margin: 10px 0;
   display: block;
 }
-/* line 175, ../sass/components/_page-digital-library-resources.scss */
+/* line 203, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom {
   -moz-border-radius: 0 0 6px 6px;
   -webkit-border-radius: 0;
@@ -30973,7 +31008,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   /* Triangle hack to make tooltip look like a speech bubble */
   /* Show tooltip content on hover */
 }
-/* line 186, ../sass/components/_page-digital-library-resources.scss */
+/* line 214, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers {
   padding: 10px 15px;
   font-size: 13px;
@@ -30994,59 +31029,59 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   bottom: 0;
   left: 0;
 }
-/* line 187, ../sass/components/_page-digital-library-resources.scss */
+/* line 215, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div {
   display: inline;
 }
-/* line 190, ../sass/components/_page-digital-library-resources.scss */
+/* line 218, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-views span {
   position: relative;
   left: 3px;
   top: 2px;
 }
-/* line 196, ../sass/components/_page-digital-library-resources.scss */
+/* line 224, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-downloads {
   margin-left: 25px;
   margin-right: 25px;
 }
-/* line 199, ../sass/components/_page-digital-library-resources.scss */
+/* line 227, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-downloads span {
   position: relative;
   left: 3px;
   top: 2px;
 }
-/* line 205, ../sass/components/_page-digital-library-resources.scss */
+/* line 233, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count {
   float: right;
 }
-/* line 207, ../sass/components/_page-digital-library-resources.scss */
+/* line 235, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count [data-tooltipp]:after {
   bottom: 34px;
 }
-/* line 210, ../sass/components/_page-digital-library-resources.scss */
+/* line 238, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count span.rating-item {
   display: block;
   float: left;
 }
-/* line 214, ../sass/components/_page-digital-library-resources.scss */
+/* line 242, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count span.rating-item.star-image .form-item {
   margin-top: .4em;
   margin-right: .5em;
 }
-/* line 241, ../sass/components/_page-digital-library-resources.scss */
+/* line 269, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp] {
   position: relative;
   z-index: 2;
   cursor: pointer;
 }
-/* line 247, ../sass/components/_page-digital-library-resources.scss */
+/* line 275, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:before,
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:after {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }
-/* line 254, ../sass/components/_page-digital-library-resources.scss */
+/* line 282, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:before {
   position: absolute;
   bottom: 150%;
@@ -31065,7 +31100,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   font-size: 16px;
   line-height: 1.2;
 }
-/* line 273, ../sass/components/_page-digital-library-resources.scss */
+/* line 301, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:after {
   position: absolute;
   bottom: 150%;
@@ -31078,31 +31113,31 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   font-size: 0;
   line-height: 0;
 }
-/* line 286, ../sass/components/_page-digital-library-resources.scss */
+/* line 314, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:hover:before,
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:hover:after {
   visibility: visible;
   opacity: 1;
 }
-/* line 293, ../sass/components/_page-digital-library-resources.scss */
+/* line 321, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list {
   display: block;
   max-width: none !important;
 }
 @media (min-width: 1100px) {
-  /* line 293, ../sass/components/_page-digital-library-resources.scss */
+  /* line 321, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .view .view-content .views-row.list {
     width: 98%;
   }
 }
-/* line 300, ../sass/components/_page-digital-library-resources.scss */
+/* line 328, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card {
   width: auto;
   height: 115px;
   position: relative;
   padding: 12px 25px 20px 29px;
 }
-/* line 305, ../sass/components/_page-digital-library-resources.scss */
+/* line 333, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-top {
   display: block;
   float: left;
@@ -31111,12 +31146,12 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: relative;
   left: 150px;
 }
-/* line 312, ../sass/components/_page-digital-library-resources.scss */
+/* line 340, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-top h3 {
   display: inline;
   position: relative;
 }
-/* line 316, ../sass/components/_page-digital-library-resources.scss */
+/* line 344, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-top img {
   height: 72px;
   width: 140px;
@@ -31124,7 +31159,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   left: -160px;
   top: 0;
 }
-/* line 324, ../sass/components/_page-digital-library-resources.scss */
+/* line 352, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom {
   width: 20%;
   position: absolute;
@@ -31138,11 +31173,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: 0 6px 6px 0;
   box-shadow: -1px 0 0 0 #CECECE;
 }
-/* line 336, ../sass/components/_page-digital-library-resources.scss */
+/* line 364, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .search-item-break {
   display: none;
 }
-/* line 339, ../sass/components/_page-digital-library-resources.scss */
+/* line 367, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .paradata-numbers {
   background: none;
   border: none;
@@ -31151,11 +31186,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: 0;
   border-bottom: 1px solid #CECECE;
 }
-/* line 346, ../sass/components/_page-digital-library-resources.scss */
+/* line 374, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .paradata-numbers > div {
   position: relative;
 }
-/* line 348, ../sass/components/_page-digital-library-resources.scss */
+/* line 376, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .paradata-numbers > div.rating-count {
   float: none;
   display: block;
@@ -31163,23 +31198,23 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   padding-bottom: 0;
   padding-top: 20px;
 }
-/* line 368, ../sass/components/_page-digital-library-resources.scss */
+/* line 396, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap.activated-filters a.category-hide {
-  background: url('../images/icon-arrow-right.png?1446833084') no-repeat 1%;
+  background: url('../images/icon-arrow-right.png?1451915418') no-repeat 1%;
 }
-/* line 373, ../sass/components/_page-digital-library-resources.scss */
+/* line 401, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap.not-activated-filters a.category-hide {
-  background: url('../images/icon-arrow-down.png?1442954714') no-repeat 1%;
+  background: url('../images/icon-arrow-down.png?1446141811') no-repeat 1%;
 }
-/* line 378, ../sass/components/_page-digital-library-resources.scss */
+/* line 406, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap a.category-hide.active, .page-digital-library-resources .filters .inner-wrap a.category-hide:before {
   content: '';
 }
-/* line 380, ../sass/components/_page-digital-library-resources.scss */
+/* line 408, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap a.category-hide.active:before, .page-digital-library-resources .filters .inner-wrap a.category-hide:before:before {
   content: '';
 }
-/* line 386, ../sass/components/_page-digital-library-resources.scss */
+/* line 414, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters #clear-all-facets {
   border-radius: 6px;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
@@ -31199,18 +31234,18 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   float: right;
   margin: 15px;
 }
-/* line 404, ../sass/components/_page-digital-library-resources.scss */
+/* line 432, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters #clear-all-facets a {
   color: white;
 }
-/* line 408, ../sass/components/_page-digital-library-resources.scss */
+/* line 436, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block {
   position: relative;
   width: 30.5%;
   margin: 5px 1.2%;
   float: left;
 }
-/* line 410, ../sass/components/_page-digital-library-resources.scss */
+/* line 438, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block li.minus-sign:before {
   content: '-';
   z-index: 10;
@@ -31221,7 +31256,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: absolute;
   cursor: pointer;
 }
-/* line 423, ../sass/components/_page-digital-library-resources.scss */
+/* line 451, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block li.plus-sign:before {
   left: -8px;
   padding: 0 10px;
@@ -31232,35 +31267,35 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: absolute;
   cursor: pointer;
 }
-/* line 439, ../sass/components/_page-digital-library-resources.scss */
+/* line 467, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
   box-shadow: 2px 14px 29px -8px #9e999e;
 }
-/* line 444, ../sass/components/_page-digital-library-resources.scss */
+/* line 472, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li {
   background-image: none;
 }
-/* line 446, ../sass/components/_page-digital-library-resources.scss */
+/* line 474, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list {
   width: auto;
 }
-/* line 448, ../sass/components/_page-digital-library-resources.scss */
+/* line 476, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul {
   box-shadow: none;
 }
-/* line 450, ../sass/components/_page-digital-library-resources.scss */
+/* line 478, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li {
   background-image: none;
 }
-/* line 453, ../sass/components/_page-digital-library-resources.scss */
+/* line 481, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li .item-list width:auto
 ul {
   box-shadow: none;
 }
-/* line 463, ../sass/components/_page-digital-library-resources.scss */
+/* line 491, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list {
   background: white;
   position: absolute;
@@ -31269,38 +31304,38 @@ ul {
   height: 0;
   overflow-x: hidden;
 }
-/* line 471, ../sass/components/_page-digital-library-resources.scss */
+/* line 499, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li {
   position: relative;
   margin: 0 0 10px 15px;
   color: black;
 }
-/* line 475, ../sass/components/_page-digital-library-resources.scss */
+/* line 503, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a {
   color: black;
   font-weight: normal;
   padding-left: 25px;
   padding-bottom: 2px;
 }
-/* line 480, ../sass/components/_page-digital-library-resources.scss */
+/* line 508, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-inactive {
-  background: url('../images/filter/icon-checkbox.png?1442954714') no-repeat 0 0;
+  background: url('../images/filter/icon-checkbox.png?1446141811') no-repeat 0 0;
 }
-/* line 483, ../sass/components/_page-digital-library-resources.scss */
+/* line 511, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
   color: black;
   font-weight: normal;
   padding-left: 15px;
   text-indent: -9999px;
   display: inline-block !important;
-  background: url('../images/filter/icon-check-mark.png?1442954714') no-repeat 0 0;
+  background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
 }
-/* line 494, ../sass/components/_page-digital-library-resources.scss */
+/* line 522, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul > li > a:hover {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 499, ../sass/components/_page-digital-library-resources.scss */
+/* line 527, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide {
   width: 100%;
   color: #0684ad;
@@ -31310,66 +31345,66 @@ ul {
   height: 28px;
   line-height: 28px;
   border-radius: 3px;
-  background: white url('../images/icon-arrow-down.png?1442954714') no-repeat 95% !important;
+  background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95% !important;
 }
-/* line 509, ../sass/components/_page-digital-library-resources.scss */
+/* line 537, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active, .page-digital-library-resources .filters .facet-block a.category-hide:before {
   content: '';
 }
-/* line 511, ../sass/components/_page-digital-library-resources.scss */
+/* line 539, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active:before, .page-digital-library-resources .filters .facet-block a.category-hide:before:before {
   content: '';
 }
-/* line 515, ../sass/components/_page-digital-library-resources.scss */
+/* line 543, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
-  background: white url('../images/icon-close.png?1442954714') no-repeat 95% !important;
+  background: white url('../images/icon-close.png?1446141811') no-repeat 95% !important;
 }
-/* line 518, ../sass/components/_page-digital-library-resources.scss */
+/* line 546, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
-  background: white url('../images/icon-arrow-down.png?1442954714') no-repeat 95%;
+  background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95%;
 }
-/* line 521, ../sass/components/_page-digital-library-resources.scss */
+/* line 549, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected {
-  background: #507483 url('../images/icon-arrow-down-white.png?1449685387') no-repeat 95% !important;
+  background: #507483 url('../images/icon-arrow-down-white.png?1451915418') no-repeat 95% !important;
   color: white;
 }
-/* line 524, ../sass/components/_page-digital-library-resources.scss */
+/* line 552, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected.activated {
-  background: #507483 url('../images/icon-close-white.png?1449685387') no-repeat 95% !important;
+  background: #507483 url('../images/icon-close-white.png?1451915418') no-repeat 95% !important;
 }
-/* line 527, ../sass/components/_page-digital-library-resources.scss */
+/* line 555, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected:before {
-  background: url('../images/checkmark.png?1442954714') no-repeat !important;
+  background: url('../images/checkmark.png?1446141811') no-repeat !important;
   top: 7px;
   padding: 12px;
   background-size: 90% !important;
 }
-/* line 536, ../sass/components/_page-digital-library-resources.scss */
+/* line 564, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
   color: #0684ad;
   margin: 0;
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 542, ../sass/components/_page-digital-library-resources.scss */
+/* line 570, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 545, ../sass/components/_page-digital-library-resources.scss */
+/* line 573, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0;
   overflow: hidden;
 }
-/* line 550, ../sass/components/_page-digital-library-resources.scss */
+/* line 578, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
-/* line 552, ../sass/components/_page-digital-library-resources.scss */
+/* line 580, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap input {
   opacity: 0;
 }
-/* line 557, ../sass/components/_page-digital-library-resources.scss */
+/* line 585, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .item-list-size {
   height: auto !important;
   position: relative !important;
@@ -35599,7 +35634,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -2px;
 }
 /* line 3916, ../sass/custom.scss */
 .filter-bar a.flag.unflagged, .filter-bar a.flag.flag-action {
@@ -35607,12 +35642,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 3921, ../sass/custom.scss */
 .filter-bar a.flag.flagged, .filter-bar a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -22px;
 }
 /* line 3925, ../sass/custom.scss */
 .filter-bar a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -42px;
 }
 /* line 3930, ../sass/custom.scss */
 .filter-bar a[title]:hover:after {
@@ -35689,7 +35724,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -2px;
 }
 /* line 4002, ../sass/custom.scss */
 #section-collaboration a.flag.unflagged, #section-collaboration a.flag.flag-action {
@@ -35697,12 +35732,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4007, ../sass/custom.scss */
 #section-collaboration a.flag.flagged, #section-collaboration a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -22px;
 }
 /* line 4011, ../sass/custom.scss */
 #section-collaboration a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -42px;
 }
 /* line 4016, ../sass/custom.scss */
 #section-collaboration a[title]:hover:after {
@@ -35762,7 +35797,7 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 30px;
   height: 20px;
   position: relative;
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -2px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -2px;
 }
 /* line 4067, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.unflagged, .topic-node-view-tertiary-nav-right a.flag.flag-action {
@@ -35770,12 +35805,12 @@ form#sbac-user-filter-form #edit-email {
 }
 /* line 4072, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -22px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -22px;
 }
 /* line 4076, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
   color: #0684ad;
-  background: url('../images/subscribe_icons.png?1442954714') no-repeat 0 -42px;
+  background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -42px;
 }
 /* line 4081, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a[title]:hover:after {

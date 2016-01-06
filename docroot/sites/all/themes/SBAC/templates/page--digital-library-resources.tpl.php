@@ -176,9 +176,11 @@ drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.
     <?php if($blocks['educational_use']):?>
       <div class="facet-block" id="facet-educational-use">
         <div class="facet-label"><a class="category-hide educational-hide">Educational Use</a></div>
-        <?php print $blocks['educational_use']; ?>
-      </div>
+<?php print $blocks['educational_use']; ?>
+            </div>
 <?php endif; ?>
+
+<?php print sbac_search_digital_library_categories(); ?>
 
 <?if (isset($_GET['f'])): ?>
             <script>

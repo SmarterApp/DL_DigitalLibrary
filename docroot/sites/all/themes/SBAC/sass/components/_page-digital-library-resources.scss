@@ -1,5 +1,33 @@
 // Updated digital library page
 .page-digital-library-resources {
+  .categories-container {
+    position: relative;
+    width: 30.5%;
+    margin: 5px 1.2%;
+    float: left;
+    .categories-filter {
+      padding-bottom:0;
+      .category-filter-name.column.large-4 {
+	padding-bottom: 0;
+	padding-left:0;
+	padding-right:0;
+	width:100%;
+	ul {
+	  font-size:inherit;
+	  li {
+	    height: 28px;
+	    background: #FFF url("../images/icon-arrow-down.png") no-repeat 95% center;
+	    a {
+	      font-size:12.5px;
+	      &:hover {
+		text-decoration:none;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
   .main-container {
     margin-top:0;
   }

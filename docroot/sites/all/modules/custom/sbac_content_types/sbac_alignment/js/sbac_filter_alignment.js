@@ -200,12 +200,16 @@
 
               $('#ccss-cancel').click(function () {
                 closeCtoolsModal();
+		sessionStorage.removeItem("ccssSet");
               });
               $('#ccss-cancel2').click(function () {
                 closeCtoolsModal();
+		sessionStorage.removeItem("ccssSet");
               });
 
               $('#ccss-submit').click(function () {
+		sessionStorage.setItem("ccssSet", "setted");
+		
                 var countType = countStandard = 0;
                 $('#alignment-msg').html('');
                 //count standards
@@ -222,15 +226,43 @@
                   //get ref
                   var alignmentRef = $('input[id=alignment_ref]').val();
                   //count standards
+		  var idArr = [];
+
+		  urlLibArg = 'digital-library-resources';
+		  if (window.location.href.indexOf(urlLibArg) > -1){
+		    url = window.location.href;
+		  }
+		  else {
+		    url = window.location.href + urlLibArg;		    
+		  }
                   $('input[id^=edit-term-]').each(function () {
                     if ($(this).is(':checked')) {
                       var temp = $(this).attr('id');
                       var id = temp.split('-');
                       id = id[2];
                       alignmentStandards += '|' + id;
+		      idArr.push(id);		      		      		      
                     }
                   });
 
+		  // ccss filter check
+		  var s = url.split('f[').pop().charAt(0);
+		  if (url.indexOf('?') > -1){		    
+		    var formedUrl = '&';
+		    var i = +s + 1;		    
+		  }
+		   else {
+		    var formedUrl = '?';
+		     var i = 0;		     
+		  }
+		  $.each(idArr, function(){
+		    formedUrl += 'f[' + i + ']=im_field_alignment_term%3A' + this + '&';
+		    i++;
+		  })
+		    // redirect when ccss filter stuff happens.
+		    if (window.location.href !== location.protocol + "//" + location.host) {	      
+		      var reDir = window.location.replace(url + formedUrl);
+		    }
                   $.ajax({
                     type: "POST",
                     url: "/ajax-filter-alignment-finish-set",
