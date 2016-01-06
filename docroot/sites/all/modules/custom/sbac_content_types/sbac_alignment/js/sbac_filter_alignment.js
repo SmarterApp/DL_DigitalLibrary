@@ -218,8 +218,9 @@
                     countStandard++;
                   }
                 });
-
+	
                 if (countStandard > 0) {
+		 
                   var alignmentStandards = '';
                   var alignmentType = $('#edit-alignment-type').val();
 
@@ -227,7 +228,7 @@
                   var alignmentRef = $('input[id=alignment_ref]').val();
                   //count standards
 		  var idArr = [];
-
+ 
 		  urlLibArg = 'digital-library-resources';
 		  if (window.location.href.indexOf(urlLibArg) > -1){
 		    url = window.location.href;
@@ -235,16 +236,18 @@
 		  else {
 		    url = window.location.href + urlLibArg;		    
 		  }
+		 
                   $('input[id^=edit-term-]').each(function () {
                     if ($(this).is(':checked')) {
                       var temp = $(this).attr('id');
                       var id = temp.split('-');
                       id = id[2];
                       alignmentStandards += '|' + id;
-		      idArr.push(id);		      		      		      
+		      idArr.push(id);
+	      	      
                     }
                   });
-
+		  sessionStorage.setItem('ccssKeys', JSON.stringify(idArr));
 		  // ccss filter check
 		  var s = url.split('f[').pop().charAt(0);
 		  if (url.indexOf('?') > -1){		    
@@ -257,7 +260,7 @@
 		  }
 		  $.each(idArr, function(){
 		    formedUrl += 'f[' + i + ']=im_field_alignment_term%3A' + this + '&';
-		    i++;
+		    i++;		    
 		  })
 		    // redirect when ccss filter stuff happens.
 		    if (window.location.href !== location.protocol + "//" + location.host) {	      
@@ -270,6 +273,7 @@
                     data: 'alignment_standards=' + alignmentStandards,
                   });
                 }
+	
                 else {
                   $('#modal-content').animate({ scrollTop: 0 });
                   $('#alignment-msg').append('<div class="alignment-error"><ul></ul></div>');

@@ -1,5 +1,8 @@
 // Updated digital library page
 .page-digital-library-resources {
+  #facet-common-core-state-standards {
+    display:none;
+  }
   .categories-container {
     position: relative;
     width: 30.5%;
@@ -15,10 +18,22 @@
 	ul {
 	  font-size:inherit;
 	  li {
+	   &.selected .sbac-search-filter-custom-link {
+	      background:image-url('checkmark.png') -1px 4px no-repeat !important;	   
+	      background-size: 6% !important;
+	    }
+	    &.selected {
+	      background:#507483 image-url('icon-arrow-down-white.png') no-repeat 95% center;
+	      a {
+		color:white;	
+	      }
+	    }
 	    height: 28px;
-	    background: #FFF url("../images/icon-arrow-down.png") no-repeat 95% center;
+	    background: #FFF image-url('icon-arrow-down.png') no-repeat 95% center;
 	    a {
 	      font-size:12.5px;
+	      padding-top:2px;
+	      padding-left:3px;
 	      &:hover {
 		text-decoration:none;
 	      }

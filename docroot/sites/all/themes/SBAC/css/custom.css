@@ -30757,53 +30757,72 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
 }
 
 /* line 3, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources #facet-common-core-state-standards {
+  display: none;
+}
+/* line 6, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container {
   position: relative;
   width: 30.5%;
   margin: 5px 1.2%;
   float: left;
 }
-/* line 8, ../sass/components/_page-digital-library-resources.scss */
+/* line 11, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container .categories-filter {
   padding-bottom: 0;
 }
-/* line 10, ../sass/components/_page-digital-library-resources.scss */
+/* line 13, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 {
   padding-bottom: 0;
   padding-left: 0;
   padding-right: 0;
   width: 100%;
 }
-/* line 15, ../sass/components/_page-digital-library-resources.scss */
+/* line 18, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul {
   font-size: inherit;
 }
-/* line 17, ../sass/components/_page-digital-library-resources.scss */
+/* line 20, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li {
   height: 28px;
-  background: #FFF url("../images/icon-arrow-down.png") no-repeat 95% center;
+  background: #FFF url('../images/icon-arrow-down.png?1446141811') no-repeat 95% center;
 }
-/* line 20, ../sass/components/_page-digital-library-resources.scss */
+/* line 21, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li.selected .sbac-search-filter-custom-link {
+  background: url('../images/checkmark.png?1446141811') -1px 4px no-repeat !important;
+  background-size: 6% !important;
+}
+/* line 25, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li.selected {
+  background: #507483 url('../images/icon-arrow-down-white.png?1451915418') no-repeat 95% center;
+}
+/* line 27, ../sass/components/_page-digital-library-resources.scss */
+.page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li.selected a {
+  color: white;
+}
+/* line 33, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li a {
   font-size: 12.5px;
+  padding-top: 2px;
+  padding-left: 3px;
 }
-/* line 22, ../sass/components/_page-digital-library-resources.scss */
+/* line 37, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container .categories-filter .category-filter-name.column.large-4 ul li a:hover {
   text-decoration: none;
 }
-/* line 31, ../sass/components/_page-digital-library-resources.scss */
+/* line 46, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .main-container {
   margin-top: 0;
 }
-/* line 35, ../sass/components/_page-digital-library-resources.scss */
+/* line 50, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #sbac-digital-library-resources-form .form-item {
   margin: 0;
 }
-/* line 38, ../sass/components/_page-digital-library-resources.scss */
+/* line 53, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #sbac-digital-library-resources-form button.form-submit {
   display: none;
 }
-/* line 41, ../sass/components/_page-digital-library-resources.scss */
+/* line 56, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #sbac-digital-library-resources-form #edit-sbac-digital-library-resources-text {
   background: url('../images/search.png?1446141811') 5% center no-repeat;
   border-radius: 20px;
@@ -30812,20 +30831,20 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   right: 0;
   padding-left: 25px;
 }
-/* line 50, ../sass/components/_page-digital-library-resources.scss */
+/* line 65, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle {
   position: absolute;
   right: 25px;
   top: 20px;
 }
-/* line 54, ../sass/components/_page-digital-library-resources.scss */
+/* line 69, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle a#click-toggle-a {
   color: #fff;
   font-size: 16px;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
   display: inline-block;
 }
-/* line 59, ../sass/components/_page-digital-library-resources.scss */
+/* line 74, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle a#click-toggle-a:before {
   content: "\e609";
   display: inline-block;
@@ -30837,11 +30856,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: relative;
   top: -2px;
 }
-/* line 71, ../sass/components/_page-digital-library-resources.scss */
+/* line 86, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources #click-toggle a#click-toggle-a.list:before {
   content: "\e608";
 }
-/* line 77, ../sass/components/_page-digital-library-resources.scss */
+/* line 92, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .main-container, .page-digital-library-resources .row {
   background: none;
   border: none;
@@ -30852,24 +30871,24 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: none;
 }
 @media (min-width: 1280px) {
-  /* line 87, ../sass/components/_page-digital-library-resources.scss */
+  /* line 102, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .row {
     max-width: 1280px;
   }
 }
 @media (max-width: 1280px) and (min-width: 961px) {
-  /* line 92, ../sass/components/_page-digital-library-resources.scss */
+  /* line 107, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .row {
     max-width: 960px;
   }
 }
 @media (max-width: 960px) {
-  /* line 97, ../sass/components/_page-digital-library-resources.scss */
+  /* line 112, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .row {
     max-width: 656px;
   }
 }
-/* line 101, ../sass/components/_page-digital-library-resources.scss */
+/* line 116, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view {
   padding-top: 15px;
   padding-bottom: 15px;
@@ -30878,30 +30897,30 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: 6px;
   margin-bottom: 30px;
 }
-/* line 108, ../sass/components/_page-digital-library-resources.scss */
+/* line 123, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view.view-display-id-attachment_1,
 .page-digital-library-resources .view .view-header {
   background-color: #3b9ebe;
 }
-/* line 112, ../sass/components/_page-digital-library-resources.scss */
+/* line 127, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content {
   margin: 0;
   padding: 0;
 }
 @media (min-width: 1280px) {
-  /* line 112, ../sass/components/_page-digital-library-resources.scss */
+  /* line 127, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .view .view-content {
     margin-left: 5px;
   }
 }
-/* line 118, ../sass/components/_page-digital-library-resources.scss */
+/* line 133, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row {
   max-width: 290px !important;
   margin: 0 5px 10px 10px;
   display: inline-block;
   vertical-align: top;
 }
-/* line 123, ../sass/components/_page-digital-library-resources.scss */
+/* line 138, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
@@ -30915,34 +30934,34 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   transition: background-color 0.3s ease;
   overflow: hidden;
 }
-/* line 124, ../sass/components/_page-digital-library-resources.scss */
+/* line 139, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .bold {
   font-weight: bold;
   padding-right: 5px;
 }
-/* line 128, ../sass/components/_page-digital-library-resources.scss */
+/* line 143, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .search-item-break {
   margin-top: 10px;
   margin-bottom: 20px;
   color: #62676e;
 }
-/* line 132, ../sass/components/_page-digital-library-resources.scss */
+/* line 147, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .search-item-break.resource-button {
   text-align: right;
 }
-/* line 134, ../sass/components/_page-digital-library-resources.scss */
+/* line 149, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .search-item-break.resource-button a {
   margin-bottom: 0px;
 }
-/* line 150, ../sass/components/_page-digital-library-resources.scss */
+/* line 165, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card:hover {
   background-color: white;
 }
-/* line 154, ../sass/components/_page-digital-library-resources.scss */
+/* line 169, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card:hover .resource-top a img {
   outline: 3px #0583AC solid;
 }
-/* line 160, ../sass/components/_page-digital-library-resources.scss */
+/* line 175, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top {
   clear: both;
   padding-bottom: 10px;
@@ -30953,11 +30972,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: relative;
   min-height: 280px;
 }
-/* line 166, ../sass/components/_page-digital-library-resources.scss */
+/* line 181, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top.posted-with-distinction {
   background: url('../images/icons/icon-distinction.png?1446141811') no-repeat top right;
 }
-/* line 169, ../sass/components/_page-digital-library-resources.scss */
+/* line 184, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 {
   margin: 0;
   padding: 0;
@@ -30970,7 +30989,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   height: 60px;
   vertical-align: middle;
 }
-/* line 180, ../sass/components/_page-digital-library-resources.scss */
+/* line 195, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 a {
   color: #101010;
   font-size: 14px;
@@ -30978,12 +30997,12 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   padding-right: 5px;
   display: block;
 }
-/* line 186, ../sass/components/_page-digital-library-resources.scss */
+/* line 201, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top h3 a:hover {
   text-decoration: underline;
   color: #3b9ebe;
 }
-/* line 195, ../sass/components/_page-digital-library-resources.scss */
+/* line 210, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-top img {
   height: 138px;
   width: 258px;
@@ -30991,7 +31010,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   margin: 10px 0;
   display: block;
 }
-/* line 203, ../sass/components/_page-digital-library-resources.scss */
+/* line 218, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom {
   -moz-border-radius: 0 0 6px 6px;
   -webkit-border-radius: 0;
@@ -31008,7 +31027,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   /* Triangle hack to make tooltip look like a speech bubble */
   /* Show tooltip content on hover */
 }
-/* line 214, ../sass/components/_page-digital-library-resources.scss */
+/* line 229, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers {
   padding: 10px 15px;
   font-size: 13px;
@@ -31029,59 +31048,59 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   bottom: 0;
   left: 0;
 }
-/* line 215, ../sass/components/_page-digital-library-resources.scss */
+/* line 230, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div {
   display: inline;
 }
-/* line 218, ../sass/components/_page-digital-library-resources.scss */
+/* line 233, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-views span {
   position: relative;
   left: 3px;
   top: 2px;
 }
-/* line 224, ../sass/components/_page-digital-library-resources.scss */
+/* line 239, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-downloads {
   margin-left: 25px;
   margin-right: 25px;
 }
-/* line 227, ../sass/components/_page-digital-library-resources.scss */
+/* line 242, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.stat-downloads span {
   position: relative;
   left: 3px;
   top: 2px;
 }
-/* line 233, ../sass/components/_page-digital-library-resources.scss */
+/* line 248, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count {
   float: right;
 }
-/* line 235, ../sass/components/_page-digital-library-resources.scss */
+/* line 250, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count [data-tooltipp]:after {
   bottom: 34px;
 }
-/* line 238, ../sass/components/_page-digital-library-resources.scss */
+/* line 253, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count span.rating-item {
   display: block;
   float: left;
 }
-/* line 242, ../sass/components/_page-digital-library-resources.scss */
+/* line 257, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom .paradata-numbers > div.rating-count span.rating-item.star-image .form-item {
   margin-top: .4em;
   margin-right: .5em;
 }
-/* line 269, ../sass/components/_page-digital-library-resources.scss */
+/* line 284, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp] {
   position: relative;
   z-index: 2;
   cursor: pointer;
 }
-/* line 275, ../sass/components/_page-digital-library-resources.scss */
+/* line 290, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:before,
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:after {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }
-/* line 282, ../sass/components/_page-digital-library-resources.scss */
+/* line 297, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:before {
   position: absolute;
   bottom: 150%;
@@ -31100,7 +31119,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   font-size: 16px;
   line-height: 1.2;
 }
-/* line 301, ../sass/components/_page-digital-library-resources.scss */
+/* line 316, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:after {
   position: absolute;
   bottom: 150%;
@@ -31113,31 +31132,31 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   font-size: 0;
   line-height: 0;
 }
-/* line 314, ../sass/components/_page-digital-library-resources.scss */
+/* line 329, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:hover:before,
 .page-digital-library-resources .view .view-content .views-row .resource-card .resource-bottom [data-tooltipp]:hover:after {
   visibility: visible;
   opacity: 1;
 }
-/* line 321, ../sass/components/_page-digital-library-resources.scss */
+/* line 336, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list {
   display: block;
   max-width: none !important;
 }
 @media (min-width: 1100px) {
-  /* line 321, ../sass/components/_page-digital-library-resources.scss */
+  /* line 336, ../sass/components/_page-digital-library-resources.scss */
   .page-digital-library-resources .view .view-content .views-row.list {
     width: 98%;
   }
 }
-/* line 328, ../sass/components/_page-digital-library-resources.scss */
+/* line 343, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card {
   width: auto;
   height: 115px;
   position: relative;
   padding: 12px 25px 20px 29px;
 }
-/* line 333, ../sass/components/_page-digital-library-resources.scss */
+/* line 348, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-top {
   display: block;
   float: left;
@@ -31146,12 +31165,12 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: relative;
   left: 150px;
 }
-/* line 340, ../sass/components/_page-digital-library-resources.scss */
+/* line 355, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-top h3 {
   display: inline;
   position: relative;
 }
-/* line 344, ../sass/components/_page-digital-library-resources.scss */
+/* line 359, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-top img {
   height: 72px;
   width: 140px;
@@ -31159,7 +31178,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   left: -160px;
   top: 0;
 }
-/* line 352, ../sass/components/_page-digital-library-resources.scss */
+/* line 367, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom {
   width: 20%;
   position: absolute;
@@ -31173,11 +31192,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: 0 6px 6px 0;
   box-shadow: -1px 0 0 0 #CECECE;
 }
-/* line 364, ../sass/components/_page-digital-library-resources.scss */
+/* line 379, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .search-item-break {
   display: none;
 }
-/* line 367, ../sass/components/_page-digital-library-resources.scss */
+/* line 382, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .paradata-numbers {
   background: none;
   border: none;
@@ -31186,11 +31205,11 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   border-radius: 0;
   border-bottom: 1px solid #CECECE;
 }
-/* line 374, ../sass/components/_page-digital-library-resources.scss */
+/* line 389, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .paradata-numbers > div {
   position: relative;
 }
-/* line 376, ../sass/components/_page-digital-library-resources.scss */
+/* line 391, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .view .view-content .views-row.list .resource-card .resource-bottom .paradata-numbers > div.rating-count {
   float: none;
   display: block;
@@ -31198,23 +31217,23 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   padding-bottom: 0;
   padding-top: 20px;
 }
-/* line 396, ../sass/components/_page-digital-library-resources.scss */
+/* line 411, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap.activated-filters a.category-hide {
   background: url('../images/icon-arrow-right.png?1451915418') no-repeat 1%;
 }
-/* line 401, ../sass/components/_page-digital-library-resources.scss */
+/* line 416, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap.not-activated-filters a.category-hide {
   background: url('../images/icon-arrow-down.png?1446141811') no-repeat 1%;
 }
-/* line 406, ../sass/components/_page-digital-library-resources.scss */
+/* line 421, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap a.category-hide.active, .page-digital-library-resources .filters .inner-wrap a.category-hide:before {
   content: '';
 }
-/* line 408, ../sass/components/_page-digital-library-resources.scss */
+/* line 423, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap a.category-hide.active:before, .page-digital-library-resources .filters .inner-wrap a.category-hide:before:before {
   content: '';
 }
-/* line 414, ../sass/components/_page-digital-library-resources.scss */
+/* line 429, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters #clear-all-facets {
   border-radius: 6px;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
@@ -31234,18 +31253,18 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   float: right;
   margin: 15px;
 }
-/* line 432, ../sass/components/_page-digital-library-resources.scss */
+/* line 447, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters #clear-all-facets a {
   color: white;
 }
-/* line 436, ../sass/components/_page-digital-library-resources.scss */
+/* line 451, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block {
   position: relative;
   width: 30.5%;
   margin: 5px 1.2%;
   float: left;
 }
-/* line 438, ../sass/components/_page-digital-library-resources.scss */
+/* line 453, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block li.minus-sign:before {
   content: '-';
   z-index: 10;
@@ -31256,7 +31275,7 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: absolute;
   cursor: pointer;
 }
-/* line 451, ../sass/components/_page-digital-library-resources.scss */
+/* line 466, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block li.plus-sign:before {
   left: -8px;
   padding: 0 10px;
@@ -31267,35 +31286,35 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   position: absolute;
   cursor: pointer;
 }
-/* line 467, ../sass/components/_page-digital-library-resources.scss */
+/* line 482, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
   box-shadow: 2px 14px 29px -8px #9e999e;
 }
-/* line 472, ../sass/components/_page-digital-library-resources.scss */
+/* line 487, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li {
   background-image: none;
 }
-/* line 474, ../sass/components/_page-digital-library-resources.scss */
+/* line 489, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list {
   width: auto;
 }
-/* line 476, ../sass/components/_page-digital-library-resources.scss */
+/* line 491, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul {
   box-shadow: none;
 }
-/* line 478, ../sass/components/_page-digital-library-resources.scss */
+/* line 493, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li {
   background-image: none;
 }
-/* line 481, ../sass/components/_page-digital-library-resources.scss */
+/* line 496, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li .item-list ul li .item-list width:auto
 ul {
   box-shadow: none;
 }
-/* line 491, ../sass/components/_page-digital-library-resources.scss */
+/* line 506, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list {
   background: white;
   position: absolute;
@@ -31304,24 +31323,24 @@ ul {
   height: 0;
   overflow-x: hidden;
 }
-/* line 499, ../sass/components/_page-digital-library-resources.scss */
+/* line 514, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li {
   position: relative;
   margin: 0 0 10px 15px;
   color: black;
 }
-/* line 503, ../sass/components/_page-digital-library-resources.scss */
+/* line 518, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a {
   color: black;
   font-weight: normal;
   padding-left: 25px;
   padding-bottom: 2px;
 }
-/* line 508, ../sass/components/_page-digital-library-resources.scss */
+/* line 523, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-inactive {
   background: url('../images/filter/icon-checkbox.png?1446141811') no-repeat 0 0;
 }
-/* line 511, ../sass/components/_page-digital-library-resources.scss */
+/* line 526, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
   color: black;
   font-weight: normal;
@@ -31330,12 +31349,12 @@ ul {
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
 }
-/* line 522, ../sass/components/_page-digital-library-resources.scss */
+/* line 537, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul > li > a:hover {
   color: #0684AD;
   text-decoration: underline;
 }
-/* line 527, ../sass/components/_page-digital-library-resources.scss */
+/* line 542, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide {
   width: 100%;
   color: #0684ad;
@@ -31347,64 +31366,64 @@ ul {
   border-radius: 3px;
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95% !important;
 }
-/* line 537, ../sass/components/_page-digital-library-resources.scss */
+/* line 552, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active, .page-digital-library-resources .filters .facet-block a.category-hide:before {
   content: '';
 }
-/* line 539, ../sass/components/_page-digital-library-resources.scss */
+/* line 554, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.active:before, .page-digital-library-resources .filters .facet-block a.category-hide:before:before {
   content: '';
 }
-/* line 543, ../sass/components/_page-digital-library-resources.scss */
+/* line 558, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.activated {
   background: white url('../images/icon-close.png?1446141811') no-repeat 95% !important;
 }
-/* line 546, ../sass/components/_page-digital-library-resources.scss */
+/* line 561, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.not-activated {
   background: white url('../images/icon-arrow-down.png?1446141811') no-repeat 95%;
 }
-/* line 549, ../sass/components/_page-digital-library-resources.scss */
+/* line 564, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected {
   background: #507483 url('../images/icon-arrow-down-white.png?1451915418') no-repeat 95% !important;
   color: white;
 }
-/* line 552, ../sass/components/_page-digital-library-resources.scss */
+/* line 567, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected.activated {
   background: #507483 url('../images/icon-close-white.png?1451915418') no-repeat 95% !important;
 }
-/* line 555, ../sass/components/_page-digital-library-resources.scss */
+/* line 570, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block a.category-hide.selected:before {
   background: url('../images/checkmark.png?1446141811') no-repeat !important;
   top: 7px;
   padding: 12px;
   background-size: 90% !important;
 }
-/* line 564, ../sass/components/_page-digital-library-resources.scss */
+/* line 579, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters li a, .page-digital-library-resources .filters li.collapsed a {
   color: #0684ad;
   margin: 0;
   font-weight: bold;
   font-size: 1.1em;
 }
-/* line 570, ../sass/components/_page-digital-library-resources.scss */
+/* line 585, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .expanded {
   overflow: hidden;
 }
-/* line 573, ../sass/components/_page-digital-library-resources.scss */
+/* line 588, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .collapsed {
   padding: 0;
   margin: 0;
   overflow: hidden;
 }
-/* line 578, ../sass/components/_page-digital-library-resources.scss */
+/* line 593, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap {
   height: 100%;
 }
-/* line 580, ../sass/components/_page-digital-library-resources.scss */
+/* line 595, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .inner-wrap input {
   opacity: 0;
 }
-/* line 585, ../sass/components/_page-digital-library-resources.scss */
+/* line 600, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .item-list-size {
   height: auto !important;
   position: relative !important;

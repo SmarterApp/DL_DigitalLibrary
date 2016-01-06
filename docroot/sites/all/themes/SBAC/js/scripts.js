@@ -23,28 +23,31 @@
 
   Drupal.behaviors.toggleGrid = {
     attach: function (context, settings) {
+
       $(document).ready(function() {
 
+	// Indicate previously selected items.
+	$('#modal-content').change(function() {       
+	  var keyedItems = JSON.parse(sessionStorage.getItem('ccssKeys'));
+	  $(keyedItems).each(function(){
+	    $('#edit-term-' + this).once().attr('checked', true);
+	    $('#edit-term-' + this).parents('label').css({
+	      'background': 'red',
+	    });	    
+	  });
+	})
+	
 	// Switcharoo between Facets CCSS and custom CCSS filter.
 	url = window.location.href;
 	var s = url.split('f[').pop().charAt(0);
-
 	
 	urlLibArg = 'digital-library-resources';
-	console.log(url.indexOf(urlLibArg));
 	
 	if (url.indexOf(urlLibArg) == -1){
 	  sessionStorage.removeItem('lastClicked');
 	  sessionStorage.removeItem('ccssSet');
 	}
-	
-	if (sessionStorage.getItem("ccssSet")) {
-	  $('.facet-blocks .categories-container').hide();
-	}
-	else {
-	  $('#facet-common-core-state-standards').hide();
-	}
-	
+
 	// Controls the search box and plugs in a clear all x.
 	$('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear"></div>');
 	if ($('#edit-sbac-digital-library-resources-text').val().length) {	  
@@ -140,20 +143,19 @@
 
 	    // When user clicks outside of facets, close facet blocks.
 	    $('.filters, .top-bar, .page-wrap').click(function(){
-        if(event.target === this){
-          console.log('clicked');
-          $('*').removeClass('activated');
-	      
-          $('.item-list').css({
-          'height': '0',
-	      });
-        }
-      });
-  
-  
-	$('a.category-hide').each(function() {
+              if(event.target === this){
+		$('*').removeClass('activated');
+		
+		$('.item-list').css({
+		  'height': '0',
+		});
+              }
+	    });
 	  
-	  // Tracks active filter selections, changes styles accordingly.
+	  
+	  $('a.category-hide').each(function() {
+	    
+	    // Tracks active filter selections, changes styles accordingly.
 	  var targetList = $(this).parents().siblings().children().children().children(':checkbox:checked').length;	  
 	  if (targetList > 0) {
 	    $(this).addClass('selected');		
@@ -183,7 +185,13 @@
 	    }
 	  });
 	  
-	});	
+	  });
+
+	// Add selected to our ccss container
+	if ($('#facet-common-core-state-standards .facet-label a').hasClass('selected')){	  
+	  $('.categories-container .large-4 ul li').addClass('selected');
+	}
+	
       });
     }
   };
