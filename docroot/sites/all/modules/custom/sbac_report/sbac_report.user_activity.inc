@@ -102,7 +102,7 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
 
   if (sbac_central_user_has_role(array('reports administrator'))) {
     foreach ($form_state['values']['state'] as $state) {
-      if ($state != sbac_report_get_default_state_tid()) {
+      if (!in_array($state, sbac_report_get_default_state_tid())) {
         form_set_error('state', t('You\'re only allowed to select your own state'));
       }
     }
@@ -366,7 +366,7 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
       $all = sbac_report_user_group_options();
       foreach ($all as $key => $value) {
         $user_groups_ids[$key] = $key;
-        
+
       }
     }
   }
