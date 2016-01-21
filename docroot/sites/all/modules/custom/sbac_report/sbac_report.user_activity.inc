@@ -99,14 +99,6 @@ function sbac_csv_report_user_activity_form_validate($form, &$form_state) {
   if (empty($form_state['values']['date_range1'])) {
     form_set_error('date_range', t('Choose a time period field is required.'));
   }
-
-  if (sbac_central_user_has_role(array('reports administrator'))) {
-    foreach ($form_state['values']['state'] as $state) {
-      if (!in_array($state, sbac_report_get_default_state_tid())) {
-        form_set_error('state', t('You\'re only allowed to select your own state'));
-      }
-    }
-  }
 }
 
 /**
