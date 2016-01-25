@@ -320,7 +320,7 @@ function sbac_csv_report_prettify(&$user_group_options) {
         break;
     }
   }
-  /* if (!sbac_central_user_has_role(array('reports administrator'))) {
+   //if (!sbac_central_user_has_role(array('reports administrator'))) {
     $res = $user_group_options;
     $user_group_options = array_slice($res, 0, 5, TRUE) + array(32 => "SNE Members") + array(33 => "SLT Members") + array(13 => "Moderators") + array(11 => "Facilitators") + array_slice($res, 3, count($res) - 3, TRUE);
     if (isset($user_group_options[37]) && $user_group_options[37] == 'SNE Members') {
@@ -329,7 +329,7 @@ function sbac_csv_report_prettify(&$user_group_options) {
     if (isset($user_group_options[38]) && $user_group_options[38] == 'SLT Members') {
       unset($user_group_options[38]);
     }
-    }*/
+    //}
 }
 
 /*
