@@ -321,11 +321,11 @@ button.blue:hover, .button.blue:hover, button.blue:active, .button.blue:active, 
   a {
     color: inherit;
     text-decoration: underline;
-  } 
+  }
 
   ul {
     list-style-type: none;
-    //margin: 0 !important; 
+    //margin: 0 !important;
   }
 
   &.alert {
@@ -1190,14 +1190,14 @@ a.tabledrag-handle .handle {
 #section-flag {
 	position: relative;
 	min-height: 500px;
-	
+
 	>.ajax-progress-throbber {
 		position: absolute;
 		left: 62%;
 		top: 190px;
 		float: none;
 		display:inline;
-		
+
 		.throbber  {
 			display: block;
 			background: url('../images/loading.gif') no-repeat center center !important;
@@ -1928,7 +1928,7 @@ a.tabledrag-handle .handle {
    CTools Modal
    ----------------------------------------- */
 #modalBackdrop {
-/*  background: url(../images/colorbox/overlay.png) repeat 0 0 !important;*/  
+/*  background: url(../images/colorbox/overlay.png) repeat 0 0 !important;*/
   opacity: 0.5 !important;
   background-color: #000 !important;
 }
@@ -2842,13 +2842,13 @@ a.tabledrag-handle .handle {
 }
 */
 .page-node-add-resource {
-	
+
 	.ctools-modal-content {
 		padding: 10px 21px 15px !important;
-		
+
 		.modal-header {
 			padding: 0;
-			
+
 			.modal-title {
 				width: 100%;
 				padding-bottom: 0 !important;
@@ -2870,11 +2870,11 @@ a.tabledrag-handle .handle {
 	p {
 		font-size: 14px !important;
 	}
-	
+
 	button {
 		margin-right: 20px;
 	}
-	
+
 	button[id*='edit-submit'] {
 		margin-right: 25px;
 	}
@@ -2951,7 +2951,7 @@ a.tabledrag-handle .handle {
     cursor: pointer;
     /*for firefox*/
 		-moz-appearance: none;
-		padding: 0 3px; 
+		padding: 0 3px;
 	  /*for chrome*/
 	  -webkit-appearance:none;
 		text-indent: 3px;
@@ -3585,19 +3585,19 @@ form#sbac-user-filter-form #edit-email {
 		float: none;
 		padding-bottom: 20px;
 	}
-	
+
 	#main.large-9 {
 		margin: 0 auto;
-		
+
 		p {
 			font-size: 1rem;
 		}
 	}
-	
+
 	#main.push-3 {
 		left: auto;
 	}
-	
+
 	.error-code {
 		margin-top: 20px;
 		clear: left;
@@ -3612,21 +3612,21 @@ form#sbac-user-filter-form #edit-email {
 }
 
 #legal-login {
-	
+
 	#cancel-button {
 		.ajax-progress-throbber {
 			display: none;
 		}
 	}
-	
+
 	#sbac-user-disagree-tos {
 		box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
-		
+
 		&:focus, &:active {
 			background-color: #8A1538;
 		}
 	}
-}	
+}
 
 #sbac-user-disagree-tos-form {
 	margin-bottom: 0;
@@ -3662,80 +3662,80 @@ form#sbac-user-filter-form #edit-email {
     padding: 40px 50px;
     position: relative;
     width: 960px;
-    
+
     h1 {color: #04384e;}
   }
-  
+
   label {
     font-size: 15px;
   }
-  
+
   .form-item-maintenance-mode {
     .description {
       line-height: 1.4;
     }
   }
-  
+
   label[for="edit-critical-message-on-off"] {
     font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
     color: #04384e;
     font-size: 1.5em;
     margin-top: 40px;
   }
-  
+
   .start-date-wrapper,
   .end-date-wrapper {
     width: 50%;
   }
-  
+
   .start-date-wrapper {
     float: left;
     margin-top: 30px;
-    
+
     label[for="edit-critical-message-start-date"],
     #edit-critical-message-start-date{
       display: inline-block;
       float: left;
       padding-top: 0;
-      
+
       label {display: none;}
     }
-    
+
     .form-item.form-type-checkbox  {
       margin: 0.5em 0;
-      
+
       .description { margin-left: 2.2em; }
     }
   }
-  
+
   .end-date-wrapper {
     float: right;
     margin-top: 30px;
-    
+
     label[for="edit-critical-message-end-date"],
     #edit-critical-message-end-date{
       display: inline-block;
       float: left;
       padding-top: 0;
-      
+
       label {display: none;}
     }
-    
+
     .form-item.form-type-checkbox {
       margin: 0.5em 0;
-      
+
       .description { margin-left: 2.2em; }
     }
   }
-  
+
   .form-item-critical-message-textbox {
     clear: both;
     width: 100%;
     margin-top: 20px;
-    
+
     textarea {height: 100px;}
   }
-  
+
   label[for="edit-critical-message-start-date"],
   label[for="edit-critical-message-end-date"] {
     margin-top: 10px;
@@ -3751,25 +3751,25 @@ form#sbac-user-filter-form #edit-email {
   color: #464b54;
   padding: 10px 20px;
   overflow-y: scroll;
-  
+
   .modal-content {
     overflow: visible !important;
     overflow-y: visible !important;
-    
+
     h2 {color: #000;}
   }
-  
+
   #modal-title {
     color: #8a1538 !important;
     padding: 15px 0;
   }
-  
+
   strong {
     width: 100%;
     float: left;
     clear: both;
   }
-  
+
   button.close.form-submit,
   button.close#edit-submit {
     background: none;
@@ -3790,7 +3790,7 @@ form#sbac-user-filter-form #edit-email {
     top: -50px;
     z-index: 9999;
   }
-  
+
   button.close.form-submit:before {
     content: "\e636";
     font-family: SBAC;
@@ -3810,19 +3810,19 @@ form#sbac-user-filter-form #edit-email {
   width: 100% !important;
   font-family: Arial,sans-serif;
   line-height: 1.4;
-  
+
   .ui-widget-header {
     width: 640px;
     padding: 20px 40px 0;
     background-color: #fff;
     color: #000;
     margin: 0 auto;
-    
+
     .ui-button {
       display: none;
     }
   }
-  
+
   .ui-widget-content {
     width: 640px;
     background-color: #fff;
@@ -3830,17 +3830,17 @@ form#sbac-user-filter-form #edit-email {
     font-size: 16px;
     margin: 0 auto;
   }
-  
+
   #autologout-confirm.ui-widget-content {
     width: 640px !important;
     padding: 20px 40px;
     margin: 0 auto !important;
   }
-  
+
   .ui-dialog-buttonpane.ui-widget-content {
     border: none;
     padding-bottom: 25px;
-           
+
     button {
       float: right;
       margin: 0 20px 0 10px;
@@ -3857,20 +3857,20 @@ form#sbac-user-filter-form #edit-email {
     	text-align: center;
     	background-color: #2AA549;
       border: 1px solid #268A16;
-      
+
       &:hover {
     		background-color: #269542;
       }
     }
-    
+
     button.ui-state-default {
       background-image: none;
     }
-    
+
     button + button {
       background-color: #6E7379;
       border: 1px solid #4D5457;
-      
+
       &:hover {
     		background-color: #64696e;
       }
@@ -4122,7 +4122,7 @@ form#sbac-user-filter-form #edit-email {
 .view-display-id-grid_view .view-content{
   margin: 0;
   padding: 0;
-} 
+}
 
 .view-display-id-grid_view .view-content .views-row {
   max-width: 290px !important;

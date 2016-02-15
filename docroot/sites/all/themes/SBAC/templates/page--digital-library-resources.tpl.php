@@ -70,8 +70,8 @@ drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.
             <div class="inner-wrap">
             <nav class="main-nav left">
 <?php
-           
-            
+
+
             ?>
     <?php if ($main_menu_links && !in_array(SBAC_SHARE_GUEST, $user->roles) && !$conflicting_profile) : ?>
       <?php print $main_menu_links; ?>
@@ -196,9 +196,10 @@ drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.
             <div style="display:block;clear:both;width:100%"></div>
             </div>
 
-            
+
 <div class="row main-row">
   <div class="main-container clearfix">
+    <div id="spinner-load"></div>
   <?php if($blocks['block_applied_filters']):?>
     <div class="block block-sbac-resource contextual-links-region block-sbac-resource-sbac-resource-quick-search">
       <?php print $blocks['block_applied_filters']; ?>
