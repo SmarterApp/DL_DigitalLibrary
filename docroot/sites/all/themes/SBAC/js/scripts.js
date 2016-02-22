@@ -120,9 +120,9 @@
         })
 
         // Tracks the last active facet block to display open on page load.
-        $('#' + sessionStorage.getItem('lastClicked') + ' .facet-label a.category-hide').addClass('activated');
+        //$('#' + sessionStorage.getItem('lastClicked') + ' .facet-label a.category-hide').addClass('activated');
         $('#' + sessionStorage.getItem('lastClicked') + ' .item-list').css({
-          'height': '300px',
+          //'height': '300px',
         });
 
         $('a.facetapi-checkbox').each(function() {
