@@ -50,8 +50,10 @@
 
         // Controls the search box and plugs in a clear all x.
         $('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear"></div>');
-        if ($('#edit-sbac-digital-library-resources-text').val().length) {
-          $('#search-x-clear').text('x');
+        if ($('#edit-sbac-digital-library-resources-text').length) {
+          if ($('#edit-sbac-digital-library-resources-text').val().length) {
+            $('#search-x-clear').text('x');
+          }
         }
         $('#search-x-clear').click(function() {
           location.href = window.location.pathname;
