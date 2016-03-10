@@ -68,7 +68,9 @@ function theme_current_search_item_wrapper(array $variables) {
       drupal_html_class('current-search-item-' . $element['#current_search_name']),
     ),
   );
-  return '<div' . drupal_attributes($attributes) . '>' . $element['#children'] . '</div>';
+  if (arg(0) != 'forums-search' && empty($_GET['keyword'])) {
+    return '<div' . drupal_attributes($attributes) . '>' . $element['#children'] . '</div>';
+  }
 }
 
 /**
