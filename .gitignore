@@ -20,6 +20,10 @@ nbproject
 #Drupal Root folders
 /docroot/*
 
+!/docroot/profiles/
+/docroot/profiles/*
+!/docroot/profiles/sbac
+
 !/docroot/sites/
 /docroot/sites/*
 !/docroot/sites/all/
