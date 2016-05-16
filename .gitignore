@@ -1,3 +1,7 @@
+docroot
+!docroot/sites/all/modules/custom
+vendor
+
 # OS specific temporary files
 .DS_Store*
 ehthumbs.db

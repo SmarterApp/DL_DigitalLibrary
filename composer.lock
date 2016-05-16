@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f8d3c58fd4d59332b263227917ee73d3",
-    "content-hash": "41b4c362b4fc7c170746de47fa7cf2eb",
+    "hash": "d6ae8028b284ec6b48a13ba4ae6ee089",
+    "content-hash": "5a2d0337c5aa1db1d76e7ae14fb0f2f2",
     "packages": [
         {
             "name": "composer/installers",
@@ -271,15 +271,15 @@
         },
         {
             "name": "drupal/advagg",
-            "version": "7.2.18",
+            "version": "7.2.5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/advagg",
-                "reference": "f56c9fa4ce058975ebd4c4c19ac0f93921c9aa88"
+                "reference": "4e9e31587be0517b701b80ab2191d0988cf67f7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/advagg-7.x-2.18.zip",
+                "url": "https://ftp.drupal.org/files/projects/advagg-7.x-2.5.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -290,12 +290,9 @@
                 "drupal/advagg_bundler": "self.version",
                 "drupal/advagg_css_cdn": "self.version",
                 "drupal/advagg_css_compress": "self.version",
-                "drupal/advagg_ext_compress": "self.version",
-                "drupal/advagg_font": "self.version",
                 "drupal/advagg_js_cdn": "self.version",
                 "drupal/advagg_js_compress": "self.version",
                 "drupal/advagg_mod": "self.version",
-                "drupal/advagg_sri": "self.version",
                 "drupal/advagg_validator": "self.version"
             },
             "type": "drupal-module",
@@ -310,19 +307,19 @@
             ],
             "description": "Aggregates multiple CSS/JS files in a way that prevents 404 from happening when accessing a CSS or JS file.",
             "homepage": "https://www.drupal.org/project/advagg",
-            "time": "2016-03-29 22:10:41"
+            "time": "2014-02-28 01:45:38"
         },
         {
             "name": "drupal/apachesolr",
-            "version": "7.1.8",
+            "version": "7.1.7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/apachesolr",
-                "reference": "17d810c77d0c6f7ed33cba13b784c836e7b74615"
+                "reference": "95297447cbc93599866a32bcbb9be0d933be5dcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr-7.x-1.8.zip",
+                "url": "https://ftp.drupal.org/files/projects/apachesolr-7.x-1.7.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -348,7 +345,7 @@
             ],
             "description": "Framework for searching with Solr",
             "homepage": "https://www.drupal.org/project/apachesolr",
-            "time": "2015-12-02 19:11:47"
+            "time": "2014-08-29 12:57:01"
         },
         {
             "name": "drupal/apachesolr_attachments",
@@ -384,17 +381,11 @@
         },
         {
             "name": "drupal/apachesolr_comments",
-            "version": "7.1.0",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/apachesolr_comments.git",
-                "reference": "953bfcf08926b2d2d817be5001632fbfa07802b2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr_comments-7.x-1.0.zip",
-                "reference": null,
-                "shasum": null
+                "reference": "907651eec64cd95fcac52892ed0ee185a4426384"
             },
             "require": {
                 "drupal/apachesolr": "7.*",
@@ -413,7 +404,7 @@
             ],
             "description": "Seperates comments from nodes to allows direct searching and linking to comments.",
             "homepage": "https://www.drupal.org/project/apachesolr_comments",
-            "time": "2013-01-25 02:50:18"
+            "time": "2013-03-07 22:07:35"
         },
         {
             "name": "drupal/apachesolr_file",
@@ -497,20 +488,21 @@
         },
         {
             "name": "drupal/apachesolr_views",
-            "version": "7.1.0",
+            "version": "7.1.1-beta1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/apachesolr_views",
-                "reference": "cb214a70c45e0c35981ed01936af8e732363a59b"
+                "reference": "73b0a69d0cc63ca084ef3345646ab2354517ffd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr_views-7.x-1.0.zip",
+                "url": "https://ftp.drupal.org/files/projects/apachesolr_views-7.x-1.1-beta1.zip",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "drupal/apachesolr": "7.*",
+                "drupal/apachesolr_search": "7.*",
                 "drupal/drupal": "7.*",
                 "drupal/views": "7.*"
             },
@@ -524,9 +516,9 @@
             "license": [
                 "GPL-2.0+"
             ],
-            "description": "Provides Views Integration with Views",
+            "description": "Provides Apache Solr integration with Views",
             "homepage": "https://www.drupal.org/project/apachesolr_views",
-            "time": "2010-08-11 05:53:11"
+            "time": "2015-05-14 19:35:19"
         },
         {
             "name": "drupal/apachesolr_workbench_moderation",
@@ -563,15 +555,15 @@
         },
         {
             "name": "drupal/autologout",
-            "version": "7.4.4",
+            "version": "7.4.3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/autologout",
-                "reference": "d6ed22052b26d71b9da05712d97efc78e994939c"
+                "reference": "bb9bb3cdc4f115371853cfb7db34f03eb1d36d32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/autologout-7.x-4.4.zip",
+                "url": "https://ftp.drupal.org/files/projects/autologout-7.x-4.3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -590,19 +582,19 @@
             ],
             "description": "Adds automated timed logout",
             "homepage": "https://www.drupal.org/project/autologout",
-            "time": "2015-07-16 08:52:15"
+            "time": "2013-11-05 09:04:17"
         },
         {
             "name": "drupal/chosen",
-            "version": "7.2.0-beta5",
+            "version": "7.2.0-beta4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/chosen",
-                "reference": "cddbcffcc37478c69226d2f82f83a3def7faeaea"
+                "reference": "a8e1cca8573a3757ec683f4dd571c62bc482aa5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/chosen-7.x-2.0-beta5.zip",
+                "url": "https://ftp.drupal.org/files/projects/chosen-7.x-2.0-beta4.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -621,7 +613,7 @@
             ],
             "description": "Makes select elements more user-friendly using <a href=\"http://harvesthq.github.com/chosen/\">Chosen</a>.",
             "homepage": "https://www.drupal.org/project/chosen",
-            "time": "2016-03-25 10:24:04"
+            "time": "2014-03-08 05:13:37"
         },
         {
             "name": "drupal/comment_goodness",
@@ -756,15 +748,15 @@
         },
         {
             "name": "drupal/ctools",
-            "version": "7.1.9",
+            "version": "7.1.7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/ctools",
-                "reference": "1bf2f388cd7371ae16639349ae3b344732faafae"
+                "reference": "7b975e41382b2b8bb652d259f162871f4994b12f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/ctools-7.x-1.9.zip",
+                "url": "https://ftp.drupal.org/files/projects/ctools-7.x-1.7.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -801,19 +793,19 @@
             ],
             "description": "A library of helpful tools by Merlin of Chaos.",
             "homepage": "https://www.drupal.org/project/ctools",
-            "time": "2015-08-19 21:14:56"
+            "time": "2015-03-18 16:24:51"
         },
         {
             "name": "drupal/date",
-            "version": "7.2.9",
+            "version": "7.2.8",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/date",
-                "reference": "e37620a69f76354a7f87dff47ed4010da891d105"
+                "reference": "4b2b54dda2e36785bfa799eb7f139a43d1af73d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/date-7.x-2.9.zip",
+                "url": "https://ftp.drupal.org/files/projects/date-7.x-2.8.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -853,7 +845,7 @@
             ],
             "description": "Makes date/time fields available.",
             "homepage": "https://www.drupal.org/project/date",
-            "time": "2015-09-07 10:33:19"
+            "time": "2014-07-29 16:58:56"
         },
         {
             "name": "drupal/devel",
@@ -1025,15 +1017,15 @@
         },
         {
             "name": "drupal/drupal",
-            "version": "7.43.0",
+            "version": "7.38.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/drupal",
-                "reference": "c136d1347b9b92145590cb1f84cc02a695d721fe"
+                "reference": "7205c84e8cb7e74a10df39bda1eaaaccd9bebc8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/drupal-7.43.zip",
+                "url": "https://ftp.drupal.org/files/projects/drupal-7.38.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1128,19 +1120,19 @@
             ],
             "description": "Handles general site configuration for administrators.",
             "homepage": "https://www.drupal.org/project/drupal",
-            "time": "2016-02-24 19:26:52"
+            "time": "2015-06-17 18:38:44"
         },
         {
             "name": "drupal/ds",
-            "version": "7.2.14",
+            "version": "7.2.10",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/ds",
-                "reference": "2ccb1ddb42cb0dcf406bec5d8a70cc19ef2a1f0e"
+                "reference": "ffe3d47af751ffce3202aee651f6ebadf8ae5c59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/ds-7.x-2.14.zip",
+                "url": "https://ftp.drupal.org/files/projects/ds-7.x-2.10.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1171,19 +1163,19 @@
             ],
             "description": "Extend the display options for every entity type.",
             "homepage": "https://www.drupal.org/project/ds",
-            "time": "2016-01-19 18:29:18"
+            "time": "2015-05-21 08:02:47"
         },
         {
             "name": "drupal/eck",
-            "version": "7.2.0-rc8",
+            "version": "7.2.0-rc2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/eck",
-                "reference": "29ae02f3397b8c8ce75920c039db3778e0f10664"
+                "reference": "69ae16b820f48c333573194547d38a9737d1dada"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/eck-7.x-2.0-rc8.zip",
+                "url": "https://ftp.drupal.org/files/projects/eck-7.x-2.0-rc2.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1213,7 +1205,7 @@
             ],
             "description": "ECK (Entity Construction Kit) Allows users to create and administer entity types, bundles, and entities from an easy to use UI",
             "homepage": "https://www.drupal.org/project/eck",
-            "time": "2015-11-26 17:32:40"
+            "time": "2013-03-21 04:05:43"
         },
         {
             "name": "drupal/elysia_cron",
@@ -1281,15 +1273,15 @@
         },
         {
             "name": "drupal/entity",
-            "version": "7.1.7",
+            "version": "7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/entity",
-                "reference": "4d76c5c2302e225fea2db7aba08d48f3558bf275"
+                "reference": "724e7193419da3b7d3ca165025256371dd74eb4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity-7.x-1.7.zip",
+                "url": "https://ftp.drupal.org/files/projects/entity-7.x-1.6.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1311,25 +1303,24 @@
             ],
             "description": "Enables modules to work with any entity type and to provide entities.",
             "homepage": "https://www.drupal.org/project/entity",
-            "time": "2015-02-27 17:08:22"
+            "time": "2015-02-25 14:55:23"
         },
         {
             "name": "drupal/entitycache",
-            "version": "7.1.5",
+            "version": "7.1.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/entitycache",
-                "reference": "4b6494307851a6bc3096b7b3174ae4a1e78cc261"
+                "reference": "7e390b5d4112b581ac2885d8bd0f2cb5ce873284"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entitycache-7.x-1.5.zip",
+                "url": "https://ftp.drupal.org/files/projects/entitycache-7.x-1.2.zip",
                 "reference": null,
                 "shasum": null
             },
             "require": {
-                "drupal/drupal": "7.*",
-                "drupal/system": ">=7.36.0"
+                "drupal/drupal": "7.*"
             },
             "type": "drupal-module",
             "extra": {
@@ -1343,7 +1334,7 @@
             ],
             "description": "Provides caching for core entities including nodes and taxonomy terms.",
             "homepage": "https://www.drupal.org/project/entitycache",
-            "time": "2015-10-27 10:28:53"
+            "time": "2012-07-24 20:23:34"
         },
         {
             "name": "drupal/entityreference",
@@ -1418,15 +1409,15 @@
         },
         {
             "name": "drupal/facetapi_taxonomy_sort",
-            "version": "7.1.0-rc1",
+            "version": "7.1.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/facetapi_taxonomy_sort",
-                "reference": "a1e08ce7b468fa9d5f87f80e213c031c7d76cf70"
+                "reference": "658cc5a220584cb50402274e308a38ce99660069"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/facetapi_taxonomy_sort-7.x-1.0-rc1.zip",
+                "url": "https://ftp.drupal.org/files/projects/facetapi_taxonomy_sort-7.x-1.0-beta1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1446,7 +1437,7 @@
             ],
             "description": "Adds an option to taxonomy facets to sort by term weight.",
             "homepage": "https://www.drupal.org/project/facetapi_taxonomy_sort",
-            "time": "2016-04-28 13:06:40"
+            "time": "2011-12-24 10:16:13"
         },
         {
             "name": "drupal/fast_404",
@@ -1481,15 +1472,15 @@
         },
         {
             "name": "drupal/features",
-            "version": "7.2.10",
+            "version": "7.2.5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/features",
-                "reference": "41fd9b821b03cbdc6476428f375f16c9f8dc4185"
+                "reference": "14fa81e5c4c6016a33484d147d59bd5033619875"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/features-7.x-2.10.zip",
+                "url": "https://ftp.drupal.org/files/projects/features-7.x-2.5.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1508,19 +1499,19 @@
             ],
             "description": "Provides feature management for Drupal.",
             "homepage": "https://www.drupal.org/project/features",
-            "time": "2016-04-18 19:27:42"
+            "time": "2015-04-13 14:38:38"
         },
         {
             "name": "drupal/features_extra",
-            "version": "7.1.0",
+            "version": "7.1.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/features_extra",
-                "reference": "dcf9ad9d0926f515873053f72cc5bbd41cbda78d"
+                "reference": "75da91f29c3c93fedcea65c7c4b042366b6461e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/features_extra-7.x-1.0.zip",
+                "url": "https://ftp.drupal.org/files/projects/features_extra-7.x-1.0-beta1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1532,13 +1523,12 @@
             },
             "replace": {
                 "drupal/fe_block": "self.version",
-                "drupal/fe_date": "self.version",
                 "drupal/fe_nodequeue": "self.version",
                 "drupal/fe_profile": "self.version"
             },
             "suggest": {
-                "drupal/ctools": "Required by drupal/fe_date, drupal/fe_nodequeue, drupal/fe_profile",
-                "drupal/features": "Required by drupal/fe_date, drupal/fe_nodequeue, drupal/fe_profile",
+                "drupal/ctools": "Required by drupal/fe_nodequeue, drupal/fe_profile",
+                "drupal/features": "Required by drupal/fe_nodequeue, drupal/fe_profile",
                 "drupal/nodequeue": "Required by drupal/fe_nodequeue",
                 "drupal/profile": "Required by drupal/fe_profile"
             },
@@ -1554,19 +1544,19 @@
             ],
             "description": "Build blocks and block settings as features.",
             "homepage": "https://www.drupal.org/project/features_extra",
-            "time": "2015-06-10 07:08:47"
+            "time": "2013-04-15 07:56:34"
         },
         {
             "name": "drupal/field_collection",
-            "version": "7.1.0-beta11",
+            "version": "7.1.0-beta8",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/field_collection",
-                "reference": "ec024e5cfb5308bce4d10756683a8cd3fa881b8f"
+                "reference": "bb4c9813cbd277dbf5d4710b7600fed7ba3f1149"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/field_collection-7.x-1.0-beta11.zip",
+                "url": "https://ftp.drupal.org/files/projects/field_collection-7.x-1.0-beta8.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1586,19 +1576,19 @@
             ],
             "description": "Provides a field collection field, to which any number of fields can be attached.",
             "homepage": "https://www.drupal.org/project/field_collection",
-            "time": "2015-10-22 19:51:03"
+            "time": "2014-11-04 14:48:00"
         },
         {
             "name": "drupal/field_group",
-            "version": "7.1.5",
+            "version": "7.1.4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/field_group",
-                "reference": "1726c5191a7a7aef173e3a67ba46c3be9e470953"
+                "reference": "1c4f45993d4651f0362a276ec5da949e13ec2c3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/field_group-7.x-1.5.zip",
+                "url": "https://ftp.drupal.org/files/projects/field_group-7.x-1.4.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1619,19 +1609,19 @@
             ],
             "description": "Provides the ability to group your fields on both form and display.",
             "homepage": "https://www.drupal.org/project/field_group",
-            "time": "2016-01-05 22:32:38"
+            "time": "2014-06-04 21:35:46"
         },
         {
             "name": "drupal/file_entity",
-            "version": "7.2.0-beta2",
+            "version": "7.2.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/file_entity",
-                "reference": "812dc896a258837017166fdd8d2fb381c0433001"
+                "reference": "72ab07c1b8d630b70baf537eef900fd259ccecad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/file_entity-7.x-2.0-beta2.zip",
+                "url": "https://ftp.drupal.org/files/projects/file_entity-7.x-2.0-beta1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1654,7 +1644,7 @@
             ],
             "description": "Extends Drupal file entities to be fieldable and viewable.",
             "homepage": "https://www.drupal.org/project/file_entity",
-            "time": "2015-07-14 17:00:36"
+            "time": "2014-10-04 11:01:19"
         },
         {
             "name": "drupal/filter_perms",
@@ -1689,15 +1679,15 @@
         },
         {
             "name": "drupal/fivestar",
-            "version": "7.2.2",
+            "version": "7.2.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/fivestar",
-                "reference": "c1c12ec6c82c541ad7d1f71eb7de968c5e652802"
+                "reference": "0bde51edc93f5667b7b0ce4a5908161a67e3d501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/fivestar-7.x-2.2.zip",
+                "url": "https://ftp.drupal.org/files/projects/fivestar-7.x-2.1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1717,19 +1707,19 @@
             ],
             "description": "Enables fivestar ratings on content, users, etc.",
             "homepage": "https://www.drupal.org/project/fivestar",
-            "time": "2016-04-22 11:04:24"
+            "time": "2014-03-11 07:43:04"
         },
         {
             "name": "drupal/flag",
-            "version": "7.3.7",
+            "version": "7.3.6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/flag",
-                "reference": "6bf834cb01caa0bf4198b2bedd3ec953fee9a9fe"
+                "reference": "a273aa200c2f2b5cd6d765feaf523b81e6606ee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flag-7.x-3.7.zip",
+                "url": "https://ftp.drupal.org/files/projects/flag-7.x-3.6.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1752,19 +1742,19 @@
             ],
             "description": "Create customized flags that users can set on entities.",
             "homepage": "https://www.drupal.org/project/flag",
-            "time": "2015-10-14 13:19:02"
+            "time": "2015-03-02 20:16:33"
         },
         {
             "name": "drupal/flexslider",
-            "version": "7.2.0-rc1",
+            "version": "7.2.0-alpha3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/flexslider",
-                "reference": "d73e58a8c022767aacdcd5f65198924d977213a7"
+                "reference": "068df89c31ccdfe50c73c4922d8425cb7fc05793"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flexslider-7.x-2.0-rc1.zip",
+                "url": "https://ftp.drupal.org/files/projects/flexslider-7.x-2.0-alpha3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1801,7 +1791,7 @@
             ],
             "description": "Integrate the FlexSlider 2 library with Drupal",
             "homepage": "https://www.drupal.org/project/flexslider",
-            "time": "2015-07-30 19:31:20"
+            "time": "2013-09-03 16:13:52"
         },
         {
             "name": "drupal/globalredirect",
@@ -1901,15 +1891,15 @@
         },
         {
             "name": "drupal/imce",
-            "version": "7.1.10",
+            "version": "7.1.9",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/imce",
-                "reference": "0b60beb560e986ff6b03ebea64db072bb6ff6ae2"
+                "reference": "6af7f032390685d98ed47e8927642d704ac45d18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/imce-7.x-1.10.zip",
+                "url": "https://ftp.drupal.org/files/projects/imce-7.x-1.9.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1928,7 +1918,7 @@
             ],
             "description": "An image/file uploader and browser supporting personal directories and user quota.",
             "homepage": "https://www.drupal.org/project/imce",
-            "time": "2016-03-30 12:48:43"
+            "time": "2014-04-05 11:11:54"
         },
         {
             "name": "drupal/imce_wysiwyg",
@@ -2031,15 +2021,15 @@
         },
         {
             "name": "drupal/jquery_update",
-            "version": "7.2.7",
+            "version": "7.2.6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/jquery_update",
-                "reference": "b622885f942ef212f51981d1c88b57aef0c2dfa5"
+                "reference": "42c1cf9a06cbf613902e7b3e93425ae4ed05fd17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jquery_update-7.x-2.7.zip",
+                "url": "https://ftp.drupal.org/files/projects/jquery_update-7.x-2.6.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2058,7 +2048,7 @@
             ],
             "description": "Update jQuery and jQuery UI to a more recent version.",
             "homepage": "https://www.drupal.org/project/jquery_update",
-            "time": "2015-10-20 22:18:12"
+            "time": "2015-06-17 13:56:33"
         },
         {
             "name": "drupal/label_help",
@@ -2157,15 +2147,15 @@
         },
         {
             "name": "drupal/libraries",
-            "version": "7.2.3",
+            "version": "7.2.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/libraries",
-                "reference": "943761c08b01c76574ec6b2a6f6cd8ce19fe4987"
+                "reference": "744cd04d1c78a08d10b511f67904f0839baf94ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/libraries-7.x-2.3.zip",
+                "url": "https://ftp.drupal.org/files/projects/libraries-7.x-2.2.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2185,19 +2175,19 @@
             ],
             "description": "Allows version-dependent and shared usage of external libraries.",
             "homepage": "https://www.drupal.org/project/libraries",
-            "time": "2016-05-12 17:50:14"
+            "time": "2014-02-09 16:56:24"
         },
         {
             "name": "drupal/link",
-            "version": "7.1.4",
+            "version": "7.1.3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/link",
-                "reference": "3cfdc1848d00dc5d5a7b2e9e9b7e85a04fdbe9f5"
+                "reference": "7170806a07386c1619ceadcfc4b6018d20982e4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/link-7.x-1.4.zip",
+                "url": "https://ftp.drupal.org/files/projects/link-7.x-1.3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2216,7 +2206,7 @@
             ],
             "description": "Defines simple link field types.",
             "homepage": "https://www.drupal.org/project/link",
-            "time": "2015-12-09 22:02:04"
+            "time": "2014-10-15 20:42:49"
         },
         {
             "name": "drupal/m4032404",
@@ -2251,17 +2241,11 @@
         },
         {
             "name": "drupal/maillog",
-            "version": "7.1.0-alpha1",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/maillog",
-                "reference": "e8ed3229f0f41f84274cc7f720b0e263d17df530"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/maillog-7.x-1.0-alpha1.zip",
-                "reference": null,
-                "shasum": null
+                "reference": "80e9748a990ba344acf29c578527739b7b0483d2"
             },
             "require": {
                 "drupal/drupal": "7.*",
@@ -2279,7 +2263,7 @@
             ],
             "description": "Utility to log all Mails for debugging purposes. It's possible to suppress mail delivery for e.g. dev or staging systems.",
             "homepage": "https://www.drupal.org/project/maillog",
-            "time": "2014-07-17 22:46:43"
+            "time": "2016-05-09 10:40:05"
         },
         {
             "name": "drupal/mailsystem",
@@ -2315,15 +2299,15 @@
         },
         {
             "name": "drupal/maxlength",
-            "version": "7.3.2",
+            "version": "7.3.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/maxlength",
-                "reference": "b84c0f2b799ff9d77ed11aa4223103c2247348bf"
+                "reference": "33cf366d504a0b32604bcdef72e3088548ed10ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/maxlength-7.x-3.2.zip",
+                "url": "https://ftp.drupal.org/files/projects/maxlength-7.x-3.0-beta1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2342,19 +2326,19 @@
             ],
             "description": "Limit the number of characters in textfields and textareas and shows the amount of characters left.",
             "homepage": "https://www.drupal.org/project/maxlength",
-            "time": "2015-03-11 19:54:46"
+            "time": "2011-11-08 21:41:19"
         },
         {
             "name": "drupal/media",
-            "version": "7.2.0-beta1",
+            "version": "7.2.0-alpha4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/media",
-                "reference": "19a155b1a78f18355dc9a2a614524178816be2cc"
+                "reference": "e4c529a28990c1da66e45ffa7ad45872be3044ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/media-7.x-2.0-beta1.zip",
+                "url": "https://ftp.drupal.org/files/projects/media-7.x-2.0-alpha4.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2389,7 +2373,7 @@
             ],
             "description": "Provides the core Media API",
             "homepage": "https://www.drupal.org/project/media",
-            "time": "2015-07-14 17:20:45"
+            "time": "2014-10-04 10:15:22"
         },
         {
             "name": "drupal/media_vimeo",
@@ -2425,20 +2409,21 @@
         },
         {
             "name": "drupal/media_youtube",
-            "version": "7.2.0-rc5",
+            "version": "7.2.0-rc3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/media_youtube",
-                "reference": "df382109092f33bb9661d96c59cedeeb7a9fdee5"
+                "reference": "c53660cde8c7d223f62ea41bc1ce0391c15ed006"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/media_youtube-7.x-2.0-rc5.zip",
+                "url": "https://ftp.drupal.org/files/projects/media_youtube-7.x-2.0-rc3.zip",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "drupal/drupal": "7.*",
+                "drupal/media": "7.*",
                 "drupal/media_internet": "7.*"
             },
             "type": "drupal-module",
@@ -2451,9 +2436,9 @@
             "license": [
                 "GPL-2.0+"
             ],
-            "description": "Adds YouTube as a supported media provider.",
+            "description": "Provides YouTube support for File Entity and the Media module.",
             "homepage": "https://www.drupal.org/project/media_youtube",
-            "time": "2015-03-23 06:10:07"
+            "time": "2013-03-22 16:50:32"
         },
         {
             "name": "drupal/memcache",
@@ -2491,15 +2476,15 @@
         },
         {
             "name": "drupal/message",
-            "version": "7.1.11",
+            "version": "7.1.10",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/message",
-                "reference": "338e7afa0c805fc6ffa3e762ba765f3dbe3f1bd5"
+                "reference": "a1848731810540dc38714be06e1497fe4ede9bf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/message-7.x-1.11.zip",
+                "url": "https://ftp.drupal.org/files/projects/message-7.x-1.10.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2534,7 +2519,7 @@
             ],
             "description": "A general message logging utility.",
             "homepage": "https://www.drupal.org/project/message",
-            "time": "2015-12-22 07:14:30"
+            "time": "2015-03-05 19:20:31"
         },
         {
             "name": "drupal/message_notify",
@@ -2626,15 +2611,15 @@
         },
         {
             "name": "drupal/mimemail",
-            "version": "7.1.0-beta4",
+            "version": "7.1.0-beta3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/mimemail",
-                "reference": "ed10b61494079e909adfa9d4cf4c5831111468d8"
+                "reference": "07fb9bafdaee2bb5f71159454897653bb21a2638"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/mimemail-7.x-1.0-beta4.zip",
+                "url": "https://ftp.drupal.org/files/projects/mimemail-7.x-1.0-beta3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2645,8 +2630,7 @@
             },
             "replace": {
                 "drupal/mimemail_action": "self.version",
-                "drupal/mimemail_compress": "self.version",
-                "drupal/mimemail_example": "self.version"
+                "drupal/mimemail_compress": "self.version"
             },
             "suggest": {
                 "drupal/trigger": "Required by drupal/mimemail_action"
@@ -2663,7 +2647,7 @@
             ],
             "description": "Send MIME-encoded emails with embedded images and attachments.",
             "homepage": "https://www.drupal.org/project/mimemail",
-            "time": "2015-08-02 15:37:51"
+            "time": "2014-03-05 11:06:58"
         },
         {
             "name": "drupal/module_filter",
@@ -2762,15 +2746,15 @@
         },
         {
             "name": "drupal/pathauto",
-            "version": "7.1.3",
+            "version": "7.1.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/pathauto",
-                "reference": "88db3ee74ddf62eab54e12347955dd2f6dd66737"
+                "reference": "e95ceafa6b4638084cc37aeaff268f117f84a111"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/pathauto-7.x-1.3.zip",
+                "url": "https://ftp.drupal.org/files/projects/pathauto-7.x-1.2.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -2791,7 +2775,7 @@
             ],
             "description": "Provides a mechanism for modules to automatically generate aliases for the content they manage.",
             "homepage": "https://www.drupal.org/project/pathauto",
-            "time": "2015-10-01 18:37:04"
+            "time": "2012-08-09 15:07:09"
         },
         {
             "name": "drupal/phonetic",
@@ -2998,15 +2982,15 @@
         },
         {
             "name": "drupal/reroute_email",
-            "version": "7.1.2",
+            "version": "7.1.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/reroute_email",
-                "reference": "aa420cd2fd14a75fc00e19c8052efb942edce37c"
+                "reference": "c6061b014c08950369b338ca80af8c79ef42ed57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/reroute_email-7.x-1.2.zip",
+                "url": "https://ftp.drupal.org/files/projects/reroute_email-7.x-1.1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3025,7 +3009,7 @@
             ],
             "description": "Reroutes emails send from the site to a predefined email. Useful for test sites.",
             "homepage": "https://www.drupal.org/project/reroute_email",
-            "time": "2014-11-01 06:46:21"
+            "time": "2011-11-04 14:10:03"
         },
         {
             "name": "drupal/rules",
@@ -3070,15 +3054,15 @@
         },
         {
             "name": "drupal/scheduler",
-            "version": "7.1.4",
+            "version": "7.1.3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/scheduler",
-                "reference": "ca2364be5d57ec5e53ebfa35a3f04459d964a1e4"
+                "reference": "e21b69e990beefde45dd17bb16f2550dd01a1dcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/scheduler-7.x-1.4.zip",
+                "url": "https://ftp.drupal.org/files/projects/scheduler-7.x-1.3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3097,19 +3081,19 @@
             ],
             "description": "This module allows nodes to be published and unpublished on specified dates and time.",
             "homepage": "https://www.drupal.org/project/scheduler",
-            "time": "2016-03-12 16:47:41"
+            "time": "2014-11-11 17:20:07"
         },
         {
             "name": "drupal/simple_dialog",
-            "version": "7.1.10",
+            "version": "7.1.9",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/simple_dialog",
-                "reference": "66b4c568746f7b78c5fd6f6d7832db383c09ceae"
+                "reference": "93748ef0950860dac08d76e13abd6b1731db8913"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/simple_dialog-7.x-1.10.zip",
+                "url": "https://ftp.drupal.org/files/projects/simple_dialog-7.x-1.9.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3131,19 +3115,19 @@
             ],
             "description": "Provides an API to create simple modal dialogs. Leverages the jQuery ui dialog plugin included with Drupal 7.",
             "homepage": "https://www.drupal.org/project/simple_dialog",
-            "time": "2013-10-24 18:34:11"
+            "time": "2013-04-12 06:16:31"
         },
         {
             "name": "drupal/smtp",
-            "version": "7.1.4",
+            "version": "7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/smtp",
-                "reference": "2b2db7af71659976690e117e4c15ecc1e81022d4"
+                "reference": "f883d14de74050a3794c4c49582f181affb2f074"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/smtp-7.x-1.4.zip",
+                "url": "https://ftp.drupal.org/files/projects/smtp-7.x-1.0.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3162,19 +3146,19 @@
             ],
             "description": "Allow for site emails to be sent through an SMTP server of your choice.",
             "homepage": "https://www.drupal.org/project/smtp",
-            "time": "2016-04-27 11:14:25"
+            "time": "2013-02-16 22:27:44"
         },
         {
             "name": "drupal/stage_file_proxy",
-            "version": "7.1.7",
+            "version": "7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/stage_file_proxy",
-                "reference": "bf221a8515d68aa8db9439042d04e94ed6aaed47"
+                "reference": "b2a2fd714a3c6cb8499f29369cd3a6fb7db09f4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/stage_file_proxy-7.x-1.7.zip",
+                "url": "https://ftp.drupal.org/files/projects/stage_file_proxy-7.x-1.6.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3193,7 +3177,7 @@
             ],
             "description": "Proxies files from production server so you don't have to transfer them manually",
             "homepage": "https://www.drupal.org/project/stage_file_proxy",
-            "time": "2014-10-29 15:17:42"
+            "time": "2014-04-23 13:40:19"
         },
         {
             "name": "drupal/strongarm",
@@ -3261,15 +3245,15 @@
         },
         {
             "name": "drupal/title",
-            "version": "7.1.0-alpha8",
+            "version": "7.1.0-alpha7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/title",
-                "reference": "2415009632cdc4546fcd5734eb3ce53bcfd211f3"
+                "reference": "bd4d03fdeda4320b58e5a2101a0f334f41a0bbeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/title-7.x-1.0-alpha8.zip",
+                "url": "https://ftp.drupal.org/files/projects/title-7.x-1.0-alpha7.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3289,7 +3273,7 @@
             ],
             "description": "Replaces entity legacy fields with regular fields.",
             "homepage": "https://www.drupal.org/project/title",
-            "time": "2016-03-28 14:58:06"
+            "time": "2013-03-18 16:55:21"
         },
         {
             "name": "drupal/token",
@@ -3411,15 +3395,15 @@
         },
         {
             "name": "drupal/usermerge",
-            "version": "7.2.11",
+            "version": "7.2.10",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/usermerge",
-                "reference": "fea7e37cf0a0c5137bcf529c71ca344dd34c4788"
+                "reference": "e2e60b04f2f832e717790d3648b58239be8cd56a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/usermerge-7.x-2.11.zip",
+                "url": "https://ftp.drupal.org/files/projects/usermerge-7.x-2.10.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3441,19 +3425,19 @@
             ],
             "description": "Provides an advanced mechanism to merge user accounts together.",
             "homepage": "https://www.drupal.org/project/usermerge",
-            "time": "2015-08-17 10:14:32"
+            "time": "2015-06-08 06:11:06"
         },
         {
             "name": "drupal/views",
-            "version": "7.3.13",
+            "version": "7.3.11",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/views",
-                "reference": "5c2bfc9638e3e78023d1efb754b79d4ac994d0c6"
+                "reference": "cef693bc5874d75659bbcb03f77fc7ecf106be97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views-7.x-3.13.zip",
+                "url": "https://ftp.drupal.org/files/projects/views-7.x-3.11.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3476,7 +3460,7 @@
             ],
             "description": "Create customized lists and queries from your database.",
             "homepage": "https://www.drupal.org/project/views",
-            "time": "2015-11-06 10:12:01"
+            "time": "2015-04-29 15:22:19"
         },
         {
             "name": "drupal/views_accelerator",
@@ -3577,15 +3561,15 @@
         },
         {
             "name": "drupal/views_data_export",
-            "version": "7.3.0-beta9",
+            "version": "7.3.0-beta8",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/views_data_export",
-                "reference": "9b840da5505ba6ff844b9a2ca7f3f4b1237f8e24"
+                "reference": "32abc1aab9cad964f2403e2466a12f10e1a61d2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_data_export-7.x-3.0-beta9.zip",
+                "url": "https://ftp.drupal.org/files/projects/views_data_export-7.x-3.0-beta8.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3605,7 +3589,7 @@
             ],
             "description": "Plugin to export views data into various file formats",
             "homepage": "https://www.drupal.org/project/views_data_export",
-            "time": "2015-10-26 06:44:50"
+            "time": "2014-08-13 19:37:38"
         },
         {
             "name": "drupal/views_fields_combine",
@@ -3705,22 +3689,22 @@
         },
         {
             "name": "drupal/views_pdf",
-            "version": "7.1.5",
+            "version": "7.1.3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/views_pdf",
-                "reference": "372be29634833af3152f48fa24f5d1f9f73e1647"
+                "reference": "4061c5a65141f7512760abb2f353a43ecdac0a8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_pdf-7.x-1.5.zip",
+                "url": "https://ftp.drupal.org/files/projects/views_pdf-7.x-1.3.zip",
                 "reference": null,
                 "shasum": null
             },
             "require": {
                 "drupal/drupal": "7.*",
                 "drupal/jquery_update": "7.*",
-                "drupal/libraries": "7.2.*",
+                "drupal/php": "7.*",
                 "drupal/views": "7.*"
             },
             "replace": {
@@ -3742,7 +3726,7 @@
             ],
             "description": "Views plugin to export a view as a PDF file.",
             "homepage": "https://www.drupal.org/project/views_pdf",
-            "time": "2016-02-01 15:46:01"
+            "time": "2013-11-18 23:52:02"
         },
         {
             "name": "drupal/votingapi",
@@ -3777,17 +3761,11 @@
         },
         {
             "name": "drupal/wordfilter",
-            "version": "7.1.0",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/wordfilter.git",
-                "reference": "5dab9163f7b0d4f5fcfb25611bd5062e36844c15"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/wordfilter-7.x-1.0.zip",
-                "reference": null,
-                "shasum": null
+                "reference": "f2db2df0df8df4368abc477ff57f802b61ead3ef"
             },
             "require": {
                 "drupal/drupal": "7.*"
@@ -3804,7 +3782,7 @@
             ],
             "description": "Replaces words inside posts with filtered versions.",
             "homepage": "https://www.drupal.org/project/wordfilter",
-            "time": "2011-02-18 01:08:51"
+            "time": "2014-07-23 20:03:42"
         },
         {
             "name": "drupal/workbench",
@@ -3840,15 +3818,15 @@
         },
         {
             "name": "drupal/workbench_moderation",
-            "version": "7.1.4",
+            "version": "7.1.3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/workbench_moderation",
-                "reference": "5c2769ac58b4fc28b1c103444b9584af118e522e"
+                "reference": "342a5703c97caad860d8907af2c8efaec9ebb405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/workbench_moderation-7.x-1.4.zip",
+                "url": "https://ftp.drupal.org/files/projects/workbench_moderation-7.x-1.3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -3867,7 +3845,7 @@
             ],
             "description": "Provides content moderation services",
             "homepage": "https://www.drupal.org/project/workbench_moderation",
-            "time": "2015-02-06 17:12:16"
+            "time": "2013-01-16 22:35:09"
         },
         {
             "name": "drupal/wysiwyg",
@@ -3935,7 +3913,21 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/apachesolr_comments": 20,
+        "drupal/apachesolr_file": 20,
+        "drupal/apachesolr_term": 20,
+        "drupal/apachesolr_user": 20,
+        "drupal/devtools": 20,
+        "drupal/dialog": 20,
+        "drupal/field_collection": 20,
+        "drupal/maillog": 20,
+        "drupal/message_notify": 20,
+        "drupal/morecomments": 20,
+        "drupal/upload_qc": 20,
+        "drupal/views_infinite_scroll": 20,
+        "drupal/wordfilter": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
