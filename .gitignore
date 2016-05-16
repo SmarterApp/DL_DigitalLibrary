@@ -16,3 +16,9 @@ nbproject
 # Tools
 .svn
 .sass-cache
+
+#Drupal Root folders
+/docroot/
+!/docroot/sites/all/modules/custom/
+
+/vendor
