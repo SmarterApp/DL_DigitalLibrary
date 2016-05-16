@@ -1,0 +1,4242 @@
+<?php
+/**
+ * @file.
+ * Module to handle all resource functionality.
+ *
+ * Provides:
+ *  - Exports the resource content type
+ *  - The Digital Library, Related Resources and My Resources tabs.
+ *  - The Resource contribution form and workflow
+ */
+
+include_once 'sbac_resource.features.inc';
+include_once 'sbac_resource.forms.inc';
+include_once 'sbac_resource.theme.inc';
+
+// Count.
+define('SBAC_RESOURCE_MY_RESOURCES_COUNT', 'sbac-my-resources-count');
+define('SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_COUNT', 'sbac-digital-library-resources-count');
+define('SBAC_RESOURCE_RESOURCE_REVIEW', 'sbac-resoruce-review-count');
+
+// View Mode.
+define('SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE', 'sbac-dl-view-mode');
+define('SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE', 'sbac-mr-view-mode');
+define('SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE', 'sbac-rr-view-mode');
+
+define('SBAC_RESOURCE_ALL_NODE_FLAG', 0);
+define('SBAC_RESOURCE_ALL_USER_FLAG', 0);
+
+define('SBAC_RESOURCE_REVIEWER_ROLE', 'resource_reviewer');
+define('SBAC_RESOURCE_PUBLISHER_ROLE', 'resource publisher');
+define('SBAC_RESOURCE_FACILITATOR_ROLE', 'facilitator');
+define('SBAC_RESOURCE_ADMINISTRATOR_ROLE', 'administrator');
+
+define('SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME', 'sbac-smart-search-last-url');
+define('SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME', 'sbac-smart-search-url-history');
+define('SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS', 'sbac-smart-search-hide-filters');
+define('SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS', 'sbac-smart-search-show-status');
+
+define('SBAC_RESOURCE_SUBNAV_ACTIVE', 'sbac-resource-sub-nav-active');
+define('SBAC_RESOURCE_SUBNAV_SHOW_RESUBMISSION_TAB', 'resource-review-show-resubmission-tab');
+define('SBAC_RESOURCE_SUBNAV_RESOURCES', 'resource-review-resources');
+define('SBAC_RESOURCE_SUBNAV_RESOURCES_COUNT', 'resource-review-resources-count');
+define('SBAC_RESOURCE_SUBNAV_RESUBMISSIONS', 'resource-review-resubmissions');
+define('SBAC_RESOURCE_SUBNAV_RESUBMISSIONS_COUNT', 'resource-review-resubmissions-count');
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_resource_update_projects_alter(&$projects) {
+  unset($projects['sbac_resource']);
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_resource_menu() {
+  $items = array();
+
+  $items['sbac_resource/%ctools_js/add-alignment'] = array(
+    'title' => 'Add Alignment',
+    'page callback' => 'sbac_resource_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac_resource/%ctools_js/filter-by-alignment'] = array(
+    'title' => 'Filter',
+    'page callback' => 'sbac_resource_filter_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac_resource/%ctools_js/submit-resource'] = array(
+    'title' => 'Submit Resource',
+    'page callback' => 'sbac_resource_submit_resource_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac_resource/%ctools_js/delete-resource'] = array(
+    'title' => 'Delete Resource',
+    'page callback' => 'sbac_resource_delete_resource_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac_resource/%ctools_js/save-all-changes'] = array(
+    'title' => 'Save All Changes',
+    'page callback' => 'sbac_resource_save_all_changes_modal_callback',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['sbac-resource/%ctools_js/unsubmit-resource-modal'] = array(
+    'title' => 'Unsubmit Resource',
+    'page callback' => 'sbac_resource_unsubmit_resource_modal',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['digital-library-resources'] = array(
+    'title' => 'Digital Library Resources',
+    'description' => 'Digital Library Resources',
+    'page callback' => 'sbac_resource_digital_library_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -50,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['my-resources'] = array(
+    'title' => 'My Resources',
+    'description' => 'My Resources',
+    'page callback' => 'sbac_resource_my_resources_page',
+    'access callback' => 'sbac_resource_my_resources_access_callback',
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -48,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['resource-review'] = array(
+    'title' => 'Resource Review',
+    'description' => 'Resource Review',
+    'page callback' => 'sbac_resource_resource_review_page',
+    'access callback' => 'sbac_resource_resource_review_access_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -49,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['resource-review-reset'] = array(
+    'title' => 'Resource Review Reset',
+    'description' => 'Resource Review Reset',
+    'page callback' => 'sbac_resource_resource_review_page_reset',
+    'access callback' => 'sbac_resource_resource_review_access_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['dlr-smart-search'] = array(
+    'title' => 'Digital Library Resources',
+    'page callback' => 'sbac_resource_smart_search_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'sbac_resource.menu_callbacks.inc',
+  );
+
+  $items['admin/sbac/smart-search-builder'] = array(
+    'title' => 'Smart Search Query Builder',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_smart_search_builder_form'),
+    'access arguments' => array('configure sbac'),
+    'weight' => 10,
+    'file' => 'sbac_resource.forms.inc',
+  );
+
+  $items['admin/structure/types/manage/%node_type/messages'] = array(
+    'title' => 'Messages',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_form_messages'),
+    'access arguments' => array(4),
+    'access callback' => array('sbac_resource_form_messages_access'),
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+    'file' => 'sbac_resource.admin.inc',
+  );
+
+  $items['sbac-resource/url-exists'] = array(
+    'title' => 'URL Exists',
+    'page callback' => 'sbac_resource_url_exists_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  $items['sbac-resource/load-more'] = array(
+    'title' => 'Load More View Data',
+    'page callback' => 'sbac_resource_load_more_ajax',
+    'access arguments' => array('access content'),
+  );
+
+  $items['sbac-resource/update-thumbnail'] = array(
+    'title' => 'Update Resource Thumbnail',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_update_thumb_form'),
+    'access arguments' => array('configure sbac'),
+  );
+
+  $items['sbac-resource/print-about-tab/%node'] = array(
+    'title' => 'Print about this tab',
+    'page callback' => 'sbac_resource_print_about_this_tab',
+    'access arguments' => array('access content'),
+    'page arguments' => array(2),
+  );
+
+  return $items;
+}
+
+
+/**
+ * Create pdf for contributors.
+ */
+function sbac_resource_print_about_this_tab($node) {
+  drupal_add_js(drupal_get_path('module', 'sbac_core') . '/components/feedback/js/feedback_about.js');
+  $output = theme('sbac_resource_profile_print', array('node' => $node));
+  $query = $_GET;
+  $cid = NULL;
+  module_load_include('inc', 'print', 'print.pages');
+  $print = print_controller('node/' . $node->nid, $query, $cid, PRINT_PDF_FORMAT);
+  if ($print === FALSE) {
+    return;
+  }
+
+  $print['content'] = $output;
+  $print['author_owner'] = '
+      <div class="print-author"><span class="print-author-title">Author: </span>' . $node->field_author['und'][0]['safe_value'] . '</div><div class="print-owner"><span class="print-owner-title">Owner: </span>' . $node->field_publisher['und'][0]['safe_value'] . '</div>';
+  global $base_url;
+  $print['css'] = '<link rel="stylesheet" type="text/css" href="' . $base_url . '/' . drupal_get_path('module', 'sbac_resource') . '/css/print_style.css' . '">';
+  // Img elements must be set to absolute.
+  $pattern = '!<(img\s[^>]*?)>!is';
+  $print['content'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['content']);
+  $print['logo'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['logo']);
+  $print['footer_message'] = preg_replace_callback($pattern, '_print_rewrite_urls', $print['footer_message']);
+  $print['sendtoprinter'] = '';
+  $html = theme('sbac_resource_print', array(
+      'print' => $print,
+      'type' => PRINT_PDF_FORMAT,
+      'node' => $node
+    ));
+
+  // Convert the a href elements, to make sure no relative links remain.
+  $pattern = '!<(a\s[^>]*?)>!is';
+  $html = preg_replace_callback($pattern, '_print_rewrite_urls', $html);
+  // And make anchor links relative again, to permit in-PDF navigation.
+  $html = preg_replace("!${base_url}/" . PRINTPDF_PATH . '/.*?#!', '#', $html);
+  module_load_include('inc', 'print_pdf', 'print_pdf.pages');
+  $content = print_pdf_generate_html($print, $html);
+  $directory = 'private://resource_pdfs/' . floor($node->nid / 32000) . '/' . $node->nid . '/';
+  $writable = file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+  file_save_data($content, $directory . 'about_this_resource.pdf', FILE_EXISTS_REPLACE);
+
+  return '';
+}
+
+/**
+ * Outputs the profile fields.
+ *
+ * @param $node
+ */
+function sbac_resource_profile_fields(&$node) {
+  $resource_node = $node['node'];
+  // Subjects and Domains
+  if (isset($resource_node->field_subject['und']['0'])) {
+    $resource_node->resource_profile_left['subjects']['title'] = 'Subjects and Domains';
+    $resource_node->resource_profile_left['subjects']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_subject);
+  }
+
+  // Common Core State Standards
+  if (isset($resource_node->field_alignment_term['und']['0'])) {
+    $resource_node->resource_profile_left['ccss']['title'] = 'Common Core State Standards';
+    $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_alignment_term, TRUE);
+  }
+
+  // Grades
+  if (isset($resource_node->field_grades['und']['0'])) {
+    $resource_node->resource_profile_left['grades']['title'] = 'Grades';
+    $resource_node->resource_profile_left['grades']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_grades);
+  }
+
+  // Intended End Use
+  if (isset($resource_node->field_intended_end_user['und']['0'])) {
+    $resource_node->resource_profile_left['end_use']['title'] = 'Intended End Users';
+    $resource_node->resource_profile_left['end_use']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_intended_end_user);
+  }
+
+  // Intended Student Populations
+  if (isset($resource_node->field_intended_student['und']['0'])) {
+    $resource_node->resource_profile_left['student_pop']['title'] = 'Intended Student Populations';
+    $resource_node->resource_profile_left['student_pop']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_intended_student);
+  }
+
+  // Media Types
+  if (isset($resource_node->field_digital_media_type['und']['0'])) {
+    $resource_node->resource_profile_left['media']['title'] = 'Media Types';
+    $resource_node->resource_profile_left['media']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_digital_media_type);
+  }
+
+  // Educational Use
+  if (isset($resource_node->field_educational_use['und']['0'])) {
+    $resource_node->resource_profile_left['educational']['title'] = 'Educational Use';
+    $resource_node->resource_profile_left['educational']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_educational_use);
+  }
+
+  // Technologies for use in classroom
+  if (isset($resource_node->field_classroom_technologies['und']['0'])) {
+    $resource_node->resource_profile_left['classroom']['title'] = 'Technologies Required for use in Classroom';
+    $resource_node->resource_profile_left['classroom']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_classroom_technologies);
+  }
+
+  // Geographics Settings
+  if (isset($resource_node->field_geographical_settings['und']['0'])) {
+    $resource_node->resource_profile_left['geo']['title'] = 'Geographics Settings';
+    $resource_node->resource_profile_left['geo']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_geographical_settings);
+  }
+
+  // Module Type
+  if (isset($resource_node->field_smarter_balanced_keyword['und']['0'])) {
+    $resource_node->resource_profile_left['smarter']['title'] = 'Module Type';
+    $resource_node->resource_profile_left['smarter']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_smarter_balanced_keyword);
+  }
+
+  // License for primary material
+  if (isset($resource_node->field_license['und']['0'])) {
+    $resource_node->resource_profile_left['primary']['title'] = 'License For Primary Material';
+    $resource_node->resource_profile_left['primary']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_license);
+  }
+
+  // License for a secondary material
+  if (isset($resource_node->field_license_secondary['und']['0'])) {
+    $resource_node->resource_profile_left['secondary']['title'] = 'Licenses For Secondary Material';
+    $resource_node->resource_profile_left['secondary']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_license_secondary);
+  }
+
+  // Focus
+  if (isset($resource_node->field_attributes['und']['0'])) {
+    $resource_node->resource_profile_right['attributes']['title'] = 'Attributes of the Formative Assessment Process';
+    $resource_node->resource_profile_right['attributes']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_attributes);
+  }
+
+  $node['node'] = $resource_node;
+}
+
+/**
+ * Load the taxonomy terms and get there names.
+ *
+ * @param $field
+ * @param $ccss
+ *
+ * @return string
+ */
+function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
+  $terms = array();
+  foreach ($field['und'] as $key => $term) {
+    if ($ccss) {
+      if (isset($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'])){
+        $terms[] = $term['taxonomy_term']->field_alignment_shortname['und'][0]['value'];
+      }
+      else {
+        $temp_term = taxonomy_term_load($term['tid']);
+        if ($temp_term) {
+          $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+        }
+      }
+    }
+    else {
+      if (isset($term['taxonomy_term']->name)) {
+        $terms[] = $term['taxonomy_term']->name;
+      }
+      else {
+        $temp_term = taxonomy_term_load($term['tid']);
+        if ($temp_term) {
+          $terms[] = $temp_term->name;
+        }
+      }
+    }
+  }
+
+  $list = theme('item_list', array('items' => $terms, 'title' => '', 'type' => 'ul', 'attributes' => array('class' => 'field-content')));
+  return $list;
+}
+
+/**
+ * Concatenate the term name with the parents term names
+ * @param $tid
+ * @return string
+ */
+function sbac_resource_term_concat_parents($tid, $term_name) {
+  $parents = array();
+  $parents[] = (object) array(
+    'tid' => $tid,
+    'name' => $term_name,
+  );
+  $n = 0;
+  while ($parent = _sbac_resource_taxonomy_get_parents($parents[$n]->tid)) {
+    $parents = array_merge($parents, $parent);
+    $n++;
+  }
+  $names = array();
+  foreach ($parents as $p) {
+    $names[] = $p->name;
+  }
+  $names = array_reverse($names);
+  return implode(' - ', $names);
+}
+
+/**
+ * Returns the related resources for a given nid.
+ *
+ * @param $nid
+ * @return string
+ */
+function sbac_resource_related_resources($nid) {
+  $output = '';
+
+  if ($nid) {
+    $resource_node = node_load($nid);
+    if ($resource_node) {
+      $output = theme('sbac_resource_related_resources_header');
+      $related_resources = sbac_resource_get_related_resources($resource_node);
+      if ($related_resources) {
+        if (count($related_resources) > 3) {
+          drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.related_resources.js');
+        }
+        $output .= sbac_resource_create_resource_card($related_resources);
+      }
+      else {
+        $output .= theme('sbac_resource_no_related_resources');
+      }
+    }
+  }
+
+  return $output;
+}
+
+/**
+ * Takes the baseline resource node and compares the subject,
+ * grade and attributes to find related resources.
+ *
+ * @param $node
+ * @return array
+ */
+function sbac_resource_get_related_resources($baseline_node) {
+  // create baseline, then create query, then weight/sort, then return array list.
+  $related_resources = array();
+  $baseline_subjects = array();
+  if (isset($baseline_node->field_subject['und'][0]['tid'])) {
+    foreach ($baseline_node->field_subject['und'] as $key => $term) {
+      $baseline_subjects[] = $term['tid'];
+    }
+  }
+  $baseline_grades = array();
+  if (isset($baseline_node->field_grades['und'][0]['tid'])) {
+    foreach ($baseline_node->field_grades['und'] as $key => $term) {
+      $baseline_grades[] = $term['tid'];
+    }
+  }
+  $baseline_attributes = array();
+  if (isset($baseline_node->field_attributes['und'][0]['tid'])) {
+    foreach ($baseline_node->field_attributes['und'] as $key => $term) {
+      $baseline_attributes[] = $term['tid'];
+    }
+  }
+
+  /**
+   *  Baseline Resource:  Subjects A, B, C; Grades 1, 2; Formative Assessment X, Y
+   *
+   *  To determine the nine (9) related resources, the system undergoes a layered comparison:
+   *
+   *  Subjects A OR Subjects B OR Subjects C AND
+   *  Grades 1 OR Grades 2 AND
+   *  Formative Assessment X OR Formative Assessment Y
+   *
+   *  If a resource does not match any of the subject tags (A, B, C) it is not subjected to the other filters.
+   */
+  // Compare baseline subjects against all other resource nodes.
+  if ($baseline_subjects) {
+    $baseline_subjects_string = implode(',', $baseline_subjects);
+    // Check against baseline subjects.
+    $query = "
+            SELECT
+              n.nid,
+              s.field_subject_tid AS subject
+            FROM {node} n
+            JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid
+            JOIN {field_data_field_subject} s ON n.nid = s.entity_id AND n.vid = s.revision_id
+            WHERE n.type = 'resource'
+            AND w.state = 'published'
+            AND w.current = 1
+            AND s.field_subject_tid IN (" . $baseline_subjects_string . ")
+            AND n.nid <> " . $baseline_node->nid;
+
+    $result = db_query($query);
+    $subject_nids = array();
+    foreach ($result as $row) {
+      $subject_nids[$row->nid] = $row->nid;
+    }
+
+    // Compare baseline subjects against all other resource nodes that had the same baseline grades
+    if ($subject_nids) {
+      $baseline_grades_string = implode(',', $baseline_grades);
+      if ($baseline_grades) {
+        $subject_nids = implode(',', $subject_nids);
+        $query = "
+            SELECT
+              n.nid,
+              g.field_grades_tid AS subject
+            FROM {node} n
+            JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid
+            JOIN {field_data_field_grades} g ON n.nid = g.entity_id AND n.vid = g.revision_id
+            WHERE n.type = 'resource'
+            AND w.state = 'published'
+            AND w.current = 1
+            AND n.nid IN (" . $subject_nids . ")
+            AND g.field_grades_tid IN (" . $baseline_grades_string . ")
+            AND n.nid <> " . $baseline_node->nid;
+        $result = db_query($query);
+        $grade_nids = array();
+        foreach ($result as $row) {
+          $grade_nids[$row->nid] = $row->nid;
+        }
+
+        // Compare baseline attributes against all other resource nodes that had the same baseline grades and subjects.
+        if ($grade_nids) {
+          $baseline_attributes_string = implode(',', $baseline_attributes);
+          if ($baseline_attributes) {
+            $grade_nids = implode(',', $grade_nids);
+            $query = "
+              SELECT
+                n.nid,
+                a.field_attributes_tid AS subject
+              FROM {node} n
+              JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid
+              JOIN {field_data_field_attributes} a ON n.nid = a.entity_id AND n.vid = a.revision_id
+              WHERE n.type = 'resource'
+              AND w.state = 'published'
+              AND w.current = 1
+              AND n.nid IN (" . $grade_nids . ")
+              AND a.field_attributes_tid IN (" . $baseline_attributes_string . ")
+              AND n.nid <> " . $baseline_node->nid;
+            $result = db_query($query);
+            $attributes_nids = array();
+            foreach ($result as $row) {
+              $attributes_nids[$row->nid] = $row->nid;
+            }
+
+            /**
+             * Use the first four metadata elements strictly as filters to create the pool of n resources
+             * (meaning that all are equally valid and the only rule is that a related resource has at least one
+             * match on each of the three attributes), then sort that pool by ratings to get an overall order
+             * In this scenario, the ultimate display order is R5, R1 and no other resources
+             * Reasoning: both R1 and R5 have at least one match in each category, and R5 has a higher total
+             * ratings than R1 since R1 has no reviews.
+             */
+            // This is the resource pool of nodes.
+            if ($attributes_nids) {
+              $count = 0;
+              foreach ($attributes_nids as $nid) {
+                if ($count >= 8) {
+                  break;
+                }
+
+                $related_views = TRUE;
+                $query = "SELECT v.field_unique_views_value AS views
+                          FROM {field_data_field_unique_views} v
+                          WHERE v.entity_id = " . $nid;
+                $result = db_query($query)->fetchObject();
+                if ($result !== FALSE) {
+                  if ($result->views == 0) {
+                    $related_views = FALSE;
+                  }
+                  else {
+                    $related_resources[$nid] = $result->views;
+                  }
+                }
+                else {
+                  $related_views = FALSE;
+                }
+
+                if (!$related_views) {
+                  $query = "SELECT sl.field_student_learning_rating AS learning,
+                            pd.field_pro_dev_rating AS pro_dev,
+                            eu.field_ease_use_rating AS ease_use
+                            FROM {eck_review} r
+                            JOIN {field_data_field_student_learning} sl ON r.id = sl.entity_id
+                            JOIN {field_data_field_pro_dev} pd ON r.id = pd.entity_id
+                            JOIN {field_data_field_ease_use} eu ON r.id = eu.entity_id
+                            WHERE r.node_id = " . $nid;
+                  $result = db_query($query);
+                  if ($result->rowCount()) {
+                    foreach ($result as $row) {
+                      $total = $row->learning + $row->pro_dev + $row->ease_use;
+                      $related_resources[$nid] += $total;
+                    }
+                  }
+                  else {
+                    $related_resources[$nid] = 0;
+                  }
+                }
+                $count++;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // sort related resources by score.
+  if (count($related_resources) > 0) {
+    global $user;
+    $account = $user;
+    foreach ($related_resources as $nid => $total_score) {
+      // filter out resources that dont exist, or that the user does not have access to see.
+      if (_sbac_resource_determine_state_access_via_sql($nid, $account) == FALSE) {
+        unset($related_resources[$nid]);
+      }
+    }
+    arsort($related_resources);
+  }
+
+  return $related_resources;
+}
+
+/**
+ * Builds out the resource card.
+ *
+ * @param $related_resources
+ * @return string
+ */
+function sbac_resource_create_resource_card(&$related_resources) {
+  $class = '';
+  if (count($related_resources) <= 3) {
+    $class = 'static';
+  }
+
+  $output = '<div class="resources-container ' . $class . '">';
+  $output .= '<ul class="slides">';
+  foreach ($related_resources as $nid => $score) {
+    $node = node_load($nid);
+    if ($node) {
+      // hacked all this up into "fields" and some are "classes",
+      // did this so i wouldn't have to modify the TPL that much
+      // since it was just a copy of the view template.
+      $fields = array();
+      $fields['nid'] = new stdClass;
+      $fields['nid']->raw = $nid;
+      $fields['sticky'] = new stdClass;
+      $fields['sticky']->raw = $node->sticky;
+      $fields['title'] = new stdClass;
+      $fields['title']->content = l($node->title, $node->path['alias']);
+      if (isset($node->field_thumbnail_uri['und'][0]['value'])) {
+        $fields['field_thumbnail_uri']->content = $node->field_thumbnail_uri['und'][0]['value'];
+        $variables = _sbac_resource_grid_image($fields);
+        $fields['image'] = $variables['image'];
+        $fields['file-type-icon'] = $variables['file-type-icon'];
+      }
+      else {
+        $fields['image'] = NULL;
+        $fields['file-type-icon'] = NULL;
+      }
+      $fields['field_alt_body'] = new stdClass;
+      $body = (isset($node->field_alt_body['und'][0]['value']) ? $node->field_alt_body['und'][0]['value'] : '');
+      $fields['field_alt_body']->content = sbac_resource_truncate($body, 140);
+      $fields['state'] = new stdClass;
+      $fields['state']->raw = 'published';
+      $fields['views'] = (isset($node->field_unique_views['und'][0]['value']) ? $node->field_unique_views['und'][0]['value'] : 0);
+      $fields['downloads'] = (isset($node->field_asset_downloads['und'][0]['value']) ? $node->field_asset_downloads['und'][0]['value'] : 0);
+      $fields['collaborators'] = 'N Collaborations';
+      $fields['subject'] = sbac_resource_get_field_terms($node->field_subject);
+      $fields['grades'] = sbac_resource_get_field_terms($node->field_grades);
+      $fields['media_types'] = sbac_resource_get_field_terms($node->field_digital_media_type);
+      $fields['rating'] = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($nid));
+      $fields['rating_count'] = sbac_resource_get_rating_count($nid);
+      $output .= '<li>' . theme('sbac_resource_card', array('fields' => $fields)) . '</li>';
+    }
+  }
+  $output .= '</ul>';
+  $output .= '</div>';
+  return $output;
+}
+
+/**
+ * Helper function to retreive the term name(s).
+ *
+ * @param $field
+ * @return string
+ *
+ */
+function sbac_resource_get_field_terms($field, $non_taxonomy = FALSE) {
+  $term_names = array();
+  if ($non_taxonomy) {
+    foreach ($field as $tid) {
+      $term = taxonomy_term_load($tid);
+      $term_names[] = $term->name;
+    }
+  }
+  else {
+    foreach ($field['und'] as $key => $tid) {
+      $term = taxonomy_term_load($tid['tid']);
+      $term_names[] = $term->name;
+    }
+  }
+
+  $terms = '';
+  if ($term_names) {
+    $terms = implode(', ', $term_names);
+  }
+  return $terms;
+}
+
+/**
+ * Access callback for my resources menu item.
+ *
+ * @return bool
+ */
+function sbac_resource_my_resources_access_callback() {
+  global $user;
+  if (in_array('resource contributor', $user->roles)) {
+    return TRUE;
+  }
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Access callback for resource review menu item.
+ *
+ * @return bool
+ */
+function sbac_resource_resource_review_access_callback() {
+  global $user;
+  if (in_array('resource reviewer', $user->roles)) {
+    return TRUE;
+  }
+  if (in_array('resource publisher', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Access callback for menu item.
+ *
+ * @param $node_type
+ * @return bool
+ */
+function sbac_resource_form_messages_access($node_type) {
+  if ($node_type->type == 'resource') {
+    return user_access('administer site configuration');
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_preprocess_node()
+ *
+ * @param $vars
+ */
+function sbac_resource_preprocess_node(&$vars) {
+  if ($vars['type'] == 'resource') {
+    drupal_add_http_header('X-Frame-Options', 'SAMEORIGIN');
+    drupal_set_title($vars['title'], PASS_THROUGH);
+    drupal_add_js(libraries_get_path('jwplayer') . '/jwplayer.js', array('preprocess' => FALSE));
+    drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.node.js');
+    drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
+
+    $vars['author'] = '';
+    $vars['license'] = '';
+    $vars['owner'] = '';
+    $vars['resource_type'] = '';
+
+    $contributor_name = sbac_central_get_user_first_last_name($vars['uid']);
+    if ('published' == $vars['node']->workbench_moderation['current']->state) {
+      $vars['contributor'] = l($contributor_name, 'digital-library-resources', array('query' => array('contributor_uid' => $vars['uid'])));
+    }
+
+    if (isset($vars['field_focus'][0]['tid'])) {
+      $resource_types = array();
+      foreach ($vars['field_focus'] as $key => $term) {
+        $resource_types[] = $term['taxonomy_term']->name;
+      }
+      $vars['resource_type'] = implode(', ', $resource_types);
+    }
+    if (isset($vars['field_author'][0]['safe_value'])) {
+      $author_name = htmlspecialchars_decode($vars['field_author'][0]['safe_value']);
+      $vars['author'] = l($author_name, 'digital-library-resources', array('query' => array('author' => $author_name)));
+    }
+    if (isset($vars['field_publisher'][0]['safe_value'])) {
+      $owner_name = htmlspecialchars_decode($vars['field_publisher'][0]['safe_value']);
+      $vars['owner'] = l($owner_name, 'digital-library-resources', array('query' => array('owner' => $owner_name)));
+    }
+    if (isset($vars['field_license'][0]['taxonomy_term']->name)) {
+      $vars['license'] = $vars['field_license'][0]['taxonomy_term']->name;
+    }
+
+    // Edit link for DLRB member's.
+    global $user;
+    $url = url('node/' . $vars['nid'] . '/edit', array('absolute' => TRUE));
+    if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      $vars['edit_link'] = l('Edit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+    }
+    if ($vars['uid'] == $user->uid && $vars['workbench_moderation']['current']->state == 'rejected' && in_array('resource contributor', $user->roles)) {
+      $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+    } elseif ($vars['uid'] == $user->uid && $vars['workbench_moderation']['current']->state == 'draft' && in_array('resource contributor', $user->roles)){
+      $rejected = db_select('workbench_moderation_node_history', 'h')
+        ->condition('h.state', 'rejected')
+        ->condition('h.nid', $vars['nid'])
+        ->fields('h', array('hid'))
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if ($rejected && $vars['uid'] == $user->uid) {
+        $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+      }
+    }
+    elseif ($vars['uid'] == $user->uid && $vars['workbench_moderation']['current']->state == 'draft' && in_array('resource contributor', $user->roles)) {
+      $rejected = db_select('workbench_moderation_node_history', 'h')
+        ->condition('h.state', 'rejected')
+        ->condition('h.nid', $vars['nid'])
+        ->fields('h', array('hid'))
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      if ($rejected && $vars['uid'] == $user->uid) {
+        $vars['edit_resubmit'] = l('Edit & Resubmit', $url, array('attributes' => array('title' => 'Edit', 'class' => array('medium', 'button'))));
+      }
+    }
+
+    // Documents
+    if (isset($vars['document'][0]) || isset($vars['document']['html5'])) {
+      // Determine the file type, load up the correct video player, doc viewer or image viewer.
+      $viewer = _sbac_resource_preview_content($vars);
+      $materials = _sbac_resource_preview_materials($vars);
+      $result = sbac_resource_determine_download_ability($vars);
+      if ($result['primary'] || $result['secondary']) {
+        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download Zip File', 'class' => 'button small right')));
+        if ($result['primary'] == FALSE || $result['secondary'] == FALSE) {
+          $vars['download_partial'] = TRUE;
+        }
+      }
+      $vars['viewer'] = $viewer['viewer'];
+      $vars['viewer_filename'] = $viewer['viewer_filename'];
+      $vars['materials'] = $materials;
+    }
+
+    $vars['favorites_link'] = sbac_favorites_get_favorite_link($user->uid, $vars['nid'], 'node');
+  }
+}
+
+/**
+ * Determines if the resource button is displayed or not.
+ *
+ */
+function sbac_resource_determine_download_ability(&$vars) {
+  global $user;
+  $result = array('primary' => FALSE, 'secondary' => FALSE);
+  if (isset($vars['document']) && sbac_media_downloadable_scheme($vars['document']) && !in_array(SBAC_SHARE_GUEST, $user->roles)) {
+    if (isset($vars['field_resource_actions'][0])) {
+      foreach ($vars['field_resource_actions'] as $index => $value) {
+        if ($index == 0) { // primary or secondary depending on how drupal served this up.
+          if ($value['value'] == 0) {
+            $result['primary'] = TRUE;
+          }
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+        if ($index == 1) { // always secondary
+          if ($value['value'] == 1) {
+            $result['secondary'] = TRUE;
+          }
+        }
+      }
+    }
+  }
+  return $result;
+}
+
+/**
+ * Creates the preview content.
+ *
+ * @param $vars
+ * @return string
+ */
+function _sbac_resource_preview_content(&$vars) {
+  if (isset($vars['view_mode']) && $vars['view_mode'] == 'print') {
+    return;
+  }
+
+  $viewer = NULL;
+  $html5 = FALSE;
+  if (isset($vars['document']['html5'])) {
+    $html5_progress = db_query("SELECT * FROM {sbac_html5_progress} WHERE nid = " . $vars['nid'])->fetchObject();
+    if ($html5_progress && $html5_progress->status == SBAC_MEDIA_HTML5_FINISHED) {
+      // Add required js and css files
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.js', array('scope' => 'footer'));
+      drupal_add_js(drupal_get_path('theme', 'SBAC') . '/js/moduleScript.js', array('scope' => 'footer'));
+      drupal_add_css(drupal_get_path('theme', 'SBAC') . '/js/fancybox/jquery.fancybox.css');
+      $html5 = TRUE;
+      $media = $vars['document']['html5'];
+      $file = file_load($media->fid);
+      $path_variables = explode('::', $media->document_id);
+      $folder = variable_get('oscaddie_gcs_folder');
+
+      // http://storage.googleapis.com/html5_modules/local/html5/5/180171/53c82185be57c2.84715191/MATH02/ar/11785.mp3
+      $url = SBAC_MEDIA_HTML5_GOOGLE_URL . $folder . '/html5/' . floor($vars['nid'] / 32000) . '/' . $vars['nid'] . '/' . $path_variables[0] . '/' . $path_variables[1] . '/dlcomponents/CoverPage.html';
+      $viewer['viewer_filename'] = ucwords($path_variables[1]);
+      $viewer['viewer'] = '<iframe id="contentIframe" title="resource-preview" src="' . $url . '" width="880" height="600" style="border: none;"></iframe>';
+    }
+    else {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview-html5.jpg';
+      $viewer['viewer_filename'] = 'Processing...';
+      $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
+    }
+  }
+
+  if (isset($vars['document'][0]) && $vars['document'][0] && !$html5) {
+    $media = $vars['document'][0];
+    $type = _sbac_resource_determine_type($media);
+    $viewer['viewer_filename'] = $media->filename;
+    if ($media->transcript) {
+      $viewer['viewer_filename'] .= ' (Transcript Included)';
+    }
+
+    $url = NULL;
+    if ($media->fid) {
+      $file = file_load($media->fid);
+      if ($file) {
+        $bool = stat($file->uri);
+        if ($bool) {
+          $url = file_create_url($file->uri);
+        }
+      }
+    }
+    else {
+      $url = sbac_media_create_embed_url($media);
+    }
+
+    if ($url) {
+      if ($type == 'document') {
+        $google_url = 'http://docs.google.com/viewer';
+        if (isset($_SERVER['HTTPS'])) {
+          $google_url = 'https://docs.google.com/viewer';
+        }
+        $viewer['viewer'] = '<iframe title="resource-preview" src="' . $google_url . '?url=' . urlencode($url) . '&embedded=true" width="880" height="400" style="border: none;">Alternative Content</iframe>';
+      }
+      elseif ($type == 'video') {
+        $jwplayer = 'jQuery(document).ready(function () {jwplayer("sbac-jwplayer").setup({ file: "' . $url . '", height: 400, width: 880});});';
+        drupal_add_js($jwplayer, array('type' => 'inline', 'weight' => 999, 'preprocess' => FALSE));
+        $viewer['viewer'] = '<div id="sbac-jwplayer"></div>';
+      }
+      elseif ($type == 'image') {
+        $viewer['viewer'] = theme('image_style', array(
+          'style_name' => 'resource_profile',
+          'path' => $file->uri,
+          'alt' => 'Resource preview"'
+        ));
+      }
+      elseif ($type == 'schooltube') {
+        $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="500" height="375" src="' . $url . '" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" webkitallowfullscreen="webkitallowfullscreen">Alternative Content</iframe></div>';
+      }
+      elseif ($type == 'teachertube') {
+        $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen/>Alternative Content</iframe></div>';
+      }
+      elseif ($type == 'slideshare') {
+        $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen webkitallowfullscreen mozallowfullscreen>Alternative Content</iframe></div>';
+      }
+      elseif ($type == 'vimeo') {
+        $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" src="' . $url . '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen>Alternative Content</iframe></div>';
+      }
+      elseif ($type == 'youtube') {
+        if (strpos($url, 'youtube') !== FALSE) {
+          $url .= '?rel=0'; // Disable related videos.
+          $viewer['viewer'] = '<div class="flex-video"><iframe title="resource-preview" width="560" height="315" src="' . $url . '" frameborder="0" allowfullscreen>Alternative Content</iframe></div>';
+        }
+        else {
+          $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+          $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
+        }
+      }
+      else {
+        $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+        $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
+      }
+    }
+    else {
+      $url = drupal_get_path('module', 'sbac_resource') . '/images/no-preview.jpg';
+      $viewer['viewer'] = theme('image', array('path' => $url, 'alt' => 'Resource preview'));
+    }
+  }
+  return $viewer;
+}
+
+/**
+ * Creates the materials dropdown.
+ *
+ * The drop down list of materials.
+ * No need to check for HTML5 since business logic
+ * states there can only be one and its handled in
+ * _sbac_resource_previou_content(&$vars)
+ *
+ * @param $vars
+ * @return array
+ */
+function _sbac_resource_preview_materials(&$vars) {
+  $materials = '';
+  $material_urls = array();
+
+  if (isset($vars['document'][0])) {
+    foreach ($vars['document'] as $key => $media) {
+      if (is_numeric($key)) {
+        $type = _sbac_resource_determine_type($media);
+        $transcript = 0;
+        if ($media->transcript) {
+          $transcript = 1;
+        }
+        $url = 'sbac-get-media/' . $media->id;
+        $material_urls[] = l(ucwords($media->filename), $url, array('attributes' => array('sbac-type' => $type, 'transcript' => $transcript)));
+      }
+    }
+  }
+
+  if ($material_urls) {
+    $materials = '<a title="View All Materials" class="button small arrow sbac-materials-dropdown" data-dropdown="sbac-materials">' . t('View All Materials') . '<span></span></a>';
+    $materials .= theme('item_list', array(
+      'items' => $material_urls,
+      'attributes' => array(
+        'class' => 'materials-dropdown f-dropdown',
+        'id' => 'sbac-materials'
+      )
+    ));
+  }
+
+  return $materials;
+}
+
+/**
+ * Creates the resource media variables.
+ *
+ * @param $url
+ * @param $file
+ * @return string
+ */
+function _sbac_resource_determine_type($media, $return_embed = FALSE) {
+  if (!$media->document_id && !$media->fid) {
+    $type = _sbac_resource_determine_media($media, $return_embed);
+  }
+  else {
+    $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
+    $type = _sbac_resource_determine_extension($ext);
+  }
+  return $type;
+}
+
+/**
+ * Determine the media type based on URL.
+ *
+ * @param $file object
+ * @return string
+ */
+function _sbac_resource_determine_media($media, $return_embed = FALSE) {
+  $type = 'embed';
+  if ($return_embed) {
+    return $type;
+  }
+  $embedded_video_source = $media->embed_url;
+  if (strpos($embedded_video_source, 'schooltube') !== FALSE) {
+    $type = 'schooltube';
+  }
+  if (strpos($embedded_video_source, 'teachertube') !== FALSE) {
+    $type = 'teachertube';
+  }
+  if (strpos($embedded_video_source, 'slideshare') !== FALSE) {
+    $type = 'slideshare';
+  }
+  if (strpos($embedded_video_source, 'youtube') !== FALSE) {
+    $type = 'youtube';
+  }
+  if (strpos($embedded_video_source, 'vimeo') !== FALSE) {
+    $type = 'vimeo';
+  }
+  return $type;
+}
+
+/**
+ * Determines the resource card characteristics.
+ * @param  string $ext file extension
+ * @return array       [Primary thumbnail, backup thumbnail]
+ */
+function _sbac_resource_determine_card_image($ext) {
+  switch (strtolower($ext)) {
+    case 'doc':
+    case 'docx':
+    case 'xls':
+    case 'xlsx':
+    case 'ppt':
+    case 'pptx':
+    case 'odt':
+    case 'odp':
+    case 'pdf':
+    case 'txt':
+      return array('cdn', 'no_img');
+    case 'ods':
+    case 'mov':
+    case 'avi':
+    case 'mpg':
+    case 'mp4':
+    case 'mp3':
+    case 'aac':
+      return array('no_img', 'no_img');
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+      return array('primary', 'na');
+    default:
+      return array('na', 'na');
+  }
+}
+
+/**
+ * Generates the external (Primary and Secondary) URLs for the thumbnail to be
+ * downloaded.
+ * @param  string $url URL targetted.
+ * @param  string $uri URI targetted.
+ * @param  array $opts [(Primary Option), (Secondary Option)]
+ * @return array        uri::url
+ */
+function _sbac_resource_generate_thumbnail_urls($url, $uri, $opts = array()) {
+  $has_thumb = FALSE;
+  $urls = array();
+
+  foreach ($opts AS $option) {
+    $url_option = '';
+    switch ($option) {
+      case 'cdn':
+        $url_option = $url;
+        break;
+      case 'primary':
+        $url_option = $url;
+        break;
+      case 'no_img':
+        $url_option = 'no_img';
+        break;
+      case 'na':
+        // $url_option = 'public://file.png';
+        $url_option = 'no_img';
+        break;
+      default:
+        $url_option = 'no_img';
+        break;
+    }
+    $urls[] = $url_option;
+  }
+  return $urls;
+}
+
+/**
+ * Uses the embed URL id to generate a thumbnail from the service.
+ * @param  Object $media Represents $node['document'][0]
+ * @return array         [(Primary option), (Secondary option)]
+ */
+function _sbac_resource_embed_vid_thumb_url($media) {
+  $embedded_url = $media->embed_url;
+  $file = new stdClass();
+
+  if (strpos($embedded_url, 'slideshare') !== FALSE) {
+    $handler = new MediaInternetSlideShareHandler($embedded_url);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_url, 'youtube') !== FALSE) {
+    $handler = new MediaInternetYouTubeHandler($embedded_url);
+    $file = $handler->getFileObject();
+  }
+
+  if (strpos($embedded_url, 'vimeo') !== FALSE) {
+    $handler = new MediaInternetVimeoHandler($embedded_url);
+    $file = $handler->getFileObject();
+  }
+
+  if (isset($file->uri)) {
+    $wrapper = file_stream_wrapper_get_instance_by_uri($file->uri);
+    $parts = $wrapper->get_parameters();
+    $id = check_plain($parts['v']);
+
+    switch ($file->filemime) {
+      case 'video/slideshare':
+        $api_req = $handler->getOEmbed();
+        $url = 'http:' . $api_req['thumbnail'];
+        break;
+      case 'video/vimeo':
+        $vimeo_url = 'http://vimeo.com/api/v2/video/' . $id . '.php';
+        $req_contents = unserialize(file_get_contents($vimeo_url));
+        $url = $req_contents[0]['thumbnail_large'];
+        break;
+      case 'video/youtube':
+        $url = 'http://img.youtube.com/vi/' . $id . '/hqdefault.jpg';
+        break;
+    }
+  }
+  return array($url, 'no_img');
+}
+
+/**
+ * Saves the thumbnail to private://thumbnail directory.
+ * @param  array $urls [(Primary option), (Secondary option)]
+ * @param  string $filename Filename or Title of ebmedded video
+ * @param  int $nid Node ID.
+ * @param  object $media the eck_media object
+ *
+ * @return string uri::url
+ */
+function _sbac_resource_save_thumbnail($urls = array(), $filename = NULL, $nid, $media) {
+  $thumbnail_exists = FALSE;
+  $uri_url = array();
+  $filename = preg_replace('/[^a-z0-9]/ui', '', $filename);
+  $default_file = 'no_img';
+  // If the resource has a thumbnail already defined, do not bother downloading.
+  $haystack = $default_file . '::' . $default_file;
+  $query = db_select('field_data_field_thumbnail_uri', 'ft');
+  $query->fields('ft', array('field_thumbnail_uri_value'));
+  $query->condition('entity_id', $nid, '=');
+  $result = $query->execute()->fetchAssoc();
+  $result = array_pop($result);
+  if (strpos($haystack, $result) === FALSE) {
+    $result_array = explode('::', $result);
+    if (isset($result_array[2]) && $result_array[2] == $media->filehash) {
+      return array(
+        'uri' => $result_array[0],
+        'url' => $result_array[1],
+      );
+    }
+  }
+  
+  foreach ($urls as $url) {
+    if (url_is_external($url) && !$thumbnail_exists) {
+      $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $type = $finfo->buffer(file_get_contents($url));
+      $ext = explode('/', $type);
+      $ext = array_pop($ext);
+      $file_ext = $ext;
+      if (_sbac_resource_determine_file_type_icon($ext) != 'image') {
+        $ext = 'png';
+      }
+      $dir = 'public://resource_thumbnails/' . floor($nid / 32000) . '/' . $nid;
+      if ($filename) {
+        $filename = $filename . '.' . $ext;
+        if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+          $download = sbac_resource_system_retrieve_file($url, $dir . '/' . $filename, TRUE, FILE_EXISTS_REPLACE);
+          if ($download) {
+            $uri_url['uri'] = $download->uri;
+            $uri_url['url'] = $url;
+            if (_sbac_resource_determine_file_type_icon($file_ext) == 'image') {
+              $image_styles = image_styles();
+              image_style_create_derivative($image_styles['resource_image_grid'], $download->uri, $download->uri);
+            }
+            return $uri_url;
+          }
+          else {
+            watchdog('sbac_resource', 'Unable to download image for ' . $nid, array(), WATCHDOG_NOTICE);
+          }
+        }
+        else {
+          watchdog('sbac_resource', 'Unable to make dir: ' . $dir, array(), WATCHDOG_NOTICE);
+        }
+      }
+    }
+    elseif ($url == 'no_img' && !$thumbnail_exists) {
+      $uri_url['uri'] = 'no_img';
+      $uri_url['url'] = 'no_img';
+      $thumbnail_exists = TRUE;
+    }
+    elseif ($url == 'na' && !$thumbnail_exists) {
+      $uri_url['uri'] = $default_file;
+      $uri_url['url'] = $default_file;
+      $thumbnail_exists = TRUE;
+    }
+  }
+  return $uri_url;
+}
+
+/**
+ * Taken from system.module (system_retrieve_file), over riding it to remove the
+ * drupal_set_messages that the user did not want to see. Instead of looping
+ * through the $_SESSION variable to string compare and unset.
+ *
+ * @param $url
+ * @param null $destination
+ * @param bool $managed
+ * @param int $replace
+ * @return bool|null|stdClass|string
+ */
+function sbac_resource_system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
+  $parsed_url = parse_url($url);
+  if (!isset($destination)) {
+    $path = file_build_uri(drupal_basename($parsed_url['path']));
+  }
+  else {
+    if (is_dir(drupal_realpath($destination))) {
+      // Prevent URIs with triple slashes when glueing parts together.
+      $path = str_replace('///', '//', "$destination/") . drupal_basename($parsed_url['path']);
+    }
+    else {
+      $path = $destination;
+    }
+  }
+  $result = drupal_http_request($url);
+  if ($result->code != 200) {
+    // drupal_set_message(t('HTTP error @errorcode occurred when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url)), 'error');
+    return FALSE;
+  }
+  $local = $managed ? file_save_data($result->data, $path, $replace) : file_unmanaged_save_data($result->data, $path, $replace);
+  if (!$local) {
+    // drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
+  }
+  return $local;
+}
+
+/**
+ * Determine the filename extension.
+ *
+ * @param $ext
+ * @return string
+ */
+function _sbac_resource_determine_extension($ext) {
+  $media = 'document';
+
+  switch (strtolower($ext)) {
+    case 'txt':
+    case 'doc':
+    case 'docx':
+    case 'pdf':
+    case 'xls':
+    case 'xlsx':
+    case 'pptx':
+    case 'ppt':
+    case 'odt':
+    case 'odp':
+      $media = 'document';
+      break;
+    case 'mp4':
+    case 'mp3':
+    case 'aac':
+      $media = 'video';
+      break;
+    case 'png':
+    case 'jpg':
+    case 'jpeg':
+      $media = 'image';
+      break;
+    case 'avi':
+    case 'mov':
+    case 'mpg':
+    case 'ods':
+      $media = 'none';
+      break;
+  }
+  return $media;
+}
+
+/**
+ * Determine the filename extension.
+ *
+ * @param $ext
+ * @return string
+ */
+function _sbac_resource_determine_file_type_icon($ext) {
+  $media = 'document';
+
+  switch (strtolower($ext)) {
+    case 'txt';
+    case 'doc';
+    case 'docx';
+      $media = 'doc';
+      break;
+    case 'pdf';
+      $media = 'pdf';
+      break;
+    case 'xls';
+    case 'xlsx';
+      $media = 'xls';
+      break;
+    case 'pptx';
+    case 'ppt';
+      $media = 'ppt';
+      break;
+    case 'mp4';
+    case 'mpg';
+    case 'mov';
+    case 'avi';
+    case 'mp3';
+    case 'aac';
+      $media = 'video';
+      break;
+    case 'png';
+    case 'jpg';
+    case 'jpeg';
+      $media = 'image';
+      break;
+  }
+
+  return $media;
+}
+
+/**
+ * Implementation of hook_preprocess_page()
+ *
+ * @param $vars
+ */
+function sbac_resource_preprocess_page(&$vars) {
+  if ($_SERVER['REQUEST_URI'] == '/') {
+    drupal_set_title('Smarter Balanced Assessment Consortium');
+  }
+
+  $vars['html5'] = FALSE;
+  if (isset($vars['node']) && $vars['node']->type == 'resource') {
+    if (isset($vars['page']['#type']) && $vars['page']['#type'] == 'page') {
+      unset($vars['tabs']);
+      $vars['title'] = $vars['node']->title;
+      if (isset($vars['node']->field_html5['und'][0]['value']) && $vars['node']->field_html5['und'][0]['value'] && arg(2) != 'edit') {
+        $vars['html5'] = TRUE;
+      }
+    }
+  }
+
+  // Page not found markup.
+  if (isset($vars['page']['content']['system_main']['main']['#markup'])) {
+    $value = $vars['page']['content']['system_main']['main']['#markup'];
+    if (strpos($value, 'could not be found')) {
+      drupal_set_title(t('Sorry, the page you requested was not found'));
+      $reason_list_items = array(
+        t('The page has moved'),
+        t('The page no longer exists'),
+        t('You do not have permission to view the page'),
+      );
+      $reason_list = theme('item_list', array('items' => $reason_list_items));
+      $message = '' . t('Possible reasons include:') . $reason_list . '';
+      $button = '';
+      if (user_is_logged_in()) {
+        $button = l('Browse Resources', 'digital-library-resources', array('attributes' => array('class' => array('medium', 'button'))));
+      }
+      $vars['page']['content']['system_main']['main']['#markup'] = $message . $button;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * Determine the page display and toss a class on the body.
+ *
+ * @param $vars
+ */
+function sbac_resource_preprocess_html(&$vars) {
+  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources' || arg(0) == 'resource-review') {
+    $display = sbac_resource_determine_grid_or_list();
+    if ($display == 'grid_view') {
+      $vars['classes_array'][] = 'grid-view';
+    }
+    else {
+      $vars['classes_array'][] = 'list-view';
+    }
+  }
+
+  // Page not found markup.
+  if (isset($vars['page']['content']['system_main']['main']['#markup'])) {
+    $value = $vars['page']['content']['system_main']['main']['#markup'];
+    if (strpos($value, 'could not be found')) {
+      $vars['classes_array'][] = 'sbac-resource-access-denied';
+    }
+  }
+}
+
+/**
+ * overide theme_status_messages, in function check if yours, else call theme_status_messages or soemthing
+ *
+ * @param $theme_registry
+ */
+function sbac_resource_theme_registry_alter(&$theme_registry) {
+  if (isset($theme_registry['status_messages'])) {
+    $theme_registry['status_messages']['function'] = 'sbac_resource_status_messages';
+  }
+  if (isset($theme_registry['views_load_more_pager'])) {
+    $theme_registry['views_load_more_pager']['function'] = 'theme_sbac_resource_views_load_more_pager';
+    $theme_registry['views_load_more_pager']['theme path'] = 'sites/all/modules/custom/sbac_content_types/sbac_resource';
+  }
+}
+
+/**
+ *
+ *
+ * @param $variables
+ * @return string
+ */
+function sbac_resource_status_messages($variables) {
+  $output = '';
+  $structured_messages = array();
+  $messages = drupal_get_messages('sbac_resource_error');
+  if (isset($messages['sbac_resource_error'])) {
+    foreach ($messages['sbac_resource_error'] as $message) {
+      $elements = explode(':', $message);
+      $section = $elements[0];
+      $field = $elements[1];
+      $error_type = $elements[2];
+      $error_message = $elements[3];
+      if (isset($elements[4])) {
+        $error_message .= ': ' . $elements[4];
+      }
+      $structured_messages[$section][$error_type][$field] = $error_message;
+    }
+  }
+
+  $final_messages = array();
+  if ($structured_messages) {
+    foreach ($structured_messages as $section => $field_errors) {
+      if (count($field_errors['group']) > 1) { // Group is needed, create structure, extra Parent label
+        foreach ($field_errors['group'] as $field => $error) {
+          $final_messages[$section]['messages'][] = $error;
+          $final_messages[$section]['group'] = TRUE;
+        }
+      }
+      else {
+        $single_message = array_shift($field_errors['single']);
+        $final_messages[$section]['messages'][] = $single_message;
+      }
+    }
+
+    if ($final_messages) {
+      $output = sbac_resource_status_messages_output($variables, $final_messages);
+    }
+  }
+
+  if (!$final_messages) {
+    $output = sbac_status_messages($variables);
+  }
+
+  return $output;
+}
+
+/**
+ * Takes the final array structure from sbac_resource_status_messages
+ * and builds the desired output.
+ *
+ * @param $variables
+ * @param $final_messages
+ */
+function sbac_resource_status_messages_output($variables, $final_messages) {
+  $output = '';
+  foreach ($final_messages as $section => $messages) {
+    $header = $section;
+    if (isset($messages['group'])) {
+      $header = "Please correct the following to continue: ";
+    }
+
+    $output .= "<div class='sbac-resource-alert-box alert-box alert'>\n";
+    if (isset($messages['group'])) {
+      $output .= "<h2 class='sbac-resource-error-section'>" . ucwords($header) . "</h2>\n";
+    }
+    $output .= " <ul>\n";
+    foreach ($messages['messages'] as $message) {
+      $output .= '  <li>' . $message . "</li>\n";
+    }
+    $output .= " </ul>\n";
+    $output .= "</div>\n";
+  }
+  return $output;
+}
+
+/**
+ * Override drupal core messages with zurb foundation alert-box messages.
+ * Customize the colors within the _settings.scss file
+ *
+ * http://foundation.zurb.com/docs/elements.php#panelEx
+ */
+function sbac_status_messages($variables) {
+  $display = $variables['display'];
+  $output = '';
+
+  $status_heading = array(
+    'error' => t('Error message'),
+    'status' => t('Status message'),
+    'warning' => t('Warning message'),
+  );
+  $status_mapping = array(
+    'error' => 'alert',
+    'success' => 'success',
+    'warning' => 'secondary'
+  );
+  $error_messages = drupal_get_messages($display);
+  foreach ($error_messages as $type => $messages) {
+    if ($messages) {
+      $type_output = '';
+      if (isset($status_mapping[$type])) {
+        $type_output .= "<div class=\"drupal-alert-box alert-box $status_mapping[$type]\">\n";
+      }
+      else {
+        $type_output .= "<div class=\"sbac-alert-box alert-box\">\n";
+      }
+
+      if (!empty($status_heading[$type])) {
+        $type_output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
+      }
+
+      $added_message = FALSE;
+      if (count($messages) > 1) {
+        $type_output .= " <ul>\n";
+        foreach ($messages as $message) {
+          if ($message == 'Content permissions have been rebuilt.') {
+            continue;
+          }
+          $type_output .= '  <li>' . $message . "</li>\n";
+          $added_message = TRUE;
+        }
+        $type_output .= " </ul>\n";
+      }
+      elseif ($messages[0] != 'Content permissions have been rebuilt.') {
+        $type_output .= $messages[0];
+        $added_message = TRUE;
+      }
+      $type_output .= "</div>\n";
+
+      if ($added_message) {
+        $output .= $type_output;
+      }
+    }
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_node_load().
+ *
+ * @param $nodes
+ * @param $types
+ */
+function sbac_resource_node_load($nodes, $types) {
+  if (!in_array('resource', $types)) {
+    return;
+  }
+
+  foreach ($nodes as $node) {
+    //make sure we are looking at a node along the node path and it is published before we start to count views
+    if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
+      // Grab the alignemnt terms.
+      $node->field_alignment_term = array();
+
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'alignment')
+        ->entityCondition('deleted', 0)
+        ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
+
+      $result = $query->execute();
+
+      if (isset($result['node'])) {
+        $terms = array();
+        foreach ($result['node'] as $item) {
+          if ($alignment = node_load($item->nid)) {
+            $terms = array_merge_recursive($terms, $alignment->field_education_alignment);
+          }
+        }
+
+        $node->field_alignment_term = $terms;
+      }
+
+
+      //make sure we are only viewing through the content/* path
+      global $user;
+      //update the raw data table
+      $query = "insert into node_user_paradata (
+						uid,
+						nid,
+						hits)
+					values (
+						" . $user->uid . ",
+						" . $node->nid . ",
+						1)
+					on duplicate key
+						update hits = hits + 1";
+      db_query($query);
+      //send the denormed data to the node
+      $query = "select sum(hits) as hits, count(distinct(uid)) as unique_hits from node_user_paradata where nid=" . $node->nid;
+      $result = db_query($query)->fetchAssoc();
+      $node->field_total_views[LANGUAGE_NONE] = array(0 => array('value' => $result['hits']));
+      $node->field_unique_views[LANGUAGE_NONE] = array(0 => array('value' => $result['unique_hits']));
+      if ($result) {
+        // Total Views Update
+        if (isset($result['hits']) && $result['hits']) {
+          db_query('UPDATE {field_data_field_total_views} SET field_total_views_value = :total_views WHERE entity_id = :entity_id', array(':total_views' => $result['hits'], ':entity_id' => $node->nid));
+        }
+        // Unique Views Update
+        if (isset($result['unique_hits']) && $result['unique_hits']) {
+          db_query('UPDATE {field_data_field_unique_views} SET field_unique_views_value = :unique_views WHERE entity_id = :entity_id', array(':unique_views' => $result['unique_hits'], ':entity_id' => $node->nid));
+        }
+      }
+    }
+    // Load all media entities and attach them to the resource.
+    $load = FALSE;
+    // update.php
+    if (isset($_GET['op']) && isset($_GET['token']) && isset($_GET['id'])) {
+      $load = TRUE;
+    }
+    // drush scripts
+    if (arg(0) == 'digital-library-resources' && count($nodes) == 1) {
+      $load = TRUE;
+    }
+    // website.
+    if (arg(0) != 'digital-library-resources' && arg(0) != 'resource-review' && arg(0) != 'my-resources' && count($nodes) != 12 && $node->type == 'resource') {
+      $load = TRUE;
+    }
+
+    if ($load) {
+      $media_items = sbac_media_load_items($node->nid, TRUE);
+      $node->document = $media_items;
+      if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+        $html5_item = sbac_media_load_html5_item($node->nid);
+        if ($html5_item !== FALSE) {
+          $node->document['html5'] = $html5_item;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implemenets hook_workbench_moderation_transition().
+ *
+ * @param $new_state
+ *  The new state of the revision.
+ */
+function sbac_resource_workbench_moderation_transition($node, $previous_state, $new_state) {
+  if ($node->type == 'resource' && $new_state != 'removed') {
+    // Necassary to override workbench moderation into publishing the node. Line 1602, function
+    // workbench_moderation_node_data(), they query the DB directly to find out if there is a
+    // published node. I bruce lee the publish status here.
+    db_query('UPDATE {node} SET status = 1 WHERE nid = :nid', array(':nid' => $node->nid));
+    db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $node->nid, ':vid' => $node->vid));
+
+    // unhide the node on the my-resources tab, if hidden
+    $node->field_is_hidden[LANGUAGE_NONE][0]['value'] = 0;
+    field_attach_update('node', $node);
+  }
+
+  // issue, i need to create records for everyone during state transitions, could limit this to "being_reviewed" and "approved".
+  // need to put logic in that loops around users for a given role and creates records based on feedback states.
+  // this will also be your update script.
+  if ($node->type == 'resource') {
+    sbac_resource_save_current_state($node);
+  }
+}
+
+/**
+ * Saves the current state to a separate table.
+ *
+ * @param $node
+ */
+function sbac_resource_save_current_state($node) {
+  if ($node->type == 'resource') {
+    global $user;
+
+    // Always save the state for the author.
+    $entity = NULL;
+    $new_record = sbac_resource_get_state($entity, $node->nid, $node->uid);
+    $entity->state = 'author';
+
+    sbac_resource_save_resource_state($entity, $new_record);
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'draft') {
+      sbac_resource_delete_resource_state_except($node->nid, $entity->state);
+    }
+
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'needs_review') {
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+      sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+    }
+
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'being_reviewed') {
+      // new one, if gate keeping in progress, give access to that user, no one else
+      $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 0, 1, 'single');
+      $completed_gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+      if ($gate_keeper) {
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid']);
+        $entity->state = 'gk_being_reviewed';
+        sbac_resource_save_resource_state($entity, $new_record);
+        sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+      }
+      elseif (!$completed_gate_keeper && !$gate_keeper) {
+        sbac_resource_delete_resource_state_given_state($node, 'gk_being_reviewed');
+        if (!$completed_gate_keeper) {
+          sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+          sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+        }
+      }
+
+      if ($completed_gate_keeper) {
+        // if there is no completed feedback and no current feedback, then its in gk_need_review status
+        $completed_feedback = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 1, 1, 'set');
+        $current_review = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1, 'single');
+        if (!$completed_feedback && !$current_review) {
+          sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
+          sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
+        }
+        else {
+          $current_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 1, 0, 1);
+          $total_count = count($current_reviews) + count($completed_feedback);
+          // if there is current reviews, tag them correctly
+          foreach ($current_reviews as $current_review) {
+            $entity = NULL;
+            $new_record = sbac_resource_get_state($entity, $node->nid, $current_review->uid);
+            $entity->state = 'qc_being_reviewed';
+            sbac_resource_save_resource_state($entity, $new_record);
+          }
+          unset($current_reviews);
+
+          // if there are completed reviews, delete the records, the user can not see it anymore.
+          foreach ($completed_feedback as $complete_feedback) {
+            $entity = NULL;
+            $new_record = sbac_resource_get_state($entity, $node->nid, $complete_feedback->uid);
+            if (!$new_record) {
+              $entity->state = 'qc_reviewed';
+              sbac_resource_save_resource_state($entity, $new_record);
+            }
+          }
+
+          if ($total_count < 3) {
+            // everyone has access and is set to needs review
+            sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
+            sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review', TRUE);
+          }
+          else {
+            sbac_resource_delete_resource_state_for_all_role($node->nid, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
+          }
+        }
+
+        //check for "cancelled" review and clean up.
+        $cancelled_reviews = _sbac_resource_determine_feedback($node->nid, 'qc', FALSE, 0, 0, 1);
+        foreach ($cancelled_reviews as $cancelled_review) {
+          $active_review = _sbac_resource_determine_feedback($node->nid, 'qc', $cancelled_review->uid, 1, 0, 1, 'single');
+          $completed_review = _sbac_resource_determine_feedback($node->nid, 'qc', $cancelled_review->uid, 1, 1, 1, 'single');
+          if (!$active_review && !$completed_review) {
+            $entity = NULL;
+            $new_record = sbac_resource_get_state($entity, $node->nid, $cancelled_review->uid);
+            if (!$new_record) {
+              sbac_resource_delete_resource_state($entity);
+            }
+          }
+          unset($active_review);
+          unset($completed_review);
+        }
+
+        unset($completed_feedback);
+        unset($current_review);
+        unset($cancelled_reviews);
+      }
+
+      _sbac_resource_save_reviewers($node, 'field_recent_reviewers', $user);
+      unset($gate_keeper);
+      unset($completed_gate_keeper);
+    }
+
+    // if the user rejected the resource, delete the previous state and add a state that does allow
+    // them to see the resource as a read only param.
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'rejected') {
+      if ($node->workbench_moderation['current']->from_state == 'being_reviewed') {
+        $gate_keeper = _sbac_resource_determine_feedback($node->nid, 'gate_keeper', FALSE, 1, 1, 1, 'single');
+        if ($gate_keeper) {
+          $entity = NULL;
+          $new_record = sbac_resource_get_state($entity, $node->nid, $gate_keeper['uid'], 'gk_being_reviewed');
+          if (!$new_record) {
+            // update the existing record, set it to allow the user to still
+            // view the read only GK review.
+            sbac_resource_update_resource_state_given_state($node, 'gk_being_reviewed', 'gk_view_rejected');
+          }
+        }
+        unset($gate_keeper);
+
+        // All reviewers who have reviewed the resource, still get read only access
+        // to the node. So, update there existing records from old state to new state
+        // of "gk_view_rejected"
+        sbac_resource_update_resource_state_given_state($node, 'qc_being_reviewed', 'gk_view_rejected');
+        sbac_resource_update_resource_state_given_state($node, 'qc_reviewed', 'gk_view_rejected');
+        _sbac_resource_save_reviewers($node, 'field_recent_reviewers', $user);
+      }
+
+      if ($node->workbench_moderation['current']->from_state == 'approved') {
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, $user->uid, 'post_being_reviewed');
+        if (!$new_record) {
+          sbac_resource_delete_resource_state($entity);
+        }
+
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, $user->uid);
+        if ($new_record) {
+          $entity->state = 'post_view_rejected';
+          sbac_resource_save_resource_state($entity, $new_record);
+        }
+
+        _sbac_resource_save_reviewers($node, 'field_recent_publishers', $user);
+      }
+    }
+
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'approved') {
+      $post_review_in_progress = _sbac_resource_determine_feedback($node->nid, 'post', FALSE, 1, 0, 1, 'single');
+      if ($post_review_in_progress) {
+        sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, $post_review_in_progress['uid']);
+        $entity->state = 'post_being_reviewed';
+        sbac_resource_save_resource_state($entity, $new_record);
+      }
+      else {
+        $entity = NULL;
+        $new_record = sbac_resource_get_state($entity, $node->nid, FALSE, 'post_being_reviewed', 0);
+        if (!$new_record) {
+          sbac_resource_delete_resource_state($entity);
+        }
+        sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
+        sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
+      }
+
+      unset($post_review_in_progress);
+
+      // remove any left over states.
+      sbac_resource_delete_resource_state_given_state($node, 'qc_being_reviewed');
+      sbac_resource_delete_resource_state_given_state($node, 'qc_reviewed');
+    }
+
+    if (isset($node->workbench_moderation['current']->state) && $node->workbench_moderation['current']->state == 'published') {
+      sbac_resource_save_resource_state_for_all_role($node, 'all', 'published');
+      if ($node->workbench_moderation['current']->from_state == 'approved') {
+        sbac_resource_delete_resource_state_given_state($node, 'post_being_reviewed');
+      }
+      _sbac_resource_save_reviewers($node, 'field_recent_reviewers', NULL, TRUE);
+      _sbac_resource_save_reviewers($node, 'field_recent_publishers', NULL, TRUE);
+    }
+
+    // Clean up the table.
+    // If the node is in neither state, delete all records associated to this role and node.
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state != 'being_reviewed' &&
+      $node->workbench_moderation['current']->state != 'needs_review'
+    ) {
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'gk_needs_review');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
+    }
+
+    // if the node is in neither state, delete all records associated to this role and node.
+    if (isset($node->workbench_moderation['current']->state) &&
+      $node->workbench_moderation['current']->state != 'approved'
+    ) {
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_being_reviewed');
+      sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_PUBLISHER_ROLE, 'post_needs_review');
+    }
+
+    unset($node);
+    unset($user);
+    unset($entity);
+  }
+}
+
+/**
+ * Implements hook_query_alter().
+ *
+ * Alters the resource review view since the group by statement doesn't work
+ * in the hook_views_query_alter(). This is a bug in views.
+ *
+ * @param $query
+ */
+function sbac_resource_query_alter(&$query) {
+  if (isset($query->alterMetaData['view']->name) &&
+    ($query->alterMetaData['view']->name == "resource_review" ||
+      $query->alterMetaData['view']->name == 'resources' ||
+      $query->alterMetaData['view']->name == 'my_resources' ||
+      ($query->alterMetaData['view']->name == 'forum_list' &&
+        ($query->alterMetaData['view']->current_display == 'block_2' || $query->alterMetaData['view']->current_display == 'block_3')))) {
+    $removed_tables = array();
+    $tables =& $query->getTables();
+    $where =& $query->conditions();
+    $possible_filters = array();
+
+    // resources view
+    if ($query->alterMetaData['view']->name == 'resource_review') {
+      $possible_filters = array(
+        'field_data_field_focus_value_',
+        'field_data_field_grades_value_',
+        'field_data_field_subject_value_'
+      );
+    }
+    else if ($query->alterMetaData['view']->name == 'my_resources') {
+      $possible_filters = array(
+        'field_data_field_focus_value_',
+        'field_data_field_grades_value_',
+        'field_data_field_subject_value_'
+      );
+    }
+    else if ($query->alterMetaData['view']->name == 'resources') {
+      $possible_filters = array(
+        'field_data_field_focus_value_',
+        'field_data_field_grades_value_',
+        'field_data_field_subject_value_',
+        'field_data_field_attributes_value_',
+        'field_data_field_intended_student_value_',
+        'field_data_field_digital_media_type_value_',
+        'field_data_field_geographical_settings_value_',
+        'field_data_field_educational_use_value_',
+        'field_data_field_intended_end_user_value_',
+        'field_data_field_smarter_balanced_keyword_value_',
+        'field_data_field_classroom_technologies_value_',
+        'taxonomy_index_value_',
+      );
+    }
+    else if ($query->alterMetaData['view']->name == 'forum_list') {
+      $possible_filters = array(
+        'field_data_field_focus_value_',
+        'field_data_field_grades_value_',
+        'field_data_field_subject_value_',
+        'field_data_field_attributes_value_',
+        'field_data_field_intended_student_value_',
+        'field_data_field_digital_media_type_value_',
+        'field_data_field_geographical_settings_value_',
+        'field_data_field_educational_use_value_',
+        'field_data_field_intended_end_user_value_',
+        'field_data_field_smarter_balanced_keyword_value_',
+        'field_data_field_classroom_technologies_value_',
+      );
+    }
+
+    if ($possible_filters) {
+      if ($query->alterMetaData['view']->name == 'forum_list') {
+        sbac_resource_forum_table_optimize($possible_filters, $tables, $removed_tables);
+        sbac_resource_forum_query_optimize($query, $removed_tables, $tables, $where, $possible_filters);
+      }
+      else {
+        sbac_resource_default_table_optimize($possible_filters, $tables, $removed_tables);
+        sbac_resource_default_query_optimize($query, $removed_tables, $tables, $where, $possible_filters);
+      }
+    }
+  }
+}
+
+/**
+ * Optimize the query tables.
+ *
+ * @param $possible_filters
+ * @param $tables
+ * @param $removed_tables
+ */
+function sbac_resource_forum_table_optimize(&$possible_filters, &$tables, &$removed_tables) {
+  foreach ($possible_filters as $filter_name) {
+    foreach ($tables as $key => $table) {
+      if (preg_match('/' . $filter_name . '[0-9]/', $key)) {
+        $length = strlen($filter_name);
+        $number = substr($key, $length);
+        if ($number == 0) {
+          if (strpos($filter_name, 'taxonomy_index_value_') !== FALSE) {
+            $tables[$key]['condition'] = 'taxonomy_term_data.tid = ' . $filter_name . '0.entity_id';
+            $tables[$key]['arguments'] = array();
+          }
+          else {
+            $tables[$key]['condition'] = 'taxonomy_term_data.tid = ' . $filter_name . '0.entity_id AND ' . $filter_name . "0.bundle = 'forum'";
+            $tables[$key]['arguments'] = array();
+          }
+        }
+        else {
+          unset($tables[$key]);
+          $removed_tables[] = $key;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Forum query optimizing.
+ *
+ * @param $query
+ * @param $removed_tables
+ * @param $tables
+ * @param $where
+ * @param $possible_filters
+ */
+function sbac_resource_forum_query_optimize(&$query, &$removed_tables, &$tables, &$where, &$possible_filters) {
+  foreach ($where as $key => $clause) {
+    if (isset($clause['field']) && is_object($clause['field'])) {
+      $conditions =& $clause['field']->conditions();
+      if ($conditions) {
+        foreach ($conditions as $key1 => $clause1) {
+          if (isset($clause1['field']) && is_object($clause1['field'])) {
+            $conditions2 =& $clause1['field']->conditions();
+            if ($conditions2) {
+              foreach ($conditions2 as $key2 => $clause2) {
+                if (isset($clause2['field']) && is_object($clause2['field'])) {
+                  $conditions3 =& $clause2['field']->conditions();
+                  if ($conditions3) {
+                    foreach ($conditions3 as $key3 => $clause3) {
+                      if (isset($clause3['field']) && is_object($clause3['field'])) {
+                        $conditions4 =& $clause3['field']->conditions();
+                        if ($conditions4) {
+                          foreach ($conditions4 as $key4 => $clause4) {
+                            if (isset($clause4['field']) && is_string($clause4['field'])) {
+                              sbac_resource_optimize_field_query($clause4, $conditions4, $key4, $possible_filters);
+                            }
+                          }
+                        }
+                      }
+                      else {
+                        if (isset($clause3['field'])) {
+                          sbac_resource_optimize_field_query($clause3, $conditions3, $key3, $possible_filters);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+//  $query->groupBy("node.nid");
+}
+
+/**
+ * Optimize the query tables.
+ *
+ * @param $possible_filters
+ * @param $tables
+ * @param $removed_tables
+ */
+function sbac_resource_default_table_optimize(&$possible_filters, &$tables, &$removed_tables) {
+  foreach ($possible_filters as $filter_name) {
+    foreach ($tables as $key => $table) {
+      if (preg_match('/' . $filter_name . '[0-9]/', $key)) {
+        $length = strlen($filter_name);
+        $number = substr($key, $length);
+        if ($number == 0) {
+          if (strpos($filter_name, 'taxonomy_index_value_') !== FALSE) {
+            $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.nid';
+            $tables[$key]['arguments'] = array();
+          }
+          else {
+            $tables[$key]['condition'] = 'node.nid = ' . $filter_name . '0.entity_id AND ' . $filter_name . "0.bundle = 'resource'";
+            $tables[$key]['arguments'] = array();
+          }
+        }
+        else {
+          unset($tables[$key]);
+          $removed_tables[] = $key;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Default query optimizing.
+ *
+ * @param $query
+ * @param $removed_tables
+ * @param $tables
+ * @param $where
+ * @param $possible_filters
+ */
+function sbac_resource_default_query_optimize(&$query, &$removed_tables, &$tables, &$where, &$possible_filters) {
+  foreach ($where as $key => $clause) {
+    if (isset($clause['field']) && is_object($clause['field'])) {
+      $conditions =& $clause['field']->conditions();
+      if ($conditions) {
+        foreach ($conditions as $key1 => $clause1) {
+          if (isset($clause1['field']) && is_object($clause1['field'])) {
+            $conditions2 =& $clause1['field']->conditions();
+            if ($conditions2) {
+              foreach ($conditions2 as $key2 => $clause2) {
+                if (isset($clause2['field']) && is_object($clause2['field'])) {
+                  $conditions3 =& $clause2['field']->conditions();
+                  if ($conditions3) {
+                    foreach ($conditions3 as $key3 => $clause3) {
+                      if (isset($clause3['field']) && is_object($clause3['field'])) {
+                        $conditions4 =& $clause3['field']->conditions();
+                        if ($conditions4) {
+                          foreach ($conditions4 as $key4 => $clause4) {
+                            if (isset($clause4['field']) && is_string($clause4['field'])) {
+                              sbac_resource_optimize_field_query($clause4, $conditions4, $key4, $possible_filters);
+                            }
+                          }
+                        }
+                      }
+                      else {
+                        if (isset($clause3['field'])) {
+                          $field = $clause3['field'];
+                          $filter_name = 'taxonomy_index_value_';
+                          if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
+                            sbac_resource_optimize_taxonomy_query($clause3, $conditions3, $key3);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  $query->groupBy("node.nid");
+}
+
+/**
+ * Removes OR statements and creates an IN for field filter values.
+ *
+ * @param $clause4
+ * @param $conditions4
+ * @param $key4
+ * @param $possible_filters
+ */
+function sbac_resource_optimize_field_query(&$clause, &$conditions, &$key, &$possible_filters) {
+  $field = $clause['field'];
+  foreach ($possible_filters as $filter_name) {
+    if (preg_match('/' . $filter_name . '[1-9]/', $field)) {
+      if (is_array($conditions[0]['value'])) {
+        array_push($conditions[0]['value'], $clause['value']);
+      }
+      else {
+        $value = $conditions[0]['value'];
+        $conditions[0]['value'] = array($value, $clause['value']);
+        $conditions[0]['operator'] = 'IN';
+      }
+      unset($conditions[$key]);
+    }
+  }
+}
+
+/**
+ * Removes OR statements and creates an IN for taxonomy_index only
+ *
+ * @param $clause3
+ * @param $conditions3
+ * @param $key3
+ */
+function sbac_resource_optimize_taxonomy_query(&$clause3, &$conditions3, &$key3) {
+  if (is_array($conditions3[0]['value'])) {
+    array_push($conditions3[0]['value'], $clause3['value']);
+  }
+  else {
+    $value = $conditions3[0]['value'];
+    $conditions3[0]['value'] = array($value, $clause3['value']);
+    $conditions3[0]['operator'] = 'IN';
+  }
+  unset($conditions3[$key3]);
+}
+
+/**
+ * Get all users by the role name.
+ *
+ * @param $role_name
+ * @return mixed
+ */
+function sbac_resource_get_users_by_role($role_name) {
+  $uids = array();
+  // Get role
+  $role = user_role_load_by_name($role_name);
+  // Query
+  $query = "SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rid";
+  $result = db_query($query, array(':rid' => $role->rid));
+  foreach ($result as $row) {
+    $uids[] = $row->uid;
+  }
+  // Load users.
+  $accounts = array();
+  $accounts = user_load_multiple($uids);
+  return $accounts;
+}
+
+/**
+ * Inserts / Updates the resource state.
+ *
+ * @param $entity
+ * @param $new_record
+ */
+function sbac_resource_save_resource_state($entity, $new_record) {
+  if ($new_record) {
+    drupal_write_record('sbac_node_resource_state', $entity);
+  }
+  else {
+    drupal_write_record('sbac_node_resource_state', $entity, array('nid', 'uid'));
+  }
+
+  unset($entity);
+  unset($new_record);
+}
+
+/**
+ * Loops through all users given a role and saves the new record.
+ *
+ * @param $node
+ * @param $role_name
+ * @param $new_state
+ */
+function sbac_resource_save_resource_state_for_all_role($node, $role_name, $new_state, $flag_param = FALSE) {
+  $qc_reviewed = NULL;
+  if ($flag_param) {
+    $result = db_query('SELECT s.* FROM {sbac_node_resource_state} s WHERE s.nid = :nid AND s.state = :state', array(':nid' => $node->nid, ':state' => 'qc_reviewed'));
+    foreach ($result as $row) {
+      $qc_reviewed[] = 'qc_reviewed::' . $row->uid;
+    }
+    if (count($qc_reviewed) > 0) {
+      $qc_reviewed = implode('::', $qc_reviewed);
+    }
+  }
+
+  $entity = NULL;
+  $flag = $role_name . '::' . $new_state . '::' . $node->nid;
+  if ($qc_reviewed) {
+    $flag .= '::' . $qc_reviewed;
+  }
+  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $new_state);
+  $entity->state = $new_state;
+  $entity->flag = $flag;
+
+  sbac_resource_save_resource_state($entity, $new_record);
+
+  unset($flag);
+  unset($entity);
+  unset($new_record);
+}
+
+/**
+ * Loops through all users given a role and deletes the record for the given
+ * node id. Excluding the uid provided (if one).
+ *
+ * @param $node
+ * @param $role_name
+ * @param null $keep_uid
+ *
+ * $keep_uid = NULL, $states_to_delete = array()
+ */
+function sbac_resource_delete_resource_state_for_all_role($node, $role_name, $old_state) {
+  // Sometimes we get an nid string.
+  if (!is_object($node)) {
+    $node = node_load($node);
+  }
+
+  $entity = NULL;
+  $new_record = sbac_resource_get_state($entity, $node->nid, SBAC_RESOURCE_ALL_USER_FLAG, $old_state);
+  if (!$new_record) {
+    sbac_resource_delete_resource_state($entity);
+  }
+
+  unset($entity);
+  unset($node);
+}
+
+/**
+ * Deletes the resource state.
+ *
+ * @param $node
+ * @param $old_state
+ */
+function sbac_resource_delete_resource_state_given_state($node, $old_state) {
+  $entity = NULL;
+  $new_record = sbac_resource_get_state($entity, $node->nid, NULL, $old_state);
+  if (!$new_record) {
+    db_delete('sbac_node_resource_state')
+      ->condition('nid', $node->nid)
+      ->condition('state', $old_state)
+      ->execute();
+  }
+
+  unset($entity);
+}
+
+/**
+ * Update the old state to the new state for the given nid.
+ *
+ * @param $node
+ * @param $old_state
+ * @param $new_state
+ */
+function sbac_resource_update_resource_state_given_state($node, $old_state, $new_state) {
+  db_update('sbac_node_resource_state')->fields(array('state' => $new_state))
+    ->condition('nid', $node->nid)
+    ->condition('state', $old_state)
+    ->execute();
+}
+
+/**
+ * Remove all resource states related to this NID except the given state.
+ *
+ * @param $nid
+ * @param $state
+ */
+function sbac_resource_delete_resource_state_except($nid, $state) {
+  db_delete('sbac_node_resource_state')
+    ->condition('nid', $nid)
+    ->condition('state', $state, '<>')
+    ->execute();
+}
+
+/**
+ * Deletes the resource state for the given UID and NID.
+ *
+ * @param $entity
+ */
+function sbac_resource_delete_resource_state($entity) {
+  if (!isset($entity->nid) || !$entity->nid) {
+    return;
+  }
+  if (!isset($entity->uid) || $entity->uid === FALSE) {
+    return;
+  }
+  if (!isset($entity->state) || !$entity->state) {
+    return;
+  }
+
+  if ($entity->uid == 0) {
+    db_delete('sbac_node_resource_state')
+      ->condition('nid', $entity->nid)
+      ->condition('uid', $entity->uid)
+      ->condition('state', $entity->state)
+      ->condition('flag', $entity->flag)
+      ->execute();
+  }
+  else {
+    db_delete('sbac_node_resource_state')
+      ->condition('nid', $entity->nid)
+      ->condition('uid', $entity->uid)
+      ->condition('state', $entity->state)
+      ->execute();
+  }
+
+  unset($entity);
+}
+
+/**
+ * Gets the state object from the custom table.
+ *
+ * @param $nid
+ * @param $uid
+ * @param $entity
+ * @return bool
+ */
+function sbac_resource_get_state(&$entity, $nid, $uid = NULL, $state = NULL, $flag = NULL) {
+  $query = db_select('sbac_node_resource_state', 'snrs');
+  $query->fields('snrs');
+  $query->condition('nid', $nid);
+  if ($uid != NULL) {
+    $query->condition('uid', $uid);
+  }
+  if ($state != NULL) {
+    $query->condition('state', $state);
+  }
+  if ($flag != NULL) {
+    $query->condition('flag', $flag);
+  }
+  $result = $query->execute()->fetchObject();
+  if (!$result) {
+    $entity = new stdClass();
+    $entity->nid = $nid;
+    $entity->uid = $uid;
+    $new_record = TRUE;
+  }
+  else {
+    $entity = $result;
+    $new_record = FALSE;
+  }
+
+  unset($query);
+  unset($result);
+
+  return $new_record;
+}
+
+/**
+ * Implements hook_node_update();
+ *
+ * @param $node
+ */
+function sbac_resource_node_update($node) {
+  if ($node->type == 'resource') {
+    sbac_resource_determine_thumbnail_uri($node);
+    if (isset($node->workbench_moderation['published'])) {
+      $node->workbench_moderation['published']->vid = $node->vid;
+    }
+
+    // update the states setting of the resource forums
+    $forum_ids = db_select('field_data_field_forum_resource_ref', 'r')
+      ->condition('r.field_forum_resource_ref_target_id', $node->nid)
+      ->condition('r.bundle', 'forum')
+      ->fields('r', array('entity_id'))
+      ->execute()
+      ->fetchCol();
+    if (!empty($forum_ids)) {
+      foreach ($forum_ids as $tid) {
+        $forum = taxonomy_term_load($tid);
+        if ($node->field_view_permissions['und'][0]['value'] == 1) {
+          $forum->field_forum_access_states['und'][0]['value'] = 0;
+          $forum->field_state = $node->field_view_permissions_per_state;
+        }
+        else {
+          $forum->field_forum_access_states['und'][0]['value'] = 1;
+          $forum->field_state = array();
+        }
+        taxonomy_term_save($forum);
+      }
+    }
+  }
+  global $user;
+  if ($node->type == 'resource') {
+    if (((in_array('resource contributor', $user->roles) && ($node->workbench_moderation['current']->state == 'needs_review')) ||
+    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles) ||  $user->uid == 1) &&
+    (($node->workbench_moderation['current']->state == 'published') || ($node->workbench_moderation['current']->state == 'published' && $node->sticky == 1))))) {
+      sbac_resource_print_about_this_tab($node);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ *
+ * @param $node
+ */
+function sbac_resource_node_insert($node) {
+  if ($node->type == 'resource') {
+    sbac_resource_determine_thumbnail_uri($node);
+  }
+}
+
+/**
+ * Implements hook_node_delete()
+ */
+function sbac_resource_node_delete($node) {
+  if ($node->type == 'resource') {
+    // Delete resource forum and topics
+    if ($forum_id = sbac_forum_get_resource_forum_id($node->nid)) {
+      sbac_forum_delete_resource_forum($forum_id);
+    }
+    // Delete favorite
+    db_delete('sbac_favorites')->condition('type', 'node')->condition('id', $node->nid)->execute();
+
+    // Delete notifications
+    db_query("delete t1, t2 from {taskit_entity} t1 left join {taskit} t2 on t1.task_id = t2.task_id where t1.entity_type = 'node' and t1.entity_id = :nid", array(':nid' => $node->nid));
+  }
+}
+
+/**
+ * Saves the node thumbnail into the resource field.
+ *
+ * @param $node
+ */
+function sbac_resource_determine_thumbnail_uri(&$node) {
+  $default_file = 'no_img';
+  $nid = $node->nid;
+  $media_items = sbac_media_load_items($node->nid);
+  $node->document = $media_items;
+  if (isset($node->field_html5['und'][0]['value']) && $node->field_html5['und'][0]['value']) {
+    $html5_item = sbac_media_load_html5_item($node->nid);
+    $node->document['html5'] = $html5_item;
+    $default_file = 'public://no-preview-html5.png';
+    if (isset($node->document['html5'])) {
+      $directory = "public://html5_thumbnails/" . floor($nid / 32000) . "/" . $nid;
+      $directory_thumbnail_uri = $directory . '/thumbnail.png';
+      $directory_thumbnail_path = drupal_realpath($directory) . '/thumbnail.png';
+      if (file_exists($directory_thumbnail_path)) {
+        $uri = $directory_thumbnail_uri;
+        $url = file_create_url($directory_thumbnail_uri);
+      }
+      else {
+        $url = $default_file;
+        $uri = $default_file;
+      }
+    }
+    else {
+      $url = $default_file;
+      $uri = $default_file;
+    }
+  }
+  elseif (isset($node->document[0])) {
+    $media = $node->document[0];
+    $url = '';
+    $uri = '';
+    if ($media->fid) {
+      $exists = FALSE;
+      $ext = pathinfo($media->filename, PATHINFO_EXTENSION);
+      if (_sbac_resource_determine_file_type_icon($ext) != 'video') {
+        $file = file_load($media->fid);
+        $url = file_create_url($file->uri);
+        $uri = $file->uri;
+        $exists = file_exists($uri);
+      }
+      $thumb_opts = _sbac_resource_determine_card_image($ext);
+      $thumb_urls = _sbac_resource_generate_thumbnail_urls($url, $uri, $thumb_opts);
+      if (!$exists || ($thumb_opts[0] == 'no_img')) {
+        $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, NULL, $nid, $media);
+        $url = $thumb_url['url'];
+        $uri = $thumb_url['uri'];
+      }
+      else {
+        if($node->field_resource_thumbnail){
+          if (!empty($node->field_resource_thumbnail['und']) || strpos($node->field_thumbnail_uri['und'][0]['value'], 'public://resource_thumbnails') !== false){
+            $file = file_load($node->field_resource_thumbnail['und'][0]['fid']);
+            file_get_contents(image_style_url('resource_image_grid',$file->uri));
+            $url = image_style_url('resource_image_grid',$file->uri);
+            $uri = image_style_path('resource_image_grid',$file->uri);
+            $thumb_urls = array($url, $uri, $thumb_opts);
+          }
+        }
+        $thumb_url = array($thumb_urls, $file->filename, $nid, $media);
+        if(empty($node->field_resource_thumbnail['und']) && $node->field_thumbnail_uri['und'][0]['value']){
+          // If there is no resource image, check if it used to come from a resource thumbnail
+          if (strpos($node->field_thumbnail_uri['und'][0]['value'], 'public://resource_thumbnails') !== false) {
+            $url = $default_file;
+            $uri = $default_file;
+          }
+        }
+      }
+    }
+    elseif (isset($media->embed_url)) {
+      $thumb_urls = _sbac_resource_embed_vid_thumb_url($media);
+      $thumb_url = _sbac_resource_save_thumbnail($thumb_urls, $media->filename, $nid, $media);
+      $url = $thumb_url['url'];
+      $uri = $thumb_url['uri'];
+    }
+    else {
+      $url = $default_file;
+      $uri = $default_file;
+    }
+  }
+  else {
+    $url = $default_file;
+    $uri = $default_file;
+  }
+
+  $node->field_thumbnail_uri['und'][0]['value'] = $uri . '::' . $url;
+  if ($uri != 'no_img' && $url != 'no_img' && isset($media->filehash) && $media->filehash) {
+    $node->field_thumbnail_uri['und'][0]['value'] .= '::' . $media->filehash;
+  }
+}
+
+/**
+ * Implements of hook_page_alter().
+ *
+ * @param $page
+ */
+function sbac_resource_page_alter(&$page) {
+  if (!isset($page['content']['system_main']['#form_id'])) {
+  }
+  else {
+    if (isset($page['content']['system_main']['#form_id']) && $page['content']['system_main']['#form_id'] == 'resource_node_form') {
+      $page['help']['system_help']['#markup'] = '';
+    }
+  }
+}
+
+/**
+ * Text to display when "Has No License" option is selected on Licensing radio boxes
+ * in Resource - Materials
+ *
+ * @return string
+ */
+function sbac_resource_licensing_form_has_no_license() {
+  $output = '
+              <ul>
+                <li>Before continuing, you must obtain permission to use the resource in the Digital Library.</li>
+                <li>Download, complete and submit the Copyright Clearance Form to resume your submittal.</li>
+              </ul>
+            ';
+
+  return $output;
+}
+
+/**
+ * Creates a grid or list button.
+ *
+ * @return string
+ */
+function sbac_resource_grid_list_button() {
+  switch (arg(0)) {
+    case 'my-resources':
+      $name = SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE;
+      break;
+    case 'digital-library-resources':
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+    case 'resource-review':
+      $name = SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE;
+      break;
+    default:
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+  }
+  $path = arg(0);
+  if (isset($_SESSION[$name])) {
+    $display_mode = $_SESSION[$name];
+    if ($display_mode == 'grid_view') {
+      $button = l('List View', $path . '/list', array(
+          'absolute' => TRUE,
+          'attributes' => array(
+            'class' => array('sbac-list-layout')
+          )
+        ));
+    }
+    else {
+      $button = l('Grid View', $path . '/grid', array(
+          'absolute' => TRUE,
+          'attributes' => array(
+            'class' => array('sbac-grid-layout')
+          )
+        ));
+    }
+  }
+  else {
+    $button = l('List View', $path . '/list', array(
+        'absolute' => TRUE,
+        'attributes' => array(
+          'class' => array('sbac-list-layout')
+        )
+      ));
+    if (arg(1) != NULL && arg(1) == 'list') {
+      $button = l('Grid View', $path . '/grid', array(
+          'absolute' => TRUE,
+          'attributes' => array(
+            'class' => array('sbac-grid-layout')
+          )
+        ));
+    }
+  }
+
+  return $button;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ */
+function sbac_resource_block_info() {
+  $blocks['sbac_resource_results_count'] = array(
+    'info' => t('Search Results Count'),
+    'region' => 'sub-header',
+    'pages' => "digital-library-resources*\nmy-resources*\nresource-review*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_quick_search'] = array(
+    'info' => t('Quick search filter'),
+    'region' => 'sub-header',
+    'pages' => "digital-library-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -25,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_review_tabs'] = array(
+    'info' => t('Resource Review Tabs'),
+    'region' => 'sub-header',
+    'pages' => "resource-review*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_create_button'] = array(
+    'info' => t('Create New Resource'),
+    'region' => 'sub-header',
+    'pages' => "my-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'weight' => -22,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_grid_list_button'] = array(
+    'info' => t('Grid / List button'),
+    'region' => 'sub-header',
+    'pages' => "digital-library-resources*\nmy-resources*\nresource-review*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'status' => 1,
+    'weight' => 0,
+  );
+
+  $blocks['sbac_resource_back_button'] = array(
+    'info' => t('Back Button'),
+    'region' => 'sub-header',
+    'pages' => "terms-of-service",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_dl_sort_form'] = array(
+    'info' => t('Digital Library Sort'),
+    'region' => 'sub-header',
+    'pages' => "digital-library-resources*\n",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -21,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_rr_sort_form'] = array(
+    'info' => t('Resource Review Sort'),
+    'region' => 'sub-header',
+    'pages' => "resource-review*\n",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -21,
+    'status' => 1,
+  );
+
+  $blocks['sbac_resource_mr_sort_form'] = array(
+    'info' => t('My Resources Sort'),
+    'region' => 'sub-header',
+    'pages' => "my-resources*\n",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => -23,
+    'status' => 1,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_resource_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'sbac_resource_results_count':
+      switch (arg(0)) {
+        case 'my-resources':
+          $name = SBAC_SEARCH_MY_RESOURCES_COUNT;
+          break;
+        case 'digital-library-resources':
+          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
+          break;
+        case 'resource-review':
+          $name = SBAC_SEARCH_RESOURCE_REVIEW_COUNT;
+          break;
+        default:
+          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
+          break;
+      }
+
+      $count = 0;
+      if (isset($_SESSION[$name])) {
+        $count = $_SESSION[$name];
+      }
+      $block['subject'] = NULL;
+      $block['content'] = '<h3 class="left"><span>' . $count . '</span>' . t(' Resources:') . '</h3>';
+      break;
+
+    case 'sbac_resource_create_button':
+      $block['subject'] = NULL;
+      $block['content'] = sbac_resource_create_button();
+      break;
+
+    case 'sbac_resource_grid_list_button':
+      $block['subject'] = NULL;
+      $block['content'] = sbac_resource_grid_list_button();
+      break;
+
+    case 'sbac_resource_review_tabs':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_get_form('sbac_resource_resource_review_subnav_form');
+      break;
+
+    case 'sbac_resource_back_button':
+      $block['subject'] = NULL;
+      $previous_url = $_SERVER['HTTP_REFERER'];
+      global $base_url;
+      if (strpos($previous_url, $base_url) !== FALSE) {
+        $previous_url = str_replace($base_url, '', $previous_url);
+      }
+      $js = FALSE;
+      switch ($previous_url) {
+        case '/moderation':
+        case '/digital-library-resources':
+        case '/resource-review':
+        case '/my-resources':
+          $js = TRUE;
+          break;
+      }
+      if ($js) {
+        $block['content'] = '<span class="button" onclick="parent.history.back();">Back</span>';
+      }
+      else {
+        $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+      }
+      break;
+    case 'sbac_resource_dl_sort_form':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_get_form('sbac_resource_digital_library_sort_form');
+      break;
+    case 'sbac_resource_rr_sort_form':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_get_form('sbac_resource_resource_review_sort_form');
+      break;
+    case 'sbac_resource_mr_sort_form':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_get_form('sbac_resource_my_resources_sort_form');
+      break;
+    case 'sbac_resource_quick_search':
+      $block['subject'] = NULL;
+      $block['content'] = sbac_resource_quick_search_filter();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * @param $blocks
+ * @param $theme
+ * @param $code_blocks
+ */
+function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
+  $blocks['system']['navigation']['status'] = FALSE;
+  $blocks['workbench']['block']['status'] = FALSE;
+
+  if (isset($blocks['sbac_resource']['sbac_resource_results_count']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_results_count']['pages'] = "digital-library-resources*\nmy-resources*";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_rr_sort_form']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_rr_sort_form']['pages'] = "";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_create_button']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_create_button']['pages'] = "my-resources*";
+    $blocks['sbac_resource']['sbac_resource_create_button']['weight'] = -22;
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_grid_list_button']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_grid_list_button']['pages'] = "digital-library-resources*\nmy-resources*\nresource-review*";
+    $blocks['sbac_resource']['sbac_resource_grid_list_button']['region'] = "sub-header";
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_mr_sort_form']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_mr_sort_form']['weight'] = -23;
+  }
+  if (isset($blocks['sbac_resource']['sbac_resource_back_button']) && $theme == 'SBAC') {
+    $blocks['sbac_resource']['sbac_resource_back_button']['pages'] = "content*\nterms-of-service";
+  }
+}
+
+/**
+ * Create button
+ *
+ * @return null|string
+ */
+function sbac_resource_create_button() {
+  global $user;
+  $content = NULL;
+
+  // Resource contributor button.
+  if (in_array('resource contributor', $user->roles)) {
+    $content = l('Create New Resource', 'node/add/resource', array(
+      'absolute' => TRUE,
+      'attributes' => array('class' => array('small', 'button')),
+      'query' => array('destination' => arg(0)),
+    ));
+  }
+
+  // DLRB admin / member button.
+  if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+    $create_urls[] = l('Resource', 'node/add/resource', array('attributes' => array('class' => array('create-resource')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'resource', 'destination' => arg(0))));
+    $create_urls[] = l('Content Module', 'node/add/resource', array('attributes' => array('class' => array('create-module')), 'absolute' => TRUE, 'external' => TRUE, 'query' => array('type' => 'module', 'destination' => arg(0))));
+    $content = '<a id="admin-create-menu" class="button small arrow sbac-create-resource-dropdown" data-dropdown="sbac-create-resource">' . t('Create New') . '<span></span></a>';
+    $content .= theme('item_list', array(
+      'items' => $create_urls,
+      'attributes' => array(
+        'class' => 'materials-dropdown f-dropdown',
+        'id' => 'sbac-create-resource'
+      )
+    ));
+  }
+  return $content;
+}
+
+/**
+ * Cleans the text and remove's any malicious text.
+ *
+ * @param $form_state
+ */
+function sbac_resource_clean_text(&$form_state) {
+  foreach ($form_state['values'] as $field_name => $field) {
+    if (is_array($field) && isset($field['und'][0]['value']) && $field['und'][0]['value'] != NULL) {
+      $form_state['values'][$field_name]['und'][0]['value'] = filter_xss($field['und'][0]['value']);
+    }
+    if ($field_name == 'title' && $field != NULL) {
+      $form_state['values']['title'] = filter_xss($field);
+    }
+  }
+}
+
+/**
+ * Determines if the display is grid / list.
+ *
+ * @param string
+ *   $page can be 'dl', 'mr' or 'rr' (for each page).
+ *
+ * @return string
+ */
+function sbac_resource_determine_grid_or_list() {
+  switch (arg(0)) {
+    case 'my-resources':
+      $name = SBAC_RESOURCE_MY_RESOURCES_VIEW_MODE;
+      break;
+    case 'digital-library-resources':
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+    case 'resource-review':
+      $name = SBAC_RESOURCE_RESOURCE_REVIEW_VIEW_MODE;
+      break;
+    default:
+      $name = SBAC_RESOURCE_DIGITAL_LIBRARY_RESOURCES_VIEW_MODE;
+      break;
+  }
+
+  if (isset($_SESSION[$name])) {
+    $display = $_SESSION[$name];
+    if (arg(1) == 'list') {
+      $display = 'list_view';
+    }
+    else {
+      if (arg(1) == 'grid') {
+        $display = 'grid_view';
+      }
+    }
+    $_SESSION[$name] = $display;
+  }
+  else {
+    // By default show grid layout with link to list layout
+    $display = 'grid_view';
+    if (arg(1) == 'list') {
+      $display = 'list_view';
+    }
+    // Add session variable to persist for users session.
+    $_SESSION[$name] = $display;
+  }
+  return $display;
+}
+
+/**
+ * Truncates Resources.
+ *
+ * @param $html
+ * @param int $maxLength
+ * @return string
+ */
+function sbac_resource_truncate($html, $maxLength = 100) {
+  mb_internal_encoding("UTF-8");
+  $printedLength = 0;
+  $position = 0;
+  $tags = array();
+  $newContent = '';
+
+  $html = $content = preg_replace("/<img[^>]+\>/i", "", $html);
+
+  while ($printedLength < $maxLength && preg_match('{</?([a-z]+)[^>]*>|&#?[a-zA-Z0-9]+;}', $html, $match, PREG_OFFSET_CAPTURE, $position)) {
+    list($tag, $tagPosition) = $match[0];
+    // Print text leading up to the tag.
+    $str = mb_strcut($html, $position, $tagPosition - $position);
+    if ($printedLength + mb_strlen($str) > $maxLength) {
+      $newstr = mb_strcut($str, 0, $maxLength - $printedLength);
+      $newstr = preg_replace('~\s+\S+$~', '', $newstr);
+      $newContent .= $newstr;
+      $printedLength = $maxLength;
+      break;
+    }
+    $newContent .= $str;
+    $printedLength += mb_strlen($str);
+    if ($tag[0] == '&') {
+      // Handle the entity.
+      $newContent .= $tag;
+      $printedLength++;
+    }
+    else {
+      // Handle the tag.
+      $tagName = $match[1][0];
+      if ($tag[1] == '/') {
+        // This is a closing tag.
+        $openingTag = array_pop($tags);
+        assert($openingTag == $tagName); // check that tags are properly nested.
+        $newContent .= $tag;
+      }
+      else {
+        if ($tag[mb_strlen($tag) - 2] == '/') {
+          // Self-closing tag.
+          $newContent .= $tag;
+        }
+        else {
+          // Opening tag.
+          $newContent .= $tag;
+          $tags[] = $tagName;
+        }
+      }
+    }
+
+    // Continue after the tag.
+    $position = $tagPosition + mb_strlen($tag);
+  }
+
+  // Print any remaining text.
+  if ($printedLength < $maxLength && $position < mb_strlen($html)) {
+    $newstr = mb_strcut($html, $position, $maxLength - $printedLength);
+    $newstr = preg_replace('~\s+\S+$~', '', $newstr);
+    $newContent .= $newstr;
+  }
+
+  // Close any open tags.
+  while (!empty($tags)) {
+    $newContent .= sprintf('</%s>', array_pop($tags));
+  }
+
+  return $newContent;
+}
+
+/**
+ * Updates the average rating score.
+ *
+ * @param $nid
+ * @param null $exclude
+ */
+function sbac_resource_update_average_rating_score($nid, $exclude = NULL) {
+  // Initialize variables.
+  $entity_type = 'review';
+  $all_reviews = array();
+  $scores = array();
+
+  // Query all reviews for the node.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', $entity_type)
+    ->entityCondition('bundle', 'end_use')
+    ->propertyCondition('node_id', $nid, '=');
+
+  // Compute the totals without this id. Used for when deleting a review.
+  if (!empty($exclude)) {
+    $query->propertyCondition('id', $exclude, '!=');
+  }
+
+  $result = $query->execute();
+  if ($result[$entity_type]) {
+    $review_ids = array_keys($result[$entity_type]);
+    $all_reviews = entity_load($entity_type, $review_ids);
+  }
+
+  // Loop through results and pull the avg score value for each review.
+  if (!empty($all_reviews)) {
+    foreach ($all_reviews as $ent_id => $review) {
+      $review_data = entity_metadata_wrapper($entity_type, $review);
+      if (isset($review_data->field_avg_rating)) {
+        $scores[$ent_id] = $review_data->field_avg_rating->value();
+      }
+    }
+  }
+
+  $overall_avg = 0;
+  if (!empty($scores)) {
+    $overall_total = 0;
+    foreach ($scores as $score) {
+      $overall_total += $score;
+    }
+    $overall_avg = $overall_total / count($scores);
+  }
+
+  $resource_node = node_load($nid);
+  if (!empty($resource_node)) {
+    // Cant do full node save, workbench moderation doesnt like it.
+    $resource_node->field_node_avg_rating[LANGUAGE_NONE][0]['value'] = $overall_avg;
+    entity_save_field(array('field_node_avg_rating'), $resource_node, 'node', $nid);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * @param $entity
+ * @param $type
+ */
+function sbac_resource_entity_delete($entity, $type) {
+  if ($type == 'review') {
+    // Ensure the average rating for the node gets recalculated when a review is deleted.
+    $entity_wrapper = entity_metadata_wrapper($type, $entity);
+    $nid = $entity_wrapper->node_id->value();
+    $eid = $entity_wrapper->id->value();
+    sbac_resource_update_average_rating_score($nid, $eid);
+  }
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * @param $node
+ * @param $op
+ * @param $account
+ */
+function sbac_resource_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+  if ($type == 'resource') {
+    if ($account->uid == 1) {
+      return NODE_ACCESS_ALLOW;
+    }
+
+    $cache_access = &drupal_static(__FUNCTION__);
+    if (empty($cache_access) || empty($cache_access[$account->uid]) || !isset($cache_access[$account->uid][$node->nid]) || !isset($cache_access[$account->uid][$node->nid][$op])) {
+    $access = sbac_resource_determine_access($node, $account, $op);
+      $cache_access[$account->uid][$node->nid][$op] = $access;
+    if (!$access) {
+        // variable_set('site_404', '');
+      return NODE_ACCESS_DENY;
+    }
+    else {
+      return NODE_ACCESS_ALLOW;
+    }
+  }
+    return $cache_access[$account->uid][$node->nid][$op];
+  }
+}
+
+/**
+ * Determines access to the node. Currently state and workflow determine this.
+ *
+ * @param $nid
+ * @param $uid
+ * @param $op
+ * @return bool
+ */
+function sbac_resource_determine_access($node, $account, $op) {
+  // state access
+  $access = _sbac_resource_determine_state_access($node, $account);
+  if ($access) {
+    // workflow access
+    $access = _sbac_resource_determine_workflow_access($node, $account, $op);
+  }
+  return $access;
+}
+
+/**
+ * Determine workflow access.
+ *
+ * @param $node
+ * @param $account
+ * @param $op = create, update, delete, view
+ * @return bool
+ */
+function _sbac_resource_determine_workflow_access($node, $account, $op) {
+  $access = FALSE;
+
+  if ($op == 'create') {
+    $access = TRUE;
+  }
+
+  if (isset($node->workbench_moderation['current']->state)) {
+    $state = $node->workbench_moderation['current']->state;
+    $query = db_select('sbac_node_resource_state', 's');
+    $query->fields('s');
+    $query->condition('s.nid', $node->nid);
+    switch ($state) {
+      case 'draft':
+        // author has access view/edit
+        $query->condition('s.uid', $account->uid);
+        $query->condition('s.state', 'author');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if ($account->uid == $node->uid && ($op == 'create' || $op == 'update' || $op == 'delete' || $op == 'view')) {
+            $access = TRUE;
+          }
+        }
+        // Reports admin in the same state as contributor can view it
+        if (!$access && sbac_central_user_has_role(array('reports administrator'), $account)) {
+          $query = db_select('node', 'n');
+          $query->leftJoin('field_data_field_state', 's1', 's1.entity_id = n.uid AND s1.entity_type = \'user\'');
+          $query->leftJoin('field_data_field_state', 's2', 's2.entity_id = :uid AND s2.entity_type = \'user\'', array(':uid' => $account->uid));
+          $query->condition('n.nid', $node->nid);
+          $query->where('s1.field_state_tid = s2.field_state_tid');
+          $query->fields('n', array('nid'));
+          $access = (bool) $query->countQuery()->execute()->fetchField();
+        }
+        break;
+      case 'needs_review':
+        // author has view
+        // resource reviewer has view/edit
+        // reports admin / publishers can view
+        $query->condition('s.uid', 0);
+        $query->condition('s.state', 'gk_needs_review');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
+            $access = TRUE;
+          }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
+        }
+        elseif (sbac_central_user_has_role(array('resource publisher', 'reports administrator'), $account) && $op == 'view') {
+          $access = TRUE;
+        }
+        break;
+      case 'being_reviewed':
+        // author has view
+        // resource reviewer has view/edit
+        // posters can view
+        if (in_array('resource reviewer', $account->roles) && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
+        }
+        elseif ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
+        }
+        elseif (sbac_central_user_has_role(array('resource publisher', 'reports administrator'), $account) && $op == 'view') {
+          $access = TRUE;
+        }
+        break;
+      case 'approved':
+        // author has view
+        // resource publisher has view/edit
+        // reports admin can view
+        $all_condition = db_and()->condition('s.state', 'post_needs_review')->condition('s.uid', 0);
+        $user_condition = db_and()->condition('s.state', 'post_being_reviewed')->condition('s.uid', $account->uid);
+        $query->condition(db_or()->condition($all_condition)->condition($user_condition));
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if (in_array('resource publisher', $account->roles) && ($op == 'view' || $op == 'update')) {
+            $access = TRUE;
+          }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
+        }
+        elseif (sbac_central_user_has_role(array('reports administrator'), $account) && $op == 'view') {
+          $access = TRUE;
+        }
+        break;
+      case 'published':
+        // everyone has view
+        // author has view
+        // admin/dlrb member/moderator have view/edit
+        $query->condition('s.uid', 0);
+        $query->condition('s.state', 'published');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          if ($op == 'view') {
+            $access = TRUE;
+          }
+          if ((in_array('admininstrator', $account->roles) ||
+              in_array('DLRB member', $account->roles) ||
+              in_array('moderator', $account->roles)) && (
+              $op == 'view' || $op == 'update' || $op == 'delete')
+          ) {
+            $access = TRUE;
+          }
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
+        }
+        break;
+      case 'returned':
+        // author has view/edit
+        // resource reviewer has view
+        // resource puslisher has view
+        $query->condition('s.uid', 0);
+        $query->condition('s.state', 'returned');
+        $result = $query->execute();
+        $count = $result->rowCount();
+        if ($count) {
+          $access = sbac_central_user_has_role(array('resource reviewer', 'resource publisher', 'reports administrator'), $account);
+        }
+        if ($account->uid == $node->uid && $op == 'view') {
+          $access = TRUE;
+        }
+        break;
+      case 'rejected':
+        // author has view/edit
+        if ($account->uid == $node->uid && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
+        }
+        // resource publisher has view
+        if (!$access) {
+          $access = sbac_central_user_has_role(array('resource publisher', 'reports administrator'), $account);
+        }
+        if (!$access) {
+          // resource reviewer has view
+          $query->condition('s.uid', $account->uid);
+          $condition = db_or()->condition('s.state', 'gk_view_rejected')->condition('s.state', 'post_view_rejected');
+          $query->condition($condition);
+          $result = $query->execute();
+          $count = $result->rowCount();
+          if ($count) {
+            $access = sbac_central_user_has_role(array('resource reviewer'), $account);
+          }
+        }
+        break;
+      case 'removed':
+        // author has view/edit
+        if ($account->uid == $node->uid && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
+        }
+        break;
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Given the node and account, see if the user has access
+ * to view given the state of the node.
+ *
+ * @param $node
+ * @param $account
+ * @param $op
+ * @return bool
+ */
+function _sbac_resource_determine_state_access_via_sql($nid, $account) {
+  $all_states = array();
+  $access = FALSE;
+  $sql = "SELECT * FROM {field_data_field_view_permissions} p ";
+  $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+  $state_permission = db_query($sql, array(':nid' => $nid))->fetchObject();
+  if ($state_permission->field_view_permissions_value == 1) {
+    $sql = "SELECT * FROM {field_data_field_view_permissions_per_state} p ";
+    $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+    $result = db_query($sql, array(':nid' => $nid));
+    foreach ($result as $row) {
+      $all_states[] = $row->field_view_permission_per_state_tid;
+    }
+  }
+  else {
+    $all_states = array();
+  }
+
+  // if the array is empty, then the user has access.
+  if (empty($all_states)) {
+    $access = TRUE;
+    return $access;
+  }
+  else {
+    $user = sbac_central_get_user_with_states($all_states, $account->uid);
+    if ($user) {
+      $access = TRUE;
+    }
+  }
+  return $access;
+}
+
+/**
+ * Given the node and account, see if the user has access
+ * to view given the state of the node.
+ *
+ * @param $node
+ * @param $account
+ * @param $op
+ * @return bool
+ */
+function _sbac_resource_determine_state_access($node, $account) {
+  $all_states = array();
+  $access = FALSE;
+  if (isset($node->field_view_permissions['und'][0]['value'])) {
+    // 0 is all states, 1 is specific states
+    $view_permissions = $node->field_view_permissions['und'][0]['value'];
+    if ($view_permissions == 0) {
+      $all_states = array();
+    }
+    else {
+      if (isset($node->field_view_permissions_per_state['und'])) {
+        foreach ($node->field_view_permissions_per_state['und'] as $key => $tid) {
+          $all_states[] = $tid['tid'];
+        }
+      }
+    }
+  }
+  // if the array is empty, then the user has access.
+  if (empty($all_states)) {
+    if (is_string($node)) {
+      $node_perm = array_keys(node_list_permissions($node));
+      $user_perm = user_role_permissions($account->roles);
+      foreach ($user_perm as $perm_id => $perms_list) {
+        $perm_intersect = array_intersect($node_perm, array_keys($perms_list));
+        if (count($perm_intersect) > 0) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+    }
+    $access = TRUE;
+    return $access;
+  }
+  else {
+    $user = sbac_central_get_user_with_states($all_states, $account->uid);
+    if ($user) {
+      $access = TRUE;
+    }
+  }
+  return $access;
+}
+
+/**
+ * Add a user to the field_recent_reviewers field
+ * @param $node
+ * @param $account
+ * @param bool $reset
+ */
+function _sbac_resource_save_reviewers(&$node, $field = 'field_recent_reviewers', $account = NULL, $reset = FALSE, $remove = FALSE) {
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
+  if ($reset) {
+    $node->{$field}[LANGUAGE_NONE] = array();
+    field_attach_update('node', $node);
+    return;
+  }
+
+  if (!empty($node->{$field}[LANGUAGE_NONE])) {
+    foreach ($node->{$field}[LANGUAGE_NONE] as $index => $reviewer) {
+      if ($reviewer['target_id'] == $account->uid) {
+        unset($node->{$field}[LANGUAGE_NONE][$index]);
+      }
+    }
+  }
+
+  if (!$remove) {
+    $node->{$field}[LANGUAGE_NONE][] = array(
+      'target_id' => $account->uid,
+    );
+  }
+  field_attach_update('node', $node);
+}
+
+/**
+ * @param $nid
+ * @return null
+ */
+function sbac_resource_get_url_alias($nid) {
+  $alias = NULL;
+
+  $source = 'node/' . $nid;
+  $sql = "SELECT alias FROM {url_alias} WHERE source = :source";
+  $alias = db_query($sql, array(':source' => $source))->fetchField();
+
+  return $alias;
+}
+
+/**
+ * Get a resource's rating count
+ *
+ * @param $nid
+ * @return mixed
+ */
+function sbac_resource_get_rating_count($nid) {
+  $count_query = "  SELECT    COUNT(id)
+                    FROM      {eck_review}
+                    WHERE     type = 'end_use'
+                    AND       node_id = :node_id
+                    AND       status = 1
+                 ";
+  return db_query($count_query, array(':node_id' => $nid))->fetchField();
+}
+
+/**
+ * Get a resource's average rating
+ *
+ * @param $nid
+ * @return mixed
+ */
+function sbac_resource_get_rating_average($nid) {
+  $average_query = "
+    SELECT
+      (avg(student.field_student_learning_rating) +
+       avg(dev.field_pro_dev_rating) +
+       avg(ease.field_ease_use_rating)) / 3
+    FROM {field_data_field_student_learning} student
+      INNER JOIN {eck_review} review
+        ON review.id = student.entity_id
+      LEFT JOIN {field_data_field_pro_dev} dev
+        ON dev.entity_id = review.id
+      LEFT JOIN {field_data_field_ease_use} ease
+        ON ease.entity_id = review.id
+    WHERE student.bundle = 'end_use'
+          AND review.node_id = :nid";
+  return db_query($average_query, array(':nid' => $nid))->fetchField();
+}
+
+/**
+ * Returns the fivestar HTML
+ *
+ * @param $rating
+ * @return string
+ */
+function sbac_resource_display_fivestar_rating($rating) {
+  return theme('fivestar_formatter_default', array(
+    'element' => array(
+      '#theme' => 'fivestar_formatter_default',
+      '#rating' => $rating,
+      '#instance_settings' => array(
+        'stars' => 4,
+        'allow_clear' => 0,
+        'target' => 'none',
+        'user_register_form' => '',
+      ),
+      '#display_settings' => array(
+        'widget' => array(
+          'fivestar_widget' => '',
+        ),
+        'style' => 'average',
+        'text' => 'average',
+        'expose' => 1,
+      ),
+      '#widget' => array(
+        'name' => 'oxygen',
+        'css' => drupal_get_path('module', 'fivestar') . '/widgets/oxygen/oxygen.css',
+      ),
+      '#description' => '',
+      '#children' => '',
+    ),
+  ));
+}
+
+/**
+ * Gets URL from source.
+ *
+ * @param $nid
+ * @return null
+ */
+function sbac_resource_get_url_source($alias) {
+  $source = NULL;
+
+  $sql = "SELECT source FROM {url_alias} WHERE alias = :alias";
+  $source = db_query($sql, array(':alias' => $alias))->fetchField();
+
+  return $source;
+}
+
+/**
+ * Selects the number of feedback review items from the table for
+ * the given nid / uid.
+ *
+ * @param $nid
+ *   The node id.
+ * @param string $type
+ *   The type to search for (qc, gk, post)
+ * @param bool $uid
+ *   A user id.
+ * @param bool $status
+ *   The status of the feedback.
+ * @param bool $completed
+ *   The completed flag of the feedback.
+ * @param bool $current
+ *   The current flag on the feedback.
+ * @param string $return_type
+ *   The type of return set to return.
+ * @param bool $uid_not
+ *   If you wish to include or not include that given uid param.
+ * @param bool $archived
+ *   If you wish to search for archived feedback.
+ *
+ * @return array
+ *   An array of feedback or an empty array.
+ */
+function _sbac_resource_determine_feedback($nid, $type = 'qc', $uid = FALSE, $status = FALSE, $completed = FALSE, $current = FALSE, $return_type = 'set', $uid_not = FALSE, $archived = FALSE) {
+  $feedback = array();
+  if ($nid) {
+    $query = db_select('eck_feedback', 'f');
+    $query->fields('f', array('id', 'uid', 'node_id', 'created', 'changed', 'title', 'status', 'completed', 'met_criteria', 'current'));
+    $query->condition('f.node_id', $nid);
+    $query->condition('f.type', $type);
+    if ($uid !== FALSE) {
+      if ($uid_not) {
+        $query->condition('f.uid', array($uid), 'NOT IN');
+      }
+      else {
+        $query->condition('f.uid', $uid);
+      }
+    }
+    if ($status !== FALSE) {
+      if ($archived == FALSE) {
+        $query->condition('f.status', $status);
+      }
+      else {
+        $condition1 = db_and()->condition('f.status', 1);
+        $condition2 = db_and()->condition('f.status', 0)->condition('f.archived', 1);
+        $query->condition(db_or()->condition($condition1)->condition($condition2));
+        unset($condition1);
+        unset($condition2);
+      }
+    }
+    if ($completed !== FALSE) {
+      $query->condition('f.completed', $completed);
+    }
+    if ($current !== FALSE) {
+      $query->condition('f.current', $current);
+    }
+
+    if ($return_type == 'single') { // get the latest result.
+      $query->orderBy('f.id', 'DESC');
+      $query->range(0, 1);
+      $single = $query->execute()->fetchAssoc();
+
+      unset($query);
+      return $single;
+    }
+    else {
+      $result = $query->execute();
+      foreach ($result as $record) {
+        $feedback[] = $record;
+      }
+
+      unset($query);
+      unset($result);
+      unset($record);
+    }
+  }
+  return $feedback;
+}
+
+/**
+ * Implements image_style_create_derivative_alter.
+ *
+ * @param $style
+ * @param $image_uri
+ * @param $derivative_uri
+ */
+function sbac_resource_image_style_create_derivative_alter(&$style, &$image_uri, &$derivative_uri) {
+  if ($style['name'] == 'resource_image_grid') {
+    if (strpos($derivative_uri, 'gs://') !== FALSE) {
+      $derivative_uri = str_replace('gs://', 'private://', $derivative_uri);
+    }
+  }
+}
+
+/**
+ * Load more of the view data.
+ */
+function sbac_resource_load_more_ajax() {
+  $view = $_POST['view'];
+  $page = $_POST['page'];
+  module_load_include('inc', 'sbac_resource', 'sbac_resource.menu_callbacks');
+  $output = array();
+  if ($view == 'resources') {
+    $output = sbac_resource_digital_library_page($page, TRUE);
+  }
+  if ($view == 'resource_review') {
+    $output = sbac_resource_resource_review_page($page, TRUE);
+  }
+  if ($view == 'my_resources') {
+    $output = sbac_resource_my_resources_page($page, TRUE);
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Override views load more pager
+ *
+ * @param $vars
+ * @return string
+ */
+function theme_sbac_resource_views_load_more_pager($vars) {
+  global $pager_page_array, $pager_total;
+  drupal_add_js(drupal_get_path('module', 'views_load_more') . '/views_load_more.js');
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
+
+  global $base_url;
+  $referer = str_replace($base_url . '/', '', $_GET['q']);
+  $view_name = '';
+  if ($referer) {
+    switch ($referer) {
+      case 'digital-library-resources':
+        $view_name = 'resources';
+        break;
+      case 'resource-review':
+        $view_name = 'resource_review';
+        break;
+      case 'my-resources':
+        $view_name = 'my_resources';
+        break;
+    }
+  }
+
+  // Because we dynamically change the items per page, we need
+  // to update the global pager and tell it where on page X now.
+  $old_url = NULL;
+  if (isset($_POST['page'])) {
+    $pager_page_array[0] = $_POST['page'];
+    $old_url = $_GET['q'];
+    if ($referer) {
+      $_GET['q'] = $referer;
+    }
+  }
+  elseif (isset($_SESSION['load_more'][$view_name]['page'])) {
+    $pager_page_array[0] = $_SESSION['load_more'][$view_name]['page'];
+    $old_url = $_GET['q'];
+    if ($referer) {
+      $_GET['q'] = $referer;
+    }
+  }
+
+  $li_next = theme('pager_next',
+    array(
+      'text' => (isset($tags[3]) ? $tags[3] : t($vars['more_button_text'])),
+      'element' => $element,
+      'interval' => 1,
+      'parameters' => $parameters,
+    )
+  );
+  if (empty($li_next)) {
+    $li_next = "&nbsp;";
+  }
+
+  if ($pager_total[$element] > 1) {
+    $items[] = array(
+      'class' => array('pager-next'),
+      'data' => $li_next,
+    );
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager', 'pager-load-more')),
+      )
+    );
+  }
+
+  if ($old_url) {
+    $_GET['q'] = $old_url;
+  }
+}
+
+/**
+ * Get the timestamp the resource was resubmitted
+ *
+ * @param $resource_nid
+ * @return mixed
+ * If this not a resubmission, return 0
+ */
+function _sbac_resource_resubmit_timestamp($resource_nid) {
+  $timestamp = & drupal_static(__FUNCTION__);
+  if (empty($timestamp) || !isset($timestamp[$resource_nid])) {
+    $result = db_query("
+      SELECT
+          max(h.stamp)
+      FROM {workbench_moderation_node_history} h
+      WHERE
+          h.nid = :nid
+          AND h.from_state = 'draft'
+          AND h.state = 'needs_review'
+          AND h.stamp > (
+              SELECT
+                  max(h2.stamp)
+              FROM {workbench_moderation_node_history} h2
+              WHERE h2.nid = :nid
+                    AND h2.state = 'rejected'
+                    AND h2.current = 0
+	)", array(':nid' => $resource_nid))->fetchField();
+    if (!$result) {
+      $result = 0;
+    }
+    $timestamp[$resource_nid] = $result;
+  }
+  return $timestamp[$resource_nid];
+}
+
+/**
+ * Is this a recent reviewer?
+ */
+function _sbac_resource_is_recent_reviewers($resource_node, $account_uid) {
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result) || empty($result[$resource_node->nid]) || !isset($result[$resource_node->nid][$account_uid])) {
+    $original_reviewers = db_query("
+                SELECT
+                    DISTINCT r.field_recent_reviewers_target_id
+                FROM {field_data_field_recent_reviewers} r
+                WHERE r.entity_id = :nid", array(':nid' => $resource_node->nid))->fetchCol();
+    if (_sbac_resource_is_in_quality_review($resource_node) && count($original_reviewers) < 4) {
+      $result[$resource_node->nid][$account_uid] = TRUE;
+    }
+    else {
+      $result[$resource_node->nid][$account_uid] = !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
+    }
+  }
+  return $result[$resource_node->nid][$account_uid];
+}
+
+/**
+ * Is this a recent publisher?
+ */
+function _sbac_resource_is_recent_publishers($resource_node, $account_uid) {
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result) || empty($result[$resource_node->nid]) || !isset($result[$resource_node->nid][$account_uid])) {
+    $original_publishers = db_query("
+                SELECT
+                    DISTINCT p.field_recent_publishers_target_id
+                FROM {field_data_field_recent_publishers} p
+                WHERE p.entity_id = :nid", array(':nid' => $resource_node->nid))->fetchCol();
+    if (_resource_access_node_has_state($resource_node, array('approved')) && count($original_publishers) < 1) {
+      $result[$resource_node->nid][$account_uid] = TRUE;
+    }
+    else {
+      $result[$resource_node->nid][$account_uid] = !empty($original_publishers) && in_array($account_uid, $original_publishers);
+    }
+  }
+  return $result[$resource_node->nid][$account_uid];
+}
+
+/**
+ * Is the resource in gate keeping?
+ */
+function _sbac_resource_is_in_gate_keeping($node) {
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result) || !isset($result[$node->nid])) {
+    $in_gk = FALSE;
+    if (_resource_access_node_has_state($node, array('needs_review', 'being_reviewed'))) {
+      $completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', FALSE, FALSE, 1);
+      $in_gk = 0 == $completed_gk;
+    }
+    $result[$node->nid] = $in_gk;
+  }
+  return $result[$node->nid];
+}
+
+/**
+ * Is the resource in QC?
+ */
+function _sbac_resource_is_in_quality_review($node) {
+  $result = & drupal_static(__FUNCTION__);
+  if (empty($result) || !isset($result[$node->nid])) {
+    $in_qc = FALSE;
+    if (_resource_access_node_has_state($node, array('needs_review', 'being_reviewed'))) {
+      $completed_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', FALSE, FALSE, 1);
+      $in_qc = $completed_gk;
+    }
+    $result[$node->nid] = $in_qc;
+  }
+  return $result[$node->nid];
+}
+
+/**
+ * Is the resource in the poster workflow
+ *
+ * A resource is in poster workflow if it has been rejected by the poster and resubmitted.
+ * It will go back to the poster again and skip all the reviewers.
+ *
+ * @param $nid
+ * @return bool
+ */
+function _sbac_resource_is_in_poster_workflow($nid) {
+  $in_workflow = FALSE;
+  $type = db_select('eck_feedback', 'f')
+    ->condition('f.completed', 1)
+    ->condition('f.node_id', $nid)
+    ->fields('f', array('type'))
+    ->range(0, 2)
+    ->orderBy('f.id', 'desc')
+    ->execute()
+    ->fetchCol();
+  if (!empty($type) && 'post' == $type[0] && 'post' == $type[1]) {
+    $in_workflow = TRUE;
+  }
+  return $in_workflow;
+}
+
+/**
+ * Since we already have the thumbnail and its the correct size,
+ * lets just move it to the correct location instead of re-downloading
+ * and creating the image.
+ *
+ * @param $node
+ */
+function sbac_resource_move_private_to_public($node) {
+  // Get Locations
+  $locations = explode('::', $node->field_thumbnail_uri['und'][0]['value']);
+  $private_uri = $locations[0];
+  $public_uri = str_replace('private://resource_thumbnails', 'public://resource_thumbnails', $private_uri);
+
+  // Trim to directory path, remove filename
+  $pos = strrpos($public_uri, '/');
+  $public_directory_uri = substr($public_uri, 0, $pos);
+
+  // Create the directory
+  file_prepare_directory($public_directory_uri, FILE_CREATE_DIRECTORY);
+
+  // Get the file with this URI
+  $query = db_select('file_managed', 'f');
+  $query->fields('f', array('fid'));
+  $query->condition('f.uri', $private_uri, '=');
+  $fid = $query->execute()->fetchField();
+  if ($fid) {
+    // Load and move the file.
+    $file = file_load($fid);
+    $file = file_move($file, $public_directory_uri, FILE_EXISTS_REPLACE);
+    if ($file) {
+      // Update node with new path.
+      $locations[0] = $public_uri;
+      $value = implode('::', $locations);
+      $node->field_thumbnail_uri['und'][0]['value'] = $value;
+      $node->field_thumbnail_uri['und'][0]['safe_value'] = $value;
+      entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+    }
+    unset($file);
+  }
+  unset($fid);
+}
+
+function sbac_resource_move_html5_thumbnail($node) {
+  $locations = explode('::', $node->field_thumbnail_uri['und'][0]['value']);
+  $private_uri = $locations[0];
+  $public_uri = str_replace('private://html5_thumbnails/', 'public://html5_thumbnails', $private_uri);
+
+  // Trim to directory path, remove filename
+  $pos = strrpos($public_uri, '/');
+  $public_directory_uri = substr($public_uri, 0, $pos);
+
+  // Create the directory
+  file_prepare_directory($public_directory_uri, FILE_CREATE_DIRECTORY);
+
+  // Get the file with this URI
+  $query = db_select('file_managed', 'f');
+  $query->fields('f', array('fid'));
+  $query->condition('f.uri', $private_uri, '=');
+  $fid = $query->execute()->fetchField();
+  if ($fid) {
+    // Load and move the file.
+    $file = file_load($fid);
+    $file = file_move($file, $public_directory_uri, FILE_EXISTS_REPLACE);
+    if ($file) {
+      // Update node with new path.
+      $locations[0] = $public_uri;
+      $value = implode('::', $locations);
+      $node->field_thumbnail_uri['und'][0]['value'] = $value;
+      $node->field_thumbnail_uri['und'][0]['safe_value'] = $value;
+      entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+    }
+    unset($file);
+  }
+  unset($fid);
+}
+
+/**
+ * Remove the default Drupal messages when you save an entity
+ */
+function sbac_resource_remove_default_status_messages(){
+  if(!empty($_SESSION['messages']['status'])){
+    foreach($_SESSION['messages']['status'] as $index => $message){
+      if (preg_match('/^Entity.*(?=has been saved)/i', $message)) {
+        // Remove "Entity....has been saved" messages
+        array_splice($_SESSION['messages']['status'], $index, 1);
+      }
+    }
+  }
+}
+
+/**
+ * Mimic taxonomy get parent but we don't want to trigger the load hook
+ */
+function _sbac_resource_taxonomy_get_parents($tid){
+  $query = db_select('taxonomy_term_data', 't');
+  $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
+  $query->fields('t', array('tid', 'name'));
+  $query->condition('h.tid', $tid);
+  $query->addTag('term_access');
+  $query->orderBy('t.weight');
+  $query->orderBy('t.name');
+  return $query->execute()->fetchAll();
+}
+
+/**
+ *  Implements hook_taxonomy_term_load().
+ */
+function sbac_resource_taxonomy_term_load($terms) {
+  foreach ($terms as $term) {
+    if ($term->vocabulary_machine_name == 'education_alignment') {
+      continue;
+    }
+
+    // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
+    $query = db_select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
+    $query->addField('t', 'tid');
+    $query->condition('h.parent', $term->tid);
+    $query->addTag('term_access');
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    $children = $query->execute()->fetchCol();
+    if (!empty($children)) {
+      unset($terms[$term->tid]);
+    }
+    // concatenate the children name with parents. We're using our own get parent function because we don't want to trigger this hook again.
+    $term->name = sbac_resource_term_concat_parents($term->tid, $term->name);
+  }
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
+  // because we concatenate the term name in sbac_resource_taxonomy_term_load, we don't want to show this concatenated name in the term edit form
+  $form['name']['#default_value'] = db_select('taxonomy_term_data', 't')
+    ->condition('t.tid', $form['#term']['tid'])
+    ->fields('t', array('name'))
+    ->execute()
+    ->fetchField();
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject_s_'),
+    array('vid' => 'grades', 'field' => 'field_grade_level_s_'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_special_populations'),
+  );
+  foreach ($configs as $config) {
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    $form[$config['field']]['und']['#options'] = $options;
+  }
+}
+
+/**
+ *  Implements hook_form_FORM_ID_alter().
+ */
+function sbac_resource_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  $configs = array(
+    array('vid' => 'subject', 'field' => 'field_subject_s_'),
+    array('vid' => 'grades', 'field' => 'field_grade_level_s_'),
+    array('vid' => 'intended_student_populations', 'field' => 'field_special_populations'),
+  );
+  foreach ($configs as $config) {
+    $vocab = taxonomy_vocabulary_machine_name_load($config['vid']);
+    $options = array();
+    $terms = taxonomy_get_tree($vocab->vid);
+    foreach ($terms as $term) {
+      $children = taxonomy_get_children($term->tid);
+      if (empty($children)) {
+        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+      }
+    }
+    $form[$config['field']]['und']['#options'] = $options;
+  }
+}
+/**
+ * Show the contributor/author/owner filter
+ *
+ * @return null|string
+ */
+function sbac_resource_quick_search_filter() {
+  $output = '';
+  $query = drupal_get_query_parameters();
+  $clear_link = l('x', 'digital-library-resources');
+  if (isset($query['contributor'])) {
+    $output = t('Showing resources contributed by: !author !clear', array(
+      '!author' => '<span>' . sbac_central_get_user_first_last_name($query['contributor']) . '</span>',
+      '!clear' => $clear_link
+    ));
+  }
+  elseif (isset($query['author'])) {
+    $output = t('Showing resources authored or owned by: !author !clear', array(
+      '!author' => '<span>' . $query['author'] . '</span>',
+      '!clear' => $clear_link
+    ));
+  }
+  elseif (isset($query['owner'])) {
+    $output = t('Showing resources authored or owned by: !author !clear', array(
+      '!author' => '<span>' . $query['owner'] . '</span>',
+      '!clear' => $clear_link
+    ));
+  }
+  return $output;
+}
+
+/**
+ * Check to see if a resource has failed arbitration 2+ times
+ *
+ * @param $resource_id
+ * @return bool
+ */
+function sbac_resource_failed_arbitration_twice($resource_id){
+  $failed_arbitration_twice = db_select('eck_feedback', 'f')
+    ->condition('f.node_id', $resource_id)
+    ->condition('f.completed', 1)
+    ->fields('f', array('type'))
+    ->orderBy('f.id', 'DESC')
+    ->range(0, 2)
+    ->execute()
+    ->fetchCol();
+  return $failed_arbitration_twice[0] == 'post' && $failed_arbitration_twice[1] == 'post';
+}
+
+/**
+ *  Implements hook_menu_alter().
+ */
+function sbac_resource_menu_alter(&$items) {
+  if(!empty($items['taxonomy/term/%taxonomy_term/edit'])){
+    $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'sbac_resource_edit_taxonomy_access';
+  }
+}
+
+/**
+ * Access rule for taxonomy term edit
+ *
+ * @param $term
+ * @return bool
+ */
+function sbac_resource_edit_taxonomy_access($term) {
+  // restrict access for resource forums
+  if (isset($term->field_forum_resource_ref) && !empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
+    return sbac_central_user_has_role(array('administrator'));
+  }
+  else {
+    return user_access("edit terms in $term->vid") || user_access('administer taxonomy');
+  }
+}

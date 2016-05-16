@@ -1,0 +1,714 @@
+@import "compass/css3"; 
+
+/* mixins */
+  $border_color: #ccc;
+
+  @mixin bottom-border {
+    border-bottom: 1px $border_color solid;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+  }
+ 
+/* resource review tabs */
+.feedback-wrap {
+  padding: 10px 30px;
+
+  h2{
+    font-size: 1.4em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+
+	.feedback-item {
+		.comments {
+			margin-bottom: 20px;
+		}
+	}
+	
+  textarea {
+    resize: none;
+  }
+
+  .criteria-set-title {
+    font-weight:bold;
+    font-size: 1.1em;
+    margin: 0 0 10px 0;
+		color: #000;
+  }
+
+  .more-less-text{
+    margin-bottom: 20px;
+
+    .more-less-text-trigger-more {
+      font-size: 0.8em;
+      display: inline-block;
+      padding: 3px 5px;
+      border: 1px solid #ccc;
+      @include border-radius(3px);
+      background-color:#eee;
+      color: #0085ad;
+    }
+  }
+
+  .author {
+    font-weight: bold;
+  }
+
+  .created {
+    font-style: italic;
+		margin-bottom: 10px;
+  }
+
+  /* intro form elements */
+    .gate-keeper-intro {
+      @include bottom-border;
+      padding: 10px 30px 0;
+    }
+
+    .dialog-trigger-gk {
+      margin-left: 30px;
+    }
+
+  /* entity form elements */
+    input[type="checkbox"], 
+    input[type="radio"] {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+  /* helpful info block */
+    .helpful-info {
+      background: #eee;
+      border: 1px $border_color solid;
+      margin: 10px 0;
+      padding: 1em 2em 0;
+
+      .helpful-info-title {
+        color: #666;
+        font-size: 1.3em;
+      }
+    }
+
+  /* buttons */
+    .button,
+    button {
+      margin: 10px 10px 10px 0;
+    }
+
+    #edit-tags-cancel {
+      margin-left: 2em;
+    }
+
+  /* get rid of the ajax progres div, throbber, etc. */
+    .ajax-progress,
+  /* hide the messages within #gate-keeper, as they'll be moved via JS to the normal spot and displayed there */
+    .alert-box {
+      display: none;
+    }
+
+  /* criteria sets */
+    .field-name-field-review-set,
+    .field-name-field-quality-set {
+      .sticky-header,
+      .tabledrag-toggle-weight-wrapper {
+        display: none !important;
+      }
+
+      .field-multiple-table {
+        border: 0;
+        width: 100%;
+
+        thead {
+          display: none !important;
+        }
+
+        tbody {
+          border: 0;
+					
+					tr:last-child {
+						border-bottom: none;
+					}
+
+          tr {
+            background: none;
+            border: 0;
+            border-bottom: 1px #ccc solid;
+
+            td {
+              &.field-multiple-drag,
+              &.delta-order,
+              .grippie {
+                display: none;
+              }
+
+              padding: 1.5em 0;
+
+              /* title */
+              .criteria-set-title{
+                font-weight:bold;
+                font-size: 1.1em;
+                margin: 0 0 10px 0;
+
+                p {
+                  /*font-size: 1em;*/
+									font-size: 18px;
+                  font-weight: bold;
+                  max-width: 800px;
+                  margin-left: 5px;
+								  font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+                }
+              }
+
+              /* comments text */
+              .criteria-set-comments-text {
+
+              }
+
+              /* comments field */
+              .criteria-set-comments {
+                float: left;
+                position: relative;
+                width: 70%;
+                max-width: 700px;
+
+                .grippie {
+                  display: none;
+                }
+
+                label {
+                  font-size: 1em;
+                }
+                
+                .counter {
+                  position: absolute;
+                  right: 25px;
+                  top: 0px;
+                  font-size: 12px;
+
+                  &.messages {
+                    background: #fff;
+                    border: 0;
+                    margin: 0;
+                    padding: 0;
+                  }
+                }
+
+                .form-textarea-wrapper {
+                  padding-right: 25px;
+
+                  textarea {
+                    min-height: 75px;
+                  }
+                }
+              }
+
+              /* radios */
+              .criteria-set-radios {
+                float: left;
+                margin-left: 1em;
+                width: 26%;
+
+                label {
+                  font-size: 1em;
+                }
+
+                /* the field allows full html, but we don't want paragraphs to mess up layout */
+                p {
+                  font-size: 0.9em;
+                  margin: 0;
+                  white-space: normal;
+                }
+
+                .field-widget-options-buttons {
+                  display: inline-block;
+
+                  .form-type-radios {
+                    padding-right: 25px;
+                  }
+                }
+
+                .form-type-radios {
+                  min-height: 50px;
+                }
+
+                /* force radio buttons to display inline */
+                .form-radios .form-item {
+                  display: inline;
+                  margin-right: 0;
+                }
+
+                .desc {
+                  background: #eee;
+                  border: 1px #ccc solid;
+                  margin-top: 1em;
+                  padding: 0.5em;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  /* radio button set with inline descriptions */
+    .radios-with-desc {
+      label span {
+        * {
+          color: #666;
+          display: inline-block;
+          font-size: 1em;
+        }
+
+        p {
+          margin: 0;
+        }
+      } 
+
+      .form-item-error-holder.error + .form-type-radios {
+        display: inline-block;
+        padding-right: 25px;
+      }
+    }
+
+  /* retionale for recommedation */
+    .field-name-field-rec-rationale {
+      position: relative;
+			max-width: 584px;
+
+      .counter {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 12px;
+      }
+
+      textarea {
+        min-height: 75px;
+      }
+    }
+
+  /* feedback comments */
+    .field-name-field-to-contributor,
+    .field-name-field-to-reviewer-1,
+    .field-name-field-to-reviewer-2,
+    .field-name-field-to-reviewer-3 {
+      float: left;
+      position: relative;
+      width: 49%;
+
+      textarea {
+        min-height: 70px;
+      }
+
+      .counter {
+        font-size: 0.8em;
+        position: absolute;
+        right: 0;
+        top: 15px;
+      }
+    }
+
+    .field-name-field-to-reviewer-1,
+    .field-name-field-to-reviewer-3 {
+      float: right;
+    }
+
+  /* asterisk/required info */
+    .criteria-set-required-info {
+      border-bottom: 1px #ccc solid;
+      font-size: 0.9em;
+      margin: .5em 0;
+      padding-bottom: 0.5em;
+    }
+
+  /* error element selector */
+    .form-item-error-holder {
+      display: none;
+
+      &.error + .form-item {
+         background: #fff url('/sites/all/themes/SBAC/images/icon-validation-fail.png') right 30px no-repeat;
+
+         .form-item {
+            background: none;
+         }
+      }
+    }
+
+  /* review items content on post tab */
+    .feedback-items {
+      ul {
+        //margin-left: 10px;
+      }
+
+      .feedback-item {
+        border-bottom: 1px #ccc solid;
+        margin: 0 0 1.5em 0;
+        padding: 0 0 1.5em 0;
+
+        .criteria-set-title {
+          font-weight:bold;
+          font-size: 1.1em;
+          margin: 0 0 10px 0;
+        }
+
+        .date {
+          font-style: italic;
+        }
+
+        .criteria-set-comments-text {
+          margin: 0 0 1em 0;
+
+          .more-less-text {
+            li {
+              word-break: normal;
+            }
+          }
+        }
+
+        .reviewer-comments-title {
+          //font-size: 0.8em;
+        }
+
+        .comments-title {
+          //font-size: 0.8em;
+          font-weight: bold;
+          margin: 0 0 1em 0;
+        }
+
+        .feedback-review {
+
+          float: left;
+          //font-size: 0.8em;
+          margin-right: 1.5%;
+          padding-right:1.5%;
+          width: 31%;
+          border-right: 1px solid #ccc;
+
+
+          &:last-child,
+          &.feedback-review-3 {
+            margin-right: 0;
+            border-right: none;
+          } 
+
+          .author {
+            margin: 0 0 0.5em 0;
+
+            a {
+              font-weight: bold;
+              text-decoration: underline;
+            }
+          }
+
+          .created {
+            margin: 0 0 1em 0;
+          }
+
+          .headline {
+            font-weight: bold;
+          }
+
+          /* ie fix */
+          .comments {
+            word-break: normal;
+          }
+        }
+      }
+    }
+
+
+  /* inline field title/desc */
+    .field-title {
+      font-size: 0.8em;
+      font-weight: bold;
+      margin: 0 0 0.5em 0;
+    }
+
+    .field-description {
+      color: #666;
+      font-size: 0.8em;
+      margin: 0 0 1em 0;
+    }
+
+  /* post options */
+    .field-name-field-post-options {
+      border-bottom: 1px #ccc solid;
+      margin: 0 0 1em 0;
+      padding: 0 0 1em 0;
+			clear: both;
+
+      label {
+        margin: 0 0 0.5em 0;
+      }
+
+      .description {
+        color: #666;
+        font-size: 0.8em;
+      }
+    }
+
+		button.secondary:hover, button.secondary:focus, .button.secondary:hover, .button.secondary:focus {
+		  /*background-color: #608a00;*/
+			background-color: #0084b0;
+		}
+
+}
+
+/* description */
+.form-item .description {
+  margin-bottom: .5em;
+}
+
+/* text in gate keeper confirmation modal */
+#dialog {
+  .gate-keeper-modal-intro {
+    border-bottom: 1px solid silver;
+    padding-bottom: 1em;
+    border-bottom: 1em;
+    font-size: 0.8em;
+    line-height: normal;
+  }
+
+  .devtools-dialog-content {
+    text-align: right;
+
+    .button {
+      margin-right: 10px;
+    }
+  }
+
+  .form-submit {
+    float: right;
+  }
+
+  .ajax-progress {
+    display: none;
+  }
+}
+
+/* modal */
+.ui-dialog.ui-widget {
+  position: fixed !important;
+}
+
+/* misc */
+.clear {
+  clear: both;
+  float: none;
+}
+
+.hidden {
+  display: none;
+}
+
+
+/** Columns on About **/
+.ds-2col {
+  .group-left {
+    width: 45% !important;
+    margin-right: 3%;
+  }
+
+  .group-right{
+    width: 45%;
+    margin-right: 0;
+    float: right !important;
+  }
+
+  .field-label {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid silver;
+    color: #18577E;
+  }
+
+  .field {
+    margin-bottom: 1.5em;
+    line-height: normal;
+    font-size: 0.9em;
+
+    ul {
+      font-size: 0.9em;
+    }
+  }
+}
+
+#feedback-wrap-edit-tags {
+  .vertical-tabs {
+    border: 0;
+    margin: 2em;
+    padding: 0;
+
+    .vertical-tabs-list {
+      display: none;
+    }
+
+    .vertical-tabs-panes {
+      .vertical-tabs-pane {
+        padding: 0;
+
+        .field-widget-options-select {
+          float: left;
+          margin: 0 0 1em 0;
+          width: 40%;
+
+          &:nth-child(even) {
+            clear: left;
+            margin-right: 5%;
+          }
+
+          .chzn-container {
+            width: 250px !important;
+          }
+
+          .description {
+            color: #a2a2a2;
+            font-size: 0.75em;
+            margin: 0.5em 0;
+            line-height: 1.25em;
+            max-width: 90%;
+            word-break: normal;
+          }
+
+          input {
+            padding: 1px !important;
+            height: 1.5em;
+          }
+
+          .description:last-child {
+            display: none;
+          }
+        }
+
+        .alignment-tag-title {
+          clear: both;
+          float: none;
+        }
+
+        .alignment-tag-title-help, .sbac-resource-required {
+          font-size: 0.75em;
+        }
+
+        #sbac-resource-modal-alignment {
+          float: right;
+        }
+
+        #sbac-resource-alignment-tag-view {
+          table {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.field-name-resource-slideshow {
+  margin: 0 0 70px 0;
+
+  .flexslider {
+    font-size: 1.4em;
+    margin: 0 auto;
+    max-width: 834px;
+
+    @include border-radius(0);
+    @include box-shadow(none);
+
+    ul {
+      margin: 0;
+    }
+
+    .flex-viewport {
+      ul {
+        li {
+          margin: 0;
+          overflow: hidden;
+
+          label {
+            font-size: 1em;
+            font-weight: bold;
+            cursor: default;
+          }
+
+          .content-field {
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            margin: 0 0 10px 0;
+            padding: 0 10px;
+          }
+        }
+      }
+    }
+
+    .flex-control-nav {
+
+    }
+  }
+}
+
+/*Edit Resource Tags*/
+.section-edit-resource-tags {
+	#feedback-wrap-edit-tags {
+		.vertical-tabs {
+			margin: 0;
+			
+			.field-widget-options-select:nth-child(2n) {
+			   clear: right !important;
+			}
+			
+			.vertical-tabs-panes .vertical-tabs-pane .field-widget-options-select .chzn-container {
+				width: 310px !important;
+			}
+		}
+		
+		#edit-tags-cancel {
+			margin-left: 0;
+			margin-right: 15px;
+		}
+	}
+}
+
+/*Revisions tab*/
+.section-revisions {
+	.contributor-comment-title {
+		font-weight: bold;
+	}
+	.contributor-comment-date {
+		font-style: italic;
+		margin-bottom: 10px;
+		color: #A2A2A2;
+	}
+}
+
+/*Gate keeping criteria review tab*/
+.section-gate-keeping-criteria-review {
+	.form-item textarea.error, .form-item input.error  {
+		width: 100%;
+	}
+}
+
+
+@media all and (max-width: 980px) {
+  .field-name-resource-slideshow .flexslider  {
+     margin: 0 auto;
+     width: 510px;
+  }
+}
+
+@media all and (max-width: 670px) {
+  .field-name-resource-slideshow .flexslider  {
+     margin: 0 auto;
+     width: 250px;
+  }
+}
+
+
+
+
+
+

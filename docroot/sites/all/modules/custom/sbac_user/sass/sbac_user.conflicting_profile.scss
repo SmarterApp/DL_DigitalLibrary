@@ -1,0 +1,89 @@
+/*SBAC user conflicting profile page*/
+
+.page-sbac-user-conflicting-profile {
+	.row {
+		max-width: 650px;
+		margin-top: 30px;
+		
+		#main.columns {
+		  background: none repeat scroll 0 0 #f2f2f2;
+	    border-bottom-left-radius: 12px;
+	    border-bottom-right-radius: 12px;
+	    margin-bottom: -15px;
+	    padding: 0 40px;
+		}
+		
+		
+		#page-title {
+		  background: none repeat scroll 0 0 #fff;
+	    border-top-left-radius: 5px;
+	    border-top-right-radius: 5px;
+	    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+	    color: #04384e;
+	    font-family: Arial,sans-serif;
+	    font-size: 22px;
+	    margin: -15px -40px 20px;
+	    padding: 20px 40px;
+	    position: relative;
+	    z-index: 3;
+		}
+		
+		.sbac-conflict-wrapper {
+			line-height: 1.6;
+			
+			strong {
+				font-weight: normal;
+			}
+			
+			#edit-choices {
+				margin-top: 20px;
+			}
+		}
+		
+		.form-item-choices {
+			border-bottom: 1px #ccc solid;
+			margin-bottom: 10px;
+			padding-bottom: 8px;
+			clear: both;
+			width: 100%;
+			float: left;
+			position: relative;
+			
+			input {
+				float: left;
+				width: 20px;
+			}
+			
+			label {
+				width: auto;
+				float: left;
+				margin-top: -22px;
+				margin-left: 30px;
+				clear: left;
+				
+				& > strong {
+					font-weight: bold;
+					margin-right: 5px;
+				}
+			}
+		}
+		
+		.form-item-choices:last-child {
+			border-bottom: none;
+		}
+		
+		.sbac-user-conflict-submit {
+			float: right;
+			padding-left: 40px !important;
+			padding-right: 40px !important;
+			margin: 50px 0 30px;
+			clear: both;
+		}
+	}	
+	
+	.bottom-bar {
+		.row {
+			margin-top: 0;
+		}
+	}
+}

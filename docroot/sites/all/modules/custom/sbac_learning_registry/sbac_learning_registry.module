@@ -1,0 +1,885 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Learning Registry feature.
+ */
+
+include_once 'sbac_learning_registry.features.inc';
+
+/**
+ * @file.
+ * Module to handle all Learning Registry related functionality.
+ *
+ * Provides:
+ *  - Provides UI for flagging resources on node view
+ *  -
+ */
+
+define('SBAC_LEARNING_REGISTRY_PUBLISHER', 'Smarter Balanced Assessment Consortium');
+define('SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE', 12);
+define('SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS', 'sbac-learning-registry-external-solr-keywords');
+define('SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS', 'No Results');
+
+/**
+ * Implements hook_menu()
+ */
+function sbac_learning_registry_menu() {
+  $items = array();
+//  $items['external-resources'] = array(
+//    'title' => t('External Resources'),
+//    'page callback' => 'sbac_learning_registry_external_resources_page',
+//    'access arguments' => array('access content'),
+//    'type' => MENU_CALLBACK,
+//  );
+  $items['external-resources/clear-all'] = array(
+    'title' => 'Digital Library Resources',
+    'page callback' => 'sbac_learning_registry_clear_all',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['external-resources/%ctools_js/load-more/%'] = array(
+    'title' => 'Load more',
+    'page callback' => 'sbac_learning_registry_external_resource_load_more',
+    'page arguments' => array(1, 3, 4),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['external-resources/view-database'] = array(
+    'title' => 'View database',
+    'page callback' => 'sbac_learning_registry_view_database',
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/sbac/sbac-learning-registry'] = array(
+    'title' => 'Learning Registry Configuration',
+    'description' => '',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_learning_registry_admin'),
+    'access arguments' => array('administer sbac_learning_registry'),
+    'type' => MENU_NORMAL_ITEM,
+   );
+  
+  return $items;
+}
+
+/**
+ * Implements permissions().
+ */
+function sbac_learning_registry_permission() {
+  return array(
+    'administer sbac_learning_registry' => array(
+      'title' => t('Administer SBAC Learning Registry'),
+      'description' => t('Perform administration tasks for SBAC Learning Registry.'),
+    ),
+  );
+}
+
+
+/**
+ * Page callback: SBAC Learning Registry Settings
+ * 
+ *  @see current_posts_menu()
+ */
+function sbac_learning_registry_admin() {
+  $form = array();
+
+  $form['sbac_learning_registry_inbloom_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('In Bloom URL'),
+    '#default_value' => variable_get('sbac_learning_registry_inbloom_url', ''),
+    '#maxlength' => 255,
+    '#description' => t(""),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Load the next SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE items from the
+ * LRI starting at $start
+ *
+ * @param int $start
+ * The starting point to load from
+ * @return string
+ * The HTML output
+ */
+function sbac_learning_registry_external_resource_load($start = 0) {
+  ctools_include('ajax');
+  $results = array();
+  (isset($_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS] : $search_string = '');
+  (isset($_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS]) ? $current_filters = explode('::', $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS]) : $current_filters = '');
+
+  if (!empty($current_filters) || !empty($_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS])) {
+    $parameters = array();
+    foreach ($current_filters as $filter) {
+      $filter_info = explode(':', $filter);
+      $filter_name = is_numeric($filter_info[0]) ? 'common_core_standards' : $filter_info[0];
+      $parameters[$filter_name][] = sbac_learning_registry_external_resource_filter_values($filter_info[0], $filter_info[1]);
+    }
+    $parameters['start'] = $start;
+    if (!empty($_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS])) {
+      $parameters['solr_keywords'] = $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS];
+    }
+    $request_url = sbac_learning_registry_inbloom_construct_request_url($parameters);
+    $results = sbac_learning_registry_inbloom_send_request($request_url);
+  }
+  $start = $start + SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE;
+
+  $output = SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS;
+  if (count($results)) {
+    $output = theme('sbac_external_resource_results', array(
+      'results' => $results,
+      'load_more_link' => count($results) ? ctools_ajax_text_button(t('Show More External Resources'), "external-resources/nojs/load-more/" . $start, t('Show more external resources'), 'button load-more') : NULL
+    ));
+  }
+  return $output;
+}
+
+/**
+ * Ajax call back to load the next SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE items
+ *
+ * @param $js
+ * @param int $start
+ * @return string
+ */
+function sbac_learning_registry_external_resource_load_more($js, $start = 0) {
+  $results = '';
+
+  if ($js) {
+    $results = sbac_learning_registry_external_resource_load($start);
+    $commands = array();
+    $commands[] = ajax_command_remove('.load-more');
+    if ($results != SBAC_LEARNING_REGISTRY_INBLOOM_NO_RESULTS) {
+      $commands[] = ajax_command_invoke('.results', 'append', array($results));
+    }
+    print ajax_render($commands);
+    exit;
+  }
+  else {
+    return $results;
+  }
+}
+
+/**
+ * Clears the search filters and redirects.
+ */
+function sbac_learning_registry_clear_all() {
+  $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS] = '';
+  $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS] = '';
+  $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS] = '';
+  drupal_goto('external-resources');
+}
+
+/**
+ * Page callback
+ */
+function sbac_learning_registry_external_resources_page() {
+  if (empty($_SESSION[SBAC_LEARNING_REGISTRY_SHOW_CONFIRMATION_DIAGLOG])) {
+    drupal_add_js(drupal_get_path("module", "sbac_learning_registry") . "/js/external-resource.js");
+  }
+  $_SESSION[SBAC_LEARNING_REGISTRY_SHOW_CONFIRMATION_DIAGLOG] = 'false';
+  ctools_include('modal');
+  ctools_include('ajax');
+  ctools_modal_add_js();
+  $results = '';
+  if (!empty($_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS]) || !empty($_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS])) {
+    $results = sbac_learning_registry_external_resource_load(0);
+  }
+  return theme('sbac_external_resource', array(
+    'results' => $results,
+  ));
+}
+
+/**
+ * Create the request URL
+ *
+ * @param $parameters
+ * @return string
+ */
+function sbac_learning_registry_inbloom_construct_request_url($parameters) {
+  $mapping = array(
+    'solr_keywords' => 'resource_solrsummary_t',
+    'intended_user_roles' => 'resource.audience_t',
+    'common_core_standards' => 'resource.standard_t',
+    'learning_resource_type' => 'resource.learningresource_t',
+    'educational_use' => 'resource.use_t',
+    'typical_age_range' => 'resource.agerange_t',
+    'interactivity_type' => 'resource.interactivity_t'
+  );
+  $inbloom_query = array();
+  foreach ($mapping as $form_param => $inbloom_param) {
+    if (isset($parameters[$form_param])) {
+      if (is_array($parameters[$form_param])) {
+        $inbloom_query[] = $inbloom_param . ':(' . implode(' OR ', $parameters[$form_param]) . ')';
+      }
+      else {
+        $inbloom_query[] = $inbloom_param . ':' . $parameters[$form_param];
+      }
+    }
+  }
+  // TODO: This doesn't look like the right parameter to filter out the publisher
+  // $inbloom_query[] = 'resource.sourcetext_s:-(' . SBAC_LEARNING_REGISTRY_PUBLISHER . ')';
+  $options = array(
+    'absolute' => TRUE,
+    'query' => array(
+      'start' => $parameters['start'],
+      'rows' => SBAC_LEARNING_REGISTRY_INBLOOM_RESULTS_PER_PAGE,
+      'query' => implode(' AND ', $inbloom_query),
+    ),
+  );
+  return url(variable_get('sbac_learning_registry_inbloom_url', ''), $options);
+}
+
+/**
+ * Execute the request
+ *
+ * @param $request
+ * @return array
+ */
+function sbac_learning_registry_inbloom_send_request($request) {
+  $results = array();
+  $response = drupal_http_request($request);
+  if (!isset($response->error)) {
+    $results = sbac_learning_registry_inbloom_parse_response($response->data);
+  }
+  return $results;
+}
+
+/**
+ * Parse the API response
+ *
+ * @param $response
+ * @return array
+ */
+function sbac_learning_registry_inbloom_parse_response($response) {
+  $results = drupal_json_decode($response);
+  // TODO: See if we can do the filtering as part of the query itself. Otherwise the results would look weird because we might not always have the same number of results returned due to this filtering.
+//  foreach ($results as $index => $result) {
+//    if (preg_match('/\b([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}\b/ix', $result['URL'], $matches)) {
+//      $domain = str_replace('www.', '', $matches[0]);
+//      $this_domain = str_replace('www.', '', $_SERVER['SERVER_NAME']);
+//      if($domain == $this_domain){
+//        unset($results[$index]);
+//      }
+//    }
+//  }
+  return $results;
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function sbac_learning_registry_block_info() {
+  $blocks['external_resources_filters'] = array(
+    'info' => t('External Resources Filters'),
+    'region' => 'filter',
+    'pages' => "external-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['external_resources_keywords'] = array(
+    'info' => t('External Resources Keywords'),
+    'region' => 'search',
+    'pages' => "external-resources*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function sbac_learning_registry_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'external_resources_filters':
+      $block['subject'] = t('');
+      $block['content'] = drupal_get_form('sbac_learning_registry_external_resources_form');
+      break;
+    case 'external_resources_keywords':
+      $block['subject'] = t('');
+      $block['content'] = drupal_get_form('sbac_learning_registry_external_resources_solr_search_form');
+      break;
+  }
+  return $block;
+}
+
+/**
+ * SOLR search form
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
+function sbac_learning_registry_external_resources_solr_search_form($form, &$form_state) {
+  $form = array();
+
+  $form['solr_keywords'] = array(
+    '#type' => 'textfield',
+    '#default_value' => isset($_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS]) ? $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS] : '',
+    '#attributes' => array(
+      'placeholder' => t('Search External Resources')
+    ),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Search'
+  );
+  return $form;
+}
+
+/**
+ * SOLR search form submit handler
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_learning_registry_external_resources_solr_search_form_submit(&$form, &$form_state) {
+  $_SESSION[SBAC_LEARNING_REGISTRY_INBLOOM_SOLR_KEYWORDS] = $form_state['values']['solr_keywords'];
+}
+
+/**
+ * Implements hook_block_info_alter()
+ */
+function sbac_learning_registry_block_info_alter(&$blocks, $theme, $code_blocks) {
+  if (isset($blocks['sbac_learning_registry']['external_resources_filters']) && $theme == 'SBAC') {
+    $blocks['sbac_learning_registry']['external_resources_filters']['pages'] = "external-resources*";
+  }
+}
+
+/**
+ * Form definition
+ */
+function sbac_learning_registry_external_resources_form($form, &$form_state) {
+  $form = array();
+
+  $hide_categories_text = t('Hide Categories');
+  $hide_categories_class = 'active';
+  $should_hide_categories = sbac_search_hide_category_style();
+
+  $current_filters = NULL;
+  if (isset($_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS])) {
+    $current_filters = $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS];
+  }
+
+  if ($should_hide_categories) {
+    $hide_categories_text = t('Show Categories');
+    $hide_categories_class = '';
+  }
+
+  $form['current_filters'] = array(
+    '#prefix' => '<a class="category-hide js-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a>',
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-current-filters'),
+  );
+
+  $form['search_categories'] = array(
+    '#markup' => sbac_learning_registry_external_resource_filters()
+  );
+
+  $current_keywords = NULL;
+  if (isset($_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS])) {
+    $current_keywords = $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS];
+  }
+  $form['search_keywords'] = array(
+    '#type' => 'hidden',
+    '#value' => $current_keywords,
+    '#attributes' => array('id' => 'sbac-search-keywords'),
+  );
+
+  $form['filter'] = array(
+    '#type' => 'submit',
+    '#value' => ($current_filters != NULL) ? t('Edit Filters') : t('Apply Filters'),
+    '#attributes' => array(
+      'id' => 'sbac-search-filter-button',
+      'class' => array(
+        ($current_filters != NULL) ? 'is-edit' : 'is-apply',
+        ($current_filters == NULL) ? 'js-hide' : ''
+      ),
+    ),
+    '#prefix' => '<div class="category-buttons slideable" ' . $should_hide_categories . '>',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+    '#attached' => array(
+      'js' => array(
+        array(
+          'data' => array('sbac_learning_registry' => array('isEdit' => ($current_filters != NULL ? 1 : 0))),
+          'type' => 'setting',
+        ),
+      ),
+    ),
+  );
+
+  $form['reset_filters'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset Filters'),
+    '#attributes' => array(
+      'class' => array('js-hide'),
+    ),
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+}
+
+/**
+ * Form submit handler
+ */
+function sbac_learning_registry_external_resources_form_submit(&$form, &$form_state) {
+  $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS] = $form_state['input']['current_filters'];
+  if (isset($_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS])) {
+    $current_keywords = $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS];
+    // If the keywords are different, remove filters.
+    if ($current_keywords && $current_keywords != $form_state['input']['search_keywords']) {
+      $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS] = '';
+    }
+  }
+  $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCE_KEYWORDS] = $form_state['input']['search_keywords'];
+}
+
+/**
+ * Returns the HTML for the filters on the external-resources page
+ */
+function sbac_learning_registry_external_resource_filters() {
+  drupal_add_css(drupal_get_path('module', 'sbac_search') . '/css/sbac_search.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
+  drupal_add_css(drupal_get_path('module', 'sbac_learning_registry') . '/css/sbac_learning_registry.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_learning_registry') . '/js/sbac_learning_registry.categories.js');
+
+  $cf_value = NULL;
+  $cf_html = array();
+  if (isset($_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS])) {
+    $cf_value = $_SESSION[SBAC_SEARCH_EXTERNAL_RESOURCES_FILTERS];
+    if ($cf_value) {
+      $filters = explode('::', $cf_value);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            $cf_html[] = '<div class="current-filter"><span vid="' . $vid . '" tid="' . $tid . '" class="filter-name">' . sbac_learning_registry_external_resource_filter_values($vid, $tid) . '</span></div>';
+          }
+        }
+      }
+    }
+  }
+
+  return theme('sbac_external_resource_filters', array(
+    'categories' => array(
+      'common_core_standards' => array(
+        'display_name' => '',
+        'link' => l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', array(
+          'attributes' => array(
+            'class' => 'ctools-use-modal ctools-modal-ctools-ccss-style',
+            'id' => 'sbac-resource-modal-alignment2',
+          ),
+        ))
+      ),
+      'learning_resource_type' => array(
+        'display_name' => 'Learning Resource Type',
+        'terms' => sbac_learning_registry_external_resource_filter_values('learning_resource_type'),
+      ),
+      'educational_use' => array(
+        'display_name' => 'Educational Use',
+        'terms' => sbac_learning_registry_external_resource_filter_values('educational_use'),
+      ),
+      'typical_age_range' => array(
+        'display_name' => 'Typical Age Range',
+        'terms' => sbac_learning_registry_external_resource_filter_values('typical_age_range'),
+      ),
+      'intended_user_roles' => array(
+        'display_name' => 'Intended User Roles',
+        'terms' => sbac_learning_registry_external_resource_filter_values('intended_user_roles'),
+      ),
+//      'group_type' => array(
+//        'display_name' => 'Group Type',
+//        'terms' => sbac_learning_registry_external_resource_filter_values('group_type'),
+//      ),
+//      'media_type' => array(
+//        'display_name' => 'Media Type',
+//        'terms' => sbac_learning_registry_external_resource_filter_values('media_type'),
+//      ),
+      'interactivity_type' => array(
+        'display_name' => 'Interactivity Type',
+        'terms' => sbac_learning_registry_external_resource_filter_values('interactivity_type'),
+      ),
+    ),
+    'cf_value' => $cf_value,
+    'cf_html' => $cf_html,
+  ));
+}
+
+/**
+ * Get the filter value from our hardcoded values.
+ *
+ * @param $name
+ * @param null $index
+ * @return null
+ */
+function sbac_learning_registry_external_resource_filter_values($name, $index = NULL) {
+  $value = NULL;
+  $intended_user_roles = array('Administrator', 'Mentor', 'Parent', 'Peer Tutor', 'Specialist', 'Student', 'Teacher', 'Team');
+  $typical_age_range = array('0-2', '3-5', '5-8', '8-10', '10-12', '12-14', '14-16', '16-18', '18+');
+  $educational_use = array(
+    'Activity',
+    'Analogies',
+    'Assessment',
+    'Auditory',
+    'Brainstorming',
+    'Classifying',
+    'Comparing',
+    'Cooperative Learning',
+    'Creative Response',
+    'Demonstration',
+    'Differentiation',
+    'Discovery Learning',
+    'Discussion/Debate',
+    'Drill & Practice',
+    'Experiential',
+    'Field Trip',
+    'Game',
+    'Generating hypotheses',
+    'Guided questions',
+    'Hands-on',
+    'Homework',
+    'Identify similarities & differences',
+    'Inquiry',
+    'Interactive',
+    'Interview/Survey',
+    'Interviews',
+    'Introduction',
+    'Journaling',
+    'Kinesthetic',
+    'Laboratory',
+    'Lecture',
+    'Metaphors',
+    'Model & Simulation',
+    'Musical',
+    'Nonlinguistic',
+    'Note taking',
+    'Peer Coaching',
+    'Peer Response',
+    'Play',
+    'Presentation',
+    'Problem Solving',
+    'Problem Based',
+    'Project',
+    'Questioning',
+    'Reading',
+    'Reciprocal Teaching',
+    'Reflection',
+    'Reinforcement',
+    'Research',
+    'Review',
+    'Role Playing',
+    'Service Learning',
+    'Simulations',
+    'Summarizing',
+    'Technology',
+    'Testing Hypotheses',
+    'Thematic Instruction',
+    'Visual/Spacial',
+    'Word Association',
+    'Writing'
+  );
+  $media_type = array(
+    'Audio CD',
+    'Audiotape',
+    'Calculator',
+    'CD-I',
+    'CD-ROM',
+    'Diskette',
+    'Duplication Master',
+    'DVD/Blu-Ray',
+    'E-Mail',
+    'Electronic Slides',
+    'Field Trip',
+    'Filmstrip',
+    'Flash',
+    'Image',
+    'In-Person/Speaker',
+    'Interactive Whiteboard',
+    'Manipulative',
+    'MBL (Microcomputer Based)',
+    'Microfiche',
+    'Overhead',
+    'Pamphlet',
+    'PDF',
+    'Person-to-Person',
+    'Phonograph Record',
+    'Photo',
+    'Podcast',
+    'Printed',
+    'Radio',
+    'Robotics',
+    'Satellite',
+    'Slides',
+    'Television',
+    'Transparency',
+    'Video Conference',
+    'Videodisc',
+    'Webpage',
+    'Wiki'
+  );
+  $learning_resource_type = array(
+    'Activity',
+    'Assessment',
+    'Audio',
+    'Broadcast',
+    'Calculator',
+    'Discussion',
+    'E-Mail',
+    'Fieldtrip',
+    'Hands-On',
+    'In-Person/Speaker',
+    'Kinesthetic',
+    'Lab Material (Printed Activities - Instruments - Samples...',
+    'Lesson Plan',
+    'Manipulative',
+    'MBL (Microcomputer Based',
+    'Model',
+    'On-Line',
+    'Podcast',
+    'Presentation',
+    'Printed',
+    'Quiz',
+    'Robotics',
+    'Still Image',
+    'Test',
+    'Video',
+    'Wiki',
+    'Worksheet'
+  );
+  $group_type = array('Class', 'Community', 'Grade', 'Group Large (6+ members)', 'Group Small (3-5 members)', 'Individual', 'Inter-Generational', 'Multiple Class', 'Pair', 'School', 'State/Province', 'World');
+  $interactivity_type = array('Active', 'Expositive', 'Mixed');
+  if (!is_null($index) && !empty(${$name})) {
+    $value = ${$name}[$index];
+  }
+  elseif (empty(${$name})) {
+    // Common core standard is a taxonomy term. We'll get it from there.
+    $term = taxonomy_term_load($index);
+    $value = $term->name;
+    if (isset($term->field_alignment_shortname)) {
+      $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+      $value = $term_wrapper->field_alignment_shortname->value();
+    }
+  }
+  else {
+    $value = ${$name};
+  }
+  return $value;
+}
+
+/**
+ * Implements hook_theme()
+ */
+function sbac_learning_registry_theme($existing, $type, $theme, $path) {
+  $items['sbac_external_resource_filters'] = array(
+    'template' => 'templates/external-resource-filters',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+  $items['sbac_external_resource_results'] = array(
+    'template' => 'templates/external-resource-results',
+    'variables' => array(
+      'results' => NULL,
+      'load_more_link' => NULL
+    )
+  );
+  $items['sbac_external_resource'] = array(
+    'template' => 'templates/external-resource',
+    'variables' => array(
+      'results' => NULL,
+    )
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_workbench_moderation_transition()
+ */
+function sbac_learning_registry_workbench_moderation_transition($node, $previous_state, $new_state) {
+  // publish the node to the Learning Registry
+  if ($node->type == 'resource' && $new_state == 'published') {
+    module_load_include('inc', 'learning_registry', 'learning_registry.learning_registry');
+    $nodes_to_publish = variable_get('learning_registry_node_types', array());
+    $oauth_consumer = learning_registry_oauth_verify();
+    if (isset($nodes_to_publish[$node->type]) && $nodes_to_publish[$node->type] != FALSE && $node->nid && $oauth_consumer) {
+      // Switch case below used to accommodate more methods (update, delete)
+      // in the future.
+      if ($node->status == 1) {
+        _learning_registry_queue_node($node->nid);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_delete()
+ */
+function sbac_learning_registry_node_delete($node) {
+  // Also remove from the Learning Registry
+  if ($node->type == 'resource') {
+    module_load_include('inc', 'learning_registry', 'learning_registry.learning_registry');
+    _learning_registry_publish($node, FALSE, LEARNING_REGISTRY_MODE_DELETE);
+  }
+}
+
+/**
+ * Implements hook_learning_resource_metadata_payload_alter()
+ */
+function sbac_learning_registry_learning_resource_metadata_payload_alter(&$payload, &$node) {
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  try { // Publisher
+    $payload['items']['properties']['publisher'] = array(
+      'type' => 'http://schema.org/Organization',
+      'properties' => array(
+        'name' => SBAC_LEARNING_REGISTRY_PUBLISHER,
+      ),
+    );
+    // inLanguage
+    $payload['items']['properties']['inLanguage'][] = 'English';
+    // About
+    if ($node_wrapper->field_subject->count()) {
+      foreach ($node_wrapper->field_subject as $subject_wrapper) {
+        $payload['items']['properties']['about'][] = $subject_wrapper->name->value();
+      }
+    }
+    // Description
+    $payload['items']['properties']['description'] = $node_wrapper->field_alt_body->value();
+    // educationalAlignment
+    if ($node_wrapper->field_alignment_term->count()) {
+      foreach ($node_wrapper->field_alignment_term as $alignment_wrapper) {
+        $name = $alignment_wrapper->field_alignment_shortname->value();
+        $payload['items']['properties']["educationalAlignment"][] = array(
+          'type' => 'http://schema.org/AlignmentObject',
+          'properties' => array(
+            'alignmentType' => 'teaches',
+            'targetName' => $name,
+            'targetDescription' => strip_tags($node_wrapper->field_alignment_term[0]->description->value()),
+          ),
+        );
+      }
+    }
+    // learningResourceType
+    $payload['items']['properties']['learningResourceType'][] = $node_wrapper->field_focus->name->value();
+    // educationalRole
+    if ($node_wrapper->field_intended_end_user->count()) {
+      foreach ($node_wrapper->field_intended_end_user as $end_user_wrapper) {
+        $payload['items']['properties']['educationalRole'][] = $end_user_wrapper->name->value();
+      }
+    }
+    // educationalUse
+    if ($node_wrapper->field_educational_use->count()) {
+      foreach ($node_wrapper->field_educational_use as $educational_use_wrapper) {
+        $payload['items']['properties']['educationalUse'][] = $educational_use_wrapper->name->value();
+      }
+    }
+  } catch (EntityMetadataWrapperException $e) {
+  }
+}
+
+/**
+ * Implements hook_learning_registry_prepared_submission_alter()
+ */
+function sbac_learning_registry_learning_registry_prepared_submission_alter(&$resource_data, &$node, $op) {
+  $doc_id = db_query('SELECT docid FROM {learning_registry} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField();
+  if ($doc_id) {
+    $resource_data->replaces = array($doc_id);
+    if ($op == LEARNING_REGISTRY_MODE_DELETE) {
+      // Delete has one additional option
+      $resource_data->payload_placement = 'none';
+    }
+  }
+}
+
+/**
+ * Returns docid for a specific resource node.
+ * @param  int    $nid Node ID.
+ * @return string      docid associated with a node.
+ */
+function sbac_learning_registry_get_docid($nid) {
+  $query = db_select('learning_registry', 'lr');
+  $query->fields('lr', array('docid'));
+  $query->condition('nid', $nid, '=');
+  $doc_id = $query->execute()->fetchField();
+  return $doc_id;
+}
+
+/**
+ * Add all resources to the queue to be pushed to the LR
+ */
+function sbac_learning_registry_queue_all_resources() {
+  module_load_include('inc', 'learning_registry', 'learning_registry.learning_registry');
+  $query = db_select('node', 'n');
+  $query->leftJoin('workbench_moderation_node_history', 'h', 'h.nid = n.nid');
+  $query->condition('n.type', 'resource')
+    ->condition('n.status', 1)
+    ->condition('h.current', 1)
+    ->condition('h.state', 'published');
+  $results = $query->fields('n', array('nid'))->execute()->fetchCol();
+  foreach ($results as $result) {
+    _learning_registry_queue_node($result);
+  }
+}
+
+/**
+ * Admin page so admins can look at the learning registry queue
+ * @return string
+ */
+function sbac_learning_registry_view_database() {
+  $table = array();
+  $header = array(
+    array('data' => t('Title'), 'field' => 'n.title'),
+    array('data' => t('Published'), 'field' => 'lr.published', 'sort' => 'desc'),
+    array('data' => t('Learning Registry Doc ID'), 'field' => 'lr.docid'),
+    array('data' => t('Queued'), 'field' => 'lr.queue'),
+  );
+  $query = db_select('learning_registry', 'lr')
+    ->extend('PagerDefault')
+    ->extend('TableSort');
+  $query->leftJoin('node', 'n', 'lr.nid = n.nid');
+  $results = $query
+    ->fields('lr', array())
+    ->fields('n', array('title'))
+    ->orderByHeader($header)
+    ->limit(50)
+    ->execute();
+  foreach ($results as $result) {
+    $row = array();
+    $row['nid'] = l($result->title, 'node/' . $result->nid, array('attributes' => array('target' => '_blank')));
+    $row['published'] = date(DATE_FORMAT_DATETIME, $result->published);
+    $submission_url = variable_get('learning_registry_node_url', NULL) . '/harvest/getrecord?by_doc_ID=TRUE&request_ID=' . $result->docid;
+    $row['docid'] = l($result->docid, $submission_url, array('attributes' => array('target' => '_blank')));
+    $row['queue'] = $result->queued == 0 ? 'No' : 'Yes';
+    $table[] = $row;
+  }
+  $output = '';
+  $output .= theme('table', array(
+    'header' => $header,
+    'rows' => $table,
+  ));
+  $output .= theme('pager');
+  return $output;
+}
+
+/*
+ * Adding a missing function. Not sure what its functionality was.
+ */
+
+function sbac_search_hide_category_style(){
+  return '';
+}

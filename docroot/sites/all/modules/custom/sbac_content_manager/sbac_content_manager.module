@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Content Manager feature.
+ */
+
+include_once 'sbac_content_manager.features.inc';

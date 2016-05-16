@@ -1,0 +1,328 @@
+<?php
+
+/*----------------------------------------------------------------------------
+      DRUPAL HOOKS
+----------------------------------------------------------------------------*/
+
+/**
+ * Implementation of hook_requirements
+ *
+ *   Used if encryption is required for storing password field values.
+ */
+// function sbac_core_requirements($phase) {
+//   $t = get_t();
+
+//   $requirements = array();
+
+//   $requirements['mcrypt'] = array(
+//     'title' => $t('mcrypt'),
+//   );
+
+//   // Check for mcrypt extension.
+//   if (function_exists('mcrypt_encrypt')) {
+//     $requirements['mcrypt']['value'] = $t('Installed');
+//     $requirements['mcrypt']['severity'] = REQUIREMENT_OK;
+//   }
+//   else {
+//     $requirements['mcrypt']['value'] = $t('Not installed');
+//     $requirements['mcrypt']['description'] = $t('SBAC Core requires mcrypt Library');
+//     $requirements['mcrypt']['severity'] = REQUIREMENT_ERROR;
+//   }
+
+//   return $requirements;
+// }
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the taskit module.
+ */
+function sbac_core_update_7001() {
+  $modules = array(
+    'taskit',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the entitycache module.
+ */
+function sbac_core_update_7002() {
+  $modules = array(
+    'entitycache',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disables the entitycache module.
+ */
+function sbac_core_update_7003() {
+  $modules = array(
+    'entitycache',
+  );
+
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the taskit, devtools, dialog modules.
+ */
+function sbac_core_update_7004() {
+  $modules = array(
+    'taskit',
+    'dialog',
+    'devtools',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Sets correct weight for sbac_core.
+ */
+function sbac_core_update_7005() {
+  db_query("UPDATE system SET weight = 6 WHERE name = 'sbac_core'");
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Updates taskit visibility mode.
+ */
+function sbac_core_update_7006() {
+  variable_set('taskit_visibility', 'user');
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Updates taskit visibility mode.
+ */
+function sbac_core_update_7007() {
+  sbac_core_update_7006(); // 7006 contained a typo; fixed & needs to be re-ran
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables Fivestar and Voting API.
+ */
+function sbac_core_update_7008() {
+  $modules = array(
+    'votingapi',
+    'fivestar',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Renames Feedback 'Review' bundle to 'Qc'
+ */
+function sbac_core_update_7009() {
+  db_query("UPDATE field_data_field_review_set SET bundle = 'qc' WHERE bundle = 'review'");
+  db_query("UPDATE field_revision_field_review_set SET bundle = 'qc' WHERE bundle = 'review'");
+
+  db_query("UPDATE field_data_field_rec_options SET bundle = 'qc' WHERE bundle = 'review'");
+  db_query("UPDATE field_revision_field_rec_options SET bundle = 'qc' WHERE bundle = 'review'");
+
+  db_query("UPDATE field_data_field_rec_rationale SET bundle = 'qc' WHERE bundle = 'review'");
+  db_query("UPDATE field_revision_field_rec_rationale SET bundle = 'qc' WHERE bundle = 'review'");
+
+  db_query("UPDATE eck_bundle SET machine_name = 'feedback_qc', name = 'qc', label = 'Quality Criteria Review' WHERE id = 2");
+  db_query("UPDATE eck_entity_type SET name = 'qc', label = 'Quality Criteria Review' WHERE id = 2");
+  db_query("UPDATE eck_feedback SET type = 'qc' WHERE type = 'review'");
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Renaming-related fix
+ */
+function sbac_core_update_7010() {
+  db_query("UPDATE eck_entity_type SET name = 'review', label = 'Review' WHERE id = 2");
+}
+
+/**
+ * Creates Applied Category taxonomy & populates it with terms.
+ * @return [type] [description]
+ */
+function sbac_core_update_7011() {
+  $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
+
+  if (!$vocab) {
+    taxonomy_vocabulary_save((object) array(
+      'name' => 'Applied Category',
+      'machine_name' => 'applied_category',
+    ));
+
+    $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
+  }
+
+  if ($vocab) {
+    $terms = array(
+      'Elementary School',
+      'Educators to Use During Instruction',
+      'High Quality Professional Learning',
+      'Middle School',
+      'Students to Use During Learning',
+      'Collaborative Learning',
+      'High School',
+      'Use with Families'
+    );
+
+    $weight = 0;
+    foreach ($terms as $term) {
+      taxonomy_term_save((object) array(
+        'name' => $term,
+        'weight' => $weight++,
+        'vid' => $vocab->vid,
+      ));
+    }
+  }
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables Rate.
+ */
+function sbac_core_update_7012() {
+  $modules = array(
+    'rate',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Cleans up Flag entity type.
+ */
+function sbac_core_update_7013() {
+  /* db_query("ALTER TABLE eck_flag DROP COLUMN node_id"); */
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Deletes (now-invalid) database content for the License field.
+ */
+function sbac_core_update_7014() {
+  db_query("DELETE FROM field_data_field_license_information WHERE field_license_information_value = 2");
+  db_query("DELETE FROM field_revision_field_license_information WHERE field_license_information_value = 2");
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Updates license taxonomy.
+ */
+function sbac_core_update_7015() {
+  $vid = db_query("SELECT vid FROM taxonomy_vocabulary WHERE machine_name = 'license'")->fetchField();
+  db_query("UPDATE taxonomy_term_data SET name = :new_name WHERE vid = :vid AND name = :name", array(
+    ':new_name' => 'Public Domain (free of copyright restrictions)',
+    ':vid' => $vid,
+    ':name' => 'All of the submitted materials are free of copyright restrictions and in the public domain.',
+  ));
+
+  $terms = array(
+    'Smarter Balanced Terms of Service (owned by the contributor)',
+    'License Available at Approved Content Site (e.g., YouTube, Slideshare)',
+  );
+
+  $weight = -6;
+  foreach ($terms as $term) {
+    taxonomy_term_save((object) array(
+      'name' => $term,
+      'weight' => $weight++,
+      'vid' => $vid,
+    ));
+  }
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Updates license taxonomy.
+ */
+function sbac_core_update_7016() {
+  $vid = db_query("SELECT vid FROM taxonomy_vocabulary WHERE machine_name = 'license'")->fetchField();
+  db_query("UPDATE taxonomy_term_data SET name = :new_name WHERE vid = :vid AND name = :name", array(
+    ':new_name' => 'Smarter Balanced Copyright Clearance Form (signed by the owner)',
+    ':vid' => $vid,
+    ':name' => 'The Smarter Balanced Copyright Clearance Form',
+  ));
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Blows away & recreates the content of eck_bundle & eck_entity_type
+ */
+function sbac_core_update_7017() {
+  db_query("TRUNCATE eck_bundle");
+  db_query("TRUNCATE eck_entity_type");
+
+  db_query("INSERT INTO `eck_bundle` (`id`, `machine_name`, `entity_type`, `name`, `label`, `config`)
+            VALUES
+              (1, 'feedback_gate_keeper', 'feedback', 'gate_keeper', 'Gate Keeper', '[]'),
+              (2, 'feedback_qc', 'feedback', 'qc', 'Quality Criteria Review', '[]'),
+              (3, 'feedback_post', 'feedback', 'post', 'Post', '[]'),
+              (4, 'review_end_use', 'review', 'end_use', 'End Use', '[]'),
+              (5, 'media_media', 'media', 'media', 'media', '[]'),
+              (6, 'flag_review_end_use', 'flag', 'review_end_use', 'Review End Use', '[]');
+  ");
+
+  db_query("INSERT INTO `eck_entity_type` (`id`, `name`, `label`, `properties`)
+          VALUES
+            (1, 'feedback', 'Feedback', '{\"uid\":{\"label\":\"Author\",\"type\":\"integer\",\"behavior\":\"author\"},\"created\":{\"label\":\"Created\",\"type\":\"integer\",\"behavior\":\"created\"},\"changed\":{\"label\":\"Changed\",\"type\":\"integer\",\"behavior\":\"changed\"},\"language\":{\"label\":\"Entity language\",\"type\":\"language\",\"behavior\":\"language\"},\"title\":{\"label\":\"Title\",\"type\":\"text\",\"behavior\":\"title\"},\"status\":{\"label\":\"Published\",\"type\":\"integer\",\"behavior\":\"checkbox\"},\"completed\":{\"label\":\"Completed\",\"type\":\"integer\",\"behavior\":\"checkbox\"},\"node_id\":{\"label\":\"Node ID\",\"type\":\"integer\",\"behavior\":\"textfield\"},\"met_criteria\":{\"label\":\"Meets Criteria\",\"type\":\"integer\",\"behavior\":\"checkbox\"},\"current\":{\"label\":\"Current\",\"type\":\"integer\",\"behavior\":\"checkbox\"},\"reminder\":{\"label\":\"reminder\",\"type\":\"integer\",\"behavior\":\"textfield\"}}'),
+            (2, 'review', 'Review', '{\"title\":{\"label\":\"Title\",\"type\":\"text\",\"behavior\":\"title\"},\"uid\":{\"label\":\"Author\",\"type\":\"integer\",\"behavior\":\"author\"},\"created\":{\"label\":\"Created\",\"type\":\"integer\",\"behavior\":\"created\"},\"changed\":{\"label\":\"Changed\",\"type\":\"integer\",\"behavior\":\"changed\"},\"status\":{\"label\":\"Status\",\"type\":\"integer\",\"behavior\":\"checkbox\"},\"node_id\":{\"label\":\"Node id\",\"type\":\"integer\",\"behavior\":\"textfield\"}}'),
+            (3, 'media', 'media', '{\"fid\":{\"label\":\"File ID\",\"type\":\"text\",\"behavior\":\"textfield\"},\"filename\":{\"label\":\"File Name\",\"type\":\"text\",\"behavior\":\"textfield\"},\"file_hash\":{\"label\":\"File Hash\",\"type\":\"text\",\"behavior\":\"textfield\"},\"file_size\":{\"label\":\"File Size\",\"type\":\"text\",\"behavior\":\"textfield\"},\"nid\":{\"label\":\"Node ID\",\"type\":\"text\",\"behavior\":\"textfield\"},\"weight\":{\"label\":\"Weight\",\"type\":\"text\",\"behavior\":\"textfield\"},\"document_id\":{\"label\":\"Document ID\",\"type\":\"text\",\"behavior\":\"textfield\"},\"embed_url\":{\"label\":\"Embed URL\",\"type\":\"text\",\"behavior\":\"textfield\"}}'),
+            (4, 'flag', 'Flag', '{\"uid\":{\"label\":\"Author\",\"type\":\"integer\",\"behavior\":\"author\"},\"created\":{\"label\":\"Created\",\"type\":\"integer\",\"behavior\":\"created\"},\"changed\":{\"label\":\"Changed\",\"type\":\"integer\",\"behavior\":\"changed\"},\"target_type\":{\"label\":\"Target Type\",\"type\":\"text\",\"behavior\":\"textfield\"},\"target_id\":{\"label\":\"Target ID\",\"type\":\"integer\",\"behavior\":\"textfield\"}}');
+  ");
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disables and uninstalls no longer used Rate module
+ */
+function sbac_core_update_7018() {
+  if (module_exists('rate')) {
+    module_disable(array('rate'));
+    drupal_uninstall_modules(array('rate'));
+  }
+}
+
+function sbac_core_uninstall(){
+  variable_del('sbac_core_cmis_creds_default');
+  variable_del('cmis_repositories');
+  variable_del('taskit_visibility');
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Deletes redundant content from terms.
+ */
+function sbac_core_update_7019() {
+  $name = 'NA';
+  db_delete('taxonomy_term_data')
+    ->condition('name', $name, '=')
+    ->execute();
+}

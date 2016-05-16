@@ -1,0 +1,57 @@
+/**
+ * Help Page CSS
+ **/
+/* line 8, ../sass/help.scss */
+.page-help-topics .view-help-topics {
+  width: 100%;
+}
+
+/* line 14, ../sass/help.scss */
+#colorbox .view-help-topics {
+  width: 750px;
+  margin: 0 auto;
+}
+/* line 17, ../sass/help.scss */
+#colorbox .view-help-topics .flexslider {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+/* line 20, ../sass/help.scss */
+#colorbox .view-help-topics .flexslider .views-row {
+  text-align: center;
+  margin: 0;
+  overflow: hidden;
+}
+/* line 26, ../sass/help.scss */
+#colorbox .view-help-topics .flexslider .views-row img {
+  margin: 0 auto;
+}
+/* line 30, ../sass/help.scss */
+#colorbox .view-help-topics .flexslider .views-row div {
+  margin: 0 5px;
+}
+/* line 36, ../sass/help.scss */
+#colorbox .view-help-topics .views-field-nid {
+  display: none;
+}
+
+@media all and (max-width: 980px) {
+  /* line 45, ../sass/help.scss */
+  #colorbox .view-help-topics {
+    width: 510px;
+    margin: 0 auto;
+  }
+}
+@media all and (max-width: 670px) {
+  /* line 54, ../sass/help.scss */
+  #colorbox .view-help-topics {
+    width: 250px;
+    margin: 0 auto;
+  }
+}
