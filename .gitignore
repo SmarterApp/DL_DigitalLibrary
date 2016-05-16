@@ -1,7 +1,3 @@
-docroot
-!docroot/sites/all/modules/custom
-vendor
-
 # OS specific temporary files
 .DS_Store*
 ehthumbs.db
@@ -22,7 +18,9 @@ nbproject
 .sass-cache
 
 #Drupal Root folders
-/docroot/
-!/docroot/sites/all/modules/custom/
+/docroot
+!/docroot/sites/all/modules/custom
+!/docroot/sites/all/themes/custom
 
 /vendor
+
