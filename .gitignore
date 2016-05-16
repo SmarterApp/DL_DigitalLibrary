@@ -18,9 +18,18 @@ nbproject
 .sass-cache
 
 #Drupal Root folders
-/docroot
-!/docroot/sites/all/modules/custom
-!/docroot/sites/all/themes/custom
+/docroot/*
+
+!/docroot/sites/
+/docroot/sites/*
+!/docroot/sites/all/
+/docroot/sites/all/*
+!/docroot/sites/all/modules/
+/docroot/sites/all/modules/*
+!/docroot/sites/all/modules/custom/
+!/docroot/sites/all/themes/
+/docroot/sites/all/themes/*
+!/docroot/sites/all/themes/custom/
 
 /vendor
 
