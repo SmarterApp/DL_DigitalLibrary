@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aa694eabd0eb925bbfbfe856f96335b7",
-    "content-hash": "167b4e3ca46305a9a630eb57f5265bbf",
+    "hash": "6d4610e91a27b6ef8a36c5b2beca6fb4",
+    "content-hash": "31a5b52c005354f2e97ef1d7bfa2573a",
     "packages": [
         {
             "name": "composer/installers",
@@ -161,15 +161,15 @@
         },
         {
             "name": "drupal/acquia_connector",
-            "version": "7.2.17",
+            "version": "7.2.15",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/acquia_connector",
-                "reference": "e43c357a1e95281ee73830e301f486f776da6425"
+                "reference": "69c851d60bed71526e083569a27e85377ceb0589"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/acquia_connector-7.x-2.17.zip",
+                "url": "https://ftp.drupal.org/files/projects/acquia_connector-7.x-2.15.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -199,7 +199,7 @@
             ],
             "description": "Allows Drupal to securely communicate with Acquia Insight, and checks for updates to Acquia Drupal.",
             "homepage": "https://www.drupal.org/project/acquia_connector",
-            "time": "2016-05-06 12:39:37"
+            "time": "2014-11-05 15:05:28"
         },
         {
             "name": "drupal/acquia_search_multi_subs",

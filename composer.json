@@ -11,7 +11,7 @@
     "drupal/drupal": "7.38",
 
         "drupal/composer_vendor": "7.1.*",
-        "drupal/acquia_connector": "7.2.*",
+        "drupal/acquia_connector": "7.2.15",
         "drupal/acquia_search_multi_subs": "7.1.*",
         "drupal/admin_menu": "7.3.0-rc5",
         "drupal/advagg": "7.2.5",
@@ -160,7 +160,10 @@
         "drupal/sbac_share": "7.1.*",
         "drupal/sbac_sso": "7.1.*",
         "drupal/sbac_user": "7.1.*",
-        "drupal/sbac_workbench": "7.1.*"
+        "drupal/sbac_workbench": "7.1.*",
+	"drupal/taskit": "7.1.0",
+	"learning_registry": "7.1.x-dev",
+	"learning_registry_metadata_initiative": "7.1.x-dev"
   },
   "conflict": {
     "drupal/core": "8.*"
