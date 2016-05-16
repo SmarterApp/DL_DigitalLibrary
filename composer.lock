@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d6ae8028b284ec6b48a13ba4ae6ee089",
-    "content-hash": "5a2d0337c5aa1db1d76e7ae14fb0f2f2",
+    "hash": "aa694eabd0eb925bbfbfe856f96335b7",
+    "content-hash": "167b4e3ca46305a9a630eb57f5265bbf",
     "packages": [
         {
             "name": "composer/installers",
@@ -3908,6 +3908,34 @@
             "description": "Autoload based on PSR-0, PSR-4 and a custom PHP 5.2 compatibility mode.",
             "homepage": "https://www.drupal.org/project/xautoload",
             "time": "2014-04-04 10:50:35"
+        },
+        {
+            "name": "drupal/zurb_foundation",
+            "version": "dev-7.x-4.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/zurb-foundation.git",
+                "reference": "f36968da82309ed64a24e78659ab7d0bacd10e7e"
+            },
+            "require": {
+                "drupal/drupal": "7.*"
+            },
+            "replace": {
+                "drupal/zurb_foundation": "self.version"
+            },
+            "type": "drupal-theme",
+            "extra": {
+                "branch-alias": {
+                    "dev-7.x-4.x": "7.4.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.drupal-composer.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Drupal implementation of the Zurb Foundation 4 framework.",
+            "homepage": "https://www.drupal.org/project/zurb-foundation",
+            "time": "2015-03-20 15:30:35"
         }
     ],
     "packages-dev": [],
@@ -3926,7 +3954,8 @@
         "drupal/morecomments": 20,
         "drupal/upload_qc": 20,
         "drupal/views_infinite_scroll": 20,
-        "drupal/wordfilter": 20
+        "drupal/wordfilter": 20,
+        "drupal/zurb_foundation": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
