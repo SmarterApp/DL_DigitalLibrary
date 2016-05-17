@@ -4,77 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "890eb1435a781f1c8cca2457852db595",
-    "content-hash": "07eaf1588c5d6cfbfeadf96c264508c5",
+    "hash": "b81a28fae04ee28998373293c8fe6a4e",
+    "content-hash": "cc6f7af8f1d11ba984decbe02628efb0",
     "packages": [
-        {
-            "name": "bower-asset/jquery",
-            "version": "1.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
-                "reference": "6361fdf2f30e41f565a953eb120f795774c65c4e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/6361fdf2f30e41f565a953eb120f795774c65c4e",
-                "reference": "6361fdf2f30e41f565a953eb120f795774c65c4e",
-                "shasum": ""
-            },
-            "type": "bower-asset-library"
-        },
-        {
-            "name": "bower-asset/jquery-joyride",
-            "version": "v2.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zurb/joyride.git",
-                "reference": "3633df64703bc888fe665f290988c2e8e91502d6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zurb/joyride/zipball/3633df64703bc888fe665f290988c2e8e91502d6",
-                "reference": "3633df64703bc888fe665f290988c2e8e91502d6",
-                "shasum": ""
-            },
-            "type": "bower-asset-library"
-        },
-        {
-            "name": "bower-asset/zeroclipboard",
-            "version": "v1.2.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zeroclipboard/zeroclipboard.git",
-                "reference": "3b3861ae21fb2abccaf2efa23fbf52e63c5fb8de"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zeroclipboard/zeroclipboard/zipball/3b3861ae21fb2abccaf2efa23fbf52e63c5fb8de",
-                "reference": "3b3861ae21fb2abccaf2efa23fbf52e63c5fb8de",
-                "shasum": ""
-            },
-            "type": "bower-asset-library",
-            "extra": {
-                "bower-asset-main": [
-                    "./ZeroClipboard.js",
-                    "./ZeroClipboard.swf"
-                ]
-            },
-            "license": [
-                "https://github.com/zeroclipboard/zeroclipboard/blob/master/LICENSE"
-            ],
-            "description": "The ZeroClipboard library provides an easy way to copy text to the clipboard using an invisible Adobe Flash movie and a JavaScript interface.",
-            "keywords": [
-                "clip",
-                "clipboard",
-                "clippy",
-                "copy",
-                "cut",
-                "flash",
-                "paste",
-                "zclip"
-            ]
-        },
         {
             "name": "composer/installers",
             "version": "v1.0.25",
@@ -4104,68 +4036,6 @@
             "time": "2014-11-20 10:13:43"
         },
         {
-            "name": "itbz/fpdf",
-            "version": "1.7.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hanneskod/fpdf.git",
-                "reference": "06d02a7bf227a62d37691a4e7e9c3a35efcb41c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hanneskod/fpdf/zipball/06d02a7bf227a62d37691a4e7e9c3a35efcb41c3",
-                "reference": "06d02a7bf227a62d37691a4e7e9c3a35efcb41c3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fpdf": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "no usage restriction"
-            ],
-            "description": "Unofficial PSR-0 compliant version of the FPDF library",
-            "homepage": "http://www.fpdf.org/",
-            "time": "2013-12-27 14:18:15"
-        },
-        {
-            "name": "itbz/fpdi",
-            "version": "1.4.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hanneskod/fpdi.git",
-                "reference": "89a7e66fd3289cc7ce06eb80306de3c5835b1f1e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hanneskod/fpdi/zipball/89a7e66fd3289cc7ce06eb80306de3c5835b1f1e",
-                "reference": "89a7e66fd3289cc7ce06eb80306de3c5835b1f1e",
-                "shasum": ""
-            },
-            "require": {
-                "itbz/fpdf": "1.7.*",
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fpdi": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "Unofficial PSR-0 compliant version of the FPDI library",
-            "time": "2013-10-28 12:15:49"
-        },
-        {
             "name": "jquery/autopager",
             "version": "1.0.0",
             "dist": {
@@ -4239,39 +4109,6 @@
                 "composer-plugin"
             ],
             "time": "2016-02-04 14:48:35"
-        },
-        {
-            "name": "npm-asset/chosen-npm",
-            "version": "v0.9.14",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/harvesthq/chosen.git",
-                "reference": "f63dd0d33e9b1ba6afaef92478b104902282492e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/harvesthq/chosen/zipball/f63dd0d33e9b1ba6afaef92478b104902282492e",
-                "reference": "f63dd0d33e9b1ba6afaef92478b104902282492e",
-                "shasum": ""
-            },
-            "require-dev": {
-                "npm-asset/coffee-script": ">=1.6",
-                "npm-asset/uglify-js": ">=1.2.5,<2.0"
-            },
-            "type": "npm-asset-library",
-            "extra": {
-                "npm-asset-repository": {
-                    "type": "git",
-                    "url": "https://github.com/harvesthq/chosen"
-                },
-                "npm-asset-engines": {
-                    "node": ">=0.4.0"
-                }
-            },
-            "authors": [
-                "harvest"
-            ],
-            "description": "Chosen is a JavaScript plugin that makes long, unwieldy select boxes much more user-friendly. It is currently available in both jQuery and Prototype flavors."
         },
         {
             "name": "npm-asset/jquery",
@@ -4389,28 +4226,6 @@
             ],
             "description": "jQuery tree plugin",
             "homepage": "http://jstree.com"
-        },
-        {
-            "name": "tinymce/tinymce",
-            "version": "3.5.8",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/tinymce/tinymce/archive/3.5.8.zip",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "library"
-        },
-        {
-            "name": "woothemes/flexslider",
-            "version": "2.4.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/woothemes/FlexSlider/archive/version/2.4.0.zip",
-                "reference": null,
-                "shasum": null
-            },
-            "type": "library"
         }
     ],
     "packages-dev": [],

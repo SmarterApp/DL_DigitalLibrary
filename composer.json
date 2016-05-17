@@ -168,17 +168,10 @@
         "drupal/xautoload": "7.4.5",
 	"drupal/zurb_foundation": "7.4.x-dev",
 
-	"npm-asset/chosen-npm": "0.9.14",
 	"jquery/autopager": "1.0.0",
-	"woothemes/flexslider": "2.4.0",
-	"itbz/fpdi": "1.4.4",
 	"google/apiclient": "1.1.1",
-	"bower-asset/jquery-joyride": "2.0.3",
-	"bower-asset/jquery": "1.9.0",
 	"jquery/more": "1.1.0",
-	"npm-asset/jstree": "3.0.8",
-	"tinymce/tinymce": "3.5.8",
-	"bower-asset/zeroclipboard": "1.2.3"
+	"npm-asset/jstree": "3.0.8"
   },
   "sbac-used-libraries-to-add": {
     "chosen": "0.9.14 (js or package.json)",
