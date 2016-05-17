@@ -1,13 +1,61 @@
 {
   "name": "drupal-composer/drupal-project",
   "description": "Composer template for Drupal projects",
-  "repositories": [{
-    "type": "composer",
-    "url": "https://packagist.drupal-composer.org"
-  }],
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "tinymce/tinymce",
+	"version": "3.5.8",
+	"dist": {
+	  "url": "https://github.com/tinymce/tinymce/archive/3.5.8.zip",
+	  "type": "zip"
+	}
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "woothemes/flexslider",
+	"version": "2.4.0",
+	"dist": {
+	  "url": "https://github.com/woothemes/FlexSlider/archive/version/2.4.0.zip",
+	  "type": "zip"
+	}
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "jquery/autopager",
+	"version": "1.0.0",
+	"dist": {
+	  "url": "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/jquery-autopager/jquery.autopager-1.0.0.js",
+	  "type": "file"
+	}
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "jquery/more",
+	"version": "1.1.0",
+	"dist": {
+	  "url": "http://keith-wood.name/zip/jquery.more.package-1.1.0.zip",
+	  "type": "zip"
+	}
+      }
+    },
+    {
+      "type": "composer",
+      "url": "https://packagist.drupal-composer.org"
+    }
+  ],
   "require": {
     "composer/installers": "~1.0",
     "derhasi/composer-preserve-paths": "0.1.*",
+    "fxp/composer-asset-plugin": "~1.1",
+    "mnsami/composer-custom-directory-installer": "~1.1",
     "drupal/drupal": "7.38",
 
         "drupal/composer_vendor": "7.1.*",
@@ -118,7 +166,34 @@
         "drupal/workbench_moderation": "7.1.3",
         "drupal/wysiwyg": "7.2.2",
         "drupal/xautoload": "7.4.5",
-	"drupal/zurb_foundation": "7.4.x-dev"
+	"drupal/zurb_foundation": "7.4.x-dev",
+
+	"npm-asset/chosen-npm": "0.9.14",
+	"jquery/autopager": "1.0.0",
+	"woothemes/flexslider": "2.4.0",
+	"itbz/fpdi": "1.4.4",
+	"google/apiclient": "1.1.1",
+	"bower-asset/jquery-joyride": "2.0.3",
+	"bower-asset/jquery": "1.9.0",
+	"jquery/more": "1.1.0",
+	"npm-asset/jstree": "3.0.8",
+	"tinymce/tinymce": "3.5.8",
+	"bower-asset/zeroclipboard": "1.2.3"
+  },
+  "sbac-used-libraries-to-add": {
+    "chosen": "0.9.14 (js or package.json)",
+    "autopager": "jQuery.autopager 1.0.0",
+    "flexslider": "2.4.0 (js)",
+    "fpdi": "1.4.4 (php)",
+    "google-api-php-client": "google/apiclient - 1.1.1",
+    "joyride": "2.0.3 (js)",
+    "jquery": "1.9.0",
+    "jquery.more": "1.1.0",
+    "jstree": "3.0.8",
+    "jwplayer": "6.5.3609 ??  Does not seem available",
+    "tcpdf": "6.0.012 (php)",
+    "tinymce": "3.5.8",
+    "zeroclipboard": "1.2.3 (using component-installer or package.json)"
   },
   "skip-due-to-issues": {
   },
@@ -175,6 +250,7 @@
   },
   "config": {
     "vendor-dir": "vendor",
+    "secure-http": false,
     "disabled-vendor-dir": "docroot/sites/all/vendor"
   },
   "minimum-stability": "dev",
