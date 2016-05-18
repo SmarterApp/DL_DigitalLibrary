@@ -79,7 +79,6 @@
         "drupal/ctools": "7.1.7",
         "drupal/date": "7.2.8",
         "drupal/devel": "7.1.5",
-        "drupal/devtools": "7.1.x-dev",
         "drupal/dialog": "7.1.x-dev",
         "drupal/diff": "7.3.2",
         "drupal/draggableviews": "7.2.1",
@@ -189,6 +188,7 @@
     "zeroclipboard": "1.2.3 (using component-installer or package.json)"
   },
   "skip-due-to-issues": {
+        "missing clear_views_exposed_filter_cache - drupal/devtools": "7.1.x-dev"
   },
   "removed-not-sure-if-needed": {
         "davidbarratt/custom-installer": "dev-master"
