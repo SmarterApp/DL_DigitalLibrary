@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b81a28fae04ee28998373293c8fe6a4e",
-    "content-hash": "cc6f7af8f1d11ba984decbe02628efb0",
+    "hash": "0bba0ea3f80265baee8cfa777283e760",
+    "content-hash": "ad162c6400380a96c90930db7b72eaaf",
     "packages": [
         {
             "name": "composer/installers",
@@ -884,31 +884,6 @@
             "description": "Various blocks, pages, and functions for developers.",
             "homepage": "https://www.drupal.org/project/devel",
             "time": "2014-03-02 16:03:08"
-        },
-        {
-            "name": "drupal/devtools",
-            "version": "dev-7.x-1.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/devtools.git",
-                "reference": "587b7e25f1bc4c973fab205c955a04e5d70be493"
-            },
-            "require": {
-                "drupal/drupal": "7.*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-7.x-1.x": "7.1.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.drupal-composer.org/downloads/",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "description": "Helpful tools for Drupal developers.",
-            "homepage": "https://www.drupal.org/project/devtools",
-            "time": "2013-10-22 18:08:15"
         },
         {
             "name": "drupal/dialog",
@@ -4236,7 +4211,6 @@
         "drupal/apachesolr_file": 20,
         "drupal/apachesolr_term": 20,
         "drupal/apachesolr_user": 20,
-        "drupal/devtools": 20,
         "drupal/dialog": 20,
         "drupal/field_collection": 20,
         "drupal/maillog": 20,
