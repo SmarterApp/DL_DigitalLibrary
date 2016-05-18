@@ -13,7 +13,7 @@ services:
     image: blinkreaction/drupal-solr:4.x-stable
   phpfpm:
     image: gened/php:latest-fpm
-    links:
+    depends_on:
       - db
       - solr
     environment:
@@ -26,10 +26,10 @@ services:
       MYSQL_USER:
       MYSQL_PASSWORD:
     volumes:
-      - &project_root ".:/var/www/html"
+      - &project_root "..:/var/www/html"
   nginx:
     image: gened/nginx:latest
-    links:
+    depends_on:
       - phpfpm
     environment:
       UPSTREAM_HOST: phpfpm:9000
