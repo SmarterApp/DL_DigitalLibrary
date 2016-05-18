@@ -267,7 +267,8 @@
     },
     "preserve-paths": [
       "docroot/sites/all/modules/contrib",
-      "docroot/sites/all/themes/contrib",
+      "docroot/sites/all/modules/custom",
+      "docroot/sites/all/themes",
       "docroot/sites/all/libraries",
       "docroot/sites/all/drush",
       "docroot/profiles",

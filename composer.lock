@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0bba0ea3f80265baee8cfa777283e760",
-    "content-hash": "ad162c6400380a96c90930db7b72eaaf",
+    "hash": "f5a4637a13da948fba281b8f218db915",
+    "content-hash": "de63db5c68bc4049792ab437b9b8231a",
     "packages": [
         {
             "name": "composer/installers",
@@ -2220,7 +2220,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/maillog",
-                "reference": "80e9748a990ba344acf29c578527739b7b0483d2"
+                "reference": "5275d0505ba31a6f6a296759e7a81795f8622bc8"
             },
             "require": {
                 "drupal/drupal": "7.*",
@@ -2238,7 +2238,7 @@
             ],
             "description": "Utility to log all Mails for debugging purposes. It's possible to suppress mail delivery for e.g. dev or staging systems.",
             "homepage": "https://www.drupal.org/project/maillog",
-            "time": "2016-05-09 10:40:05"
+            "time": "2016-05-18 09:59:41"
         },
         {
             "name": "drupal/mailsystem",

@@ -13,23 +13,20 @@ services:
     image: blinkreaction/drupal-solr:4.x-stable
   phpfpm:
     image: gened/php:latest-fpm
-    depends_on:
+    links:
       - db
       - solr
     environment:
-      MYSQL_ENV_MYSQL_DATABASE: "${MYSQL_DATABASE}"
-      MYSQL_ENV_MYSQL_USER: "${MYSQL_USER}"
-      MYSQL_ENV_MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
-      MYSQL_ENV_MYSQL_HOST: db
-      SOLR_ENV_SOLR_HOST: solr
       MYSQL_DATABASE:
       MYSQL_USER:
       MYSQL_PASSWORD:
+      MYSQL_HOST: db
+      SOLR_HOST: solr
     volumes:
       - &project_root "..:/var/www/html"
   nginx:
     image: gened/nginx:latest
-    depends_on:
+    links:
       - phpfpm
     environment:
       UPSTREAM_HOST: phpfpm:9000
