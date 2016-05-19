@@ -31,7 +31,7 @@ services:
     environment:
       UPSTREAM_HOST: phpfpm:9000
     ports:
-      - "80:80"
+      - "80"
     volumes:
       - *project_root
 volumes:
