@@ -42,4 +42,4 @@ echo
 echo
 echo 'Setup complete:'
 echo
-echo 'You can connect to http://' $(docker inspect ${COMPOSE_PROJECT_NAME}_nginx_1 --format "{{ .NetworkSettings.Networks.${COMPOSE_PROJECT_NAME}_default.IPAddress }}")
+echo 'You can connect to http://localhost:' $(docker inspect --format '{{ (index (index .NetworkSettings.Ports "80/tcp") 0).HostPort }}' ${COMPOSE_PROJECT_NAME}_nginx_1) '//'
