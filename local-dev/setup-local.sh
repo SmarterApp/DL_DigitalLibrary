@@ -7,9 +7,7 @@ cd $(dirname $0)
 cd ..
 
 echo 'Install code via composer'
-PWD=$(pwd)
-DIR=/var/www/html
-docker run --rm -v ${PWD}:${DIR} -w ${DIR} composer/composer install
+./bin/composer install
 
 echo 'Apply patches'
 # Patch for issue where get_resources() is redefined
