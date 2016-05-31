@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f5a4637a13da948fba281b8f218db915",
-    "content-hash": "de63db5c68bc4049792ab437b9b8231a",
+    "hash": "513c4384b98b6817e7e92747680d8793",
+    "content-hash": "b6fb80153180a5ec50898833f6e47a28",
     "packages": [
         {
             "name": "composer/installers",
@@ -3890,7 +3890,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/zurb-foundation.git",
-                "reference": "f36968da82309ed64a24e78659ab7d0bacd10e7e"
+                "reference": "6f0792a373a75cb81790f807b135e1895a6f62a4"
             },
             "require": {
                 "drupal/drupal": "7.*"
@@ -3910,7 +3910,7 @@
             ],
             "description": "Drupal implementation of the Zurb Foundation 4 framework.",
             "homepage": "https://www.drupal.org/project/zurb-foundation",
-            "time": "2015-03-20 15:30:35"
+            "time": "2013-04-13 20:33:24"
         },
         {
             "name": "fxp/composer-asset-plugin",
