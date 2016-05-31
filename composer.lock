@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e795cec7bbbf64417dab657eec585baf",
-    "content-hash": "87061270fbd4ec50cbe82078855a0599",
+    "hash": "5af0eb511b266b9fe50b9880c6a33114",
+    "content-hash": "ae055a682a6d339c5dc5a1cf2d6b6e4a",
     "packages": [
         {
             "name": "composer/installers",
@@ -203,16 +203,16 @@
         },
         {
             "name": "drupal/acquia_search_multi_subs",
-            "version": "7.1.6",
+            "version": "7.1.4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/acquia_search_multi_subs",
-                "reference": "00c1d74466bf70373a803724eb9c535b138e1c37"
+                "reference": "4c47dcb9ad18c9f89c02fdc6fd20790b4b2af784"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/acquia_search_multi_subs-7.x-1.6.zip",
-                "reference": "00c1d74466bf70373a803724eb9c535b138e1c37",
+                "url": "https://ftp.drupal.org/files/projects/acquia_search_multi_subs-7.x-1.4.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -231,7 +231,7 @@
             ],
             "description": "Acquia Search UI for connecting to other Acquia Search Indexes.",
             "homepage": "https://www.drupal.org/project/acquia_search_multi_subs",
-            "time": "2016-01-28 20:36:14"
+            "time": "2015-04-13 21:48:04"
         },
         {
             "name": "drupal/admin_menu",
@@ -1001,7 +1001,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/drupal-7.43.zip",
-                "reference": null,
+                "reference": "c136d1347b9b92145590cb1f84cc02a695d721fe",
                 "shasum": null
             },
             "replace": {
@@ -2220,7 +2220,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/maillog",
-                "reference": "06c4bc007b2f45cdd2ff184c1568df82490ad2cc"
+                "reference": "2591153d5ba486806ac660013f5834da94e98db0"
             },
             "require": {
                 "drupal/drupal": "7.*",
@@ -2238,7 +2238,7 @@
             ],
             "description": "Utility to log all Mails for debugging purposes. It's possible to suppress mail delivery for e.g. dev or staging systems.",
             "homepage": "https://www.drupal.org/project/maillog",
-            "time": "2016-05-21 13:21:21"
+            "time": "2012-02-13 01:37:22"
         },
         {
             "name": "drupal/mailsystem",
@@ -3740,7 +3740,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/wordfilter.git",
-                "reference": "f2db2df0df8df4368abc477ff57f802b61ead3ef"
+                "reference": "6a6a8bb1f6158b1238e51fb94686e2a93fbec360"
             },
             "require": {
                 "drupal/drupal": "7.*"
@@ -3757,7 +3757,7 @@
             ],
             "description": "Replaces words inside posts with filtered versions.",
             "homepage": "https://www.drupal.org/project/wordfilter",
-            "time": "2014-07-23 20:03:42"
+            "time": "2011-02-26 01:36:03"
         },
         {
             "name": "drupal/workbench",
@@ -4087,12 +4087,12 @@
         },
         {
             "name": "npm-asset/jquery",
-            "version": "2.2.3",
+            "version": "2.2.4",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/jquery/-/jquery-2.2.3.tgz",
+                "url": "https://registry.npmjs.org/jquery/-/jquery-2.2.4.tgz",
                 "reference": null,
-                "shasum": "45e07e4190334de36c9e1a64b43b1f1373d91758"
+                "shasum": "2c89d6889b5eac522a7eea32c14521559c6cbf02"
             },
             "require-dev": {
                 "npm-asset/commitplease": "2.0.0",
@@ -4143,7 +4143,7 @@
             "authors": [
                 {
                     "name": "jQuery Foundation and other contributors",
-                    "url": "https://github.com/jquery/jquery/blob/2.2.3/AUTHORS.txt"
+                    "url": "https://github.com/jquery/jquery/blob/2.2.4/AUTHORS.txt"
                 }
             ],
             "description": "JavaScript library for DOM operations",
