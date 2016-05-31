@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "513c4384b98b6817e7e92747680d8793",
-    "content-hash": "b6fb80153180a5ec50898833f6e47a28",
+    "hash": "e795cec7bbbf64417dab657eec585baf",
+    "content-hash": "87061270fbd4ec50cbe82078855a0599",
     "packages": [
         {
             "name": "composer/installers",
@@ -992,16 +992,16 @@
         },
         {
             "name": "drupal/drupal",
-            "version": "7.38.0",
+            "version": "7.43.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/drupal",
-                "reference": "7205c84e8cb7e74a10df39bda1eaaaccd9bebc8d"
+                "reference": "c136d1347b9b92145590cb1f84cc02a695d721fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/drupal-7.38.zip",
-                "reference": "7205c84e8cb7e74a10df39bda1eaaaccd9bebc8d",
+                "url": "https://ftp.drupal.org/files/projects/drupal-7.43.zip",
+                "reference": null,
                 "shasum": null
             },
             "replace": {
@@ -1095,7 +1095,7 @@
             ],
             "description": "Handles general site configuration for administrators.",
             "homepage": "https://www.drupal.org/project/drupal",
-            "time": "2015-06-17 18:38:44"
+            "time": "2016-02-24 19:26:52"
         },
         {
             "name": "drupal/ds",
@@ -2220,7 +2220,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/maillog",
-                "reference": "5275d0505ba31a6f6a296759e7a81795f8622bc8"
+                "reference": "06c4bc007b2f45cdd2ff184c1568df82490ad2cc"
             },
             "require": {
                 "drupal/drupal": "7.*",
@@ -2238,7 +2238,7 @@
             ],
             "description": "Utility to log all Mails for debugging purposes. It's possible to suppress mail delivery for e.g. dev or staging systems.",
             "homepage": "https://www.drupal.org/project/maillog",
-            "time": "2016-05-18 09:59:41"
+            "time": "2016-05-21 13:21:21"
         },
         {
             "name": "drupal/mailsystem",
