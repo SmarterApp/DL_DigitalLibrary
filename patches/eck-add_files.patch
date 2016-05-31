@@ -1,0 +1,304 @@
+diff --git a/modules/eck_services/eck_services.info b/modules/eck_services/eck_services.info
+new file mode 100755
+index 0000000..dfd2da1
+--- /dev/null
++++ b/modules/eck_services/eck_services.info
+@@ -0,0 +1,15 @@
++name = ECK Services
++description = Service resources for ECK
++core = 7.x
++package = ECK
++
++dependencies[] = eck
++dependencies[] = services
++
++
++; Information added by Drupal.org packaging script on 2015-01-26
++version = "7.x-2.0-rc7"
++core = "7.x"
++project = "eck"
++datestamp = "1422241382"
++
+diff --git a/modules/eck_services/eck_services.module b/modules/eck_services/eck_services.module
+new file mode 100755
+index 0000000..d604e2c
+--- /dev/null
++++ b/modules/eck_services/eck_services.module
+@@ -0,0 +1,129 @@
++<?php
++
++/**
++ * Implements hook_form_alter().
++ *
++ * Add option to entity type form to enable service resource.
++ */
++function eck_services_form_eck__entity_type__form_alter(&$form, &$form_state, $form_id) {
++  if (module_exists('services') && array_key_exists(0, $form_state['build_info']['args'])) {
++    $entity = $form_state['build_info']['args'][0];
++    if (!empty($entity)) {
++      $form['enable_services'] = array(
++        '#type' => 'checkbox',
++        '#title' => t('Enable generic service for this entity'),
++        '#default_value' => variable_get('eck_services_' . $entity . '_enable', FALSE),
++      );
++      $form['#submit'][] = '_eck_services_entity_type_form_submit';
++    }
++  }
++}
++function _eck_services_entity_type_form_submit($form, &$form_state) {
++  if (isset($form_state['values']['enable_services'])) {
++    variable_set('eck_services_' . $form_state['build_info']['args'][0] . '_enable',
++      $form_state['values']['enable_services']);
++  }
++}
++
++
++/**
++ *  Class to allow dynamic dispatch of entity resource callbacks
++ */
++class eckServicesCallbacks {
++  public static function __callStatic($name, $args) {
++    list($entity, $method) = explode('__', $name);
++
++    switch ($method) {
++      case 'retrieve':
++        return entity_load($entity, array($args[0]));
++        break;
++
++      case 'create':
++        $new_entity = entity_create($entity, $args[0]);
++        return entity_save($entity, $new_entity);
++        break;
++
++      case 'update':
++        $update_entity = array_shift(entity_load($entity, array($args[0])));
++        $update_entity = (object) array_merge((array) $update_entity, (array) $args[1]);
++        return entity_save($entity, $update_entity);
++        break;
++
++      case 'delete':
++        return entity_delete($entity, $args[0]);
++
++    }
++  }
++}
++
++/**
++ * Define a services resource for each enabled entity
++ */
++function eck_services_services_resources() {
++  $resources = array();
++  foreach (EntityType::loadAll() as $entity) {
++    if (variable_get('eck_services_' . $entity->name . '_enable', FALSE)) {
++      $resources[$entity->name] = array(
++        'operations' => array(
++          'retrieve' => array(
++            'callback' => "eckServicesCallbacks::{$entity->name}__retrieve",
++            'access arguments' => array('administer content'),
++            'args' => array(
++              array(
++                'name' => 'id',
++                'type' => 'int',
++                'source' => array('path' => 0),
++                'optional' => FALSE,
++              ),
++            ),
++          ),
++          'update' => array(
++            'callback' => "eckServicesCallbacks::{$entity->name}__update",
++            'access arguments' => array('administer content'),
++            'args' => array(
++              array(
++                'name' => 'id',
++                'type' => 'int',
++                'source' => array('path' => 0),
++                'optional' => FALSE,
++              ),
++              array(
++                'name' => 'data',
++                'type' => 'struct',
++                'source' => 'data',
++                'optional' => FALSE,
++              ),
++            ),
++          ),
++          'create' => array(
++            'callback' => "eckServicesCallbacks::{$entity->name}__create",
++            'access arguments' => array('administer content'),
++            'args' => array(
++              array(
++                'name' => 'data',
++                'type' => 'struct',
++                'source' => 'data',
++                'optional' => FALSE,
++              ),
++            ),
++          ),
++          'delete' => array(
++            'callback' => "eckServicesCallbacks::{$entity->name}__delete",
++            'access arguments' => array('administer content'),
++            'args' => array(
++              array(
++                'name' => 'id',
++                'type' => 'int',
++                'source' => array('path' => 0),
++                'optional' => FALSE,
++              ),
++            ),
++          ),
++        ),
++      );
++    }
++  }
++  return $resources;
++}
++
++
+diff --git a/plugins/property_behavior/title_and_formatter.inc b/plugins/property_behavior/title_and_formatter.inc
+new file mode 100755
+index 0000000..2c0a252
+--- /dev/null
++++ b/plugins/property_behavior/title_and_formatter.inc
+@@ -0,0 +1,90 @@
++<?php
++/**
++ * @file
++ * The title behavior makes a property behave like a title.
++ * 
++ * 1) When then entity is view, we set the page title to be the 
++ *    properties value.
++ * 2) We set the property as the label of the entity.
++ * 3) The property can be entered by the user with a text field.
++ * 4) The property is displayed as an h1 tag.
++ */
++
++$plugin = array(
++  'label' => "Title and Formatter",
++  'entity_view' => 'eck_title_and_formatter_property_entity_view',
++  'entity_info' => 'eck_title_and_formatter_property_entity_info',
++  'default_widget' => 'eck_title_and_formatter_property_widget',
++  'default_formatter' => 'eck_title_and_formatter_property_formatter',
++);
++
++/**
++ * How to input a title.
++ */
++function eck_title_and_formatter_property_widget($property, $vars) {
++  $entity = $vars['entity'];
++  $title = _eck_title_and_formatter_property_extract_title($entity, $property);
++  return array(
++    '#type' => 'textfield',
++    '#title' => $vars['properties'][$property]['label'],
++    '#default_value' => $title,
++    '#required' => TRUE,
++  );
++}
++
++/**
++ * Display the title as an h1.
++ */
++function eck_title_and_formatter_property_formatter($property, $vars) {
++  $entity = $vars['entity'];
++  $title = _eck_title_and_formatter_property_extract_title($entity, $property);
++  return array('#markup' => "<h1>{$title}</h1>");
++}
++
++/**
++ * When we are viewing the entity, set the pages title.
++ */
++function eck_title_and_formatter_property_entity_view($property, $vars) {
++  $entity = $vars['entity'];
++  $title = _eck_title_and_formatter_property_extract_title($entity, $property);
++
++  if (empty($title)) {
++    $tile = "{$entity->entityType()} : {$entity->id}";
++  }
++
++  $uri = entity_uri($entity->entityType(), $entity);
++  if ($uri['path'] == current_path()) {
++    drupal_set_title($title);
++  }
++}
++
++/**
++ * Make whatever property is using the title behavior, the label.
++ */
++function eck_title_and_formatter_property_entity_info($property, $var) {
++  $info = $var;
++  unset($info['label callback']);
++  $info['entity keys']['label'] = $property;
++
++  return $info;
++}
++
++/**
++ * Helper function that gets the title from an entity.
++ * 
++ * @param object $entity
++ *   an entity object.
++ * @param string $property
++ *   the name of the property that contains the title.
++ * 
++ * @return string
++ *   The title of the entity.
++ */
++function _eck_title_and_formatter_property_extract_title($entity, $property) {
++  $title = "";
++  if (isset($entity->{$property})) {
++    $title = $entity->{$property};
++  }
++
++  return $title;
++}
+diff --git a/plugins/property_behavior/uuid.inc b/plugins/property_behavior/uuid.inc
+new file mode 100755
+index 0000000..dce762d
+--- /dev/null
++++ b/plugins/property_behavior/uuid.inc
+@@ -0,0 +1,46 @@
++<?php
++/**
++ * @file
++ * UUID Property behavior plugin definition.
++ */
++
++if (module_exists('uuid')) {
++  $plugin = array(
++    'label' => 'UUID',
++    'entity_info' => 'eck_uuid_property_entity_info',
++    'entity_save' => 'eck_uuid_property_entity_insert',
++    'property_info' => 'eck_uuid_property_property_info',
++  );
++}
++
++/**
++ * Entity info.
++ */
++function eck_uuid_property_entity_info($property, $var) {
++  $info = $var;
++  // Put UUID into entity keys.
++  $info['entity keys']['uuid'] = $property;
++  $info['uuid'] = TRUE;
++  return $info;
++}
++
++/**
++ * Entity insert.
++ */
++function eck_uuid_property_entity_insert($property, $vars) {
++  if (module_exists('uuid')) {
++    $entity = $vars['entity'];
++    if (empty($entity->{$property})) {
++      $entity->{$property} = uuid_generate();
++    }
++  }
++}
++
++/**
++ * Property info.
++ */
++function eck_uuid_property_property_info($property, $vars) {
++  $vars['properties'][$property]['type'] = 'text';
++  $vars['properties'][$property]['description'] = t('The universally unique ID.');
++  return $vars;
++}

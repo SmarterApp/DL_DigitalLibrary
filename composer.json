@@ -187,8 +187,8 @@
     "tcpdf": "6.0.012 (php)",
     "tinymce": "3.5.8",
     "zeroclipboard": "1.2.3 (using component-installer or package.json)",
-    "diffs-exist": "devtools, taskit, eck, field_collection, httprl, workbench_moderation",
-    "patches-exist": "autologout, morecomments, rate"
+    "diffs-exist": "devtools, taskit, eck, field_collection, httprl",
+    "patches-exist": "autologout, morecomments, rate, workbench_moderation"
   },
   "skip-due-to-issues": {
     "missing clear_views_exposed_filter_cache - drupal/devtools": "7.1.x-dev"
@@ -296,6 +296,9 @@
 	"featuresint-state-transition": "patches/workbench_moderation-featuresint-state-transition-1314508-57.patch",
 	"redirect_form": "patches/workbench_moderation-redirect_form-1515110.patch",
 	"publish_status": "patches/workbench_moderation-publish_status-1797750-1.patch"
+      },
+      "drupal/eck": {
+	"add additional files": "patches/eck-add_files.patch"
       }
     }
   }
