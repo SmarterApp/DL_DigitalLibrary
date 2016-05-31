@@ -105,7 +105,7 @@
     "drupal/flexslider": "7.2.0-alpha3",
     "drupal/globalredirect": "7.1.5",
     "drupal/google_analytics": "7.1.4",
-    "drupal/httprl": "7.1.14",
+    "drupal/httprl": "7.1.x-dev#e3a8bdea43084d4f865ed8e361f6a5fbab368211",
     "drupal/imce": "7.1.9",
     "drupal/imce_wysiwyg": "7.1.0",
     "drupal/joyride": "7.1.0-alpha3",
@@ -187,8 +187,8 @@
     "tcpdf": "6.0.012 (php)",
     "tinymce": "3.5.8",
     "zeroclipboard": "1.2.3 (using component-installer or package.json)",
-    "diffs-exist": "devtools, taskit, eck, field_collection, httprl",
-    "patches-exist": "autologout, morecomments, rate, workbench_moderation"
+    "diffs-exist": "devtools, taskit, field_collection, httprl",
+    "patches-exist": "autologout, morecomments, rate, workbench_moderation, eck"
   },
   "skip-due-to-issues": {
     "missing clear_views_exposed_filter_cache - drupal/devtools": "7.1.x-dev"

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d16973aea933b54c8b29457d0df1a695",
-    "content-hash": "f1e4e1b5768afc8e03ff4b368f100c64",
+    "hash": "0b21702e440ff460d460fbff251e76ee",
+    "content-hash": "8ca072b4e372300e3ed5ea1bbc503816",
     "packages": [
         {
             "name": "composer/installers",
@@ -1198,7 +1198,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/eck-7.x-2.0-rc2.zip",
-                "reference": null,
+                "reference": "69ae16b820f48c333573194547d38a9737d1dada",
                 "shasum": null
             },
             "require": {
@@ -1885,17 +1885,11 @@
         },
         {
             "name": "drupal/httprl",
-            "version": "7.1.14",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/httprl",
-                "reference": "d24ae80cffe553ba652fddc210bf8e4ae6e60c6b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/httprl-7.x-1.14.zip",
-                "reference": "d24ae80cffe553ba652fddc210bf8e4ae6e60c6b",
-                "shasum": null
+                "reference": "e3a8bdea43084d4f865ed8e361f6a5fbab368211"
             },
             "require": {
                 "drupal/drupal": "7.*"
@@ -1912,7 +1906,7 @@
             ],
             "description": "Send http requests out in parallel in a blocking or non-blocking manner.",
             "homepage": "https://www.drupal.org/project/httprl",
-            "time": "2014-01-01 01:28:22"
+            "time": "2014-05-15 20:35:15"
         },
         {
             "name": "drupal/imce",
@@ -4274,6 +4268,7 @@
         "drupal/apachesolr_user": 20,
         "drupal/dialog": 20,
         "drupal/field_collection": 20,
+        "drupal/httprl": 20,
         "drupal/maillog": 20,
         "drupal/message_notify": 20,
         "drupal/morecomments": 20,
