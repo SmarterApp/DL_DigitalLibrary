@@ -187,7 +187,7 @@
     "tcpdf": "6.0.012 (php)",
     "tinymce": "3.5.8",
     "zeroclipboard": "1.2.3 (using component-installer or package.json)",
-    "diffs-exist": "devtools, eck, field_collection, httprl, taskit, workbench_moderation",
+    "diffs-exist": "devtools, taskit, eck, field_collection, httprl, workbench_moderation",
     "patches-exist": "autologout, morecomments, rate"
   },
   "skip-due-to-issues": {
@@ -291,6 +291,11 @@
       },
       "drupal/rate": {
 	"JS error after ajax (Drupal issue #2102571)": "https://www.drupal.org/files/issues/rate-js_error_after_ajax-2102571-5.patch"
+      },
+      "drupal/workbench_moderation": {
+	"featuresint-state-transition": "patches/workbench_moderation-featuresint-state-transition-1314508-57.patch",
+	"redirect_form": "patches/workbench_moderation-redirect_form-1515110.patch",
+	"publish_status": "patches/workbench_moderation-publish_status-1797750-1.patch"
       }
     }
   }
