@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0b21702e440ff460d460fbff251e76ee",
-    "content-hash": "8ca072b4e372300e3ed5ea1bbc503816",
+    "hash": "6225cab69703db2002c2944579ca0a74",
+    "content-hash": "431f8cf0ef65fed49411498d3572175c",
     "packages": [
         {
             "name": "composer/installers",
@@ -1573,17 +1573,11 @@
         },
         {
             "name": "drupal/field_collection",
-            "version": "7.1.0-beta8",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/field_collection",
-                "reference": "bb4c9813cbd277dbf5d4710b7600fed7ba3f1149"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/field_collection-7.x-1.0-beta8.zip",
-                "reference": "bb4c9813cbd277dbf5d4710b7600fed7ba3f1149",
-                "shasum": null
+                "reference": "c0a44258b9c0fa60fe385581c4c126d6ec46e67c"
             },
             "require": {
                 "drupal/drupal": "7.*",
@@ -1601,7 +1595,7 @@
             ],
             "description": "Provides a field collection field, to which any number of fields can be attached.",
             "homepage": "https://www.drupal.org/project/field_collection",
-            "time": "2014-11-04 14:48:00"
+            "time": "2015-03-26 17:40:46"
         },
         {
             "name": "drupal/field_group",
@@ -2542,17 +2536,11 @@
         },
         {
             "name": "drupal/message_notify",
-            "version": "7.2.5",
+            "version": "dev-7.x-2.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/message_notify",
-                "reference": "e546b0a6e3d2dfd48f4fd3a4d45806c066c9a9bc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/message_notify-7.x-2.5.zip",
-                "reference": "e546b0a6e3d2dfd48f4fd3a4d45806c066c9a9bc",
-                "shasum": null
+                "reference": "1fbea08093e16231ca313f0e6ebcf454316f3610"
             },
             "require": {
                 "drupal/ctools": "7.*",
@@ -2581,7 +2569,7 @@
             ],
             "description": "Message notify.",
             "homepage": "https://www.drupal.org/project/message_notify",
-            "time": "2013-04-11 12:21:48"
+            "time": "2015-01-05 10:27:47"
         },
         {
             "name": "drupal/message_subscribe",
@@ -2701,17 +2689,11 @@
         },
         {
             "name": "drupal/morecomments",
-            "version": "7.1.0-beta3",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/morecomments",
-                "reference": "d89af8a6f5a273254ea6a1e0a108879a8d01c33e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/morecomments-7.x-1.0-beta3.zip",
-                "reference": "d89af8a6f5a273254ea6a1e0a108879a8d01c33e",
-                "shasum": null
+                "reference": "46ad3a05456c037ada3f287af1a15b9f287debcf"
             },
             "require": {
                 "drupal/comment": "7.*",
@@ -2732,7 +2714,7 @@
             ],
             "description": "Replace comment pager with a more comment pager like twitter or facebook does",
             "homepage": "https://www.drupal.org/project/morecomments",
-            "time": "2011-03-09 15:41:45"
+            "time": "2013-01-30 20:33:41"
         },
         {
             "name": "drupal/oscaddie_gcs",
@@ -3650,17 +3632,11 @@
         },
         {
             "name": "drupal/views_infinite_scroll",
-            "version": "7.1.2",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/views_infinite_scroll",
-                "reference": "501ef20017c6a1e7c66a7ba85d414de86b1eddaa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_infinite_scroll-7.x-1.2.zip",
-                "reference": "501ef20017c6a1e7c66a7ba85d414de86b1eddaa",
-                "shasum": null
+                "reference": "dca76871d9732ad2d681e19e117fde0d81da75bd"
             },
             "require": {
                 "drupal/drupal": "7.*",
@@ -3678,7 +3654,7 @@
             ],
             "description": "Provides an Infinite Scrolling pager for Views",
             "homepage": "https://www.drupal.org/project/views_infinite_scroll",
-            "time": "2014-07-23 03:45:35"
+            "time": "2014-10-02 14:05:47"
         },
         {
             "name": "drupal/views_load_more",

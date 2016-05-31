@@ -96,7 +96,7 @@
     "drupal/fast_404": "7.1.5",
     "drupal/features_extra": "7.1.0-beta1",
     "drupal/features": "7.2.5",
-    "drupal/field_collection": "7.1.0-beta8+11-dev#c0a44258b9c0fa60fe385581c4c126d6ec46e67c",
+    "drupal/field_collection": "7.1.x-dev#c0a44258b9c0fa60fe385581c4c126d6ec46e67c",
     "drupal/field_group": "7.1.4",
     "drupal/file_entity": "7.2.0-beta1",
     "drupal/filter_perms": "7.1.0",
@@ -125,11 +125,11 @@
     "drupal/media_youtube": "7.2.0-rc3",
     "drupal/memcache": "7.1.5",
     "drupal/message": "7.1.10",
-    "drupal/message_notify": "7.2.5+4-dev#1fbea08093e16231ca313f0e6ebcf454316f3610",
+    "drupal/message_notify": "7.2.x-dev#1fbea08093e16231ca313f0e6ebcf454316f3610",
     "drupal/message_subscribe": "7.1.0-rc2",
     "drupal/mimemail": "7.1.0-beta3",
     "drupal/module_filter": "7.2.0",
-    "drupal/morecomments": "7.1.0-beta3+3-dev#46ad3a05456c037ada3f287af1a15b9f287debcf",
+    "drupal/morecomments": "7.1.x-dev#46ad3a05456c037ada3f287af1a15b9f287debcf",
     "drupal/oscaddie_gcs": "7.2.0",
     "drupal/pathauto": "7.1.2",
     "drupal/phonetic": "7.2.0",
@@ -159,7 +159,7 @@
     "drupal/views_content_cache": "7.3.0-alpha3",
     "drupal/views_data_export": "7.3.0-beta8",
     "drupal/views_fields_combine": "7.1.2",
-    "drupal/views_infinite_scroll": "7.1.2+1-dev#dca76871d9732ad2d681e19e117fde0d81da75bd",
+    "drupal/views_infinite_scroll": "7.1.x-dev#dca76871d9732ad2d681e19e117fde0d81da75bd",
     "drupal/views_load_more": "7.1.5",
     "drupal/votingapi": "7.2.12",
     "drupal/wordfilter": "7.1.x-dev#6a6a8bb1f6158b1238e51fb94686e2a93fbec360",
@@ -187,8 +187,8 @@
     "tcpdf": "6.0.012 (php)",
     "tinymce": "3.5.8",
     "zeroclipboard": "1.2.3 (using component-installer or package.json)",
-    "diffs-exist": "devtools, taskit, field_collection, httprl",
-    "patches-exist": "autologout, morecomments, rate, workbench_moderation, eck"
+    "diffs-exist": "devtools, taskit",
+    "patches-exist": "autologout, morecomments, rate, workbench_moderation, eck, httprl"
   },
   "skip-due-to-issues": {
     "missing clear_views_exposed_filter_cache - drupal/devtools": "7.1.x-dev"
