@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PWD=$(pwd)
+DIR=/var/www/html
+docker run --rm -v ${PWD}:${DIR} -w ${DIR} composer/composer "$@"
