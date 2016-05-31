@@ -56,7 +56,7 @@
     "derhasi/composer-preserve-paths": "0.1.*",
     "fxp/composer-asset-plugin": "~1.1",
     "mnsami/composer-custom-directory-installer": "~1.1",
-    "drupal/drupal": "7.38",
+    "drupal/drupal": "7.43",
 
         "drupal/composer_vendor": "7.1.*",
         "drupal/acquia_connector": "7.2.15",
