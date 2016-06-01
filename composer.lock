@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "45881b0d8c6f49a8df55e6c30b39a792",
-    "content-hash": "8b722e155ef651efd657ac811f5e5bc3",
+    "hash": "b636661d68b42967c94e27172ef834c0",
+    "content-hash": "41b345dd2eae9665593f59596e889920",
     "packages": [
         {
             "name": "composer/installers",
@@ -844,16 +844,16 @@
         },
         {
             "name": "drupal/date",
-            "version": "7.2.8",
+            "version": "7.2.9",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/date",
-                "reference": "4b2b54dda2e36785bfa799eb7f139a43d1af73d3"
+                "reference": "e37620a69f76354a7f87dff47ed4010da891d105"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/date-7.x-2.8.zip",
-                "reference": "4b2b54dda2e36785bfa799eb7f139a43d1af73d3",
+                "url": "https://ftp.drupal.org/files/projects/date-7.x-2.9.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -892,7 +892,7 @@
             ],
             "description": "Makes date/time fields available.",
             "homepage": "https://www.drupal.org/project/date",
-            "time": "2014-07-29 16:58:56"
+            "time": "2015-09-07 10:33:19"
         },
         {
             "name": "drupal/devel",
