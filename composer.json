@@ -73,7 +73,7 @@
     "drupal/apachesolr_user": "7.1.x-dev#fe07a69ee502c67425893251f0b2055fa39f0dd8",
     "drupal/apachesolr_views": "7.1.1-beta1",
     "drupal/apachesolr_workbench_moderation": "7.1.1",
-    "drupal/autologout": "7.4.3",
+    "drupal/autologout": "7.4.4",
     "drupal/chosen": "7.2.0-beta4",
     "drupal/comment_goodness": "7.1.4",
     "drupal/context": "7.3.6",

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7c64f14811f144360c58990d5e79efd6",
-    "content-hash": "148c1bdb24b5fb96512d92dde0777f6d",
+    "hash": "7ef3c7e796b8d2ffa4c8d6624e6336cb",
+    "content-hash": "750eb9773dd5932c15042f040b002e9e",
     "packages": [
         {
             "name": "composer/installers",
@@ -599,16 +599,16 @@
         },
         {
             "name": "drupal/autologout",
-            "version": "7.4.3",
+            "version": "7.4.4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/autologout",
-                "reference": "bb9bb3cdc4f115371853cfb7db34f03eb1d36d32"
+                "reference": "d6ed22052b26d71b9da05712d97efc78e994939c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/autologout-7.x-4.3.zip",
-                "reference": "bb9bb3cdc4f115371853cfb7db34f03eb1d36d32",
+                "url": "https://ftp.drupal.org/files/projects/autologout-7.x-4.4.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -618,6 +618,9 @@
             "extra": {
                 "branch-alias": {
                     "dev-7.x-4.x": "7.4.x-dev"
+                },
+                "patches_applied": {
+                    "Button text change": "patches/autologout.button_text_change.patch"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
@@ -626,7 +629,7 @@
             ],
             "description": "Adds automated timed logout",
             "homepage": "https://www.drupal.org/project/autologout",
-            "time": "2013-11-05 09:04:17"
+            "time": "2015-07-16 08:52:15"
         },
         {
             "name": "drupal/chosen",
@@ -1195,7 +1198,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/eck-7.x-2.0-rc2.zip",
-                "reference": "69ae16b820f48c333573194547d38a9737d1dada",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1216,6 +1219,9 @@
             "extra": {
                 "branch-alias": {
                     "dev-7.x-2.x": "7.2.x-dev"
+                },
+                "patches_applied": {
+                    "add additional files": "patches/eck-add_files.patch"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
@@ -1402,7 +1408,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/facetapi-7.x-1.5.zip",
-                "reference": "316b904312d3eb5480b060801e5ccf7827208977",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1416,6 +1422,9 @@
             "extra": {
                 "branch-alias": {
                     "dev-7.x-1.x": "7.1.x-dev"
+                },
+                "patches_applied": {
+                    "Do not add attributes in forum search": "patches/facetapi-ignore_attribute_in_forum_search.patch"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
@@ -2919,7 +2928,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/rate-7.x-1.7.zip",
-                "reference": "ff681a93044fc8ebeaf65a7a99ec80d54c1cb5cf",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -2937,6 +2946,9 @@
             "extra": {
                 "branch-alias": {
                     "dev-7.x-1.x": "7.1.x-dev"
+                },
+                "patches_applied": {
+                    "JS error after ajax (Drupal issue #2102571)": "https://www.drupal.org/files/issues/rate-js_error_after_ajax-2102571-5.patch"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
@@ -3819,7 +3831,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/workbench_moderation-7.x-1.3.zip",
-                "reference": "342a5703c97caad860d8907af2c8efaec9ebb405",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -3829,6 +3841,11 @@
             "extra": {
                 "branch-alias": {
                     "dev-7.x-1.x": "7.1.x-dev"
+                },
+                "patches_applied": {
+                    "featuresint-state-transition": "patches/workbench_moderation-featuresint-state-transition-1314508-57.patch",
+                    "redirect_form": "patches/workbench_moderation-redirect_form-1515110.patch",
+                    "publish_status": "patches/workbench_moderation-publish_status-1797750-1.patch"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
