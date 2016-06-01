@@ -302,6 +302,9 @@
       },
       "drupal/facetapi": {
 	"Do not add attributes in forum search": "patches/facetapi-ignore_attribute_in_forum_search.patch"
+      },
+      "drupal/zurb_foundation": {
+	"Changes to the theme": "patches/zurb_foundation-changes.patch"
       }
     }
   }
