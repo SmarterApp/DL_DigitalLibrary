@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0c94dc382f7e7e8206db5fff570b06c3",
-    "content-hash": "1906fb82729880ab8dada7fb72bdee36",
+    "hash": "45881b0d8c6f49a8df55e6c30b39a792",
+    "content-hash": "8b722e155ef651efd657ac811f5e5bc3",
     "packages": [
         {
             "name": "composer/installers",
@@ -633,16 +633,16 @@
         },
         {
             "name": "drupal/chosen",
-            "version": "7.2.0-beta4",
+            "version": "7.2.0-beta5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/chosen",
-                "reference": "a8e1cca8573a3757ec683f4dd571c62bc482aa5e"
+                "reference": "cddbcffcc37478c69226d2f82f83a3def7faeaea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/chosen-7.x-2.0-beta4.zip",
-                "reference": "a8e1cca8573a3757ec683f4dd571c62bc482aa5e",
+                "url": "https://ftp.drupal.org/files/projects/chosen-7.x-2.0-beta5.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -660,7 +660,7 @@
             ],
             "description": "Makes select elements more user-friendly using <a href=\"http://harvesthq.github.com/chosen/\">Chosen</a>.",
             "homepage": "https://www.drupal.org/project/chosen",
-            "time": "2014-03-08 05:13:37"
+            "time": "2016-03-25 10:24:04"
         },
         {
             "name": "drupal/comment_goodness",
