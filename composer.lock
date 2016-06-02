@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93f1de22c32a438081e5f736dd2c27cc",
-    "content-hash": "d03db2e36d3a6b9665486fa2b8d2c491",
+    "hash": "52a56bb0538b06b521a9a34f991ac0eb",
+    "content-hash": "10cfcc2e6ff3f56aeced965731eaf28c",
     "packages": [
         {
             "name": "composer/installers",
@@ -2197,16 +2197,16 @@
         },
         {
             "name": "drupal/link",
-            "version": "7.1.3",
+            "version": "7.1.4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/link",
-                "reference": "7170806a07386c1619ceadcfc4b6018d20982e4d"
+                "reference": "3cfdc1848d00dc5d5a7b2e9e9b7e85a04fdbe9f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/link-7.x-1.3.zip",
-                "reference": "7170806a07386c1619ceadcfc4b6018d20982e4d",
+                "url": "https://ftp.drupal.org/files/projects/link-7.x-1.4.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -2224,7 +2224,7 @@
             ],
             "description": "Defines simple link field types.",
             "homepage": "https://www.drupal.org/project/link",
-            "time": "2014-10-15 20:42:49"
+            "time": "2015-12-09 22:02:04"
         },
         {
             "name": "drupal/m4032404",
