@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "23e7f69e62225246f0c5f7f1b14871a1",
-    "content-hash": "9d48b5b10d6a875d3a7b75d9b47478a7",
+    "hash": "7e7376ebdb0a4ad6a59afa3f2ecb7486",
+    "content-hash": "456e7e02d47c35c13249791e081c6592",
     "packages": [
         {
             "name": "composer/installers",
@@ -1644,16 +1644,16 @@
         },
         {
             "name": "drupal/file_entity",
-            "version": "7.2.0-beta1",
+            "version": "7.2.0-beta2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/file_entity",
-                "reference": "72ab07c1b8d630b70baf537eef900fd259ccecad"
+                "reference": "812dc896a258837017166fdd8d2fb381c0433001"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/file_entity-7.x-2.0-beta1.zip",
-                "reference": "72ab07c1b8d630b70baf537eef900fd259ccecad",
+                "url": "https://ftp.drupal.org/files/projects/file_entity-7.x-2.0-beta2.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1675,7 +1675,7 @@
             ],
             "description": "Extends Drupal file entities to be fieldable and viewable.",
             "homepage": "https://www.drupal.org/project/file_entity",
-            "time": "2014-10-04 11:01:19"
+            "time": "2015-07-14 17:00:36"
         },
         {
             "name": "drupal/filter_perms",

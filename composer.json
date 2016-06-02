@@ -98,7 +98,7 @@
     "drupal/features": "7.2.10",
     "drupal/field_collection": "7.1.x-dev#c0a44258b9c0fa60fe385581c4c126d6ec46e67c",
     "drupal/field_group": "7.1.5",
-    "drupal/file_entity": "7.2.0-beta1",
+    "drupal/file_entity": "7.2.0-beta2",
     "drupal/filter_perms": "7.1.0",
     "drupal/fivestar": "7.2.1",
     "drupal/flag": "7.3.6",
