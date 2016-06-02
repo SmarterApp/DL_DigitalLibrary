@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "52a56bb0538b06b521a9a34f991ac0eb",
-    "content-hash": "10cfcc2e6ff3f56aeced965731eaf28c",
+    "hash": "1f8cf03c58299901cebf62bc0002fc2d",
+    "content-hash": "1fcf9ce3cd62ea74e62d12dd68e34246",
     "packages": [
         {
             "name": "composer/installers",
@@ -2317,16 +2317,16 @@
         },
         {
             "name": "drupal/maxlength",
-            "version": "7.3.0-beta1",
+            "version": "7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/maxlength",
-                "reference": "33cf366d504a0b32604bcdef72e3088548ed10ff"
+                "reference": "b84c0f2b799ff9d77ed11aa4223103c2247348bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/maxlength-7.x-3.0-beta1.zip",
-                "reference": "33cf366d504a0b32604bcdef72e3088548ed10ff",
+                "url": "https://ftp.drupal.org/files/projects/maxlength-7.x-3.2.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -2344,7 +2344,7 @@
             ],
             "description": "Limit the number of characters in textfields and textareas and shows the amount of characters left.",
             "homepage": "https://www.drupal.org/project/maxlength",
-            "time": "2011-11-08 21:41:19"
+            "time": "2015-03-11 19:54:46"
         },
         {
             "name": "drupal/media",
