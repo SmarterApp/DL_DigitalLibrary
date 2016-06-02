@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b59b9bcb069f19f908672d9a5e362003",
-    "content-hash": "98f7d564f5669c3bc83ae9cf0e175c87",
+    "hash": "9acab94258c9afc6c5aa6db8ef4f7ea1",
+    "content-hash": "3d5d057a89191e3edbb0975ba9fbeef7",
     "packages": [
         {
             "name": "composer/installers",
@@ -2629,16 +2629,16 @@
         },
         {
             "name": "drupal/mimemail",
-            "version": "7.1.0-beta3",
+            "version": "7.1.0-beta4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/mimemail",
-                "reference": "07fb9bafdaee2bb5f71159454897653bb21a2638"
+                "reference": "ed10b61494079e909adfa9d4cf4c5831111468d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/mimemail-7.x-1.0-beta3.zip",
-                "reference": "07fb9bafdaee2bb5f71159454897653bb21a2638",
+                "url": "https://ftp.drupal.org/files/projects/mimemail-7.x-1.0-beta4.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -2648,7 +2648,8 @@
             },
             "replace": {
                 "drupal/mimemail_action": "self.version",
-                "drupal/mimemail_compress": "self.version"
+                "drupal/mimemail_compress": "self.version",
+                "drupal/mimemail_example": "self.version"
             },
             "suggest": {
                 "drupal/trigger": "Required by drupal/mimemail_action"
@@ -2665,7 +2666,7 @@
             ],
             "description": "Send MIME-encoded emails with embedded images and attachments.",
             "homepage": "https://www.drupal.org/project/mimemail",
-            "time": "2014-03-05 11:06:58"
+            "time": "2015-08-02 15:37:51"
         },
         {
             "name": "drupal/module_filter",

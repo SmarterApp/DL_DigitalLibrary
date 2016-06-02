@@ -127,7 +127,7 @@
     "drupal/message": "7.1.11",
     "drupal/message_notify": "7.2.5",
     "drupal/message_subscribe": "7.1.0-rc2",
-    "drupal/mimemail": "7.1.0-beta3",
+    "drupal/mimemail": "7.1.0-beta4",
     "drupal/module_filter": "7.2.0",
     "drupal/morecomments": "7.1.x-dev#46ad3a05456c037ada3f287af1a15b9f287debcf",
     "drupal/oscaddie_gcs": "7.2.0",
