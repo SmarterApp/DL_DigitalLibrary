@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7b7a43cab53c8102abad1367d6213249",
-    "content-hash": "05ded01457c36595a7baadbd043b0139",
+    "hash": "93f1de22c32a438081e5f736dd2c27cc",
+    "content-hash": "d03db2e36d3a6b9665486fa2b8d2c491",
     "packages": [
         {
             "name": "composer/installers",
@@ -2039,16 +2039,16 @@
         },
         {
             "name": "drupal/jquery_update",
-            "version": "7.2.6",
+            "version": "7.2.7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/jquery_update",
-                "reference": "42c1cf9a06cbf613902e7b3e93425ae4ed05fd17"
+                "reference": "b622885f942ef212f51981d1c88b57aef0c2dfa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/jquery_update-7.x-2.6.zip",
-                "reference": "42c1cf9a06cbf613902e7b3e93425ae4ed05fd17",
+                "url": "https://ftp.drupal.org/files/projects/jquery_update-7.x-2.7.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -2066,7 +2066,7 @@
             ],
             "description": "Update jQuery and jQuery UI to a more recent version.",
             "homepage": "https://www.drupal.org/project/jquery_update",
-            "time": "2015-06-17 13:56:33"
+            "time": "2015-10-20 22:18:12"
         },
         {
             "name": "drupal/label_help",
