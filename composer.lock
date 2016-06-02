@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e325422dc047898420c7948f9c0a0dc0",
-    "content-hash": "5edf24034088f3d20cbfef83094414c4",
+    "hash": "b59b9bcb069f19f908672d9a5e362003",
+    "content-hash": "98f7d564f5669c3bc83ae9cf0e175c87",
     "packages": [
         {
             "name": "composer/installers",
@@ -2541,11 +2541,17 @@
         },
         {
             "name": "drupal/message_notify",
-            "version": "dev-7.x-2.x",
+            "version": "7.2.5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/message_notify",
-                "reference": "1fbea08093e16231ca313f0e6ebcf454316f3610"
+                "reference": "e546b0a6e3d2dfd48f4fd3a4d45806c066c9a9bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/message_notify-7.x-2.5.zip",
+                "reference": null,
+                "shasum": null
             },
             "require": {
                 "drupal/ctools": "7.*",
@@ -2574,7 +2580,7 @@
             ],
             "description": "Message notify.",
             "homepage": "https://www.drupal.org/project/message_notify",
-            "time": "2015-01-05 10:27:47"
+            "time": "2013-04-11 12:21:48"
         },
         {
             "name": "drupal/message_subscribe",
@@ -4254,7 +4260,6 @@
         "drupal/field_collection": 20,
         "drupal/httprl": 20,
         "drupal/maillog": 20,
-        "drupal/message_notify": 20,
         "drupal/morecomments": 20,
         "drupal/upload_qc": 20,
         "drupal/views_infinite_scroll": 20,
