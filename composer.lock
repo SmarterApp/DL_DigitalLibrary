@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0a2068909d47e6f8658057159c100d36",
-    "content-hash": "9c9b9e545b10e50921b9a3293d9baa33",
+    "hash": "504f45f304370f50289152921a371364",
+    "content-hash": "8e1b9ae95b65d8d76cb8c1f78dcdafa8",
     "packages": [
         {
             "name": "composer/installers",
@@ -1539,16 +1539,16 @@
         },
         {
             "name": "drupal/features_extra",
-            "version": "7.1.0-beta1",
+            "version": "7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/features_extra",
-                "reference": "75da91f29c3c93fedcea65c7c4b042366b6461e0"
+                "reference": "dcf9ad9d0926f515873053f72cc5bbd41cbda78d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/features_extra-7.x-1.0-beta1.zip",
-                "reference": "75da91f29c3c93fedcea65c7c4b042366b6461e0",
+                "url": "https://ftp.drupal.org/files/projects/features_extra-7.x-1.0.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1559,12 +1559,13 @@
             },
             "replace": {
                 "drupal/fe_block": "self.version",
+                "drupal/fe_date": "self.version",
                 "drupal/fe_nodequeue": "self.version",
                 "drupal/fe_profile": "self.version"
             },
             "suggest": {
-                "drupal/ctools": "Required by drupal/fe_nodequeue, drupal/fe_profile",
-                "drupal/features": "Required by drupal/fe_nodequeue, drupal/fe_profile",
+                "drupal/ctools": "Required by drupal/fe_date, drupal/fe_nodequeue, drupal/fe_profile",
+                "drupal/features": "Required by drupal/fe_date, drupal/fe_nodequeue, drupal/fe_profile",
                 "drupal/nodequeue": "Required by drupal/fe_nodequeue",
                 "drupal/profile": "Required by drupal/fe_profile"
             },
@@ -1580,7 +1581,7 @@
             ],
             "description": "Build blocks and block settings as features.",
             "homepage": "https://www.drupal.org/project/features_extra",
-            "time": "2013-04-15 07:56:34"
+            "time": "2015-06-10 07:08:47"
         },
         {
             "name": "drupal/field_collection",
