@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ced0a92e4ea8bb20b863e5d04f5955bc",
-    "content-hash": "da210250c9b8f869c8d38a57437cff95",
+    "hash": "13eef5179f27d6d2f72a1a7ca13d90b5",
+    "content-hash": "ca36fd8a51329aa01aa2486d2b35e449",
     "packages": [
         {
             "name": "composer/installers",
@@ -1153,16 +1153,16 @@
         },
         {
             "name": "drupal/ds",
-            "version": "7.2.10",
+            "version": "7.2.14",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/ds",
-                "reference": "ffe3d47af751ffce3202aee651f6ebadf8ae5c59"
+                "reference": "2ccb1ddb42cb0dcf406bec5d8a70cc19ef2a1f0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/ds-7.x-2.10.zip",
-                "reference": "ffe3d47af751ffce3202aee651f6ebadf8ae5c59",
+                "url": "https://ftp.drupal.org/files/projects/ds-7.x-2.14.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1192,7 +1192,7 @@
             ],
             "description": "Extend the display options for every entity type.",
             "homepage": "https://www.drupal.org/project/ds",
-            "time": "2015-05-21 08:02:47"
+            "time": "2016-01-19 18:29:18"
         },
         {
             "name": "drupal/eck",
