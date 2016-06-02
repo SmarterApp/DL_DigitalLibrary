@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "df526ff2557f437ef7e70edd2107a1bc",
-    "content-hash": "3e9c1b1a70c04ca3d958ad095ff7ecbf",
+    "hash": "4013e48b7022348147a216db2bfdefa8",
+    "content-hash": "7a51d40615def7697626ecd0d5aeab16",
     "packages": [
         {
             "name": "composer/installers",
@@ -1777,16 +1777,16 @@
         },
         {
             "name": "drupal/flexslider",
-            "version": "7.2.0-alpha3",
+            "version": "7.2.0-rc1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/flexslider",
-                "reference": "068df89c31ccdfe50c73c4922d8425cb7fc05793"
+                "reference": "d73e58a8c022767aacdcd5f65198924d977213a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/flexslider-7.x-2.0-alpha3.zip",
-                "reference": "068df89c31ccdfe50c73c4922d8425cb7fc05793",
+                "url": "https://ftp.drupal.org/files/projects/flexslider-7.x-2.0-rc1.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1822,7 +1822,7 @@
             ],
             "description": "Integrate the FlexSlider 2 library with Drupal",
             "homepage": "https://www.drupal.org/project/flexslider",
-            "time": "2013-09-03 16:13:52"
+            "time": "2015-07-30 19:31:20"
         },
         {
             "name": "drupal/globalredirect",
