@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2cad763456eabd434ed8077a8551f7cd",
-    "content-hash": "56a50070b1259065496edc4708e7d9f3",
+    "hash": "e325422dc047898420c7948f9c0a0dc0",
+    "content-hash": "5edf24034088f3d20cbfef83094414c4",
     "packages": [
         {
             "name": "composer/installers",
@@ -2494,16 +2494,16 @@
         },
         {
             "name": "drupal/message",
-            "version": "7.1.10",
+            "version": "7.1.11",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/message",
-                "reference": "a1848731810540dc38714be06e1497fe4ede9bf0"
+                "reference": "338e7afa0c805fc6ffa3e762ba765f3dbe3f1bd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/message-7.x-1.10.zip",
-                "reference": "a1848731810540dc38714be06e1497fe4ede9bf0",
+                "url": "https://ftp.drupal.org/files/projects/message-7.x-1.11.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -2537,7 +2537,7 @@
             ],
             "description": "A general message logging utility.",
             "homepage": "https://www.drupal.org/project/message",
-            "time": "2015-03-05 19:20:31"
+            "time": "2015-12-22 07:14:30"
         },
         {
             "name": "drupal/message_notify",

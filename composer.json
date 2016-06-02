@@ -124,7 +124,7 @@
     "drupal/media_vimeo": "7.1.0-beta5",
     "drupal/media_youtube": "7.2.0-rc3",
     "drupal/memcache": "7.1.5",
-    "drupal/message": "7.1.10",
+    "drupal/message": "7.1.11",
     "drupal/message_notify": "7.2.x-dev#1fbea08093e16231ca313f0e6ebcf454316f3610",
     "drupal/message_subscribe": "7.1.0-rc2",
     "drupal/mimemail": "7.1.0-beta3",
