@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "13eef5179f27d6d2f72a1a7ca13d90b5",
-    "content-hash": "ca36fd8a51329aa01aa2486d2b35e449",
+    "hash": "bb6cdf5d0ac48da7c2e216dc93de513e",
+    "content-hash": "deedb908eba6174709b5206e5019437a",
     "packages": [
         {
             "name": "composer/installers",
@@ -1305,16 +1305,16 @@
         },
         {
             "name": "drupal/entity",
-            "version": "7.1.6",
+            "version": "7.1.7",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/entity",
-                "reference": "724e7193419da3b7d3ca165025256371dd74eb4f"
+                "reference": "4d76c5c2302e225fea2db7aba08d48f3558bf275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/entity-7.x-1.6.zip",
-                "reference": "724e7193419da3b7d3ca165025256371dd74eb4f",
+                "url": "https://ftp.drupal.org/files/projects/entity-7.x-1.7.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1335,7 +1335,7 @@
             ],
             "description": "Enables modules to work with any entity type and to provide entities.",
             "homepage": "https://www.drupal.org/project/entity",
-            "time": "2015-02-25 14:55:23"
+            "time": "2015-02-27 17:08:22"
         },
         {
             "name": "drupal/entitycache",
