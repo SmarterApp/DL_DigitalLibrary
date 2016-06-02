@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e5ca959b8d3810c6c48bafe2d1ee6785",
-    "content-hash": "7bb44989ff24654d70e54d113a05c826",
+    "hash": "0a2068909d47e6f8658057159c100d36",
+    "content-hash": "9c9b9e545b10e50921b9a3293d9baa33",
     "packages": [
         {
             "name": "composer/installers",
@@ -1445,16 +1445,16 @@
         },
         {
             "name": "drupal/facetapi_taxonomy_sort",
-            "version": "7.1.0-beta1",
+            "version": "7.1.0-rc1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/facetapi_taxonomy_sort",
-                "reference": "658cc5a220584cb50402274e308a38ce99660069"
+                "reference": "a1e08ce7b468fa9d5f87f80e213c031c7d76cf70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/facetapi_taxonomy_sort-7.x-1.0-beta1.zip",
-                "reference": "658cc5a220584cb50402274e308a38ce99660069",
+                "url": "https://ftp.drupal.org/files/projects/facetapi_taxonomy_sort-7.x-1.0-rc1.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1473,7 +1473,7 @@
             ],
             "description": "Adds an option to taxonomy facets to sort by term weight.",
             "homepage": "https://www.drupal.org/project/facetapi_taxonomy_sort",
-            "time": "2011-12-24 10:16:13"
+            "time": "2016-04-28 13:06:40"
         },
         {
             "name": "drupal/fast_404",

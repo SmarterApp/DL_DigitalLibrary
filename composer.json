@@ -92,7 +92,7 @@
     "drupal/entitycache": "7.1.5",
     "drupal/entityreference": "7.1.1",
     "drupal/facetapi": "7.1.5",
-    "drupal/facetapi_taxonomy_sort": "7.1.0-beta1",
+    "drupal/facetapi_taxonomy_sort": "7.1.0-rc1",
     "drupal/fast_404": "7.1.5",
     "drupal/features_extra": "7.1.0-beta1",
     "drupal/features": "7.2.5",
