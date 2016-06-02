@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e35bc779def5d8497cba37a2e97651be",
-    "content-hash": "fafde6499d62a35ccb11c661d3981349",
+    "hash": "7b7a43cab53c8102abad1367d6213249",
+    "content-hash": "05ded01457c36595a7baadbd043b0139",
     "packages": [
         {
             "name": "composer/installers",
@@ -1909,16 +1909,16 @@
         },
         {
             "name": "drupal/imce",
-            "version": "7.1.9",
+            "version": "7.1.10",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/imce",
-                "reference": "6af7f032390685d98ed47e8927642d704ac45d18"
+                "reference": "0b60beb560e986ff6b03ebea64db072bb6ff6ae2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/imce-7.x-1.9.zip",
-                "reference": "6af7f032390685d98ed47e8927642d704ac45d18",
+                "url": "https://ftp.drupal.org/files/projects/imce-7.x-1.10.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1936,7 +1936,7 @@
             ],
             "description": "An image/file uploader and browser supporting personal directories and user quota.",
             "homepage": "https://www.drupal.org/project/imce",
-            "time": "2014-04-05 11:11:54"
+            "time": "2016-03-30 12:48:43"
         },
         {
             "name": "drupal/imce_wysiwyg",
