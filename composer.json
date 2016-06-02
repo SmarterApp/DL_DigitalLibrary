@@ -120,7 +120,7 @@
     "drupal/maillog": "7.1.x-dev#2591153d5ba486806ac660013f5834da94e98db0",
     "drupal/mailsystem": "7.2.34",
     "drupal/maxlength": "7.3.2",
-    "drupal/media": "7.2.0-alpha4",
+    "drupal/media": "7.2.0-beta1",
     "drupal/media_vimeo": "7.1.0-beta5",
     "drupal/media_youtube": "7.2.0-rc3",
     "drupal/memcache": "7.1.5",

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1f8cf03c58299901cebf62bc0002fc2d",
-    "content-hash": "1fcf9ce3cd62ea74e62d12dd68e34246",
+    "hash": "2cad763456eabd434ed8077a8551f7cd",
+    "content-hash": "56a50070b1259065496edc4708e7d9f3",
     "packages": [
         {
             "name": "composer/installers",
@@ -2348,16 +2348,16 @@
         },
         {
             "name": "drupal/media",
-            "version": "7.2.0-alpha4",
+            "version": "7.2.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/media",
-                "reference": "e4c529a28990c1da66e45ffa7ad45872be3044ce"
+                "reference": "19a155b1a78f18355dc9a2a614524178816be2cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/media-7.x-2.0-alpha4.zip",
-                "reference": "e4c529a28990c1da66e45ffa7ad45872be3044ce",
+                "url": "https://ftp.drupal.org/files/projects/media-7.x-2.0-beta1.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -2391,7 +2391,7 @@
             ],
             "description": "Provides the core Media API",
             "homepage": "https://www.drupal.org/project/media",
-            "time": "2014-10-04 10:15:22"
+            "time": "2015-07-14 17:20:45"
         },
         {
             "name": "drupal/media_vimeo",
