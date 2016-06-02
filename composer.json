@@ -89,7 +89,7 @@
     "drupal/elysia_cron": "7.2.1",
     "drupal/emfield": "7.1.0-alpha2",
     "drupal/entity": "7.1.7",
-    "drupal/entitycache": "7.1.2",
+    "drupal/entitycache": "7.1.5",
     "drupal/entityreference": "7.1.1",
     "drupal/facetapi": "7.1.5",
     "drupal/facetapi_taxonomy_sort": "7.1.0-beta1",
