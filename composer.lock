@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "11ea10403b61628f1e9a5ff76fcb4b33",
-    "content-hash": "0db968d0e20c63b8ce83509495775a27",
+    "hash": "d89bfff2825702ff9f51e27087272a33",
+    "content-hash": "beaacb05014d3923c4460f1928d9641e",
     "packages": [
         {
             "name": "composer/installers",
@@ -934,45 +934,38 @@
         },
         {
             "name": "drupal/dialog",
-            "version": "7.2.0-alpha9",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/dialog.git",
-                "reference": "4fb074fa4e05ca61e1a7b172707e772433944ead"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/dialog-7.x-2.0-alpha9.zip",
-                "reference": null,
-                "shasum": null
+                "reference": "2ff76c67f7b3b951746e404adf6cec5373bd3308"
             },
             "require": {
-                "drupal/drupal": "7.*",
-                "drupal/jquery_update": "7.*"
+                "drupal/drupal": "7.*"
             },
             "replace": {
                 "drupal/dialog_comment": "self.version",
-                "drupal/dialog_node": "self.version",
+                "drupal/dialog_contextual": "self.version",
+                "drupal/dialog_example": "self.version",
                 "drupal/dialog_user": "self.version"
             },
             "suggest": {
                 "drupal/comment": "Required by drupal/dialog_comment",
-                "drupal/node": "Required by drupal/dialog_node",
-                "drupal/user": "Required by drupal/dialog_user"
+                "drupal/contextual": "Required by drupal/dialog_contextual"
             },
             "type": "drupal-module",
             "extra": {
                 "branch-alias": {
-                    "dev-7.x-2.x": "7.2.x-dev"
+                    "dev-7.x-1.x": "7.1.x-dev"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
             "license": [
                 "GPL-2.0+"
             ],
-            "description": "Provides an API for opening content in an interactive overlay.",
+            "description": "Dialog window API based on jQuery UI Dialog and CTools ajax.",
             "homepage": "https://www.drupal.org/project/dialog",
-            "time": "2016-04-18 09:35:12"
+            "time": "2012-01-16 18:14:11"
         },
         {
             "name": "drupal/diff",
@@ -4257,6 +4250,7 @@
         "drupal/apachesolr_file": 20,
         "drupal/apachesolr_term": 20,
         "drupal/apachesolr_user": 20,
+        "drupal/dialog": 20,
         "drupal/field_collection": 20,
         "drupal/httprl": 20,
         "drupal/maillog": 20,
