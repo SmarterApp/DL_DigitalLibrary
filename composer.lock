@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "504f45f304370f50289152921a371364",
-    "content-hash": "8e1b9ae95b65d8d76cb8c1f78dcdafa8",
+    "hash": "dfd708dbd0b5cce2458effbd2e69a25a",
+    "content-hash": "2af7042cb5ba7837a885057394f986ed",
     "packages": [
         {
             "name": "composer/installers",
@@ -1508,16 +1508,16 @@
         },
         {
             "name": "drupal/features",
-            "version": "7.2.5",
+            "version": "7.2.10",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/features",
-                "reference": "14fa81e5c4c6016a33484d147d59bd5033619875"
+                "reference": "41fd9b821b03cbdc6476428f375f16c9f8dc4185"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/features-7.x-2.5.zip",
-                "reference": "14fa81e5c4c6016a33484d147d59bd5033619875",
+                "url": "https://ftp.drupal.org/files/projects/features-7.x-2.10.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -1535,7 +1535,7 @@
             ],
             "description": "Provides feature management for Drupal.",
             "homepage": "https://www.drupal.org/project/features",
-            "time": "2015-04-13 14:38:38"
+            "time": "2016-04-18 19:27:42"
         },
         {
             "name": "drupal/features_extra",
