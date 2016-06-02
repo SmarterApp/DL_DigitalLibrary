@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4013e48b7022348147a216db2bfdefa8",
-    "content-hash": "7a51d40615def7697626ecd0d5aeab16",
+    "hash": "11ea10403b61628f1e9a5ff76fcb4b33",
+    "content-hash": "0db968d0e20c63b8ce83509495775a27",
     "packages": [
         {
             "name": "composer/installers",
@@ -1710,15 +1710,15 @@
         },
         {
             "name": "drupal/fivestar",
-            "version": "7.2.2",
+            "version": "7.2.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/fivestar",
-                "reference": "c1c12ec6c82c541ad7d1f71eb7de968c5e652802"
+                "reference": "0bde51edc93f5667b7b0ce4a5908161a67e3d501"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/fivestar-7.x-2.2.zip",
+                "url": "https://ftp.drupal.org/files/projects/fivestar-7.x-2.1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1738,7 +1738,7 @@
             ],
             "description": "Enables fivestar ratings on content, users, etc.",
             "homepage": "https://www.drupal.org/project/fivestar",
-            "time": "2016-04-22 11:04:24"
+            "time": "2014-03-11 07:43:04"
         },
         {
             "name": "drupal/flag",
