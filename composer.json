@@ -146,7 +146,7 @@
     "drupal/stage_file_proxy": "7.1.6",
     "drupal/strongarm": "7.2.0",
     "drupal/taxonomy_manager": "7.1.0",
-    "drupal/title": "7.1.0-alpha7",
+    "drupal/title": "7.1.0-alpha8",
     "drupal/token": "7.1.6",
     "drupal/transliteration": "7.3.2",
     "drupal/upload_qc": "7.1.x-dev#554addbfbae3242d41b64ce86452e5ca04782298",

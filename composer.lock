@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "89e13d3042d3b98d656055e0996d0d27",
-    "content-hash": "227655ed77572e4f1d12b42b47676b72",
+    "hash": "c5145c06b2092143cb5e5cf261d4e1e4",
+    "content-hash": "82cfcfb954f8fdb799585d4cb2ad5d06",
     "packages": [
         {
             "name": "composer/installers",
@@ -3270,16 +3270,16 @@
         },
         {
             "name": "drupal/title",
-            "version": "7.1.0-alpha7",
+            "version": "7.1.0-alpha8",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/title",
-                "reference": "bd4d03fdeda4320b58e5a2101a0f334f41a0bbeb"
+                "reference": "2415009632cdc4546fcd5734eb3ce53bcfd211f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/title-7.x-1.0-alpha7.zip",
-                "reference": "bd4d03fdeda4320b58e5a2101a0f334f41a0bbeb",
+                "url": "https://ftp.drupal.org/files/projects/title-7.x-1.0-alpha8.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -3298,7 +3298,7 @@
             ],
             "description": "Replaces entity legacy fields with regular fields.",
             "homepage": "https://www.drupal.org/project/title",
-            "time": "2013-03-18 16:55:21"
+            "time": "2016-03-28 14:58:06"
         },
         {
             "name": "drupal/token",
