@@ -61,7 +61,7 @@
     "drupal/drupal": "7.43",
 
     "drupal/composer_vendor": "7.1.*",
-    "drupal/acquia_connector": "7.2.15",
+    "drupal/acquia_connector": "7.2.16",
     "drupal/acquia_search_multi_subs": "7.1.4",
     "drupal/admin_menu": "7.3.0-rc5",
     "drupal/advagg": "7.2.5",
