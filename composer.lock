@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b2675d5690ec3217621dc474b9b4f128",
-    "content-hash": "5d012b2425672a529a90533f5e0f47ea",
+    "hash": "5e688c038b7e38ccfef03223fcfc6492",
+    "content-hash": "c1ab75b2ee165e335b909451bcde6917",
     "packages": [
         {
             "name": "composer/installers",
@@ -3650,11 +3650,17 @@
         },
         {
             "name": "drupal/views_infinite_scroll",
-            "version": "dev-7.x-1.x",
+            "version": "7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/views_infinite_scroll",
-                "reference": "dca76871d9732ad2d681e19e117fde0d81da75bd"
+                "reference": "2dc53b3d8e115911fe9756dd6b797bd71d49d783"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/views_infinite_scroll-7.x-2.0.zip",
+                "reference": null,
+                "shasum": null
             },
             "require": {
                 "drupal/drupal": "7.*",
@@ -3663,7 +3669,7 @@
             "type": "drupal-module",
             "extra": {
                 "branch-alias": {
-                    "dev-7.x-1.x": "7.1.x-dev"
+                    "dev-7.x-2.x": "7.2.x-dev"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
@@ -3672,7 +3678,7 @@
             ],
             "description": "Provides an Infinite Scrolling pager for Views",
             "homepage": "https://www.drupal.org/project/views_infinite_scroll",
-            "time": "2014-10-02 14:05:47"
+            "time": "2016-03-09 10:21:25"
         },
         {
             "name": "drupal/views_load_more",
@@ -4268,7 +4274,6 @@
         "drupal/httprl": 20,
         "drupal/maillog": 20,
         "drupal/upload_qc": 20,
-        "drupal/views_infinite_scroll": 20,
         "drupal/wordfilter": 20,
         "drupal/zurb_foundation": 20
     },

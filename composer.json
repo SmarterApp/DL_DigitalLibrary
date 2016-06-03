@@ -159,7 +159,7 @@
     "drupal/views_content_cache": "7.3.0-alpha3",
     "drupal/views_data_export": "7.3.0-beta9",
     "drupal/views_fields_combine": "7.1.2",
-    "drupal/views_infinite_scroll": "7.1.x-dev#dca76871d9732ad2d681e19e117fde0d81da75bd",
+    "drupal/views_infinite_scroll": "7.2.0",
     "drupal/views_load_more": "7.1.5",
     "drupal/votingapi": "7.2.12",
     "drupal/wordfilter": "7.1.x-dev#6a6a8bb1f6158b1238e51fb94686e2a93fbec360",
