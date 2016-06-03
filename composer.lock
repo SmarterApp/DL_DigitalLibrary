@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c5145c06b2092143cb5e5cf261d4e1e4",
-    "content-hash": "82cfcfb954f8fdb799585d4cb2ad5d06",
+    "hash": "12f02ffa39c785889d37a98cb92e61e9",
+    "content-hash": "5f6cf8971bd11b7edbf4d69710303a46",
     "packages": [
         {
             "name": "composer/installers",
@@ -3389,16 +3389,16 @@
         },
         {
             "name": "drupal/user_import",
-            "version": "7.2.3",
+            "version": "7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/user_import",
-                "reference": "28e558878dd6c349ef6f3e9328adeafc152cd195"
+                "reference": "9863b3f90f9e942d39292fbc1174de073efe6890"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/user_import-7.x-2.3.zip",
-                "reference": "28e558878dd6c349ef6f3e9328adeafc152cd195",
+                "url": "https://ftp.drupal.org/files/projects/user_import-7.x-3.2.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -3407,7 +3407,7 @@
             "type": "drupal-module",
             "extra": {
                 "branch-alias": {
-                    "dev-7.x-2.x": "7.2.x-dev"
+                    "dev-7.x-3.x": "7.3.x-dev"
                 }
             },
             "notification-url": "https://packagist.drupal-composer.org/downloads/",
@@ -3416,7 +3416,7 @@
             ],
             "description": "Import users into Drupal from a CSV file.",
             "homepage": "https://www.drupal.org/project/user_import",
-            "time": "2015-02-15 00:09:54"
+            "time": "2016-02-28 01:56:48"
         },
         {
             "name": "drupal/usermerge",

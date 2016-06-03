@@ -150,7 +150,7 @@
     "drupal/token": "7.1.6",
     "drupal/transliteration": "7.3.2",
     "drupal/upload_qc": "7.1.x-dev#554addbfbae3242d41b64ce86452e5ca04782298",
-    "drupal/user_import": "7.2.3",
+    "drupal/user_import": "7.3.2",
     "drupal/usermerge": "7.2.10",
     "drupal/views": "7.3.11",
     "drupal/views_accelerator": "7.1.0-beta1",
