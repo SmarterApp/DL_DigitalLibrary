@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2b1f8f4c56bad5863955ed526ba6d457",
-    "content-hash": "726346e5848ec93f9a467bfb229302d3",
+    "hash": "b2675d5690ec3217621dc474b9b4f128",
+    "content-hash": "5d012b2425672a529a90533f5e0f47ea",
     "packages": [
         {
             "name": "composer/installers",
@@ -3586,16 +3586,16 @@
         },
         {
             "name": "drupal/views_data_export",
-            "version": "7.3.0-beta8",
+            "version": "7.3.0-beta9",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/views_data_export",
-                "reference": "32abc1aab9cad964f2403e2466a12f10e1a61d2b"
+                "reference": "9b840da5505ba6ff844b9a2ca7f3f4b1237f8e24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views_data_export-7.x-3.0-beta8.zip",
-                "reference": "32abc1aab9cad964f2403e2466a12f10e1a61d2b",
+                "url": "https://ftp.drupal.org/files/projects/views_data_export-7.x-3.0-beta9.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -3614,7 +3614,7 @@
             ],
             "description": "Plugin to export views data into various file formats",
             "homepage": "https://www.drupal.org/project/views_data_export",
-            "time": "2014-08-13 19:37:38"
+            "time": "2015-10-26 06:44:50"
         },
         {
             "name": "drupal/views_fields_combine",
