@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "12f02ffa39c785889d37a98cb92e61e9",
-    "content-hash": "5f6cf8971bd11b7edbf4d69710303a46",
+    "hash": "2b1f8f4c56bad5863955ed526ba6d457",
+    "content-hash": "726346e5848ec93f9a467bfb229302d3",
     "packages": [
         {
             "name": "composer/installers",
@@ -3454,16 +3454,16 @@
         },
         {
             "name": "drupal/views",
-            "version": "7.3.11",
+            "version": "7.3.13",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/views",
-                "reference": "cef693bc5874d75659bbcb03f77fc7ecf106be97"
+                "reference": "5c2bfc9638e3e78023d1efb754b79d4ac994d0c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/views-7.x-3.11.zip",
-                "reference": "cef693bc5874d75659bbcb03f77fc7ecf106be97",
+                "url": "https://ftp.drupal.org/files/projects/views-7.x-3.13.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -3485,7 +3485,7 @@
             ],
             "description": "Create customized lists and queries from your database.",
             "homepage": "https://www.drupal.org/project/views",
-            "time": "2015-04-29 15:22:19"
+            "time": "2015-11-06 10:12:01"
         },
         {
             "name": "drupal/views_accelerator",
