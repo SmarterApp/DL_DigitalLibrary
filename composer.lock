@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "95d8d59b7a7e5fa4bb87a38bae5c2793",
-    "content-hash": "8b6993fb804ea773e18f8254a5c34a60",
+    "hash": "9694768eca5706d2c75b1857d6c1bf28",
+    "content-hash": "ed1d93d20d8b014accc00b45c0d7c658",
     "packages": [
         {
             "name": "composer/installers",
@@ -3079,16 +3079,16 @@
         },
         {
             "name": "drupal/scheduler",
-            "version": "7.1.3",
+            "version": "7.1.4",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/scheduler",
-                "reference": "e21b69e990beefde45dd17bb16f2550dd01a1dcf"
+                "reference": "ca2364be5d57ec5e53ebfa35a3f04459d964a1e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/scheduler-7.x-1.3.zip",
-                "reference": "e21b69e990beefde45dd17bb16f2550dd01a1dcf",
+                "url": "https://ftp.drupal.org/files/projects/scheduler-7.x-1.4.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -3106,7 +3106,7 @@
             ],
             "description": "This module allows nodes to be published and unpublished on specified dates and time.",
             "homepage": "https://www.drupal.org/project/scheduler",
-            "time": "2014-11-11 17:20:07"
+            "time": "2016-03-12 16:47:41"
         },
         {
             "name": "drupal/simple_dialog",
