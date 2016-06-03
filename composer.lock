@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9694768eca5706d2c75b1857d6c1bf28",
-    "content-hash": "ed1d93d20d8b014accc00b45c0d7c658",
+    "hash": "89e13d3042d3b98d656055e0996d0d27",
+    "content-hash": "227655ed77572e4f1d12b42b47676b72",
     "packages": [
         {
             "name": "composer/installers",
@@ -3144,16 +3144,16 @@
         },
         {
             "name": "drupal/smtp",
-            "version": "7.1.0",
+            "version": "7.1.3",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/smtp",
-                "reference": "f883d14de74050a3794c4c49582f181affb2f074"
+                "reference": "da1866d879211308394f2a69f6eca2931038931f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/smtp-7.x-1.0.zip",
-                "reference": "f883d14de74050a3794c4c49582f181affb2f074",
+                "url": "https://ftp.drupal.org/files/projects/smtp-7.x-1.3.zip",
+                "reference": null,
                 "shasum": null
             },
             "require": {
@@ -3171,7 +3171,7 @@
             ],
             "description": "Allow for site emails to be sent through an SMTP server of your choice.",
             "homepage": "https://www.drupal.org/project/smtp",
-            "time": "2013-02-16 22:27:44"
+            "time": "2015-12-08 20:15:49"
         },
         {
             "name": "drupal/stage_file_proxy",
