@@ -114,7 +114,7 @@ function sbac_csv_report_resource_stats_export_form_submit($form, &$form_state) 
   }
 
   $_SESSION['report_chosen_filters'] = $resource_filters;
-  $resources = get_resources($resource_filters);
+  $resources = sbac_report_get_resources($resource_filters);
   if ($resources) {
     batch_set(array(
         'title' => t('Resource Statistics Report'),
@@ -517,7 +517,7 @@ function sbac_report_default_resource_attribute_option($form_state = array()) {
  * Get the resources from the node table using five constraints: type, status, grade, attribute, and grade.
  * Returns an array of node ids to the resources.
  */
-function get_resources($resource_filters) {
+function sbac_report_get_resources($resource_filters) {
   $query = db_select('node', 'n');
   $query->condition('n.type', 'resource');
   $query->condition('n.status', 1);
