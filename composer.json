@@ -152,6 +152,8 @@
     "drupal/upload_qc": "7.1.x-dev#554addbfbae3242d41b64ce86452e5ca04782298",
     "drupal/user_import": "7.3.2",
     "drupal/usermerge": "7.2.10",
+    "drupal/uuid": "7.1.0-beta1",
+    "drupal/uuid_features": "7.1.0-alpha4",
     "drupal/views": "7.3.13",
     "drupal/views_accelerator": "7.1.0-beta1",
     "drupal/views_accordion": "7.1.1",

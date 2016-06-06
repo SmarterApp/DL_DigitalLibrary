@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fccb8dee3aff21cdba404f156fc659ab",
-    "content-hash": "3d6b8d0824940477e9ae36740bf99195",
+    "hash": "08d0da42b9263e46fc8afa1f4170f4de",
+    "content-hash": "8c1ae64862e2f5fc7bcf0f11ca4b30b4",
     "packages": [
         {
             "name": "composer/installers",
@@ -3451,6 +3451,84 @@
             "description": "Provides an advanced mechanism to merge user accounts together.",
             "homepage": "https://www.drupal.org/project/usermerge",
             "time": "2015-06-08 06:11:06"
+        },
+        {
+            "name": "drupal/uuid",
+            "version": "7.1.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/uuid",
+                "reference": "0707ea6350131480cc45d35eb864b21df2a99e50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/uuid-7.x-1.0-beta1.zip",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "drupal/drupal": "7.*",
+                "drupal/node": "7.*",
+                "drupal/user": "7.*"
+            },
+            "replace": {
+                "drupal/uuid_path": "self.version",
+                "drupal/uuid_services": "self.version",
+                "drupal/uuid_services_example": "self.version"
+            },
+            "suggest": {
+                "drupal/entity": "Required by drupal/uuid_services",
+                "drupal/rest_server": "Required by drupal/uuid_services_example",
+                "drupal/services": "Required by drupal/uuid_services, drupal/uuid_services_example",
+                "drupal/uuid_services": "Required by drupal/uuid_services_example"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-7.x-1.x": "7.1.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.drupal-composer.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Extends the entity functionality and adds support for universally unique identifiers.",
+            "homepage": "https://www.drupal.org/project/uuid",
+            "time": "2015-09-05 13:03:56"
+        },
+        {
+            "name": "drupal/uuid_features",
+            "version": "7.1.0-alpha4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/uuid_features",
+                "reference": "cba92565cfe9889e097a43b12919a13bb220c518"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/uuid_features-7.x-1.0-alpha4.zip",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "drupal/drupal": "7.*",
+                "drupal/entity": "7.*",
+                "drupal/features": "7.*",
+                "drupal/uuid": "7.*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-7.x-1.x": "7.1.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.drupal-composer.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Provides features integration for content (nodes, taxonomy, etc) based on the UUID module.",
+            "homepage": "https://www.drupal.org/project/uuid_features",
+            "time": "2014-01-31 22:54:41"
         },
         {
             "name": "drupal/views",
