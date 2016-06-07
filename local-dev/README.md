@@ -6,7 +6,8 @@ Development Environment Setup
   - On a Mac [Docker for Mac|https://beta.docker.com] can be used
 
 2. Clone the source repository
-  - Note that you may want to make sure the clone is in a folder shared with the host if using a VM (or under /Users if using Docker for Mac)
+  - Note that you may want to make sure the clone is in a folder shared with the host if using a VM 
+  - If using a Mac the repository MUST be under /Users otherwise docker mounts fail
 
 3. Run setup-local.sh
 
