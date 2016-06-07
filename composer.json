@@ -249,7 +249,7 @@
   "config": {
     "vendor-dir": "vendor",
     "secure-http": false,
-    "preferred-install": "source",
+    "preferred-install": "dist",
     "disabled-vendor-dir": "docroot/sites/all/vendor"
   },
   "minimum-stability": "dev",
