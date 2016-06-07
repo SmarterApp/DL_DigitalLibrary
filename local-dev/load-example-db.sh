@@ -6,6 +6,10 @@ cd $(dirname $0)
 
 if [ ! -f cache/sbac.sql.gz ]; then
   docker run --rm -v "$(pwd)/cache:/dls:rw" appropriate/curl -fsSL -o /dls/sbac.sql.gz https://s3.amazonaws.com/uploads.hipchat.com/519721/3548552/2KeuTLLk3OH2acM/local-db-20160606T1130.sql.gz
+  if [ ! -f cache/sbac.sql.gz ]; then
+    echo 'Error downloading sql file'
+    exit 1
+  fi
 fi
 
 ./exec-drush sql-drop -y
