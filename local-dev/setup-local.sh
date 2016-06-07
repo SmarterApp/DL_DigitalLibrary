@@ -21,6 +21,9 @@ echo 'Apply patches'
 #fi
 
 echo 'Install settings files'
+if [ ! -d docroot/sites/default ]; then
+  mkdir -m 0777 docroot/sites/default
+fi
 cp local-dev/templates/settings.php docroot/sites/default/
 cp local-dev/templates/local_settings.inc docroot/sites/default/
 
