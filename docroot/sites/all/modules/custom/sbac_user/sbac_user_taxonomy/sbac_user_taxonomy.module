@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC User Taxonomy feature.
+ */
+
+include_once 'sbac_user_taxonomy.features.inc';
