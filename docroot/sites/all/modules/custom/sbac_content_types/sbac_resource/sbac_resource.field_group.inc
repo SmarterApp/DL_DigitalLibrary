@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function sbac_resource_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -44,7 +44,7 @@ function sbac_resource_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $export['group_advanced|node|resource|form'] = $field_group;
+  $field_groups['group_advanced|node|resource|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -79,7 +79,7 @@ function sbac_resource_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $export['group_basic|node|resource|form'] = $field_group;
+  $field_groups['group_basic|node|resource|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -117,7 +117,7 @@ function sbac_resource_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $export['group_flag|node|resource|form'] = $field_group;
+  $field_groups['group_flag|node|resource|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -152,7 +152,7 @@ function sbac_resource_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $export['group_materials|node|resource|form'] = $field_group;
+  $field_groups['group_materials|node|resource|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -189,7 +189,7 @@ function sbac_resource_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $export['group_summary|node|resource|form'] = $field_group;
+  $field_groups['group_summary|node|resource|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -222,7 +222,16 @@ function sbac_resource_field_group_info() {
       'formatter' => 'closed',
     ),
   );
-  $export['group_tags|node|resource|form'] = $field_group;
+  $field_groups['group_tags|node|resource|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Advanced');
+  t('Details');
+  t('Flags');
+  t('General');
+  t('Materials');
+  t('Tags');
+
+  return $field_groups;
 }
