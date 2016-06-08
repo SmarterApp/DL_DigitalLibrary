@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_help.features.taxonomy.inc
+ * sbac_help_taxonomy.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_help_taxonomy_default_vocabularies() {
+function sbac_help_taxonomy_taxonomy_default_vocabularies() {
   return array(
     'help_page_topic' => array(
       'name' => 'Help Page Topic',
@@ -15,7 +15,7 @@ function sbac_help_taxonomy_default_vocabularies() {
       'description' => '',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => 0,
+      'weight' => 1,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -38,7 +38,7 @@ function sbac_help_taxonomy_default_vocabularies() {
       'description' => NULL,
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => 0,
+      'weight' => 10,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

@@ -10,7 +10,7 @@
 function sbac_help_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-help_page-body'
+  // Exported field_instance: 'node-help_page-body'.
   $field_instances['node-help_page-body'] = array(
     'bundle' => 'help_page',
     'default_value' => NULL,
@@ -60,7 +60,7 @@ function sbac_help_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-help_page-field_help_icon'
+  // Exported field_instance: 'node-help_page-field_help_icon'.
   $field_instances['node-help_page-field_help_icon'] = array(
     'bundle' => 'help_page',
     'deleted' => 0,
@@ -106,7 +106,7 @@ function sbac_help_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-help_page-field_help_page_topic'
+  // Exported field_instance: 'node-help_page-field_help_page_topic'.
   $field_instances['node-help_page-field_help_page_topic'] = array(
     'bundle' => 'help_page',
     'default_value' => array(
@@ -151,7 +151,7 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
     ),
   );
 
-  // Exported field_instance: 'node-help_page-field_help_user_roles'
+  // Exported field_instance: 'node-help_page-field_help_user_roles'.
   $field_instances['node-help_page-field_help_user_roles'] = array(
     'bundle' => 'help_page',
     'default_value' => array(
@@ -196,7 +196,7 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
     ),
   );
 
-  // Exported field_instance: 'node-help_page-field_summary'
+  // Exported field_instance: 'node-help_page-field_summary'.
   $field_instances['node-help_page-field_summary'] = array(
     'bundle' => 'help_page',
     'default_value' => NULL,
