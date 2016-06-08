@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_lexicon.features.taxonomy.inc
+ * sbac_lexicon_taxonomy.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_lexicon_taxonomy_default_vocabularies() {
+function sbac_lexicon_taxonomy_taxonomy_default_vocabularies() {
   return array(
     'forum_flags' => array(
       'name' => 'Forum Flags',
@@ -15,9 +15,7 @@ function sbac_lexicon_taxonomy_default_vocabularies() {
       'description' => 'The flags that are available when a user wishes to flag a forum topic or comment.',
       'hierarchy' => 0,
       'module' => '',
-      'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 46,
+      'weight' => -3,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
@@ -40,9 +38,7 @@ function sbac_lexicon_taxonomy_default_vocabularies() {
       'description' => 'Glossary Terms',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 22,
+      'weight' => -1,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
