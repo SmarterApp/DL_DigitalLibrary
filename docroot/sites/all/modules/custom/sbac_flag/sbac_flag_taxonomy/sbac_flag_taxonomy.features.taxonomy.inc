@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_flag.features.taxonomy.inc
+ * sbac_flag_taxonomy.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_flag_taxonomy_default_vocabularies() {
+function sbac_flag_taxonomy_taxonomy_default_vocabularies() {
   return array(
     'resource_flags' => array(
       'name' => 'Resource Flags',
@@ -15,9 +15,7 @@ function sbac_flag_taxonomy_default_vocabularies() {
       'description' => 'The flags that are available when a user wishes to flag a resource.',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => 0,
-      'entity_type' => 'taxonomy_vocabulary',
-      'entity_id' => 36,
+      'weight' => 9,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Flag Taxonomy feature.
+ */
+
+include_once 'sbac_flag_taxonomy.features.inc';
