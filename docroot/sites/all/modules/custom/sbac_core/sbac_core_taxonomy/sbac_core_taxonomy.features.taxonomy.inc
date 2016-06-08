@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_core.features.taxonomy.inc
+ * sbac_core_taxonomy.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_core_taxonomy_default_vocabularies() {
+function sbac_core_taxonomy_taxonomy_default_vocabularies() {
   return array(
     'applied_category' => array(
       'name' => 'Applied Category',
@@ -15,7 +15,7 @@ function sbac_core_taxonomy_default_vocabularies() {
       'description' => NULL,
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => 0,
+      'weight' => -8,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

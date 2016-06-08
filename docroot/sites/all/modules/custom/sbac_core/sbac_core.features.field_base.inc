@@ -10,7 +10,7 @@
 function sbac_core_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_appropriate_for'
+  // Exported field_base: 'field_appropriate_for'.
   $field_bases['field_appropriate_for'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -31,12 +31,13 @@ function sbac_core_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_avg_rating'
+  // Exported field_base: 'field_avg_rating'.
   $field_bases['field_avg_rating'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -53,7 +54,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'number_float',
   );
 
-  // Exported field_base: 'field_comments'
+  // Exported field_base: 'field_comments'.
   $field_bases['field_comments'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -72,7 +73,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_contributor_comment'
+  // Exported field_base: 'field_contributor_comment'.
   $field_bases['field_contributor_comment'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -91,7 +92,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_contributor_comment_date'
+  // Exported field_base: 'field_contributor_comment_date'.
   $field_bases['field_contributor_comment_date'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -120,7 +121,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'datestamp',
   );
 
-  // Exported field_base: 'field_details'
+  // Exported field_base: 'field_details'.
   $field_bases['field_details'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -139,7 +140,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_ease_use'
+  // Exported field_base: 'field_ease_use'.
   $field_bases['field_ease_use'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -156,7 +157,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'fivestar',
   );
 
-  // Exported field_base: 'field_issue_type'
+  // Exported field_base: 'field_issue_type'.
   $field_bases['field_issue_type'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -184,7 +185,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_level'
+  // Exported field_base: 'field_level'.
   $field_bases['field_level'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -212,7 +213,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_meets_criterion'
+  // Exported field_base: 'field_meets_criterion'.
   $field_bases['field_meets_criterion'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -237,7 +238,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_post_options'
+  // Exported field_base: 'field_post_options'.
   $field_bases['field_post_options'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -263,7 +264,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_pro_dev'
+  // Exported field_base: 'field_pro_dev'.
   $field_bases['field_pro_dev'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -280,7 +281,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'fivestar',
   );
 
-  // Exported field_base: 'field_quality_set'
+  // Exported field_base: 'field_quality_set'.
   $field_bases['field_quality_set'] = array(
     'active' => 1,
     'cardinality' => 7,
@@ -302,7 +303,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'field_collection',
   );
 
-  // Exported field_base: 'field_rec_options'
+  // Exported field_base: 'field_rec_options'.
   $field_bases['field_rec_options'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -329,7 +330,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_rec_rationale'
+  // Exported field_base: 'field_rec_rationale'.
   $field_bases['field_rec_rationale'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -348,7 +349,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_review_set'
+  // Exported field_base: 'field_review_set'.
   $field_bases['field_review_set'] = array(
     'active' => 1,
     'cardinality' => 30,
@@ -370,7 +371,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'field_collection',
   );
 
-  // Exported field_base: 'field_student_learning'
+  // Exported field_base: 'field_student_learning'.
   $field_bases['field_student_learning'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -387,7 +388,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'fivestar',
   );
 
-  // Exported field_base: 'field_to_contributor'
+  // Exported field_base: 'field_to_contributor'.
   $field_bases['field_to_contributor'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -406,7 +407,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_to_reviewer_1'
+  // Exported field_base: 'field_to_reviewer_1'.
   $field_bases['field_to_reviewer_1'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -425,7 +426,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_to_reviewer_2'
+  // Exported field_base: 'field_to_reviewer_2'.
   $field_bases['field_to_reviewer_2'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -444,7 +445,7 @@ function sbac_core_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_to_reviewer_3'
+  // Exported field_base: 'field_to_reviewer_3'.
   $field_bases['field_to_reviewer_3'] = array(
     'active' => 1,
     'cardinality' => 1,

@@ -10,7 +10,7 @@
 function sbac_core_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'feedback-gate_keeper-field_quality_set'
+  // Exported field_instance: 'feedback-gate_keeper-field_quality_set'.
   $field_instances['feedback-gate_keeper-field_quality_set'] = array(
     'bundle' => 'gate_keeper',
     'default_value' => NULL,
@@ -56,7 +56,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'feedback-post-field_contributor_comment'
+  // Exported field_instance: 'feedback-post-field_contributor_comment'.
   $field_instances['feedback-post-field_contributor_comment'] = array(
     'bundle' => 'post',
     'default_value' => NULL,
@@ -103,7 +103,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'feedback-post-field_contributor_comment_date'
+  // Exported field_instance: 'feedback-post-field_contributor_comment_date'.
   $field_instances['feedback-post-field_contributor_comment_date'] = array(
     'bundle' => 'post',
     'deleted' => 0,
@@ -118,6 +118,7 @@ function sbac_core_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 6,
@@ -158,7 +159,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'feedback-post-field_post_options'
+  // Exported field_instance: 'feedback-post-field_post_options'.
   $field_instances['feedback-post-field_post_options'] = array(
     'bundle' => 'post',
     'default_value' => NULL,
@@ -198,7 +199,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'feedback-post-field_to_contributor'
+  // Exported field_instance: 'feedback-post-field_to_contributor'.
   $field_instances['feedback-post-field_to_contributor'] = array(
     'bundle' => 'post',
     'default_value' => NULL,
@@ -245,7 +246,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'feedback-post-field_to_reviewer_1'
+  // Exported field_instance: 'feedback-post-field_to_reviewer_1'.
   $field_instances['feedback-post-field_to_reviewer_1'] = array(
     'bundle' => 'post',
     'default_value' => NULL,
@@ -292,7 +293,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'feedback-post-field_to_reviewer_2'
+  // Exported field_instance: 'feedback-post-field_to_reviewer_2'.
   $field_instances['feedback-post-field_to_reviewer_2'] = array(
     'bundle' => 'post',
     'default_value' => NULL,
@@ -339,7 +340,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'feedback-post-field_to_reviewer_3'
+  // Exported field_instance: 'feedback-post-field_to_reviewer_3'.
   $field_instances['feedback-post-field_to_reviewer_3'] = array(
     'bundle' => 'post',
     'default_value' => NULL,
@@ -386,7 +387,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'feedback-qc-field_rec_options'
+  // Exported field_instance: 'feedback-qc-field_rec_options'.
   $field_instances['feedback-qc-field_rec_options'] = array(
     'bundle' => 'qc',
     'default_value' => NULL,
@@ -426,7 +427,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'feedback-qc-field_rec_rationale'
+  // Exported field_instance: 'feedback-qc-field_rec_rationale'.
   $field_instances['feedback-qc-field_rec_rationale'] = array(
     'bundle' => 'qc',
     'default_value' => NULL,
@@ -474,7 +475,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'feedback-qc-field_review_set'
+  // Exported field_instance: 'feedback-qc-field_review_set'.
   $field_instances['feedback-qc-field_review_set'] = array(
     'bundle' => 'qc',
     'default_value' => NULL,
@@ -527,7 +528,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_quality_set-field_comments'
+  // 'field_collection_item-field_quality_set-field_comments'.
   $field_instances['field_collection_item-field_quality_set-field_comments'] = array(
     'bundle' => 'field_quality_set',
     'default_value' => NULL,
@@ -570,7 +571,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_quality_set-field_contributor_comment'
+  // 'field_collection_item-field_quality_set-field_contributor_comment'.
   $field_instances['field_collection_item-field_quality_set-field_contributor_comment'] = array(
     'bundle' => 'field_quality_set',
     'default_value' => NULL,
@@ -612,7 +613,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_quality_set-field_contributor_comment_date'
+  // 'field_collection_item-field_quality_set-field_contributor_comment_date'.
   $field_instances['field_collection_item-field_quality_set-field_contributor_comment_date'] = array(
     'bundle' => 'field_quality_set',
     'deleted' => 0,
@@ -655,7 +656,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_quality_set-field_meets_criterion'
+  // 'field_collection_item-field_quality_set-field_meets_criterion'.
   $field_instances['field_collection_item-field_quality_set-field_meets_criterion'] = array(
     'bundle' => 'field_quality_set',
     'default_value' => NULL,
@@ -690,7 +691,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_review_set-field_comments'
+  // 'field_collection_item-field_review_set-field_comments'.
   $field_instances['field_collection_item-field_review_set-field_comments'] = array(
     'bundle' => 'field_review_set',
     'default_value' => NULL,
@@ -732,7 +733,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_review_set-field_contributor_comment'
+  // 'field_collection_item-field_review_set-field_contributor_comment'.
   $field_instances['field_collection_item-field_review_set-field_contributor_comment'] = array(
     'bundle' => 'field_review_set',
     'default_value' => NULL,
@@ -774,7 +775,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_review_set-field_contributor_comment_date'
+  // 'field_collection_item-field_review_set-field_contributor_comment_date'.
   $field_instances['field_collection_item-field_review_set-field_contributor_comment_date'] = array(
     'bundle' => 'field_review_set',
     'deleted' => 0,
@@ -789,6 +790,7 @@ function sbac_core_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 3,
@@ -824,7 +826,7 @@ function sbac_core_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_review_set-field_level'
+  // 'field_collection_item-field_review_set-field_level'.
   $field_instances['field_collection_item-field_review_set-field_level'] = array(
     'bundle' => 'field_review_set',
     'default_value' => NULL,
@@ -858,7 +860,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'flag-review_end_use-field_details'
+  // Exported field_instance: 'flag-review_end_use-field_details'.
   $field_instances['flag-review_end_use-field_details'] = array(
     'bundle' => 'review_end_use',
     'default_value' => NULL,
@@ -905,7 +907,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 1,
   );
 
-  // Exported field_instance: 'flag-review_end_use-field_issue_type'
+  // Exported field_instance: 'flag-review_end_use-field_issue_type'.
   $field_instances['flag-review_end_use-field_issue_type'] = array(
     'bundle' => 'review_end_use',
     'default_value' => NULL,
@@ -945,7 +947,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'review-end_use-field_appropriate_for'
+  // Exported field_instance: 'review-end_use-field_appropriate_for'.
   $field_instances['review-end_use-field_appropriate_for'] = array(
     'bundle' => 'end_use',
     'default_value' => NULL,
@@ -988,7 +990,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'review-end_use-field_avg_rating'
+  // Exported field_instance: 'review-end_use-field_avg_rating'.
   $field_instances['review-end_use-field_avg_rating'] = array(
     'bundle' => 'end_use',
     'default_value' => array(
@@ -1041,7 +1043,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'review-end_use-field_details'
+  // Exported field_instance: 'review-end_use-field_details'.
   $field_instances['review-end_use-field_details'] = array(
     'bundle' => 'end_use',
     'default_value' => NULL,
@@ -1088,7 +1090,7 @@ function sbac_core_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'review-end_use-field_ease_use'
+  // Exported field_instance: 'review-end_use-field_ease_use'.
   $field_instances['review-end_use-field_ease_use'] = array(
     'bundle' => 'end_use',
     'default_value' => NULL,
@@ -1141,7 +1143,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'review-end_use-field_pro_dev'
+  // Exported field_instance: 'review-end_use-field_pro_dev'.
   $field_instances['review-end_use-field_pro_dev'] = array(
     'bundle' => 'end_use',
     'default_value' => NULL,
@@ -1194,7 +1196,7 @@ function sbac_core_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'review-end_use-field_student_learning'
+  // Exported field_instance: 'review-end_use-field_student_learning'.
   $field_instances['review-end_use-field_student_learning'] = array(
     'bundle' => 'end_use',
     'default_value' => NULL,
