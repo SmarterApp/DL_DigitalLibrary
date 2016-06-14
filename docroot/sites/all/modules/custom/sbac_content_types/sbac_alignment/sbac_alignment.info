@@ -11,6 +11,7 @@ dependencies[] = features
 dependencies[] = list
 dependencies[] = node
 dependencies[] = options
+dependencies[] = sbac_alignment_taxonomy
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text
