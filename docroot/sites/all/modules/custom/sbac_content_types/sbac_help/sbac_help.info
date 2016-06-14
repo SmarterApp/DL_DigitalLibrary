@@ -16,6 +16,7 @@ dependencies[] = options
 dependencies[] = publishcontent
 dependencies[] = strongarm
 dependencies[] = taxonomy
+dependencies[] = sbac_help_taxonomy
 dependencies[] = text
 dependencies[] = views
 dependencies[] = views_content_cache
