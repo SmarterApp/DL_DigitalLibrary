@@ -7,6 +7,7 @@ project = sbac_report
 dependencies[] = contextual_range_filter
 dependencies[] = date
 dependencies[] = date_popup
+dependencies[] = sbac_resource_taxonomy
 dependencies[] = strongarm
 dependencies[] = views
 features[ctools][] = strongarm:strongarm:1
