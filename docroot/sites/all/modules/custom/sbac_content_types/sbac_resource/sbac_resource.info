@@ -20,6 +20,7 @@ dependencies[] = node
 dependencies[] = number
 dependencies[] = options
 dependencies[] = sbac_alignment
+dependencies[] = sbac_resource_taxonomy
 dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text

@@ -1033,7 +1033,7 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       foreach ($terms as $term) {
         $children = taxonomy_get_children($term->tid);
         if (empty($children)) {
-          $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+          $options[$term->tid] = sbac_resource_taxonomy_term_concat_parents($term->tid, $term->name);
         }
       }
       $form[$config['field']]['und']['#options'] = $options;

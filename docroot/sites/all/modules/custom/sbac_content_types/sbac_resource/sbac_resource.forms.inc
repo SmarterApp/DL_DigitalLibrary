@@ -66,7 +66,7 @@ function _sbac_resource_form_flatten_term_tree(&$form, &$form_state) {
     foreach ($terms as $term) {
       $children = taxonomy_get_children($term->tid);
       if (empty($children)) {
-        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+        $options[$term->tid] = sbac_resource_taxonomy_term_concat_parents($term->tid, $term->name);
       }
     }
     if (!empty($config['wrapper'])) {
@@ -3613,7 +3613,7 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     foreach ($vocab_tree as $term) {
       $children = taxonomy_get_children($term->tid);
       if (empty($children)) {
-        $vocab_terms[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+        $vocab_terms[$term->tid] = sbac_resource_taxonomy_term_concat_parents($term->tid, $term->name);
       }
     }
     $form[$machine_name][$machine_name . '_terms'] = array(
