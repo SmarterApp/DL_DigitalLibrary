@@ -11,51 +11,61 @@ function sbac_user_taxonomy_uuid_features_default_terms() {
   $terms = array();
 
   $terms[] = array(
-    'name' => 'Regional Learning Consultant',
-    'description' => '',
-    'format' => NULL,
-    'weight' => -9,
-    'uuid' => '1fa956da-0d2e-4630-ba8d-20bfd922a63a',
-    'vocabulary_machine_name' => 'title',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 230,
-  );
-  $terms[] = array(
     'name' => 'Other',
     'description' => '',
     'format' => NULL,
     'weight' => 1,
-    'uuid' => '3ff01c9b-0b09-41fd-9dd6-9178b0fd8951',
+    'uuid' => '00720fdb-b1e3-4c92-885a-541ac5563297',
     'vocabulary_machine_name' => 'title',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 240,
-  );
-  $terms[] = array(
-    'name' => 'Student Teacher',
-    'description' => '',
-    'format' => NULL,
-    'weight' => 0,
-    'uuid' => '4d59a19f-4047-4aea-859e-0c0483eb90b8',
-    'vocabulary_machine_name' => 'title',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 239,
   );
   $terms[] = array(
     'name' => 'School Counselor',
     'description' => '',
     'format' => NULL,
     'weight' => -5,
-    'uuid' => '6dfa8a1f-3fd4-470d-bc41-1846d8c66a20',
+    'uuid' => '12e7e988-b177-4314-971c-edbc3b5677f1',
     'vocabulary_machine_name' => 'title',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 234,
+  );
+  $terms[] = array(
+    'name' => 'Regional Learning Consultant',
+    'description' => '',
+    'format' => NULL,
+    'weight' => -9,
+    'uuid' => '24134168-ec96-4bf3-bf96-b3df4066747b',
+    'vocabulary_machine_name' => 'title',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 230,
+  );
+  $terms[] = array(
+    'name' => 'Instructional Coach',
+    'description' => '',
+    'format' => NULL,
+    'weight' => -3,
+    'uuid' => '377d0289-1616-4311-bc72-1b63a239e730',
+    'vocabulary_machine_name' => 'title',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 236,
+  );
+  $terms[] = array(
+    'name' => 'Instructional Coordinator',
+    'description' => '',
+    'format' => 'filtered_html',
+    'weight' => -2,
+    'uuid' => '44f9c2f2-c284-4f65-ac6e-0dca2b02b595',
+    'vocabulary_machine_name' => 'title',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 237,
   );
   $terms[] = array(
     'name' => 'Librarian / Media Specialist',
     'description' => '',
     'format' => NULL,
     'weight' => -4,
-    'uuid' => '8937a6c5-6044-4e5b-8b20-e2ab1cf2b1c2',
+    'uuid' => '551f90d6-c783-4d4d-bcf9-2c8b8586c5e9',
     'vocabulary_machine_name' => 'title',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 235,
@@ -65,7 +75,7 @@ function sbac_user_taxonomy_uuid_features_default_terms() {
     'description' => '',
     'format' => NULL,
     'weight' => -1,
-    'uuid' => '9b314880-07c5-48fa-8156-002048ee2913',
+    'uuid' => '5d60db1f-dcf5-4e20-9978-3382d496de75',
     'vocabulary_machine_name' => 'title',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 238,
@@ -75,60 +85,50 @@ function sbac_user_taxonomy_uuid_features_default_terms() {
     'description' => '',
     'format' => NULL,
     'weight' => -8,
-    'uuid' => 'bc556639-9ee4-4173-8aab-fc15a709a696',
+    'uuid' => '7158821e-558f-42ef-a6d8-8e8c3cce347b',
     'vocabulary_machine_name' => 'title',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 231,
   );
   $terms[] = array(
-    'name' => 'Instructional Coach',
+    'name' => 'Student Teacher',
     'description' => '',
     'format' => NULL,
-    'weight' => -3,
-    'uuid' => 'cb98277e-b926-4030-ba8e-8ed62d4b8aea',
+    'weight' => 0,
+    'uuid' => '7c1684cb-448a-47d0-990f-75f0b5bf28b6',
     'vocabulary_machine_name' => 'title',
     'entity_type' => 'taxonomy_term',
-    'entity_id' => 236,
-  );
-  $terms[] = array(
-    'name' => 'Building Administrator',
-    'description' => '',
-    'format' => NULL,
-    'weight' => -7,
-    'uuid' => 'd3daec4f-4940-4033-bcd0-a51b79201107',
-    'vocabulary_machine_name' => 'title',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 232,
-  );
-  $terms[] = array(
-    'name' => 'State Personnel',
-    'description' => '',
-    'format' => NULL,
-    'weight' => -10,
-    'uuid' => 'e4e55cde-6d69-47b0-af2c-86171170e770',
-    'vocabulary_machine_name' => 'title',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 229,
-  );
-  $terms[] = array(
-    'name' => 'Instructional Coordinator',
-    'description' => '',
-    'format' => 'filtered_html',
-    'weight' => -2,
-    'uuid' => 'eba9d5af-7578-4243-a90e-cdd8ad1e392d',
-    'vocabulary_machine_name' => 'title',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 237,
+    'entity_id' => 239,
   );
   $terms[] = array(
     'name' => 'Teacher',
     'description' => '',
     'format' => NULL,
     'weight' => -6,
-    'uuid' => 'fd8c66db-f6fb-4fb6-8ba1-7580f1af6eaf',
+    'uuid' => '81af82f9-8f5a-46aa-a618-c223422cf844',
     'vocabulary_machine_name' => 'title',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 233,
+  );
+  $terms[] = array(
+    'name' => 'State Personnel',
+    'description' => '',
+    'format' => NULL,
+    'weight' => -10,
+    'uuid' => '83c483fe-17c2-4e89-a69c-a84e958114ce',
+    'vocabulary_machine_name' => 'title',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 229,
+  );
+  $terms[] = array(
+    'name' => 'Building Administrator',
+    'description' => '',
+    'format' => NULL,
+    'weight' => -7,
+    'uuid' => 'f368fc1e-28b6-441e-aacd-88d47757ed81',
+    'vocabulary_machine_name' => 'title',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 232,
   );
   return $terms;
 }
