@@ -11,11 +11,21 @@ function sbac_flag_taxonomy_uuid_features_default_terms() {
   $terms = array();
 
   $terms[] = array(
+    'name' => 'Resource is not available free of charge',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 11,
+    'uuid' => '0428213d-b192-4e44-95ac-b726d445c586',
+    'vocabulary_machine_name' => 'resource_flags',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 60406,
+  );
+  $terms[] = array(
     'name' => 'Unintelligible / not viewable / technology does not function properly',
     'description' => '',
     'format' => 'full_html',
     'weight' => 3,
-    'uuid' => '0d51e1c1-0312-4d25-994d-99f78ee3473a',
+    'uuid' => '216cd3f7-2a9e-40e7-bb1e-5a92f5c51662',
     'vocabulary_machine_name' => 'resource_flags',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 60371,
@@ -25,110 +35,100 @@ function sbac_flag_taxonomy_uuid_features_default_terms() {
     'description' => NULL,
     'format' => NULL,
     'weight' => 10,
-    'uuid' => '21d84add-76b0-41e0-91ae-2e6925df62c4',
+    'uuid' => '3aa9d41d-37c8-4faa-9d7f-fd81ec5517cd',
     'vocabulary_machine_name' => 'resource_flags',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 70416,
-  );
-  $terms[] = array(
-    'name' => 'Does not support implementation of Common Core State Standards',
-    'description' => '',
-    'format' => 'full_html',
-    'weight' => 9,
-    'uuid' => '2f4ccf8b-8a29-4575-9f33-1c5de90fd660',
-    'vocabulary_machine_name' => 'resource_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60401,
-  );
-  $terms[] = array(
-    'name' => 'Summary information does not match the resource',
-    'description' => '',
-    'format' => 'full_html',
-    'weight' => 7,
-    'uuid' => '31e16336-9c26-4de4-973d-ddadc7f6d26b',
-    'vocabulary_machine_name' => 'resource_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60391,
-  );
-  $terms[] = array(
-    'name' => 'May be in violation of intellectual property rights (i.e., copyright infringement)',
-    'description' => '',
-    'format' => 'full_html',
-    'weight' => 8,
-    'uuid' => '3e7a1ae5-211a-43e7-b12c-f622f2d29cd0',
-    'vocabulary_machine_name' => 'resource_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60396,
-  );
-  $terms[] = array(
-    'name' => 'Accessibility or accommodation issues',
-    'description' => '',
-    'format' => 'full_html',
-    'weight' => 4,
-    'uuid' => '63f37720-86b7-4b55-89c6-231068be0e90',
-    'vocabulary_machine_name' => 'resource_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60376,
-  );
-  $terms[] = array(
-    'name' => 'Duplicate',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => 1,
-    'uuid' => '6b0451bf-fa62-4e99-9e70-a80aca0d97b1',
-    'vocabulary_machine_name' => 'resource_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 70421,
-  );
-  $terms[] = array(
-    'name' => 'Resource is not available free of charge',
-    'description' => '',
-    'format' => 'full_html',
-    'weight' => 11,
-    'uuid' => '8588b9c2-3739-480c-ac18-3baf70b9f2da',
-    'vocabulary_machine_name' => 'resource_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60406,
   );
   $terms[] = array(
     'name' => 'Contains personally identifiable information (PII)',
     'description' => '',
     'format' => 'full_html',
     'weight' => 6,
-    'uuid' => 'b48ebd62-a70e-4290-a1db-2bdbb5ebe5ed',
+    'uuid' => '524f59a7-477a-408b-b95c-410ee601eb75',
     'vocabulary_machine_name' => 'resource_flags',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 60386,
   );
   $terms[] = array(
-    'name' => 'Outdated',
+    'name' => 'Summary information does not match the resource',
     'description' => '',
     'format' => 'full_html',
-    'weight' => 0,
-    'uuid' => 'c8d40bf2-b8af-41fe-b1c8-b21c09819adb',
+    'weight' => 7,
+    'uuid' => '735ddaec-7253-4fdb-b0f3-bd1f55809e3c',
     'vocabulary_machine_name' => 'resource_flags',
     'entity_type' => 'taxonomy_term',
-    'entity_id' => 60361,
+    'entity_id' => 60391,
   );
   $terms[] = array(
-    'name' => 'Inaccurate / misleading',
-    'description' => '',
-    'format' => 'full_html',
-    'weight' => 2,
-    'uuid' => 'd8e94930-d7a2-4114-9f23-a18ced3dd478',
+    'name' => 'Duplicate',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 1,
+    'uuid' => '793a2de6-2325-4289-87ba-bd7eec2bd14d',
     'vocabulary_machine_name' => 'resource_flags',
     'entity_type' => 'taxonomy_term',
-    'entity_id' => 60366,
+    'entity_id' => 70421,
   );
   $terms[] = array(
     'name' => 'Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)',
     'description' => '',
     'format' => 'full_html',
     'weight' => 5,
-    'uuid' => 'e8ba643d-4d2d-4e7d-87a4-6be5c66c961c',
+    'uuid' => '799a79b3-caba-4f92-ae8d-ac662d77d4f7',
     'vocabulary_machine_name' => 'resource_flags',
     'entity_type' => 'taxonomy_term',
     'entity_id' => 60381,
+  );
+  $terms[] = array(
+    'name' => 'May be in violation of intellectual property rights (i.e., copyright infringement)',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 8,
+    'uuid' => 'b047e143-ab44-4854-8d40-8f9f56284c9e',
+    'vocabulary_machine_name' => 'resource_flags',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 60396,
+  );
+  $terms[] = array(
+    'name' => 'Inaccurate / misleading',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 2,
+    'uuid' => 'b72d7537-11c7-4ecc-855d-5437e53cdfc6',
+    'vocabulary_machine_name' => 'resource_flags',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 60366,
+  );
+  $terms[] = array(
+    'name' => 'Outdated',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 0,
+    'uuid' => 'bbd88910-0a0b-4683-b850-29b3b6ceed4b',
+    'vocabulary_machine_name' => 'resource_flags',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 60361,
+  );
+  $terms[] = array(
+    'name' => 'Accessibility or accommodation issues',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 4,
+    'uuid' => 'd4fa0f0e-9841-432e-9953-72880af3fec7',
+    'vocabulary_machine_name' => 'resource_flags',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 60376,
+  );
+  $terms[] = array(
+    'name' => 'Does not support implementation of Common Core State Standards',
+    'description' => '',
+    'format' => 'full_html',
+    'weight' => 9,
+    'uuid' => 'f1db8cfa-5dad-42db-8c98-25e9cfd056eb',
+    'vocabulary_machine_name' => 'resource_flags',
+    'entity_type' => 'taxonomy_term',
+    'entity_id' => 60401,
   );
   return $terms;
 }
