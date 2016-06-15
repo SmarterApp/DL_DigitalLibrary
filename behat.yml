@@ -11,8 +11,24 @@ default:
     Behat\MinkExtension:
       goutte: ~
       selenium2: ~
-      base_url: http://localhost:10000
+      base_url: http://nginx
     Drupal\DrupalExtension:
       blackbox: ~
+      api_driver: "drush"
+      drupal:
+        drupal_root: "../docroot"
       drush:
-        root: ../docroot
+        root: "../docroot"
+      text:
+        username_field: "Email Address"
+        password_field: "Password"
+        log_in: "Log into the Digital Library"
+        log_out: "Log out"
+      region_map:
+        nav: "nav.top-bar"
+        header: "div.top-bar.sub-top"
+        footer: ".bottom-bar"
+        resource_list: ".view-digital-library-resources"
+        notifications: "#section-notifications.notifications"
+        forum_nav: "#sbac-forum-sub-nav-forum"
+        forums: ".sbac-forum-main-container"
