@@ -1,0 +1,36 @@
+default:
+  suites:
+    default:
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2:
+        wd_host: 'http://selenium:4444/wd/hub'
+        browser: chrome
+      base_url: http://nginx
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: "drush"
+      drupal:
+        drupal_root: "../docroot"
+      drush:
+        root: "../docroot"
+      text:
+        username_field: "Email Address"
+        password_field: "Password"
+        log_in: "Log into the Digital Library"
+        log_out: "Log out"
+      region_map:
+        nav: "nav.top-bar"
+        header: "div.top-bar.sub-top"
+        footer: ".bottom-bar"
+        resource_list: ".view-digital-library-resources"
+        notifications: "#notifications"
+        forum_nav: "#sbac-forum-sub-nav-forum"
+        forums: ".sbac-forum-main-container"
