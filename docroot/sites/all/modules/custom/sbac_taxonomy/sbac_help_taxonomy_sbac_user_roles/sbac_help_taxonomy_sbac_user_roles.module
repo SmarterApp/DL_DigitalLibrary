@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Help Taxonomy - SBAC User Roles feature.
+ */
+
+include_once 'sbac_help_taxonomy_sbac_user_roles.features.inc';
