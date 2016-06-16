@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Alignment Taxonomy - SBAC Alignment feature.
+ */
+
+include_once 'sbac_alignment_taxonomy_sbac_alignment.features.inc';

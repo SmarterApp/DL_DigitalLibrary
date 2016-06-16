@@ -1,10 +1,8 @@
 <?php
 /**
  * @file
- * Code for the SBAC Alignment Taxonomy feature.
+ * Code for the SBAC Alignment Taxonomy module
  */
-
-include_once 'sbac_alignment_taxonomy.features.inc';
 
 /**
  * Helper Function
