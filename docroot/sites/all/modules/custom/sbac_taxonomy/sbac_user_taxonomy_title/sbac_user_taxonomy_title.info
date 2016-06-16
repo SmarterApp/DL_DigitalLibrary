@@ -1,7 +1,7 @@
-name = SBAC User Taxonomy
-description = A feature that contains vocabularies and terms for sbac user module
+name = SBAC User Taxonomy - Title
+description = A feature to contain the Title vocab and terms
 core = 7.x
-package = ~SBAC
+package = ~SBAC Taxonomy
 version = 7.x-1.0
 dependencies[] = ctools
 dependencies[] = features
@@ -24,3 +24,4 @@ features[uuid_term][] = 7c1684cb-448a-47d0-990f-75f0b5bf28b6
 features[uuid_term][] = 81af82f9-8f5a-46aa-a618-c223422cf844
 features[uuid_term][] = 83c483fe-17c2-4e89-a69c-a84e958114ce
 features[uuid_term][] = f368fc1e-28b6-441e-aacd-88d47757ed81
+project path = sites/all/modules/custom/sbac_taxonomy

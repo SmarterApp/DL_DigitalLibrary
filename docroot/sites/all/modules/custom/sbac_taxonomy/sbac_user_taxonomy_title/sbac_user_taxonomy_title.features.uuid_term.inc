@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_user_taxonomy.features.uuid_term.inc
+ * sbac_user_taxonomy_title.features.uuid_term.inc
  */
 
 /**
  * Implements hook_uuid_features_default_terms().
  */
-function sbac_user_taxonomy_uuid_features_default_terms() {
+function sbac_user_taxonomy_title_uuid_features_default_terms() {
   $terms = array();
 
   $terms[] = array(

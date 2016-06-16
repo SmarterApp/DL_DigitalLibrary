@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_user_taxonomy.features.taxonomy.inc
+ * sbac_user_taxonomy_title.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_user_taxonomy_taxonomy_default_vocabularies() {
+function sbac_user_taxonomy_title_taxonomy_default_vocabularies() {
   return array(
     'title' => array(
       'name' => 'Title',
