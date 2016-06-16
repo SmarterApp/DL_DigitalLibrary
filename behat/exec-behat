@@ -2,17 +2,37 @@
 
 cd $(dirname $0)
 
+SELENIUM_URL="http://selenium:4444/wd/hub"
+SELENIUM_BROWSER="chrome"
 if [ -d /sbac ]; then
     eval $(weave env)
     . ../../../env.sh
     DOCKER_NET=""
     DOCKER_PHPFPM="${CMS_DEPLOYMENT}-phpfpm"
+    SITE_URL="http://${CMS_DEPLOYMENT}-nginx"
 else
     . ./../local-dev/.env
+    MYSQL_HOST=db
     DOCKER_NET="--net=${COMPOSE_PROJECT_NAME}_default"
     DOCKER_PHPFPM="${COMPOSE_PROJECT_NAME}_phpfpm_1"
-    MYSQL_HOST=db
+    SITE_URL="http://nginx"
+
+    if [ "$(uname -s)" == "Darwin" ]; then
+        # We currently cannot use the selenium docker instance in OSX
+        MY_IP=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+        SITE_PORT=$(docker inspect --format '{{ (index (index .NetworkSettings.Ports "80/tcp") 0).HostPort }}' ${COMPOSE_PROJECT_NAME}_nginx_1)
+        SITE_URL="http://${MY_IP}:${SITE_PORT}"
+        SELENIUM_URL="http://${MY_IP}:4444/wd/hub"
+        SELENIUM_BROWSER="firefox"
+    fi
 fi
+
+## Drush does not pass the environment along, so creating a new file instead
+#BEHAT_PARAMS=" {'extensions': {'Behat\\MinkExtension': {'base_url': '${SITE_URL}', 'selenium2': {'wd_host': '${SELENIUM_URL}', 'browser': '${SELENIUM_BROWSER}' } } } } "
+#BEHAT_PARAMS=${BEHAT_PARAMS//\'/\"}
+#echo $BEHAT_PARAMS
+
+cat behat.template.yml | sed "s@SELENIUM_URL@${SELENIUM_URL}@;s@SELENIUM_BROWSER@${SELENIUM_BROWSER}@;s@SITE_URL@${SITE_URL}@" > behat.run.yml
 
 TTY=""
 if [ "$1" == "-t" ]; then
@@ -21,6 +41,7 @@ fi
 
 exec docker run ${DOCKER_NET} --rm -i $TTY \
     --volumes-from ${DOCKER_PHPFPM} \
+    -e BEHAT_PARAMS \
     -e "MYSQL_DATABASE=${MYSQL_DATABASE}" \
     -e "MYSQL_USER=${MYSQL_USER}" \
     -e "MYSQL_PASSWORD=${MYSQL_PASSWORD}" \
@@ -33,4 +54,4 @@ exec docker run ${DOCKER_NET} --rm -i $TTY \
     -e "CMS_DEPLOYMENT=${CMS_DEPLOYMENT}" \
     -e "CMS_ENVIRONMENT=${CMS_ENVIRONMENT}" \
     -w /var/www/html/behat \
-    gened/drush -r /var/www/html/docroot "$@"
+    gened/drush -r /var/www/html/docroot exec ../behat/behat -c "" behat.run.yml "$@"

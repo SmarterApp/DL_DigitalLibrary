@@ -2,4 +2,4 @@
 
 cd $(dirname $0)
 
-./exec-behat exec ../behat/behat "$@"
+./exec-behat "$@"
