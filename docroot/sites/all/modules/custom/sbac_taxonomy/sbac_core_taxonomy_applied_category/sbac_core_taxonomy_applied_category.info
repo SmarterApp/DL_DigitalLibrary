@@ -1,7 +1,7 @@
-name = SBAC Core Taxonomy
-description = A feature to contain vocabularies and terms for the SBAC Core feature
+name = SBAC Core Taxonomy - Applied Category
+description = A feature to contain the Applied Category vocab and terms
 core = 7.x
-package = ~SBAC
+package = ~SBAC Taxonomy
 version = 7.x-1.0
 dependencies[] = ctools
 dependencies[] = features
@@ -20,3 +20,4 @@ features[uuid_term][] = bdeb3fa4-fd57-4da3-b692-6e23a7c58791
 features[uuid_term][] = ed46a60d-47b3-4aa1-9c6f-61eb0f22877a
 features[uuid_term][] = eef7962f-42a7-4b78-b00f-8a558f177752
 features[uuid_term][] = f2d2891f-0969-48b8-92d1-340642ac483f
+project path = sites/all/modules/custom/sbac_taxonomy

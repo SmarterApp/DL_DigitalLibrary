@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the SBAC Core Taxonomy feature.
- */
-
-include_once 'sbac_core_taxonomy.features.inc';

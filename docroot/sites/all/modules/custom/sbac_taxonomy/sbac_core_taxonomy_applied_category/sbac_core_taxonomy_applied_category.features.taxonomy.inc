@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_core_taxonomy.features.taxonomy.inc
+ * sbac_core_taxonomy_applied_category.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_core_taxonomy_taxonomy_default_vocabularies() {
+function sbac_core_taxonomy_applied_category_taxonomy_default_vocabularies() {
   return array(
     'applied_category' => array(
       'name' => 'Applied Category',
