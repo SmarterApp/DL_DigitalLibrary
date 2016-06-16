@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the SBAC Lexicon Taxonomy feature.
- */
-
-include_once 'sbac_lexicon_taxonomy.features.inc';

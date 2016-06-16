@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_lexicon_taxonomy.features.uuid_term.inc
+ * sbac_lexicon_taxonomy_glossary_terms.features.uuid_term.inc
  */
 
 /**
  * Implements hook_uuid_features_default_terms().
  */
-function sbac_lexicon_taxonomy_uuid_features_default_terms() {
+function sbac_lexicon_taxonomy_glossary_terms_uuid_features_default_terms() {
   $terms = array();
 
   $terms[] = array(
@@ -17,8 +17,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 25,
     'uuid' => '0b29c93f-2511-41e9-9bfd-8550517673fa',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4011,
   );
   $terms[] = array(
     'name' => 'Commissioned Resource',
@@ -27,8 +25,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 18,
     'uuid' => '0c6b9772-4cf7-45c3-9316-983a65458f73',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4001,
   );
   $terms[] = array(
     'name' => 'Cover Profile',
@@ -37,8 +33,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 14,
     'uuid' => '1e28d04c-35e6-45ad-b24a-b3e43c538d2d',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4005,
   );
   $terms[] = array(
     'name' => 'Formative Assessment Process',
@@ -47,18 +41,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 27,
     'uuid' => '310b498d-271b-469a-9428-ba5af3e86053',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4009,
-  );
-  $terms[] = array(
-    'name' => 'Biased and objectionable or culturally insensitive. <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => -3,
-    'uuid' => '32be672b-7a18-418b-aa78-d4e44563d85a',
-    'vocabulary_machine_name' => 'forum_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60636,
   );
   $terms[] = array(
     'name' => 'Universal Design for Learning (UDL)',
@@ -67,8 +49,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 9,
     'uuid' => '37bef60f-8be0-4f5e-b0aa-f7de78ce0b33',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 6700,
   );
   $terms[] = array(
     'name' => 'Combination of Instructional and Professional Learning Resource',
@@ -77,8 +57,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 17,
     'uuid' => '3e8f9166-c058-44f4-9649-443309087ed8',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 3999,
   );
   $terms[] = array(
     'name' => 'Smarter Balanced Assessment Targets',
@@ -87,8 +65,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 4,
     'uuid' => '52f0940b-b1a9-4926-a326-130b03bbc583',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4208,
   );
   $terms[] = array(
     'name' => 'Licensing Terms',
@@ -97,18 +73,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 11,
     'uuid' => '54033ede-9968-4805-b08e-abeb30971743',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4015,
-  );
-  $terms[] = array(
-    'name' => 'Outdated or inactive',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => -6,
-    'uuid' => '5b0740a8-c16f-422b-8937-578e232c095f',
-    'vocabulary_machine_name' => 'forum_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60621,
   );
   $terms[] = array(
     'name' => 'Professional Learning Resource',
@@ -117,8 +81,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 10,
     'uuid' => '5b8efa80-a698-44fa-a304-5e1ebc514823',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4016,
   );
   $terms[] = array(
     'name' => 'Common Core State Standards',
@@ -127,8 +89,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 16,
     'uuid' => '5e9acf49-a537-4ac7-8e65-01e2c132cf57',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4000,
   );
   $terms[] = array(
     'name' => 'Instructional Resource',
@@ -137,8 +97,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 21,
     'uuid' => '64685afa-4bc0-4d4c-b73c-d3817e3b2407',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4012,
   );
   $terms[] = array(
     'name' => 'Content Specifications',
@@ -147,8 +105,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 12,
     'uuid' => '7a3209d1-228c-4a3d-85d6-e803a86badcc',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4003,
   );
   $terms[] = array(
     'name' => 'Smarter Balanced Claims',
@@ -157,8 +113,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 3,
     'uuid' => '8069211c-7c50-4067-81f1-bfdd1a553fa4',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4737,
   );
   $terms[] = array(
     'name' => 'Attributes of the Formative Assessment Process',
@@ -167,8 +121,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 28,
     'uuid' => '8753173d-116f-4cf3-90ee-a1030ecf8a41',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 3998,
   );
   $terms[] = array(
     'name' => 'Quality Criteria',
@@ -177,8 +129,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 5,
     'uuid' => '9557fe3f-cb1c-4e46-b709-f9065dfd2879',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4017,
   );
   $terms[] = array(
     'name' => 'Copyright Clearance Form',
@@ -187,18 +137,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 13,
     'uuid' => '9abb6e6b-5ed5-4a96-8060-737b1f54fd15',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4004,
-  );
-  $terms[] = array(
-    'name' => 'Unintelligible',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => -4,
-    'uuid' => '9af886bb-fdf9-4831-8651-87cfbe6180b5',
-    'vocabulary_machine_name' => 'forum_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60631,
   );
   $terms[] = array(
     'name' => 'Family Educational Rights and Privacy Act (FERPA)',
@@ -207,8 +145,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 26,
     'uuid' => '9d091373-50ee-4b4f-9121-66152b93c2e2',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4008,
   );
   $terms[] = array(
     'name' => 'Learning Target',
@@ -217,18 +153,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 23,
     'uuid' => 'a1a2bc89-fc7e-4aad-83d0-2f4369219ec9',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4014,
-  );
-  $terms[] = array(
-    'name' => 'Inaccurate / misleading',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => -5,
-    'uuid' => 'ab267575-eb99-43d7-a883-06d0188befd7',
-    'vocabulary_machine_name' => 'forum_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60626,
   );
   $terms[] = array(
     'name' => 'Tag',
@@ -237,8 +161,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 8,
     'uuid' => 'b6bd4bd3-f022-49c0-9ffa-335d88d4e4f3',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 6375,
   );
   $terms[] = array(
     'name' => 'State Network of Educators (SNE)',
@@ -247,8 +169,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 2,
     'uuid' => 'bfbfb1fa-5df4-43a0-b8a8-5d7809d9c8df',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 6049,
   );
   $terms[] = array(
     'name' => 'Governance Criteria',
@@ -257,8 +177,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 24,
     'uuid' => 'c1b3ec51-c98c-4238-bc58-d90ddb1253b3',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4010,
   );
   $terms[] = array(
     'name' => 'Depth of Knowledge',
@@ -267,8 +185,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 19,
     'uuid' => 'c575b4d7-c825-4705-ba3a-036222116303',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4006,
   );
   $terms[] = array(
     'name' => 'Success Criteria',
@@ -277,8 +193,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 7,
     'uuid' => 'dc47bbf4-0046-4be0-96fb-8544aa49ef23',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 6231,
   );
   $terms[] = array(
     'name' => 'State Leadership Team (SLT)',
@@ -287,8 +201,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 1,
     'uuid' => 'dcac4e58-b4a6-4a56-8df8-b3db2b44fb04',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 5823,
   );
   $terms[] = array(
     'name' => 'Digital Library',
@@ -297,28 +209,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 20,
     'uuid' => 'e1693a4b-0ad1-4939-8c5c-28765d463a60',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4007,
-  );
-  $terms[] = array(
-    'name' => 'Contains personally identifiable information (PII)',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => -2,
-    'uuid' => 'e92b20f7-5bed-45e0-b67b-544b76fed7df',
-    'vocabulary_machine_name' => 'forum_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60641,
-  );
-  $terms[] = array(
-    'name' => 'Appears to be spam',
-    'description' => NULL,
-    'format' => NULL,
-    'weight' => -1,
-    'uuid' => 'edacd1d0-6ede-4c9f-b64a-605adba3402e',
-    'vocabulary_machine_name' => 'forum_flags',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 60646,
   );
   $terms[] = array(
     'name' => 'Item Specifications',
@@ -327,8 +217,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 22,
     'uuid' => 'ef1cc2f2-f143-4b5f-b6a2-fc8a1caee683',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4013,
   );
   $terms[] = array(
     'name' => 'Comprehensible',
@@ -337,8 +225,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 15,
     'uuid' => 'f4c3445b-bda0-46b9-9340-64ce254ddaeb',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4002,
   );
   $terms[] = array(
     'name' => 'Smarter Balanced Assessment Consortium',
@@ -347,8 +233,6 @@ function sbac_lexicon_taxonomy_uuid_features_default_terms() {
     'weight' => 6,
     'uuid' => 'feac2e46-beff-4c1c-af96-0042820a34d4',
     'vocabulary_machine_name' => 'glossary_terms',
-    'entity_type' => 'taxonomy_term',
-    'entity_id' => 4018,
   );
   return $terms;
 }
