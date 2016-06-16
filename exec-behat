@@ -2,19 +2,33 @@
 
 cd $(dirname $0)
 
-. ./../local-dev/.env
+if [ -d /sbac ]; then
+    eval $(weave env)
+    . ../../../env.sh
+    DOCKER_NET=""
+    DOCKER_PHPFPM="${CMS_DEPLOYMENT}-phpfpm"
+else
+    . ./../local-dev/.env
+    DOCKER_NET="--net=${COMPOSE_PROJECT_NAME}_default"
+    DOCKER_PHPFPM="${COMPOSE_PROJECT_NAME}_phpfpm_1"
+    MYSQL_HOST=db
+fi
 
 TTY=""
 if [ "$1" == "-t" ]; then
   TTY=$1; shift
 fi
 
-exec docker run --net=${COMPOSE_PROJECT_NAME}_default --rm -i $TTY \
-    --volumes-from "${COMPOSE_PROJECT_NAME}_phpfpm_1" \
+exec docker run ${DOCKER_NET} --rm -i $TTY \
+    --volumes-from ${DOCKER_PHPFPM} \
     -e "MYSQL_DATABASE=${MYSQL_DATABASE}" \
     -e "MYSQL_USER=${MYSQL_USER}" \
     -e "MYSQL_PASSWORD=${MYSQL_PASSWORD}" \
-    -e "MYSQL_HOST=db" \
+    -e "MYSQL_HOST=${MYSQL_HOST}" \
+      -e "MYSQL_ENV_MYSQL_DATABASE=${MYSQL_DATABASE}" \
+      -e "MYSQL_ENV_MYSQL_USER=${MYSQL_USER}" \
+      -e "MYSQL_ENV_MYSQL_PASSWORD=${MYSQL_PASSWORD}" \
+      -e "MYSQL_ENV_MYSQL_HOST=${MYSQL_HOST}" \
     -e "SOLR_HOST=solr" \
     -e "CMS_DEPLOYMENT=${CMS_DEPLOYMENT}" \
     -e "CMS_ENVIRONMENT=${CMS_ENVIRONMENT}" \
