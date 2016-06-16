@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * sbac_flag_taxonomy.features.taxonomy.inc
+ * sbac_flag_taxonomy_resource_flags.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_flag_taxonomy_taxonomy_default_vocabularies() {
+function sbac_flag_taxonomy_resource_flags_taxonomy_default_vocabularies() {
   return array(
     'resource_flags' => array(
       'name' => 'Resource Flags',

@@ -1,7 +1,7 @@
-name = SBAC Flag Taxonomy
-description = A feature containing vocabularies and terms for the SBAC Flag feature
+name = SBAC Flag Taxonomy - Resource Flags
+description = A feature to contain the Resource Flags vocab and terms
 core = 7.x
-package = ~SBAC
+package = ~SBAC Taxonomy
 version = 7.x-1.0
 dependencies[] = ctools
 dependencies[] = features

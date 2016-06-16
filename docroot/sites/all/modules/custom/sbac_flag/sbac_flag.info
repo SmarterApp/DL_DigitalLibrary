@@ -9,6 +9,6 @@ dependencies[] = features
 dependencies[] = field_group
 dependencies[] = number
 dependencies[] = taxonomy
-dependencies[] = sbac_flag_taxonomy
+dependencies[] = sbac_flag_taxonomy_resource_flags
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:2
