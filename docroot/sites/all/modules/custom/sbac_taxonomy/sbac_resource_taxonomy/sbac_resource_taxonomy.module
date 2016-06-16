@@ -1,10 +1,8 @@
 <?php
 /**
  * @file
- * Code for the SBAC Resource Taxonomy feature.
+ * Code for the SBAC Resource Taxonomy 
  */
-
-include_once 'sbac_resource_taxonomy.features.inc';
 
 /**
  * Load the taxonomy terms and get there names.
