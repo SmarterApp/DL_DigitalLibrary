@@ -2,18 +2,21 @@
 Feature: Login
 	As a user I should be able to log in
 
+  @smoketest
 	Scenario: Not logged in user on homepage
 		Given I am not logged in
 		And I am on the homepage
 		Then I should see "Enter the password that accompanies your username."
 		And I should see the button "edit-submit"
 
+  @smoketest
 	Scenario: Anonymous user on homepage
 		Given I am an anonymous user
 		And I am on the homepage
 		Then I should see "Enter the password that accompanies your username."
 		And I should see the button "edit-submit"
 
+  @smoketest
   Scenario: Log in as a known admin user
     Given I am on the homepage
     When I fill in the following:
