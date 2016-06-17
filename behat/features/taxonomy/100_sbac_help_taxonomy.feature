@@ -11,7 +11,7 @@ Feature: SBAC Help Taxonomy
     Then I should be on the homepage
 
     When I am on "admin/structure/taxonomy/help_page_topic"
-    Then I should see 3 ".draggable" elements
+    Then I should see 3 ".term-id" elements
 
   Scenario: Log in and go to "SBAC User Roles taxonomy page" as a known admin user
     Given I am on the homepage
@@ -22,6 +22,6 @@ Feature: SBAC Help Taxonomy
     Then I should be on the homepage
 
     When I am on "admin/structure/taxonomy/sbac_user_roles"
-    Then I should see 17 ".draggable" elements
+    Then I should see 17 ".term-id" elements
 
 #As #1 user, view taxonomies, see the correct number of terms
