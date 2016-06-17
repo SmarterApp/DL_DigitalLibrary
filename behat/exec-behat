@@ -11,6 +11,9 @@ if [ -d /sbac ]; then
     DOCKER_PHPFPM="${CMS_DEPLOYMENT}-phpfpm"
     DOCKER_SOLR="${CMS_DEPLOYMENT}-solr"
     SITE_URL="http://${CMS_DEPLOYMENT}-nginx"
+elif [ "${AH_SITE_ENVIRONMENT}x" != "x" ]; then
+    SITE_URL="http://${AH_SITE_NAME}.${AH_REALM}.acquia-sites.com"
+    SELENIUM_URL=""
 else
     . ./../local-dev/.env
     MYSQL_HOST=db
@@ -29,7 +32,11 @@ else
     fi
 fi
 
-BEHAT_PARAMS=" {'extensions': {'Behat\\\\MinkExtension': {'base_url': '${SITE_URL}', 'selenium2': {'wd_host': '${SELENIUM_URL}', 'browser': '${SELENIUM_BROWSER}' } } } } "
+BEHAT_PARAMS="{'extensions': {'Behat\\\\MinkExtension': {'base_url': '${SITE_URL}'"
+if [ "${SELENIUM_URL}" != "x" ]; then
+    BEHAT_PARAMS=${BEHAT_PARAMS}", 'selenium2': {'wd_host': '${SELENIUM_URL}', 'browser': '${SELENIUM_BROWSER}' }"
+fi
+BEHAT_PARAMS=${BEHAT_PARAMS}"} } }"
 BEHAT_PARAMS=${BEHAT_PARAMS//\'/\"}
 #echo $BEHAT_PARAMS
 
