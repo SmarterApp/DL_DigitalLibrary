@@ -37,7 +37,7 @@ BEHAT_PARAMS=${BEHAT_PARAMS//\'/\"}
 
 which docker >&/dev/null
 if [ $? -ne 0 ]; then
-    exec ../bin/behat "$@"
+    exec ../vendor/behat/behat/bin/behat "$@"
 else
     exec docker run ${DOCKER_NET} --rm -i \
         --volumes-from ${DOCKER_PHPFPM} \
@@ -54,6 +54,6 @@ else
         -e "CMS_DEPLOYMENT=${CMS_DEPLOYMENT}" \
         -e "CMS_ENVIRONMENT=${CMS_ENVIRONMENT}" \
         -w /var/www/html/behat \
-        --entrypoint /var/www/html/bin/behat \
+        --entrypoint /var/www/html/vendor/behat/behat/bin/behat \
         gened/drush "$@"
 fi
