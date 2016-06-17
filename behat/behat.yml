@@ -42,7 +42,7 @@ default:
         - Drupal\DrupalExtension\Context\DrushContext
     forum_features:
       paths:
-        - %paths.base%/features/search
+        - %paths.base%/features/forum
       contexts:
         - FeatureContext
         - Drupal\DrupalExtension\Context\DrupalContext
@@ -51,7 +51,7 @@ default:
         - Drupal\DrupalExtension\Context\DrushContext
     help_features:
       paths:
-        - %paths.base%/features/search
+        - %paths.base%/features/help
       contexts:
         - FeatureContext
         - Drupal\DrupalExtension\Context\DrupalContext
@@ -60,7 +60,7 @@ default:
         - Drupal\DrupalExtension\Context\DrushContext
     notification_features:
       paths:
-        - %paths.base%/features/search
+        - %paths.base%/features/notification
       contexts:
         - FeatureContext
         - Drupal\DrupalExtension\Context\DrupalContext
@@ -70,10 +70,7 @@ default:
   extensions:
     Behat\MinkExtension:
       goutte: ~
-      selenium2:
-        wd_host: 'http://selenium:4444/wd/hub'
-        browser: chrome
-      base_url: http://nginx
+      selenium2: ~
     Drupal\DrupalExtension:
       blackbox: ~
       api_driver: "drush"

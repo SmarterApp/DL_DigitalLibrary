@@ -9,12 +9,14 @@ if [ -d /sbac ]; then
     . ../../../env.sh
     DOCKER_NET=""
     DOCKER_PHPFPM="${CMS_DEPLOYMENT}-phpfpm"
+    DOCKER_SOLR="${CMS_DEPLOYMENT}-solr"
     SITE_URL="http://${CMS_DEPLOYMENT}-nginx"
 else
     . ./../local-dev/.env
     MYSQL_HOST=db
     DOCKER_NET="--net=${COMPOSE_PROJECT_NAME}_default"
     DOCKER_PHPFPM="${COMPOSE_PROJECT_NAME}_phpfpm_1"
+    DOCKER_SOLR="${COMPOSE_PROJECT_NAME}_solr_1"
     SITE_URL="http://nginx"
 
     if [ "$(uname -s)" == "Darwin" ]; then
@@ -27,31 +29,31 @@ else
     fi
 fi
 
-## Drush does not pass the environment along, so creating a new file instead
-#BEHAT_PARAMS=" {'extensions': {'Behat\\MinkExtension': {'base_url': '${SITE_URL}', 'selenium2': {'wd_host': '${SELENIUM_URL}', 'browser': '${SELENIUM_BROWSER}' } } } } "
-#BEHAT_PARAMS=${BEHAT_PARAMS//\'/\"}
+BEHAT_PARAMS=" {'extensions': {'Behat\\\\MinkExtension': {'base_url': '${SITE_URL}', 'selenium2': {'wd_host': '${SELENIUM_URL}', 'browser': '${SELENIUM_BROWSER}' } } } } "
+BEHAT_PARAMS=${BEHAT_PARAMS//\'/\"}
 #echo $BEHAT_PARAMS
 
-cat behat.template.yml | sed "s@SELENIUM_URL@${SELENIUM_URL}@;s@SELENIUM_BROWSER@${SELENIUM_BROWSER}@;s@SITE_URL@${SITE_URL}@" > behat.run.yml
+#cat behat.template.yml | sed "s@SELENIUM_URL@${SELENIUM_URL}@;s@SELENIUM_BROWSER@${SELENIUM_BROWSER}@;s@SITE_URL@${SITE_URL}@" > behat.run.yml
 
-TTY=""
-if [ "$1" == "-t" ]; then
-  TTY=$1; shift
+which docker >&/dev/null
+if [ $? -ne 0 ]; then
+    exec ../bin/behat "$@"
+else
+    exec docker run ${DOCKER_NET} --rm -i \
+        --volumes-from ${DOCKER_PHPFPM} \
+        -e "BEHAT_PARAMS=${BEHAT_PARAMS}" \
+        -e "MYSQL_DATABASE=${MYSQL_DATABASE}" \
+        -e "MYSQL_USER=${MYSQL_USER}" \
+        -e "MYSQL_PASSWORD=${MYSQL_PASSWORD}" \
+        -e "MYSQL_HOST=${MYSQL_HOST}" \
+          -e "MYSQL_ENV_MYSQL_DATABASE=${MYSQL_DATABASE}" \
+          -e "MYSQL_ENV_MYSQL_USER=${MYSQL_USER}" \
+          -e "MYSQL_ENV_MYSQL_PASSWORD=${MYSQL_PASSWORD}" \
+          -e "MYSQL_ENV_MYSQL_HOST=${MYSQL_HOST}" \
+        -e "SOLR_HOST=${DOCKER_SOLR}" \
+        -e "CMS_DEPLOYMENT=${CMS_DEPLOYMENT}" \
+        -e "CMS_ENVIRONMENT=${CMS_ENVIRONMENT}" \
+        -w /var/www/html/behat \
+        --entrypoint /var/www/html/bin/behat \
+        gened/drush "$@"
 fi
-
-exec docker run ${DOCKER_NET} --rm -i $TTY \
-    --volumes-from ${DOCKER_PHPFPM} \
-    -e BEHAT_PARAMS \
-    -e "MYSQL_DATABASE=${MYSQL_DATABASE}" \
-    -e "MYSQL_USER=${MYSQL_USER}" \
-    -e "MYSQL_PASSWORD=${MYSQL_PASSWORD}" \
-    -e "MYSQL_HOST=${MYSQL_HOST}" \
-      -e "MYSQL_ENV_MYSQL_DATABASE=${MYSQL_DATABASE}" \
-      -e "MYSQL_ENV_MYSQL_USER=${MYSQL_USER}" \
-      -e "MYSQL_ENV_MYSQL_PASSWORD=${MYSQL_PASSWORD}" \
-      -e "MYSQL_ENV_MYSQL_HOST=${MYSQL_HOST}" \
-    -e "SOLR_HOST=solr" \
-    -e "CMS_DEPLOYMENT=${CMS_DEPLOYMENT}" \
-    -e "CMS_ENVIRONMENT=${CMS_ENVIRONMENT}" \
-    -w /var/www/html/behat \
-    gened/drush -r /var/www/html/docroot exec ../behat/behat -c "" behat.run.yml "$@"

@@ -71,9 +71,9 @@ default:
     Behat\MinkExtension:
       goutte: ~
       selenium2:
-        wd_host: SELENIUM_URL
-        browser: SELENIUM_BROWSER
-      base_url: SITE_URL
+        wd_host: http://selenium:4444/wd/hub
+        browser: chrome
+      base_url: http://nginx
     Drupal\DrupalExtension:
       blackbox: ~
       api_driver: "drush"
