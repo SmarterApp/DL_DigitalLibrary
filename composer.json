@@ -173,7 +173,9 @@
     "jquery/autopager": "1.0.0",
     "google/apiclient": "1.1.1",
     "jquery/more": "1.1.0",
-    "npm-asset/jstree": "3.0.8"
+    "npm-asset/jstree": "3.0.8",
+
+    "drupal/drupal-extension": "~3.0"
   },
   "sbac-used-libraries-to-add": {
     "chosen": "0.9.14 (js or package.json)",
@@ -247,6 +249,7 @@
     ]
   },
   "config": {
+    "bin-dir": "bin/",
     "vendor-dir": "vendor",
     "secure-http": false,
     "preferred-install": "dist",
