@@ -1,0 +1,96 @@
+default:
+  suites:
+    smoketest:
+      paths:
+        - %paths.base%/features
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+      filters:
+        tags: "@smoketest"
+    nonjs:
+      paths:
+        - %paths.base%/features
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+      filters:
+        tags: "~@javascript"
+    base_features:
+      paths:
+        - %paths.base%/features/base
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+    search_features:
+      paths:
+        - %paths.base%/features/search
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+    forum_features:
+      paths:
+        - %paths.base%/features/forum
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+    help_features:
+      paths:
+        - %paths.base%/features/help
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+    notification_features:
+      paths:
+        - %paths.base%/features/notification
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+  extensions:
+    Behat\MinkExtension:
+      goutte: ~
+      selenium2:
+        wd_host: SELENIUM_URL
+        browser: SELENIUM_BROWSER
+      base_url: SITE_URL
+    Drupal\DrupalExtension:
+      blackbox: ~
+      api_driver: "drush"
+      drupal:
+        drupal_root: "../docroot"
+      drush:
+        root: "../docroot"
+      text:
+        username_field: "Email Address"
+        password_field: "Password"
+        log_in: "Log into the Digital Library"
+        log_out: "Log out"
+      region_map:
+        nav: "nav.top-bar"
+        header: "div.top-bar.sub-top"
+        footer: ".bottom-bar"
+        resource_list: ".view-digital-library-resources"
+        notifications: "#notifications"
+        forum_nav: "#sbac-forum-sub-nav-forum"
+        forums: ".sbac-forum-main-container"
