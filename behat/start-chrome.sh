@@ -2,6 +2,14 @@
 
 cd $(dirname $0)
 
+CONTAINER=selenium
+
+RUNNING=$(docker inspect --format="{{ .State.Running }}" $CONTAINER 2> /dev/null)
+if [ $? -eq 0 ]; then
+  echo "$CONTAINER is already running."
+  exit 0
+fi
+
 if [ -d /sbac ]; then
     eval $(weave env)
     . ../../../env.sh
@@ -15,7 +23,7 @@ else
 fi
 
 exec docker run -d ${DOCKER_NET} \
-    --name selenium \
+    --name $CONTAINER \
     -v /dev/shm:/dev/shm \
     -p 5900:5900 \
     selenium/standalone-chrome-debug
