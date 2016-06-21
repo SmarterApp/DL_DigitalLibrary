@@ -14,10 +14,10 @@ Feature: SBAC Core Taxonomy Applied Category
     Then I should see "Elementary School"
     And I should see "Educators to Use During Instruction"
     And I should see "High Quality Professional Learning"
-	And I should see "Middle School"
-	And I should see "Students to Use During Learning"
-	And I should see "Collaborative Learning"
-	And I should see "High School"
-	And I should see "Use with Families"
+    And I should see "Middle School"
+    And I should see "Students to Use During Learning"
+    And I should see "Collaborative Learning"
+    And I should see "High School"
+    And I should see "Use with Families"
 
 #As #1 user, view Applied Category taxonomy, see the correct terms
