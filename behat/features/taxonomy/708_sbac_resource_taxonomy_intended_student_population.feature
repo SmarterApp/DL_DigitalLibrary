@@ -14,6 +14,6 @@ Feature: SBAC Resource Taxonomy Intended Student Populations
     Then I should see "All Students"
     And I should see "English Language Learners (ELL)"
     And I should see "Students with Disabilities (SWD)"
-	And I should see "Gifted & Talented (G&T)"
+    And I should see "Gifted & Talented (G&T)"
 
 #As #1 user, view Intended Student Populations taxonomy, see the correct terms

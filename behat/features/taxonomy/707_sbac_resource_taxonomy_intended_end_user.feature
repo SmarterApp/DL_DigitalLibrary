@@ -14,8 +14,8 @@ Feature: SBAC Resource Taxonomy Intended End Users
     Then I should see "Administrator"
     And I should see "Parent"
     And I should see "Student"
-	And I should see "Teacher"
-	And I should see "Coach/Coordinator"
-	And I should see "Professional Learning Community"
+    And I should see "Teacher"
+    And I should see "Coach/Coordinator"
+    And I should see "Professional Learning Community"
 
 #As #1 user, view Intended End User taxonomy, see the correct terms

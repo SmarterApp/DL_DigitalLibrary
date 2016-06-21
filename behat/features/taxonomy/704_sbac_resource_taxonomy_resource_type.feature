@@ -14,7 +14,7 @@ Feature: SBAC Resource Taxonomy Resource Type
     Then I should see "Instructional"
     And I should see "Instructional and Professional Learning"
     And I should see "Professional Learning"
-	And I should see "Playlist"
-	And I should see "Spotlight"
+    And I should see "Playlist"
+    And I should see "Spotlight"
 
 #As #1 user, view Resource Type taxonomy, see the correct terms

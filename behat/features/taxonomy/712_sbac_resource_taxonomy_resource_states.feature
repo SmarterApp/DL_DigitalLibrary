@@ -14,11 +14,11 @@ Feature: SBAC Resource Taxonomy Resource States
     Then I should see "Being Reviewed"
     And I should see "Draft"
     And I should see "In Review"
-	And I should see "Needs Posting"
-	And I should see "Needs Review"
-	And I should see "Posted"
-	And I should see "Removed"
-	And I should see "Returned"
-	And I should see "Submitted"
+    And I should see "Needs Posting"
+    And I should see "Needs Review"
+    And I should see "Posted"
+    And I should see "Removed"
+    And I should see "Returned"
+    And I should see "Submitted"
 
 #As #1 user, view Resource States taxonomy, see the correct terms

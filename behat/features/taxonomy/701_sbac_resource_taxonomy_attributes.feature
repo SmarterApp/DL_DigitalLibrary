@@ -14,6 +14,6 @@ Feature: SBAC Resource Taxonomy Formative Assessment Attributes
     Then I should see "Clarify Intended Learning"
     And I should see "Elicit Evidence"
     And I should see "Interpret Evidence"
-	And I should see "Act on Evidence"
+    And I should see "Act on Evidence"
 
 #As #1 user, view Formative Assessment Attributes taxonomy, see the correct terms

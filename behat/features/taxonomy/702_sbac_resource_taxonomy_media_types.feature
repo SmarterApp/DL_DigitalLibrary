@@ -14,9 +14,9 @@ Feature: SBAC Resource Taxonomy Media Types
     Then I should see "Video"
     And I should see "Image"
     And I should see "Document"
-	And I should see "Interactive"
-	And I should see "Presentation"
-	And I should see "Spreadsheet"
-	And I should see "Audio"
+    And I should see "Interactive"
+    And I should see "Presentation"
+    And I should see "Spreadsheet"
+    And I should see "Audio"
 
 #As #1 user, view Media Types taxonomy, see the correct terms

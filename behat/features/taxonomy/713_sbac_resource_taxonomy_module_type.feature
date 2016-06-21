@@ -14,6 +14,6 @@ Feature: SBAC Resource Taxonomy Module Type
     Then I should see "Assessment Literacy"
     And I should see "ELA Instructional"
     And I should see "Mathematics Instructional"
-	And I should see "Score Report"
+    And I should see "Score Report"
 
 #As #1 user, view Module Type taxonomy, see the correct terms
