@@ -1,6 +1,6 @@
 # vim: sw=2:ts=2:et
 Feature: SBAC Lexicon Taxonomy Glossary Terms
-	As an admin user I should be able to view the Glossary Terms taxonomy with correct terms
+  As an admin user I should be able to view the Glossary Terms taxonomy with correct terms
 
   Scenario: Log in and go to "Glossary Terms taxonomy page" as a known admin user
     Given I am on the homepage
@@ -14,15 +14,15 @@ Feature: SBAC Lexicon Taxonomy Glossary Terms
     Then I should see "State Leadership Team (SLT)"
     And I should see "State Network of Educators (SNE)"
     And I should see "Smarter Balanced Claims"
-	And I should see "Smarter Balanced Assessment Targets"
-	And I should see "Quality Criteria"
-	And I should see "Smarter Balanced Assessment Consortium"
-	And I should see "Success Criteria"
-	And I should see "Tag"
-	And I should see "Universal Design for Learning (UDL)"
-	And I should see "Professional Learning Resource"
-	And I should see "Licensing Terms"
-	And I should see "Content Specifications"
+    And I should see "Smarter Balanced Assessment Targets"
+    And I should see "Quality Criteria"
+    And I should see "Smarter Balanced Assessment Consortium"
+    And I should see "Success Criteria"
+    And I should see "Tag"
+    And I should see "Universal Design for Learning (UDL)"
+    And I should see "Professional Learning Resource"
+    And I should see "Licensing Terms"
+    And I should see "Content Specifications"
     And I should see "Copyright Clearance Form"
     And I should see "Cover Profile"
     And I should see "Comprehensible"
