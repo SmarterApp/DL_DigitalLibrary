@@ -10,7 +10,7 @@
 function sbac_user_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'user-user-field_alternate_email_address'
+  // Exported field_instance: 'user-user-field_alternate_email_address'.
   $field_instances['user-user-field_alternate_email_address'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -55,7 +55,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_district_name'
+  // Exported field_instance: 'user-user-field_district_name'.
   $field_instances['user-user-field_district_name'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -100,7 +100,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_feedback_flag'
+  // Exported field_instance: 'user-user-field_feedback_flag'.
   $field_instances['user-user-field_feedback_flag'] = array(
     'bundle' => 'user',
     'default_value' => array(
@@ -146,7 +146,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_first_name'
+  // Exported field_instance: 'user-user-field_first_name'.
   $field_instances['user-user-field_first_name'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -191,7 +191,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_grade_level_s_'
+  // Exported field_instance: 'user-user-field_grade_level_s_'.
   $field_instances['user-user-field_grade_level_s_'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -233,7 +233,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_introduction'
+  // Exported field_instance: 'user-user-field_introduction'.
   $field_instances['user-user-field_introduction'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -280,7 +280,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_last_name'
+  // Exported field_instance: 'user-user-field_last_name'.
   $field_instances['user-user-field_last_name'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -325,7 +325,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_login_count'
+  // Exported field_instance: 'user-user-field_login_count'.
   $field_instances['user-user-field_login_count'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -374,7 +374,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_position'
+  // Exported field_instance: 'user-user-field_position'.
   $field_instances['user-user-field_position'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -416,7 +416,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_privacy'
+  // Exported field_instance: 'user-user-field_privacy'.
   $field_instances['user-user-field_privacy'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -457,7 +457,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_retired'
+  // Exported field_instance: 'user-user-field_retired'.
   $field_instances['user-user-field_retired'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -498,7 +498,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_school_name'
+  // Exported field_instance: 'user-user-field_school_name'.
   $field_instances['user-user-field_school_name'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -543,7 +543,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_slt_member'
+  // Exported field_instance: 'user-user-field_slt_member'.
   $field_instances['user-user-field_slt_member'] = array(
     'bundle' => 'user',
     'default_value' => array(
@@ -589,7 +589,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_sne_member'
+  // Exported field_instance: 'user-user-field_sne_member'.
   $field_instances['user-user-field_sne_member'] = array(
     'bundle' => 'user',
     'default_value' => array(
@@ -635,7 +635,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_special_populations'
+  // Exported field_instance: 'user-user-field_special_populations'.
   $field_instances['user-user-field_special_populations'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -677,7 +677,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_sso_tenancy_hash'
+  // Exported field_instance: 'user-user-field_sso_tenancy_hash'.
   $field_instances['user-user-field_sso_tenancy_hash'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -724,7 +724,7 @@ function sbac_user_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'user-user-field_sso_uuid'
+  // Exported field_instance: 'user-user-field_sso_uuid'.
   $field_instances['user-user-field_sso_uuid'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -769,7 +769,7 @@ function sbac_user_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'user-user-field_state'
+  // Exported field_instance: 'user-user-field_state'.
   $field_instances['user-user-field_state'] = array(
     'bundle' => 'user',
     'default_value' => NULL,
@@ -812,7 +812,7 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-field_subject_s_'
+  // Exported field_instance: 'user-user-field_subject_s_'.
   $field_instances['user-user-field_subject_s_'] = array(
     'bundle' => 'user',
     'default_value' => NULL,

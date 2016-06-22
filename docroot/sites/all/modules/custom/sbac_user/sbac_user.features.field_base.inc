@@ -10,7 +10,7 @@
 function sbac_user_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_alternate_email_address'
+  // Exported field_base: 'field_alternate_email_address'.
   $field_bases['field_alternate_email_address'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_district_name'
+  // Exported field_base: 'field_district_name'.
   $field_bases['field_district_name'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -52,7 +52,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_feedback_flag'
+  // Exported field_base: 'field_feedback_flag'.
   $field_bases['field_feedback_flag'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -77,7 +77,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_first_name'
+  // Exported field_base: 'field_first_name'.
   $field_bases['field_first_name'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -98,7 +98,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_grade_level_s_'
+  // Exported field_base: 'field_grade_level_s_'.
   $field_bases['field_grade_level_s_'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -119,12 +119,13 @@ function sbac_user_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_introduction'
+  // Exported field_base: 'field_introduction'.
   $field_bases['field_introduction'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -143,7 +144,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_last_name'
+  // Exported field_base: 'field_last_name'.
   $field_bases['field_last_name'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -164,7 +165,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_login_count'
+  // Exported field_base: 'field_login_count'.
   $field_bases['field_login_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -179,7 +180,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_position'
+  // Exported field_base: 'field_position'.
   $field_bases['field_position'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -200,12 +201,13 @@ function sbac_user_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_privacy'
+  // Exported field_base: 'field_privacy'.
   $field_bases['field_privacy'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -240,7 +242,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_retired'
+  // Exported field_base: 'field_retired'.
   $field_bases['field_retired'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -264,7 +266,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_school_name'
+  // Exported field_base: 'field_school_name'.
   $field_bases['field_school_name'] = array(
     'active' => 1,
     'cardinality' => 2,
@@ -285,7 +287,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_slt_member'
+  // Exported field_base: 'field_slt_member'.
   $field_bases['field_slt_member'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -310,7 +312,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_sne_member'
+  // Exported field_base: 'field_sne_member'.
   $field_bases['field_sne_member'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -335,7 +337,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_special_populations'
+  // Exported field_base: 'field_special_populations'.
   $field_bases['field_special_populations'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -356,12 +358,13 @@ function sbac_user_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_sso_tenancy_hash'
+  // Exported field_base: 'field_sso_tenancy_hash'.
   $field_bases['field_sso_tenancy_hash'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -380,7 +383,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_sso_uuid'
+  // Exported field_base: 'field_sso_uuid'.
   $field_bases['field_sso_uuid'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -401,7 +404,7 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_state'
+  // Exported field_base: 'field_state'.
   $field_bases['field_state'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -422,12 +425,13 @@ function sbac_user_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_subject_s_'
+  // Exported field_base: 'field_subject_s_'.
   $field_bases['field_subject_s_'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -448,6 +452,7 @@ function sbac_user_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
