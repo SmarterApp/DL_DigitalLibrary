@@ -1,0 +1,9 @@
+name = SBAC Resource Taxonomy
+description = A module containing resource taxonomy functionality
+core = 7.x
+package = ~SBAC Taxonomy
+version = 7.x-1.0
+
+dependencies[] = sbac_central
+
+project path = sites/all/modules/custom/sbac_taxonomy

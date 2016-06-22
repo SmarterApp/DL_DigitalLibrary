@@ -356,7 +356,7 @@ function query_taxonomy_term($sql) {
   foreach ($result as $record) {
     $children = taxonomy_get_children($record->tid);
     if (empty($children)) {
-      $values[$record->tid] = sbac_resource_term_concat_parents($record->tid, $record->name);
+      $values[$record->tid] = sbac_resource_taxonomy_term_concat_parents($record->tid, $record->name);
     }
   }
   return $values;

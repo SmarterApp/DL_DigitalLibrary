@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Resource Taxonomy - Age Range feature.
+ */
+
+include_once 'sbac_resource_taxonomy_age_range.features.inc';

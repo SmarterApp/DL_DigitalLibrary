@@ -10,7 +10,7 @@
 function sbac_resource_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-resource-field_alignment_tags'
+  // Exported field_instance: 'node-resource-field_alignment_tags'.
   $field_instances['node-resource-field_alignment_tags'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -64,7 +64,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_alignment_term'
+  // Exported field_instance: 'node-resource-field_alignment_term'.
   $field_instances['node-resource-field_alignment_term'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -83,6 +83,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 42,
@@ -92,6 +93,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'tooltip',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 4,
@@ -124,7 +126,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_alt_body'
+  // Exported field_instance: 'node-resource-field_alt_body'.
   $field_instances['node-resource-field_alt_body'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -184,7 +186,7 @@ function sbac_resource_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'node-resource-field_asset_downloads'
+  // Exported field_instance: 'node-resource-field_asset_downloads'.
   $field_instances['node-resource-field_asset_downloads'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -246,7 +248,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_attributes'
+  // Exported field_instance: 'node-resource-field_attributes'.
   $field_instances['node-resource-field_attributes'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -265,6 +267,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 21,
@@ -301,7 +304,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_author'
+  // Exported field_instance: 'node-resource-field_author'.
   $field_instances['node-resource-field_author'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -359,7 +362,7 @@ function sbac_resource_field_default_field_instances() {
     'xss' => 1,
   );
 
-  // Exported field_instance: 'node-resource-field_classroom_technologies'
+  // Exported field_instance: 'node-resource-field_classroom_technologies'.
   $field_instances['node-resource-field_classroom_technologies'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -378,6 +381,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 35,
@@ -416,7 +420,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_connection_to_ccss'
+  // Exported field_instance: 'node-resource-field_connection_to_ccss'.
   $field_instances['node-resource-field_connection_to_ccss'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -475,7 +479,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_connection_to_fap'
+  // Exported field_instance: 'node-resource-field_connection_to_fap'.
   $field_instances['node-resource-field_connection_to_fap'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -533,7 +537,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_contexts'
+  // Exported field_instance: 'node-resource-field_contexts'.
   $field_instances['node-resource-field_contexts'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -591,7 +595,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_copyright_clearace_forms'
+  // Exported field_instance: 'node-resource-field_copyright_clearace_forms'.
   $field_instances['node-resource-field_copyright_clearace_forms'] = array(
     'bundle' => 'resource',
     'deleted' => 0,
@@ -647,7 +651,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_digital_media_type'
+  // Exported field_instance: 'node-resource-field_digital_media_type'.
   $field_instances['node-resource-field_digital_media_type'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -666,6 +670,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 7,
@@ -704,7 +709,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_document_id'
+  // Exported field_instance: 'node-resource-field_document_id'.
   $field_instances['node-resource-field_document_id'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -759,7 +764,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_educational_use'
+  // Exported field_instance: 'node-resource-field_educational_use'.
   $field_instances['node-resource-field_educational_use'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -778,6 +783,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 8,
@@ -816,7 +822,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_focus'
+  // Exported field_instance: 'node-resource-field_focus'.
   $field_instances['node-resource-field_focus'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -835,6 +841,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 23,
@@ -871,7 +878,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_geographical_settings'
+  // Exported field_instance: 'node-resource-field_geographical_settings'.
   $field_instances['node-resource-field_geographical_settings'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -890,6 +897,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 34,
@@ -928,7 +936,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_grades'
+  // Exported field_instance: 'node-resource-field_grades'.
   $field_instances['node-resource-field_grades'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -947,6 +955,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 32,
@@ -985,7 +994,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_html5'
+  // Exported field_instance: 'node-resource-field_html5'.
   $field_instances['node-resource-field_html5'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -1042,7 +1051,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_intended_end_user'
+  // Exported field_instance: 'node-resource-field_intended_end_user'.
   $field_instances['node-resource-field_intended_end_user'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1061,6 +1070,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 6,
@@ -1099,7 +1109,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_intended_student'
+  // Exported field_instance: 'node-resource-field_intended_student'.
   $field_instances['node-resource-field_intended_student'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1118,6 +1128,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 33,
@@ -1156,7 +1167,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_is_hidden'
+  // Exported field_instance: 'node-resource-field_is_hidden'.
   $field_instances['node-resource-field_is_hidden'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -1213,7 +1224,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_learning_goals'
+  // Exported field_instance: 'node-resource-field_learning_goals'.
   $field_instances['node-resource-field_learning_goals'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1273,7 +1284,7 @@ function sbac_resource_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'node-resource-field_license'
+  // Exported field_instance: 'node-resource-field_license'.
   $field_instances['node-resource-field_license'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1292,6 +1303,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 20,
@@ -1329,7 +1341,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_license_information'
+  // Exported field_instance: 'node-resource-field_license_information'.
   $field_instances['node-resource-field_license_information'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -1386,7 +1398,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_license_secondary'
+  // Exported field_instance: 'node-resource-field_license_secondary'.
   $field_instances['node-resource-field_license_secondary'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1439,7 +1451,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_node_avg_rating'
+  // Exported field_instance: 'node-resource-field_node_avg_rating'.
   $field_instances['node-resource-field_node_avg_rating'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1500,7 +1512,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_permanent_link_settings'
+  // Exported field_instance: 'node-resource-field_permanent_link_settings'.
   $field_instances['node-resource-field_permanent_link_settings'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -1556,7 +1568,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_pii'
+  // Exported field_instance: 'node-resource-field_pii'.
   $field_instances['node-resource-field_pii'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1609,7 +1621,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_posting_options'
+  // Exported field_instance: 'node-resource-field_posting_options'.
   $field_instances['node-resource-field_posting_options'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1661,7 +1673,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_posting_options_comment'
+  // Exported field_instance: 'node-resource-field_posting_options_comment'.
   $field_instances['node-resource-field_posting_options_comment'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1720,7 +1732,7 @@ function sbac_resource_field_default_field_instances() {
     'xss' => 1,
   );
 
-  // Exported field_instance: 'node-resource-field_principles'
+  // Exported field_instance: 'node-resource-field_principles'.
   $field_instances['node-resource-field_principles'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1784,7 +1796,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_publisher'
+  // Exported field_instance: 'node-resource-field_publisher'.
   $field_instances['node-resource-field_publisher'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1842,7 +1854,7 @@ function sbac_resource_field_default_field_instances() {
     'xss' => 1,
   );
 
-  // Exported field_instance: 'node-resource-field_recent_publishers'
+  // Exported field_instance: 'node-resource-field_recent_publishers'.
   $field_instances['node-resource-field_recent_publishers'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1899,7 +1911,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_recent_reviewers'
+  // Exported field_instance: 'node-resource-field_recent_reviewers'.
   $field_instances['node-resource-field_recent_reviewers'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -1956,7 +1968,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_resource_actions'
+  // Exported field_instance: 'node-resource-field_resource_actions'.
   $field_instances['node-resource-field_resource_actions'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -2015,7 +2027,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_resource_state'
+  // Exported field_instance: 'node-resource-field_resource_state'.
   $field_instances['node-resource-field_resource_state'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -2072,7 +2084,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_resource_thumbnail'
+  // Exported field_instance: 'node-resource-field_resource_thumbnail'.
   $field_instances['node-resource-field_resource_thumbnail'] = array(
     'bundle' => 'resource',
     'deleted' => 0,
@@ -2136,7 +2148,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_smarter_balanced_keyword'
+  // Exported field_instance: 'node-resource-field_smarter_balanced_keyword'.
   $field_instances['node-resource-field_smarter_balanced_keyword'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2155,6 +2167,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 11,
@@ -2193,7 +2206,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_student_agency'
+  // Exported field_instance: 'node-resource-field_student_agency'.
   $field_instances['node-resource-field_student_agency'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2252,7 +2265,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_subject'
+  // Exported field_instance: 'node-resource-field_subject'.
   $field_instances['node-resource-field_subject'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2271,6 +2284,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 9,
@@ -2309,7 +2323,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_subscription_package_type'
+  // Exported field_instance: 'node-resource-field_subscription_package_type'.
   $field_instances['node-resource-field_subscription_package_type'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -2365,7 +2379,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_success_criteria'
+  // Exported field_instance: 'node-resource-field_success_criteria'.
   $field_instances['node-resource-field_success_criteria'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2423,7 +2437,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_supporting_evidence'
+  // Exported field_instance: 'node-resource-field_supporting_evidence'.
   $field_instances['node-resource-field_supporting_evidence'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2481,7 +2495,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_temp'
+  // Exported field_instance: 'node-resource-field_temp'.
   $field_instances['node-resource-field_temp'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -2539,7 +2553,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_temporary_public_link'
+  // Exported field_instance: 'node-resource-field_temporary_public_link'.
   $field_instances['node-resource-field_temporary_public_link'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2591,7 +2605,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_temporary_public_link_time'
+  // Exported field_instance: 'node-resource-field_temporary_public_link_time'.
   $field_instances['node-resource-field_temporary_public_link_time'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2644,7 +2658,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_thumbnail_uri'
+  // Exported field_instance: 'node-resource-field_thumbnail_uri'.
   $field_instances['node-resource-field_thumbnail_uri'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2703,7 +2717,7 @@ function sbac_resource_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'node-resource-field_total_views'
+  // Exported field_instance: 'node-resource-field_total_views'.
   $field_instances['node-resource-field_total_views'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -2769,7 +2783,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_unique_downloads'
+  // Exported field_instance: 'node-resource-field_unique_downloads'.
   $field_instances['node-resource-field_unique_downloads'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2830,7 +2844,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_unique_views'
+  // Exported field_instance: 'node-resource-field_unique_views'.
   $field_instances['node-resource-field_unique_views'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -2896,7 +2910,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_view_permissions'
+  // Exported field_instance: 'node-resource-field_view_permissions'.
   $field_instances['node-resource-field_view_permissions'] = array(
     'bundle' => 'resource',
     'default_value' => array(
@@ -2952,7 +2966,7 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_view_permissions_per_state'
+  // Exported field_instance: 'node-resource-field_view_permissions_per_state'.
   $field_instances['node-resource-field_view_permissions_per_state'] = array(
     'bundle' => 'resource',
     'default_value' => NULL,
@@ -2971,6 +2985,7 @@ function sbac_resource_field_default_field_instances() {
         'module' => 'ds',
         'settings' => array(
           'taxonomy_term_reference_view_mode' => 'full',
+          'use_content_language' => TRUE,
         ),
         'type' => 'ds_taxonomy_view_mode',
         'weight' => 17,

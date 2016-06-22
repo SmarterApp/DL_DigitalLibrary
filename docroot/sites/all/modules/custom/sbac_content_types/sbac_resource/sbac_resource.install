@@ -180,98 +180,6 @@ function sbac_resource_update_7002() {
 }
 
 /**
- * Implements of hook_update_N().
- *
- * Add the terms to the appropriate vocab
- */
-function sbac_resource_update_7003() {
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'intended_end_user'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Administrator');
-    $terms[] = array('name' => 'Mentor');
-    $terms[] = array('name' => 'Parent');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'digital_media_type'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Audio');
-    $terms[] = array('name' => 'Interactive');
-    $terms[] = array('name' => 'Document');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'educational_use'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Analogies');
-    $terms[] = array('name' => 'Assessment');
-    $terms[] = array('name' => 'Auditory');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'subject'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'English Language Arts');
-    $terms[] = array('name' => 'Mathematics');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'learning_resource_type'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Interm/Summative Assessment');
-    $terms[] = array('name' => 'Learning Task');
-    $terms[] = array('name' => 'Lesson');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'smarter_balanced_keyword'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Assessment Literacy');
-    $terms[] = array('name' => 'Exemplar Module');
-    $terms[] = array('name' => 'Score Report');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'age_range'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => '0 - 2');
-    $terms[] = array('name' => '3 - 5');
-    $terms[] = array('name' => '5 - 8');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'interactivity_type'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Active');
-    $terms[] = array('name' => 'Expositive');
-    $terms[] = array('name' => 'Mixed');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'education_alignment'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Common Core State Standards');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'alignment_type'))->fetchAssoc();
-  if ($vocab) {
-    // Define the terms.
-    $terms[] = array('name' => 'Alignment Type');
-    sbac_resource_save_taxonomy_term($terms, $vocab);
-  }
-}
-
-/**
  * Helper function to create terms.
  *
  * @param $terms
@@ -334,75 +242,6 @@ function sbac_resource_update_7006() {
   field_delete_instance($field);
 
   return $ret;
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Adds states to the vocab.
- */
-function sbac_resource_update_7007() {
-  $states = array(
-    'AL' => 'Alabama',
-    'AK' => 'Alaska',
-    'AZ' => 'Arizona',
-    'AR' => 'Arkansas',
-    'CA' => 'California',
-    'CO' => 'Colorado',
-    'CT' => 'Connecticut',
-    'DE' => 'Delaware',
-    'FL' => 'Florida',
-    'GA' => 'Georgia',
-    'HI' => 'Hawaii',
-    'ID' => 'Idaho',
-    'IL' => 'Illinois',
-    'IN' => 'Indiana',
-    'IA' => 'Iowa',
-    'KS' => 'Kansas',
-    'KY' => 'Kentucky',
-    'LA' => 'Louisiana',
-    'ME' => 'Maine',
-    'MD' => 'Maryland',
-    'MA' => 'Massachusetts',
-    'MI' => 'Michigan',
-    'MN' => 'Minnesota',
-    'MS' => 'Mississippi',
-    'MO' => 'Missouri',
-    'MT' => 'Montana',
-    'NE' => 'Nebraska',
-    'NV' => 'Nevada',
-    'NH' => 'New Hampshire',
-    'NJ' => 'New Jersey',
-    'NM' => 'New Mexico',
-    'NY' => 'New York',
-    'NC' => 'North Carolina',
-    'ND' => 'North Dakota',
-    'OH' => 'Ohio',
-    'OK' => 'Oklahoma',
-    'OR' => 'Oregon',
-    'PA' => 'Pennsylvania',
-    'RI' => 'Rhode Island',
-    'SC' => 'South Carolina',
-    'SD' => 'South Dakota',
-    'TN' => 'Tennessee',
-    'TX' => 'Texas',
-    'UT' => 'Utah',
-    'VT' => 'Vermont',
-    'VA' => 'Virginia',
-    'WA' => 'Washington',
-    'WV' => 'West Virginia',
-    'WI' => 'Wisconsin',
-    'WY' => 'Wyoming',
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'states'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($states as $ab => $state) {
-      taxonomy_term_save((object) array(
-        'name' => $state,
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
 }
 
 /**
@@ -473,54 +312,6 @@ function sbac_resource_update_7011() {
 /**
  * Implements of hook_update_N().
  *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7012() {
-  $licenses = array(
-    'license' => array(
-      0 => 'Digital Library base terms',
-      1 => 'CC Attribution',
-      2 => 'CC Attribution Share Alike',
-      3 => 'CC Attribution No Derivatives',
-      4 => 'CC Attribution Non-Commercial',
-      5 => 'CC Attribution Non-Commercial Share Alike',
-      6 => 'CC Attribution Non-Commercial No Derivatives',
-    ),
-    'license_url' => array(
-      0 => 'http://creativecommons.org/licenses/by-nd/3.0/us',
-      1 => 'http://creativecommons.org/licenses/by-nd/3.1/us',
-      2 => 'http://creativecommons.org/licenses/by-nd/3.2/us',
-      3 => 'http://creativecommons.org/licenses/by-nd/3.3/us',
-      4 => 'http://creativecommons.org/licenses/by-nd/3.4/us',
-      5 => 'http://creativecommons.org/licenses/by-nd/3.5/us',
-      6 => 'http://creativecommons.org/licenses/by-nd/3.6/us',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-      3 => -7,
-      4 => -6,
-      5 => -5,
-      6 => -4,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'license'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($licenses['license'] as $index => $license) {
-      taxonomy_term_save((object) array(
-        'name' => $license,
-        'description' => $licenses['license_url'][$index],
-        'weight' => $licenses['weight'][$index],
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
-}
-
-/**
- * Implements of hook_update_N().
- *
  * Delete the field_license
  */
 function sbac_resource_update_7013() {
@@ -545,68 +336,6 @@ function sbac_resource_update_7014() {
 /**
  * Implements of hook_update_N().
  *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7015() {
-  $attributes = array(
-    'attributes' => array(
-      0 => 'Clarify Intended Learning',
-      1 => 'Elicit Evidence',
-      2 => 'Interpret Evidence',
-      3 => 'Act on Evidence',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-      3 => -7,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'attributes'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($attributes['attributes'] as $index => $attribute) {
-      taxonomy_term_save((object) array(
-        'name' => $attribute,
-        'weight' => $attributes['weight'][$index],
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7016() {
-  $focuses = array(
-    'focuses' => array(
-      0 => 'Instructional Resource',
-      1 => 'Professional Learning Resource',
-      2 => 'Professional Learning and Instructional Resource',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'focus'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($focuses['focuses'] as $index => $focus) {
-      taxonomy_term_save((object) array(
-        'name' => $focus,
-        'weight' => $focuses['weight'][$index],
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
-}
-
-/**
- * Implements of hook_update_N().
- *
  * Delete the field_age_range
  */
 function sbac_resource_update_7017() {
@@ -619,76 +348,6 @@ function sbac_resource_update_7017() {
 /**
  * Implements of hook_update_N().
  *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7018() {
-  $grades = array(
-    'grades' => array(
-      0 => 'KG - Kindergarten',
-      1 => '1 - First Grade',
-      2 => '2 - Second Grade',
-      3 => '3 - Third Grade',
-      4 => '4 - Fourth Grade',
-      5 => '5 - Fifth Grade',
-      6 => '6 - Sixth Grade',
-      7 => '7 - Seventh Grade',
-      8 => '8 - Eighth Grade',
-      9 => '9 - Ninth Grade',
-      10 => '10 - Tenth Grade',
-      11 => '11 - Eleventh Grade',
-      12 => '12 - Twelveth Grade',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-      3 => -7,
-      4 => -6,
-      5 => -5,
-      6 => -4,
-      7 => -3,
-      8 => -2,
-      9 => -1,
-      10 => 0,
-      11 => 1,
-      12 => 2,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'grades'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($grades['grades'] as $index => $grade) {
-      taxonomy_term_save((object) array(
-        'name' => $grade,
-        'weight' => $grades['weight'][$index],
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7019() {
-  sbac_resource_update_7015();
-  sbac_resource_update_7016();
-  sbac_resource_update_7018();
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7020() {
-  sbac_resource_update_7012();
-}
-
-/**
- * Implements of hook_update_N().
- *
  * Delete the field_media_types
  */
 function sbac_resource_update_7021() {
@@ -696,98 +355,6 @@ function sbac_resource_update_7021() {
   module_load_include('inc','field','field.crud');
   field_delete_field('field_media_types');
   return $ret;
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7022() {
-  $terms = array(
-    'terms' => array(
-      0 => 'General Education',
-      1 => 'Students with Disabilities (SWD)',
-      2 => 'English Language Learners (ELL)',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'intended_student_populations'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($terms['terms'] as $index => $term) {
-      taxonomy_term_save((object) array(
-        'name' => $term,
-        'weight' => $terms['weight'][$index],
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7023() {
-  $terms = array(
-    'terms' => array(
-      0 => 'Urban',
-      1 => 'Suburban',
-      2 => 'Rural',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'geographical_settings'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($terms['terms'] as $index => $term) {
-      taxonomy_term_save((object) array(
-        'name' => $term,
-        'weight' => $terms['weight'][$index],
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7024() {
-  sbac_resource_update_7022();
-  sbac_resource_update_7023();
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7025() {
-  sbac_resource_update_7015();
-  sbac_resource_update_7016();
-  sbac_resource_update_7018();
-  sbac_resource_update_7022();
-  sbac_resource_update_7023();
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7026() {
-  sbac_resource_update_7012();
 }
 
 /**
@@ -808,37 +375,6 @@ function sbac_resource_update_7027() {
   return $ret;
 }
 
-
-/**
- * Implements of hook_update_N().
- *
- * Creates taxonomy terms.
- */
-function sbac_resource_update_7028() {
-  $terms = array(
-    'terms' => array(
-      0 => 'Tablets/Computers for Teacher',
-      1 => 'Video Camera',
-      2 => 'Still Camera',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'technologies_for_classroom_use'))->fetchAssoc();
-  if ($vocab) {
-    foreach ($terms['terms'] as $index => $term) {
-      taxonomy_term_save((object) array(
-        'name' => $term,
-        'weight' => $terms['weight'][$index],
-        'vid' => $vocab['vid'],
-      ));
-    }
-  }
-}
-
 /**
  * Implements of hook_update_N().
  *
@@ -857,36 +393,6 @@ function sbac_resource_update_7029() {
  */
 function sbac_resource_update_7030() {
   // do not use, it's already been taken.
-}
-
-/**
- * Removes old License terms and creates new ones.
- */
-function sbac_resource_update_7031() {
-  $vocab = db_query("SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = 'license'")->fetch();
-
-  $result = db_query("SELECT tid FROM taxonomy_term_data WHERE vid = :vid", array(':vid' => $vocab->vid));
-
-  foreach ($result as $row) {
-    taxonomy_term_delete($row->tid);
-  }
-
-  $terms = array(
-    'The Smarter Balanced Copyright Clearance Form' => '',
-    'Creative Commons Attribution' => 'http://creativecommons.org/licenses/by/3.0/',
-    'Creative Commons Attribution No Derivatives' => 'http://creativecommons.org/licenses/by-nd/3.0/',
-    'All of the submitted materials are free of copyright restrictions and in the public domain' => '',
-  );
-
-  $weight = -10;
-  foreach ($terms as $name => $desc) {
-    taxonomy_term_save((object) array(
-      'name' => $name,
-      'description' => $desc,
-      'weight' => $weight++,
-      'vid' => $vocab->vid,
-    ));
-  }
 }
 
 /**
@@ -1147,32 +653,6 @@ function sbac_resource_update_7049() {
   unset($nodes);
 
   return "Added states for each node";
-}
-
-/**
- * Remove Creative Commons link
- */
-function sbac_resource_update_7050() {
-  $terms = taxonomy_get_term_by_name('Creative Commons Attribution No Derivatives', 'license');
-  if (count($terms)) {
-    foreach ($terms as $term) {
-      $term->description = '';
-      taxonomy_term_save($term);
-    }
-  }
-}
-
-/**
- * Remove Creative Commons link
- */
-function sbac_resource_update_7051() {
-  $terms = taxonomy_get_term_by_name('Creative Commons Attribution', 'license');
-  if (count($terms)) {
-    foreach ($terms as $term) {
-      $term->description = '';
-      taxonomy_term_save($term);
-    }
-  }
 }
 
 /**
