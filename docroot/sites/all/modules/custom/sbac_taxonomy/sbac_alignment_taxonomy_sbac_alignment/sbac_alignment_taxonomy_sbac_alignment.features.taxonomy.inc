@@ -1,21 +1,21 @@
 <?php
 /**
  * @file
- * sbac_alignment.features.taxonomy.inc
+ * sbac_alignment_taxonomy_sbac_alignment.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_alignment_taxonomy_default_vocabularies() {
+function sbac_alignment_taxonomy_sbac_alignment_taxonomy_default_vocabularies() {
   return array(
-    'education_alignment' => array(
-      'name' => 'Education Alignment',
-      'machine_name' => 'education_alignment',
+    'sbac_alignment' => array(
+      'name' => 'SBAC Alignment',
+      'machine_name' => 'sbac_alignment',
       'description' => '',
-      'hierarchy' => 1,
+      'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => -7,
+      'weight' => 10,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',
