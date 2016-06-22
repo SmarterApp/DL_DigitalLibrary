@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function sbac_help_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -40,7 +40,7 @@ function sbac_help_field_group_info() {
       ),
     ),
   );
-  $export['group_general|node|help_page|form'] = $field_group;
+  $field_groups['group_general|node|help_page|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -69,7 +69,7 @@ function sbac_help_field_group_info() {
       ),
     ),
   );
-  $export['group_help_container|node|help_page|form'] = $field_group;
+  $field_groups['group_help_container|node|help_page|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -97,7 +97,7 @@ function sbac_help_field_group_info() {
       ),
     ),
   );
-  $export['group_help_left|node|help_page|form'] = $field_group;
+  $field_groups['group_help_left|node|help_page|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -125,7 +125,14 @@ function sbac_help_field_group_info() {
       ),
     ),
   );
-  $export['group_help_right|node|help_page|form'] = $field_group;
+  $field_groups['group_help_right|node|help_page|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('General');
+  t('Help Container');
+  t('Left Group');
+  t('Right Group');
+
+  return $field_groups;
 }
