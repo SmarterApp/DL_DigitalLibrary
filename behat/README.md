@@ -11,7 +11,7 @@ When using Linux (local or Dimensions Data) one can start a Selenium docker inst
 by running `./start-chrome.sh` in order to run the javascript tests inside a container.
 
 To run the tests use `run-all.sh` in the behat/ directory.
-  - `./run-all.sh` will run all the tests
+  - `./run-all.sh --colors` will run all the tests highlighting text with color
   - `./run-all.sh --tags=@smoketest` will run the tests marked as smoke tests
   - `./run-all.sh --tags=~@javascript` will run the tests that do not need Selenium
 
