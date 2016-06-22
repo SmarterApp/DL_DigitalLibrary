@@ -86,7 +86,7 @@ function sbac_alignment_ajax_terms_callback() {
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
   $publication = $parent->field_alignment_publication['und'][0]['value'];
   $output_array['publication'] = (empty($publication)) ? 0 : $publication;
-  $output_array['depth'] = $depth = sbac_alignment_term_depth($parent->tid);
+  $output_array['depth'] = $depth = sbac_alignment_taxonomy_term_depth($parent->tid);
   if ($publication == 'CC-MA-v1') {
     $level_title = $ma_titles[$depth];
   }

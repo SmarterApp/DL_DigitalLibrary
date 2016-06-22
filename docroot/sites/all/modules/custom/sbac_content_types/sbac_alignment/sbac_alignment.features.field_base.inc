@@ -10,7 +10,7 @@
 function sbac_alignment_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_alignment_grade'
+  // Exported field_base: 'field_alignment_grade'.
   $field_bases['field_alignment_grade'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_alignment_key'
+  // Exported field_base: 'field_alignment_key'.
   $field_bases['field_alignment_key'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -52,7 +52,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_alignment_publication'
+  // Exported field_base: 'field_alignment_publication'.
   $field_bases['field_alignment_publication'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -73,7 +73,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_alignment_shortname'
+  // Exported field_base: 'field_alignment_shortname'.
   $field_bases['field_alignment_shortname'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -92,7 +92,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_alignment_type'
+  // Exported field_base: 'field_alignment_type'.
   $field_bases['field_alignment_type'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -113,12 +113,13 @@ function sbac_alignment_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_dot_notation'
+  // Exported field_base: 'field_dot_notation'.
   $field_bases['field_dot_notation'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -139,7 +140,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_education_alignment'
+  // Exported field_base: 'field_education_alignment'.
   $field_bases['field_education_alignment'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -160,12 +161,13 @@ function sbac_alignment_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_item_url'
+  // Exported field_base: 'field_item_url'.
   $field_bases['field_item_url'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -186,7 +188,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_resource_reference'
+  // Exported field_base: 'field_resource_reference'.
   $field_bases['field_resource_reference'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -221,7 +223,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_sbacdrupaluid'
+  // Exported field_base: 'field_sbacdrupaluid'.
   $field_bases['field_sbacdrupaluid'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -242,7 +244,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_sbacgrade'
+  // Exported field_base: 'field_sbacgrade'.
   $field_bases['field_sbacgrade'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -278,7 +280,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_sbackey'
+  // Exported field_base: 'field_sbackey'.
   $field_bases['field_sbackey'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -299,7 +301,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_sbacparent'
+  // Exported field_base: 'field_sbacparent'.
   $field_bases['field_sbacparent'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -320,7 +322,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_sbacpublication'
+  // Exported field_base: 'field_sbacpublication'.
   $field_bases['field_sbacpublication'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -347,7 +349,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_sbacshortname'
+  // Exported field_base: 'field_sbacshortname'.
   $field_bases['field_sbacshortname'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -368,7 +370,7 @@ function sbac_alignment_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_sbactreelevel'
+  // Exported field_base: 'field_sbactreelevel'.
   $field_bases['field_sbactreelevel'] = array(
     'active' => 1,
     'cardinality' => 1,

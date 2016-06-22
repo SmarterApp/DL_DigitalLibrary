@@ -17,42 +17,6 @@ function sbac_help_update_7200() {
 
 /**
  * Implements hook_update_N().
- * Creates Taxonomy Tree for user roles.
- */
-function sbac_help_update_7201() {
-  $vocabulary = new stdClass();
-  $vocabulary->name = 'SBAC User Roles';
-  $vocabulary->machine_name = 'sbac_user_roles';
-
-  if (!taxonomy_vocabulary_machine_name_load('sbac_user_roles')) {
-    taxonomy_vocabulary_save($vocabulary);
-  }
-
-  $roles = sbac_central_user_roles();
-  $vid = taxonomy_vocabulary_machine_name_load('sbac_user_roles');
-  $vid = $vid->vid;
-
-  // Add all users.
-  $term = new stdClass();
-  $term->vid = $vid;
-  $term->name = 'All User Roles';
-  $term->weight = 0;
-
-  taxonomy_term_save($term);
-
-  foreach ($roles as $idx => $role) {
-    $term = new stdClass();
-    $term->vid = $vid;
-    $term->name = $role->name;
-    $term->weight = $role->weight + 1;
-    $term->description = $role->rid;
-
-    taxonomy_term_save($term);
-  }
-}
-
-/**
- * Implements hook_update_N().
  * Updates all help_page nodes with All User as roles viewable.
  */
 function sbac_help_update_7202() {

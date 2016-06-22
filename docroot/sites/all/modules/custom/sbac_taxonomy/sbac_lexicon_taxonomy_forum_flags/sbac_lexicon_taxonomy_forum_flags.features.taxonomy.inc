@@ -1,21 +1,21 @@
 <?php
 /**
  * @file
- * sbac_user.features.taxonomy.inc
+ * sbac_lexicon_taxonomy_forum_flags.features.taxonomy.inc
  */
 
 /**
  * Implements hook_taxonomy_default_vocabularies().
  */
-function sbac_user_taxonomy_default_vocabularies() {
+function sbac_lexicon_taxonomy_forum_flags_taxonomy_default_vocabularies() {
   return array(
-    'title' => array(
-      'name' => 'Title',
-      'machine_name' => 'title',
-      'description' => '',
+    'forum_flags' => array(
+      'name' => 'Forum Flags',
+      'machine_name' => 'forum_flags',
+      'description' => 'The flags that are available when a user wishes to flag a forum topic or comment.',
       'hierarchy' => 0,
-      'module' => 'taxonomy',
-      'weight' => 0,
+      'module' => '',
+      'weight' => -3,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Core Taxonomy - Applied Category feature.
+ */
+
+include_once 'sbac_core_taxonomy_applied_category.features.inc';

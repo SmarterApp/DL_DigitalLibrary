@@ -189,17 +189,5 @@ function sbac_core_user_default_permissions() {
     'module' => 'taskit',
   );
 
-  // Exported permission: 'view rate results page'.
-  $permissions['view rate results page'] = array(
-    'name' => 'view rate results page',
-    'roles' => array(
-      'administrator' => 'administrator',
-      'authenticated user' => 'authenticated user',
-      'digital library administrator' => 'digital library administrator',
-      'system administrator' => 'system administrator',
-    ),
-    'module' => 'rate',
-  );
-
   return $permissions;
 }

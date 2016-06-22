@@ -10,21 +10,13 @@
 function sbac_lexicon_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_comment_ref'
+  // Exported field_base: 'field_comment_ref'.
   $field_bases['field_comment_ref'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_comment_ref',
-    'foreign keys' => array(
-      'comment' => array(
-        'columns' => array(
-          'target_id' => 'cid',
-        ),
-        'table' => 'comment',
-      ),
-    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -55,21 +47,13 @@ function sbac_lexicon_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_message_rendered_body'
+  // Exported field_base: 'field_message_rendered_body'.
   $field_bases['field_message_rendered_body'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_message_rendered_body',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -82,21 +66,13 @@ function sbac_lexicon_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_message_rendered_subject'
+  // Exported field_base: 'field_message_rendered_subject'.
   $field_bases['field_message_rendered_subject'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_message_rendered_subject',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -111,7 +87,7 @@ function sbac_lexicon_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'message_subscribe_email'
+  // Exported field_base: 'message_subscribe_email'.
   $field_bases['message_subscribe_email'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -120,7 +96,6 @@ function sbac_lexicon_field_default_field_bases() {
       0 => 'user',
     ),
     'field_name' => 'message_subscribe_email',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -139,7 +114,7 @@ function sbac_lexicon_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'message_text'
+  // Exported field_base: 'message_text'.
   $field_bases['message_text'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -148,14 +123,6 @@ function sbac_lexicon_field_default_field_bases() {
       0 => 'message_type',
     ),
     'field_name' => 'message_text',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',

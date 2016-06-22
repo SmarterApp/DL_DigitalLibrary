@@ -10,7 +10,7 @@
 function sbac_lexicon_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'message-comment_insert-field_comment_ref'
+  // Exported field_instance: 'message-comment_insert-field_comment_ref'.
   $field_instances['message-comment_insert-field_comment_ref'] = array(
     'bundle' => 'comment_insert',
     'default_value' => NULL,
@@ -68,7 +68,8 @@ function sbac_lexicon_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'message-comment_insert-field_message_rendered_body'
+  // Exported field_instance:
+  // 'message-comment_insert-field_message_rendered_body'.
   $field_instances['message-comment_insert-field_message_rendered_body'] = array(
     'bundle' => 'comment_insert',
     'default_value' => NULL,
@@ -114,7 +115,8 @@ function sbac_lexicon_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'message-comment_insert-field_message_rendered_subject'
+  // Exported field_instance:
+  // 'message-comment_insert-field_message_rendered_subject'.
   $field_instances['message-comment_insert-field_message_rendered_subject'] = array(
     'bundle' => 'comment_insert',
     'default_value' => NULL,
@@ -160,7 +162,7 @@ function sbac_lexicon_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'message_type-message_type-message_text'
+  // Exported field_instance: 'message_type-message_type-message_text'.
   $field_instances['message_type-message_type-message_text'] = array(
     'bundle' => 'message_type',
     'default_value' => NULL,
@@ -193,7 +195,7 @@ function sbac_lexicon_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'user-user-message_subscribe_email'
+  // Exported field_instance: 'user-user-message_subscribe_email'.
   $field_instances['user-user-message_subscribe_email'] = array(
     'bundle' => 'user',
     'default_value' => array(

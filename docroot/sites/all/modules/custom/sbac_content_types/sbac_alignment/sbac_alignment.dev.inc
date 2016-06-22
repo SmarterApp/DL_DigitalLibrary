@@ -68,7 +68,7 @@ function sbac_alignment_batch_importer_page() {
         ),
       ),
     );
-    sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
+    sbac_alignment_taxonomy_add_terms($edu_alignment_vocab->vid, $terms);
   }
 
   // Only available types are "Mathematics" and "English / Language Arts"
@@ -168,7 +168,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, $api_type, &$context) {
         $term['weight'] = $weight;
       }
       $parent_tid = $grade_terms[$grade]->tid;
-      $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
+      $new_term = sbac_alignment_taxonomy_add_term($vid, $term, $parent_tid);
       $parents[$key] = $new_term->tid;
     }
     else { // treeLevel >= 2
@@ -176,7 +176,7 @@ function sbac_alignment_batch($vid, $json, $grade_terms, $api_type, &$context) {
       if(isset($parents[$parent_key])) {
         $parent_tid = $parents[$parent_key];
         
-        $new_term = sbac_alignment_add_term($vid, $term, $parent_tid);
+        $new_term = sbac_alignment_taxonomy_add_term($vid, $term, $parent_tid);
         $parents[$key] = $new_term->tid;
       }
       else {
@@ -263,7 +263,7 @@ function sbac_alignment_test_import() {
     ),
   );
   
-  sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
+  sbac_alignment_taxonomy_add_terms($edu_alignment_vocab->vid, $terms);
 
   $subject = array_pop(taxonomy_get_term_by_name('English / Language Arts'));
   
@@ -290,7 +290,7 @@ function sbac_alignment_test_import() {
     if ($term['treeLevel'] < 2) {
       $parent_tid = $grade_terms[$grade]->tid;
       $key = $grade . '|' . $term['key'];
-      $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+      $parents[$key] = sbac_alignment_taxonomy_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
     }
     elseif(($tree_level = $term['treeLevel']) >=2) {
       $parent_key = $grade . '|' . $term['fkParent'];
@@ -304,7 +304,7 @@ function sbac_alignment_test_import() {
       }
       else {
       $key = $grade . '|' . $term['key'];
-      $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+      $parents[$key] = sbac_alignment_taxonomy_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
       }
     }
     else{
@@ -399,7 +399,7 @@ function sbac_alignment_import_ccss() {
       ),
     );
     
-    sbac_alignment_add_terms($edu_alignment_vocab->vid, $terms);
+    sbac_alignment_taxonomy_add_terms($edu_alignment_vocab->vid, $terms);
   }
 
   if(isset($_GET['type'])) {
@@ -443,7 +443,7 @@ function sbac_alignment_import_ccss() {
       if ($term['treeLevel'] < 2) {
         $parent_tid = $grade_terms[$grade]->tid;
         $key = $grade . '|' . $term['key'];
-        $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+        $parents[$key] = sbac_alignment_taxonomy_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
       }
       elseif(($tree_level = $term['treeLevel']) >=2) {
         $parent_key = $grade . '|' . $term['fkParent'];
@@ -455,7 +455,7 @@ function sbac_alignment_import_ccss() {
         }
         else {
         $key = $grade . '|' . $term['key'];
-        $parents[$key] = sbac_alignment_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
+        $parents[$key] = sbac_alignment_taxonomy_add_term($edu_alignment_vocab->vid, $term, $parent_tid);
         }
       }
       else{
@@ -479,42 +479,6 @@ function sbac_alignment_get_parent($key) {
     array(':field_alignment_key_value' => $key));
 
   return $result->fetchObject()->entity_id;
-}
-/**
- * Callback function
- * Deletes vocabulary.
- */
-function sbac_alignment_delete_vocab() {
-  if (isset($_GET['op'])) {
-    if(isset($_GET['vocab'])) {
-      $edu_alignment_vocab_name = $_GET['vocab'];
-    }
-    else {
-      $edu_alignment_vocab_name = "education_alignment2";
-    }
-    $edu_alignment_vocab = taxonomy_vocabulary_machine_name_load($edu_alignment_vocab_name);
-    $grade_terms = array();
-  
-    $delete = TRUE;
-    $print = FALSE;
-  
-    //delete terms
-    if ($delete) {
-      $terms = taxonomy_get_tree($edu_alignment_vocab->vid);
-      foreach ($terms as $term) {
-        //if($term->depth > 1){
-          taxonomy_term_delete($term->tid);
-        //}
-      }
-    }
-  
-    if($print) {
-      $terms = taxonomy_get_tree($edu_alignment_vocab->vid, 0, NULL, TRUE);
-      dsm($terms);
-    }
-  }
-
-  return '';
 }
 
 /**
