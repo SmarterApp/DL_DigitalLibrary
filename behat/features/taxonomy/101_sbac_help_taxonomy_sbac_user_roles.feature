@@ -21,11 +21,11 @@ Feature: SBAC Help Taxonomy SBAC User Roles
     And I should see "resource publisher"
     And I should see "facilitator"
     And I should see "moderator"
-    And I should see "DLRB memeber"
+    And I should see "DLRB member"
     And I should see "help desk"
     And I should see "digital library administrator"
     And I should see "system administrator"
-    And I should see "onboarding"
+    And I should see "on-boarding"
     And I should see "guest"
 
 #As #1 user, view SBAC Roles taxonomy, see the correct terms
