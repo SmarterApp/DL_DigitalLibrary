@@ -76,7 +76,17 @@ default:
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
         - Drupal\DrupalExtension\Context\DrushContext
+  formatters:
+    html:
+      output_path: %paths.base%/../docroot/build/behat
   extensions:
+    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+      name: html
+      renderer: Behat2
+      file_name: index
+      print_args: true
+      print_outp: true
+      loop_break: true
     Behat\MinkExtension:
       goutte: ~
       selenium2: ~
