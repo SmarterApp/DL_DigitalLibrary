@@ -34,16 +34,16 @@ function sbac_help_theme($existing, $type, $theme, $path) {
   $themes = array();
 
   $themes['sbac-help-topics'] = array(
-    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
     'template' => 'help-topics',
   );
   $themes['sbac-help-topic'] = array(
-    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
     'template' => 'help-topic',
   );
 
   $themes['views_view__help_topics__block'] = array(
-    'template' => 'templates/views-view--help-topics--block',
+    'template' => drupal_get_path('theme', 'SBAC') . 'templates/sbac_help/views-view--help-topics--block',
     'arguments' => array('view' => NULL),
     'original hook' => 'views_view',
     'preprocess functions' => array(
@@ -54,7 +54,7 @@ function sbac_help_theme($existing, $type, $theme, $path) {
   );
 
   $themes['help_dropdown'] = array(
-    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
     'template' => 'help-drop-down',
   );
 
@@ -65,7 +65,7 @@ function sbac_help_theme($existing, $type, $theme, $path) {
       'summary' => NULL,
       'image' => NULL,
     ),
-    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
     'template' => 'welcome-tutorial-list',
   );
 
@@ -76,12 +76,12 @@ function sbac_help_theme($existing, $type, $theme, $path) {
       'image'     => NULL,
       'body'      => NULL,
     ),
-    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
     'template' => 'welcome-tutorial-post',
   );
 
   $themes['help_dropdown_footer'] = array(
-    'path' => drupal_get_path('module', 'sbac_help') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
     'template' => 'help-drop-down-footer',
   );
 

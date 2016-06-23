@@ -39,27 +39,6 @@ function sbac_digital_library_resources_block_view($delta = '') {
 }
 
 /**
- * Implements hook_theme().
- */
-function sbac_digital_library_resources_theme($existing, $type, $theme, $path) {
-  $items = array();
-  // Digital Library Resources search templates.
-  $items['views_view__digital_library_resources'] = array(
-    'template' => 'views-view--digital-library-resources',
-    'path' => drupal_get_path('module', 'sbac_digital_library_resources') . '/templates/views',
-    'arguments' => array('view' => NULL),
-    'original hook' => 'views_view',
-    'preprocess functions' => array(
-      'template_preprocess',
-      'template_preprocess_views_view',
-      'sbac_digital_library_resources_view',
-    ),
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_form().
  */
 function sbac_digital_library_resources_form($form, &$form_state) {

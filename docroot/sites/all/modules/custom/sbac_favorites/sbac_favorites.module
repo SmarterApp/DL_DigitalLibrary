@@ -61,11 +61,11 @@ function sbac_favorites_menu() {
  */
 function sbac_favorites_theme($existing, $type, $theme, $path) {
   $items['sbac_favorites_no_favorites_resource'] = array(
-    'path' => drupal_get_path('module', 'sbac_favorites') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_favorites',
     'template' => 'no-favorites-resource',
   );
   $items['sbac_favorites_no_favorites_forum'] = array(
-    'path' => drupal_get_path('module', 'sbac_favorites') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_favorites',
     'template' => 'no-favorites-forum',
   );
   $items['sbac_favorites_resource_tabledrag'] = array(

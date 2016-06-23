@@ -685,7 +685,7 @@ function sbac_learning_registry_external_resource_filter_values($name, $index = 
  */
 function sbac_learning_registry_theme($existing, $type, $theme, $path) {
   $items['sbac_external_resource_filters'] = array(
-    'template' => 'templates/external-resource-filters',
+    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_learning_registry/external-resource-filters',
     'variables' => array(
       'categories' => NULL,
       'cf_value' => NULL,
@@ -693,14 +693,14 @@ function sbac_learning_registry_theme($existing, $type, $theme, $path) {
     ),
   );
   $items['sbac_external_resource_results'] = array(
-    'template' => 'templates/external-resource-results',
+    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_learning_registry/external-resource-results',
     'variables' => array(
       'results' => NULL,
       'load_more_link' => NULL
     )
   );
   $items['sbac_external_resource'] = array(
-    'template' => 'templates/external-resource',
+    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_learning_registry/external-resource',
     'variables' => array(
       'results' => NULL,
     )
