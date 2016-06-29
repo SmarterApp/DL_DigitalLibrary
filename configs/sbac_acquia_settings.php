@@ -54,6 +54,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
         'apachesolr_read_only' => '1',
         'apachesolr_soft_commit' => 0,
       );
+
+      // Google Analytics Domain ID
+      variable_set('googleanalytics_account', 'UA-27429193-1-1');
       
       break;
 
@@ -98,6 +101,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
         'apachesolr_soft_commit' => 0,
       );
 
+      // Google Analytics Domain ID
+      variable_set('googleanalytics_account', 'UA-27429193-1-1');
+
       break;
 
     case 'prod':
@@ -140,6 +146,9 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
         'apachesolr_read_only' => '1',
         'apachesolr_soft_commit' => 0,
       );
+
+      // Google Analytics Domain ID
+      variable_set('googleanalytics_account', 'UA-27429193-1');
 
       break;
   }
