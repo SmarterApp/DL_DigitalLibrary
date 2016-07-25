@@ -1,5 +1,5 @@
 #!/bin/bash
 
 PWD=$(pwd)
-DIR=/var/www/html
-docker run --rm -v ${PWD}:${DIR} -w ${DIR} composer/composer "$@"
+WORKDIR=/var/www/html
+docker run -u $(id -u):$(id -g) --rm -v "${PWD}":"${WORKDIR}" -w "${WORKDIR}" composer/composer "$@"
