@@ -1,27 +1,27 @@
 default:
   suites:
-    #smoketest:
-    #  paths:
-    #    - %paths.base%/features
-    #  contexts:
-    #    - FeatureContext
-    #    - Drupal\DrupalExtension\Context\DrupalContext
-    #    - Drupal\DrupalExtension\Context\MinkContext
-    #    - Drupal\DrupalExtension\Context\MessageContext
-    #    - Drupal\DrupalExtension\Context\DrushContext
-    #  filters:
-    #    tags: "@smoketest"
-    #nonjs:
-    #  paths:
-    #    - %paths.base%/features
-    #  contexts:
-    #    - FeatureContext
-    #    - Drupal\DrupalExtension\Context\DrupalContext
-    #    - Drupal\DrupalExtension\Context\MinkContext
-    #    - Drupal\DrupalExtension\Context\MessageContext
-    #    - Drupal\DrupalExtension\Context\DrushContext
-    #  filters:
-    #    tags: "~@javascript"
+    smoketest:
+      paths:
+        - %paths.base%/features
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+      filters:
+        tags: "@smoketest"
+    nonjs:
+      paths:
+        - %paths.base%/features
+      contexts:
+        - FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
+      filters:
+        tags: "~@javascript"
     base_features:
       paths:
         - %paths.base%/features/base
@@ -67,29 +67,13 @@ default:
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
         - Drupal\DrupalExtension\Context\DrushContext
-    taxonomy_features:
-      paths:
-        - %paths.base%/features/taxonomy
-      contexts:
-        - FeatureContext
-        - Drupal\DrupalExtension\Context\DrupalContext
-        - Drupal\DrupalExtension\Context\MinkContext
-        - Drupal\DrupalExtension\Context\MessageContext
-        - Drupal\DrupalExtension\Context\DrushContext
-  formatters:
-    html:
-      output_path: %paths.base%/../docroot/build/behat
   extensions:
-    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
-      name: html
-      renderer: Behat2
-      file_name: index
-      print_args: true
-      print_outp: true
-      loop_break: true
     Behat\MinkExtension:
       goutte: ~
-      selenium2: ~
+      selenium2:
+        wd_host: SELENIUM_URL
+        browser: SELENIUM_BROWSER
+      base_url: SITE_URL
     Drupal\DrupalExtension:
       blackbox: ~
       api_driver: "drush"
