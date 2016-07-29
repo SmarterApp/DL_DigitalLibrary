@@ -340,6 +340,15 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
 
   global $user;
 
+  $is_playlist = FALSE;
+
+  $quality_count = FEEDBACK_MAX_REVIEW;
+  // Reduce qc reviews for playlists to 2
+  if ($node->field_focus[LANGUAGE_NONE][0]['tid'] == '78306') {
+    $quality_count = 2;
+    $is_playlist = TRUE;
+  }
+
   $task = FALSE;
   $completed_review = FALSE;
   switch ($form_state['values']['action']) {
@@ -374,7 +383,7 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
 
       $count = db_query($query, $args)->fetchField();
 
-      if ($count == FEEDBACK_MAX_REVIEW) {
+      if ($count == $quality_count) {
         $query = "  SELECT  id
                     FROM    eck_feedback
                     WHERE   type = 'qc'
@@ -408,6 +417,12 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
         }
 
         $task = FALSE;
+        $do_post = 3;
+        // Allow publishing with only 2 recommendations for playlists
+        if ($is_playlist) {
+          $do_post = 2;        
+        }
+
         // post with distinction
         if ($do_dis == 3 || ($do_dis == 2 && $do == 1)) {
           $node->sticky = 1;
@@ -421,7 +436,7 @@ function feedback_eck_qc_form_submit($form, &$form_state) {
           $task = taskit_get_object('resource_published');
         }
         // post
-        elseif (($do_dis == 1 && $do == 2) || $do == 3) {
+        elseif (($do_dis == 1 && $do == 2) || $do == $do_post) {
           // we need to go through the approved state in order to not confuse
           // workbench_moderation
           workbench_moderation_moderate($node, 'approved');

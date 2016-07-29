@@ -1763,7 +1763,12 @@ function sbac_resource_save_current_state($node) {
             }
           }
 
-          if ($total_count < 3) {
+          $quality_count = 3;
+          // Set required quality reviews to 2 for playlists
+          if ($node->field_focus[LANGUAGE_NONE][0]['tid'] == '78306') {
+            $quality_count = 2;
+          } 
+          if ($total_count < $quality_count) {
             // everyone has access and is set to needs review
             sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
             sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review', TRUE);

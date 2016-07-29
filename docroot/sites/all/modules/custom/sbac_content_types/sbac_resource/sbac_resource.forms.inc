@@ -38,6 +38,14 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_remove_elements($form, $form_state);
     _sbac_resource_form_finalize($form, $form_state);
     _sbac_resource_form_flatten_term_tree($form, $form_state);
+    
+    //SBAC-80 Remove Playlist option for non-SLT's    
+    $is_slt = FALSE;    
+    $is_slt  = sbac_report_is_slt($user);
+    
+    if (!$is_slt && !in_array('administrator', $user->roles)) {
+      unset($form['field_ficus'][LANGUAGE_NONE]['#options']['Playlist']);
+    }
   }
 }
 
@@ -1796,6 +1804,34 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
   // Focus
   unset($form['field_focus']['und']['#options']['_none']);
   $form['field_focus']['und']['#title'] = t('Resource Type') . ' ' . theme('form_required_marker');
+
+  // Remove Spotlight form option for non-admins
+  if (!in_array('administrator', $user->roles)) {
+    unset($form['field_focus'][LANGUAGE_NONE]['#options']['78686']);
+  }
+
+  // Remove Playlist form option for non-SLT's
+  $is_slt = FALSE;    
+  $is_slt  = sbac_report_is_slt($user);
+  
+  if (!$is_slt && !in_array('administrator', $user->roles)) {
+    unset($form['field_focus'][LANGUAGE_NONE]['#options']['78306']);
+  }
+  else {
+    $form['field_focus'][LANGUAGE_NONE]['#after_build'][] = '_sbac_resource_playlist_modal'; 
+    $form['playlist_modal'] = array(
+      '#markup' => '<div class="playlist-modal">
+                      <h2>You are about to create a Playlist.</h2>
+                      <p>Please refer to the <a href="/sites/all/themes/custom/SBAC/workflow_resources/Educator_Learning_Guide_and_Digital_Library_Resource_Playlist_Template_June2016_v4.docm">playlist template</a> for an example.</p> 
+                      <p>Before continuing, please confirm that you have completed the training for this content type. Select "Continue" if you have completed the training.</p> 
+                      <button class="button right close-reveal-modal">Continue</button><button class="button right secondary close-reveal-modal">Cancel</button>   
+                    </div>',
+      '#prefix' => '<div id="playlist-modal-container" class="reveal-modal">',
+      '#suffix' => '</div>'        
+    );
+    $form['#group_children']['playlist_modal'] = 'group_basic';
+    
+  }
 
   // Connection to FAP
   $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');

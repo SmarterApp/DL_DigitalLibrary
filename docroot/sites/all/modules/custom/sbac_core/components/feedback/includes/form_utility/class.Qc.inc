@@ -63,6 +63,13 @@ class Qc extends Base {
 
     // remove the N/A option
     unset($this->_form['field_rec_options'][$this->_lang]['#options']['_none']);
+    
+    // remove distinction for playlist qc
+    $focus = field_entity_value($this->_resource, 'field_focus');
+
+    if ($focus->tid == '78306') {
+      unset($this->_form['field_rec_options'][$this->_lang]['#options'][3]);
+    }
 
     // add 'required field' asterisks
     $this->_form['field_rec_options'][$this->_lang]['#title'] .= $this->_required_marker;

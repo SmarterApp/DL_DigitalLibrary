@@ -755,6 +755,13 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
+  /* Field: Field: Resource Type */
+  $handler->display->display_options['fields']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['fields']['field_focus']['table'] = 'field_data_field_focus';
+  $handler->display->display_options['fields']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['fields']['field_focus']['label'] = '';
+  $handler->display->display_options['fields']['field_focus']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_focus']['type'] = 'taxonomy_term_reference_plain';
 
   /* Display: List View */
   $handler = $view->new_display('block', 'List View', 'list_view');
@@ -865,6 +872,12 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['path']['field'] = 'path';
   $handler->display->display_options['fields']['path']['label'] = '';
   $handler->display->display_options['fields']['path']['element_label_colon'] = FALSE;
+  /* Field: Field: Resource Type */
+  $handler->display->display_options['fields']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['fields']['field_focus']['table'] = 'field_data_field_focus';
+  $handler->display->display_options['fields']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['fields']['field_focus']['label'] = '';
+  $handler->display->display_options['fields']['field_focus']['element_label_colon'] = FALSE;
   $export['resource_review'] = $view;
 
   $view = new view();
