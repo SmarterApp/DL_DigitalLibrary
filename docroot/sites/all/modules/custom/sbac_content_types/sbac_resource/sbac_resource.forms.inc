@@ -1781,6 +1781,7 @@ function _sbac_resource_create_close_container(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_form_basic(&$form, &$form_state) {
+  global $user;
   // Title.
   $form['title']['#title'] = t('Title') . ' ' . theme('form_required_marker');
   $form['title']['#theme_options']['description at top'] = t('Enter a user-friendly name for the resource.');
@@ -1818,13 +1819,12 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
     unset($form['field_focus'][LANGUAGE_NONE]['#options']['78306']);
   }
   else {
-    $form['field_focus'][LANGUAGE_NONE]['#after_build'][] = '_sbac_resource_playlist_modal'; 
     $form['playlist_modal'] = array(
       '#markup' => '<div class="playlist-modal">
                       <h2>You are about to create a Playlist.</h2>
                       <p>Please refer to the <a href="/sites/all/themes/custom/SBAC/workflow_resources/Educator_Learning_Guide_and_Digital_Library_Resource_Playlist_Template_June2016_v4.docm">playlist template</a> for an example.</p> 
                       <p>Before continuing, please confirm that you have completed the training for this content type. Select "Continue" if you have completed the training.</p> 
-                      <button class="button right close-reveal-modal">Continue</button><button class="button right secondary close-reveal-modal">Cancel</button>   
+                      <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button><button class="button right secondary close-reveal-modal">Cancel</button>   
                     </div>',
       '#prefix' => '<div id="playlist-modal-container" class="reveal-modal">',
       '#suffix' => '</div>'        

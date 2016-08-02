@@ -763,6 +763,15 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
  * @param $view
  */
 function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
+  // Remove playlists for non-SLTs
+  $is_slt = FALSE;
+  $is_slt = sbac_report_is_slt($user);
+
+  if (!$is_slt) {
+    $view->query->add_table('field_data_field_focus');
+    $playlist_condition = db_or()->condition('field_data_field_focus.field_focus_tid', '78306', 'NOT IN');
+    $view->query->add_where('AND', $playlist_condition);
+  }
   global $user;
   // don't allow the node author to see / review own nodes.
   $node_condition = db_or()->condition('node.uid', $user->uid, '<>');
