@@ -1916,6 +1916,13 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   sbac_media_widget_form_element($form, $form_state);
   global $user;
 
+  // Add Playlist template to Materials help text for SLTs 
+  $is_slt  = sbac_report_is_slt($user);
+   
+  if ($is_slt || in_array('administrator', $user->roles)) {
+    drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.playlist.form.js');
+  }
+
   // License Informations
   // Let's remove the N/A Option from the license information section
   unset($form['field_license_information'][LANGUAGE_NONE]['#options']['_none']);

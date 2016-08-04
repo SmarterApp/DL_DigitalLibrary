@@ -3780,4 +3780,9 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
   color: #0684ad;
   right: 5px;
   bottom: 5px;
-} 
+}
+
+/* Resource Playlist template messagine */
+.playlist-template {
+  display: none;
+}
