@@ -40,7 +40,6 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_flatten_term_tree($form, $form_state);
     
     //SBAC-80 Remove Playlist option for non-SLT's    
-    $is_slt = FALSE;    
     $is_slt  = sbac_report_is_slt($user);
     
     if (!$is_slt && !in_array('administrator', $user->roles)) {
@@ -1812,7 +1811,6 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
   }
 
   // Remove Playlist form option for non-SLT's
-  $is_slt = FALSE;    
   $is_slt  = sbac_report_is_slt($user);
   
   if (!$is_slt && !in_array('administrator', $user->roles)) {
