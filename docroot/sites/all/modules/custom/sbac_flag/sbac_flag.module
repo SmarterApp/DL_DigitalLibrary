@@ -398,49 +398,49 @@ function sbac_flag_form_alter(&$form, &$form_state, $form_id) {
  */
 function sbac_flag_theme($existing, $type, $theme, $path) {
   $items['sbac_flag_confirmation'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-confirmation',
     'variables' => array('radio_selected' => NULL),
   );
 
   $items['sbac_flag_list_card'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-list-card',
     'variables' => array('node' => NULL, 'flag_content' => NULL),
   );
 
   $items['sbac_flag_list_card_topic'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-list-card-topic',
     'variables' => array('node' => NULL, 'flag_content' => NULL),
   );
 
   $items['sbac_flag_moderation'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-moderation',
     'variables' => array('list_output' => NULL, 'load_more' => NULL),
   );
 
   $items['flag_category'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-category',
     'variables' => array('category' => NULL, 'count_message' => NULL)
   );
 
   $items['flag_category_row'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-category-row',
     'variables' => array('username' => NULL, 'created' => NULL, 'flag_comment' => NULL),
   );
 
   $items['flag_category_container'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-category-container',
     'variables' => array('list_output' => NULL)
   );
 
   $items['flag_category_review_buttons'] = array(
-    'path' => drupal_get_path('module', 'sbac_flag') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_flag',
     'template' => 'flag-category-review-buttons',
     'variables' => array('cancel' => NULL, 'finish' => NULL, 'session'),
   );
