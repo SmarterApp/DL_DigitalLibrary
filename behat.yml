@@ -67,6 +67,16 @@ default:
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
         - Drupal\DrupalExtension\Context\DrushContext
+    playlist_features:
+      paths:
+        - %paths.base%/features/playlist
+      contexts:
+        - FeatureContext
+        - ChosenContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
     taxonomy_features:
       paths:
         - %paths.base%/features/taxonomy
@@ -77,16 +87,16 @@ default:
         - Drupal\DrupalExtension\Context\MessageContext
         - Drupal\DrupalExtension\Context\DrushContext
   formatters:
-    html:
-      output_path: %paths.base%/../docroot/build/behat
+#    html:
+#      output_path: %paths.base%/../docroot/build/behat
   extensions:
-    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
-      name: html
-      renderer: Behat2
-      file_name: index
-      print_args: true
-      print_outp: true
-      loop_break: true
+#    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+#      name: html
+#      renderer: Behat2
+#      file_name: index
+#      print_args: true
+#      print_outp: true
+#      loop_break: true
     Behat\MinkExtension:
       goutte: ~
       selenium2: ~
@@ -110,3 +120,4 @@ default:
         notifications: "#notifications"
         forum_nav: "#sbac-forum-sub-nav-forum"
         forums: ".sbac-forum-main-container"
+        resource_form: ".node-resource-form"
