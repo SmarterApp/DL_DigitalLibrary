@@ -539,7 +539,6 @@ function sbac_report_is_slt($account) {
       ->condition('entity_id', $account->uid)
       ->condition('field_slt_member_value', '1')
       ->execute();
-    $count = $result->rowCount();
     return $result->rowCount();
   }
   return FALSE;

@@ -44,6 +44,11 @@
         <?php echo $fields['field_alt_body']->content; ?>
       <?php endif; ?>
     </div>
+    <div class='resource-type'>
+      <?php if (isset($fields['field_focus'])): ?>
+        <?php echo $fields['field_focus']->content; ?>
+      <?php endif; ?>
+    </div>
   </div>
 
   <?php
