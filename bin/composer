@@ -1,5 +1,20 @@
 #!/bin/bash
 
+cd $(dirname $0)
+cd ..
+
+docker pull gened/composer
+
+if [ ! -d build/composer ]; then
+    mkdir -p build/composer
+fi
+
 PWD=$(pwd)
 WORKDIR=/var/www/html
-docker run --rm -v "${PWD}":"${WORKDIR}" -v /etc/passwd:/etc/passwd -w "${WORKDIR}" composer/composer "$@"
+docker run --rm \
+    --user $(id -u):$(id -g) \
+    -v /etc/passwd:/etc/passwd \
+    -v "${PWD}/build/composer":/composer \
+    -v "${PWD}":"${WORKDIR}" \
+    -w "${WORKDIR}" \
+    gened/composer "$@"
