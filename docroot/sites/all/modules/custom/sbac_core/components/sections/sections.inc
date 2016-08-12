@@ -79,6 +79,15 @@ function section_get_content() {
       ajax_deliver($page);
       exit();
     }
+    elseif ($tab == 'goals') {
+      $content = sbac_goals_get_html_content();
+      $commands = array();
+      $commands[] = ajax_command_invoke('#' . $_GET['section_id'], 'empty');
+      $commands[] = ajax_command_append('#' . $_GET['section_id'], $content);
+      $page = array('#type' => 'ajax', '#commands' => $commands);
+      ajax_deliver($page);
+      exit();
+    }
   }
   else {
     $node = node_load($_GET['nid']);

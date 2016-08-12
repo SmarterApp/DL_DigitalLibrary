@@ -117,6 +117,16 @@ class Hooks extends \devtools\Hooks {
       'tab' => 'favorites',
       'section_loaded' => '',
     );
+    $account->content['sections']['goals'] = array(
+      'title' => t('Goals'),
+      'content' => '',
+      'disabled' => FALSE,
+      'class' => 'section-goals',
+      'weight' => -100,
+      'source' => 'people',
+      'tab' => 'goals',
+      'section_loaded' => '',
+    );
   }
 
   /*----------------------------------------------------------------------------

@@ -1,0 +1,148 @@
+/* Goals SASS */
+.nav-goals {
+  float: right;
+  .goal-completed,
+  .goal-perc {
+    display: inline-block;
+  }
+  .goal-completed {
+    font-size: 12px;
+    text-align: center;
+    color: #FFFFFF;
+    width: 36px;
+    height: 44px;
+  }
+  .star-rating-complete {
+    background: url('/sites/all/themes/custom/SBAC/images/star-rating-triangle.png') no-repeat 0px 5px;
+  }
+  .resources-reviewed-complete {
+    background: url('/sites/all/themes/custom/SBAC/images/resource-reviewed-triangle.png') no-repeat 0px 5px;
+  }
+  .resources-posted-complete {
+    background: url('/sites/all/themes/custom/SBAC/images/resource-posted-triangle.png') no-repeat 0px 5px;
+  }
+}
+
+body.section-users {
+  .tooltip {
+    background-color: #ccecf9;
+    font-size: 15px;
+    padding: 10px;
+    p {
+      margin-bottom: 0px;
+    }
+    .congratulations {
+      color: red;
+    }
+  }
+  .nub {
+    border-color: transparent transparent #ccecf9 transparent;
+  }
+}
+
+#section-goals {
+  padding-top: 40px;
+  #edit-sbac-user-email-options--2,
+  .field-group-tab-wrapper,
+  .redirect-list {
+    display: none;
+  }
+}
+#user-profile-form {
+  .field-name-field-star-rating-goal,
+  .field-name-field-resources-reviewed-goal,
+  .field-name-field-resources-posted-goal {
+    display: none;
+  }
+}
+#user-profile-form--2 {
+  .goal-header {
+    width: 45%;
+    padding: 10px;
+    color: #FFF;
+    border-radius: 5px 5px 0 0;
+    h3 {
+      color: #FFF;
+      display: inline;
+      margin-right: 8px;
+    }
+    &.star-rating {
+      background-color: #515152;
+    }
+    &.resources-reviewed {
+      background-color: #4b7e40;
+    }
+    &.resources-posted {
+      background-color: #0b5d76;
+    }
+  }
+  .goal-percentage {
+    float: right;
+    background: url('/sites/all/themes/custom/SBAC/images/goal-triangle.png') no-repeat right top;
+    padding: 3px 30px;
+    font-weight: bold;
+  }
+  .goal-container {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-radius: 0px 0px 5px 5px;
+    position: relative;
+    width: 45%;
+    padding: 3px 10px;
+    margin-bottom: 20px;
+  }
+  .completed-prompt {
+    font-size: 14px;
+    position: absolute;
+    right: -270px;
+    top: 25px;
+    width: 253px;
+  }
+  input[type="text"] {
+    display: inline-block;
+    text-align: right;
+    width: 36%;
+    margin-left: 10px;
+  }
+  label {
+    display: inline-block;
+    font-weight: normal;
+    font-size: 100%;
+  }
+  .progress-container {
+    margin-bottom: 10px;
+  }
+  .progress-bar-container {
+    border: 1px solid #ddd;
+    position: relative;
+    height: 33px;
+    display: inline-block;
+    width: 63%;
+    margin-left: 10px;
+  }
+  .goal-status {
+    position: relative;
+    display: inline-block;
+    height: 29px;
+    padding-top: 7px;
+    float: left;
+  }
+  .progress-bar {
+    position: absolute;
+    height: 100%;
+    background-color: #ddd;
+  }
+  .progress-info {
+    z-index: 1000;
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    font-family: sans-serif;
+  }
+  .completed-message {
+    text-align: center;
+    color: green;
+    padding: 10px 0;
+  }
+}

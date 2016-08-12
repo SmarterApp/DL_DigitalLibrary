@@ -65,7 +65,10 @@ Drupal.behaviors.sections = {
       else if (hash == '#profile-notifications' && !$.trim($('#section-notifications').html() ).length) {
         $('.section-notifications a').click();
       }
-      else if (hash != '#profile-favorites' && hash != '#profile-notifications') {
+      else if (hash == '#profile-goals' && !$.trim($('#section-goals').html() ).length) {
+        $('.section-goals a').click();
+      }
+      else if (hash != '#profile-favorites' && hash != '#profile-notifications' && hash != '#profile-goals') {
         $('body').once('switch-section', function() {
           var hash = window.location.hash;
           Drupal.behaviors.sections.switch_tab(hash);
@@ -80,6 +83,9 @@ Drupal.behaviors.sections = {
         var section = $(el);
         section.find('a').click(function(e) {
           var href = $(this);
+          if (href.attr('section_id') == 'section-goals') {
+            window.location.hash = 'profile-goals';
+          }
           if (href.attr('section_id') == 'section-favorites') {
             window.location.hash = 'profile-favorites';
           }
@@ -257,6 +263,8 @@ if (Drupal.ajax) {
           $('.throbber', this.progress.element).after('<div class="message">' + this.progress.message + '</div>');
         }
         switch (title) {
+          case 'Goals':
+            $('#section-goals').append(this.progress.element); 
           case 'Notifications':
             $('#section-notifications').append(this.progress.element);
             break;

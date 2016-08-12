@@ -195,3 +195,14 @@ function sbac_user_update_7010() {
   $ret = array();
   return $ret;
 }
+
+/**
+ * Enable sbac_goals module
+ */
+function sbac_user_update_8001() {
+  $modules = array(
+    'sbac_goals',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}

@@ -627,6 +627,76 @@ function sbac_preprocess_page(&$variables) {
     }
     $variables['blocks']['block_applied_filters'] = sbac_digital_library_resources_applied_filters();
   }
+  // Add goals to $variables array to add to top nav
+  global $user;
+  // Only get goals for logged in users
+  if ($user->uid !== 0) {
+    // Get goals for user(role permissions defined in sbac_goals_get_goals)
+    $goals = sbac_goals_get_goals();
+    // Star rating goal
+    $starred_complete_all = sbac_goals_get_completed('star_rating', $user->uid);
+    // If none completed set total to 0
+    if ($starred_complete_all) {
+      $starred_complete = $starred_complete_all;
+    }
+    else {
+      $starred_complete[0] = 0;
+    }
+    // If user hasn't saved goal values yet, use defaults
+    if ($goals['starred_goal'] == 0) {
+      $goals['starred_goal'] = 10;
+    }
+    // If goal completed, set number complete to goal target
+    if ($starred_complete[0] > $goals['starred_goal']) {
+      $starred_complete[0] = $goals['starred_goal'];
+    }
+    $starred_perc = sbac_goals_calc_percent($starred_complete[0], $goals['starred_goal']);
+    $variables['goals']['star_rating'][] = $starred_complete[0];
+    $variables['goals']['star_rating'][] = $starred_perc;
+    // Resources Reviewed goal
+    if (isset($goals['reviewed_goal'])) {
+      // If user hasn't saved goal values yet, use defaults
+      if ($goals['reviewed_goal'] == 0) {
+        $goals['reviewed_goal'] = 9;
+      } 
+      $reviewed_complete_all = sbac_goals_get_completed('resources_reviewed', $user->uid);
+      // If none completed set total to 0
+      if ($reviewed_complete_all) {
+        $reviewed_complete = $reviewed_complete_all;
+      }
+      else {
+        $reviewed_complete[0] = 0;
+      }
+      // If goal completed, set number complete to goal target
+      if ($reviewed_complete[0] > $goals['reviewed_goal']) {
+        $reviewed_complete[0] = $goals['reviewed_goal'];
+      }    
+      $reviewed_perc = sbac_goals_calc_percent($reviewed_complete[0], $goals['reviewed_goal']);
+      $variables['goals']['resources_reviewed'][] = $reviewed_complete[0];
+      $variables['goals']['resources_reviewed'][] = $reviewed_perc;
+    }
+    if (isset($goals['posted_goal'])) {
+      // If user hasn't saved goal values yet, use defaults
+      if ($goals['posted_goal'] == 0) {
+        $goals['posted_goal'] = 3;
+      } 
+      $posted_complete_all = sbac_goals_get_completed('resources_posted', $user->uid);
+      // If none completed set total to 0
+      if ($posted_complete_all) {
+        $posted_complete = $posted_complete_all;
+      }
+      else {
+        $posted_complete[0] = 0;
+      }
+      // If goal completed, set number complete to goal target
+      if ($posted_complete[0] > $goals['posted_goal']) {
+        $posted_complete[0] = $goals['posted_goal'];
+      }
+      $posted_perc = sbac_goals_calc_percent($posted_complete[0], $goals['posted_goal']);
+      $variables['goals']['resources_posted'][] = $posted_complete[0];
+      $variables['goals']['resources_posted'][] = $posted_perc;
+    }
+  }
 }
 
 /**
