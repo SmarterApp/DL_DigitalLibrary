@@ -36011,6 +36011,9 @@ form#sbac-user-filter-form #edit-email {
   width: 36px;
   height: 44px;
 }
+.nav-goals .goal-completed a {
+  color: #FFFFFF;
+}
 .nav-goals .star-rating-complete {
   background: url('/sites/all/themes/custom/SBAC/images/star-rating-triangle.png') no-repeat 0px 5px;
 }

@@ -631,6 +631,9 @@ function sbac_preprocess_page(&$variables) {
   global $user;
   // Only get goals for logged in users
   if ($user->uid !== 0) {
+    // Generate link to goals tab
+    $user_name = str_replace(' ' , '_', strtolower($user->full_name));
+    $variables['goals']['goals_url'] = '/users/' . $user_name . '#profile-goals';
     // Get goals for user(role permissions defined in sbac_goals_get_goals)
     $goals = sbac_goals_get_goals();
     // Star rating goal
