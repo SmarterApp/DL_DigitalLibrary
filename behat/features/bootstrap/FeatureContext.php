@@ -42,7 +42,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
      */
     public function iWaitForTheRegionToAppear($region)
     {
-        $this->getSession()->wait(5000, "jQuery('{$region}').children().length > 0");
+        $this->getSession()->wait(20000, "jQuery('{$region}').children().length > 0");
     }
 
     /**

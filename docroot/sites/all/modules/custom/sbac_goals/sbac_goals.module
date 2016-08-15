@@ -16,6 +16,7 @@ function sbac_goals_get_html_content() {
   $complete = FALSE;
   $completed = '';
   $completed_icon = '';
+  $starred_goal_zero = '';
 
   // Deal with when more than the goal are completed
   if ($star_ratings >= $star_goal) {
@@ -23,6 +24,12 @@ function sbac_goals_get_html_content() {
     $complete = TRUE;
     $completed_icon = '&#x2605;';
   }
+
+  // Remove progress bar and success messages if goal value is 0
+  if ($star_goal == 0) {
+    $starred_goal_zero = 'progress-hidden';
+  }
+
   // Create and populate tooltip if goal complete
   if ($complete) {
     $completed = 'completed';
@@ -49,10 +56,10 @@ function sbac_goals_get_html_content() {
   if ($complete) {
     //Add completed prompt if goal reached
     $user_form['field_star_rating_goal']['#prefix'] .= '
-      <div class="completed-prompt">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
+      <div class="completed-prompt ' . $starred_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
   }
   $user_form['field_star_rating_goal']['#suffix'] = '
-      <div class="progress-container">
+      <div class="progress-container ' . $starred_goal_zero . '">
         <div class="goal-status">Current Status</div>';
   // Add tooltip if goal completed
   if ($complete) {
@@ -94,12 +101,18 @@ function sbac_goals_get_html_content() {
     $complete = FALSE;
     $completed_icon = '';
     $completed = '';
+    $reviewed_goal_zero = '';
 
     // Deal with when more than the goal are completed and goal complete
     if ($resources_reviewed >= $review_goal) {
       $resources_reviewed = $review_goal;
       $complete = TRUE;
       $completed_icon = '&#x2605;';
+    }
+
+    // Remove progress bar and success messages if goal value is 0
+    if ($review_goal == 0) {
+      $reviewed_goal_zero = 'progress-hidden';
     }
 
     // Create and populate tooltip if goal complete
@@ -132,11 +145,11 @@ function sbac_goals_get_html_content() {
     // Add completed prompt if goal reached
     if ($complete) {
       $user_form['field_resources_reviewed_goal']['#prefix'] .= '
-        <div class="completed-prompt">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
+        <div class="completed-prompt ' . $reviewed_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
     }
   
     $user_form['field_resources_reviewed_goal']['#suffix'] = '
-        <div class="progress-container">
+        <div class="progress-container ' . $reviewed_goal_zero . '">
           <div class="goal-status">Current Status</div>';
     // Add tooltip if goal completed
     if ($complete) {
@@ -176,13 +189,19 @@ function sbac_goals_get_html_content() {
     $resources_posted = $all_resources_posted[0];
     $posted_goal = $user_form['field_resources_posted_goal'][LANGUAGE_NONE][0]['value']['#default_value'];
     $complete = FALSE;
-    $completed_icon = '';    
+    $completed_icon = '';
+    $posted_goal_zero = '';
 
     // Deal with when more than the goal are completed and goal complete
     if ($resources_posted >= $posted_goal) {
       $resources_posted = $posted_goal;
       $complete = TRUE;
       $completed_icon = '&#x2605;';
+    }
+
+    // Remove progress bar and success messages if goal value is 0
+    if ($posted_goal == 0) {
+      $posted_goal_zero = 'progress-hidden';
     }
 
     // Create and populate tooltip if goal complete
@@ -215,10 +234,10 @@ function sbac_goals_get_html_content() {
     // Add completed prompt if goal reached
     if ($complete) {
       $user_form['field_resources_posted_goal']['#prefix'] .= '
-        <div class="completed-prompt">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
+        <div class="completed-prompt ' . $posted_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
     }  
     $user_form['field_resources_posted_goal']['#suffix'] = '
-        <div class="progress-container">
+        <div class="progress-container ' . $posted_goal_zero . '">
           <div class="goal-status">Current Status</div>';
     // Add tooltip if goal completed
     if ($complete) {
@@ -235,7 +254,7 @@ function sbac_goals_get_html_content() {
           </div>';
         if ($complete) {
           $user_form['field_resources_posted_goal']['#suffix'] .= '
-          <div class="completed-message"><strong>Goal Achieved!</strong></div>
+          <div class="completed-message ' . $posted_goal_zero . '"><strong>Goal Achieved!</strong></div>
         </div>
       </div>';
         }

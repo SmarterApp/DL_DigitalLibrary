@@ -36166,3 +36166,6 @@ body.section-users .tooltip .congratulations {
   color: green;
   padding: 10px 0;
 }
+.progress-hidden {
+  display: none;
+}
