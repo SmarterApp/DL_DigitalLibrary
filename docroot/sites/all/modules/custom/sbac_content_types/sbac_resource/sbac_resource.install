@@ -720,3 +720,11 @@ function sbac_resource_update_7055() {
       ->execute();
   }
 }
+
+/**
+ * Enable workflow help text messaging feature
+ */
+function sbac_resource_update_8001() {
+  $modules = array('sbac_workflow_messaging');
+  module_enable($modules);  
+}

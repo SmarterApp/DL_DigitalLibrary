@@ -40,12 +40,12 @@ function sbac_landing_page_theme($existing, $type, $theme, $path) {
   $theme['sbac_landing_page'] = array(
     'render element' => 'content',
     'template' => 'landing-page',
-    'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_landing_page',
   );
   $theme['sbac_help_topics'] = array(
     'render element' => 'content',
     'template' => 'help-topics',
-    'path' => drupal_get_path('module', 'sbac_landing_page') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_landing_page',
   );
   return $theme;
 }

@@ -3,8 +3,8 @@
 
   Drupal.behaviors.accountDropdown = {
     attach: function(context, settings) {
-      $(document).click(function() {
-        if (!$(this).hasClass('open')) {
+      $('.user-info').click(function() {
+        if (!$('.user-info .f-dropdown').hasClass('open')) {
           var selectedDiv = $('.open');
           selectedDiv.hide();
           selectedDiv.removeClass('open');

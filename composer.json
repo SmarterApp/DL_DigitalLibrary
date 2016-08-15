@@ -303,7 +303,7 @@
     ]
   },
   "config": {
-    "bin-dir": "bin/",
+    "bin-dir": "vendor/bin/",
     "vendor-dir": "vendor",
     "secure-http": false,
     "preferred-install": "dist",
