@@ -16,8 +16,9 @@ dependencies[] = options
 dependencies[] = publishcontent
 dependencies[] = strongarm
 dependencies[] = taxonomy
-dependencies[] = sbac_help_taxonomy_help_page_topic
-dependencies[] = sbac_help_taxonomy_sbac_user_roles
+; Add back after UUIDs are imported from prod
+; dependencies[] = sbac_help_taxonomy_help_page_topic
+; dependencies[] = sbac_help_taxonomy_sbac_user_roles
 dependencies[] = text
 dependencies[] = views
 dependencies[] = views_content_cache

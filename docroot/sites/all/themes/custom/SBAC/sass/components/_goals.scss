@@ -43,11 +43,18 @@ body.section-users {
   }
 }
 
+#section-account {
+  div[class*=" form-item-autologout-user-"] {
+    display: none;
+  }
+}
+
 #section-goals {
   padding-top: 40px;
   #edit-sbac-user-email-options--2,
   .field-group-tab-wrapper,
-  .redirect-list {
+  .redirect-list,
+  div[class*=" form-item-autologout-user-"] {
     display: none;
   }
 }

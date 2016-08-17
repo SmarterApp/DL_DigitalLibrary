@@ -36048,7 +36048,9 @@ body.section-users .tooltip .congratulations {
 
 #section-goals #edit-sbac-user-email-options--2,
 #section-goals .field-group-tab-wrapper,
-#section-goals .redirect-list {
+#section-goals .redirect-list,
+#section-account div[class*=" form-item-autologout-user-"],
+#section-goals div[class*=" form-item-autologout-user-"]{
   display: none;
 }
 
