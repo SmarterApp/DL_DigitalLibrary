@@ -269,11 +269,6 @@ function sbac_core_library_alter(&$libraries, $module) {
 function sbac_core_devtools_components() {
   $components = array(
     'admin' => array(),
-    'cmis'  => array(
-      'files' => array(
-        'cmis.forms.inc',
-      ),
-    ),
     'colorbox' => array(),
     'current_entity' => array(),
     'feedback' => array(
