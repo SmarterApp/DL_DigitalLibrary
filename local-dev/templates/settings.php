@@ -1,5 +1,10 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+
+
 $update_free_access = FALSE;
 $drupal_hash_salt = '';
 
@@ -28,10 +33,10 @@ $conf['fast_404_HTML_error_all_paths'] = FALSE;
 
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     // Load database settings (in Acquia environment)
-    if (file_exists('/var/www/site-php/'.$_ENV['AH_SITE_GROUP'].'/'.$_ENV['AH_SITE_GROUP'].'-settings.inc')) {
-        require '/var/www/site-php/'.$_ENV['AH_SITE_GROUP'].'/'.$_ENV['AH_SITE_GROUP'].'-settings.inc';
+    if (file_exists('/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc')) {
+        require '/var/www/site-php/' . $_ENV['AH_SITE_GROUP'] . '/' . $_ENV['AH_SITE_GROUP'] . '-settings.inc';
     }
-
+}
 // Load settings when in Acquia environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     $settings_file = '/mnt/files/' . $_ENV['AH_SITE_GROUP'] . '.' . $_ENV['AH_SITE_ENVIRONMENT'] . '/files-private/sbac_acquia_settings.inc';
