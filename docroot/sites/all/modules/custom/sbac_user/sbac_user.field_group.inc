@@ -22,9 +22,7 @@ function sbac_user_field_group_info() {
   $field_group->data = array(
     'label' => 'Email Settings',
     'weight' => '3',
-    'children' => array(
-      0 => 'sbac_user_email_options',
-    ),
+    'children' => array(),
     'format_type' => 'tab',
     'format_settings' => array(
       'formatter' => 'closed',
@@ -51,10 +49,9 @@ function sbac_user_field_group_info() {
     'weight' => '1',
     'children' => array(
       0 => 'field_introduction',
-      1 => 'field_swd_ell',
+      1 => 'field_special_populations',
       2 => 'field_grade_level_s_',
-      3 => 'field_special_populations',
-      4 => 'field_subject_s_',
+      3 => 'field_subject_s_',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

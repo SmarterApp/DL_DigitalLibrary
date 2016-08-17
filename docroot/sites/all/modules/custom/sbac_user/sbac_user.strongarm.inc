@@ -116,6 +116,12 @@ function sbac_user_strongarm() {
         'googleanalytics' => array(
           'weight' => '3',
         ),
+        'mimemail' => array(
+          'weight' => '0',
+        ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(
         'summary' => array(

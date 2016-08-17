@@ -68,6 +68,25 @@
       <?php print $main_menu_links; ?>
     <?php endif; ?>
   </nav>
+   <?php if (isset($goals)): ?>
+      <div class="nav-goals">
+         <div class="star-rating-complete goal-completed"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><?php print $goals['star_rating'][0]; ?></a></div>
+         <div class="goal-perc"><strong><?php print $goals['star_rating'][1]; ?>%</strong></div>
+      <?php if (isset($goals['resources_reviewed'])): ?>
+         <div class="resources-reviewed-complete goal-completed"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><?php print $goals['resources_reviewed'][0]; ?></a></div>
+         <div class="goal-perc"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong></div>
+      <?php endif; ?>
+      <?php if (isset($goals['resources_posted'])): ?>
+         <div class="resources-posted-complete goal-completed"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><?php print $goals['resources_posted'][0]; ?></a></div>
+         <div class="goal-perc"><strong><?php print $goals['resources_posted'][1]; ?>%</strong></div>
+      <?php endif; ?>
+      </div>
+   <?php endif; ?>
+   <?php if (isset($page['search']) && $page['search']): ?>
+    <div class="search right">
+      <?php print render($page['search']); ?>
+    </div>
+   <?php endif; ?>
   <?php if (isset($page['search']) && $page['search']): ?>
     <div class="search right">
       <?php print render($page['search']); ?>

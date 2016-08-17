@@ -457,6 +457,110 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_resources_posted_goal'.
+  $field_instances['user-user-field_resources_posted_goal'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 3,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 35,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_resources_posted_goal',
+    'label' => 'Resources Posted Goal',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+      ),
+      'type' => 'number',
+      'weight' => 33,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_resources_reviewed_goal'.
+  $field_instances['user-user-field_resources_reviewed_goal'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 9,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 34,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_resources_reviewed_goal',
+    'label' => 'Resources Reviewed Goal',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+      ),
+      'type' => 'number',
+      'weight' => 32,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_retired'.
   $field_instances['user-user-field_retired'] = array(
     'bundle' => 'user',
@@ -769,6 +873,58 @@ function sbac_user_field_default_field_instances() {
     'xss' => 0,
   );
 
+  // Exported field_instance: 'user-user-field_star_rating_goal'.
+  $field_instances['user-user-field_star_rating_goal'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 10,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 33,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_star_rating_goal',
+    'label' => 'Star Rating Goal',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+      ),
+      'type' => 'number',
+      'weight' => 31,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_state'.
   $field_instances['user-user-field_state'] = array(
     'bundle' => 'user',
@@ -865,6 +1021,8 @@ function sbac_user_field_default_field_instances() {
   t('Other Professional Experiences and Accomplishments');
   t('Privacy');
   t('Records the number of successful logins for the user.');
+  t('Resources Posted Goal');
+  t('Resources Reviewed Goal');
   t('Retired');
   t('SLT Member');
   t('SNE Member');
@@ -872,6 +1030,7 @@ function sbac_user_field_default_field_instances() {
   t('SSO UUID');
   t('School Name');
   t('Select the personal information and expertise you’d like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown at the top of this page. Note that no educators can access your full account and no information will be displayed publicly.');
+  t('Star Rating Goal');
   t('State');
   t('Student Population(s)');
   t('Subject(s)');
