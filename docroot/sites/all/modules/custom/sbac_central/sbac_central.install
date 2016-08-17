@@ -21,11 +21,7 @@ function sbac_central_install() {
     'token',
     'views',
     'views_ui',
-    'wysiwyg',
-    'cmis',
-    'cmis_common',
-    'cmis_browser',
-    'cmis_query'
+    'wysiwyg'
   );
   module_enable($modules);
 }
@@ -532,16 +528,6 @@ function sbac_central_update_7049() {
 }
 
 /**
- * Enables CMIS HeaderSwing Module.
- */
-function sbac_central_update_7050() {
-  $modules = array(
-    'cmis_headerswing',
-  );
-  module_enable($modules);
-}
-
-/**
  * Disables workbench email module.
  */
 function sbac_central_update_7051() {
@@ -915,20 +901,6 @@ function sbac_central_update_7071() {
  */
 function sbac_central_update_7072(){
   module_enable(array('sbac_learning_registry'));
-}
-
-/**
- * Disable CMIS modules.
- */
-function sbac_central_update_7073() {
-  $modules = array(
-    'cmis',
-    'cmis_common',
-    'cmis_browser',
-    'cmis_query',
-    'cmis_headerswing',
-  );
-  module_disable($modules);
 }
 
 /**
