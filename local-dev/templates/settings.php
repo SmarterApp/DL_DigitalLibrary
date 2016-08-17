@@ -27,24 +27,15 @@ $conf['fast_404_string_whitelisting'] = array('cdn/farfuture', '/advagg_', 'html
 $conf['fast_404_HTML_error_all_paths'] = FALSE;
 
 
-$file = __DIR__ . '/global_settings.inc';
-if (file_exists($file)) {
-  include_once $file;
-}
-
+// Load settings when in Acquia environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-  // Load settings when in Acquia environment
-  if (file_exists('/var/www/site-php/sbacmvp/sbacmvp-settings.inc')) {
-    require '/var/www/site-php/sbacmvp/sbacmvp-settings.inc';
-  }
-  $files_private_conf_path = conf_path();
-  $conf['file_private_path'] = '/mnt/files/' . $_ENV['AH_SITE_GROUP'] . '.' . $_ENV['AH_SITE_ENVIRONMENT'] . '/' . $files_private_conf_path . '/files-private';
-
-  $conf['file_temporary_path'] = '/mnt/tmp/' . $_ENV['AH_SITE_GROUP'] . '.' . $_ENV['AH_SITE_ENVIRONMENT'];
+    $settings_file = '/mnt/files/' . $_ENV['AH_SITE_GROUP'] . '.' . $_ENV['AH_SITE_ENVIRONMENT'] . '/files-private/sbac_acquia_settings.inc';
 } else {
-  // Local settings
-  $file = __DIR__ . '/local_settings.inc';
-  if (file_exists($file)) {
-    include_once $file;
-  }
+    // Local Environment settings.
+    $settings_file = __DIR__ . '/local_settings.inc';
 }
+
+if (isset($settings_file) && file_exists($settings_file)) {
+    include_once $settings_file;
+}
+
