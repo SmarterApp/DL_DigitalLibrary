@@ -26,6 +26,11 @@ $conf['fast_404_whitelist'] = array('index.php', 'rss.xml', 'install.php', 'cron
 $conf['fast_404_string_whitelisting'] = array('cdn/farfuture', '/advagg_', 'html5_module', 'resources', 'resource_stats_csv', 'resource_thumbnails', 'html5_thumbnails');
 $conf['fast_404_HTML_error_all_paths'] = FALSE;
 
+if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    // Load database settings (in Acquia environment)
+    if (file_exists('/var/www/site-php/'.$_ENV['AH_SITE_GROUP'].'/'.$_ENV['AH_SITE_GROUP'].'-settings.inc')) {
+        require '/var/www/site-php/'.$_ENV['AH_SITE_GROUP'].'/'.$_ENV['AH_SITE_GROUP'].'-settings.inc';
+    }
 
 // Load settings when in Acquia environment
 if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
