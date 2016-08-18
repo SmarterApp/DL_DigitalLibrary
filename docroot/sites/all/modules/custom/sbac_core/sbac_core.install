@@ -235,10 +235,10 @@ function sbac_core_update_7018() {
 function sbac_core_update_8000() {
   global $conf;
   if (isset($conf['cmis_repositories'])) {
-    variable_delete('cmis_repositories');
+    variable_del('cmis_repositories');
   }
   if (isset($conf['sbac_core_cmis_creds_default'])) {
-    variable_delete('sbac_core_cmis_creds_default');  
+    variable_del('sbac_core_cmis_creds_default');  
   }
 }
 
