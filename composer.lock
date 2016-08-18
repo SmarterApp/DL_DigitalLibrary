@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0e73949bb3481a2cc90581da04297ab0",
-    "content-hash": "41803c0ed8f4749014f481ed93fc64b0",
+    "hash": "b5d9e999c01423adabbceb43b7b9cf2f",
+    "content-hash": "bee147f7db059a310a44a9182943d120",
     "packages": [
         {
             "name": "behat/behat",
@@ -934,17 +934,11 @@
         },
         {
             "name": "drupal/apachesolr_comments",
-            "version": "7.1.0",
+            "version": "dev-7.x-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/apachesolr_comments.git",
-                "reference": "953bfcf08926b2d2d817be5001632fbfa07802b2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr_comments-7.x-1.0.zip",
-                "reference": null,
-                "shasum": null
+                "reference": "907651eec64cd95fcac52892ed0ee185a4426384"
             },
             "require": {
                 "drupal/apachesolr": "7.*",
@@ -963,7 +957,7 @@
             ],
             "description": "Seperates comments from nodes to allows direct searching and linking to comments.",
             "homepage": "https://www.drupal.org/project/apachesolr_comments",
-            "time": "2013-01-25 02:50:18"
+            "time": "2013-03-07 22:07:35"
         },
         {
             "name": "drupal/apachesolr_file",
@@ -6047,6 +6041,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "drupal/apachesolr_comments": 20,
         "drupal/apachesolr_file": 20,
         "drupal/apachesolr_term": 20,
         "drupal/apachesolr_user": 20,
