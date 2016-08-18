@@ -3776,10 +3776,8 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
 
 /* Resource Review */
 .view-resource-review .resource-type {
-  position: absolute;
   color: #0684ad;
-  right: 5px;
-  bottom: 5px;
+  text-align: right;
 }
 
 /* Resource Playlist template messaging */
