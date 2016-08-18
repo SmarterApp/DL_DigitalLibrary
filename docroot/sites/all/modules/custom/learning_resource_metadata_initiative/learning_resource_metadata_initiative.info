@@ -1,0 +1,5 @@
+name = Learning Resource Metadata Initiative
+description = Extends the learning_registry module to integrate with the LRMI
+dependencies[] = learning_registry
+
+core = 7.x
