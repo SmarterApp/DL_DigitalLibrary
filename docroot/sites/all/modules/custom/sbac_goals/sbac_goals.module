@@ -269,7 +269,7 @@ function sbac_goals_get_html_content() {
  }
 
   //
-  $user_form['#action'] = '/users/' . $user->field_first_name[LANGUAGE_NONE][0]['value'] . '#profile-goals';
+  $user_form['#action'] = '/users/' . str_replace(' ' , '_', strtolower($user->field_first_name[LANGUAGE_NONE][0]['value'])) . '#profile-goals';
   return render($user_form);  
 }
 
