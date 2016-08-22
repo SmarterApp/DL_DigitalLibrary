@@ -1397,7 +1397,7 @@ function _sbac_resource_determine_gate_keeper($nid, $uid = FALSE) {
 function _sbac_resource_start_review_link($nid, $type, $style = 'button') {
   // Add node title to button for behat tests
   $node = node_load($nid);
-  $title = str_replace(' ', '-', $node->title);
+  $title = strtolower(str_replace(' ', '-', $node->title));
   if ($type == 'gate_keeper') {
     $stub = 'gate-keeper';
   }
