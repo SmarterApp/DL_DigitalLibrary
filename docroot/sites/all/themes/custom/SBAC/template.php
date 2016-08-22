@@ -633,8 +633,8 @@ function sbac_preprocess_page(&$variables) {
   if ($user->uid !== 0) {
     $user_obj = user_load($user->uid);
     // Generate link to goals tab
-    $user_name = str_replace(' ' , '_', strtolower($user_obj->field_first_name[LANGUAGE_NONE][0]['value']));
-    $variables['goals']['goals_url'] = '/users/' . $user_name . '#profile-goals';
+    $user_path = 	drupal_get_path_alias('user/' . $user_obj->uid);
+    $variables['goals']['goals_url'] = '/' . $user_path . '#profile-goals';
     // Get goals for user(role permissions defined in sbac_goals_get_goals)
     $goals = sbac_goals_get_goals();
     // Star rating goal

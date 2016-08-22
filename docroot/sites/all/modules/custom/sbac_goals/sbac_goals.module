@@ -269,7 +269,8 @@ function sbac_goals_get_html_content() {
  }
 
   //
-  $user_form['#action'] = '/users/' . str_replace(' ' , '_', strtolower($user->field_first_name[LANGUAGE_NONE][0]['value'])) . '#profile-goals';
+  $user_path = 	drupal_get_path_alias('user/' . $user->uid);
+  $user_form['#action'] = '/' . $user_path . '#profile-goals';
   return render($user_form);  
 }
 
