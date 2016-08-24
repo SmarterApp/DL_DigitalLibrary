@@ -49,7 +49,7 @@ function sbac_goals_get_html_content() {
   $star_perc = sbac_goals_calc_percent($star_ratings, $star_goal);
   $user_form['field_star_rating_goal']['#prefix'] = '
     <div class="star-rating goal-header">
-      <h3>Basic End User</h3><span class="goal-percentage">' . $star_perc . '%' . '</span>' . '
+      <h3>Educator</h3><span class="goal-percentage">' . $star_perc . '%' . '</span>' . '
     </div>
     <div class="star-rating-container goal-container">';
 
