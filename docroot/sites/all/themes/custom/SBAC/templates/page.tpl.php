@@ -70,15 +70,27 @@
   </nav>
    <?php if (isset($goals)): ?>
       <div class="nav-goals">
-         <div class="star-rating-complete goal-completed"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><?php print $goals['star_rating'][0]; ?></a></div>
-         <div class="goal-perc"><strong><?php print $goals['star_rating'][1]; ?>%</strong></div>
+         <?php if ($goals['star_rating'][2]): ?>
+         <div class="star-rating-complete goal-completed has-tip" data-tooltip title="<?php print $goals['star_rating'][2]; ?>"><?php print $goals['star_rating'][0]; ?></div>
+         <?php else: ?>
+            <div class="star-rating-complete goal-completed"><span><?php print $goals['star_rating'][0]; ?></span></div>
+         <?php endif; ?>
+            <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['star_rating'][1]; ?>%</strong></a></div>
       <?php if (isset($goals['resources_reviewed'])): ?>
-         <div class="resources-reviewed-complete goal-completed"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><?php print $goals['resources_reviewed'][0]; ?></a></div>
-         <div class="goal-perc"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong></div>
+         <?php if ($goals['resources_reviewed'][2]): ?>
+            <div class="resources-reviewed-complete goal-completed has-tip" data-tooltip title="<?php print $goals['resources_reviewed'][2]; ?>"><span><?php print $goals['resources_reviewed'][0]; ?></span></div>
+         <?php else: ?>
+            <div class="resources-reviewed-complete goal-completed"><span><?php print $goals['resources_reviewed'][0]; ?></span></div>
+         <?php endif; ?>
+            <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong>></a></div>
       <?php endif; ?>
       <?php if (isset($goals['resources_posted'])): ?>
-         <div class="resources-posted-complete goal-completed"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><?php print $goals['resources_posted'][0]; ?></a></div>
-         <div class="goal-perc"><strong><?php print $goals['resources_posted'][1]; ?>%</strong></div>
+         <?php if ($goals['resources_posted'][2]): ?>
+            <div class="resources-posted-complete goal-completed has-tip" data-tooltip title="<?php print $goals['resources_posted'][2]; ?>"><span><?php print $goals['resources_posted'][0]; ?></span></div>
+         <?php else: ?>
+            <div class="resources-posted-complete goal-completed"><span><?php print $goals['resources_posted'][0]; ?></span></div>
+         <?php endif; ?>
+         <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_posted'][1]; ?>%</strong></a></div>
       <?php endif; ?>
       </div>
    <?php endif; ?>

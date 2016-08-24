@@ -650,13 +650,17 @@ function sbac_preprocess_page(&$variables) {
     if ($goals['starred_goal'] == 0) {
       $goals['starred_goal'] = 10;
     }
+    $starred_tooltip = FALSE;
     // If goal completed, set number complete to goal target
     if ($starred_complete[0] > $goals['starred_goal']) {
       $starred_complete[0] = $goals['starred_goal'];
+      $starred_tooltip = '<p class="congratulations">Congratulations <strong>GOAL COMPLETE</strong></p>
+                          <p>Current number of resources rated is ' . $starred_complete[0] . ' out of ' . $goals['starred_goal'] . '</p>';
     }
     $starred_perc = sbac_goals_calc_percent($starred_complete[0], $goals['starred_goal']);
     $variables['goals']['star_rating'][] = $starred_complete[0];
     $variables['goals']['star_rating'][] = $starred_perc;
+    $variables['goals']['star_rating'][] = $starred_tooltip;
     // Resources Reviewed goal
     if (isset($goals['reviewed_goal'])) {
       // If user hasn't saved goal values yet, use defaults
@@ -671,13 +675,17 @@ function sbac_preprocess_page(&$variables) {
       else {
         $reviewed_complete[0] = 0;
       }
+      $reviewed_tooltip = FALSE;
       // If goal completed, set number complete to goal target
       if ($reviewed_complete[0] > $goals['reviewed_goal']) {
         $reviewed_complete[0] = $goals['reviewed_goal'];
+        $reviewed_tooltip = '<p class="congratulations">Congratulations <strong>GOAL COMPLETE</strong></p>
+                          <p>Current number of resources rated is ' . $reviewed_complete[0] . ' out of ' . $goals['reviewed_goal'] . '</p>';
       }    
       $reviewed_perc = sbac_goals_calc_percent($reviewed_complete[0], $goals['reviewed_goal']);
       $variables['goals']['resources_reviewed'][] = $reviewed_complete[0];
       $variables['goals']['resources_reviewed'][] = $reviewed_perc;
+      $variables['goals']['resources_reviewed'][] = $reviewed_tooltip;
     }
     if (isset($goals['posted_goal'])) {
       // If user hasn't saved goal values yet, use defaults
@@ -692,13 +700,17 @@ function sbac_preprocess_page(&$variables) {
       else {
         $posted_complete[0] = 0;
       }
+      $posted_tooltip = FALSE;
       // If goal completed, set number complete to goal target
       if ($posted_complete[0] > $goals['posted_goal']) {
         $posted_complete[0] = $goals['posted_goal'];
+        $posted_tooltip = '<p class="congratulations">Congratulations <strong>GOAL COMPLETE</strong></p>
+                          <p>Current number of resources rated is ' . $posted_complete[0] . ' out of ' . $goals['posted_goal'] . '</p>';
       }
       $posted_perc = sbac_goals_calc_percent($posted_complete[0], $goals['posted_goal']);
       $variables['goals']['resources_posted'][] = $posted_complete[0];
       $variables['goals']['resources_posted'][] = $posted_perc;
+      $variables['goals']['resources_posted'][] = $posted_tooltip;
     }
   }
 }
