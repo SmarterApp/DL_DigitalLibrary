@@ -36013,6 +36013,8 @@ form#sbac-user-filter-form #edit-email {
 }
 .nav-goals .goal-completed a {
   color: #FFFFFF;
+  position: relative;
+  top: 2px;
 }
 .nav-goals .star-rating-complete {
   background: url('/sites/all/themes/custom/SBAC/images/star-rating-triangle.png') no-repeat 0px 5px;
