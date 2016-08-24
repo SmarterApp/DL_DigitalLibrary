@@ -250,6 +250,7 @@ function sbac_core_update_8000() {
 function sbac_core_update_8001() {
     $modules = array(
     'module_missing_message_fixer',
+    'views_bulk_operations',
     'admin_views',
   );
 

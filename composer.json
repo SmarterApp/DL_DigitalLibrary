@@ -210,6 +210,7 @@
     "drupal/views": "7.3.14",
     "drupal/views_accelerator": "7.1.0-beta1",
     "drupal/views_accordion": "7.1.1",
+    "drupal/views_bulk_operations": "7.3.3",
     "drupal/views_pdf": "7.1.3",
     "drupal/views_content_cache": "7.3.0-alpha3",
     "drupal/views_data_export": "7.3.0-beta9",
