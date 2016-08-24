@@ -71,7 +71,7 @@
    <?php if (isset($goals)): ?>
       <div class="nav-goals">
          <?php if ($goals['star_rating'][2]): ?>
-         <div class="star-rating-complete goal-completed has-tip" data-tooltip title="<?php print $goals['star_rating'][2]; ?>"><?php print $goals['star_rating'][0]; ?></div>
+         <div class="star-rating-complete goal-completed has-tip" data-tooltip title="<?php print $goals['star_rating'][2]; ?>"><span><?php print $goals['star_rating'][0]; ?></span></div>
          <?php else: ?>
             <div class="star-rating-complete goal-completed"><span><?php print $goals['star_rating'][0]; ?></span></div>
          <?php endif; ?>
