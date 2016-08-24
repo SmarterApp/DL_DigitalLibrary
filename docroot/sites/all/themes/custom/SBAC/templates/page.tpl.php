@@ -82,7 +82,7 @@
          <?php else: ?>
             <div class="resources-reviewed-complete goal-completed"><span><?php print $goals['resources_reviewed'][0]; ?></span></div>
          <?php endif; ?>
-            <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong>></a></div>
+            <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong></a></div>
       <?php endif; ?>
       <?php if (isset($goals['resources_posted'])): ?>
          <?php if ($goals['resources_posted'][2]): ?>
