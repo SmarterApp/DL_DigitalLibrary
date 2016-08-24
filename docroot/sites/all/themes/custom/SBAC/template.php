@@ -678,7 +678,7 @@ function sbac_preprocess_page(&$variables) {
       // If goal completed, set number complete to goal target
       if ($reviewed_complete[0] >= $goals['reviewed_goal']) {
         $reviewed_complete[0] = $goals['reviewed_goal'];
-        $reviewed_tooltip = '<p class="congratulations">Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is ' . $reviewed_complete[0] . ' out of ' . $goals['reviewed_goal'] . '</p>';
+        $reviewed_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $reviewed_complete[0] . " out of " . $goals['reviewed_goal'] . "</p>";
       }    
       $reviewed_perc = sbac_goals_calc_percent($reviewed_complete[0], $goals['reviewed_goal']);
       $variables['goals']['resources_reviewed'][] = $reviewed_complete[0];
