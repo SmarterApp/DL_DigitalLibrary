@@ -94,11 +94,6 @@
       <?php endif; ?>
       </div>
    <?php endif; ?>
-   <?php if (isset($page['search']) && $page['search']): ?>
-    <div class="search right">
-      <?php print render($page['search']); ?>
-    </div>
-   <?php endif; ?>
   <?php if (isset($page['search']) && $page['search']): ?>
     <div class="search right">
       <?php print render($page['search']); ?>
