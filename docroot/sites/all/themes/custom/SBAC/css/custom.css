@@ -35997,6 +35997,9 @@ form#sbac-user-filter-form #edit-email {
 }
 
 /* Goals CSS */
+.search.right {
+  width: 216px;
+}
 .nav-goals {
   float: right;
 }
@@ -36035,7 +36038,7 @@ form#sbac-user-filter-form #edit-email {
   padding: 10px;
 }
 
-.nub {
+.tooltip .nub {
   border-color: transparent transparent #ccecf9 transparent;
 }
 

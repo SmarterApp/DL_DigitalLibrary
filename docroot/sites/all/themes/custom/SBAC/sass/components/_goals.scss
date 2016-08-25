@@ -1,4 +1,9 @@
 /* Goals SASS */
+.serach {
+  &.right {
+    width: 216px;  
+  }
+}
 .nav-goals {
   float: right;
   .goal-completed,
@@ -38,10 +43,11 @@
   .congratulations {
     color: red;
   }
+  .nub {
+    border-color: transparent transparent #ccecf9 transparent;
+  }
 }
-.nub {
-  border-color: transparent transparent #ccecf9 transparent;
-}
+
 
 #section-account {
   div[class*=" form-item-autologout-user-"] {
