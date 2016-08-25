@@ -77,14 +77,14 @@
          <?php else: ?>
             <div class="star-rating-complete goal-completed"><span><?php print $goals['star_rating'][0]; ?></span></div>
          <?php endif; ?>
-            <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['star_rating'][1]; ?>%</strong></a></div>
+            <div class="goal-perc"><a title="rated-goal" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['star_rating'][1]; ?>%</strong></a></div>
       <?php if (isset($goals['resources_reviewed'])): ?>
          <?php if ($goals['resources_reviewed'][2]): ?>
             <div class="resources-reviewed-complete goal-completed has-tip" data-tooltip title="<?php print $goals['resources_reviewed'][2]; ?>"><span><?php print $goals['resources_reviewed'][0]; ?></span></div>
          <?php else: ?>
             <div class="resources-reviewed-complete goal-completed"><span><?php print $goals['resources_reviewed'][0]; ?></span></div>
          <?php endif; ?>
-            <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong></a></div>
+            <div class="goal-perc"><a title="reviewed-goal" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong></a></div>
       <?php endif; ?>
       <?php if (isset($goals['resources_posted'])): ?>
          <?php if ($goals['resources_posted'][2]): ?>
@@ -92,7 +92,7 @@
          <?php else: ?>
             <div class="resources-posted-complete goal-completed"><span><?php print $goals['resources_posted'][0]; ?></span></div>
          <?php endif; ?>
-         <div class="goal-perc"><a title="goals-link" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_posted'][1]; ?>%</strong></a></div>
+         <div class="goal-perc"><a title="contributed-goal" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_posted'][1]; ?>%</strong></a></div>
       <?php endif; ?>
       </div>
    <?php endif; ?>
