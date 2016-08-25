@@ -439,7 +439,6 @@ WHERE
   AND f.completed = :completed
   AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
   AND h.current = 1
-  AND h.state IN ('published', 'rejected')
 ORDER BY
   f.changed
 
