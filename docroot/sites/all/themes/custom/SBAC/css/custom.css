@@ -36029,21 +36029,21 @@ form#sbac-user-filter-form #edit-email {
   background: url('/sites/all/themes/custom/SBAC/images/resource-posted-triangle.png') no-repeat 0px 5px;
 }
 
-body.section-users .tooltip {
+.tooltip {
   background-color: #ccecf9;
   font-size: 15px;
   padding: 10px;
 }
 
-body.section-users .nub {
+.nub {
   border-color: transparent transparent #ccecf9 transparent;
 }
 
-body.section-users .tooltip p {
+.tooltip p {
   margin-bottom: 0px;
 }
 
-body.section-users .tooltip .congratulations {
+.tooltip .congratulations {
   color: red;
 }
 

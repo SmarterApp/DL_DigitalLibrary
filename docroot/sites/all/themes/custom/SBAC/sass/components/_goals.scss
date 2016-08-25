@@ -28,21 +28,19 @@
   }
 }
 
-body.section-users {
-  .tooltip {
-    background-color: #ccecf9;
-    font-size: 15px;
-    padding: 10px;
-    p {
-      margin-bottom: 0px;
-    }
-    .congratulations {
-      color: red;
-    }
+.tooltip {
+  background-color: #ccecf9;
+  font-size: 15px;
+  padding: 10px;
+  p {
+    margin-bottom: 0px;
   }
-  .nub {
-    border-color: transparent transparent #ccecf9 transparent;
+  .congratulations {
+    color: red;
   }
+}
+.nub {
+  border-color: transparent transparent #ccecf9 transparent;
 }
 
 #section-account {
