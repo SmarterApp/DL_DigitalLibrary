@@ -12,7 +12,7 @@ dependencies[] = list
 dependencies[] = node
 dependencies[] = options
 ; Add back after UUIDs imported from prod
-; dependencies[] = sbac_alignment_taxonomy
+dependencies[] = sbac_alignment_taxonomy
 ; dependencies[] = sbac_alignment_taxonomy_alignment_type
 ; dependencies[] = sbac_alignment_taxonomy_sbac_alignment
 dependencies[] = strongarm
