@@ -755,7 +755,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
           else {
               $path = '';
           }
-          if(!in_array('no_img', $image) && getimagesize($path) && preg_match('/\.jpe?g|png]$/' , $image[0])) {
+          if(!in_array('no_img', $image) && getimagesize($path) && preg_match('/\.jpe?g|\.png]$/' , $image[0])) {
               $output .= l('<img src="' . file_create_url($image[0]) . '" />', 'node/' . $node->nid, array('html' => TRUE));
           }
       }
