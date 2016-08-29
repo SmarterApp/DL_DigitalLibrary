@@ -749,13 +749,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
 
       if (!empty($node->field_thumbnail_uri[LANGUAGE_NONE][0]['safe_value'])) {
           $image = explode("::", $node->field_thumbnail_uri[LANGUAGE_NONE][0]['safe_value']);
-          if (preg_match("/^public:/" , $image[0])){
-              $path = DRUPAL_ROOT . "/" . str_replace('public:/', variable_get('file_public_path', 'sites/default/files'), $image[0]);
-          }
-          else {
-              $path = '';
-          }
-          if(!in_array('no_img', $image) && getimagesize($path) && preg_match('/\.jpe?g|\.png]$/' , $image[0])) {
+          if(!in_array('no_img', $image) && preg_match('/\.jpe?g$|\.png$/' , $image[0])) {
               $output .= l('<img src="' . file_create_url($image[0]) . '" />', 'node/' . $node->nid, array('html' => TRUE));
           }
       }
