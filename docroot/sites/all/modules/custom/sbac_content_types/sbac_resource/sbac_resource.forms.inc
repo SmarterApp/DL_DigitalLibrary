@@ -775,14 +775,14 @@ function sbac_resource_validate_general(&$form, &$form_state) {
       drupal_set_message('general:field_student_agency:group:Remove inappropriate language from student engagement', 'sbac_resource_error');
     }
   }
-  if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
-    $error = 'Please add a connection to the formative assessment process to continue';
-    form_set_error('field_connection_to_fap', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('general:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('general:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
-  }
-  else {
+//  if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+//    $error = 'Please add a connection to the formative assessment process to continue';
+//    form_set_error('field_connection_to_fap', $error);
+//    _sbac_resource_remove_error_message($error);
+//    drupal_set_message('general:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
+//    drupal_set_message('general:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
+//  }
+  if ($form_state['values']['field_connection_to_fap']['und'][0]['value']) {
     $text = $form_state['values']['field_connection_to_fap']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
     if ($bad_words) {
@@ -834,14 +834,14 @@ function sbac_resource_validate_summary(&$form, &$form_state) {
     drupal_set_message('summary:field_grades:single:' . $error, 'sbac_resource_error');
     drupal_set_message('summary:field_grades:group:Please select a grade tag to continue', 'sbac_resource_error');
   }
-  if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-    $error = 'Add a connection to the Common Core State Standards';
-    form_set_error('field_connection_to_ccss', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
-  }
-  else {
+//  if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
+//    $error = 'Add a connection to the Common Core State Standards';
+//    form_set_error('field_connection_to_ccss', $error);
+//    _sbac_resource_remove_error_message($error);
+//    drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
+//    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
+//  }
+  if ($form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
     $text = $form_state['values']['field_connection_to_ccss']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
     if ($bad_words) {
@@ -1832,7 +1832,7 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
   }
 
   // Connection to FAP
-  $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');
+  $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process'); //. ' ' . theme('form_required_marker');
 
   // Body
   $form['field_alt_body']['und'][0]['value']['#title'] = t('Resource Summary') . ' ' . theme('form_required_marker');
@@ -1895,7 +1895,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
   // Connection to CCSS
-  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards') . ' ' . theme('form_required_marker');
+  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards'); // . ' ' . theme('form_required_marker');
   // Learning Goals
   $form['field_learning_goals']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   // Success Critieria
@@ -2847,9 +2847,9 @@ function sbac_resource_check_general($form, $form_state) {
     if (!$form_state['values']['field_focus']['und'][0]['tid']) {
       $valid = FALSE;
     }
-    if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
-      $valid = FALSE;
-    }
+//    if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+//      $valid = FALSE;
+//    }
     if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
       $valid = FALSE;
     }
@@ -2873,9 +2873,9 @@ function sbac_resource_check_general($form, $form_state) {
     if (!$form['field_alt_body']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
-    if (!$form['field_connection_to_fap']['und'][0]['value']['#default_value']) {
-      $valid = FALSE;
-    }
+//    if (!$form['field_connection_to_fap']['und'][0]['value']['#default_value']) {
+//      $valid = FALSE;
+//    }
     if (!$form['field_intended_end_user']['und']['#default_value']) {
       $valid = FALSE;
     }
@@ -2902,9 +2902,9 @@ function sbac_resource_check_summary($form, $form_state) {
     if (!$form_state['values']['field_contexts']['und'][0]['value']) {
       $valid = FALSE;
     }
-    if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-      $valid = FALSE;
-    }
+//    if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
+//      $valid = FALSE;
+//    }
     if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
       $valid = FALSE;
     }
@@ -2929,9 +2929,9 @@ function sbac_resource_check_summary($form, $form_state) {
     if (!$form['field_contexts']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
-    if (!$form['field_connection_to_ccss']['und'][0]['value']['#default_value']) {
-      $valid = FALSE;
-    }
+//    if (!$form['field_connection_to_ccss']['und'][0]['value']['#default_value']) {
+//      $valid = FALSE;
+//    }
     if (!$form['field_learning_goals']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
