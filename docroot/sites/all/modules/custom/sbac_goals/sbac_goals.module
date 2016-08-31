@@ -1,5 +1,24 @@
 <?php
 /**
+ *
+ * Implements hook_menu()
+ *
+*/
+function sbac_goals_menu() {
+  $items = array();
+
+  $items['admin/sbac/goals'] = array(
+    'title' => 'Goals Settings',
+    'type' => MENU_LOCAL_TASK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_goals_admin'),
+    'file'=> 'sbac_goals.admin.inc',
+    'access arguments' => array('administer sbac_central')
+  );
+
+  return $items;
+}
+/**
  * Gets html content for goals tab on user profile
  */
 function sbac_goals_get_html_content() {
