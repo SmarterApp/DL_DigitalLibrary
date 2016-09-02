@@ -889,6 +889,31 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->wrapper_suffix = '</div>';
     $variables['fields']['entity_id']->content = $output;
   }
+  // Forum topic list view field preprocessing
+  if ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+          $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
+        }
+      
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+      if ($name == 'last_comment_uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+          $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
+        }
+      
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
 }
 
 function sbac_digital_library_resources_applied_filters(){
