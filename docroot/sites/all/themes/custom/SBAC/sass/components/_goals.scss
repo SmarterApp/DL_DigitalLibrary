@@ -1,11 +1,16 @@
 /* Goals SASS */
-.serach {
+.search {
   &.right {
     width: 216px;  
   }
+  #search-x-clear {
+    right: 337px;
+  }
 }
+.section-digital-library-resources 
 .nav-goals {
   float: right;
+  padding-left: 10px;
   .goal-completed,
   .goal-perc {
     display: inline-block;

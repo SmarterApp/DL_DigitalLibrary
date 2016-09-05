@@ -36000,8 +36000,12 @@ form#sbac-user-filter-form #edit-email {
 .search.right {
   width: 216px;
 }
+.section-digital-library-resources #search-x-clear {
+  right: 337px;
+}
 .nav-goals {
   float: right;
+  padding-left: 10px;
 }
 .nav-goals .goal-completed,
 .nav-goals .goal-perc {
