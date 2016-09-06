@@ -1,10 +1,25 @@
 /* Goals SASS */
 .search {
   &.right {
-    width: 216px;  
+    width: 220px;  
   }
   #search-x-clear {
-    right: 337px;
+    position: relative;
+    display: inline-block;
+    right: 0;
+    top: 0;
+    margin-top: 20px;
+    width: 9px;
+    line-height: 0;
+  }
+  #sbac-digital-library-resources-form {
+    #edit-sbac-digital-library-resources-text {
+      border-radius: 20px;
+      position: relative;
+      width: 200px;
+      float: left;
+      display: inline;
+    }
   }
 }
 .section-digital-library-resources 
