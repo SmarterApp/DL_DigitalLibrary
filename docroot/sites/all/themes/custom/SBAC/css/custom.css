@@ -35998,10 +35998,27 @@ form#sbac-user-filter-form #edit-email {
 
 /* Goals CSS */
 .search.right {
-  width: 216px;
+  width: 220px;
+}
+.search #sbac-digital-library-resources-form #edit-sbac-digital-library-resources-text {
+  border-radius: 20px;
+  position: relative;
+  width: 200px;
+  float: left;
+  display: inline;
+}
+.search #search-x-clear {
+  position: relative;
+  display: inline-block;
+  right: 0;
+  top: 0;
+  margin-top: 20px;
+  width: 9px;
+  line-height: 0;
 }
 .nav-goals {
   float: right;
+  padding-left: 10px;
 }
 .nav-goals .goal-completed,
 .nav-goals .goal-perc {
