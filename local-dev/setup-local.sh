@@ -68,4 +68,4 @@ echo
 echo 'Setup complete:'
 echo
 echo 'You can connect to the local MySQL instance using the IP 127.0.0.1 and the port '$(docker inspect --format '{{ (index (index .NetworkSettings.Ports "3306/tcp") 0).HostPort }}' ${COMPOSE_PROJECT_NAME}_db_1)
-echo 'You can connect to http://localhost:'$(docker inspect --format '{{ (index (index .NetworkSettings.Ports "80/tcp") 0).HostPort }}' ${COMPOSE_PROJECT_NAME}_nginx_1)'//'
+echo 'You can connect to http://localhost:'$(docker inspect --format '{{ (index (index .NetworkSettings.Ports "80/tcp") 0).HostPort }}' ${COMPOSE_PROJECT_NAME}_nginx_1)
