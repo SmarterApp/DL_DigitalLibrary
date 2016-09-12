@@ -678,7 +678,7 @@ function sbac_preprocess_page(&$variables) {
       // If goal completed, set number complete to goal target
       if ($reviewed_complete[0] >= $goals['reviewed_goal']) {
         $reviewed_complete[0] = $goals['reviewed_goal'];
-        $reviewed_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $reviewed_complete[0] . " out of " . $goals['reviewed_goal'] . "</p>";
+        $reviewed_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources reviewed is " . $reviewed_complete[0] . " out of " . $goals['reviewed_goal'] . "</p>";
       }    
       $reviewed_perc = sbac_goals_calc_percent($reviewed_complete[0], $goals['reviewed_goal']);
       $variables['goals']['resources_reviewed'][] = $reviewed_complete[0];
@@ -702,7 +702,7 @@ function sbac_preprocess_page(&$variables) {
       // If goal completed, set number complete to goal target
       if ($posted_complete[0] >= $goals['posted_goal']) {
         $posted_complete[0] = $goals['posted_goal'];
-        $posted_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $posted_complete[0] . " out of " . $goals['posted_goal'] . "</p>";
+        $posted_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources posted is " . $posted_complete[0] . " out of " . $goals['posted_goal'] . "</p>";
       }
       $posted_perc = sbac_goals_calc_percent($posted_complete[0], $goals['posted_goal']);
       $variables['goals']['resources_posted'][] = $posted_complete[0];
