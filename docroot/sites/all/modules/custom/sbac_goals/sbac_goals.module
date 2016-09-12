@@ -36,7 +36,7 @@ function sbac_goals_get_html_content() {
     foreach ($all_star_ratings[1] as $star_rated) {
       // Grab titles for rated nodes
       $node = node_load($star_rated[0]);
-      $title = $node->title;
+      $title = check_plain($node->title);
 
       //Stash in array for completed tooltip
       $starred_nodes[] = '<p>New rating given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $star_rated[1]) . '</p>'; 
@@ -124,7 +124,7 @@ function sbac_goals_get_html_content() {
         }
         // Grab titles for rated nodes
         $node = node_load($reviewed[0]);
-        $title = $node->title;
+        $title = check_plain($node->title);
   
         //Stash in array for completed tooltip
         $reviewed_nodes[] = '<p>New review given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $reviewed[1]) . '</p>';
@@ -212,7 +212,7 @@ function sbac_goals_get_html_content() {
           break;
         }
         // Grab title for posted node
-        $title = $posted[0];
+        $title = check_plain($posted[0]);
   
         //Stash in array for completed tooltip
         $posted_nodes[] = '<p>New resource ' . $title . ' posted on ' . date('n/j/Y \a\t g:i A', $posted[1]) . '</p>';
