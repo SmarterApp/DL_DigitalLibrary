@@ -646,26 +646,22 @@ function sbac_preprocess_page(&$variables) {
     else {
       $starred_complete[0] = 0;
     }
-    // If user hasn't saved goal values yet, use defaults
-    if ($goals['starred_goal'] == 0) {
-      $goals['starred_goal'] = 10;
-    }
     $starred_tooltip = FALSE;
-    // If goal completed, set number complete to goal target
-    if ($starred_complete[0] >= $goals['starred_goal']) {
-      $starred_complete[0] = $goals['starred_goal'];
-      $starred_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $starred_complete[0] . " out of " . $goals['starred_goal'] . "</p>";
+
+    // Check to see that goal set is greater than 0
+    if ($goals['starred_goal'] > 0) {
+      // If goal completed, set number complete to goal target
+      if ($starred_complete[0] >= $goals['starred_goal']) {
+        $starred_complete[0] = $goals['starred_goal'];
+        $starred_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $starred_complete[0] . " out of " . $goals['starred_goal'] . "</p>";
+      }
+      $starred_perc = sbac_goals_calc_percent($starred_complete[0], $goals['starred_goal']);
+      $variables['goals']['star_rating'][] = $starred_complete[0];
+      $variables['goals']['star_rating'][] = $starred_perc;
+      $variables['goals']['star_rating'][] = $starred_tooltip;
     }
-    $starred_perc = sbac_goals_calc_percent($starred_complete[0], $goals['starred_goal']);
-    $variables['goals']['star_rating'][] = $starred_complete[0];
-    $variables['goals']['star_rating'][] = $starred_perc;
-    $variables['goals']['star_rating'][] = $starred_tooltip;
     // Resources Reviewed goal
-    if (isset($goals['reviewed_goal'])) {
-      // If user hasn't saved goal values yet, use defaults
-      if ($goals['reviewed_goal'] == 0) {
-        $goals['reviewed_goal'] = 9;
-      } 
+    if (isset($goals['reviewed_goal']) && ($goals['reviewed_goal'] > 0)) {
       $reviewed_complete_all = sbac_goals_get_completed('resources_reviewed', $user->uid);
       // If none completed set total to 0
       if ($reviewed_complete_all) {
@@ -685,7 +681,7 @@ function sbac_preprocess_page(&$variables) {
       $variables['goals']['resources_reviewed'][] = $reviewed_perc;
       $variables['goals']['resources_reviewed'][] = $reviewed_tooltip;
     }
-    if (isset($goals['posted_goal'])) {
+    if (isset($goals['posted_goal']) && ($goals['posted_goal'] > 0)) {
       // If user hasn't saved goal values yet, use defaults
       if ($goals['posted_goal'] == 0) {
         $goals['posted_goal'] = 3;
