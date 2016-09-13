@@ -912,7 +912,6 @@ function sbac_preprocess_views_view_fields(&$variables) {
       }
     }
   }
-
 }
 
 function sbac_digital_library_resources_applied_filters(){
