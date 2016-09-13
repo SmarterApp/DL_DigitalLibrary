@@ -22,7 +22,9 @@ function sbac_user_field_group_info() {
   $field_group->data = array(
     'label' => 'Email Settings',
     'weight' => '3',
-    'children' => array(),
+    'children' => array(
+      0 => 'message_subscribe_email',
+    ),
     'format_type' => 'tab',
     'format_settings' => array(
       'formatter' => 'closed',

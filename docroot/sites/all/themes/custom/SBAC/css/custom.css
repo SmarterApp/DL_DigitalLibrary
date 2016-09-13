@@ -35998,10 +35998,27 @@ form#sbac-user-filter-form #edit-email {
 
 /* Goals CSS */
 .search.right {
-  width: 216px;
+  width: 220px;
+}
+.search #sbac-digital-library-resources-form #edit-sbac-digital-library-resources-text {
+  border-radius: 20px;
+  position: relative;
+  width: 200px;
+  float: left;
+  display: inline;
+}
+.search #search-x-clear {
+  position: relative;
+  display: inline-block;
+  right: 0;
+  top: 0;
+  margin-top: 20px;
+  width: 9px;
+  line-height: 0;
 }
 .nav-goals {
   float: right;
+  padding-left: 10px;
 }
 .nav-goals .goal-completed,
 .nav-goals .goal-perc {
@@ -36062,15 +36079,24 @@ form#sbac-user-filter-form #edit-email {
   display: none;
 }
 
-#user-profile-form .field-name-field-star-rating-goal {
+#user-profile-form .field-name-field-lock-goals,
+#user-profile-form .field-name-field-hide-from-leaderboards,
+#user-profile-form #edit-revision-information,
+#user-profile-form--2 #edit-revision-information--2,
+#user-profile-form .field-name-field-resources-rated,
+#user-profile-form .field-name-field-resources-reviewed,
+#user-profile-form .field-name-field-resources-contributed,
+#user-profile-form--2 .field-name-field-resources-rated,
+#user-profile-form--2 .field-name-field-resources-reviewed,
+#user-profile-form--2 .field-name-field-resources-contributed,
+#user-profile-form .field-name-field-star-rating-goal,
+#user-profile-form .field-name-field-resources-reviewed-goal ,
+#user-profile-form .field-name-field-resources-posted-goal,
+#user-profile-form .hidden {
   display: none;
 }
 
-#user-profile-form .field-name-field-resources-reviewed-goal {
-  display: none;
-}
-
-#user-profile-form .field-name-field-resources-posted-goal {
+#user-profile-form--2 .hidden {
   display: none;
 }
 

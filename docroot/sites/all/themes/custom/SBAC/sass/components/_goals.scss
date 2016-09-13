@@ -67,11 +67,25 @@
 #user-profile-form {
   .field-name-field-star-rating-goal,
   .field-name-field-resources-reviewed-goal,
-  .field-name-field-resources-posted-goal {
+  .field-name-field-resources-posted-goal,
+  .field-name-field-resources-rated,
+  .field-name-field-resources-reviewed,
+  .field-name-field-resources-contributed,
+  .field-name-field-lock-goals,
+  .field-name-field-hide-from-leaderboards,
+  #edit-revision-information,
+  .hidden {
     display: none;
   }
 }
 #user-profile-form--2 {
+  .hidden,
+  .field-name-field-resources-rated,
+  .field-name-field-resources-reviewed,
+  .field-name-field-resources-contributed,
+  #edit-revision-information--2 {
+    display: none;
+  }
   .goal-header {
     width: 45%;
     padding: 10px;

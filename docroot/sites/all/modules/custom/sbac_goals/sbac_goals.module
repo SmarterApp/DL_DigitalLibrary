@@ -21,10 +21,18 @@ function sbac_goals_menu() {
 /**
  * Gets html content for goals tab on user profile
  */
-function sbac_goals_get_html_content() {
-  global $user;
-  // Grab User Profile form
-  $user = user_load($user->uid);
+function sbac_goals_get_html_content($user_uid) {
+  if ($user_uid) {
+    $user = user_load($user_uid);
+  }
+  else {
+    global $user;
+    // Grab User Profile form
+    $user = user_load($user->uid);
+  }
+  // Check for goals reset
+  sbac_goals_check_for_reset($user);
+
   module_load_include('inc', 'user', 'user.pages');
   $user_form = drupal_get_form('user_profile_form', $user);
 
@@ -47,6 +55,7 @@ function sbac_goals_get_html_content() {
   // Remove progress bar and success messages if goal value is 0
   if ($star_goal == 0) {
     $starred_goal_zero = 'progress-hidden';
+    $complete = FALSE;
   }
 
   // Create and populate tooltip if goal complete
@@ -55,7 +64,7 @@ function sbac_goals_get_html_content() {
     foreach ($all_star_ratings[1] as $star_rated) {
       // Grab titles for rated nodes
       $node = node_load($star_rated[0]);
-      $title = $node->title;
+      $title = check_plain($node->title);
 
       //Stash in array for completed tooltip
       $starred_nodes[] = '<p>New rating given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $star_rated[1]) . '</p>'; 
@@ -132,6 +141,7 @@ function sbac_goals_get_html_content() {
     // Remove progress bar and success messages if goal value is 0
     if ($review_goal == 0) {
       $reviewed_goal_zero = 'progress-hidden';
+      $complete = FALSE;
     }
 
     // Create and populate tooltip if goal complete
@@ -143,7 +153,7 @@ function sbac_goals_get_html_content() {
         }
         // Grab titles for rated nodes
         $node = node_load($reviewed[0]);
-        $title = $node->title;
+        $title = check_plain($node->title);
   
         //Stash in array for completed tooltip
         $reviewed_nodes[] = '<p>New review given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $reviewed[1]) . '</p>';
@@ -205,7 +215,12 @@ function sbac_goals_get_html_content() {
   if (in_array('resource contributor', $user->roles)) {
     // Add resources posted goal customization
     $all_resources_posted = sbac_goals_get_completed('resources_posted', $user->uid);
-    $resources_posted = $all_resources_posted[0];
+    if ($all_resources_posted) {
+      $resources_posted = $all_resources_posted[0];
+    }
+    else {
+      $resources_posted = 0;
+    }
     $posted_goal = $user_form['field_resources_posted_goal'][LANGUAGE_NONE][0]['value']['#default_value'];
     $complete = FALSE;
     $completed_icon = '';
@@ -221,6 +236,7 @@ function sbac_goals_get_html_content() {
     // Remove progress bar and success messages if goal value is 0
     if ($posted_goal == 0) {
       $posted_goal_zero = 'progress-hidden';
+      $complete = FALSE;
     }
 
     // Create and populate tooltip if goal complete
@@ -231,7 +247,7 @@ function sbac_goals_get_html_content() {
           break;
         }
         // Grab title for posted node
-        $title = $posted[0];
+        $title = check_plain($posted[0]);
   
         //Stash in array for completed tooltip
         $posted_nodes[] = '<p>New resource ' . $title . ' posted on ' . date('n/j/Y \a\t g:i A', $posted[1]) . '</p>';
@@ -298,6 +314,7 @@ function sbac_goals_get_html_content() {
  */
 function sbac_goals_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'user_profile_form') {
+    global $user;
     //Deal with existing users who don't have values in goals yet
     if ($form['field_star_rating_goal'][LANGUAGE_NONE][0]['value']['#default_value'] == '') {
       $star_rating_default = $form_state['field']['field_star_rating_goal'][LANGUAGE_NONE]['instance']['default_value'][0]['value'];
@@ -311,16 +328,43 @@ function sbac_goals_form_alter(&$form, &$form_state, $form_id) {
       $resources_posted_default = $form_state['field']['field_resources_posted_goal'][LANGUAGE_NONE]['instance']['default_value'][0]['value'];
       $form['field_resources_posted_goal'][LANGUAGE_NONE][0]['value']['#default_value'] = $resources_posted_default;
     }
+    // Lock goals if lock goals is checked and unlock if previously locked
+    if ($form['field_lock_goals'][LANGUAGE_NONE]['#default_value'] == 1) {
+      $form['field_star_rating_goal']['#disabled'] = TRUE;
+      $form['field_resources_reviewed_goal']['#disabled'] = TRUE;
+      $form['field_resources_posted_goal']['#disabled'] = TRUE;
+    }
+    if ($form['field_lock_goals'][LANGUAGE_NONE]['#default_value'] == 0) {
+      $form['field_star_rating_goal']['#disabled'] = FALSE;
+      $form['field_resources_reviewed_goal']['#disabled'] = FALSE;
+      $form['field_resources_posted_goal']['#disabled'] = FALSE;
+    }
+    // Hide goals lock for non-admins
+     if (!in_array('administrator', $user->roles)) {
+      $form['field_lock_goals']['#attributes']['class'][] = 'hidden';
+      $form['field_lock_goals']['#disabled'] = TRUE;
+    }
   }
 }
 
 /**
  * SBAC Goals get completed items
  */
-function sbac_goals_get_completed($goal, $uid) {
+function sbac_goals_get_completed($goal, $uid, $date_range) {
   global $user;
   $user_profile = user_load($user->uid);
-  $date_range = format_date(strtotime(date('Y-01-01')), 'custom', 'Ymd') . '--' . format_date(time(), 'custom', 'Ymd');
+  // If no date range given use dates set by admin
+  if (!$date_range) {
+    $start = variable_get('goals_start_date');
+    $end = variable_get('goals_end_date');
+    //Format dates set by admin or fallback on current year if no entry
+    if ($start == '' || $end == '') {
+      $date_range = format_date(strtotime(date('Y-01-01')), 'custom', 'Ymd') . '--' . format_date(time(), 'custom', 'Ymd');
+    }
+    else {
+      $date_range = format_date(strtotime($start), 'custom', 'Ymd') . '--' . format_date(strtotime($end), 'custom', 'Ymd');
+    }
+  }
   //Get completed items
   switch ($goal) {
     case "star_rating":
@@ -371,18 +415,19 @@ SQL;
     break;
   
     case "resources_posted":
-      $view_name = 'my_resources';
-      $view = views_get_view($view_name);
-      $view->set_display('grid_view');
-      $view->pre_execute();
-      $view->execute();
-      $total = $view->total_rows;
-      $posted = array();
-      foreach ($view->result as $result) {
-        $posted[] = array($result->node_title, $result->node_created);
+      $posted = sbac_goals_get_contributed_resources($user->uid, $date_range);
+      if ($posted) {
+        $posted_count = count($posted);
+        $posted_info = array();
+        foreach ($posted as $post) {
+          $posted_info[] = array($post->title, $post->created);  
+        }
+        $posted_results = array($posted_count, $posted_info);
+        return $posted_results;
       }
-      $posted_resources = array($total, $posted);
-      return $posted_resources;
+      else {
+        return FALSE;
+      }  
     break;
   }
 }
@@ -474,4 +519,93 @@ SQL;
   }
 
   return $completed;
+}
+
+/**
+ * Gets all the resources in the "published" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+
+function sbac_goals_get_contributed_resources($uid, $date_range) {
+  $completed = array();
+  $sql = <<<SQL
+
+SELECT
+  n.nid,
+  n.uid,
+  n.created,
+  n.title
+FROM {node} n
+  LEFT JOIN {workbench_moderation_node_history} wmnh
+    ON n.nid = wmnh.nid
+    AND n.vid = wmnh.vid
+WHERE
+  n.type = :type
+  AND n.uid = :uid
+  AND wmnh.state = :state
+  AND wmnh.current = 1
+  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+ORDER BY
+  n.created
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  $result = db_query($sql, array(':type' => 'resource', ':uid' => $uid, ':state' => 'published', ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
+}
+
+function sbac_goals_check_for_reset($user) {
+  // Grab current admin configured start date
+  $current_start_date = strtotime(variable_get('goals_start_date'));
+
+  // Grab last user goal update
+  $user_last_update_date = sbac_goals_latest_user_update_date($user);
+
+  // Reset goals to default values if last update is less than(earlier) configured goals start date
+  // and configured goals date is not in the future
+  if (($current_start_date > $user_last_update_date) && ($current_start_date <= time())) {
+    $edit = array();
+    if ($user->field_star_rating_goal['und'][0]['value']) {
+      $edit['field_star_rating_goal']['und'][0]['value'] = '10';
+    }
+    if (in_array('resource reviewer', $user->roles) || in_array('resource publisher', $user->roles)) {
+      if ($user->field_resources_reviewed_goal['und'][0]['value']) {
+        $edit['field_resources_reviewed_goal']['und'][0]['value'] = '9';
+      }
+    }
+    if (in_array('resource contributor', $user->roles)) {
+      if ($user->field_resources_posted_goal['und'][0]['value']) {
+        $edit['field_resources_posted_goal']['und'][0]['value'] = '3';
+      }
+    }
+    // save existing user
+    user_save(
+      $user,
+      $edit
+    );
+     
+    return;
+
+  }
+
+}
+
+function sbac_goals_latest_user_update_date($user) {
+  $revisions_list = user_revision_list($user);
+  // Grab the timestamp from the first item(latest vid)
+  return array_values($revisions_list)[0]->timestamp;
 }

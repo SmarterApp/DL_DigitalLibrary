@@ -18,7 +18,7 @@ function sbac_goals_admin() {
     '#title' => t('Goal Start Date'),
     '#default_value' => variable_get('goals_start_date', ''),
     '#maxlength' => 128,
-    '#description' => t(""),
+    '#description' => t("Enter a date in this format, Year-Month-Day i.e. '2016-06-17'"),
     '#required' => TRUE,
   );
   $form['goals_end_date'] = array(
@@ -26,7 +26,7 @@ function sbac_goals_admin() {
     '#title' => t('Goal End Date'),
     '#default_value' => variable_get('goals_end_date', ''),
     '#maxlength' => 128,
-    '#description' => t(""),
+    '#description' => t("Enter a date in this format, Year-Month-Day i.e. '2016-06-17'"),
     '#required' => TRUE,
   );
 
