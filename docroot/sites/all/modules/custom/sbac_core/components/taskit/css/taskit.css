@@ -46,7 +46,7 @@
           .taskit-content {
             .taskit-expand {
               .taskit-expand-trigger {
-                background: url('/sites/all/themes/SBAC/images/arrow-right.png') center center no-repeat;
+                background: url('/sites/all/themes/custom/SBAC/images/arrow-right.png') center center no-repeat;
               }
             }
 
@@ -74,7 +74,7 @@
 }
 /* line 74, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content {
-  background: url("/sites/all/themes/SBAC/images/arrow-right.png") 99% center no-repeat;
+  background: url("/sites/all/themes/custom/SBAC/images/arrow-right.png") 99% center no-repeat;
   color: #5a5a5a;
   display: block;
   padding: 10px 40px 10px 10px;
@@ -103,7 +103,7 @@
 }
 /* line 105, ../sass/taskit.scss */
 #notifications .taskit-interval .taskit-row .item .taskit-content .taskit-expand .taskit-expand-trigger {
-  background: url("/sites/all/themes/SBAC/images/arrow-down.png") center center no-repeat;
+  background: url("/sites/all/themes/custom/SBAC/images/arrow-down.png") center center no-repeat;
   display: block;
   height: 100%;
   width: 100%;
