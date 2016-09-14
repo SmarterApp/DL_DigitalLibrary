@@ -13,6 +13,7 @@
  */
 function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'resource_node_form') {
+    global $user;
     $generate = _sbac_resource_setup_form($form, $form_state);
     _sbac_resource_module_flag($form, $form_state);
     if ($generate) {
