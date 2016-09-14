@@ -13,7 +13,7 @@
  */
 function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'resource_node_form') {
-    global $user;
+    //global $user;
     $generate = _sbac_resource_setup_form($form, $form_state);
     _sbac_resource_module_flag($form, $form_state);
     if ($generate) {
@@ -41,11 +41,11 @@ function sbac_resource_form_alter(&$form, &$form_state, $form_id) {
     _sbac_resource_form_flatten_term_tree($form, $form_state);
     
     //SBAC-80 Remove Playlist option for non-SLT's    
-    $is_slt  = sbac_report_is_slt($user);
+    //$is_slt  = sbac_report_is_slt($user);
     
-    if (!$is_slt && !in_array('administrator', $user->roles)) {
-      unset($form['field_ficus'][LANGUAGE_NONE]['#options']['Playlist']);
-    }
+    //if (!$is_slt && !in_array('administrator', $user->roles)) {
+    //  unset($form['field_focus'][LANGUAGE_NONE]['#options']['Playlist']);
+    //}
   }
 }
 
