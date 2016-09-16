@@ -566,6 +566,12 @@ function sbac_preprocess_rate_template_yesno(&$variables) {
  */
 function sbac_preprocess_page(&$variables) {
   if (arg(0) == 'digital-library-resources') {
+    $errors = drupal_get_messages('error');
+    foreach($errors['error'] as $error) {
+      if (!preg_match("/.*An illegal choice has been detected.+/", $error)) {
+        drupal_set_message($error, 'error');
+      }
+    }
     $variables['page']['search'] = '';
     $variables['page']['filter'] = '';
     $variables['page']['sub-header'] = '';
