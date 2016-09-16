@@ -142,7 +142,7 @@
         })
 
         // When user clicks outside of facets, close facet blocks.
-        $('.filters, .top-bar, .page-wrap').click(function() {
+        $('.filters, .top-bar, .page-wrap').click(function(event) {
           if (event.target === this) {
             $('*').removeClass('activated');
 

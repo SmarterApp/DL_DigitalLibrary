@@ -28,6 +28,7 @@ function sbac_goals_get_html_content() {
   // Remove progress bar and success messages if goal value is 0
   if ($star_goal == 0) {
     $starred_goal_zero = 'progress-hidden';
+    $complete = FALSE;
   }
 
   // Create and populate tooltip if goal complete
@@ -36,7 +37,7 @@ function sbac_goals_get_html_content() {
     foreach ($all_star_ratings[1] as $star_rated) {
       // Grab titles for rated nodes
       $node = node_load($star_rated[0]);
-      $title = $node->title;
+      $title = check_plain($node->title);
 
       //Stash in array for completed tooltip
       $starred_nodes[] = '<p>New rating given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $star_rated[1]) . '</p>'; 
@@ -113,6 +114,7 @@ function sbac_goals_get_html_content() {
     // Remove progress bar and success messages if goal value is 0
     if ($review_goal == 0) {
       $reviewed_goal_zero = 'progress-hidden';
+      $complete = FALSE;
     }
 
     // Create and populate tooltip if goal complete
@@ -124,7 +126,7 @@ function sbac_goals_get_html_content() {
         }
         // Grab titles for rated nodes
         $node = node_load($reviewed[0]);
-        $title = $node->title;
+        $title = check_plain($node->title);
   
         //Stash in array for completed tooltip
         $reviewed_nodes[] = '<p>New review given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $reviewed[1]) . '</p>';
@@ -186,7 +188,12 @@ function sbac_goals_get_html_content() {
   if (in_array('resource contributor', $user->roles)) {
     // Add resources posted goal customization
     $all_resources_posted = sbac_goals_get_completed('resources_posted', $user->uid);
-    $resources_posted = $all_resources_posted[0];
+    if ($all_resources_posted) {
+      $resources_posted = $all_resources_posted[0];
+    }
+    else {
+      $resources_posted = 0;
+    }
     $posted_goal = $user_form['field_resources_posted_goal'][LANGUAGE_NONE][0]['value']['#default_value'];
     $complete = FALSE;
     $completed_icon = '';
@@ -202,6 +209,7 @@ function sbac_goals_get_html_content() {
     // Remove progress bar and success messages if goal value is 0
     if ($posted_goal == 0) {
       $posted_goal_zero = 'progress-hidden';
+      $complete = FALSE;
     }
 
     // Create and populate tooltip if goal complete
@@ -212,7 +220,7 @@ function sbac_goals_get_html_content() {
           break;
         }
         // Grab title for posted node
-        $title = $posted[0];
+        $title = check_plain($posted[0]);
   
         //Stash in array for completed tooltip
         $posted_nodes[] = '<p>New resource ' . $title . ' posted on ' . date('n/j/Y \a\t g:i A', $posted[1]) . '</p>';
@@ -352,18 +360,19 @@ SQL;
     break;
   
     case "resources_posted":
-      $view_name = 'my_resources';
-      $view = views_get_view($view_name);
-      $view->set_display('grid_view');
-      $view->pre_execute();
-      $view->execute();
-      $total = $view->total_rows;
-      $posted = array();
-      foreach ($view->result as $result) {
-        $posted[] = array($result->node_title, $result->node_created);
+      $posted = sbac_goals_get_contributed_resources($user->uid, $date_range);
+      if ($posted) {
+        $posted_count = count($posted);
+        $posted_info = array();
+        foreach ($posted as $post) {
+          $posted_info[] = array($post->title, $post->created);  
+        }
+        $posted_results = array($posted_count, $posted_info);
+        return $posted_results;
       }
-      $posted_resources = array($total, $posted);
-      return $posted_resources;
+      else {
+        return FALSE;
+      }  
     break;
   }
 }
@@ -433,8 +442,8 @@ FROM {eck_feedback} f
   LEFT JOIN {workbench_moderation_node_history} h
     ON f.node_id = h.nid
 WHERE
-  type = :type
-  AND f.uid = :uid
+  f.uid = :uid
+  AND (type = :type OR type = :type1 OR type = :type2)
   AND f.status = :status
   AND f.completed = :completed
   AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
@@ -449,7 +458,54 @@ SQL;
   $to_date = $dates[1];
 
   // anything with status = 1 and completed = 1 is completed.
-  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gatekeeper', ':type2' => 'post', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
+}
+
+/**
+ * Gets all the resources in the "published" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+
+function sbac_goals_get_contributed_resources($uid, $date_range) {
+  $completed = array();
+  $sql = <<<SQL
+
+SELECT
+  n.nid,
+  n.uid,
+  n.created,
+  n.title
+FROM {node} n
+  LEFT JOIN {workbench_moderation_node_history} wmnh
+    ON n.nid = wmnh.nid
+    AND n.vid = wmnh.vid
+WHERE
+  n.type = :type
+  AND n.uid = :uid
+  AND wmnh.state = :state
+  AND wmnh.current = 1
+  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+ORDER BY
+  n.created
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  $result = db_query($sql, array(':type' => 'resource', ':uid' => $uid, ':state' => 'published', ':from_date' => $from_date, ':to_date' => $to_date));
   foreach ($result as $row) {
     $completed[] = $row;
   }

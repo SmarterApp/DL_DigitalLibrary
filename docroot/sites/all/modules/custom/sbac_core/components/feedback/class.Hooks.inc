@@ -535,7 +535,7 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_js_alter(&$javascript) {
     // this JS is throwing errors and is breaking everything; we don't need it
-    unset($javascript['sites/all/themes/SBAC/js/vendor/jquery.migrate.1.1.1.js']);
+    unset($javascript[drupal_get_path('theme', 'SBAC') . '/js/vendor/jquery.migrate.1.1.1.js']);
   }
 
   /**

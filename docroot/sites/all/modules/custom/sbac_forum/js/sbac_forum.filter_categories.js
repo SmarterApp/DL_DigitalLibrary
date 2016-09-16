@@ -270,7 +270,7 @@
 
             // Add opacity handling for IE.
             css.filter = 'alpha(opacity=' + (100 * css.opacity) + ')';
-            var img_location = '/sites/all/themes/SBAC/images/foundation/orbit/loading.gif';
+            var img_location = '/sites/all/themes/custom/SBAC/images/foundation/orbit/loading.gif';
             var img = '<img src="' + img_location + '" alt="Smiley face" height="128" width="128">';
             $('body').append('<div id="modalBackdrop" style="z-index: 1000; display: block;"></div><div id="modalContent" style="z-index: 1001; position: absolute;">' + img + '</div>');
             // Create our content div, get the dimensions, and hide it
