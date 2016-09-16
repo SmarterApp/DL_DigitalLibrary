@@ -351,8 +351,13 @@ function sbac_goals_form_alter(&$form, &$form_state, $form_id) {
  * SBAC Goals get completed items
  */
 function sbac_goals_get_completed($goal, $uid, $date_range) {
-  global $user;
-  $user_profile = user_load($user->uid);
+  if ($uid) {
+    $user_profile = user_load($uid);
+  }
+  else {
+    global $user;
+    $user_profile = user_load($user->uid);
+  }
   // If no date range given use dates set by admin
   if (!$date_range) {
     $start = variable_get('goals_start_date');
@@ -386,7 +391,7 @@ SQL;
       $from_date = $dates[0];
       $to_date = $dates[1];
     
-      $result = db_query($sql, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+      $result = db_query($sql, array(':uid' => $user_profile->uid, ':from_date' => $from_date, ':to_date' => $to_date));
       $star_count = $result->rowCount();
       $nids = array();
       foreach ($result as $nid) {
@@ -395,11 +400,23 @@ SQL;
       $star_ratings = array();
       $star_ratings[] = $star_count;
       $star_ratings[] = $nids;
+      
+      // Check for user rated goal field update
+      if ($user_profile->field_resources_rated['und'][0]['value'] != $star_count) {
+        $edit = array();
+        $edit['field_resources_rated']['und'][0]['value'] = $star_count;
+        // update user's resources rated field
+        user_save(
+          $user_profile,
+          $edit
+        );
+      }
+
       return $star_ratings;
       break;
   
     case "resources_reviewed":
-      $reviewed = sbac_goals_get_current_completed_reviews($user->uid, $date_range);
+      $reviewed = sbac_goals_get_current_completed_reviews($user_profile->uid, $date_range);
       if ($reviewed) {
         $reviewed_count = count($reviewed);
         $reviewed_info = array();
@@ -407,6 +424,18 @@ SQL;
           $reviewed_info[] = array($review->node_id, $review->changed);  
         }
         $reviewed_results = array($reviewed_count, $reviewed_info);
+
+        // Check for user reviewed goal field update
+        if ($user_profile->field_resources_reviewed['und'][0]['value'] != $reviewed_count) {
+          $edit = array();
+          $edit['field_resources_reviewed']['und'][0]['value'] = $reviewed_count;
+          // update user's resources reviewed field
+          user_save(
+            $user_profile,
+            $edit
+          );
+        }
+
         return $reviewed_results;
       }
       else {
@@ -415,7 +444,7 @@ SQL;
     break;
   
     case "resources_posted":
-      $posted = sbac_goals_get_contributed_resources($user->uid, $date_range);
+      $posted = sbac_goals_get_contributed_resources($user_profile->uid, $date_range); 
       if ($posted) {
         $posted_count = count($posted);
         $posted_info = array();
@@ -423,6 +452,19 @@ SQL;
           $posted_info[] = array($post->title, $post->created);  
         }
         $posted_results = array($posted_count, $posted_info);
+
+        // Check for user contributed goal field update
+        if ($user_profile->field_resources_contributed['und'][0]['value'] != $posted_count) {
+          $edit = array();
+          $edit['field_resources_contributed']['und'][0]['value'] = $posted_count;
+          // update user's resources contributed field
+          user_save(
+            $user_profile,
+            $edit
+          );
+        }
+
+
         return $posted_results;
       }
       else {
@@ -497,8 +539,8 @@ FROM {eck_feedback} f
   LEFT JOIN {workbench_moderation_node_history} h
     ON f.node_id = h.nid
 WHERE
-  type = :type
-  AND f.uid = :uid
+  f.uid = :uid
+  AND (type = :type OR type = :type1 OR type = :type2)
   AND f.status = :status
   AND f.completed = :completed
   AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
@@ -513,7 +555,7 @@ SQL;
   $to_date = $dates[1];
 
   // anything with status = 1 and completed = 1 is completed.
-  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gatekeeper', ':type2' => 'post',':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
   foreach ($result as $row) {
     $completed[] = $row;
   }
@@ -608,4 +650,80 @@ function sbac_goals_latest_user_update_date($user) {
   $revisions_list = user_revision_list($user);
   // Grab the timestamp from the first item(latest vid)
   return array_values($revisions_list)[0]->timestamp;
+}
+
+function sbac_goals_get_rank($uid, $category) {
+  //Get completed items
+  switch ($category) {
+    case 'rated':
+      $completed = array();
+      $sql = <<<SQL
+    
+        SELECT
+          u.uid,
+          r.field_resources_rated_value
+        FROM {users} u
+          LEFT JOIN {field_data_field_hide_from_leaderboards} h
+            ON u.uid = h.entity_id
+          INNER JOIN {field_data_field_resources_rated} r
+            ON u.uid = r.entity_id
+        WHERE
+          u.status = :status
+          AND h.field_hide_from_leaderboards_value = :hidden
+        ORDER BY
+          r.field_resources_rated_value DESC
+SQL;
+    
+      $result = db_query($sql, array(':status' => '1', ':hidden' => '0'));
+      $counter = 0;
+      foreach ($result as $row) {
+        $counter++;
+        $completed[] = $row;
+        if ($row->uid == $uid) {
+          $rank = $counter;
+          break;
+        }
+      }
+      $total = $result->rowCount();
+      
+      return $rank = array($rank, $total);  
+      break;
+    case 'reviewed':
+      $completed = array();
+      $sql = <<<SQL
+    
+        SELECT
+          u.uid,
+          r.field_resources_reviewed_value,
+          ro.rid
+        FROM {users} u
+          LEFT JOIN {field_data_field_hide_from_leaderboards} h
+            ON u.uid = h.entity_id
+          INNER JOIN {field_data_field_resources_reviewed} r
+            ON u.uid = r.entity_id
+          LEFT JOIN {user_roles} ro
+            ON u.uid = ro.uid
+        WHERE
+          u.status = :status
+          AND h.field_hide_from_leaderboards_value = :hidden
+          AND (ro.rid = :role OR ro.rid = :role1)
+        ORDER BY
+          r.field_resources_reviewed_value DESC
+SQL;
+  
+      $result = db_query($sql, array(':status' => '1', ':hidden' => '0', ':role' => '17', ':role1' => '16'));
+      $counter = 0;
+      foreach ($result as $row) {
+        $counter++;
+        $completed[] = $row;
+        if ($row->uid == $uid) {
+          $rank = $counter;
+          break;
+        }
+      }
+      $total = $result->rowCount();
+      
+      return $rank = array($rank, $total);  
+      break;
+  }
 }

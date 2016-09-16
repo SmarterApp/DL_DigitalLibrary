@@ -36212,3 +36212,18 @@ form#sbac-user-filter-form #edit-email {
   float: left;
   padding: 0.5em 2em 0 0;
 }
+
+/* Leaderboards */
+#leaderboard-wrapper {
+
+}
+
+#leaderboards {
+  margin: 0 auto;
+  padding: 20px;
+  width: 996px;
+}
+
+.leaderboard {
+  width: 200px;
+}

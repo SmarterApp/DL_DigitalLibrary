@@ -887,6 +887,31 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->wrapper_suffix = '</div>';
     $variables['fields']['entity_id']->content = $output;
   }
+  // Leaderboard preprocessing
+  if ($variables['view']->name == 'rated_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'rated_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
+  if ($variables['view']->name == 'reviewed_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'reviewed_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
   // Forum topic list view field preprocessing
   if ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block') {
     foreach ($variables['fields'] as $name => $field) {
@@ -1022,5 +1047,77 @@ function sbac_preprocess_lexicon_overview(&$variables) {
   /* edit glossary button */
   if(user_access('administer lexicon')) {
     $variables['edit_link'] = l(t('Edit Glossary'), 'admin/structure/taxonomy/glossary_terms', array('absolute' => TRUE));
+  }
+}
+
+/**
+ * Returns the rendered tooltip for a user.
+ *
+ * @param $user_id
+ * @param bool $add_comma
+ * @return null|string
+ */
+function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
+  $cached_output = cache_get('authpane_goals' . $user_id);
+  if ($cached_output) {
+    return $cached_output->data;
+  }
+  else {
+    $account = user_load($user_id);
+    $account_renderable = user_view($account, 'tooltip');
+
+    $account_data = entity_metadata_wrapper('user', $account);
+    $fn = $account_data->field_first_name->value();
+    $ln = ''; // last name hide by default.
+    if (isset($account_data->field_privacy)) { // user is using non-default settings.
+      $privacy_settings = $account_data->field_privacy->value();
+      if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+        $ln = ' ' . $account_data->field_last_name->value();
+      }
+    }
+    $full_name = $fn . $ln;
+    $ranking = '';
+    if ($leaderboard == 'rated_leaderboard') {
+      $ranking_arr = sbac_goals_get_rank($user_id, 'rated');
+      $ranking = '<div class="row">
+                    <div class="column">
+                      <div class="ranking">
+                        <div>
+                          <span class="title">Educator Rank</span>
+                          <span>' . $ranking_arr[0] . ' out of ' . $ranking_arr[1] . '</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>';
+    }
+    if ($leaderboard == 'reviewed_leaderboard') {
+      $ranking_arr = sbac_goals_get_rank($user_id, 'reviewed');
+      $ranking = '<div class="row">
+                    <div class="column">
+                      <div class="ranking">
+                        <div>
+                          <span class="title">Resource Reviewer Rank</span>
+                          <span>' . $ranking_arr[0] . ' out of ' . $ranking_arr[1] . '</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>';
+    }
+    $tooltip = '
+              <div class="devtools-tooltip account-tooltip">
+                <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
+                <div class="devtools-tooltip-body">' . render($account_renderable) . $ranking . '</div>
+              </div>
+             ';
+
+    $created = isset($account->created) ? $account->created : time();
+
+    $output = t('!name', array(
+      '!name' => $tooltip,
+      '!date' => format_date($created, 'simple'),
+    ));
+
+    cache_set('authpane_' . $user_id, $output);
+    return $output;
   }
 }
