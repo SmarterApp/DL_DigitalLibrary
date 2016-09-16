@@ -15,7 +15,7 @@ echo 'app:*:'$(id -u)':'$(id -g)':Docker:/tmp:/bin/bash' > build/composer/passwd
 WORKDIR=/var/www/html
 docker run --rm \
     --user $(id -u):$(id -g) \
-    -v $(pwd)/build/composer/passwd.tmp:/etc/passwd \
+    -v "$(pwd)/build/composer/passwd.tmp":/etc/passwd \
     -v "${PWD}/build/composer":/composer \
     -v "${PWD}":"${WORKDIR}" \
     -w "${WORKDIR}" \
