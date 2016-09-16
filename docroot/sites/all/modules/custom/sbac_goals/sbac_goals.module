@@ -393,14 +393,14 @@ function sbac_goals_get_goals() {
   $goals = array();
   $goals['starred_goal'] = $user_obj->field_star_rating_goal[LANGUAGE_NONE][0]['value'];
   // If user hasn't saved goal yet, use default
-  if (!$goals['starred_goal']) {
+  if (!$goals['starred_goal'] && $goals['starred_goal'] !== '0') {
     $goals['starred_goal'] = 10;
   }
   // Add Resource Reviewer Goals for a resource reviewer or resource publisher
   if (in_array('resource reviewer', $user->roles) ||  in_array('resource publisher', $user->roles)) {
     $goals['reviewed_goal'] = $user_obj->field_resources_reviewed_goal[LANGUAGE_NONE][0]['value'];
     // If user hasn't saved goal yet, use default
-    if (!$goals['reviewed_goal']) {
+    if (!$goals['reviewed_goal'] && $goals['reviewed_goal'] !== '0') {
       $goals['reviewed_goal'] = 9;
     }
   }
@@ -409,7 +409,7 @@ function sbac_goals_get_goals() {
   if (in_array('resource contributor', $user->roles)) {
     $goals['posted_goal'] = $user_obj->field_resources_posted_goal[LANGUAGE_NONE][0]['value'];
     // If user hasn't saved goal yet, use default
-    if (!$goals['posted_goal']) {
+    if (!$goals['posted_goal'] && $goals['posted_goal'] !== '0') {
       $goals['posted_goal'] = 3;
     }
   }
