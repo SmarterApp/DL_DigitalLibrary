@@ -433,8 +433,8 @@ FROM {eck_feedback} f
   LEFT JOIN {workbench_moderation_node_history} h
     ON f.node_id = h.nid
 WHERE
-  type = :type
-  AND f.uid = :uid
+  f.uid = :uid
+  AND (type = :type OR type = :type1 OR type = :type2)
   AND f.status = :status
   AND f.completed = :completed
   AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
@@ -449,7 +449,7 @@ SQL;
   $to_date = $dates[1];
 
   // anything with status = 1 and completed = 1 is completed.
-  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gatekeeper', ':type2' => 'post', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
   foreach ($result as $row) {
     $completed[] = $row;
   }
