@@ -28,6 +28,7 @@ function sbac_goals_get_html_content() {
   // Remove progress bar and success messages if goal value is 0
   if ($star_goal == 0) {
     $starred_goal_zero = 'progress-hidden';
+    $complete = FALSE;
   }
 
   // Create and populate tooltip if goal complete
@@ -113,6 +114,7 @@ function sbac_goals_get_html_content() {
     // Remove progress bar and success messages if goal value is 0
     if ($review_goal == 0) {
       $reviewed_goal_zero = 'progress-hidden';
+      $complete = FALSE;
     }
 
     // Create and populate tooltip if goal complete
@@ -207,6 +209,7 @@ function sbac_goals_get_html_content() {
     // Remove progress bar and success messages if goal value is 0
     if ($posted_goal == 0) {
       $posted_goal_zero = 'progress-hidden';
+      $complete = FALSE;
     }
 
     // Create and populate tooltip if goal complete
