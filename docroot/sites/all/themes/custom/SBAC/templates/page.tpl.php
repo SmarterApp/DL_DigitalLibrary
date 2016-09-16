@@ -78,7 +78,7 @@
          <?php endif; ?>
             <div class="goal-perc"><a title="rated-goal" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['star_rating'][1]; ?>%</strong></a></div>
       <?php endif; ?>
-      <?php if (isset($goals['resources_reviewed']) && ($goals['resources_reviewed'][1] !== '0')): ?>
+      <?php if (isset($goals['resources_reviewed'])): ?>
          <?php if ($goals['resources_reviewed'][2]): ?>
             <div class="resources-reviewed-complete goal-completed has-tip" data-tooltip title="<?php print $goals['resources_reviewed'][2]; ?>"><span><?php print $goals['resources_reviewed'][0]; ?></span></div>
          <?php else: ?>
@@ -86,7 +86,7 @@
          <?php endif; ?>
             <div class="goal-perc"><a title="reviewed-goal" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['resources_reviewed'][1]; ?>%</strong></a></div>
       <?php endif; ?>
-      <?php if (isset($goals['resources_posted']) && ($goals['resources_posted'][1] !== '0')): ?>
+      <?php if (isset($goals['resources_posted'])): ?>
          <?php if ($goals['resources_posted'][2]): ?>
             <div class="resources-posted-complete goal-completed has-tip" data-tooltip title="<?php print $goals['resources_posted'][2]; ?>"><span><?php print $goals['resources_posted'][0]; ?></span></div>
          <?php else: ?>

@@ -688,10 +688,6 @@ function sbac_preprocess_page(&$variables) {
       $variables['goals']['resources_reviewed'][] = $reviewed_tooltip;
     }
     if (isset($goals['posted_goal']) && ($goals['posted_goal'] > 0)) {
-      // If user hasn't saved goal values yet, use defaults
-      if ($goals['posted_goal'] == 0) {
-        $goals['posted_goal'] = 3;
-      } 
       $posted_complete_all = sbac_goals_get_completed('resources_posted', $user->uid);
       // If none completed set total to 0
       if ($posted_complete_all) {
