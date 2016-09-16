@@ -96,7 +96,7 @@ function sbac_workflow_messaging_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'qc_78306_help';
   $strongarm->value = array(
-    'value' => '<p>Review the following Playlist resource files using the Quality Criteria for Instructional Playlists below:</p><p><a href="/sites/all/themes/custom/SBAC/workflow_resources/Playlist_Quality_Criteria_Review_Guide_June2016.pdf">Educator Learning Guide and Resource Playlist </a></p><p><a href="/sites/all/themes/custom/SBAC/workflow_resources/Cover_Profile_Guide_Playlists_June2016.pdf">Cover Profile (About This Resource) </a></p><p>Do NOT review the individual resources included in the Playlist. They are posted in the Digital Library and have already gone through Gatekeeping and Quality Criteria reviews.</p>',
+    'value' => '<p>Review the following Playlist resource files using the Quality Criteria for Instructional Playlists below:</p><p><a href="/sites/all/themes/custom/SBAC/workflow_resources/Playlist_Quality_Criteria_Review_Guide_June2016.pdf">Playlist Quality Review Guide</a></p><p>Do NOT review the individual resources included in the Playlist. They are posted in the Digital Library and have already gone through Gatekeeping and Quality Criteria reviews.</p>',
     'format' => 'full_html',
   );
   $export['qc_78306_help'] = $strongarm;
