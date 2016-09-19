@@ -912,6 +912,18 @@ function sbac_preprocess_views_view_fields(&$variables) {
       }
     }
   }
+  if ($variables['view']->name == 'contributed_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
   // Forum topic list view field preprocessing
   if ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block') {
     foreach ($variables['fields'] as $name => $field) {
@@ -1065,7 +1077,8 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
   else {
     $account = user_load($user_id);
     $account_renderable = user_view($account, 'tooltip');
-
+    $image = array('path', $account->picture->uri);
+    $user_picture = theme_image($image);
     $account_data = entity_metadata_wrapper('user', $account);
     $fn = $account_data->field_first_name->value();
     $ln = ''; // last name hide by default.
@@ -1075,7 +1088,7 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
         $ln = ' ' . $account_data->field_last_name->value();
       }
     }
-    $full_name = $fn . $ln;
+    $full_name = substr($fn . $ln, 0, 10) . '...';
     $ranking = '';
     if ($leaderboard == 'rated_leaderboard') {
       $ranking_arr = sbac_goals_get_rank($user_id, 'rated');
@@ -1103,21 +1116,35 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
                     </div>
                   </div>';
     }
+    if ($leaderboard == 'contributed_leaderboard') {
+      $ranking_arr = sbac_goals_get_rank($user_id, 'contributed');
+      $ranking = '<div class="row">
+                    <div class="column">
+                      <div class="ranking">
+                        <div>
+                          <span class="title">Resource Contributor Rank</span>
+                          <span>' . $ranking_arr[0] . ' out of ' . $ranking_arr[1] . '</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>';
+    }
     $tooltip = '
               <div class="devtools-tooltip account-tooltip">
-                <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . ($add_comma ? ', ' : '') . '
+                <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . '
                 <div class="devtools-tooltip-body">' . render($account_renderable) . $ranking . '</div>
               </div>
              ';
 
     $created = isset($account->created) ? $account->created : time();
-
-    $output = t('!name', array(
+    
+    $output = $user_picture;
+    $output .= t('!name', array(
       '!name' => $tooltip,
       '!date' => format_date($created, 'simple'),
     ));
 
-    cache_set('authpane_' . $user_id, $output);
+    cache_set('goals_authpane_' . $user_id, $output);
     return $output;
   }
 }

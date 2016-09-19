@@ -31,7 +31,8 @@ function sbac_goals_get_html_content($user_uid) {
     $user = user_load($user->uid);
   }
   // Check for goals reset
-  sbac_goals_check_for_reset($user);
+  // TODO refactor user_revision_list function to make more performant(maybe custom query?)
+//  sbac_goals_check_for_reset($user);
 
   module_load_include('inc', 'user', 'user.pages');
   $user_form = drupal_get_form('user_profile_form', $user);
@@ -638,12 +639,12 @@ function sbac_goals_check_for_reset($user) {
     user_save(
       $user,
       $edit
-    );
-     
+    );    
     return;
-
   }
-
+  else {
+    return;
+  }
 }
 
 function sbac_goals_latest_user_update_date($user) {
@@ -669,7 +670,7 @@ function sbac_goals_get_rank($uid, $category) {
             ON u.uid = r.entity_id
         WHERE
           u.status = :status
-          AND h.field_hide_from_leaderboards_value = :hidden
+          AND (h.field_hide_from_leaderboards_value = :hidden OR h.field_hide_from_leaderboards_value IS NULL)
         ORDER BY
           r.field_resources_rated_value DESC
 SQL;
@@ -687,7 +688,7 @@ SQL;
       $total = $result->rowCount();
       
       return $rank = array($rank, $total);  
-      break;
+    break;
     case 'reviewed':
       $completed = array();
       $sql = <<<SQL
@@ -701,17 +702,22 @@ SQL;
             ON u.uid = h.entity_id
           INNER JOIN {field_data_field_resources_reviewed} r
             ON u.uid = r.entity_id
-          LEFT JOIN {user_roles} ro
+          INNER JOIN {users_roles} ro
             ON u.uid = ro.uid
+          INNER JOIN {field_data_field_resources_reviewed_goal} rg
+            ON u.uid = rg.entity_id
         WHERE
           u.status = :status
-          AND h.field_hide_from_leaderboards_value = :hidden
+          AND (h.field_hide_from_leaderboards_value = :hidden OR h.field_hide_from_leaderboards_value IS NULL)
           AND (ro.rid = :role OR ro.rid = :role1)
+          AND rg.field_resources_reviewed_goal_value > :goal
+        GROUP BY
+        	u.uid
         ORDER BY
           r.field_resources_reviewed_value DESC
 SQL;
   
-      $result = db_query($sql, array(':status' => '1', ':hidden' => '0', ':role' => '17', ':role1' => '16'));
+      $result = db_query($sql, array(':status' => '1', ':hidden' => '0', ':role' => '17', ':role1' => '16', ':goal' => '0'));
       $counter = 0;
       foreach ($result as $row) {
         $counter++;
@@ -724,6 +730,48 @@ SQL;
       $total = $result->rowCount();
       
       return $rank = array($rank, $total);  
-      break;
+    break;
+    case 'contributed':
+      $completed = array();
+      $sql = <<<SQL
+    
+        SELECT
+          u.uid,
+          r.field_resources_contributed_value,
+          ro.rid
+        FROM {users} u
+          LEFT JOIN {field_data_field_hide_from_leaderboards} h
+            ON u.uid = h.entity_id
+          INNER JOIN {field_data_field_resources_contributed} r
+            ON u.uid = r.entity_id
+          INNER JOIN {users_roles} ro
+            ON u.uid = ro.uid
+          INNER JOIN {field_data_field_resources_posted_goal} pg
+            ON u.uid = pg.entity_id
+        WHERE
+          u.status = :status
+          AND (h.field_hide_from_leaderboards_value = :hidden OR h.field_hide_from_leaderboards_value IS NULL)
+          AND ro.rid = :role
+          AND pg.field_resources_posted_goal_value > :goal
+        GROUP BY
+        	u.uid
+        ORDER BY
+          r.field_resources_contributed_value DESC
+SQL;
+  
+      $result = db_query($sql, array(':status' => '1', ':hidden' => '0', ':role' => '15', ':goal' => '0'));
+      $counter = 0;
+      foreach ($result as $row) {
+        $counter++;
+        $completed[] = $row;
+        if ($row->uid == $uid) {
+          $rank = $counter;
+          break;
+        }
+      }
+      $total = $result->rowCount();
+      
+      return $rank = array($rank, $total);  
+    break;
   }
 }

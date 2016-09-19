@@ -109,10 +109,11 @@ function lp_get_leaderboards() {
         }
       break;
       case 'Resource Reviewer':
+        $leaderboard_link = '';
         if ($user->field_resources_reviewed['und'][0]['value'] == 0 || $user->field_hide_from_leaderboards['und'][0]['value'] == '1') {
           $leaderboard_link = '';
         }
-        elseif (in_array('Resource reviewer', $user->roles) && $user->field_resources_reviewed['und'][0]['value'] > 0) {
+        elseif ((in_array('resource reviewer', $user->roles) || in_array('resource publisher', $user->roles)) && $user->field_resources_reviewed['und'][0]['value'] > 0) {
           $rank_arr = sbac_goals_get_rank($user->uid, 'reviewed');
           $tooltip = $rank_arr[0] . ' out of ' . $rank_arr[1];
           $leaderboard_link = '<a href="#" class="has-tip" data-tooltip title="' . $tooltip . '">See your ranking here</a>';
@@ -122,7 +123,18 @@ function lp_get_leaderboards() {
         }
       break;
       case 'Resource Contributor':
-
+        $leaderboard_link = '';
+        if ($user->field_resources_contributed['und'][0]['value'] == 0 || $user->field_hide_from_leaderboards['und'][0]['value'] == '1') {
+          $leaderboard_link = '';
+        }
+        elseif (in_array('resource contributor', $user->roles) && $user->field_resources_contributed['und'][0]['value'] > 0) {
+          $rank_arr = sbac_goals_get_rank($user->uid, 'contributed');
+          $tooltip = $rank_arr[0] . ' out of ' . $rank_arr[1];
+          $leaderboard_link = '<a href="#" class="has-tip" data-tooltip title="' . $tooltip . '">See your ranking here</a>';
+        }
+        else {
+          $leaderboad_link - '<a href="">Learn about contributing and reviewing resources here.</a>';
+        }
       break;
     }
     $output .= '<div class="leaderboard">
