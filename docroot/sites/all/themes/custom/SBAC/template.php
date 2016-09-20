@@ -912,6 +912,21 @@ function sbac_preprocess_views_view_fields(&$variables) {
       }
     }
   }
+  // Forum member list view preprocessing
+  if ($variables['view']->name == 'forum_member_list' && $variables['view']->current_display == 'block') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+          $new_output = '' . $author_name . '';
+        }
+      
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
 }
 
 function sbac_digital_library_resources_applied_filters(){
