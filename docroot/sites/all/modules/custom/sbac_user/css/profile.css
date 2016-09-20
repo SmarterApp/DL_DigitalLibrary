@@ -340,7 +340,7 @@ h2.name .field {
 }
 /* line 299, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .chzn-container-single a div b {
-  background: url("../../../../sites/all/themes/SBAC/images/arrow-down-large.png") no-repeat;
+  background: url("../../../../sites/all/themes/custom/SBAC/images/arrow-down-large.png") no-repeat;
 }
 /* line 305, ../sass/profile.scss */
 .page-user .row.second #account .field-name-field-position .form-item .error {

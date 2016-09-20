@@ -6,4 +6,3 @@ version = 7.x-0.1
 project = sbac_goals
 dependencies[] = sbac_core
 dependencies[] = sbac_user
-dependencies[] = user_revision

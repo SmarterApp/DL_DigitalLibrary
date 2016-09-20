@@ -93,10 +93,13 @@ function lp_get_leaderboards() {
   $leaderboards = array(
                     array('Educator', 'rated_resources_rankings'),
                     array('Resource Reviewer', 'reviewed_resources_rankings'),
-                    array('Resource Contributor', 'contributed_resources_rankings')
+                    array('Resource Contributor', 'contributed_resources_rankings'),
+                    array('Regional', '')
                   );
   $output = '';
+  
   foreach ($leaderboards as $leaderboard) {
+    $leaderboard_link = '';
     switch ($leaderboard[0]) {
       case 'Educator':
         if ($user->field_resources_rated['und'][0]['value'] == 0 || $user->field_hide_from_leaderboards['und'][0]['value'] == '1') {
@@ -109,7 +112,6 @@ function lp_get_leaderboards() {
         }
       break;
       case 'Resource Reviewer':
-        $leaderboard_link = '';
         if ($user->field_resources_reviewed['und'][0]['value'] == 0 || $user->field_hide_from_leaderboards['und'][0]['value'] == '1') {
           $leaderboard_link = '';
         }
@@ -123,7 +125,6 @@ function lp_get_leaderboards() {
         }
       break;
       case 'Resource Contributor':
-        $leaderboard_link = '';
         if ($user->field_resources_contributed['und'][0]['value'] == 0 || $user->field_hide_from_leaderboards['und'][0]['value'] == '1') {
           $leaderboard_link = '';
         }
@@ -137,12 +138,16 @@ function lp_get_leaderboards() {
         }
       break;
     }
+    $leaderboard_view = '';
+    if ($leaderboard[1]) {
+      $leaderboard_view = views_embed_view($leaderboard[1],'block');
+    }
     $output .= '<div class="leaderboard">
                   <div class="leaderboard-header ' . strtolower(str_replace(' ', '-', $leaderboard[0])) . '">' .
                     $leaderboard[0] .
                   '</div>
                   <div class="leaderboard-body">' .
-                  views_embed_view($leaderboard[1],'block') . $leaderboard_link .
+                    $leaderboard_view . $leaderboard_link .
                   '</div>
                 </div>';
   }

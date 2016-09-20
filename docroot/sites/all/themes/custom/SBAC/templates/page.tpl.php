@@ -70,15 +70,15 @@
   </nav>
    <?php if (isset($goals)): ?>
       <div class="nav-goals">
-      <?php if ($goals['star_rating'][1] !== '0'): ?>
+      <?php if (isset($goals['star_rating'])): ?>
          <?php if ($goals['star_rating'][2]): ?>
          <div class="star-rating-complete goal-completed has-tip" data-tooltip title="<?php print $goals['star_rating'][2]; ?>"><span><?php print $goals['star_rating'][0]; ?></span></div>
          <?php else: ?>
             <div class="star-rating-complete goal-completed"><span><?php print $goals['star_rating'][0]; ?></span></div>
          <?php endif; ?>
             <div class="goal-perc"><a title="rated-goal" href="<?php print $goals['goals_url']; ?>"><strong><?php print $goals['star_rating'][1]; ?>%</strong></a></div>
-      <?php endif; ?>      
-      <?php if (isset($goals['resources_reviewed']) && ($goals['resources_reviewed'][1] !== '0')): ?>
+      <?php endif; ?>
+      <?php if (isset($goals['resources_reviewed'])): ?>
          <?php if ($goals['resources_reviewed'][2]): ?>
             <div class="resources-reviewed-complete goal-completed has-tip" data-tooltip title="<?php print $goals['resources_reviewed'][2]; ?>"><span><?php print $goals['resources_reviewed'][0]; ?></span></div>
          <?php else: ?>

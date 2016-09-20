@@ -446,6 +446,7 @@ SQL;
   
     case "resources_posted":
       $posted = sbac_goals_get_contributed_resources($user_profile->uid, $date_range); 
+
       if ($posted) {
         $posted_count = count($posted);
         $posted_info = array();
@@ -464,7 +465,6 @@ SQL;
             $edit
           );
         }
-
 
         return $posted_results;
       }
@@ -491,14 +491,14 @@ function sbac_goals_get_goals() {
   $goals = array();
   $goals['starred_goal'] = $user_obj->field_star_rating_goal[LANGUAGE_NONE][0]['value'];
   // If user hasn't saved goal yet, use default
-  if (!$goals['starred_goal']) {
+  if (!$goals['starred_goal'] && $goals['starred_goal'] !== '0') {
     $goals['starred_goal'] = 10;
   }
   // Add Resource Reviewer Goals for a resource reviewer or resource publisher
   if (in_array('resource reviewer', $user->roles) ||  in_array('resource publisher', $user->roles)) {
     $goals['reviewed_goal'] = $user_obj->field_resources_reviewed_goal[LANGUAGE_NONE][0]['value'];
     // If user hasn't saved goal yet, use default
-    if (!$goals['reviewed_goal']) {
+    if (!$goals['reviewed_goal'] && $goals['reviewed_goal'] !== '0') {
       $goals['reviewed_goal'] = 9;
     }
   }
@@ -507,7 +507,7 @@ function sbac_goals_get_goals() {
   if (in_array('resource contributor', $user->roles)) {
     $goals['posted_goal'] = $user_obj->field_resources_posted_goal[LANGUAGE_NONE][0]['value'];
     // If user hasn't saved goal yet, use default
-    if (!$goals['posted_goal']) {
+    if (!$goals['posted_goal'] && $goals['posted_goal'] !== '0') {
       $goals['posted_goal'] = 3;
     }
   }
@@ -556,7 +556,7 @@ SQL;
   $to_date = $dates[1];
 
   // anything with status = 1 and completed = 1 is completed.
-  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gatekeeper', ':type2' => 'post',':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gatekeeper', ':type2' => 'post', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
   foreach ($result as $row) {
     $completed[] = $row;
   }
@@ -614,13 +614,15 @@ SQL;
 function sbac_goals_check_for_reset($user) {
   // Grab current admin configured start date
   $current_start_date = strtotime(variable_get('goals_start_date'));
-
-  // Grab last user goal update
-  $user_last_update_date = sbac_goals_latest_user_update_date($user);
-
-  // Reset goals to default values if last update is less than(earlier) configured goals start date
+  $current_end_date = strotime(variable_get('goals_end_date'));
+  $date_range = $current_end_date - $current_start_date;
+  $prev_start_date = date('Y-m-d', ($current_start_date - $date_range));
+  $pdf_name = $user->uid . $prev_start_date . '_' .  variable_get('goals_start_date');
+  //TODO figure this out
+  $pdf_path = '';
+  // Reset goals to default values if previous period pdf doesn't exist
   // and configured goals date is not in the future
-  if (($current_start_date > $user_last_update_date) && ($current_start_date <= time())) {
+  if ($current_start_date <= time() && !file_exists($pdf_path . '/' . $pdf_name)) {
     $edit = array();
     if ($user->field_star_rating_goal['und'][0]['value']) {
       $edit['field_star_rating_goal']['und'][0]['value'] = '10';
@@ -639,18 +641,13 @@ function sbac_goals_check_for_reset($user) {
     user_save(
       $user,
       $edit
-    );    
+    );
+    sbac_goals_create_period_pdf($user, '');
     return;
   }
   else {
     return;
   }
-}
-
-function sbac_goals_latest_user_update_date($user) {
-  $revisions_list = user_revision_list($user);
-  // Grab the timestamp from the first item(latest vid)
-  return array_values($revisions_list)[0]->timestamp;
 }
 
 function sbac_goals_get_rank($uid, $category) {
@@ -774,4 +771,58 @@ SQL;
       return $rank = array($rank, $total);  
     break;
   }
+}
+
+function sbac_goals_create_period_pdf($user, $date_range) {
+  // Get rated data
+  // Title, rating average, date complete
+  $rated_table_vals = array();
+  $star_rated = sbac_goals_get_completed('star_rating', $user->uid, $date_range);
+  foreach ($star_rated[1] as $rated) {
+    $nid = $rated[0];
+    $node = node_load($nid);
+    $title = $node->title;
+    $created = $rated[1];
+    $average = sbac_goals_get_user_rating_average($nid, $user->uid);
+    $rated_table_vals[] = array($title, $average, $created);
+  }
+  // Process rated data into table for report
+
+  // Get Reviewed data
+  // ?
+
+  // Process Reviewed data into table for report
+
+  // Get Contributed data
+  // Title, type of resource, views, star_rating average , downloads, Status, Date created
+  $star_avg = sbac_resource_get_rating_average($nid);
+  // Process Contributed data into table for report
+
+  // Create pdf
+  
+}
+
+/**
+ * Get a resource's average rating
+ *
+ * @param $nid
+ * @return mixed
+ */
+function sbac_goals_get_user_rating_average($nid, $uid) {
+  $average_query = "
+    SELECT
+      (avg(student.field_student_learning_rating) +
+       avg(dev.field_pro_dev_rating) +
+       avg(ease.field_ease_use_rating)) / 3
+    FROM {field_data_field_student_learning} student
+      INNER JOIN {eck_review} review
+        ON review.id = student.entity_id
+      LEFT JOIN {field_data_field_pro_dev} dev
+        ON dev.entity_id = review.id
+      LEFT JOIN {field_data_field_ease_use} ease
+        ON ease.entity_id = review.id
+    WHERE student.bundle = 'end_use'
+          AND review.node_id = :nid
+          AND review.uid = :uid";
+  return db_query($average_query, array(':nid' => $nid, ':uid' => $uid))->fetchField();
 }

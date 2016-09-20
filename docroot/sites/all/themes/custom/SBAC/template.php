@@ -566,6 +566,12 @@ function sbac_preprocess_rate_template_yesno(&$variables) {
  */
 function sbac_preprocess_page(&$variables) {
   if (arg(0) == 'digital-library-resources') {
+    $errors = drupal_get_messages('error');
+    foreach($errors['error'] as $error) {
+      if (!preg_match("/.*An illegal choice has been detected.+/", $error)) {
+        drupal_set_message($error, 'error');
+      }
+    }
     $variables['page']['search'] = '';
     $variables['page']['filter'] = '';
     $variables['page']['sub-header'] = '';
@@ -647,6 +653,8 @@ function sbac_preprocess_page(&$variables) {
       $starred_complete[0] = 0;
     }
     $starred_tooltip = FALSE;
+
+    // Check to see that goal set is greater than 0
     if ($goals['starred_goal'] > 0) {
       // If goal completed, set number complete to goal target
       if ($starred_complete[0] >= $goals['starred_goal']) {
@@ -660,10 +668,6 @@ function sbac_preprocess_page(&$variables) {
     }
     // Resources Reviewed goal
     if (isset($goals['reviewed_goal']) && ($goals['reviewed_goal'] > 0)) {
-      // If user hasn't saved goal values yet, use defaults
-      if ($goals['reviewed_goal'] == 0) {
-        $goals['reviewed_goal'] = 9;
-      } 
       $reviewed_complete_all = sbac_goals_get_completed('resources_reviewed', $user->uid);
       // If none completed set total to 0
       if ($reviewed_complete_all) {
@@ -676,7 +680,7 @@ function sbac_preprocess_page(&$variables) {
       // If goal completed, set number complete to goal target
       if ($reviewed_complete[0] >= $goals['reviewed_goal']) {
         $reviewed_complete[0] = $goals['reviewed_goal'];
-        $reviewed_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $reviewed_complete[0] . " out of " . $goals['reviewed_goal'] . "</p>";
+        $reviewed_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources reviewed is " . $reviewed_complete[0] . " out of " . $goals['reviewed_goal'] . "</p>";
       }    
       $reviewed_perc = sbac_goals_calc_percent($reviewed_complete[0], $goals['reviewed_goal']);
       $variables['goals']['resources_reviewed'][] = $reviewed_complete[0];
@@ -684,10 +688,6 @@ function sbac_preprocess_page(&$variables) {
       $variables['goals']['resources_reviewed'][] = $reviewed_tooltip;
     }
     if (isset($goals['posted_goal']) && ($goals['posted_goal'] > 0)) {
-      // If user hasn't saved goal values yet, use defaults
-      if ($goals['posted_goal'] == 0) {
-        $goals['posted_goal'] = 3;
-      } 
       $posted_complete_all = sbac_goals_get_completed('resources_posted', $user->uid);
       // If none completed set total to 0
       if ($posted_complete_all) {
@@ -700,7 +700,7 @@ function sbac_preprocess_page(&$variables) {
       // If goal completed, set number complete to goal target
       if ($posted_complete[0] >= $goals['posted_goal']) {
         $posted_complete[0] = $goals['posted_goal'];
-        $posted_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $posted_complete[0] . " out of " . $goals['posted_goal'] . "</p>";
+        $posted_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources posted is " . $posted_complete[0] . " out of " . $goals['posted_goal'] . "</p>";
       }
       $posted_perc = sbac_goals_calc_percent($posted_complete[0], $goals['posted_goal']);
       $variables['goals']['resources_posted'][] = $posted_complete[0];
@@ -949,6 +949,21 @@ function sbac_preprocess_views_view_fields(&$variables) {
       }
     }
   }
+  // Forum member list view preprocessing
+  if ($variables['view']->name == 'forum_member_list' && $variables['view']->current_display == 'block') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+          $new_output = '' . $author_name . '';
+        }
+      
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
 }
 
 function sbac_digital_library_resources_applied_filters(){
@@ -1077,11 +1092,18 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
   else {
     $account = user_load($user_id);
     $account_renderable = user_view($account, 'tooltip');
-    $image = array('path', $account->picture->uri);
-    $user_picture = theme_image($image);
     $account_data = entity_metadata_wrapper('user', $account);
     $fn = $account_data->field_first_name->value();
     $ln = ''; // last name hide by default.
+    if (!sbac_user_privacy_check('picture', $account) || !$account->picture) {
+      $filepath = variable_get('user_picture_default', '');
+      $alt = t("@user's picture", array('@user' => format_username($fn)));
+      $user_picture = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt, 'width' => '30px', 'height' => '30px'));
+    }
+    else {
+      $image = array('path' => $account->picture->uri, 'width' => '30px', 'height' => '30px');
+      $user_picture = theme_image($image);
+    } 
     if (isset($account_data->field_privacy)) { // user is using non-default settings.
       $privacy_settings = $account_data->field_privacy->value();
       if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
@@ -1089,50 +1111,10 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
       }
     }
     $full_name = substr($fn . $ln, 0, 10) . '...';
-    $ranking = '';
-    if ($leaderboard == 'rated_leaderboard') {
-      $ranking_arr = sbac_goals_get_rank($user_id, 'rated');
-      $ranking = '<div class="row">
-                    <div class="column">
-                      <div class="ranking">
-                        <div>
-                          <span class="title">Educator Rank</span>
-                          <span>' . $ranking_arr[0] . ' out of ' . $ranking_arr[1] . '</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>';
-    }
-    if ($leaderboard == 'reviewed_leaderboard') {
-      $ranking_arr = sbac_goals_get_rank($user_id, 'reviewed');
-      $ranking = '<div class="row">
-                    <div class="column">
-                      <div class="ranking">
-                        <div>
-                          <span class="title">Resource Reviewer Rank</span>
-                          <span>' . $ranking_arr[0] . ' out of ' . $ranking_arr[1] . '</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>';
-    }
-    if ($leaderboard == 'contributed_leaderboard') {
-      $ranking_arr = sbac_goals_get_rank($user_id, 'contributed');
-      $ranking = '<div class="row">
-                    <div class="column">
-                      <div class="ranking">
-                        <div>
-                          <span class="title">Resource Contributor Rank</span>
-                          <span>' . $ranking_arr[0] . ' out of ' . $ranking_arr[1] . '</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>';
-    }
     $tooltip = '
               <div class="devtools-tooltip account-tooltip">
                 <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . '
-                <div class="devtools-tooltip-body">' . render($account_renderable) . $ranking . '</div>
+                <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
               </div>
              ';
 

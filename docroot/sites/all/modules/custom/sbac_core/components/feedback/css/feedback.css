@@ -347,7 +347,7 @@
 }
 /* line 330, ../sass/feedback.scss */
 .feedback-wrap .form-item-error-holder.error + .form-item {
-  background: #fff url("/sites/all/themes/SBAC/images/icon-validation-fail.png") right 30px no-repeat;
+  background: #fff url("/sites/all/themes/custom/SBAC/images/icon-validation-fail.png") right 30px no-repeat;
 }
 /* line 333, ../sass/feedback.scss */
 .feedback-wrap .form-item-error-holder.error + .form-item .form-item {

@@ -36237,6 +36237,7 @@ form#sbac-user-filter-form #edit-email {
   background-color: #6cb9d1;
   border-radius: 5px;
   min-height: 445px;
+  padding-right: 0px;
 }
 
 .leaderboard {
@@ -36245,7 +36246,7 @@ form#sbac-user-filter-form #edit-email {
   display: inline-block;
   float: left;
   margin-right: 20px;
-  width: 230px;
+  width: 222px;
 }
 
 .leaderboard-header {
@@ -36267,6 +36268,10 @@ form#sbac-user-filter-form #edit-email {
   background-color: #0b5d76;
 }
 
+.leaderboard-header.regional {
+  background-color: #e1632f;
+}
+
 .leaderboard-body {
   border-radius: 0 0 5px 5px;
   padding: 10px;
@@ -36278,12 +36283,12 @@ form#sbac-user-filter-form #edit-email {
 }
 
 .leaderboard-body a {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .leaderboard-body .views-row {
   border: 1px solid #515152;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: bold;
   margin-bottom: 10px;
   padding: 10px;
