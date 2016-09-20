@@ -36291,11 +36291,15 @@ form#sbac-user-filter-form #edit-email {
   font-size: 11px;
   font-weight: bold;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 5px;
 }
 
 .leaderboard-body .views-field {
   display: inline-block;
+}
+
+.leaderboard-body .views-field-uid {
+  width: 130px;
 }
 
 .leaderboard-body .views-field-uid a {
@@ -36305,21 +36309,21 @@ form#sbac-user-filter-form #edit-email {
 
 .leaderboard-body .views-field-field-resources-rated {
   border-radius: 3px;
-  padding: 10px;
+  padding: 6px;
   background-color: #515152;
   color: #FFFFFF;
 }
 
 .leaderboard-body .views-field-field-resources-reviewed {
   border-radius: 3px;
-  padding: 10px;
+  padding: 6px;
   background-color: #4b7e40;
   color: #FFFFFF;
 }
 
 .leaderboard-body .views-field-field-resources-contributed {
   border-radius: 3px;
-  padding: 10px;
+  padding: 6px;
   background-color: #0b5d76;
   color: #FFFFFF;
 }
