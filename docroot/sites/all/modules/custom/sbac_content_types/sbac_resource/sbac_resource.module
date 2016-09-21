@@ -1580,6 +1580,12 @@ function sbac_resource_node_load($nodes, $types) {
   }
 
   foreach ($nodes as $node) {
+    // Only want to apply the feedback lookup to resources.
+    if ($node->type == 'resource') {
+      // Get the current feedback status and store it in the node object.
+      $node->feedback_status = new feedbackStatus($node);
+    }
+
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
       // Grab the alignemnt terms.
