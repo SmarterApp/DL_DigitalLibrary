@@ -225,8 +225,8 @@
     "jquery/autopager": "1.0.0",
     "google/apiclient": "1.1.1",
     "jquery/more": "1.1.0",
-    "lowbase/jstree": "3.0.8"
-
+    "lowbase/jstree": "3.0.8",
+    "dompdf/dompdf": "dev-master"
 
   },
   "--moved-to-custom-due-to-patches-on-dev-branch": {
@@ -244,6 +244,7 @@
     "jstree": "3.0.8",
     "jwplayer": "6.5.3609 ??  Does not seem available",
     "tcpdf": "6.0.012 (php)",
+    "dompdf": "dev-master",
     "tinymce": "3.5.8",
     "zeroclipboard": "1.2.3 (using component-installer or package.json)",
     "diffs-exist": "devtools, taskit",
