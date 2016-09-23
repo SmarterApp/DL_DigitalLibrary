@@ -116,18 +116,26 @@ class feedbackStatus
   public $gatekeeper_finished = 0; // If the Gate Keeper review is finished (only if criteria are met).
   public $qc_num_finished = 0; // The number of finished QCs.
   public $qc_status = array(); // An array of the QCs and their status ('started' and 'finished').
+  public $post_started = 0; // Whether the Post review has started.
+  public $post_finished = 0; // Whether the Post review has finished.
 
-  public function __construct(&$node)
+  public function __construct(&$node, $type = false)
   {
-    // Set required quality reviews to 2 for playlists
-    if ($node->field_focus[LANGUAGE_NONE][0]['tid'] == '78306') {
+    if (is_int($node) || (is_string($node) && preg_match("/^\d+$/", $node))) {
+      $nid = $node;
+    } else {
+      $nid = $node->nid;
+      $type = $node->field_focus[LANGUAGE_NONE][0]['tid'];
+    }
+    // Set required quality reviews to 2 for playlists.
+    if ($type == '78306') {
       $this->qc_count = 2;
     }
 
     // Get all of the feedback for this node that is current and active.
     $query = db_select('eck_feedback', 'f');
     $query->fields('f', array('id', 'type', 'uid', 'completed', 'met_criteria'));
-    $query->condition('node_id', $node->nid);
+    $query->condition('node_id', $nid);
     $query->condition('current', 1);
     $query->condition('status', 1);
     $results = $query->execute();
@@ -153,7 +161,20 @@ class feedbackStatus
             $this->qc_num_finished++;
           }
           break;
+        case 'post':
+          // It's active, so it's started.
+          $this->post_started = 1;
+          if ($result['completed'] == 1) {
+            // It's completed, so it's finished.
+            $this->post_finished = 1;
+          }
+          break;
       }
+    }
+    // Add the rest of the QC review statuses.
+    for ($x = count($this->qc_status); $x < $this->qc_count; $x++) {
+      $this->qc_status[$x]['started'] = 0;
+      $this->qc_status[$x]['finished'] = 0;
     }
   }
 }

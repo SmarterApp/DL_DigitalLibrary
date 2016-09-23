@@ -65,6 +65,13 @@
           <?php print $fields['text'] ?>
         </p>
       </div>
+      <div class="resource-state-icons" style="width: 110px; text-align: right; float: right; padding-top: 5px">
+        <?php
+        foreach ($fields['status_icons'] as $icon) {
+          print '<img src="/' . drupal_get_path('theme', 'SBAC') . '/images/workflow-icons/' . $icon['image'] . '" style="height: 20px" title="' . $icon['hover'] . '">';
+        }
+        ?>
+      </div>
       <?php
       if (isset($fields['buttons']) && is_array($fields['buttons'])) {
         foreach ($fields['buttons'] as $type => $button) {
