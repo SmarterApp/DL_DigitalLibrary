@@ -307,7 +307,9 @@ function sbac_goals_get_html_content($user_uid) {
   //
   $user_path = 	drupal_get_path_alias('user/' . $user->uid);
   $user_form['#action'] = '/' . $user_path . '#profile-goals';
-  return render($user_form);  
+  $report_form = drupal_get_form('sbac_goals_report_form', $user);
+  $output = render($user_form) . render($report_form);
+  return $output;
 }
 
 /**
@@ -440,6 +442,12 @@ SQL;
         return $reviewed_results;
       }
       else {
+          $edit['field_resources_reviewed']['und'][0]['value'] = '0';
+          // update user's resources reviewed field
+          user_save(
+            $user_profile,
+            $edit
+          );
         return FALSE;
       }     
     break;
@@ -469,6 +477,14 @@ SQL;
         return $posted_results;
       }
       else {
+        // Check for user contributed goal field update
+        $edit = array();
+        $edit['field_resources_contributed']['und'][0]['value'] = '0';
+        // update user's resources contributed field
+        user_save(
+          $user_profile,
+          $edit
+        );
         return FALSE;
       }  
     break;
@@ -619,11 +635,10 @@ function sbac_goals_check_for_reset($user) {
   $prev_start_date = date('Y-m-d', ($current_start_date - $date_range));
   $report_date_range = format_date($current_start_date - $date_range, 'custom', 'Ymd') . '--' . format_date($current_start_date, 'custom', 'Ymd');
   $pdf_name = $user->uid . '_' . $prev_start_date . '_' . variable_get('goals_start_date');
-  //TODO figure this out
   $pdf_path = 'sites/default/files/user_certificates/' . $user->uid;
   // Reset goals to default values if previous period pdf doesn't exist
   // and configured goals date is not in the future
-//  if ($current_start_date <= time() && !file_exists($pdf_path . '/' . $pdf_name)) {
+  if ($current_start_date <= time() && !file_exists($pdf_path . '/' . $pdf_name)) {
     sbac_goals_create_period_pdf($user, $report_date_range, $pdf_name, TRUE);
     $edit = array();
     if ($user->field_star_rating_goal['und'][0]['value']) {
@@ -646,10 +661,10 @@ function sbac_goals_check_for_reset($user) {
     );
 
     return;
-//  }
-//  else {
-//    return;
-//  }
+  }
+  else {
+    return;
+  }
 }
 
 function sbac_goals_get_rank($uid, $category) {
@@ -778,7 +793,7 @@ SQL;
 function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificate) {
   $output = '';
   // Page Header
-  if ($cerificate == TRUE) {
+  if ($certificate == TRUE) {
     $output .= '<div class="pdf-header">
                   <h1 style="color: #4b7e40;">FINAL CERTIFICATE</h1>
                   <img src="/sites/all/themes/custom/SBAC/logo.png" alt="Smarter Balanced Assessment Consortium Logo">
@@ -929,7 +944,17 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $dompdf = new Dompdf();
     $dompdf->load_html($output);
     $dompdf->render();
-    $dompdf->stream($pdf_name);
+    $pdfoutput = $dompdf->output();
+    //  Checks whether there is an output folder inside sites/default/files
+    if (!is_dir('public://user_certificates/' . $user->uid . '/temp')) {
+      mkdir("public://user_certificates/" . $user->uid . '/temp', 0777);
+    }
+    //  Creates a folder and changes its permissions}
+    $filename = 'sites/default/files/user_certificates/' . $user->uid . '/temp/' . $pdf_name;
+    $fp = fopen($filename, "w+");
+    fwrite($fp, $pdfoutput);
+    //  Writes the pdf output to a file
+    fclose($fp);
   }
 }
 
@@ -980,19 +1005,62 @@ function sbac_goals_report_form($form, &$form_state, $user) {
   $options_raw = scandir('public://user_certificates/' . $user->uid);
   $year1 = explode('-', variable_get('goals_start_date'));
   $year2 = explode('-', variable_get('goals_end_date'));
-  $options[] = 'SY ' . substr($year1[0], -2) . '-' . substr($year2[0], -2);
+  $options['current'] = 'SY ' . substr($year1[0], -2) . '-' . substr($year2[0], -2);
+  $counter = 0;
   foreach ($options_raw as $option) {
-    $pieces = explode('-', $option);
-    $entry = 'SY' . substr($pieces[0], -2) . '-' . substr($pieces[2], -2);
-    $options[] = $entry;
+    if (strpos($option, $user->uid) !== FALSE) {      
+      $pieces = explode('-', $option);
+      $entry = 'SY ' . substr($pieces[0], -2) . '-' . substr($pieces[2], -2);
+      if (in_array($entry, $options)) {
+        $new_entry = $entry . '-' . $counter;
+        $entry = $new_entry;
+        $counter++;
+      }
+      else {
+        $counter = 0;
+      } 
+      $options[$option] = $entry;
+    }
   }
   $form = array();
+  $pdf_prefix = '<h2 class="pdf-export">Goal PDF Export</h2>
+                <p>Select a school year to generate a PDF of your current year progress or a Certificate of completed school years.</p>';
   $form['pdf_select'] = array(
     '#type' => 'select',
-    '#options' => 'options',
+    '#options' => $options,
+    '#default_value' => $options['current'],
+    '#prefix' => $pdf_prefix,
   );
 
+  $form['#user_info'] = $user;
+
   $form['submit'] = array(
+    '#type' => 'submit',
     '#value' => 'Export',
   );
+
+  return $form;
+}
+
+function sbac_goals_report_form_submit($form, &$form_state, $user) {
+  $user = $form['#user_info'];
+  if ($form_state['values']['pdf_select'] == 'current') {
+    $start = variable_get('goals_start_date');
+    $end = variable_get('goals_end_date');
+    //Format dates set by admin or fallback on current year if no entry
+    if ($start == '' || $end == '') {
+      $report_date_range = format_date(strtotime(date('Y-01-01')), 'custom', 'Ymd') . '--' . format_date(time(), 'custom', 'Ymd');
+    }
+    else {
+      $report_date_range = format_date(strtotime($start), 'custom', 'Ymd') . '--' . format_date(strtotime($end), 'custom', 'Ymd');
+    }
+    $pdf_name = 'Current_Progress';
+    sbac_goals_create_period_pdf($user, $report_date_range, $pdf_name, FALSE);
+    $pdfurl = "/sites/default/files/user_certificates/" . $user->uid . '/temp/' . $pdf_name;
+    drupal_goto($pdfurl);
+  }
+  else {
+    $pdfurl = "/sites/default/files/user_certificates/" . $user->uid . '/' . $form_state['values']['pdf_select'];
+    drupal_goto($pdfurl); 
+  }
 }

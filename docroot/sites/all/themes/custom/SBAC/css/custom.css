@@ -36079,6 +36079,11 @@ form#sbac-user-filter-form #edit-email {
   display: none;
 }
 
+#user-profile-form--2 {
+  width: 45%;
+  display: inline-block;
+}
+
 #user-profile-form .field-name-field-lock-goals,
 #user-profile-form .field-name-field-hide-from-leaderboards,
 #user-profile-form #edit-revision-information,
@@ -36101,7 +36106,6 @@ form#sbac-user-filter-form #edit-email {
 }
 
 #user-profile-form--2 .goal-header {
-  width: 45%;
   padding: 10px;
   color: #FFF;
   border-radius: 5px 5px 0 0;
@@ -36138,7 +36142,6 @@ form#sbac-user-filter-form #edit-email {
   border-right: 1px solid #ddd;
   border-radius: 0px 0px 5px 5px;
   position: relative;
-  width: 45%;
   padding: 3px 10px;
   margin-bottom: 20px;
 }
@@ -36146,9 +36149,9 @@ form#sbac-user-filter-form #edit-email {
 #user-profile-form--2 .completed-prompt {
   font-size: 14px;
   position: absolute;
-  right: -270px;
+  right: -210px;
   top: 25px;
-  width: 253px;
+  width: 200px;
 }
 
 #user-profile-form--2 input[type="text"] {
@@ -36202,8 +36205,49 @@ form#sbac-user-filter-form #edit-email {
   color: green;
   padding: 10px 0;
 }
+
+#user-profile-form--2 #edit-field-hide-from-leaderboards--2 {
+  position: absolute;
+  top: 15px;
+  right: 53px;
+}
+
+#user-profile-form--2 #edit-field-lock-goals--2 {
+  position: absolute;
+  top: 246px;
+  right: 55px;
+}
+
 .progress-hidden {
   display: none;
+}
+
+#sbac-goals-report-form {
+  width: 26%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  float: right;
+  padding: 10px;
+  margin-top: 20px;
+  display: inline;
+}
+
+#sbac-goals-report-form h2 {
+  color: #0085ad;
+  background: url(/sites/all/themes/custom/SBAC/images/pdf-icon.png) no-repeat 130px;
+  line-height: 27px;
+}
+
+#sbac-goals-report-form p {
+  margin-bottom: 0px;
+}
+
+#sbac-goals-report-form .form-item-pdf-select {
+  display: inline-block;
+  font-size: 12px;
+  width: 49%;
+  margin-top: 0px;
+  margin-right: 10px;
 }
 
 /* Admin views */

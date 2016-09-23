@@ -99,12 +99,21 @@
   }
 }
 #user-profile-form--2 {
+  width: 45%;
+  display: inline-block;
   .hidden,
   .field-name-field-resources-rated,
   .field-name-field-resources-reviewed,
   .field-name-field-resources-contributed,
-  #edit-revision-information--2 {
-    display: none;
+  #edit-field-lock-goals--2 {
+    position: absolute;
+    top: 246px;
+    right: 55px;
+  }
+  #edit-field-hide-from-leaderboards--2 {
+    position: absolute;
+    top: 15px;
+    right: 53px;
   }
   .goal-header {
     width: 45%;
@@ -197,10 +206,133 @@
   }
 }
 
+/*Goals Report Form */
+#sbac-goals-report-form {
+  width: 26%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  float: right;
+  padding: 10px;
+  margin-top: 20px;
+  display: inline;
+  h2 {
+    color: #0085ad;
+    background: url(/sites/all/themes/custom/SBAC/images/pdf-icon.png) no-repeat 130px;
+    line-height: 27px;
+  }
+  p {
+    margin-bottom: 0px;
+  }
+  .form-item-pdf-select {
+    display: inline-block;
+    font-size: 12px;
+    width: 49%;
+    margin-top: 0px;
+    margin-right: 10px;
+  }
+}
+
+/* Admin Views */
 .view-admin-views-user,
 .view-id-admin_views_node {
   .views-exposed-widget {
     float: left;
     padding: 0.5em 2em 0 0;
+  }
+}
+
+/* Leaderboards */
+#leaderboard-wrapper {
+  background-color: #0085ad;
+}
+
+#leaderboards,
+#leaderboard-title {
+  margin: 0 auto;
+  padding: 20px;
+  width: 996px;
+}
+
+#leaderboard-title {
+  text-align: center;
+  h1 {
+    color: #FFFFFF;
+  }
+}
+
+#leaderboards {
+  background-color: #6cb9d1;
+  border-radius: 5px;
+  min-height: 445px;
+  padding-right: 0px;
+}
+
+.leaderboard {
+  background-color: #FFFFFF;
+  border-radius: 5px;
+  display: inline-block;
+  float: left;
+  margin-right: 20px;
+  width: 222px;
+  .leaderboard-header {
+    border-radius: 5px 5px 0px 0;
+    padding: 10px;
+    color: #FFFFFF;
+    text-align: center;
+    &.educator {
+      background-color: #515152;
+    }
+    &.resource-reviewer {
+      background-color: #4b7e40;
+    }
+    &.resource-contributor {
+      background-color: #0b5d76;
+    }
+    &.regional {
+      background-color: #e1632f;
+    }
+  }
+  .leaderboard-body {
+    border-radius: 0 0 5px 5px;
+    padding: 10px;
+    min-height: 360px;
+    a {
+      font-size: 11px;
+    }
+    .views-row {
+      border: 1px solid #515152;
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+    .views-field {
+      display: inline-block;
+    }
+    .views-field-uid {
+      width: 130px;
+      a {
+        color: #515152;
+        margin-right: 20px;
+      }
+    }
+    .views-field-field-resources-rated {
+      border-radius: 3px;
+      padding: 6px;
+      background-color: #515152;
+      color: #FFFFFF;
+    }
+    .views-field-field-resources-reviewed {
+      border-radius: 3px;
+      padding: 6px;
+      background-color: #4b7e40;
+      color: #FFFFFF;
+    }
+    .views-field-field-resources-contributed {
+      border-radius: 3px;
+      padding: 6px;
+      background-color: #0b5d76;
+      color: #FFFFFF;
+    }
   }
 }

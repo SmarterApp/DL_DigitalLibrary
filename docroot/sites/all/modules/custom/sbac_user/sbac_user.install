@@ -206,3 +206,14 @@ function sbac_user_update_8001() {
   module_enable($modules);
   drupal_flush_all_caches();
 }
+
+/**
+ * Enable sbac_goals_views feature
+ */
+function sbac_user_update_8002() {
+  $modules = array(
+    'sbac_goals_views',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
