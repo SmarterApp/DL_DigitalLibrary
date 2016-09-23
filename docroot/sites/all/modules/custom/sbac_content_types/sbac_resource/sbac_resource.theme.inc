@@ -1240,9 +1240,9 @@ function _sbac_resource_resource_review_links($fields, $row) {
     $state = $fields['state']->raw;
     switch ($state) {
       case 'needs_review':
-        $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper');
+        $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title']);
         $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-        $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', 'link');
+        $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title'], 'link');
         $variables['text'] = t('Needs Review');
         break;
       case 'being_reviewed':
@@ -1254,15 +1254,15 @@ function _sbac_resource_resource_review_links($fields, $row) {
         // gk_being_reviewed, gk_needs_review
         // no completed GK, so start or continue
         if ($row->sbac_node_resource_state_uid == 0 && strstr($row->sbac_node_resource_state_flag, 'gk_needs_review') !== FALSE) {
-          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper');
+          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title']);
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', 'link');
+          $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title'], 'link');
           $variables['text'] = t('Needs Review');
         }
         elseif ($row->sbac_node_resource_state_uid == 0 && $row->sbac_node_resource_state_flag != 'qc_needs_review') {
-          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc');
+          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title']);
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', 'link');
+          $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title'], 'link');
           $variables['text'] = t('Needs Review');
         }
         elseif ($row->sbac_node_resource_state_uid > 0 && $row->sbac_node_resource_state_flag != 'qc_being_reviewed') {
@@ -1280,9 +1280,9 @@ function _sbac_resource_resource_review_links($fields, $row) {
           $variables['text'] = t('Being Reviewed');
         }
         else {
-          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper');
+          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title']);
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', 'link');
+          $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title'], 'link');
           $variables['text'] = t('Needs Review');
         }
         break;
@@ -1298,9 +1298,9 @@ function _sbac_resource_resource_review_links($fields, $row) {
           $variables['text'] = t('Being Reviewed');
         }
         else {
-          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'post');
+          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title']);
           $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = _sbac_resource_start_review_link($nid, 'post', 'link');
+          $variables['links'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title'], 'link');
           $variables['text'] = t('Needs Posting');
         }
         break;
@@ -1394,10 +1394,10 @@ function _sbac_resource_determine_gate_keeper($nid, $uid = FALSE) {
  * @param $type
  * @return string
  */
-function _sbac_resource_start_review_link($nid, $type, $style = 'button') {
+function _sbac_resource_start_review_link($nid, $type, $title, $style = 'button') {
   // Add node title to button for behat tests
-  $node = node_load($nid);
-  $title = strtolower(str_replace(' ', '-', $node->title));
+  $title = strtolower(str_replace(' ', '-', $title->raw));
+
   if ($type == 'gate_keeper') {
     $stub = 'gate-keeper';
   }
