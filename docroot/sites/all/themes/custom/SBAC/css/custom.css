@@ -34804,6 +34804,10 @@ a.tabledrag-handle .handle {
   max-width: 960px;
 }
 
+.list-view .row {
+    max-width: 1260px;
+}
+
 /* line 3065, ../sass/custom.scss */
 .page-admin-structure #edit-cancel {
   padding: 7px 18px;
@@ -34870,7 +34874,7 @@ a.tabledrag-handle .handle {
 }
 /* line 3131, ../sass/custom.scss */
 .list-view .top-bar.last-top {
-  max-width: 960px;
+  max-width: 1280px;
 }
 
 /* fix for back button block for resource node pages.*/

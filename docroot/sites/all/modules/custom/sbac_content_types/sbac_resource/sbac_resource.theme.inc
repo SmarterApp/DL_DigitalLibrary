@@ -693,6 +693,9 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
   if (isset($variables['text'])) {
     $vars['fields']['text'] = $variables['text'];
   }
+  if (isset($variables['status_icons'])) {
+    $vars['fields']['status_icons'] = $variables['status_icons'];
+  }
   if (isset($variables['views'])) {
     $vars['fields']['views'] = $variables['views'];
   }
@@ -1259,11 +1262,15 @@ function _sbac_resource_resource_review_links($fields, $row) {
   if (!$feedback->gatekeeper_started) {
     // Needs gatekeeper review.
     $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title']);
+    $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+    $variables['links'][] = _sbac_resource_start_review_link($nid, 'gate_keeper', $fields['title'], 'link');
     $variables['text'] = t('Needs Gate Keeping Review');
   } elseif ($feedback->gatekeeper_started && !$feedback->gatekeeper_finished) {
     // Gatekeeper review in process.
     $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-gk', 'query' => array('destination' => arg(0))));
     $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+    $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+    $variables['links'][] = l('Continue', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
     $variables['text'] = t('Gate Keeping Review In Process');
     $variables['status_icons'][0] =  array('image' => 'yellow-pencil.png', 'hover' => 'In Gate Keeping Review');
   } elseif ($feedback->gatekeeper_finished) {
@@ -1275,6 +1282,8 @@ function _sbac_resource_resource_review_links($fields, $row) {
         // QC review isn't started yet.
         if (!$been_set) {
           $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title']);
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title'], 'link');
           $variables['text'] = t('Needs @pos Quality Review', array('@pos' => $positionals[$x]));
           $been_set = true;
         }
@@ -1284,6 +1293,8 @@ function _sbac_resource_resource_review_links($fields, $row) {
         if (!$been_set) {
           $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
           $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'))));
+          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+          $variables['links'][] = l('Continue Review', $url);
           $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$x]));
           $been_set = true;
         }
@@ -1298,10 +1309,14 @@ function _sbac_resource_resource_review_links($fields, $row) {
     // All the QC reviews are done, so on to Post review.
     if (!$feedback->post_started) {
       $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title']);
+      $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+      $variables['links'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title'], 'link');
       $variables['text'] = t('Needs Posting');
     } elseif ($feedback->post_started && !$feedback->post_finished) {
       $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
       $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+      $variables['links'][] = l('Continue Review', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
       $variables['text'] = t('Posting In Process');
     }
   }
