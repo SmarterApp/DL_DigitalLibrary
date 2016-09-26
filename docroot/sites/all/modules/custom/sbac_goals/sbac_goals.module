@@ -790,20 +790,154 @@ SQL;
   }
 }
 
+/**
+ * Function to create a pdf
+*/
 function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificate) {
   $output = '';
+  // Styling
+  $output .= '<html><head><style>
+                  div {
+                    display: block;
+                  }
+                  .view-sne-details {
+                    width: 600px;
+                    margin-bottom: 40px;
+                  }
+                  .logo {
+                    background-image: url("/sites/all/themes/custom/SBAC/logo.png");
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    display: block;
+                    width: 114px;
+                    height: 36px;
+                  }
+                  .view-sne-details .profile-pic .user-picture {
+                    background-image: url("/sites/all/modules/custom/sbac_report/images/avatar.png");
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    display: block;
+                    float: left;
+                    margin-right: 20px;
+                    width: 100px;
+                    height: 100px;
+                  }
+                  .user-profile {
+                    font-family: sans-serif;
+                    margin-bottom: 50px;
+                  }
+                  .row .profile-details span.title {
+                    background: none;
+                    border-bottom: 1px solid #CECECE;
+                    color: #04384E;
+                    display: block;
+                    font-family: Verdana,Geneva,sans-serif;
+                    font-size: 12px;
+                    letter-spacing: 1px;
+                    line-height: normal;
+                    margin: 0;
+                    padding: 0 0 3px;
+                    text-transform: uppercase;
+                    width: 100%;
+                  }
+                  .row .profile-details span {
+                      background-color: #F2F2F2;
+                      border-radius: 2px;
+                      display: inline-block;
+                      font-size: 12px;
+                      line-height: 22px;
+                      margin-right: 7px;
+                      margin-top: 7px;
+                      padding: 0 5px;
+                      width: 100px;
+                  }
+                  .pdf-header {
+                    position: absolute;
+                    right: 0px;
+                    font-family: sans-serif;
+                    width: 250px;       
+                  }
+                  .educator-header {
+                    color: #FFF;
+                    width: 275px;
+                    background-color: #515152;
+                    padding: 15px 22px;
+                    display: inline-block;
+                    border-radius: 5px 5px 0 0;
+                    font-family: sans-serif;
+                  }
+                  .resource-reviewer-header {
+                    color: #FFF;
+                    width: 275px;
+                    background-color: #4b7e40;
+                    padding: 15px 22px;
+                    display: inline-block;
+                    border-radius: 5px 5px 0 0;
+                    font-family: sans-serif;
+                  }
+                  .resource-contributor-header {
+                    color: #FFF;
+                    width: 275px;
+                    background-color: #0b5d76;
+                    padding: 15px 22px;
+                    display: inline-block;
+                    font-family: sans-serif;
+                    border-radius: 5px 5px 0 0;
+                  }
+                  .goal-container {
+                    font-family: sans-serif;
+                    float: right;
+                    width: 250px;
+                    display: inline-block;
+                    text-align: right;
+                  }
+                  .goal-container .goal {
+                    display: block;
+                    font-weight: bold;
+                    font-size: 18px;
+                  }
+                  table {
+                    border-spacing: 0px;
+                    font-size: 12px;
+                    width: 100%;
+                    margin-bottom: 40px;
+                  }
+                  th {
+                    border: 1px solid #777;
+                    background-color: #eee;
+                    padding: 8px;
+                    font-family: sans-serif;
+                  }
+                  td {
+                    font-family: sans-serif;
+                    text-align: center;
+                    border: 1px solid #b7b7b7;
+                    padding: 10px;
+                  }
+                  .footer {
+                    font-family: sans-serif;
+                    padding: 20px;
+                    position: absolute;
+                    bottom: 0px;
+                    width: 100%;
+                    color: #FFFFFF;
+                    background-color: #515152;
+                  }
+                </style></head>'; 
   // Page Header
   if ($certificate == TRUE) {
-    $output .= '<div class="pdf-header">
-                  <h1 style="color: #4b7e40;">FINAL CERTIFICATE</h1>
-                  <img src="/sites/all/themes/custom/SBAC/logo.png" alt="Smarter Balanced Assessment Consortium Logo">
+    $output .= '<body><div class="pdf-header">
+                  <h1 style="color: #4b7e40; margin-bottom: 5px;">FINAL CERTIFICATE</h1>
+                  <div class="logo"></div>
                 </div>';
   }
   else {
-    $output .= '<div class="pdf-header">
-                  <h1 style="color: #6cb9d1;">IN PROGRESS</h1>
-                  <p style="color: #6cb9d1;">As of ' . date('m/d/Y', time()) . '</p>
-                  <img src="/sites/all/themes/custom/SBAC/logo.png" alt="Smarter Balanced Assessment Consortium Logo">
+    $output .= '<body><div class="pdf-header">
+                  <h1 style="color: #6cb9d1; margin-bottom: 0px;">IN PROGRESS</h1>
+                  <p style="color: #6cb9d1; margin: 5px;">As of ' . date('m/d/Y', time()) . '</p>
+                  <div class="logo"></div>
                 </div>';
   }
   // Get user profile
@@ -822,8 +956,8 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $node = node_load($nid);
     $title = $node->title;
     $created = $rated[1];
-    $average = sbac_goals_get_user_rating_average($nid, $user->uid);
-    $rated_table_vals[] = array($title, ceil(($average * .05)), date('m/d/Y', $created));
+    $average_val = ceil(sbac_goals_get_user_rating_average($nid, $user->uid) *.05);
+    $rated_table_vals[] = array($title, $average_val, date('m/d/Y', $created));
   }
   $resources_rated = $user->field_resources_rated['und'][0]['value'];
   $rated_goal = $user->field_star_rating_goal['und'][0]['value'];
@@ -918,7 +1052,9 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   if (!empty($contributed_table_vals)) {  
     $output .= theme('table', array('header' => $contributed_header, 'rows' => $contributed_table_vals));
   }
-
+  
+  // Footer
+  $output .= '<div class="footer">Smarter Balanced Digital Library Goal Certificate</div></body></html>';
   // Create pdf
   if ($certificate == TRUE) {
     require_once("sites/all/libraries/dompdf/autoload.inc.php");
