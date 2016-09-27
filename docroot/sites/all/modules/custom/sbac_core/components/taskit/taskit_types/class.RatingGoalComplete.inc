@@ -8,7 +8,7 @@ class RatingGoalComplete extends \taskit\sbac_core\BaseTask {
     $account  = user_load(current($accounts));
     $rating_goal = $account->field_star_rating_goal['und'][0]['value'];
     if ($account) {
-      $this->setTaskUrl('users/' . $account->uid . '#profile-goals');
+      $this->setTaskUrl(check_plain('users/' . $account->uid . '#profile-goals'));
 
       $output = array();
       $output[] = t('Congratulations: Your goal of !title resources rated has been met! !goal_page', array(

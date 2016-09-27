@@ -408,6 +408,18 @@ SQL;
       if ($user_profile->field_resources_rated['und'][0]['value'] != $star_count) {
         $edit = array();
         $edit['field_resources_rated']['und'][0]['value'] = $star_count;
+
+        // Check to see if goal completed
+        if ($user_profile->field_star_rating_goal['und'][0]['value'] == $star_count) {
+          // If goal reached notify user
+          if ($task = taskit_get_object('rating_goal_complete')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addOwningUser($user_profile->uid);
+            $task->addTriggeringUser($user_profile->uid);
+            $task->save();
+          }
+        }
+
         // update user's resources rated field
         user_save(
           $user_profile,
