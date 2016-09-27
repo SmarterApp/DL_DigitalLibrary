@@ -62,6 +62,7 @@ function section_get_content() {
 
   $source = $_GET['source'];
   $tab = $_GET['tab'];
+  $user_uid = $_GET['uid'];
   if ($source == 'people') {
     if ($tab == 'notifications') {
       global $user;
@@ -80,7 +81,7 @@ function section_get_content() {
       exit();
     }
     elseif ($tab == 'goals') {
-      $content = sbac_goals_get_html_content();
+      $content = sbac_goals_get_html_content($user_uid);
       $commands = array();
       $commands[] = ajax_command_invoke('#' . $_GET['section_id'], 'empty');
       $commands[] = ajax_command_append('#' . $_GET['section_id'], $content);

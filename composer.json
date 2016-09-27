@@ -226,8 +226,6 @@
     "google/apiclient": "1.1.1",
     "jquery/more": "1.1.0",
     "lowbase/jstree": "3.0.8"
-
-
   },
   "--moved-to-custom-due-to-patches-on-dev-branch": {
     "drupal/zurb_foundation": "7.4.x-dev#6f0792a373a75cb81790f807b135e1895a6f62a4"
