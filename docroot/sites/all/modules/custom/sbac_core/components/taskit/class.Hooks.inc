@@ -246,9 +246,9 @@ class Hooks extends \devtools\Hooks {
       ),
       // notify user a goal has been met
       array(
-        'name' => 'goal_complete',
-        'description' => t('Notify Goal completer'),
-        'class' => 'GoalComplete',
+        'name' => 'rating_goal_complete',
+        'description' => t('Notify Rating Goal completer'),
+        'class' => 'RatingGoalComplete',
       ),
     );
 
