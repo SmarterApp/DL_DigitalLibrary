@@ -244,6 +244,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Notify HTML5 Poster'),
         'class' => 'HTML5UploadError',
       ),
+      // notify user a goal has been met
+      array(
+        'name' => 'goal_complete',
+        'description' => t('Notify Goal completer'),
+        'class' => 'GoalComplete',
+      ),
     );
 
     foreach ($types as &$type) {
