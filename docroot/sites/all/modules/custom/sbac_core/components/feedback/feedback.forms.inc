@@ -314,6 +314,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
   }
 
   if ($completed_review && $node = node_load($entity->node_id)) {
+    // Notify Reviewer
     $task = taskit_get_object('review_completed');
     $task->addVisibility($task::VISIBILITY_USER);
     $task->addEntity('node', $node->nid);
@@ -321,6 +322,14 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
     $task->addOwningUser($user->uid);
     $task->addTriggeringUser(1);
     $task->save();
+    // Notify Contributor
+    $task2 = taskit_get_object('review_completed');
+    $task2->addVisibility($task::VISIBILITY_USER);
+    $task2->addEntity('node', $node->nid);
+    $task2->addEntity('feedback', $entity->id);
+    $task2->addOwningUser($node->uid);
+    $task2->addTriggeringUser(1);
+    $task2->save();
   }
 
   sbac_resource_remove_default_status_messages();

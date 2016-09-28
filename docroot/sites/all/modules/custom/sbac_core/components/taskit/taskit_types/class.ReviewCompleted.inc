@@ -30,11 +30,18 @@ class ReviewCompleted extends \taskit\sbac_core\BaseTask {
         }
 
         $output = array();
-        $output[] = t('You completed a !reviewtype for !title', array(
-          '!title' => '<span class="taskit-title">' . $node->title . '</span>',
-          '!reviewtype' => '<span class="taskit-title">' . $review_type . '</span>',
-        ));
-
+        if ($account->uid == $node->uid) {
+          $output[] = t('A !reviewtype for !title was completed', array(
+            '!title' => '<span class="taskit-title">' . $node->title . '</span>',
+            '!reviewtype' => '<span class="taskit-title">' . $review_type . '</span>',
+          ));
+        }
+        else {
+          $output[] = t('You completed a !reviewtype for !title', array(
+            '!title' => '<span class="taskit-title">' . $node->title . '</span>',
+            '!reviewtype' => '<span class="taskit-title">' . $review_type . '</span>',
+          ));
+        }
         $output[] = '<span class="taskit-timestamp">' . format_date($this->_created, 'custom', $this->_date_format). '</span> ';
         return $this->linkDisplay($output);
       }
