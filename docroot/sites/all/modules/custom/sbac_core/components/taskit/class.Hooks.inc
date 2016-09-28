@@ -244,12 +244,42 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Notify HTML5 Poster'),
         'class' => 'HTML5UploadError',
       ),
-      // notify user a goal has been met
+      // notify user a rating goal has been met
       array(
-        'name' => 'rating_goal_complete',
+        'name' => 'goal_complete_rating',
         'description' => t('Notify Rating Goal completer'),
-        'class' => 'RatingGoalComplete',
+        'class' => 'GoalCompleteRating',
       ),
+      // notify user a reviewed goal has been met
+      array(
+        'name' => 'goal_complete_reviewed',
+        'description' => t('Notify Reviewed Goal completer'),
+        'class' => 'GoalCompleteReviewed',
+      ),
+      // notify user a contributed goal has been met
+      array(
+        'name' => 'goal_complete_contributed',
+        'description' => t('Notify Reviewed Goal completer'),
+        'class' => 'GoalCompleteContributed',
+      ),
+       // notify user when added to most active users rated board
+      array(
+        'name' => 'most_active_members_rated',
+        'description' => t('Notify Most Active Rated member'),
+        'class' => 'MostActiveMembersRated',
+      ),
+       // notify user when added to most active users reviewed board
+      array(
+        'name' => 'most_active_members_reviewed',
+        'description' => t('Notify Most Active Reviewed member'),
+        'class' => 'MostActiveMembersReviewed',
+      ),
+       // notify user when added to most active users reviewed board
+      array(
+        'name' => 'most_active_members_contributed',
+        'description' => t('Notify Most Active Contributed member'),
+        'class' => 'MostActiveMembersContributed',
+      ), 
     );
 
     foreach ($types as &$type) {

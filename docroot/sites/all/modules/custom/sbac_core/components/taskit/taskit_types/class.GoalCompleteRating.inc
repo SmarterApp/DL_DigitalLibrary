@@ -3,7 +3,7 @@ namespace taskit\sbac_core;
 
 require_once('class.BaseTask.inc');
 
-class RatingGoalComplete extends \taskit\sbac_core\BaseTask {
+class GoalCompleteRating extends \taskit\sbac_core\BaseTask {
   public function display($entities, $accounts) {
     $account  = user_load(current($accounts));
     $rating_goal = $account->field_star_rating_goal['und'][0]['value'];
