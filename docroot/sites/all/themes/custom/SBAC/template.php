@@ -888,7 +888,8 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->content = $output;
   }
   // Forum topic list view field preprocessing
-  if ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block') {
+  if (($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block')
+      || ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'collaboration')) {
     foreach ($variables['fields'] as $name => $field) {
       if ($name == 'uid') {
         $user_uid = $field->raw;
