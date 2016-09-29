@@ -200,9 +200,8 @@ function sbac_favorites_get_count($uid) {
     return $_SESSION['favorites']['count'];
   }
 
-  $forum_favorites = sbac_favorites_get_favorite_forum_list_count($uid);
   $resource_favorites = sbac_favorites_get_favorite_resource_list_count($uid);
-  $count = $forum_favorites + $resource_favorites;
+  $count = $resource_favorites;
   $_SESSION['favorites']['count'] = $count;
   return $count;
 }
