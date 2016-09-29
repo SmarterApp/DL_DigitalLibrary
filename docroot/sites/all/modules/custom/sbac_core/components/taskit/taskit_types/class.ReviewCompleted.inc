@@ -28,9 +28,9 @@ class ReviewCompleted extends \taskit\sbac_core\BaseTask {
             $review_type = 'Posting Review';
             break;
         }
-
+        global $user;
         $output = array();
-        if ($account->uid == $node->uid) {
+        if ($user->uid == $node->uid) {
           $output[] = t('A !reviewtype for !title was completed', array(
             '!title' => '<span class="taskit-title">' . $node->title . '</span>',
             '!reviewtype' => '<span class="taskit-title">' . $review_type . '</span>',

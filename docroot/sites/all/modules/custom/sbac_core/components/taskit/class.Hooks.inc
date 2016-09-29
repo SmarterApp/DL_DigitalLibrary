@@ -279,6 +279,18 @@ class Hooks extends \devtools\Hooks {
         'name' => 'most_active_members_contributed',
         'description' => t('Notify Most Active Contributed member'),
         'class' => 'MostActiveMembersContributed',
+      ),
+       // notify user resource has been rated
+      array(
+        'name' => 'resource_rated',
+        'description' => t('Notify resource contributor of rating'),
+        'class' => 'ResourceRated',
+      ),
+       // notify user in process review has timed out
+      array(
+        'name' => 'review_timeout',
+        'description' => t('Notify resource reviewer of review timeout'),
+        'class' => 'ReviewTimeout',
       ), 
     );
 

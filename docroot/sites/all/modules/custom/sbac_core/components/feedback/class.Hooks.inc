@@ -495,6 +495,14 @@ class Hooks extends \devtools\Hooks {
     $result = db_query($query, $args)->fetchAll();
     foreach ($result as $row) {
       if ($node = node_load($row->node_id)) {
+        // Notify user that review has been deleted
+        $task = taskit_get_object('review_timeout');
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $row->node_id);
+        $task->addEntity('feedback', $row->id);
+        $task->addOwningUser($row->uid);
+        $task->addTriggeringUser(1);
+        $task->save();
         // if this is an incomplete gate keeper, then the resource won't have any reviews
         // and we can safely bump it back to draft; we don't need to worry about
         // review entities, because to have one of those in the system, the resource must
