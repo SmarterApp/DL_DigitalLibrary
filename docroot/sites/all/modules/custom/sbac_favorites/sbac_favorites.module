@@ -457,65 +457,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
       '#name' => 'sbac-favorites-resource-cancel',
     );
   }
-  // Forum Tab
-  $form['tab_container']['forum_tab'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Forums'),
-  );
-  $form['tab_container']['forum_tab']['content'] = array(
-    '#theme' => 'sbac_favorites_forum_tabledrag',
-  );
-  $fav_forums = sbac_favorites_get_favorite_forum_list($account->uid);
-  if (!empty($fav_forums)) {
-    foreach ($fav_forums as $favorite) {
-      $element = array();
-      $forum = taxonomy_term_load($favorite->id);
-      $element['name'] = array(
-        '#markup' => l($forum->name, 'forums/term/' . $forum->tid),
-      );
-      $element['created'] = array(
-        '#markup' => date('M jS g:ia', $favorite->created),
-      );
-      $element['delete'] = array(
-        '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" id="' . $forum->tid . '" uid="' . $favorite->uid . '" type="' . $favorite->type . '">Delete</a>',
-      );
-      $element['weight'] = array(
-        '#type' => 'weight',
-        '#title' => t('Weight'),
-        '#default_value' => $favorite->weight,
-        '#delta' => 100,
-        '#title_display' => 'invisible',
-        '#attributes' => array(
-          'class' => array('favorite-item-weight')
-        )
-      );
 
-      $form['tab_container']['forum_tab']['content']['favorites'][$favorite->id . ':' . $favorite->uid . ':' . $favorite->type] = $element;
-    }
-    $form['tab_container']['forum_tab']['buttons'] = array(
-      '#type' => 'container',
-    );
-    $form['tab_container']['forum_tab']['buttons']['save'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save Order'),
-      '#weight' => -100,
-//      '#attributes' => array('id' => 'sbac-favorites-forum-submit'),
-      '#name' => 'sbac-favorites-forum-submit',
-      '#ajax' => array(
-        'wrapper' => 'sbac-user-profile-favorites-form',
-        'callback' => 'sbac_favorites_user_favorites_submit',
-        'method' => 'replace',
-        'effect' => 'fade'
-      ),
-    );
-    $form['tab_container']['forum_tab']['buttons']['cancel'] = array(
-      '#type' => 'submit',
-      '#value' => t('Cancel'),
-      '#weight' => 100,
-      '#attributes' => array('id' => 'sbac-favorites-forum-cancel', 'class' => array('gray')),
-      '#name' => 'sbac-favorites-forum-cancel',
-    );
-  }
   return $form;
 }
 
