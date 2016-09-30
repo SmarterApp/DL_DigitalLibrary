@@ -14,4 +14,4 @@ fi
 
 ./exec-drush sql-drop -y
 gzip -dc cache/sbac.sql.gz \
-  | docker exec -i ${COMPOSE_PROJECT_NAME}_db_1 sh -c 'exec mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" cms'
+  | docker exec -i ${COMPOSE_PROJECT_NAME}_db_1 sh -c 'exec mysql -ucms -p"${MYSQL_PASSWORD}" cms'
