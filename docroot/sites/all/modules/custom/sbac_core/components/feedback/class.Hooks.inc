@@ -485,7 +485,7 @@ class Hooks extends \devtools\Hooks {
 
     // get incomplete reviews (gk, qc or post) and set them to inactive to allow for other people
     // to
-    $query = "  SELECT    id, node_id
+    $query = "  SELECT    id, uid, node_id
                   FROM      eck_feedback
                   WHERE     status = 1
                   AND       completed = 0

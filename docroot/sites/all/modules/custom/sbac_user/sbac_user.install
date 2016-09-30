@@ -217,3 +217,15 @@ function sbac_user_update_8002() {
   module_enable($modules);
   drupal_flush_all_caches();
 }
+
+/**
+ * Enable message_subscribe_email_fequency and message_digest modules per SBAC-176: Notifications email
+ */
+function sbac_user_update_8003() {
+  $modules = array(
+    'message_subscribe_email_frequency',
+    'message_digest',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}

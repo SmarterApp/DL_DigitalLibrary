@@ -178,6 +178,8 @@
     "drupal/message": "7.1.11",
     "drupal/message_notify": "7.2.5",
     "drupal/message_subscribe": "7.1.0-rc2",
+    "drupal/message_subscribe_email_frequency": "7.1.0",
+    "drupal/message_digest": "7.1.0",
     "drupal/mimemail": "7.1.0-beta4",
     "drupal/module_filter": "7.2.0",
     "drupal/module_missing_message_fixer": "7.1.1",
