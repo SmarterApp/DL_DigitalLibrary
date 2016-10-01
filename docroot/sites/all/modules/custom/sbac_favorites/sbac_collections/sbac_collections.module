@@ -1,0 +1,10 @@
+<?php
+/**
+ * @file.
+ * Module to handle all collection functionality.
+ *
+ * Provides:
+ *  - Exports the collection content type
+ */
+
+require_once __DIR__.'/sbac_collections.forms.inc';
