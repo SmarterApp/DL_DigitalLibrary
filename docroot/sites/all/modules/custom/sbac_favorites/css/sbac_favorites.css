@@ -1,0 +1,45 @@
+/* Profile page */
+.section-favorites a.sbac-favorites-delete-favorite {
+    opacity: 100;
+    color: #0583AC;
+}
+
+/* Resource pages */
+.f-dropdown.sbac-favorites-collections {
+    position: absolute;
+    width: auto;
+    top: 75px;
+    right: 25px;
+    text-align: left;
+}
+
+.sbac-favorites-collections a.sbac-favorites-collection {
+    color: #0583ac;
+    text-decoration: underline;
+}
+.sbac-favorites-collections a.sbac-favorites-collection:hover,
+.sbac-favorites-collections a.sbac-favorites-collection:focus {
+}
+.sbac-favorites-collections a.sbac-favorites-collection-collection.sbac-favorite-no {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-blue.png) no-repeat 0 0;
+}
+.sbac-favorites-collections a.sbac-favorites-collection-collection.sbac-favorite-yes {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-red.png) no-repeat 0 0;
+}
+.sbac-favorites-collections a.sbac-favorites-collection-favorites.sbac-favorite-no {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-favorite-blue.png) no-repeat 0 0;
+}
+.sbac-favorites-collections a.sbac-favorites-collection-favorites.sbac-favorite-yes {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-favorite-red.png) no-repeat 0 0;
+}
+
+.sbac-favorites-collection-create-wrapper {
+    text-align: center;
+}
+.sbac-favorites-collections .sbac-favorites-collection-create {
+    margin-top: 15px;
+    line-height: 16px;
+    color: #006298;
+    background-color: #bfd8e5;
+    border-color: #77abc8;
+}

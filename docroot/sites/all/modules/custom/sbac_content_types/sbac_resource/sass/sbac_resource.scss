@@ -3231,7 +3231,7 @@ div[id*="edit-field-copyright-clearace-forms"] {
 .favorites-link {
 
 	a {
-		background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
+        background: url(../../../../../themes/custom/SBAC/images/icons/icon-folder-heart.png) no-repeat 0 0;
 		display: block;
 		padding-left: 20px;
 		vertical-align: middle;
@@ -3242,22 +3242,18 @@ div[id*="edit-field-copyright-clearace-forms"] {
 		/*text-transform:uppercase;*/
 
 		&.sbac-favorites-link-yes {
-			background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
 			color: #62676e;
 		}
 
 		&.sbac-favorites-link-yes:hover {
-			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			color: #0c84ad;
 		}
 
 		&.sbac-favorites-link-no {
-			background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
 			color: #62676e;
 		}
 
 		&.sbac-favorites-link-no:hover {
-			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			color: #0c84ad;
 		}
 	}
