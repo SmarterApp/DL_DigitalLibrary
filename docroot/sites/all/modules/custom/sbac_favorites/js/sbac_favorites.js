@@ -3,18 +3,42 @@
 
   Drupal.behaviors.sbac_favorites = {
     attach: function (context, settings) {
-      // on click, save as favorite.
-      $('.sbac-favorites-link').click( function () {
-        var the_favorite_link = $(this);
-        var id = the_favorite_link.attr('id');
-        var uid = the_favorite_link.attr('uid');
-        var type = the_favorite_link.attr('type');
+      // Show collection list
+      var timeoutId;
+      $('.sbac-favorites-link').click(function(){
+        return false;
+      });
+      $('.sbac-favorites-link, .sbac-favorites-collections').mouseover(function(){
+        clearInterval(timeoutId);
+        $('.sbac-favorites-collections').fadeIn(100);
+        return false;
+      }).mouseleave(function(){
+        timeoutId = setTimeout(function() {
+          $('.sbac-favorites-collections').fadeOut(400);
+        }, 3000);
+        return false;
+      });
+
+      $('.sbac-favorites-collections').on('click', '.sbac-favorites-collection', function(e){
+        var target = $(e.target);
+        var resource = target.closest('.sbac-favorites-collections');
+
+        var id = resource.data('nid');
+        var uid = resource.data('uid');
+        var type = resource.data('type');
+        var cid = target.data('cid');
 
         var is_favorite = 0;
-        if (the_favorite_link.hasClass('sbac-favorites-link-yes')) {
+        if (target.hasClass('sbac-favorite-yes')) {
           is_favorite = 1;
         }
-        submit_favorite(the_favorite_link, id, uid, type, is_favorite);
+
+        submit_favorite(target, resource, id, uid, type, cid, is_favorite);
+
+        return false;
+      });
+
+      $('.sbac-favorites-collection-create').click(function(){
         return false;
       });
     }
@@ -24,32 +48,29 @@
    * Submits the request to drupal.
    *
    * @param the_favorite_link
+   * @param resource
    * @param id
    * @param uid
+   * @param type
+   * @param cid
    * @param is_favorite
    */
-  submit_favorite = function (the_favorite_link, id, uid, type, is_favorite) {
+  submit_favorite = function (the_favorite_link, resource, id, uid, type, cid, is_favorite) {
     var ajax_request = $.ajax({
       type: 'POST',
       url: "/sbac-favorites-click",
-      data: {'id':id, 'uid':uid, 'type':type, 'is_favorite':is_favorite},
+      data: {'id':id, 'uid':uid, 'type':type, 'cid':cid, 'is_favorite':is_favorite},
       success: function(data) {
         ajax_request = null;
         if (is_favorite == 0) {
-          the_favorite_link.removeClass('sbac-favorites-link-no').addClass('sbac-favorites-link-yes'); // update class
-          the_favorite_link.html('Unfavorite');
-          var old_count = $('.sbac-favorites-menu span').html(); // update menu counter
-          old_count++;
-          $('.sbac-favorites-menu span').html(old_count);
-          $('.sbac-favorites-menu-tooltip').show(0).delay(3000).hide(0); // show / hide the tooltip
+          the_favorite_link.removeClass('sbac-favorite-no').addClass('sbac-favorite-yes'); // update class
+          resource.siblings('.sbac-favorites-link').removeClass('sbac-favorites-link-no').addClass('sbac-favorites-link-yes');
         }
         else {
-          the_favorite_link.removeClass('sbac-favorites-link-yes');
-          the_favorite_link.addClass('sbac-favorites-link-no');
-          the_favorite_link.html('Add to Favorites');
-          var old_count = $('.sbac-favorites-menu span').html();
-          old_count--;
-          $('.sbac-favorites-menu span').html(old_count);
+          the_favorite_link.removeClass('sbac-favorite-yes').addClass('sbac-favorite-no');
+          if (0 == resource.children('.sbac-favorite-yes').length) {
+              resource.siblings('.sbac-favorites-link').removeClass('sbac-favorites-link-yes').addClass('sbac-favorites-link-no');
+          }
         }
       },
       error: function(data) {
