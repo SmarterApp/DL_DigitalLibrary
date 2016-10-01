@@ -1,10 +1,12 @@
 <?php
 /**
- * @file.
+ * @file
+ * Code for the sbac_collections feature.
  * Module to handle all collection functionality.
  *
  * Provides:
  *  - Exports the collection content type
  */
 
-require_once __DIR__.'/sbac_collections.forms.inc';
+include_once 'sbac_collections.features.inc';
+require_once 'sbac_collections.forms.inc';
