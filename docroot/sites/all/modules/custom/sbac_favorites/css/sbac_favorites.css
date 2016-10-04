@@ -4,6 +4,11 @@
     color: #0583AC;
 }
 
+.section-favorites a.sbac-favorites-links-favorite {
+    opacity: 100;
+    color: #0583AC;
+}
+
 #sbac-favorites-resource-table-drag-drop .collection-favorites .tabledrag-handle {
     opacity: 0;
 }

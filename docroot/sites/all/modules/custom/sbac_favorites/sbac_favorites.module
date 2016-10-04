@@ -394,8 +394,21 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
       'name' => array(
         '#markup' => '<span class="expander"></span> '.$collection->title,
       ),
-      'delete' => array(
-        '#markup' => 'view edit',
+      'links' => array(
+        '#markup' => l('view', (0 != $collection->nid) ? 'node/'.$collection->nid : 'TODO:PageForFavorites', array(
+            'attributes' => array(
+              'class' => array('sbac-favorites-links-favorite'),
+            ),
+          )
+        )
+        .((0 != $collection->nid)
+            ?' '.l('edit', 'node/'.$collection->nid.'/edit', array(
+              'attributes' => array(
+                'class' => array('sbac-favorites-links-favorite'),
+              ),
+            ))
+            : ''
+        ),
       ),
       'id' => array(
         '#type' => 'hidden',
@@ -436,7 +449,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
           'name' => array(
             '#markup' => l($resource->title, $resource->path['alias']),
           ),
-          'delete' => array(
+          'links' => array(
             '#markup' => '<a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" data-nid="' . $resource->nid . '" data-cid="' . $collection->nid . '" data-uid="' . $favorite->uid . '" data-type="' . $favorite->type . '">remove</a>',
           ),
           'id' => array(
@@ -717,7 +730,7 @@ function theme_sbac_favorites_resource_tabledrag($vars) {
 
     $row = array('data' => array(
       'name' => $indent.drupal_render($element['name']),
-      'delete' => drupal_render($element['delete']),
+      'links' => drupal_render($element['links']),
       'id' => drupal_render($element['id']),
       'pid' => drupal_render($element['pid']),
       'weight' => drupal_render($element['weight']),
