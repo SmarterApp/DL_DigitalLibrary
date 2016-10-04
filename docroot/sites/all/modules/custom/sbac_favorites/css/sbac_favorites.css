@@ -4,18 +4,46 @@
     color: #0583AC;
 }
 
+#sbac-favorites-resource-table-drag-drop .collection-favorites .tabledrag-handle {
+    opacity: 0;
+}
+
+#sbac-favorites-resource-table-drag-drop .tabledrag-root .expander {
+    padding-left: 20px;
+    position: relative;
+}
+#sbac-favorites-resource-table-drag-drop .tabledrag-root.expanded .expander {
+    background: url(/sites/all/themes/custom/SBAC/images/icon-arrow-down.png) no-repeat 0 0;
+    top: 6px;
+}
+#sbac-favorites-resource-table-drag-drop .tabledrag-root.collapsed .expander {
+    background: url(/sites/all/themes/custom/SBAC/images/icon-arrow-right.png) no-repeat 0 0;
+    top: 4px;
+    left: 3px;
+}
+
 /* Resource pages */
 .f-dropdown.sbac-favorites-collections {
-    position: absolute;
-    width: auto;
     top: 75px;
     right: 25px;
     text-align: left;
+    max-width: 300px;
+}
+
+.f-dropdown.sbac-favorites-collections .sbac-favorites-collection-list {
+    max-height: 82px;
+    overflow-y: auto;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 
 .sbac-favorites-collections a.sbac-favorites-collection {
+    height: 16px;
     color: #0583ac;
     text-decoration: underline;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
 }
 .sbac-favorites-collections a.sbac-favorites-collection:hover,
 .sbac-favorites-collections a.sbac-favorites-collection:focus {

@@ -84,10 +84,11 @@
       // on click, save as favorite.
       $('.sbac-favorites-delete-favorite').click( function () {
         var the_favorite_link = $(this);
-        var id = the_favorite_link.attr('id');
-        var uid = the_favorite_link.attr('uid');
-        var type = the_favorite_link.attr('type');
-        delete_favorite(the_favorite_link, id, uid, type);
+        var id = the_favorite_link.data('nid');
+        var uid = the_favorite_link.data('uid');
+        var type = the_favorite_link.data('type');
+        var cid = the_favorite_link.data('cid');
+        delete_favorite(the_favorite_link, id, cid, uid, type);
         return false;
       });
     }
@@ -98,30 +99,21 @@
    *
    * @param the_favorite_link
    * @param id
+   * @param cid
    * @param uid
    */
-  delete_favorite = function (the_favorite_link, id, uid, type) {
+  delete_favorite = function (the_favorite_link, id, cid, uid, type) {
     var ajax_delete_request = $.ajax({
       type: 'POST',
       url: the_favorite_link.attr('href'),
-      data: {'id':id, 'uid':uid, 'type':type},
+      data: {'id':id, 'cid':cid, 'uid':uid, 'type':type},
       success: function(data, textStatus, jqXHR) {
         var response = jQuery.parseJSON(data);
         ajax_delete_request = null;
         the_favorite_link.closest('tr').remove();
-        if (response.total > 0) {
-          $('.sbac-favorites-menu span').html(response.total);
-        }
-        else {
-          $('.sbac-favorites-menu span').html(response.total);
-          $('#favorites-table').empty().append(response.no_results);
-          Drupal.attachBehaviors();
-        }
       },
       error: function(data) {
-
       }
     });
   };
-
 })(jQuery);
