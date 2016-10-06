@@ -148,6 +148,7 @@ function sbac_goals_get_html_content($user_uid) {
     // Create and populate tooltip if goal complete
     if ($complete) {
       $completed = 'completed';
+      $counter = 0;
       foreach ($all_resources_reviewed[1] as $reviewed) {
         if ($counter >= $review_goal) {
           break;
@@ -242,6 +243,7 @@ function sbac_goals_get_html_content($user_uid) {
 
     // Create and populate tooltip if goal complete
     if ($complete) {
+      $counter = 0;
       $completed = 'completed';
       foreach ($all_resources_posted[1] as $posted) {
         if ($counter >= $posted_goal) {
@@ -418,6 +420,18 @@ SQL;
             $task->addTriggeringUser($user_profile->uid);
             $task->save();
           }
+          // Send email to user
+          $message = message_create('rating_goal_complete', array('uid' => $user_profile->uid));
+        
+          $wrapper = entity_metadata_wrapper('message', $message);
+        
+          // Replace explicit notification with subscription-based notification
+          // message_notify_send_message($message);
+        
+          if (module_exists('message_subscribe')) {
+            // If Message-subscribe exists, let this example module use it.
+            message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+          }
         }
 
         // Check to see if user is on Most Active Member board
@@ -434,7 +448,19 @@ SQL;
               $task->addOwningUser($user_profile->uid);
               $task->addTriggeringUser($user_profile->uid);
               $task->save();
-            }          
+            }
+            // Send email to user
+            $message = message_create('rated_leaderboard', array('uid' => $user_profile->uid));
+          
+            $wrapper = entity_metadata_wrapper('message', $message);
+          
+            // Replace explicit notification with subscription-based notification
+            // message_notify_send_message($message);
+          
+            if (module_exists('message_subscribe')) {
+              // If Message-subscribe exists, let this example module use it.
+              message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+            }
           }  
         }
 
@@ -472,6 +498,18 @@ SQL;
               $task->addTriggeringUser($user_profile->uid);
               $task->save();
             }
+            // Send email to user
+            $message = message_create('reviewed_goal_complete', array('uid' => $user_profile->uid));
+          
+            $wrapper = entity_metadata_wrapper('message', $message);
+          
+            // Replace explicit notification with subscription-based notification
+            // message_notify_send_message($message);
+          
+            if (module_exists('message_subscribe')) {
+              // If Message-subscribe exists, let this example module use it.
+              message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+            }
           }
 
           // Check to see if user is on Most Active Member board
@@ -488,7 +526,19 @@ SQL;
                 $task->addOwningUser($user_profile->uid);
                 $task->addTriggeringUser($user_profile->uid);
                 $task->save();
-              }          
+              }
+              // Send email to user
+              $message = message_create('reviewed_leaderboard', array('uid' => $user_profile->uid));
+            
+              $wrapper = entity_metadata_wrapper('message', $message);
+            
+              // Replace explicit notification with subscription-based notification
+              // message_notify_send_message($message);
+            
+              if (module_exists('message_subscribe')) {
+                // If Message-subscribe exists, let this example module use it.
+                message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+              }
             }  
           }
 
@@ -536,6 +586,18 @@ SQL;
               $task->addTriggeringUser($user_profile->uid);
               $task->save();
             }
+            // Send email to user
+            $message = message_create('contributed_goal_complete', array('uid' => $user_profile->uid));
+          
+            $wrapper = entity_metadata_wrapper('message', $message);
+          
+            // Replace explicit notification with subscription-based notification
+            // message_notify_send_message($message);
+          
+            if (module_exists('message_subscribe')) {
+              // If Message-subscribe exists, let this example module use it.
+              message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+            }
           }
 
           // Check to see if user is on Most Active Member board
@@ -552,6 +614,18 @@ SQL;
                 $task->addOwningUser($user_profile->uid);
                 $task->addTriggeringUser($user_profile->uid);
                 $task->save();
+                // Send email to user
+                $message = message_create('contributed_leaderboard', array('uid' => $user_profile->uid));
+              
+                $wrapper = entity_metadata_wrapper('message', $message);
+              
+                // Replace explicit notification with subscription-based notification
+                // message_notify_send_message($message);
+              
+                if (module_exists('message_subscribe')) {
+                  // If Message-subscribe exists, let this example module use it.
+                  message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+                }
               }          
             }  
           }

@@ -13,6 +13,142 @@ function sbac_email_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__contributed_goal_complete';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__contributed_goal_complete'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__contributed_leaderboard';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__contributed_leaderboard'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__forum_flagged';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__forum_flagged'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__gatekeeper_reject';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__gatekeeper_reject'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_message__node_insert';
   $strongarm->value = array(
     'view_modes' => array(),
@@ -43,6 +179,210 @@ function sbac_email_strongarm() {
     ),
   );
   $export['field_bundle_settings_message__node_insert'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__post_reject';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__post_reject'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__rated_leaderboard';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__rated_leaderboard'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__rating_goal_complete';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__rating_goal_complete'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__resource_resubmitted';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__resource_resubmitted'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__reviewed_goal_complete';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__reviewed_goal_complete'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'field_bundle_settings_message__reviewed_leaderboard';
+  $strongarm->value = array(
+    'view_modes' => array(),
+    'extra_fields' => array(
+      'form' => array(),
+      'display' => array(
+        'message__message_text__0' => array(
+          'message_notify_email_subject' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+        ),
+        'message__message_text__1' => array(
+          'message_notify_email_subject' => array(
+            'visible' => FALSE,
+            'weight' => 0,
+          ),
+          'message_notify_email_body' => array(
+            'visible' => TRUE,
+            'weight' => 0,
+          ),
+        ),
+      ),
+    ),
+  );
+  $export['field_bundle_settings_message__reviewed_leaderboard'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -90,7 +430,9 @@ function sbac_email_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'mail_system';
   $strongarm->value = array(
-    'default-system' => 'SmtpMailSystem',
+    'default-system' => 'DefaultMailSystem',
+    'user_import' => 'UserImportMailSystem',
+    'maillog' => 'MaillogMailSystem',
   );
   $export['mail_system'] = $strongarm;
 
@@ -168,14 +510,14 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'reroute_email_address';
-  $strongarm->value = 'ken@appnovation.com';
+  $strongarm->value = 'dl-admin@mailinator.com';
   $export['reroute_email_address'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'reroute_email_enable';
-  $strongarm->value = 0;
+  $strongarm->value = 1;
   $export['reroute_email_enable'] = $strongarm;
 
   $strongarm = new stdClass();

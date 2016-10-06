@@ -36101,6 +36101,11 @@ form#sbac-user-filter-form #edit-email {
   display: none;
 }
 
+#user-profile-form #edit-message-subscribe-email-freq-und {
+  height: auto;
+  font-size: inherit;
+}
+
 #user-profile-form--2 .hidden {
   display: none;
 }

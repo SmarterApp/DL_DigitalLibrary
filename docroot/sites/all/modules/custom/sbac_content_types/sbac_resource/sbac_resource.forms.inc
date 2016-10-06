@@ -3883,6 +3883,20 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
         $post_wrapper->save();
       }
     }
+    // Email last reviewer that a rejected resource is available for review
+    $last_reviewer = $form_state['values']['field_recent_reviewers']['und'][0]['target_id'];
+    // Send email to user
+    $message = message_create('resource_resubmitted', array('uid' => $last_reviewer));
+  
+    $wrapper = entity_metadata_wrapper('message', $message);
+
+    // Replace explicit notification with subscription-based notification
+    // message_notify_send_message($message);
+  
+    if (module_exists('message_subscribe')) {
+      // If Message-subscribe exists, let this example module use it.
+      message_subscribe_send_message('node', $form_state['node'], $message, array('email' => $options));
+    }
   }
 }
 

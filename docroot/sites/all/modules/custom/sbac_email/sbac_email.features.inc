@@ -139,6 +139,104 @@ function sbac_email_flag_default_flags() {
  */
 function sbac_email_default_message_type() {
   $items = array();
+  $items['contributed_goal_complete'] = entity_import('message_type', '{
+    "name" : "contributed_goal_complete",
+    "description" : "Contributed Goal Complete",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EContributed Resources Goal Complete\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EContributed Resources Goal Complete\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['contributed_leaderboard'] = entity_import('message_type', '{
+    "name" : "contributed_leaderboard",
+    "description" : "Contributed Leaderboard",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Contributor Most Active User Board.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Contributor Most Active User Board.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['forum_flagged'] = entity_import('message_type', '{
+    "name" : "forum_flagged",
+    "description" : "Forum Flagged",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA forum you created has been flagged.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA forum you created has been flagged.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['gatekeeper_reject'] = entity_import('message_type', '{
+    "name" : "gatekeeper_reject",
+    "description" : "Gatekeeper reject",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EThe Resource you submitted requires revision.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EThe Resource you submitted requires revision.\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EA resource you submitted needs revisions to be published.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA resource you submitted needs revisions to be published.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
   $items['node_insert'] = entity_import('message_type', '{
     "name" : "node_insert",
     "description" : "Node insert",
@@ -164,8 +262,163 @@ function sbac_email_default_message_type() {
         }
       ]
     },
-    "entity_type" : "message_type",
-    "entity_id" : "308",
+    "rdf_mapping" : []
+  }');
+  $items['post_reject'] = entity_import('message_type', '{
+    "name" : "post_reject",
+    "description" : "Post Reject",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA Resource requires revision\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA Resource requires revision\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EA resource you submitted requires further revision before being published.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA resource you submitted requires further revision before being published.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['rated_leaderboard'] = entity_import('message_type', '{
+    "name" : "rated_leaderboard",
+    "description" : "Rated Leaderboard",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003ECongratulations! \\u0026nbsp;You have been added to the Educator Most Active Users Board!\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003ECongratulations! \\u0026nbsp;You have been added to the Educator Most Active Users Board!\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['rating_goal_complete'] = entity_import('message_type', '{
+    "name" : "rating_goal_complete",
+    "description" : "Star Rating Completed",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EGoal completed\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EGoal completed\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003E\\u003Cspan style=\\u0022line-height: 19.2px;\\u0022\\u003ECongratulations! You have achieved your goal for resources rated!\\u003C\\/span\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003E\\u003Cspan style=\\u0022line-height: 19.2px;\\u0022\\u003ECongratulations! You have achieved your goal for resources rated!\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['resource_resubmitted'] = entity_import('message_type', '{
+    "name" : "resource_resubmitted",
+    "description" : "Resource Resubmitted",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA resource that you rejected has been revised\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA resource that you rejected has been revised\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['reviewed_goal_complete'] = entity_import('message_type', '{
+    "name" : "reviewed_goal_complete",
+    "description" : "Reviewed Goal Complete",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EReviewed resources goal complete\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EReviewed resources goal complete\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003ECongratulations! You have met your goal for resources reviewed.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003ECongratulations! You have met your goal for resources reviewed.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['reviewed_leaderboard'] = entity_import('message_type', '{
+    "name" : "reviewed_leaderboard",
+    "description" : "Reviewed Leaderboard",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Reviewer Most Active User Board.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Reviewer Most Active User Board.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
     "rdf_mapping" : []
   }');
   $items['sbac_email_comment_insert'] = entity_import('message_type', '{
@@ -193,8 +446,6 @@ function sbac_email_default_message_type() {
         }
       ]
     },
-    "entity_type" : "message_type",
-    "entity_id" : "310",
     "rdf_mapping" : []
   }');
   return $items;
