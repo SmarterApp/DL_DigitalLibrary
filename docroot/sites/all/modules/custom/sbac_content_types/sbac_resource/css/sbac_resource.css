@@ -3787,3 +3787,87 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
 .playlist-template {
   display: none;
 }
+
+
+
+/* Viewing Collection */
+/* line 3649, ../sass/sbac_resource.scss */
+.item-list-field-pane {
+  padding-bottom: 20px;
+}
+/* line 3652, ../sass/sbac_resource.scss */
+.item-list-field-pane .pane-title {
+  display: block;
+  margin: 0;
+  padding: 5px 0 3px 0;
+  border-radius: 0;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 12px;
+  line-height: normal;
+  background: transparent;
+  color: #04384e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #CECECE;
+}
+/* line 3667, ../sass/sbac_resource.scss */
+.item-list-field-pane .item-list {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+/* line 3672, ../sass/sbac_resource.scss */
+.item-list-field-pane ul {
+  margin: 0;
+}
+/* line 3675, ../sass/sbac_resource.scss */
+.item-list-field-pane ul li {
+  background-color: #F2F2F2;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 24px;
+  margin: 7px 4px 0 0;
+  padding: 0 7px;
+}
+
+/* line 3687, ../sass/sbac_resource.scss */
+.node-type-collection-view #main .button-group {
+  display: none;
+}
+
+/* line 3708, ../sass/sbac_resource.scss */
+.node-type-collection-view .pane-node-body .field {
+  font-size: inherit;
+}
+
+/* line 3714, ../sass/sbac_resource.scss */
+.node-type-collection-view .view-id-collection .resource-card {
+  background-color: rgba(6,132,173,0.15);
+}
+
+
+/* line 3692, ../sass/sbac_resource.scss */
+.node-type-collection-view h1.title {
+  border-bottom: 1px solid #62676E;
+  color: #04384E;
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0 25px 5px 25px;
+  padding: 20px 0 0;
+}
+
+/* line 3701, ../sass/sbac_resource.scss */
+.node-type-collection-view h1.title .title-by {
+  font-size: smaller;
+  font-weight: normal;
+}
+
+.node-type-collection-view .pane-node-body {
+  padding: 15px 25px;
+}
+.node-type-collection-view .pane-node-field-subject {
+  padding-left: 25px;
+}
+.node-type-collection-view .pane-node-field-subject {
+  padding-right: 25px;

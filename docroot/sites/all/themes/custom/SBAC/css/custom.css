@@ -34876,7 +34876,8 @@ a.tabledrag-handle .handle {
 /* fix for back button block for resource node pages.*/
 /* line 3136, ../sass/custom.scss */
 .page-moderation .top-bar.last-top,
-.node-type-resource .top-bar.last-top {
+.node-type-resource .top-bar.last-top,
+.node-type-collection .top-bar.last-top {
   height: 25px;
   max-width: 960px;
   padding: 0 0 0;

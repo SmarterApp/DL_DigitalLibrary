@@ -3134,7 +3134,8 @@ a.tabledrag-handle .handle {
 }
 /* fix for back button block for resource node pages.*/
 .page-moderation .top-bar.last-top,
-.node-type-resource .top-bar.last-top{
+.node-type-resource .top-bar.last-top,
+.node-type-collection .top-bar.last-top{
   height:25px;
   max-width:960px;
   padding:0 0 0;
