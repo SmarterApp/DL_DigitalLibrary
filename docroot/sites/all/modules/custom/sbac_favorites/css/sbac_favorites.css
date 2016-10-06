@@ -35,6 +35,10 @@
     max-width: 300px;
 }
 
+.html5-identifier ~ .favorites-link .f-dropdown.sbac-favorites-collections {
+    top: 90px;
+}
+
 .f-dropdown.sbac-favorites-collections .sbac-favorites-collection-list {
     max-height: 82px;
     overflow-y: auto;
