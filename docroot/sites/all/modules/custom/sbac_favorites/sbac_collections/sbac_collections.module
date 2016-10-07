@@ -8,5 +8,6 @@
  *  - Exports the collection content type
  */
 
-include_once 'sbac_collections.features.inc';
-require_once 'sbac_collections.forms.inc';
+include_once __DIR__ . '/sbac_collections.features.inc';
+include_once __DIR__ . '/sbac_collections.forms.inc';
+include_once __DIR__ . '/sbac_collections.theme.inc';
