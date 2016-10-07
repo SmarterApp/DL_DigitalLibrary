@@ -47,6 +47,14 @@ function sbac_favorites_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['favorite_collection/%'] = array(
+    'title' => 'Favorites',
+    'page callback' => 'sbac_favorites_page_favorites',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -395,7 +403,10 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
         '#markup' => '<span class="expander"></span> '.$collection->title,
       ),
       'links' => array(
-        '#markup' => l('view', (0 != $collection->nid) ? 'node/'.$collection->nid : 'TODO:PageForFavorites', array(
+        '#markup' => l('view', (0 != $collection->nid)
+              ? 'node/'.$collection->nid
+              : 'favorite_collection/'.$account->uid,
+          array(
             'attributes' => array(
               'class' => array('sbac-favorites-links-favorite'),
             ),
@@ -774,4 +785,52 @@ function sbac_favorites_user_logout($account) {
   if (isset($_SESSION['favorites']['count'])) {
     unset($_SESSION['favorites']['count']);
   }
+}
+
+function sbac_favorites_page_favorites($uid) {
+  if (!is_numeric($uid)) {
+    drupal_access_denied();
+    return;
+  }
+
+  $user = user_load($uid);
+  $name = array();
+  if (sbac_user_privacy_check('field_first_name', $user)) {
+    $fname = field_get_items('user', $user, 'field_first_name');
+    if (count($fname)) {
+      $name[] = drupal_render(field_view_value('user', $user, 'field_first_name', $fname[0]));
+    }
+  }
+  if (sbac_user_privacy_check('field_first_name', $user)) {
+    $lname = field_get_items('user', $user, 'field_last_name');
+    if (count($lname)) {
+      $name[] = drupal_render(field_view_value('user', $user, 'field_last_name', $lname[0]));
+    }
+  }
+  if (!count($name)) {
+    $name[] = $user->name;
+  }
+
+  $favorites = sbac_favorites_get_favorite_resource_list($uid, 0);
+  $view = views_get_view('my_resources');
+  $view->set_display('list_view');
+
+  $content = [];
+  $content['title'] = array(
+    '#type' => 'markup',
+    '#markup' => '<h1 id="page-title" class="title">Favorites Collection <span class="collection-by">by '.implode(' ', $name).'</span></h1>',
+  );
+
+  if (!empty($favorites)) {
+    foreach ($favorites as $favorite) {
+      $resource = node_load($favorite->id);
+      $element = array(
+        '#type' => 'markup',
+        '#markup' => l($resource->title, $resource->path['alias']),
+      );
+      $content[$favorite->id . ':' . $favorite->type] = $element;
+    }
+  }
+
+  return render($content);
 }

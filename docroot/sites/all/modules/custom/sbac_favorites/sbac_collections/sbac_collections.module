@@ -11,3 +11,31 @@
 include_once __DIR__ . '/sbac_collections.features.inc';
 include_once __DIR__ . '/sbac_collections.forms.inc';
 include_once __DIR__ . '/sbac_collections.theme.inc';
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function sbac_collections_menu() {
+  $items = array();
+
+  return $items;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function sbac_collections_views_query_alter(&$view, &$query) {
+  if ($view->name !== 'collection') {
+    return;
+  }
+}
+
+/**
+ * Implements hook_form().
+ */
+function sbac_collections_form($node, &$form_state) {
+  if ($node->type !== 'collection') {
+  }
+}
