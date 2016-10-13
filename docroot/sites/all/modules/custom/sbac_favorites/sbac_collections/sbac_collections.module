@@ -20,6 +20,12 @@ include_once __DIR__ . '/sbac_collections.theme.inc';
 function sbac_collections_menu() {
   $items = array();
 
+  $items['sbac_collections/%ctools_js/%/%'] = array(
+    'page callback' => 'sbac_collections_add_collection_callback',
+    'page arguments' => array(1, 2, 3),
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 
@@ -37,5 +43,91 @@ function sbac_collections_views_query_alter(&$view, &$query) {
  */
 function sbac_collections_form($node, &$form_state) {
   if ($node->type !== 'collection') {
+    return;
   }
+}
+
+function sbac_collections_add_collection_callback($js = false, $resourceId = null, $nid = null) {
+  global $user;
+
+  if ($nid) {
+    $node = node_load($nid);
+  } else {
+    $node = (object) array(
+      'uid' => $user->uid,
+      'name' => isset($user->name) ? $user->name : '',
+      'type' => 'collection',
+      'language' => LANGUAGE_NONE,
+    );
+  }
+
+  if (!$js) {
+    return drupal_get_form('collection_node_form', $node);
+  }
+
+  ctools_include('node.pages', 'node', '');
+  ctools_include('modal');
+  ctools_include('ajax');
+
+  if (!empty($_POST['op']) && 'Delete' === $_POST['op']) {
+    // @TODO: Implement delete
+    var_dump('DELETE');
+    return;
+  }
+
+
+  $form_state = array(
+    'title' => $nid ? t('Edit Collection') : t('Add Collection'),
+    'ajax' => true,
+  );
+
+  $form_state['build_info']['args'] = array($node);
+  $output = ctools_modal_form_wrapper('collection_node_form', $form_state);
+
+  // ??
+  if (!empty($form_state['executed'])) {
+    $output = array();
+
+    if (!empty($resourceId)) {
+      $collection = node_load($form_state['nid']);
+      sbac_favorites_ajax_click($resourceId, $user->uid, $form_state['nid']);
+      $element = array(
+        '#markup' => l(
+          $collection->title,
+          url('node/' . $resourceId),
+          array(
+            'attributes' => array(
+              'class' => array(
+                'sbac-favorites-collection',
+                'sbac-favorites-collection-collection',
+                'sbac-favorite-yes',
+              ),
+              'data-cid' => $collection->nid,
+            )
+          )
+        ),
+      );
+      $html = drupal_render($element);
+      $output[] = ajax_command_after('.sbac-favorites-collection-list .sbac-favorites-collection-favorites', $html);
+    }
+    /*
+     *
+    ob_start();
+    var_dump($form_state);
+    $out = ob_get_contents();
+    ob_end_clean();
+    $output[] = array('output' => $out);
+    */
+
+    $output[] = ctools_modal_command_dismiss();
+
+    // Add new collection to top of list
+  } elseif (!empty($form_state['ajax_commands'])) {
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    $output[] = $form_state['ajax_commands'];
+  }
+
+  print ajax_render($output);
+  drupal_exit();
 }

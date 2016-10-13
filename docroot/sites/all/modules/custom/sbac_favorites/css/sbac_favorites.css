@@ -80,3 +80,26 @@
     background-color: #bfd8e5;
     border-color: #77abc8;
 }
+
+.sbac-favorites-collections form {
+    margin: 0;
+}
+
+
+/* popup collection form */
+.node-collection-form .field-name-field-subject,
+.node-collection-form .field-name-field-grades {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+}
+.node-collection-form .field-name-field-subject {
+    margin-right: 2%;
+}
+.node-collection-form button.button.secondary.form-submit {
+    background-color: #2AA549;
+    border: 1px solid #268A16;
+}
+#modalContent .ctools-modal-content .node-collection-form .form-actions {
+    margin: 0;
+}

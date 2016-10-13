@@ -1,45 +1,61 @@
-(function ($) {
+(function($) {
   Drupal.behaviors = Drupal.behaviors || {};
+
+  Drupal.behaviors.sbac_collections = {
+    attach: function (context, settings) {
+      $('.node-collection-form button.secondary[value=Continue]').removeClass('secondary');
+    }
+  };
 
   Drupal.behaviors.sbac_favorites = {
     attach: function (context, settings) {
       // Show collection list
-      var timeoutId;
-      $('.sbac-favorites-link').click(function(){
-        return false;
-      });
-      $('.sbac-favorites-link, .sbac-favorites-collections').mouseover(function(){
-        clearInterval(timeoutId);
-        $('.sbac-favorites-collections').fadeIn(100);
-        return false;
-      }).mouseleave(function(){
-        timeoutId = setTimeout(function() {
-          $('.sbac-favorites-collections').fadeOut(400);
-        }, 3000);
-        return false;
+      $('.sbac-favorites-link').once('disable-click', function() {
+        $('.sbac-favorites-link').click(function() {
+          return false;
+        });
       });
 
-      $('.sbac-favorites-collections').on('click', '.sbac-favorites-collection', function(e){
-        var target = $(e.target);
-        var resource = target.closest('.sbac-favorites-collections');
-
-        var id = resource.data('nid');
-        var uid = resource.data('uid');
-        var type = resource.data('type');
-        var cid = target.data('cid');
-
-        var is_favorite = 0;
-        if (target.hasClass('sbac-favorite-yes')) {
-          is_favorite = 1;
-        }
-
-        submit_favorite(target, resource, id, uid, type, cid, is_favorite);
-
-        return false;
+      $('.sbac-favorites-link, .sbac-favorites-collections').once('mouseover-dropdown', function() {
+        var timeoutId;
+        $('.sbac-favorites-link, .sbac-favorites-collections').mouseover(function() {
+          clearInterval(timeoutId);
+          $('.sbac-favorites-collections').fadeIn(100);
+          return false;
+        }).mouseleave(function() {
+          timeoutId = setTimeout(function() {
+            $('.sbac-favorites-collections').fadeOut(400);
+          }, 3000);
+          return false;
+        });
       });
 
-      $('.sbac-favorites-collection-create').click(function(){
-        return false;
+      $('.sbac-favorites-collections').once('onclick-hndl', function(e) {
+        $('.sbac-favorites-collections').on('click', '.sbac-favorites-collection', function(e) {
+          var target = $(e.target);
+          var resource = target.closest('.sbac-favorites-collections');
+
+          var id = resource.data('nid');
+          var uid = resource.data('uid');
+          var type = resource.data('type');
+          var cid = target.data('cid');
+
+          var is_favorite = 0;
+          if (target.hasClass('sbac-favorite-yes')) {
+            is_favorite = 1;
+          }
+
+          submit_favorite(target, resource, id, uid, type, cid, is_favorite);
+
+          return false;
+        });
+      });
+
+      $('.sbac-favorites-collection-create').once('disable-click', function() {
+          var nid =
+        $('.sbac-favorites-collection-create').click(function() {
+          return false;
+        });
       });
     }
   };
@@ -82,14 +98,16 @@
   Drupal.behaviors.sbac_favorites_delete = {
     attach: function (context, settings) {
       // on click, save as favorite.
-      $('.sbac-favorites-delete-favorite').click( function () {
-        var the_favorite_link = $(this);
-        var id = the_favorite_link.data('nid');
-        var uid = the_favorite_link.data('uid');
-        var type = the_favorite_link.data('type');
-        var cid = the_favorite_link.data('cid');
-        delete_favorite(the_favorite_link, id, cid, uid, type);
-        return false;
+      $('.sbac-favorites-delete-favorite', context).once('delete-link', function() {
+        $('.sbac-favorites-delete-favorite', context).click(function() {
+          var the_favorite_link = $(this);
+          var id = the_favorite_link.data('nid');
+          var uid = the_favorite_link.data('uid');
+          var type = the_favorite_link.data('type');
+          var cid = the_favorite_link.data('cid');
+          delete_favorite(the_favorite_link, id, cid, uid, type);
+          return false;
+        });
       });
     }
   };

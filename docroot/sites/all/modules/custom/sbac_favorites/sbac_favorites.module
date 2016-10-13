@@ -111,8 +111,22 @@ function sbac_favorites_get_entity_by_type($id, $type) {
 /**
  * Adds or deletes the entry from the custom table.
  */
-function sbac_favorites_ajax_click() {
+function sbac_favorites_ajax_click($id = null, $uid = null, $cid = null, $type = 'node') {
   global $user;
+
+  if (isset($id)) {
+    $_POST['id'] = $id;
+  }
+  if (isset($uid)) {
+    $_POST['uid'] = $uid;
+  }
+  if (isset($cid)) {
+    $_POST['cid'] = $cid;
+  }
+  if (isset($type)) {
+    $_POST['type'] = $type;
+  }
+
   if (!$_POST['id'] || !$_POST['uid'] || !$_POST['type']) {
     exit;
   }
@@ -413,9 +427,9 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
           )
         )
         .((0 != $collection->nid)
-            ?' '.l('edit', 'node/'.$collection->nid.'/edit', array(
+            ?' '.l('edit', 'sbac_collections/nojs/0/'.$collection->nid, array(
               'attributes' => array(
-                'class' => array('sbac-favorites-links-favorite'),
+                'class' => array('sbac-favorites-links-favorite', 'ctools-use-modal'),
               ),
             ))
             : ''
@@ -525,6 +539,9 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     ),
     '#name' => 'sbac-favorites-resource-cancel',
   );
+
+  ctools_include('modal');
+  ctools_modal_add_js();
 
   return $form;
 }
@@ -675,28 +692,74 @@ function sbac_favorites_get_favorite_link($uid, $id, $type) {
       'class' => array('sbac-favorites-collection-create-wrapper'),
     ),
   );
-  $popup['buttons']['save'] = array(
-    '#type' => 'button',
-    '#button_type' => 'no-submit',
-    '#name' => 'sbac-favorites-collection-create',
-    '#value' => t('Create a Collection'),
-    '#weight' => -100,
-    '#attributes' => array(
-      'class' => array('tiny', 'sbac-favorites-collection-create')
-    ),
-    /*
-    '#ajax' => array(
-      'wrapper' => 'sbac-user-profile-favorites-form',
-      'callback' => 'sbac_favorites_user_favorites_submit',
-      'method' => 'replace',
-      'effect' => 'fade'
-    ),
-    */
+
+  /*
+  $popup['buttons']['create'] = array(
+    '#type' => 'markup',
+    '#markup' => l(t('Create a Collection'), 'sbac_collections/nojs', array(
+      'attributes' => array(
+        'class' => array(
+          'ctools-use-modal',
+        ),
+      ),
+    )),
+  );
+  */
+
+  $popup['buttons']['form'] = array(
+    '#type' => 'form',
+    '#action' => url('sbac_collections/nojs/'.$id.'/0'),
+    '#method' => 'get',
+    'content' => array(
+      '#type' => 'button',
+      '#button_type' => 'no-submit',
+      '#name' => 'sbac-favorites-collection-create',
+      '#value' => t('Create a Collection'),
+      '#weight' => -100,
+      '#attributes' => array(
+        'class' => array(
+          'tiny',
+          'sbac-favorites-collection-create',
+          'ctools-use-modal',
+        ),
+        'id' => 'favorites-create-btn',
+        'favorites-create-btn-url' => url('sbac_collections/nojs/'.$id.'/0'),
+      ),
+    )
   );
 
+//  $popup['buttons']['create_btn'] = array(
+//    '#type' => 'button',
+//    '#button_type' => 'no-submit',
+//    '#name' => 'sbac-favorites-collection-create',
+//    '#value' => t('Create a Collection'),
+//    '#weight' => -100,
+//    '#attributes' => array(
+//      'class' => array(
+//        'tiny',
+//        'sbac-favorites-collection-create',
+////        'ctools-use-modal',
+//      ),
+//      'id' => 'favorites-create-btn',
+//      'favorites-create-btn-url' => url('sbac_collections/nojs'),
+//    ),
+//    /*
+//    '#ajax' => array(
+//      'wrapper' => 'sbac-user-profile-favorites-form',
+//      'callback' => 'sbac_favorites_user_favorites_submit',
+//      'method' => 'replace',
+//      'effect' => 'fade'
+//    ),
+//    */
+//  );
+
   $div = drupal_render($popup);
+
   drupal_add_js(drupal_get_path("module", "sbac_favorites") . "/js/sbac_favorites.js");
   drupal_add_css(drupal_get_path('module', 'sbac_favorites') . '/css/sbac_favorites.css');
+  ctools_include('modal');
+  ctools_modal_add_js();
+
   $favorite_link = l($favorite_text, $_GET['q'], array(
     'attributes' => array(
       'class' => array(
