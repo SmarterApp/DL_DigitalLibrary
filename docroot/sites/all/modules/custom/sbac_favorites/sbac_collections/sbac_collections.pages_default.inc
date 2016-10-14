@@ -243,3 +243,145 @@ function sbac_collections_default_page_manager_handlers() {
 
   return $export;
 }
+
+/**
+ * Implements hook_default_page_manager_pages().
+ */
+function sbac_collections_default_page_manager_pages() {
+  $page = new stdClass();
+  $page->disabled = FALSE; /* Edit this to true to make a default page disabled initially */
+  $page->api_version = 1;
+  $page->name = 'favorites_for_user';
+  $page->task = 'page';
+  $page->admin_title = 'Favorites for user';
+  $page->admin_description = '';
+  $page->path = 'favorites/%user';
+  $page->access = array(
+    'plugins' => array(),
+    'logic' => 'and',
+  );
+  $page->menu = array();
+  $page->arguments = array(
+    'user' => array(
+      'id' => 1,
+      'identifier' => 'User: name',
+      'name' => 'user_name',
+      'settings' => array(),
+    ),
+  );
+  $page->conf = array(
+    'admin_paths' => FALSE,
+  );
+  $page->default_handlers = array();
+  $handler = new stdClass();
+  $handler->disabled = FALSE; /* Edit this to true to make a default handler disabled initially */
+  $handler->api_version = 1;
+  $handler->name = 'page_favorites_for_user__panel';
+  $handler->task = 'page';
+  $handler->subtask = 'favorites_for_user';
+  $handler->handler = 'panel_context';
+  $handler->weight = 0;
+  $handler->conf = array(
+    'title' => 'User Collection',
+    'no_blocks' => 0,
+    'pipeline' => 'standard',
+    'body_classes_to_remove' => '',
+    'body_classes_to_add' => 'node-type-collection-view',
+    'css_id' => 'collection-list-region',
+    'css' => '',
+    'contexts' => array(),
+    'relationships' => array(),
+    'name' => 'panel',
+  );
+  $display = new panels_display();
+  $display->layout = 'foundation_2col_stacked';
+  $display->layout_settings = array();
+  $display->panel_settings = array(
+    'style_settings' => array(
+      'default' => NULL,
+      'center' => NULL,
+      'top' => NULL,
+      'left' => NULL,
+      'right' => NULL,
+      'bottom' => NULL,
+    ),
+  );
+  $display->cache = array();
+  $display->title = 'Favorites for %user:name';
+  $display->uuid = 'ba847f8e-da37-4e83-a6b9-eb1596878320';
+  $display->storage_type = 'page_manager';
+  $display->storage_id = 'page_favorites_for_user__panel';
+  $display->content = array();
+  $display->panels = array();
+  $pane = new stdClass();
+  $pane->pid = 'new-3fd65c11-060c-43d1-a094-04e910baa59d';
+  $pane->panel = 'bottom';
+  $pane->type = 'views';
+  $pane->subtype = 'collection';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'override_pager_settings' => 0,
+    'use_pager' => 0,
+    'nodes_per_page' => '0',
+    'pager_id' => '0',
+    'offset' => '0',
+    'more_link' => 0,
+    'feed_icons' => 0,
+    'panel_args' => 1,
+    'link_to_view' => 0,
+    'args' => '',
+    'url' => '',
+    'display' => 'user_list_view',
+    'context' => array(
+      0 => 'argument_user_name_1.uid',
+    ),
+    'override_title' => 0,
+    'override_title_text' => '',
+    'override_title_heading' => 'h2',
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = '3fd65c11-060c-43d1-a094-04e910baa59d';
+  $display->content['new-3fd65c11-060c-43d1-a094-04e910baa59d'] = $pane;
+  $display->panels['bottom'][0] = 'new-3fd65c11-060c-43d1-a094-04e910baa59d';
+  $pane = new stdClass();
+  $pane->pid = 'new-e6d63f34-f8e8-4caa-9f7b-e0cf5c51f2ed';
+  $pane->panel = 'top';
+  $pane->type = 'custom';
+  $pane->subtype = 'custom';
+  $pane->shown = TRUE;
+  $pane->access = array();
+  $pane->configuration = array(
+    'admin_title' => 'Favorites by user',
+    'title' => '',
+    'body' => '<h1 class="title">Favorites <span class="title-by">by %user:name</span></h1>',
+    'format' => 'full_html',
+    'substitute' => 1,
+  );
+  $pane->cache = array();
+  $pane->style = array(
+    'settings' => NULL,
+  );
+  $pane->css = array();
+  $pane->extras = array();
+  $pane->position = 0;
+  $pane->locks = array();
+  $pane->uuid = 'e6d63f34-f8e8-4caa-9f7b-e0cf5c51f2ed';
+  $display->content['new-e6d63f34-f8e8-4caa-9f7b-e0cf5c51f2ed'] = $pane;
+  $display->panels['top'][0] = 'new-e6d63f34-f8e8-4caa-9f7b-e0cf5c51f2ed';
+  $display->hide_title = PANELS_TITLE_NONE;
+  $display->title_pane = '0';
+  $handler->conf['display'] = $display;
+  $page->default_handlers[$handler->name] = $handler;
+  $pages['favorites_for_user'] = $page;
+
+  return $pages;
+
+}

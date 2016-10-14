@@ -52,7 +52,6 @@
       });
 
       $('.sbac-favorites-collection-create').once('disable-click', function() {
-          var nid =
         $('.sbac-favorites-collection-create').click(function() {
           return false;
         });

@@ -60,6 +60,7 @@ function sbac_collections_views_view__collection__list_view__preprocess(&$vars) 
   ctools_include('ajax');
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
+  drupal_add_js(drupal_get_path('module', 'sbac_collections') . '/js/sbac_collections.list.js');
   drupal_add_library('system', 'drupal.ajax');
   drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }

@@ -429,7 +429,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
         .((0 != $collection->nid)
             ?' '.l('edit', 'sbac_collections/nojs/0/'.$collection->nid, array(
               'attributes' => array(
-                'class' => array('sbac-favorites-links-favorite', 'ctools-use-modal'),
+                'class' => array('sbac-favorites-links-favorite', 'ctools-use-modal', 'ctools-modal-collection-form-modal'),
               ),
             ))
             : ''
@@ -721,6 +721,7 @@ function sbac_favorites_get_favorite_link($uid, $id, $type) {
           'tiny',
           'sbac-favorites-collection-create',
           'ctools-use-modal',
+          'ctools-modal-collection-form-modal',
         ),
         'id' => 'favorites-create-btn',
         'favorites-create-btn-url' => url('sbac_collections/nojs/'.$id.'/0'),
@@ -756,9 +757,23 @@ function sbac_favorites_get_favorite_link($uid, $id, $type) {
   $div = drupal_render($popup);
 
   drupal_add_js(drupal_get_path("module", "sbac_favorites") . "/js/sbac_favorites.js");
+  drupal_add_js(drupal_get_path("module", "sbac_collections") . "/js/sbac_collections.ctools.js");
   drupal_add_css(drupal_get_path('module', 'sbac_favorites') . '/css/sbac_favorites.css');
   ctools_include('modal');
   ctools_modal_add_js();
+  drupal_add_js(array(
+    'collection-form-modal' => array(
+//      'closeText' => t('Close Window'),
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 800,
+        'height' => 600,
+//        'contentBottom' => 800,
+      ),
+      'animation' => 'fadeIn',
+      'modalTheme' => 'CtoolsSbacCollectionsModal',
+    ),
+  ), 'setting');
 
   $favorite_link = l($favorite_text, $_GET['q'], array(
     'attributes' => array(
@@ -832,6 +847,20 @@ function theme_sbac_favorites_resource_tabledrag($vars) {
     drupal_add_tabledrag($table_id, 'match', 'parent', 'favorite-item-pid', 'favorite-item-pid', 'favorite-item-id');
     drupal_add_tabledrag($table_id, 'order', 'sibling', 'favorite-item-weight');
     drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites_tabledrag.js');
+    drupal_add_js(drupal_get_path("module", "sbac_collections") . "/js/sbac_collections.ctools.js");
+    drupal_add_js(array(
+      'collection-form-modal' => array(
+  //      'closeText' => t('Close Window'),
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 800,
+          'height' => 600,
+  //        'contentBottom' => 800,
+        ),
+        'animation' => 'fadeIn',
+        'modalTheme' => 'CtoolsSbacCollectionsModal',
+      ),
+    ), 'setting');
   }
   else {
     $output = theme('sbac_favorites_no_favorites_resource');

@@ -22,6 +22,7 @@ features[field_instance][] = node-collection-field_grades
 features[field_instance][] = node-collection-field_subject
 features[node][] = collection
 features[page_manager_handlers][] = node_view__panel_context_f8ecfb3d-1ebf-4627-ab05-f9b1ad84b106
+features[page_manager_pages][] = favorites_for_user
 features[variable][] = comment_anonymous_collection
 features[variable][] = comment_collection
 features[variable][] = comment_default_mode_collection
