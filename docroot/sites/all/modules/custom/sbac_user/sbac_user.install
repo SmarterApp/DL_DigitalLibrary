@@ -223,7 +223,6 @@ function sbac_user_update_8002() {
  */
 function sbac_user_update_8003() {
   $modules = array(
-    'message_subscribe_email_frequency',
     'message_digest',
   );
   module_enable($modules);

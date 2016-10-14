@@ -156,6 +156,11 @@ function sbac_email_default_message_type() {
           "value" : "\\u003Cp\\u003EContributed Resources Goal Complete\\u003C\\/p\\u003E",
           "format" : "full_html",
           "safe_value" : "\\u003Cp\\u003EContributed Resources Goal Complete\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have met your goal for Resources Contributed in the Digital Library.\\u003C\\/p\\u003E\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have met your goal for Resources Contributed in the Digital Library.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -180,9 +185,9 @@ function sbac_email_default_message_type() {
           "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Contributor Most Active User Board.\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Contributed in the Digital Library. \\u003C\\/p\\u003E\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Contributor Most Active User Board.\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Contributed in the Digital Library. \\u003C\\/p\\u003E\\n\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -229,9 +234,9 @@ function sbac_email_default_message_type() {
           "safe_value" : "\\u003Cp\\u003EThe Resource you submitted requires revision.\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003EA resource you submitted needs revisions to be published.\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003EA resource you submitted needs revisions to be published.\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -283,9 +288,9 @@ function sbac_email_default_message_type() {
           "safe_value" : "\\u003Cp\\u003EA Resource requires revision\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003EA resource you submitted requires further revision before being published.\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003EA resource you submitted requires further revision before being published.\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -310,9 +315,9 @@ function sbac_email_default_message_type() {
           "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003ECongratulations! \\u0026nbsp;You have been added to the Educator Most Active Users Board!\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Star Ratings in the Digital Library. \\u003C\\/p\\u003E\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003ECongratulations! \\u0026nbsp;You have been added to the Educator Most Active Users Board!\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Star Ratings in the Digital Library. \\u003C\\/p\\u003E\\n\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -337,9 +342,9 @@ function sbac_email_default_message_type() {
           "safe_value" : "\\u003Cp\\u003EGoal completed\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003E\\u003Cspan style=\\u0022line-height: 19.2px;\\u0022\\u003ECongratulations! You have achieved your goal for resources rated!\\u003C\\/span\\u003E\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have met your goal for Star Ratings in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003E\\u003Cspan style=\\u0022line-height: 19.2px;\\u0022\\u003ECongratulations! You have achieved your goal for resources rated!\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have met your goal for Star Ratings in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -362,6 +367,11 @@ function sbac_email_default_message_type() {
           "value" : "\\u003Cp\\u003EA resource that you rejected has been revised\\u003C\\/p\\u003E",
           "format" : "full_html",
           "safe_value" : "\\u003Cp\\u003EA resource that you rejected has been revised\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA resource you reviewed was re-submitted by the contributor, and is ready for the next round of review.\\u003C\\/p\\u003E\\u003Cp\\u003EView this re-submitted resource in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA resource you reviewed was re-submitted by the contributor, and is ready for the next round of review.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this re-submitted resource in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -386,9 +396,9 @@ function sbac_email_default_message_type() {
           "safe_value" : "\\u003Cp\\u003EReviewed resources goal complete\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003ECongratulations! You have met your goal for resources reviewed.\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have met your goal for Resources Reviewed in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003ECongratulations! You have met your goal for resources reviewed.\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have met your goal for Resources Reviewed in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -413,9 +423,9 @@ function sbac_email_default_message_type() {
           "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Reviewer Most Active User Board.\\u003C\\/p\\u003E",
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Reviewed in the Digital Library. \\u003C\\/p\\u003E\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003Cp\\u003ECongratulations! You have been added to the Resource Reviewer Most Active User Board.\\u003C\\/p\\u003E\\n"
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Reviewed in the Digital Library. \\u003C\\/p\\u003E\\n\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
         }
       ]
     },

@@ -24,7 +24,6 @@ function sbac_user_field_group_info() {
     'weight' => '3',
     'children' => array(
       0 => 'message_subscribe_email',
-      1 => 'message_subscribe_email_freq',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

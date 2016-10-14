@@ -426,11 +426,11 @@ SQL;
           $wrapper = entity_metadata_wrapper('message', $message);
         
           // Replace explicit notification with subscription-based notification
-          // message_notify_send_message($message);
+          message_notify_send_message($message);
         
           if (module_exists('message_subscribe')) {
             // If Message-subscribe exists, let this example module use it.
-            message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+            //message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
           }
         }
 
@@ -455,11 +455,11 @@ SQL;
             $wrapper = entity_metadata_wrapper('message', $message);
           
             // Replace explicit notification with subscription-based notification
-            // message_notify_send_message($message);
+            message_notify_send_message($message);
           
             if (module_exists('message_subscribe')) {
               // If Message-subscribe exists, let this example module use it.
-              message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+            //  message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
             }
           }  
         }
@@ -504,11 +504,11 @@ SQL;
             $wrapper = entity_metadata_wrapper('message', $message);
           
             // Replace explicit notification with subscription-based notification
-            // message_notify_send_message($message);
+             message_notify_send_message($message);
           
             if (module_exists('message_subscribe')) {
               // If Message-subscribe exists, let this example module use it.
-              message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+//              message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
             }
           }
 
@@ -533,11 +533,11 @@ SQL;
               $wrapper = entity_metadata_wrapper('message', $message);
             
               // Replace explicit notification with subscription-based notification
-              // message_notify_send_message($message);
+              message_notify_send_message($message);
             
               if (module_exists('message_subscribe')) {
                 // If Message-subscribe exists, let this example module use it.
-                message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
+                //message_subscribe_send_message('user', $user_profile, $message, array('email' => $options));
               }
             }  
           }
@@ -735,7 +735,7 @@ SQL;
   $to_date = $dates[1];
 
   // anything with status = 1 and completed = 1 is completed.
-  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gatekeeper', ':type2' => 'post', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gate_keeper', ':type2' => 'post', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
   foreach ($result as $row) {
     $completed[] = $row;
   }

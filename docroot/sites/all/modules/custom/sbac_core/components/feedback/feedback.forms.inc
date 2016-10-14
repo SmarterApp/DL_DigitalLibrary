@@ -275,16 +275,24 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       sbac_resource_save_current_state($node);
 
       // Send email to user
-      $message = message_create('gatekeeper_reject', array('uid' => $node->uid));
+      // Add resource link to message
+      global $base_url;
+      $values = array(
+        'arguments' => array(
+          '!resource-link' => $base_url . '/node/' . $node->nid,
+        ),
+        'uid' => $node->uid,
+      );
+      $message = message_create('gatekeeper_reject', $values);
     
       $wrapper = entity_metadata_wrapper('message', $message);
     
       // Replace explicit notification with subscription-based notification
-      // message_notify_send_message($message);
+      message_notify_send_message($message);
     
       if (module_exists('message_subscribe')) {
         // If Message-subscribe exists, let this example module use it.
-        message_subscribe_send_message('user', $node, $message, array('email' => $options));
+        //message_subscribe_send_message('user', $node, $message, array('email' => $options));
       }
       $completed_review = TRUE;
       break;
@@ -553,16 +561,23 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       sbac_resource_save_current_state($node);
 
       // Send email to user
-      $message = message_create('post_reject', array('uid' => $node->uid));
+      global $base_url;
+      $values = array(
+        'arguments' => array(
+          '!resource-link' => $base_url . '/node/' . $node->nid,
+        ),
+        'uid' => $node->uid,
+      );
+      $message = message_create('post_reject', $values);
     
       $wrapper = entity_metadata_wrapper('message', $message);
     
       // Replace explicit notification with subscription-based notification
-      // message_notify_send_message($message);
+      message_notify_send_message($message);
     
       if (module_exists('message_subscribe')) {
         // If Message-subscribe exists, let this example module use it.
-        message_subscribe_send_message('user', $node, $message, array('email' => $options));
+        //message_subscribe_send_message('user', $node, $message, array('email' => $options));
       }
 
       $completed_review = TRUE;

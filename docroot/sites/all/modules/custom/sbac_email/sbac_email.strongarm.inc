@@ -430,7 +430,7 @@ function sbac_email_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'mail_system';
   $strongarm->value = array(
-    'default-system' => 'DefaultMailSystem',
+    'default-system' => 'SmtpMailSystem',
     'user_import' => 'UserImportMailSystem',
     'maillog' => 'MaillogMailSystem',
   );
@@ -510,7 +510,7 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'reroute_email_address';
-  $strongarm->value = 'dl-admin@mailinator.com';
+  $strongarm->value = 'elevinson@pcgus.com';
   $export['reroute_email_address'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -538,7 +538,7 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'update_last_email_notification';
-  $strongarm->value = 1431039174;
+  $strongarm->value = 1476289944;
   $export['update_last_email_notification'] = $strongarm;
 
   $strongarm = new stdClass();
