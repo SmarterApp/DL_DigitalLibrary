@@ -24,6 +24,28 @@ function sbac_collections_theme($existing, $type, $theme, $path) {
     ),
     'path' => drupal_get_path('module', 'sbac_collections')
   );
+  $items['views_view_fields__collection__user_list_view'] = array(
+    'template' => 'templates/views-view-fields--collection--list-view',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_collections_views_view_fields__collection__list_view__preprocess'
+    ),
+    'path' => drupal_get_path('module', 'sbac_collections')
+  );
+  $items['views_view__collection__user_list_view'] = array(
+    'template' => 'templates/views-view--collection--list-view',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_collections_views_view__collection__list_view__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_collections')
+  );
 
   return $items;
 }
@@ -99,7 +121,6 @@ function sbac_collections_views_view_fields__collection__list_view__preprocess(&
   }
   global $base_url;
   $path = $vars['fields']['path']->content;
-  $path = str_replace('<span class="field-content">', '', $path);
-  $path = str_replace('</span>', '', $path);
+  $path = str_replace(array('<span class="field-content">', '</span>'), array('', ''), $path);
   $vars['fields']['path']->content = $base_url . $path;
 }

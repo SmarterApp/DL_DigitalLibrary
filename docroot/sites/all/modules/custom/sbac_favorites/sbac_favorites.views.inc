@@ -77,6 +77,14 @@ function sbac_favorites_views_data() {
     'argument' => array(
       'handler' => 'views_handler_argument',
     ),
+    'relationship' => array(
+      'base' => 'users',
+      'base field' => 'uid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Favoritor'),
+      'title' => t('Favoritor'),
+      'help' => t('The user who added the favorite'),
+    ),
   );
 
   // Collection ID field.
