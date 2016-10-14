@@ -128,18 +128,18 @@ function sbac_favorites_ajax_click($id = null, $uid = null, $cid = null, $type =
   }
 
   if (!$_POST['id'] || !$_POST['uid'] || !$_POST['type']) {
-    exit;
+    drupal_exit();
   }
   // Ensure the user making the ajax request is the user who is logged in.
   if ($user->uid != $_POST['uid']) {
-    exit;
+    drupal_exit();
   }
 
   $cid = check_plain(array_key_exists('cid', $_POST) ? $_POST['cid'] : '0');
   if ('0' !== $cid) {
     $collection = sbac_favorites_get_entity_by_type($cid, 'node');
     if ('collection' !== $collection->type || $user->uid !== $collection->uid) {
-      exit;
+      drupal_exit();
     }
   }
 
@@ -172,10 +172,10 @@ function sbac_favorites_ajax_click($id = null, $uid = null, $cid = null, $type =
     unset($_SESSION['favorites']['count']);
     $output = array();
     print drupal_json_encode($output);
-    exit;
+    drupal_exit();
   }
   else {
-    exit;
+    drupal_exit();
   }
 }
 
@@ -187,18 +187,18 @@ function sbac_favorites_ajax_click($id = null, $uid = null, $cid = null, $type =
 function sbac_favorites_ajax_delete() {
   global $user;
   if (!$_POST['id'] || !$_POST['uid'] || !$_POST['type']) {
-    exit;
+    drupal_exit();
   }
   // Ensure the user making the ajax request is the user who is logged in.
   if ($user->uid != $_POST['uid']) {
-    exit;
+    drupal_exit();
   }
 
   $cid = check_plain(array_key_exists('cid', $_POST) ? $_POST['cid'] : '0');
   if ('0' !== $cid) {
     $collection = sbac_favorites_get_entity_by_type($cid, 'node');
     if ('collection' !== $collection->type || $user->uid !== $collection->uid) {
-      exit;
+      drupal_exit();
     }
   }
 
@@ -212,7 +212,7 @@ function sbac_favorites_ajax_delete() {
     ->execute();
   $output = array();
   print drupal_json_encode($output);
-  exit;
+  drupal_exit();
 }
 
 /**
@@ -414,7 +414,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
   foreach ($collections as $collection) {
     $content[$collection->nid . ':0:' . $account->uid . ':' . 'collection'] = array(
       'name' => array(
-        '#markup' => '<span class="expander"></span> '.$collection->title,
+        '#markup' => '<span class="expander"></span> <span class="favorite-title">'.$collection->title.'</span>',
       ),
       'links' => array(
         '#markup' => l('view', (0 != $collection->nid)
@@ -568,11 +568,11 @@ function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
     }
 
     if ('node' !== $type && 'collection' !== $type) {
-      exit;
+      drupal_exit();
     }
 
     if ($user->uid != $uid) {
-      exit;
+      drupal_exit();
     }
 
     db_merge('sbac_favorites')

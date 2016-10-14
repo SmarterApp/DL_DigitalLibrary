@@ -17,12 +17,18 @@ function sbac_favorites_views_data() {
   // Join.
   $data['sbac_favorites']['table']['join'] = array(
     'users' => array(
+      'left_table' => 'users',
       'left_field' => 'uid',
       'field' => 'uid',
     ),
     'node' => array(
+      'left_table' => 'node',
       'left_field' => 'nid',
-      'field' => 'cid',
+      'field' => 'id',
+      'type' => 'LEFT',
+//      'extra' => array(
+//        array('field' => 'type', 'value' => 'node', 'operator' => '='),
+//      ),
     ),
   );
 
@@ -40,6 +46,9 @@ function sbac_favorites_views_data() {
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument',
     ),
     'relationship' => array(
       'base' => 'node',
@@ -65,6 +74,9 @@ function sbac_favorites_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'argument' => array(
+      'handler' => 'views_handler_argument',
+    ),
   );
 
   // Collection ID field.
@@ -81,6 +93,9 @@ function sbac_favorites_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'argument' => array(
+      'handler' => 'views_handler_argument',
+    ),
     'relationship' => array(
       'base' => 'node',
       'base field' => 'nid',
@@ -88,6 +103,25 @@ function sbac_favorites_views_data() {
       'label' => t('Collection'),
       'title' => t('Collection'),
       'help' => t('Collection for the Favorited item'),
+    ),
+  );
+
+  // Type fields
+  $data['sbac_favorites']['type'] = array(
+    'title' => t('Type'),
+    'help' => t('Type'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
     ),
   );
 

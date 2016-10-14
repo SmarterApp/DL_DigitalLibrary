@@ -52,6 +52,10 @@ function sbac_collections_add_collection_callback($js = false, $resourceId = nul
 
   if ($nid) {
     $node = node_load($nid);
+    if ($user->uid !== $node->uid) {
+      drupal_access_denied();
+      drupal_exit();
+    }
   } else {
     $node = (object) array(
       'uid' => $user->uid,
@@ -70,9 +74,28 @@ function sbac_collections_add_collection_callback($js = false, $resourceId = nul
   ctools_include('ajax');
 
   if (!empty($_POST['op']) && 'Delete' === $_POST['op']) {
-    // @TODO: Implement delete
-    var_dump('DELETE');
-    return;
+    // Delete the collection from the sbac_favorites table
+    db_delete('sbac_favorites')
+      ->condition('uid', $user->uid)
+      ->condition('cid', $nid)
+      ->condition('type', 'node')
+      ->execute();
+    db_delete('sbac_favorites')
+      ->condition('uid', $user->uid)
+      ->condition('id', $nid)
+      ->condition('type', 'collection')
+      ->execute();
+
+    // Delete the collection node
+    node_delete($nid);
+
+    // Update display
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    $output[] = ajax_command_remove('tr.draggable:has(.favorite-item-id[value='.$nid.']), tr.draggable:has(.sbac-favorites-delete-favorite[data-cid='.$nid.'])');
+    $output[] = ajax_command_restripe('table.sbac-favorites-resource-table-drag-drop');
+    print ajax_render($output);
+    drupal_exit();
   }
 
 
@@ -84,34 +107,61 @@ function sbac_collections_add_collection_callback($js = false, $resourceId = nul
   $form_state['build_info']['args'] = array($node);
   $output = ctools_modal_form_wrapper('collection_node_form', $form_state);
 
-  // ??
   if (!empty($form_state['executed'])) {
-    $output = array();
+    // swallow created/updated message
+    drupal_get_messages('status');
 
-    if (!empty($resourceId)) {
-      $collection = node_load($form_state['nid']);
-      sbac_favorites_ajax_click($resourceId, $user->uid, $form_state['nid']);
-      $element = array(
-        '#markup' => l(
-          $collection->title,
-          url('node/' . $resourceId),
-          array(
-            'attributes' => array(
-              'class' => array(
-                'sbac-favorites-collection',
-                'sbac-favorites-collection-collection',
-                'sbac-favorite-yes',
+    $output = array();
+    $collection = node_load($form_state['nid']);
+
+    if (empty($nid)) {
+      // New collection
+      // Add collection to favorites table
+      $obj = new stdClass();
+      $obj->id = $form_state['nid'];
+      $obj->uid = $user->uid;
+      $obj->cid = 0;
+      $obj->type = 'collection';
+      $obj->weight = -1000;
+      $obj->created = time();
+      drupal_write_record('sbac_favorites', $obj);
+
+      // Add resource to collection
+      if (!empty($resourceId)) {
+        $obj = new stdClass();
+        $obj->id = $resourceId;
+        $obj->uid = $user->uid;
+        $obj->cid = $form_state['nid'];
+        $obj->type = 'node';
+        $obj->weight = -1000;
+        $obj->created = time();
+        drupal_write_record('sbac_favorites', $obj);
+
+        // Add new collection to on-screen list
+        $element = array(
+          '#markup' => l(
+            $collection->title,
+            url('node/' . $resourceId),
+            array(
+              'attributes' => array(
+                'class' => array(
+                  'sbac-favorites-collection',
+                  'sbac-favorites-collection-collection',
+                  'sbac-favorite-yes',
+                ),
+                'data-cid' => $collection->nid,
               ),
-              'data-cid' => $collection->nid,
             )
-          )
-        ),
-      );
-      $html = drupal_render($element);
-      $output[] = ajax_command_after('.sbac-favorites-collection-list .sbac-favorites-collection-favorites', $html);
+          ),
+        );
+        $html = drupal_render($element);
+        $output[] = ajax_command_after('.sbac-favorites-collection-list .sbac-favorites-collection-favorites', $html);
+      }
+    } else {
+      // Update collection
+      $output[] = ajax_command_replace('tr.draggable:has(.favorite-item-id[value='.$nid.']) span.favorite-title', '<span class="favorite-title">'.$collection->title.'</span>');
     }
     /*
-     *
     ob_start();
     var_dump($form_state);
     $out = ob_get_contents();
@@ -120,12 +170,6 @@ function sbac_collections_add_collection_callback($js = false, $resourceId = nul
     */
 
     $output[] = ctools_modal_command_dismiss();
-
-    // Add new collection to top of list
-  } elseif (!empty($form_state['ajax_commands'])) {
-    $output = array();
-    $output[] = ctools_modal_command_dismiss();
-    $output[] = $form_state['ajax_commands'];
   }
 
   print ajax_render($output);
