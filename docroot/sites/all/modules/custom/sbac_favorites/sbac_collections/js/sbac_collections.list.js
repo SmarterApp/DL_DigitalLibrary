@@ -11,6 +11,8 @@
           $(this).next('ul').removeClass('open');
         }
       );
+
+      $('.view-display-id-user_list_view').addClass('view-display-id-list_view');
     }
   };
 })(jQuery);

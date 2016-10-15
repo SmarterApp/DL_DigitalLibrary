@@ -419,7 +419,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
       'links' => array(
         '#markup' => l('view', (0 != $collection->nid)
               ? 'node/'.$collection->nid
-              : 'favorite_collection/'.$account->uid,
+              : 'favorites/'.$account->name,
           array(
             'attributes' => array(
               'class' => array('sbac-favorites-links-favorite'),
@@ -880,12 +880,40 @@ function sbac_favorites_user_logout($account) {
 }
 
 function sbac_favorites_page_favorites($uid) {
+  /*
   if (!is_numeric($uid)) {
     drupal_access_denied();
     return;
   }
+  */
 
   $user = user_load($uid);
+  //$user = user_load_by_name($uid);
+  module_load_include("inc", "page_manager", "plugins/tasks/page");
+
+  $subtask_id = "favorites_for_user";
+  $output = page_manager_page_execute($subtask_id, $user->uid);
+  return render($output);
+
+
+  $minipanel = panels_mini_load('favorites_for_user');
+  if (empty($minipanel) || empty($minipanel->display)) {
+    watchdog('sbac_favorites', 'Unable to load minipanel');
+  } else if (!empty($minipanel->display)) {
+    $display = $minipanel->display;
+    $display->args = array('User' => $user);
+    var_dump($display);
+
+    $output = panels_render_display($display);
+
+    var_dump($output);
+  }
+
+  exit();
+
+
+
+
   $name = array();
   if (sbac_user_privacy_check('field_first_name', $user)) {
     $fname = field_get_items('user', $user, 'field_first_name');
