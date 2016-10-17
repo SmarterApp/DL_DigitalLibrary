@@ -65,6 +65,7 @@ features[user_permission][] = send arbitrary files
 features[user_permission][] = unflag email
 features[user_permission][] = unflag subscribe_term
 features[user_permission][] = use text format filtered_html
+features[variable][] = elysia_cron_script
 features[variable][] = field_bundle_settings_message__contributed_goal_complete
 features[variable][] = field_bundle_settings_message__contributed_leaderboard
 features[variable][] = field_bundle_settings_message__daily_email

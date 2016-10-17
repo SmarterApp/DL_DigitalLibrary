@@ -13,6 +13,14 @@ function sbac_email_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'elysia_cron_script';
+  $strongarm->value = '0 0 * * 0 sbac_email_weekly_cron();
+* 19 * * * sbac_email_daily_cron();';
+  $export['elysia_cron_script'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'field_bundle_settings_message__contributed_goal_complete';
   $strongarm->value = array(
     'view_modes' => array(),
