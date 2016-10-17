@@ -52,6 +52,44 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
+  // 'comment-comment_node_topic-field_topic_comment_collection'.
+  $field_instances['comment-comment_node_topic-field_topic_comment_collection'] = array(
+    'bundle' => 'comment_node_topic',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'entityreference',
+        'settings' => array(
+          'links' => 1,
+          'view_mode' => 'teaser',
+        ),
+        'type' => 'entityreference_entity_view',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'comment',
+    'field_name' => 'field_topic_comment_collection',
+    'label' => 'Topic Comment Collection',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+        'label_help_description' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance:
   // 'comment-comment_node_topic-field_topic_comment_files'
   $field_instances['comment-comment_node_topic-field_topic_comment_files'] = array(
     'bundle' => 'comment_node_topic',
@@ -1976,6 +2014,7 @@ function sbac_forum_field_default_field_instances() {
   t('States');
   t('Student Populations');
   t('Subjects and Domains');
+  t('Topic Comment Collection');
   t('Topic Comment Files');
   t('Topic Comment Links');
   t('Topic Count');
