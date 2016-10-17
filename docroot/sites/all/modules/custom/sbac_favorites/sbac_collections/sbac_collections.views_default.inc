@@ -242,6 +242,8 @@ function sbac_collections_views_default_views() {
 
   /* Display: User List View */
   $handler = $view->new_display('block', 'User List View', 'user_list_view');
+  $handler->display->display_options['defaults']['css_class'] = FALSE;
+  $handler->display->display_options['css_class'] = 'view-display-id-list_view';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['defaults']['style_options'] = FALSE;

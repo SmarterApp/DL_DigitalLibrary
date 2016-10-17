@@ -314,7 +314,7 @@ function sbac_collections_default_page_manager_pages() {
   $display->content = array();
   $display->panels = array();
   $pane = new stdClass();
-  $pane->pid = 'new-3fd65c11-060c-43d1-a094-04e910baa59d';
+  $pane->pid = 'new-01966e8b-9afa-4f92-9ec0-58e9c5e14b47';
   $pane->panel = 'bottom';
   $pane->type = 'views';
   $pane->subtype = 'collection';
@@ -344,13 +344,16 @@ function sbac_collections_default_page_manager_pages() {
   $pane->style = array(
     'settings' => NULL,
   );
-  $pane->css = array();
+  $pane->css = array(
+    'css_id' => '',
+    'css_class' => 'digital-library page-my-resources list-view',
+  );
   $pane->extras = array();
   $pane->position = 0;
   $pane->locks = array();
-  $pane->uuid = '3fd65c11-060c-43d1-a094-04e910baa59d';
-  $display->content['new-3fd65c11-060c-43d1-a094-04e910baa59d'] = $pane;
-  $display->panels['bottom'][0] = 'new-3fd65c11-060c-43d1-a094-04e910baa59d';
+  $pane->uuid = '01966e8b-9afa-4f92-9ec0-58e9c5e14b47';
+  $display->content['new-01966e8b-9afa-4f92-9ec0-58e9c5e14b47'] = $pane;
+  $display->panels['bottom'][0] = 'new-01966e8b-9afa-4f92-9ec0-58e9c5e14b47';
   $pane = new stdClass();
   $pane->pid = 'new-e6d63f34-f8e8-4caa-9f7b-e0cf5c51f2ed';
   $pane->panel = 'top';
