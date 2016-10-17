@@ -193,6 +193,33 @@ function sbac_email_default_message_type() {
     },
     "rdf_mapping" : []
   }');
+  $items['daily_email'] = entity_import('message_type', '{
+    "name" : "daily_email",
+    "description" : "Daily email",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EYour daily Digital Library email\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EYour daily Digital Library email\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "!message-view",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003E!message-view\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
   $items['forum_flagged'] = entity_import('message_type', '{
     "name" : "forum_flagged",
     "description" : "Forum Flagged",
@@ -350,6 +377,33 @@ function sbac_email_default_message_type() {
     },
     "rdf_mapping" : []
   }');
+  $items['resource_ready_for_review'] = entity_import('message_type', '{
+    "name" : "resource_ready_for_review",
+    "description" : "Resource Ready for Review",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EResource Ready for Review\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EResource Ready for Review\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EThere are new resources available for review in the Digital Library. View resources matching your expertise that are ready for review by clicking \\u003Ca href=\\u0022[site:url]\\/resource-review\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThere are new resources available for review in the Digital Library. View resources matching your expertise that are ready for review by clicking \\u003Ca href=\\u0022[site:url]\\/resource-review\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
   $items['resource_resubmitted'] = entity_import('message_type', '{
     "name" : "resource_resubmitted",
     "description" : "Resource Resubmitted",
@@ -453,6 +507,33 @@ function sbac_email_default_message_type() {
           "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EOn [current-date:custom:F j \\\\a\\\\t g:i a], [message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote:\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; [message:field-comment-ref:body]\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EView this discussion post in the Digital Library by clicking \\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003Ehere.\\u003C\\/a\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for \\u003Ca href=\\u0022[message:user:url:absolute]\\u0022\\u003E[message:user:mail].\\u003C\\/a\\u003E You are receiving this email because you are subscribed to the discussion [message:field-comment-ref:node:title]\\u0026nbsp;and your email notification setting is \\u0022On.\\u0022 Click \\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E and select the \\u0022Unsubscribe\\u0022 link to unsubscribe to this discussion. Change your email notification settings by clicking \\u003Ca href=\\u0022[message:user:url:absolute]#edit-sbac-user-email-options\\u0022\\u003Ehere.\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
           "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u003Cspan style=\\u0022font-family: inherit; font-size: 1em; line-height: 1.2;\\u0022\\u003EOn [current-date:custom:F j \\\\a\\\\t g:i a], [message:field-comment-ref:author:field-first-name] [message:field-comment-ref:author:field_last_name] wrote:\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; \\u0026nbsp; [message:field-comment-ref:body]\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this discussion post in the Digital Library by clicking \\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003Ehere.\\u003C\\/a\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003E\\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for \\u003Ca href=\\u0022[message:user:url:absolute]\\u0022\\u003E[message:user:mail].\\u003C\\/a\\u003E You are receiving this email because you are subscribed to the discussion [message:field-comment-ref:node:title]\\u0026nbsp;and your email notification setting is \\u0022On.\\u0022 Click \\u003Ca href=\\u0022[message:field-comment-ref:node:url]\\u0022\\u003Ehere\\u003C\\/a\\u003E and select the \\u0022Unsubscribe\\u0022 link to unsubscribe to this discussion. Change your email notification settings by clicking \\u003Ca href=\\u0022[message:user:url:absolute]#edit-sbac-user-email-options\\u0022\\u003Ehere.\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['weekly_email'] = entity_import('message_type', '{
+    "name" : "weekly_email",
+    "description" : "Weekly Email",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EYour weekly Digital Library Email\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EYour weekly Digital Library Email\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "!message-view",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003E!message-view\\u003C\\/p\\u003E\\n"
         }
       ]
     },
