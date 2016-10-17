@@ -431,6 +431,60 @@ function sbac_email_default_message_type() {
     },
     "rdf_mapping" : []
   }');
+  $items['review_reminder'] = entity_import('message_type', '{
+    "name" : "review_reminder",
+    "description" : "Review Reminder",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EYou have a Review in progress\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EYou have a Review in progress\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EYou have a resource review in process that has not been completed.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EComplete your review in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EYou have a resource review in process that has not been completed.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EComplete your review in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['review_timeout'] = entity_import('message_type', '{
+    "name" : "review_timeout",
+    "description" : "Review Timeout",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "Review has timed out",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EReview has timed out\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EIt has been 72 hours since you started a review on !resource-link.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EYour review has been cancelled so another reviewer could review it.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EIt has been 72 hours since you started a review on !resource-link.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EYour review has been cancelled so another reviewer could review it.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
   $items['reviewed_goal_complete'] = entity_import('message_type', '{
     "name" : "reviewed_goal_complete",
     "description" : "Reviewed Goal Complete",

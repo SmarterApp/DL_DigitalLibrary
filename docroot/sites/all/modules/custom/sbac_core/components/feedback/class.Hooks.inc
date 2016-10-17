@@ -468,6 +468,26 @@ class Hooks extends \devtools\Hooks {
       $task->addTriggeringUser(1);
       $task->save();
 
+      // Send email notification
+      $user_profile = user_load($row->uid);
+      global $base_url;
+      $values = array(
+        'arguments' => array(
+          '!resource-link' => $base_url . '/node/' . $row->node_id,
+        ),
+        'uid' => $row->uid,
+      );
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+        // Create message
+        $message = message_create('review_reminder', $values);
+        $wrapper = entity_metadata_wrapper('message', $message);
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));
+        }
+      }
       // set the reminder flag for this feedback so that its only sent
       // once at the 24 hour mark.
       $query = 'UPDATE {eck_feedback} SET reminder = 1 WHERE id = :id';
@@ -503,6 +523,26 @@ class Hooks extends \devtools\Hooks {
         $task->addOwningUser($row->uid);
         $task->addTriggeringUser(1);
         $task->save();
+        // Send email notification
+        $user_profile = user_load($row->uid);
+        global $base_url;
+        $values = array(
+          'arguments' => array(
+            '!resource-link' => $node->title,
+          ),
+          'uid' => $row->uid,
+        );
+        if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+          // Create message
+          $message = message_create('review_timeout', $values);
+          $wrapper = entity_metadata_wrapper('message', $message);
+          if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+            // send email
+            message_notify_send_message($message);
+            // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+            message_delete_multiple(array($message->mid));
+          }
+        }
         // if this is an incomplete gate keeper, then the resource won't have any reviews
         // and we can safely bump it back to draft; we don't need to worry about
         // review entities, because to have one of those in the system, the resource must
