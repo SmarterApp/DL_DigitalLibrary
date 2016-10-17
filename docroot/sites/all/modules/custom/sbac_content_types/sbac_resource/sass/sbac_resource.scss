@@ -1577,6 +1577,12 @@ html.js .category-hide {
     position: relative;
     top: -2px;
 	}
+
+  .page-favorites & {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
 }
 
 .preview{

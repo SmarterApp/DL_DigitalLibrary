@@ -590,7 +590,7 @@ function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
  * @param $vars
  */
 function sbac_favorites_preprocess_page(&$vars) {
-  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources') {
+  if (in_array(arg(0), array('digital-library-resources', 'my-resources', 'favorites'))) {
     drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
     drupal_add_css(drupal_get_path('module', 'sbac_favorites') . '/css/sbac_favorites.css');
   }

@@ -1639,6 +1639,12 @@ html.js .category-hide {
   top: -2px;
 }
 
+.page-favorites .block-sbac-resource-sbac-resource-back-button {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
 /* line 1582, ../sass/sbac_resource.scss */
 .preview {
   margin-top: 1em;
@@ -3869,5 +3875,6 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
 .node-type-collection-view .pane-node-field-subject {
   padding-left: 25px;
 }
-.node-type-collection-view .pane-node-field-subject {
+.node-type-collection-view .pane-node-field-grade {
   padding-right: 25px;
+}
