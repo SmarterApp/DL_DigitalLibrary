@@ -79,7 +79,7 @@ function sbac_collections_views_view_fields__collection__list_view__preprocess(&
     $vars['fields']['file-type-icon'] = $image_assets['file-type-icon'];
   }
 
-  $vars['fields']['nid'] = $vars['fields']['nid_1'];
+//  $vars['fields']['nid'] = $vars['fields']['nid_1'];
   $variables = _sbac_resource_digital_library_links($vars['fields']);
 //  $variables = _sbac_resource_my_resources_links($vars['fields'], $vars['row']);
 
