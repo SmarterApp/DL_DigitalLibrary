@@ -11,6 +11,15 @@
     text-shadow: none;
 }
 
+.section-favorites .favorite-title {
+    padding-left: 25px;
+
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-blue.png) no-repeat 0 2px;
+}
+.section-favorites .collection-favorites .favorite-title {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-favorite-red.png) no-repeat 0 1px;
+}
+
 .section-favorites a.sbac-favorites-delete-favorite {
     opacity: 100;
     color: #0583AC;
