@@ -37,3 +37,12 @@ $conf['image_allow_insecure_derivatives'] = TRUE;
 
 $conf['file_private_path'] = '/var/www/html/docroot/sites/default/files-private';
 $conf['file_temporary_path'] = '/tmp';
+
+/**
+ * SBAC SSO Settings.
+ */
+define('SBAC_SSO_URL', 'http://openam.daodao.online:8080/auth/SSORedirect/metaAlias/sbac/idp');
+define('SBAC_SSO_DESTROY_SESSION_URL', 'http://openam.daodao.online:8080/auth/UI/Logout');
+define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'http://openam.daodao.online:8080/auth/IDPSloRedirect/metaAlias/sbac/idp');
+
+$conf['fast_404_HTML_error_all_paths'] = FALSE;

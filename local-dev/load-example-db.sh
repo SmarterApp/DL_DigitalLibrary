@@ -5,7 +5,7 @@ cd $(dirname $0)
 . ./.env
 
 if [ ! -f cache/sbac.sql.gz ]; then
-  docker run --rm -v "$(pwd)/cache:/dls:rw" appropriate/curl -fsSL -o /dls/sbac.sql.gz https://bitbucket.org/pcgsbacdev/sample-db/raw/4d22ba06bb7a5544ea81a32141ab54afdd1cb345/sbac.sql.gz
+  docker run --rm -v "$(pwd)/cache:/dls:rw" appropriate/curl -fsSL -o /dls/sbac.sql.gz https://bitbucket.org/pcgsbacdev/sample-db/raw/4351aacd041c11a80887191be8c9d27c4f3844d2/sbac.sql.gz
   if [ ! -f cache/sbac.sql.gz ]; then
     echo 'Error downloading sql file'
     exit 1
