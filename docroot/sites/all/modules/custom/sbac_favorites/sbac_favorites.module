@@ -799,7 +799,9 @@ function sbac_favorites_get_favorite_link($uid, $id, $type) {
 function theme_sbac_favorites_resource_tabledrag($vars) {
   $form = $vars['form'];
   $rows = array();
+  $lastCollection = 'collection';
   foreach (element_children($form['favorites']) as $key) {
+    $rows[$key] = array();
     $element = & $form['favorites'][$key];
 
     $class = array();
@@ -807,25 +809,32 @@ function theme_sbac_favorites_resource_tabledrag($vars) {
     $indent = '';
     if ($element['type']['#value'] === 'collection') {
       $class[] = 'tabledrag-root';
-      $class[] = 'expanded';
       if (preg_match('/^0:0:/', $key)) {
         $class[] = 'collection-favorites';
+        $lastCollection = 'favorites';
+        $class[] = 'expanded';
+      } else {
+        $lastCollection = 'collection';
+        $class[] = 'collapsed';
       }
     } else {
       $class[] = 'tabledrag-leaf';
       $indent = theme('indentation', array('size' => 1));
+      if ('collection' === $lastCollection) {
+        $rows[$key]['style'] = 'display: none;';
+      }
     }
     unset($element['type']);
 
-    $row = array('data' => array(
+    $data = array(
       'name' => $indent.drupal_render($element['name']),
       'links' => drupal_render($element['links']),
       'id' => drupal_render($element['id']),
       'pid' => drupal_render($element['pid']),
       'weight' => drupal_render($element['weight']),
-    ));
+    );
 
-    $rows[$key] = $row;
+    $rows[$key]['data'] = $data;
     $rows[$key]['class'] = $class;
   }
   if (!empty($rows)) {

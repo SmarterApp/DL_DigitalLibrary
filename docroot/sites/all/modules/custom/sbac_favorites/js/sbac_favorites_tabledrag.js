@@ -44,16 +44,18 @@
     Drupal.tableDrag.prototype.initColumns = function () {
         this._initColumns();
 
-        $('tr.tabledrag-root .expander').toggle(
-            function(){
-                var target = $($(this).closest('tr.tabledrag-root'));
-                target.nextUntil(':not(tr.tabledrag-leaf)').hide();
-                target.removeClass('expanded').addClass('collapsed');
-            },
-            function(){
-                var target = $($(this).closest('tr.tabledrag-root'));
-                target.nextUntil(':not(tr.tabledrag-leaf)').show();
-                target.removeClass('collapsed').addClass('expanded');
+        $('tr.tabledrag-root .expander').on('click',
+            function(e){
+                var target = $($(e.target).closest('tr.tabledrag-root'));
+                if (target.hasClass('expanded')) {
+                    target.nextUntil(':not(tr.tabledrag-leaf)').hide();
+                    target.removeClass('expanded').addClass('collapsed');
+                } else {
+                    target.nextUntil(':not(tr.tabledrag-leaf)').show();
+                    target.removeClass('collapsed').addClass('expanded');
+                }
+
+                e.stopPropagation();
             }
         );
     };
