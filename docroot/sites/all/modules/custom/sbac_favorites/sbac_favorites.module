@@ -386,6 +386,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     '#theme' => 'sbac_favorites_resource_tabledrag',
   );
 
+
   $fav_collection = new \stdClass();
   $fav_collection->nid = 0;
   $fav_collection->id = 0;
@@ -542,6 +543,62 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
 
   ctools_include('modal');
   ctools_modal_add_js();
+
+  $form['#weight'] = 10;
+
+  $createButton = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('sbac-favorites-collection-create-wrapper'),
+    ),
+    'content' => array(
+      '#type' => 'markup',
+      '#markup' => l(t('Create a Collection'), url('sbac_collections/nojs/0/0'), array(
+        'attributes' => array(
+          'class' => array(
+            'button',
+            'sbac-favorites-collection-create',
+            'ctools-use-modal',
+            'ctools-modal-collection-form-modal',
+          ),
+        )
+      )),
+    ),
+    /*
+    '#type' => 'form',
+    '#action' => url('sbac_collections/nojs'),
+    '#method' => 'get',
+    '#weight' => -9999,
+    '#attributes' => array(
+      'style' => array(
+        'text-align: right;',
+      )
+    ),
+    'content' => array(
+      '#type' => 'button',
+      '#button_type' => 'no-submit',
+      '#name' => 'sbac-favorites-collection-create',
+      '#value' => t('Create a Collection'),
+      '#weight' => -100,
+      '#attributes' => array(
+        'class' => array(
+          'sbac-favorites-collection-create',
+          'ctools-use-modal',
+          'ctools-modal-collection-form-modal',
+        ),
+        'onclick' => 'return false;',
+        'id' => 'favorites-create-btn',
+        'favorites-create-btn-url' => url('sbac_collections/nojs'),
+      ),
+    ),
+    */
+  );
+
+  $form = array(
+    'top' => $createButton,
+    'table' => $form,
+  );
+
 
   return $form;
 }

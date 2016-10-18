@@ -4,6 +4,10 @@
   Drupal.behaviors.sbac_collections = {
     attach: function (context, settings) {
       $('.node-collection-form button.secondary[value=Continue]').removeClass('secondary');
+    },
+
+    reload: function() {
+      location.reload();
     }
   };
 

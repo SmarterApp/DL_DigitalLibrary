@@ -1,4 +1,16 @@
 /* Profile page */
+.section-favorites .sbac-favorites-collection-create-wrapper {
+    text-align: right;
+}
+.section-favorites a.sbac-favorites-collection-create {
+    color: #006298;
+    background-color: #bfd8e5;
+    border-color: #77abc8;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: none;
+}
+
 .section-favorites a.sbac-favorites-delete-favorite {
     opacity: 100;
     color: #0583AC;

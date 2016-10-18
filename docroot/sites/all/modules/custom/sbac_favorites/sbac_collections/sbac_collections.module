@@ -159,6 +159,9 @@ function sbac_collections_add_collection_callback($js = false, $resourceId = nul
         );
         $html = drupal_render($element);
         $output[] = ajax_command_after('.sbac-favorites-collection-list .sbac-favorites-collection-favorites', $html);
+      } else {
+        // Reload page
+        $output[] = ajax_command_callback('sbac_collections', 'reload');
       }
     } else {
       // Update collection
