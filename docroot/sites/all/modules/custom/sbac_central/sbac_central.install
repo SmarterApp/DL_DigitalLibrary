@@ -1171,6 +1171,7 @@ function sbac_central_update_7096() {
     'panels',
     'panels_node',
     'panels_mini',
+    'page_manager',
     'sbac_collections',
   );
   module_enable($modules);
