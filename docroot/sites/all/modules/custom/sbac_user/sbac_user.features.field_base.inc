@@ -52,6 +52,33 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_email_preference'.
+  $field_bases['field_email_preference'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_email_preference',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'never' => 'Never',
+        'immediately' => 'Real Time',
+        'daily' => 'Daily',
+        'weekly' => 'Weekly',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_feedback_flag'.
   $field_bases['field_feedback_flag'] = array(
     'active' => 1,

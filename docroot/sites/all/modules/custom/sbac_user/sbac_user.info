@@ -47,6 +47,7 @@ features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
 features[field_base][] = field_alternate_email_address
 features[field_base][] = field_district_name
+features[field_base][] = field_email_preference
 features[field_base][] = field_feedback_flag
 features[field_base][] = field_first_name
 features[field_base][] = field_grade_level_s_

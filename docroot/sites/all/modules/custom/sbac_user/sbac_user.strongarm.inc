@@ -111,7 +111,7 @@ function sbac_user_strongarm() {
           'weight' => '-6',
         ),
         'timezone' => array(
-          'weight' => '7',
+          'weight' => '6',
         ),
         'picture' => array(
           'weight' => '-9',
@@ -126,7 +126,7 @@ function sbac_user_strongarm() {
           'weight' => '1',
         ),
         'redirect' => array(
-          'weight' => '30',
+          'weight' => '17',
         ),
       ),
       'display' => array(

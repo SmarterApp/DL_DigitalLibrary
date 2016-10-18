@@ -96,7 +96,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 11,
+      'weight' => 8,
     ),
   );
 
@@ -142,7 +142,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 28,
+      'weight' => 13,
     ),
   );
 
@@ -273,7 +273,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'options_onoff',
-      'weight' => 35,
+      'weight' => 22,
     ),
   );
 
@@ -409,7 +409,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'options_onoff',
-      'weight' => 34,
+      'weight' => 21,
     ),
   );
 
@@ -458,7 +458,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 29,
+      'weight' => 14,
     ),
   );
 
@@ -583,7 +583,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 38,
+      'weight' => 25,
     ),
   );
 
@@ -635,7 +635,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 33,
+      'weight' => 20,
     ),
   );
 
@@ -677,7 +677,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 36,
+      'weight' => 23,
     ),
   );
 
@@ -716,7 +716,7 @@ function sbac_user_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 37,
+      'weight' => 24,
     ),
   );
 
@@ -768,7 +768,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 32,
+      'weight' => 19,
     ),
   );
 
@@ -854,7 +854,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 7,
     ),
   );
 
@@ -900,7 +900,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 23,
+      'weight' => 10,
     ),
   );
 
@@ -946,7 +946,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 22,
+      'weight' => 9,
     ),
   );
 
@@ -1034,7 +1034,7 @@ function sbac_user_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 30,
+      'weight' => 16,
     ),
     'xss' => 0,
   );
@@ -1079,7 +1079,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 255,
       ),
       'type' => 'text_textfield',
-      'weight' => 29,
+      'weight' => 15,
     ),
     'xss' => 0,
   );
@@ -1132,7 +1132,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 31,
+      'weight' => 18,
     ),
   );
 
@@ -1175,7 +1175,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 24,
+      'weight' => 12,
     ),
   );
 
