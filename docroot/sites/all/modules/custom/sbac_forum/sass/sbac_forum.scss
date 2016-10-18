@@ -3090,6 +3090,12 @@ View Topic Page, Comment Page
 		width: 100%;
 	}
 
+    .group-topic-collection {
+        .fieldset-wrapper {
+            overflow: visible !important;
+        }
+    }
+
 	#comment_comment_node_topic_form_group_topic_comments_materials,
 	#comment_comment_node_topic_form_group_topic_comments_links {
 

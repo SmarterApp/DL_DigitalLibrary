@@ -3604,6 +3604,9 @@ View Topic Page, Comment Page
 .comment-form .fieldset-wrapper {
   width: 100%;
 }
+.comment-form .group-topic-collection .fieldset-wrapper {
+    overflow: visible !important;
+}
 /* line 3093, ../sass/sbac_forum.scss */
 .comment-form #comment_comment_node_topic_form_group_topic_comments_materials,
 .comment-form #comment_comment_node_topic_form_group_topic_comments_links {

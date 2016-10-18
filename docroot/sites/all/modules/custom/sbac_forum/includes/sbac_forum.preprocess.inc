@@ -393,7 +393,14 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       $has_links = TRUE;
     }
   }
-  if ($has_links || $has_files) {
+  $has_collection = FALSE;
+  if (isset($comment_data->field_topic_comment_collection)) {
+    $topic_collection = $comment_data->field_topic_comment_collection->value();
+    if (!empty($topic_collection)) {
+      $has_collection = TRUE;
+    }
+  }
+  if ($has_links || $has_files || $has_collection) {
     $has_materials = TRUE;
   }
 

@@ -72,7 +72,7 @@ function sbac_forum_field_default_field_instances() {
     ),
     'entity_type' => 'comment',
     'field_name' => 'field_topic_comment_collection',
-    'label' => 'Topic Comment Collection',
+    'label' => 'Choose Collection',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -81,7 +81,7 @@ function sbac_forum_field_default_field_instances() {
       'active' => 1,
       'module' => 'options',
       'settings' => array(
-        'apply_chosen' => '',
+        'apply_chosen' => 1,
         'label_help_description' => '',
       ),
       'type' => 'options_select',
@@ -1978,6 +1978,7 @@ function sbac_forum_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Attributes of the Formative Assessment Process');
+  t('Choose Collection');
   t('Comment');
   t('Created');
   t('Date Joined');
@@ -2014,7 +2015,6 @@ function sbac_forum_field_default_field_instances() {
   t('States');
   t('Student Populations');
   t('Subjects and Domains');
-  t('Topic Comment Collection');
   t('Topic Comment Files');
   t('Topic Comment Links');
   t('Topic Count');
