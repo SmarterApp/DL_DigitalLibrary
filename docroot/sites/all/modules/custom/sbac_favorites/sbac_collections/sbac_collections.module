@@ -106,11 +106,20 @@ function sbac_collections_add_collection_callback($js = false, $resourceId = nul
 
   $form_state['build_info']['args'] = array($node);
   $output = ctools_modal_form_wrapper('collection_node_form', $form_state);
-  $output[] = ajax_command_remove('form.node-collection-form button#edit-preview-changes');
+  if ($nid && !preg_match('/delete-btn/', $output[0])) {
+    $output[0] = preg_replace(
+      '/close-btn/',
+      'delete-btn red button form-submit" name="op" value="Delete" type="submit">Delete</button><button class="',
+      $output[0]
+    );
+  }
+  $output[] = ajax_command_remove('form.node-collection-form button#edit-preview-changes'); // Not sure where this button came from
+  /* Note: this does not work, the button gets added but "op=Delete" does not get sent with the form
   if ($nid) {
     $output[] = ajax_command_remove('form.node-collection-form button.delete-btn'); // Only exists for some users
-    $output[] = ajax_command_prepend('div.form-actions', '<button class="delete-btn red button form-submit" id="edit-delete" name="op" value="Delete" type="submit">Delete</button>');
+    $output[] = ajax_command_prepend('div.form-actions', '<button class="delete-btn red button form-submit" name="op" value="Delete" type="submit">Delete</button>');
   }
+  */
 
   if (!empty($form_state['executed'])) {
     // swallow created/updated message
