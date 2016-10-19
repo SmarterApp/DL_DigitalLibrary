@@ -1196,11 +1196,24 @@ function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
  */
 function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
   if ($form_state['triggering_element']['#value'] == 'Flag') {
-     $flag_tid = $form_state['input']['flag_options'];
-     $flag_txt = $form_state['input']['comment'];
-     $flag_nid = $form_state['info']['nid'];
-     $flag_cid = $form_state['info']['cid'];
-     sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+    $flag_tid = $form_state['input']['flag_options'];
+    $flag_txt = $form_state['input']['comment'];
+    $flag_nid = $form_state['info']['nid'];
+    $flag_cid = $form_state['info']['cid'];
+    $node = node_load($flag_nid);
+    // Send email to user
+    $message = message_create('forum_flagged', array('uid' => $node->uid));
+  
+    $wrapper = entity_metadata_wrapper('message', $message);
+  
+    // Replace explicit notification with subscription-based notification
+    // message_notify_send_message($message);
+  
+    if (module_exists('message_subscribe')) {
+      // If Message-subscribe exists, let this example module use it.
+      message_subscribe_send_message('user', $node, $message, array('email' => $options));
+    }
+    sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
   }
 }
 
