@@ -2094,59 +2094,59 @@ function sbac_forum_get_posted_resources($limit = NULL) {
  */
 function sbac_forum_create_resource_forum($nid, $vid = NULL) {
   // Check to make sure this forum doesn't exist already
-  $query = "
-      SELECT
-        count(*)
-      FROM {taxonomy_term_data} term
-        LEFT JOIN {field_data_field_forum_resource_ref} ref
-          ON term.tid = ref.entity_id
-      WHERE ref.entity_type = 'taxonomy_term'
-            AND ref.field_forum_resource_ref_target_id = :nid";
-  $exists = db_query($query, array(':nid' => $nid))->fetchField();
-  if (!$exists) {
-    $node = node_load($nid);
-    if (!$vid) {
-      $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
-      $vid = $vocab->vid;
-    }
-    if ($node && $node->type == 'resource') {
-      $term = (object) array(
-        'vid' => $vid,
-        'name' => $node->title,
-        'description' => '',
-        'format' => 1,
-        'field_forum_resource_ref' => array(
-          LANGUAGE_NONE => array(
-            0 => array(
-              'target_id' => $node->nid
-            )
-          )
-        ),
-        'field_forum_description' => $node->field_alt_body,
-        'field_subject' => $node->field_subject,
-        'field_grades' => $node->field_grades,
-        'field_intended_end_user' => $node->field_intended_end_user,
-        'field_intended_student' => $node->field_intended_student,
-        'field_attributes' => $node->field_attributes,
-        'field_geographical_settings' => $node->field_geographical_settings,
-        'field_digital_media_type' => $node->field_digital_media_type,
-        'field_focus' => $node->field_focus,
-        'field_educational_use' => $node->field_educational_use,
-        'field_smarter_balanced_keyword' => $node->field_smarter_balanced_keyword,
-      );
-      taxonomy_term_save($term);
-      $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
-      $term_wrapper->field_forum_last_activity->set(time());
-      $term_wrapper->save(TRUE);
-      if (isset($term->tid)) {
-        // reset to avoid adding the same user 2 more times by the sbac_forum_create_forum_topic() below
-        drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
-        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC, 1);
-        drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
-        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC, 1);
-      }
-    }
-  }
+  //$query = "
+  //    SELECT
+  //      count(*)
+  //    FROM {taxonomy_term_data} term
+  //      LEFT JOIN {field_data_field_forum_resource_ref} ref
+  //        ON term.tid = ref.entity_id
+  //    WHERE ref.entity_type = 'taxonomy_term'
+  //          AND ref.field_forum_resource_ref_target_id = :nid";
+  //$exists = db_query($query, array(':nid' => $nid))->fetchField();
+  //if (!$exists) {
+  //  $node = node_load($nid);
+  //  if (!$vid) {
+  //    $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
+  //    $vid = $vocab->vid;
+  //  }
+  //  if ($node && $node->type == 'resource') {
+  //    $term = (object) array(
+  //      'vid' => $vid,
+  //      'name' => $node->title,
+  //      'description' => '',
+  //      'format' => 1,
+  //      'field_forum_resource_ref' => array(
+  //        LANGUAGE_NONE => array(
+  //          0 => array(
+  //            'target_id' => $node->nid
+  //          )
+  //        )
+  //      ),
+  //      'field_forum_description' => $node->field_alt_body,
+  //      'field_subject' => $node->field_subject,
+  //      'field_grades' => $node->field_grades,
+  //      'field_intended_end_user' => $node->field_intended_end_user,
+  //      'field_intended_student' => $node->field_intended_student,
+  //      'field_attributes' => $node->field_attributes,
+  //      'field_geographical_settings' => $node->field_geographical_settings,
+  //      'field_digital_media_type' => $node->field_digital_media_type,
+  //      'field_focus' => $node->field_focus,
+  //      'field_educational_use' => $node->field_educational_use,
+  //      'field_smarter_balanced_keyword' => $node->field_smarter_balanced_keyword,
+  //    );
+  //    taxonomy_term_save($term);
+  //    $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+  //    $term_wrapper->field_forum_last_activity->set(time());
+  //    $term_wrapper->save(TRUE);
+  //    if (isset($term->tid)) {
+  //      // reset to avoid adding the same user 2 more times by the sbac_forum_create_forum_topic() below
+  //      drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
+  //      sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC, 1);
+  //      drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
+  //      sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC, 1);
+  //    }
+  //  }
+  //}
 }
 
 /**
@@ -2197,7 +2197,8 @@ function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description, $d
  */
 function sbac_forum_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource' && $new_state == 'published') {
-    sbac_forum_create_resource_forum($node->nid);
+// Removing per SBAC-205
+//    sbac_forum_create_resource_forum($node->nid);
     // this node is published through the review process, remove the auto favourite
     // entry from this user
     global $user;
