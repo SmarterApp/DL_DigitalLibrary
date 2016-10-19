@@ -604,7 +604,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
 function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
   global $user;
 
-  foreach ($form_state['values']['tab_container']['favorites'] as $favorite_id => $item) {
+  foreach ($form_state['values']['table']['tab_container']['favorites'] as $favorite_id => $item) {
     $identifiers = explode(':', $favorite_id);
     $id = $identifiers[0];
     $cid = $identifiers[1];
