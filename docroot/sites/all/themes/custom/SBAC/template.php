@@ -906,7 +906,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $new_output = '';
         if (!empty($user_uid)) {
           $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
-          $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
+          $new_output = '' . $author_name . '';
         }
       
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
