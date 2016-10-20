@@ -113,7 +113,6 @@ function sbac_collections_add_collection_callback($js = false, $resourceId = nul
       $output[0]
     );
   }
-  $output[] = ajax_command_remove('form.node-collection-form button#edit-preview-changes'); // Not sure where this button came from
   /* Note: this does not work, the button gets added but "op=Delete" does not get sent with the form
   if ($nid) {
     $output[] = ajax_command_remove('form.node-collection-form button.delete-btn'); // Only exists for some users

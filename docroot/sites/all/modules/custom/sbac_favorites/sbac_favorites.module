@@ -376,8 +376,8 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
   $form['tab_container'] = array(
     '#type' => 'container',
     '#theme' => 'sbac_favorites_resource_tabledrag',
+    '#weight' => 100,
   );
-
 
   $fav_collection = new \stdClass();
   $fav_collection->nid = 0;
@@ -536,10 +536,9 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
   ctools_include('modal');
   ctools_modal_add_js();
 
-  $form['#weight'] = 10;
-
   $createButton = array(
     '#type' => 'container',
+    '#weight' => 0,
     '#attributes' => array(
       'class' => array('sbac-favorites-collection-create-wrapper'),
     ),
@@ -586,11 +585,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
     */
   );
 
-  $form = array(
-    'top' => $createButton,
-    'table' => $form,
-  );
-
+  $form['create_collection'] = $createButton;
 
   return $form;
 }
@@ -604,7 +599,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
 function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
   global $user;
 
-  foreach ($form_state['values']['table']['tab_container']['favorites'] as $favorite_id => $item) {
+  foreach ($form_state['values']['tab_container']['favorites'] as $favorite_id => $item) {
     $identifiers = explode(':', $favorite_id);
     $id = $identifiers[0];
     $cid = $identifiers[1];

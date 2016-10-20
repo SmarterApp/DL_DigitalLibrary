@@ -185,3 +185,6 @@
 #modalContent .ctools-modal-content .node-collection-form .form-actions {
     margin: 0;
 }
+#modalContent .node-collection-form button#edit-preview-changes {
+    display: none;
+}
