@@ -412,7 +412,7 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
       'links' => array(
         '#markup' => l('view', (0 != $collection->nid)
               ? 'node/'.$collection->nid
-              : 'favorites/'.$account->name,
+              : 'favorites',
           array(
             'attributes' => array(
               'class' => array('sbac-favorites-links-favorite'),

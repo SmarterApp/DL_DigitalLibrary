@@ -255,20 +255,13 @@ function sbac_collections_default_page_manager_pages() {
   $page->task = 'page';
   $page->admin_title = 'Favorites for user';
   $page->admin_description = '';
-  $page->path = 'favorites/%user';
+  $page->path = 'favorites';
   $page->access = array(
     'plugins' => array(),
     'logic' => 'and',
   );
   $page->menu = array();
-  $page->arguments = array(
-    'user' => array(
-      'id' => 1,
-      'identifier' => 'User: name',
-      'name' => 'user_name',
-      'settings' => array(),
-    ),
-  );
+  $page->arguments = array();
   $page->conf = array(
     'admin_paths' => FALSE,
   );
@@ -289,7 +282,16 @@ function sbac_collections_default_page_manager_pages() {
     'body_classes_to_add' => 'node-type-collection-view',
     'css_id' => 'collection-list-region',
     'css' => '',
-    'contexts' => array(),
+    'contexts' => array(
+      0 => array(
+        'identifier' => 'User',
+        'keyword' => 'user',
+        'name' => 'user',
+        'type' => 'current',
+        'uid' => '',
+        'id' => 1,
+      ),
+    ),
     'relationships' => array(),
     'name' => 'panel',
   );
@@ -334,7 +336,7 @@ function sbac_collections_default_page_manager_pages() {
     'url' => '',
     'display' => 'user_list_view',
     'context' => array(
-      0 => 'argument_user_name_1.uid',
+      0 => 'context_user_1.uid',
     ),
     'override_title' => 0,
     'override_title_text' => '',
