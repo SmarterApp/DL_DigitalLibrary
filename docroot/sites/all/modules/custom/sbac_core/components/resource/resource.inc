@@ -73,7 +73,8 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_node_has_state($node, array('published'));
           break;
         case 'view collaboration':
-          $perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && sbac_forum_get_resource_forum_id($node->nid);
+          $perm = FALSE;
+          //$perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && sbac_forum_get_resource_forum_id($node->nid);
           break;
         case 'access gk review comments':
           $perm = _resource_access_gk_review_comment($node, $account);

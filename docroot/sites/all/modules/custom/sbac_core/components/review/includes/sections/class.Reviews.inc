@@ -3,7 +3,7 @@ namespace sbac_core\components\review\sections;
 
 class Reviews extends Base {
   const name = 'reviews';
-  const title = 'Reviews';
+  const title = 'Rate and Discuss';
   const permission = 'view reviews';
 
   /**
