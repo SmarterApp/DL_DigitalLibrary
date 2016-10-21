@@ -38,6 +38,7 @@ features[variable][] = node_options_collection
 features[variable][] = node_preview_collection
 features[variable][] = node_submitted_collection
 features[variable][] = page_manager_node_view_disabled
+features[variable][] = pathauto_node_collection_pattern
 features[views_view][] = collection
 features[views_view][] = my_collections
 project path = sites/all/modules/custom/sbac_favorites
