@@ -60,7 +60,6 @@ function _sbac_resource_form_flatten_term_tree(&$form, &$form_state) {
     array('vid' => 'grades', 'field' => 'field_grades', 'wrapper' => ''),
     array('vid' => 'digital_media_type', 'field' => 'field_digital_media_type', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'intended_student_populations', 'field' => 'field_intended_student', 'wrapper' => 'tag_wrapper'),
-    array('vid' => 'geographical_settings', 'field' => 'field_geographical_settings', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'educational_use', 'field' => 'field_educational_use', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'technologies_for_classroom_use', 'field' => 'field_classroom_technologies', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'smarter_balanced_keyword', 'field' => 'field_smarter_balanced_keyword', 'wrapper' => 'tag_wrapper'),
@@ -2382,9 +2381,6 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   if (isset($form['field_intended_student']['und']['#options']['_none'])) {
     unset($form['field_intended_student']['und']['#options']['_none']);
   }
-  if (isset($form['field_geographical_settings']['und']['#options']['_none'])) {
-    unset($form['field_geographical_settings']['und']['#options']['_none']);
-  }
   if (isset($form['field_smarter_balanced_keyword']['und']['#options']['_none'])) {
     unset($form['field_smarter_balanced_keyword']['und']['#options']['_none']);
   }
@@ -2404,14 +2400,12 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   $form['field_classroom_technologies']['und']['#title'] = t('Technologies Required for Use in Classroom');
 
   $form['tag_wrapper']['field_intended_student'] = $form['field_intended_student'];
-  $form['tag_wrapper']['field_geographical_settings'] = $form['field_geographical_settings'];
   $form['tag_wrapper']['field_smarter_balanced_keyword'] = $form['field_smarter_balanced_keyword'];
   $form['tag_wrapper']['field_educational_use'] = $form['field_educational_use'];
   $form['tag_wrapper']['field_classroom_technologies'] = $form['field_classroom_technologies'];
   $form['tag_wrapper']['field_digital_media_type'] = $form['field_digital_media_type'];
 
   unset($form['field_intended_student']);
-  unset($form['field_geographical_settings']);
   unset($form['field_smarter_balanced_keyword']);
   unset($form['field_educational_use']);
   unset($form['field_classroom_technologies']);
@@ -3587,7 +3581,6 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     'intended_student_populations' => t('Intended Student Populations'),
     'educational_use' => t('Educational Use'),
     'smarter_balanced_keyword' => t('Module Type'),
-    'geographical_settings' => t('Geographic Settings'),
   );
   $form['help_text'] = array(
     '#markup' => '<p>Select filters from the available options to create a url</p>',
@@ -3809,7 +3802,6 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
       'intended_student_populations',
       'educational_use',
       'smarter_balanced_keyword',
-      'geographical_settings',
       // 'technologies_for_classroom_use',
       // 'education_alignment',
     );

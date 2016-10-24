@@ -101,7 +101,6 @@ function sbac_core_ds_layout_settings_info() {
       'right' => array(
         9 => 'field_alignment_tags',
         10 => 'field_educational_use',
-        11 => 'field_geographical_settings',
       ),
     ),
     'fields' => array(
@@ -116,7 +115,6 @@ function sbac_core_ds_layout_settings_info() {
       'field_classroom_technologies' => 'middle',
       'field_alignment_tags' => 'right',
       'field_educational_use' => 'right',
-      'field_geographical_settings' => 'right',
     ),
     'classes' => array(),
     'wrappers' => array(

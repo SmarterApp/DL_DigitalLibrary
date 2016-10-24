@@ -113,7 +113,6 @@ features[field_instance][] = taxonomy_term-forum-field_forum_removed_member_coun
 features[field_instance][] = taxonomy_term-forum-field_forum_resource_ref
 features[field_instance][] = taxonomy_term-forum-field_forum_topic_comment_count
 features[field_instance][] = taxonomy_term-forum-field_forum_topic_count
-features[field_instance][] = taxonomy_term-forum-field_geographical_settings
 features[field_instance][] = taxonomy_term-forum-field_grades
 features[field_instance][] = taxonomy_term-forum-field_intended_end_user
 features[field_instance][] = taxonomy_term-forum-field_intended_student

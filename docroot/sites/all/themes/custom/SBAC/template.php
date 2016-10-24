@@ -602,11 +602,6 @@ function sbac_preprocess_page(&$variables) {
       $variables['blocks']['intended_end_users'] = render($block_intended_end_users['content']);
     }
 
-    $block_geographic_settings = module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') ?  module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') : NULL ;
-    if($block_geographic_settings) {
-      $variables['blocks']['geographic_settings'] = render($block_geographic_settings['content']);
-    }
-
     $block_formative_assessment_attributes = module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') ?  module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') : NULL ;
     if($block_formative_assessment_attributes) {
       $variables['blocks']['formative_assessment_attributes'] = render($block_formative_assessment_attributes['content']);

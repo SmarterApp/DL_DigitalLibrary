@@ -171,12 +171,6 @@ drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.
         <?php print $blocks['intended_end_users']; ?>
       </div>
     <?php endif; ?>
-    <?php if($blocks['geographic_settings']):?>
-      <div class="facet-block" id="facet-geographic-settings">
-        <div class="facet-label"><a class="category-hide geo-hide">Geographic Settings</a></div>
-        <?php print $blocks['geographic_settings']; ?>
-      </div>
-    <?php endif; ?>
     <?php if($blocks['formative_assessment_attributes']):?>
       <div class="facet-block js-tree" id="facet-formative-assessment-attributes">
         <div class="facet-label"><a class="category-hide formative-hide">Formative Assessment Attributes</a></div>

@@ -152,7 +152,6 @@ function sbac_forum_field_group_info() {
       2 => 'field_intended_student',
       3 => 'field_subject',
       4 => 'field_attributes',
-      5 => 'field_geographical_settings',
     ),
     'format_type' => 'div',
     'format_settings' => array(

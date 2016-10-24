@@ -1688,47 +1688,6 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_geographical_settings'
-  $field_instances['taxonomy_term-forum-field_geographical_settings'] = array(
-    'bundle' => 'forum',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 20,
-      ),
-      'forum_page_card' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 20,
-      ),
-    ),
-    'entity_type' => 'taxonomy_term',
-    'field_name' => 'field_geographical_settings',
-    'label' => 'Geographic Settings',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'apply_chosen' => 1,
-        'label_help_description' => '',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-      ),
-      'type' => 'options_select',
-      'weight' => 11,
-    ),
-  );
-
   // Exported field_instance: 'taxonomy_term-forum-field_grades'
   $field_instances['taxonomy_term-forum-field_grades'] = array(
     'bundle' => 'forum',
@@ -1990,7 +1949,6 @@ function sbac_forum_field_default_field_instances() {
   t('Files');
   t('Forum');
   t('Forum resource ref');
-  t('Geographic Settings');
   t('Grades');
   t('Intended Participants');
   t('Last Activity');
