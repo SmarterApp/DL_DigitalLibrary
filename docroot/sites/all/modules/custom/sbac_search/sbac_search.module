@@ -909,19 +909,19 @@ function sbac_search_digital_library_categories() {
     _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
   }
 
-  $attrs = array(
-    'attributes' => array(
-      'class' => 'ctools-use-modal ctools-modal-ctools-ccss-style',
-      'id' => 'sbac-resource-modal-alignment2',
-      'title' => 'Filter Alignment',
-    ),
-  );
-  $link = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
-  $categories['education_alignment']['display_name'] = 'Common Core State Standards';
-  $vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
-  $categories['education_alignment']['vocabulary'] = $vocab;
-  $categories['education_alignment']['terms'] = array();
-  $categories['education_alignment']['link'] = $link;
+//  $attrs = array(
+//    'attributes' => array(
+//      'class' => 'ctools-use-modal ctools-modal-ctools-ccss-style',
+//      'id' => 'sbac-resource-modal-alignment2',
+//      'title' => 'Filter Alignment',
+//    ),
+//  );
+//  $link = l('Common Core State Standards', 'sbac_resource/nojs/filter-by-alignment', $attrs);
+//  $categories['education_alignment']['display_name'] = 'Common Core State Standards';
+//  $vocab = taxonomy_vocabulary_machine_name_load('education_alignment');
+//  $categories['education_alignment']['vocabulary'] = $vocab;
+//  $categories['education_alignment']['terms'] = array();
+//  $categories['education_alignment']['link'] = $link;
 
   $cf_value = NULL;
   $cf_html = array();

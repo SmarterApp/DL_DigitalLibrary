@@ -30756,10 +30756,6 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   opacity: 1;
 }
 
-/* line 3, ../sass/components/_page-digital-library-resources.scss */
-.page-digital-library-resources #facet-common-core-state-standards {
-  display: none;
-}
 /* line 6, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container {
   position: relative;

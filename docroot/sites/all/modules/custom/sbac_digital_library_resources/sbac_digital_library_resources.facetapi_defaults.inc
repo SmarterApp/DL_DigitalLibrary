@@ -20,7 +20,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
   $facet->enabled = TRUE;
   $facet->settings = array(
     'operator' => 'and',
-    'hard_limit' => '30',
+    'hard_limit' => '-1',
     'dependencies' => array(
       'roles' => array(),
       'bundle' => 'none',
@@ -28,7 +28,7 @@ function sbac_digital_library_resources_facetapi_default_facet_settings() {
     ),
     'facet_mincount' => '0',
     'facet_missing' => 0,
-    'flatten' => '0',
+    'flatten' => '1',
     'individual_parent' => '0',
     'query_type' => 'term',
     'limit_active_items' => 0,
