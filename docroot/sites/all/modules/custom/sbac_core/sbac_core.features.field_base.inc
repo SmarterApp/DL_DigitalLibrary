@@ -201,6 +201,7 @@ function sbac_core_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
+        0 => 'N/A',
         1 => 1,
         2 => 2,
         3 => 3,
