@@ -1540,12 +1540,7 @@ function sbac_user_user_import_data($settings, $update_setting, $column_settings
  */
 function sbac_user_preprocess_favorites(&$vars, $user) {
   module_load_include('module', 'sbac_favorites');
-  $favorites_count = sbac_favorites_get_count($user->uid);
   $text = t('Favorites');
-  if (!$favorites_count) {
-    $favorites_count = 0;
-  }
-  $text .= ' (<span>' . $favorites_count . '</span>)';
   $link = drupal_get_path_alias('user/' . $user->uid);
   $vars['user']->favorites_link = l($text, $link, array(
     'html' => TRUE,

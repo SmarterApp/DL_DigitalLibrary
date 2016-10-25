@@ -1,0 +1,191 @@
+<?php
+/**
+ * @file
+ * Code for the sbac_collections feature.
+ * Module to handle all collection functionality.
+ *
+ * Provides:
+ *  - Exports the collection content type
+ */
+
+include_once __DIR__ . '/sbac_collections.features.inc';
+include_once __DIR__ . '/sbac_collections.forms.inc';
+include_once __DIR__ . '/sbac_collections.theme.inc';
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function sbac_collections_menu() {
+  $items = array();
+
+  $items['sbac_collections/%ctools_js/%/%'] = array(
+    'page callback' => 'sbac_collections_add_collection_callback',
+    'page arguments' => array(1, 2, 3),
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function sbac_collections_views_query_alter(&$view, &$query) {
+  if ($view->name !== 'collection') {
+    return;
+  }
+}
+
+/**
+ * Implements hook_form().
+ */
+function sbac_collections_form($node, &$form_state) {
+  if ($node->type !== 'collection') {
+    return;
+  }
+}
+
+function sbac_collections_add_collection_callback($js = false, $resourceId = null, $nid = null) {
+  global $user;
+
+  if ($nid) {
+    $node = node_load($nid);
+    if ($user->uid !== $node->uid) {
+      drupal_access_denied();
+      drupal_exit();
+    }
+  } else {
+    $node = (object) array(
+      'uid' => $user->uid,
+      'name' => isset($user->name) ? $user->name : '',
+      'type' => 'collection',
+      'language' => LANGUAGE_NONE,
+    );
+  }
+
+  if (!$js) {
+    return drupal_get_form('collection_node_form', $node);
+  }
+
+  ctools_include('node.pages', 'node', '');
+  ctools_include('modal');
+  ctools_include('ajax');
+
+  if (!empty($_POST['op']) && 'Delete' === $_POST['op']) {
+    // Delete the collection from the sbac_favorites table
+    db_delete('sbac_favorites')
+      ->condition('uid', $user->uid)
+      ->condition('cid', $nid)
+      ->condition('type', 'node')
+      ->execute();
+    db_delete('sbac_favorites')
+      ->condition('uid', $user->uid)
+      ->condition('id', $nid)
+      ->condition('type', 'collection')
+      ->execute();
+
+    // Delete the collection node
+    node_delete($nid);
+
+    // Update display
+    $output = array();
+    $output[] = ctools_modal_command_dismiss();
+    $output[] = ajax_command_remove('tr.draggable:has(.favorite-item-id[value='.$nid.']), tr.draggable:has(.sbac-favorites-delete-favorite[data-cid='.$nid.'])');
+    $output[] = ajax_command_restripe('table.sbac-favorites-resource-table-drag-drop');
+    print ajax_render($output);
+    drupal_exit();
+  }
+
+
+  $form_state = array(
+//    'title' => $nid ? t('Edit Collection') : t('Add Collection'),
+    'ajax' => true,
+  );
+
+  $form_state['build_info']['args'] = array($node);
+  $output = ctools_modal_form_wrapper('collection_node_form', $form_state);
+  if ($nid && !preg_match('/delete-btn/', $output[0])) {
+    $output[0] = preg_replace(
+      '/close-btn/',
+      'delete-btn red button form-submit" name="op" value="Delete" type="submit">Delete</button><button class="',
+      $output[0]
+    );
+  }
+  /* Note: this does not work, the button gets added but "op=Delete" does not get sent with the form
+  if ($nid) {
+    $output[] = ajax_command_remove('form.node-collection-form button.delete-btn'); // Only exists for some users
+    $output[] = ajax_command_prepend('div.form-actions', '<button class="delete-btn red button form-submit" name="op" value="Delete" type="submit">Delete</button>');
+  }
+  */
+
+  if (!empty($form_state['executed'])) {
+    // swallow created/updated message
+    drupal_get_messages('status');
+
+    $output = array();
+    $collection = node_load($form_state['nid']);
+
+    if (empty($nid)) {
+      // New collection
+//      pathauto_node_insert($collection);
+      pathauto_node_update_alias($collection, 'insert', array('force' => true));
+
+      // Add collection to favorites table
+      $obj = new stdClass();
+      $obj->id = $form_state['nid'];
+      $obj->uid = $user->uid;
+      $obj->cid = 0;
+      $obj->type = 'collection';
+      $obj->weight = -1000;
+      $obj->created = time();
+      drupal_write_record('sbac_favorites', $obj);
+
+      // Add resource to collection
+      if (!empty($resourceId)) {
+        $obj = new stdClass();
+        $obj->id = $resourceId;
+        $obj->uid = $user->uid;
+        $obj->cid = $form_state['nid'];
+        $obj->type = 'node';
+        $obj->weight = -1000;
+        $obj->created = time();
+        drupal_write_record('sbac_favorites', $obj);
+
+        // Add new collection to on-screen list
+        $element = array(
+          '#markup' => l(
+            $collection->title,
+            url('node/' . $resourceId),
+            array(
+              'attributes' => array(
+                'class' => array(
+                  'sbac-favorites-collection',
+                  'sbac-favorites-collection-collection',
+                  'sbac-favorite-yes',
+                ),
+                'data-cid' => $collection->nid,
+              ),
+            )
+          ),
+        );
+        $html = drupal_render($element);
+        $output[] = ajax_command_after('.sbac-favorites-collection-list .sbac-favorites-collection-favorites', $html);
+      } else {
+        // Reload page
+        $output[] = ajax_command_callback('sbac_collections', 'reload');
+      }
+    } else {
+      // Update collection
+//      pathauto_node_update($collection);
+      pathauto_node_update_alias($collection, 'update', array('force' => true));
+      $output[] = ajax_command_replace('tr.draggable:has(.favorite-item-id[value='.$nid.']) span.favorite-title', '<span class="favorite-title">'.$collection->title.'</span>');
+    }
+
+    $output[] = ctools_modal_command_dismiss();
+  }
+
+  print ajax_render($output);
+  drupal_exit();
+}
