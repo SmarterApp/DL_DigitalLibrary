@@ -11,4 +11,6 @@ Development Environment Setup
 
 3. Run setup-local.sh
 
-4. The script should echo a URL that can be used to access the site
+4. The URL that can be used to access the site http://localhost:44000
+
+

@@ -3090,6 +3090,12 @@ View Topic Page, Comment Page
 		width: 100%;
 	}
 
+    .group-topic-collection {
+        .fieldset-wrapper {
+            overflow: visible !important;
+        }
+    }
+
 	#comment_comment_node_topic_form_group_topic_comments_materials,
 	#comment_comment_node_topic_form_group_topic_comments_links {
 
@@ -3372,8 +3378,24 @@ h2.title {
 			}
 		}
 
+        .field-name-field-topic-comment-collection.field-wrapper {
+            .node-collection {
+                clear:both;
+                background-color: inherit;
+            }
+
+            h2 {
+                font-weight: normal;
+            }
+
+            ul.links {
+                display: none;
+            }
+        }
+
 		.field-name-field-topic-comment-files .file,
-		.field-name-field-topic-comment-links.field-wrapper {
+		.field-name-field-topic-comment-links.field-wrapper,
+        .field-name-field-topic-comment-collection.field-wrapper {
 			img {display: none;}
 
 			 a {
@@ -3399,6 +3421,27 @@ h2.title {
 		    position: relative;
 			}
 		}
+
+        .field-name-field-topic-comment-collection.field-wrapper {
+            a {
+              background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-blue.png) no-repeat 0 0;
+              line-height: 16px;
+              margin-left: -6px;
+            }
+
+            a:hover {
+              text-decoration: underline;
+            }
+
+            a:before {
+                background-color: inherit;
+                width: 16px;
+            }
+
+            .contextual-links-wrapper {
+                display: none;
+            }
+        }
 
 		.field-name-field-topic-comment-files .file-widget form-managed-file .file:before {
 	    content: "" !important;

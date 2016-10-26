@@ -2437,13 +2437,6 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
     $build['field_forum_topic_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Discussions</div></div>';
 
     // Forum resource reference
-    if (!empty($build['field_forum_resource_ref'][0]['#markup'])) {
-      $favorites = sbac_favorites_get_favorites($user->uid, $build['field_forum_resource_ref'][0]['#markup']);
-      $build['field_forum_resource_ref'][0]['#markup'] = '';
-      if ($favorites) {
-        $build['field_forum_resource_ref'][0]['#markup'] = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
-      }
-    }
 
     if (arg(0) !== 'forums' && empty($build['field_forum_resource_ref'][0]['#markup'])) {
       $is_faci = FALSE;

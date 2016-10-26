@@ -32186,7 +32186,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select {
 }
 /* line 673, ../sass/custom.scss */
 .sbac-favorites-menu a {
-  background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
+  background: url(../images/icons/icon-folder-heart.png) no-repeat 0 0;
   padding-left: 20px;
 }
 /* line 678, ../sass/custom.scss */
@@ -34876,7 +34876,8 @@ a.tabledrag-handle .handle {
 /* fix for back button block for resource node pages.*/
 /* line 3136, ../sass/custom.scss */
 .page-moderation .top-bar.last-top,
-.node-type-resource .top-bar.last-top {
+.node-type-resource .top-bar.last-top,
+.node-type-collection .top-bar.last-top {
   height: 25px;
   max-width: 960px;
   padding: 0 0 0;
@@ -36261,6 +36262,7 @@ form#sbac-user-filter-form #edit-email {
   float: left;
   padding: 0.5em 2em 0 0;
 }
+<<<<<<< HEAD
 
 /* Leaderboards */
 #leaderboard-wrapper {
@@ -36376,3 +36378,5 @@ form#sbac-user-filter-form #edit-email {
   background-color: #0b5d76;
   color: #FFFFFF;
 }
+=======
+>>>>>>> ff9cce1705b4026e5a504f04f90028725a6ca967
