@@ -23,6 +23,16 @@
     </div>
   </div>
 <?php endif; ?>
+<?php if ($leaderboards): ?>
+  <div id="leaderboard-wrapper">
+    <div id="leaderboard-title">
+      <h1>MOST ACTIVE MEMBERS</h1>    
+    </div>
+    <div id="leaderboards">
+      <?php print $leaderboards; ?>    
+    </div>
+  </div>
+<?php endif; ?>
 <?php if($help_topics): ?>
   <div id="lp-help-topics-wrapper">
     <div id="lp-help-topics" class="row">

@@ -1412,6 +1412,21 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                 $task->addTriggeringUser($user->uid);
                 $task->save();
               }
+              // Email resource reviewers
+              $reviewers = sbac_resource_get_reviewers_email();
+              foreach ($reviewers as $reviewer) {
+                $email_preference = $reviewer->field_email_reference_value;
+                if ($email_preference !== '' || $email_preference !== 'never') {
+                  // create message
+                  $message = message_create('resource_ready_for_review', array('uid' => $reviewer->uid));
+                  if ($email_preference == 'immediately') {
+                    // send email
+                    message_notify_send_message($message);
+                    // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+                    message_delete_multiple(array($message->mid));
+                  }
+                }
+              }
             }
             else {
               if ($task = taskit_get_object($task_type)) {
@@ -3883,6 +3898,31 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
         $post_wrapper->save();
       }
     }
+    // Email last reviewer that a rejected resource is available for review
+    $last_reviewer = $form_state['values']['field_recent_reviewers']['und'][0]['target_id'];
+    // Send email to user
+    // Add resource link to message
+    global $base_url;
+    $values = array(
+      'arguments' => array(
+        '!resource-link' => $base_url . '/node/' . $node->nid,
+      ),
+      'uid' => $last_reviewer,
+    );
+    $user_profile = user_load($last_reviewer);
+
+    $email_preference = $user_profile->field_email_reference[0]['und']['value'];
+    if ($email_preference !== '' && $email_preference !== 'never') {
+      // Create message
+      $message = message_create('resource_resubmitted', $values);
+      $wrapper = entity_metadata_wrapper('message', $message);
+      if ($email_preference == 'immediately') {
+        // Send email
+        message_notify_send_message($message);
+        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+        message_delete_multiple(array($message->mid));
+      }
+    }
   }
 }
 
@@ -4068,4 +4108,36 @@ function sbac_resource_update_thumb_form_submit($form, &$form_state) {
     $path = drupal_get_path_alias('node/' . $node->nid);
     drupal_goto($path);
   }
+}
+
+/**
+ * Grabs users for reviewers mass messaging
+ */
+
+function sbac_resource_get_reviewers_email() {
+  $sql = <<<SQL
+
+    SELECT
+      u.uid,
+      ep.field_email_reference_value
+    FROM {users} u
+      LEFT JOIN {field_data_field_email_preference} ep
+        ON u.uid = ep.entity_id
+      INNER JOIN {users_roles} r
+        ON u.uid = r.uid
+    WHERE
+      u.status = :status
+      AND (ep.field_email_reference_value != :preference)
+      AND (r.rid = :role OR r.rid = :role1)
+    GROUP BY
+      u.uid
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':preference' => 'never', ':role' => '17', ':role1' => '16'));
+
+  foreach ($result as $row) {
+    $reviewers[] = $row;
+  }
+
+  return $reviewers;
 }
