@@ -1,0 +1,60 @@
+<?php
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_update_N().
+ * Enables contrib modules for SBAC Help.
+ */
+function sbac_help_update_7200() {
+  $modules = array(
+    'chosen',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implements hook_update_N().
+ * Updates all help_page nodes with All User as roles viewable.
+ */
+function sbac_help_update_7202() {
+  $ignore = array();
+  $all_roles = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+  $all_roles = array_pop($all_roles);
+
+  $skip = db_select('field_data_field_help_user_roles', 'roles');
+  $skip->fields('roles', array('entity_id'));
+  $skip->distinct();
+  $defined = $skip->execute();
+
+  while ($definition = $defined->fetchAssoc()) {
+    $ignore[] = $definition['entity_id'];
+  }
+
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'));
+  $query->condition('type', 'help_page', '=');
+  $results = $query->execute();
+
+  while ($result = $results->fetchAssoc()) {
+    $nid = $result['nid'];
+
+    // If permissions are already defined, skip.
+    if (array_search($nid, $ignore) !== FALSE) {
+      continue;
+    }
+
+    $raw_node = node_load($nid);
+    $raw_node->field_help_user_roles['und'][0]['tid'] = $all_roles->tid;
+    node_save($raw_node);
+  }
+}
+
+/**
+ * Enable publishcontent module
+ */
+function sbac_help_update_7203() {
+  module_enable(array('publishcontent'));
+}

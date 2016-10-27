@@ -1,0 +1,131 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Digital Library Resources feature.
+ */
+
+include_once 'sbac_digital_library_resources.features.inc';
+
+function sbac_digital_library_resources_block_info() {
+  // This example comes from node.module.
+  $blocks['posted_w_distinction'] = array(
+    'info' => t('Posted with Distinction'),
+    'cache' => DRUPAL_NO_CACHE
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function sbac_digital_library_resources_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'posted_w_distinction':
+      if (arg(1) == 'distinguished') {
+        $block['content'] = '<input id="faux-click-sbac" type="checkbox" checked="checked">';
+        $block['content'] .= l(t('Posted with Distinction Only'), '/digital-library-resources', array('attributes' => array('class' => array('distinguished'))));
+      }
+      else {
+        $block['content'] = '<input id="faux-click-sbac" type="checkbox">';
+        $block['content'] .= l('Posted with Distinction Only', '/digital-library-resources/distinguished', array('attributes' => array('class' => array('all-content'))));
+      }
+
+      break;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_form().
+ */
+function sbac_digital_library_resources_form($form, &$form_state) {
+  $query = drupal_get_query_parameters();
+  $form['sbac_digital_library_resources_text'] = array(
+    '#type' => 'textfield',
+    '#default_value' => ($query['keyword'] ? $query['keyword'] : '' ),
+  );
+  $form['submit'] = array(
+     '#type' => 'submit',
+     '#value' => t('Submit'),
+  );
+  $form['#submit'][] = 'sbac_digital_library_resources_form_submit';
+  return $form;
+}
+
+/**
+ * Form submit callback.
+ */
+function sbac_digital_library_resources_form_submit($form, &$form_state) {
+  $query = array();
+  $query = drupal_get_query_parameters();
+  $query['keyword'] = $form_state['values']['sbac_digital_library_resources_text'];
+  // Unset page number
+  if($query['page']){
+    unset($query['page']);
+  }
+  $form_state['redirect'] = array(
+    'digital-library-resources',
+    array(
+      'query' => $query,
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function sbac_digital_library_resources_form_views_exposed_form_alter(&$form, &$form_state, $form_id){
+  switch ($form['#id']) {
+    case 'views-exposed-form-digital-library-resources-page':
+      // Hide extra search fields
+      $form['keyword']['#type'] = 'hidden';
+      $form['author']['#type'] = 'hidden';
+      $form['owner']['#type'] = 'hidden';
+      $form['contributor_uid']['#type'] = 'hidden';
+      // Setting to false hides and defaults to sort order in the view
+      $form['sort_order']['#type'] = 'hidden';
+      
+      break;
+  }
+}
+
+/**
+ * Implements hook_apachesolr_query_alter().
+ *
+ * @param DrupalSolrQueryInterface $query
+ *
+ */
+
+function sbac_digital_library_resources_apachesolr_query_alter(DrupalSolrQueryInterface $query) {  
+  // Display only posted and posted with distinction
+  $posting_options = array('0','1');
+  $subquery = apachesolr_drupal_query('apachesolr');
+  foreach ($posting_options as $posting_option) {
+    $subsubquery = apachesolr_drupal_query('apachesolr');
+    $subsubquery->addFilter('is_field_posting_options', $posting_option);
+    $subquery->addFilterSubQuery($subsubquery, 'OR');
+  }
+  $query->addFilterSubQuery($subquery);
+
+  // Filter by state visability based on current user's state if not admin
+  global $user;
+  $profile = user_load($user->uid);
+  $roles = $profile->roles;
+  if (!in_array('administrator', $roles) && !in_array('digital library administrator', $roles) && !in_array('DLRB member', $roles)) {
+    $states = $roles->field_state['und'];
+    $state_subquery = apachesolr_drupal_query('apachesolr');
+    foreach ($states as $state) {
+      $state_subquery = apachesolr_drupal_query('apachesolr');
+      $state_subquery->addFilter('im_field_view_permissions', $state['tid']);
+      $state_subquery->addFilterSubQuery($subsubquery, 'OR');
+    }
+    // Display All non-state specific
+    $state_subquery = apachesolr_drupal_query('apachesolr');
+    $state_subquery->addFilter('im_field_view_permissions', '0');
+    $state_subquery->addFilterSubQuery($subsubquery, 'OR');
+    $query->addFilterSubQuery($state_subquery);
+  }
+}

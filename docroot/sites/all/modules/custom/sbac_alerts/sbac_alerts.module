@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Alerts feature.
+ */
+
+include_once 'sbac_alerts.features.inc';

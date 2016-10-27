@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter's table from varchar(255) to varchar(650)
+ */
+function sbac_flag_update_7005() {
+  db_query('ALTER TABLE eck_flag MODIFY flag_comment VARCHAR(650)');
+  return 'Success updating flag';
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Adds node ID's to eck_flag table as well.
+ */
+function sbac_flag_update_7006() {
+  $query = "SELECT * FROM {eck_flag} WHERE target_type = 'review'";
+  $result = db_query($query);
+  foreach ($result as $row) {
+    $eck_flag_entity = entity_load_single('flag', $row->id);
+    if ($eck_flag_entity) {
+      $eck_flag_wrapper = entity_metadata_wrapper('flag', $eck_flag_entity);
+      if ($eck_flag_wrapper) {
+        $eck_review_entity = entity_load_single('review', $row->target_id);
+        if ($eck_review_entity) {
+          $eck_review_wrapper = entity_metadata_wrapper('review', $eck_review_entity);
+          if ($eck_review_wrapper) {
+            $nid = $eck_review_wrapper->node_id->value();
+            if ($nid) {
+              $node = node_load($nid);
+              if ($node) {
+                $eck_flag_wrapper->nid->set($nid);
+                $eck_flag_wrapper->save();
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return 'Success updating node ids';
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter's table from varchar(255) to varchar(1000)
+ */
+function sbac_flag_update_7007() {
+  db_query('ALTER TABLE {eck_flag} MODIFY moderation_comment VARCHAR(1000)');
+  return 'Updated moderation size';
+}

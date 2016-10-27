@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * Implementation of hook_schema()
+ */
+function sbac_media_schema() {
+  $schema['sbac_html5_progress'] = array(
+    'description' => t('Stores the progress for an HTML5 upload.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the html5 being uploaded.'),
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => t('The status of the upload.'),
+      ),
+      'start_time' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The unix_timestamp start date'),
+      ),
+      'finish_time' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => t('The unix_timestamp finish date'),
+      ),
+    ),
+    'primary key' => array('nid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Updates the eck_media status column.
+ */
+function sbac_media_update_7001() {
+  $ret = array();
+  db_query('UPDATE {eck_media} SET status = 1');
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Installs the HTML5 schema.
+ */
+function sbac_media_update_7002() {
+  $ret = array();
+  //Check if table exists, if not install the schema.
+  if(db_table_exists('sbac_html5_progress') == FALSE) {
+    /*
+     * This is no longer necessary, and results in errors
+     * see: https://www.drupal.org/node/876250
+     * drupal_install_schema('sbac_media');
+     */
+  }
+  return $ret;
+}

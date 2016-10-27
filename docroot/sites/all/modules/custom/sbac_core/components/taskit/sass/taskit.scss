@@ -1,0 +1,170 @@
+#notifications {
+  .helpful-info {
+    background: #eee;
+    border: 1px #ccc solid;
+    margin: 0 0 1em 0;
+    padding: 1em !important;
+
+    h2 {
+      margin-bottom: 1em;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .taskit-interval {
+    margin-bottom: 20px;
+		padding-bottom: 30px;
+		clear: both;
+		float: left;
+		width: 100%;
+		
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      text-transform: capitalize;
+    }
+
+    .taskit-row {
+      border-bottom: 1px #ccc solid;
+      font-size: 0.8em;
+      position: relative;
+			float: left;
+			width: 100%;
+
+      &.taskit-new {
+        background: #eee;
+      }
+
+      /*
+      &.taskit-collapsed {
+        .remove {
+          display: none;
+        }
+
+        .item {
+          .taskit-content {
+            .taskit-expand {
+              .taskit-expand-trigger {
+                background: url('/sites/all/themes/custom/SBAC/images/arrow-right.png') center center no-repeat;
+              }
+            }
+
+            .taskit-content-toggle {
+              display: none;
+            }
+          }
+        }
+      }
+      */
+     
+      .ajax-progress-throbber {
+        display: none;
+      }
+
+      .item {
+				float: left;
+				width: 100%;
+				line-height: 1.5;
+
+        .taskit-content {
+          background: url('/sites/all/themes/custom/SBAC/images/arrow-right.png') 99% center no-repeat;
+          color: #5a5a5a;
+          display: block;
+          padding: 10px 40px 10px 10px;
+					line-height: 1.5;
+					float: left;
+					width: 100%;
+
+          &:hover {
+            background-color: #eee;
+          }
+
+          .taskit-title {
+            color: #0085ad;
+            font-weight: bold;
+          }
+
+          .taskit-timestamp {
+
+          }
+
+          .taskit-expand {
+            display: block;
+            height: 14px;
+            position: absolute;
+            right: 10px;
+            text-indent: -9999px;
+            top: 10px;
+            width: 14px;
+
+            .taskit-expand-trigger {
+              background: url('/sites/all/themes/custom/SBAC/images/arrow-down.png') center center no-repeat;
+              display: block;
+              height: 100%;
+              width: 100%;
+            }
+          }
+
+          .taskit-content-toggle {
+            display: block;
+            line-height: 1.5em;
+            margin-right: -30px;
+          }
+        }
+      }			
+
+      .remove {
+        display: none;
+
+        bottom: 10px;
+        position: absolute;
+        right: 10px;
+        z-index: 2;
+
+        &.collapsed {
+          display: none;
+        }
+
+        a {
+          display: block;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
+
+.taskit-interval.interval-today,
+.taskit-interval.interval-yesterday,
+.taskit-interval.interval-older,
+.taskit-interval.interval-prior {
+	
+	.taskit-forum-cont {
+		padding: 10px 40px 10px 10px;
+		
+		.taskit-content-toggle,
+		.taskit-topic-removed-message {
+			margin-top: 3px;
+		}
+		
+		a {
+			color: #0085AD;
+		  font-weight: bold;
+		}
+	}
+	
+	.taskit-timestamp {
+		text-align: right;
+		float: right;
+		color: #62676E;
+	}
+}
+
+.devtools-tooltip-body {
+	.line {border-bottom:none;}
+}

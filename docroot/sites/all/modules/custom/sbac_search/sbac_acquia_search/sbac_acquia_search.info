@@ -1,0 +1,13 @@
+name = SBAC Aqcuia Search
+description = Connects SBAC Search to Acquia Search
+core = 7.x
+package = ~SBAC
+version = 7.x-1.0
+project = sbac_acquia_search
+dependencies[] = acquia_search
+dependencies[] = acquia_search_multi_subs
+dependencies[] = sbac_search
+features[apachesolr_environment][] = acquia_search_server_1
+features[features_api][] = api:2
+features[variable][] = acquia_search_edismax_default
+mtime = 1433944882

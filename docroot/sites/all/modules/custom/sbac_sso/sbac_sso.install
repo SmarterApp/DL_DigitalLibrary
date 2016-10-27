@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * 
+ * SBAC SSO install
+ */
+
+
+/**
+ * Impliments hook_uninstall().
+ */
+
+function sbac_sso_uninstall(){
+  variable_del('sbac_sso_pm_cached_results');
+  variable_del('sbac_sso_pm_cached_results');
+}

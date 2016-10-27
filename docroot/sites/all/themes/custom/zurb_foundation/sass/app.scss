@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Styles are organized using the SMACSS technique.
+ * @see http://smacss.com/book/
+ *
+ * Files are organized to follow upcoming drupal 8 coding architecture
+ * guidelines: http://drupal.org/node/1887922
+ *   - Base — CSS reset/normalize plus HTML element styling.
+ *   - Layout — macro arrangement of a web page, icluding any grid systems.
+ *   - Component — discrete, reusable UI elements.
+ *   - State — styles that deal with client-side changes to components.
+ *   - Skin — purely visual styling (“look-and-feel”) for a component.
+ */
+
+/* Base Rules */
+@import "normalize.css";
+/* Layout Rules  */
+/* Component */
+/* State */
+/* Skin  */
