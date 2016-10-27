@@ -1178,6 +1178,16 @@ function sbac_central_update_7096() {
 }
 
 /**
+ * Enable new sbac_export_csv module
+ */
+function sbac_central_update_7097() {
+  $modules = array(
+    'sbac_export_csv',
+  );
+  module_enable($modules);
+}
+
+/**
  * Impliments hook_uninstall().
  */
 

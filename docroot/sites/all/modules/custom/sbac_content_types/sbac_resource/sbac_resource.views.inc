@@ -231,10 +231,6 @@ function sbac_resource_digital_library_apply_filters(&$view) {
                   $view_filters['field_subject_tid']['value'][] = $tid;
                   $view_filters['field_subject_tid']['operator'] = 'and';
                   break;
-                case 'geographical_settings':
-                  $view_filters['field_geographical_settings_tid']['value'][] = $tid;
-                  $view_filters['field_geographical_settings_tid']['operator'] = 'and';
-                  break;
                 case 'educational_use':
                   $view_filters['field_educational_use_tid']['value'][] = $tid;
                   $view_filters['field_educational_use_tid']['operator'] = 'and';

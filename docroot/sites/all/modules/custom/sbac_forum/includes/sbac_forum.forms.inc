@@ -99,7 +99,6 @@ function _sbac_forum_filter_categories() {
   _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
   _sbac_search_create_taxonomy_filter($categories, 'intended_end_user', 'Intended End Users');
   _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
-  _sbac_search_create_taxonomy_filter($categories, 'geographical_settings', 'Geographic Settings');
   if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
     _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
     _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
