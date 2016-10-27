@@ -888,7 +888,8 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->content = $output;
   }
   // Forum topic list view field preprocessing
-  if ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block') {
+  if (($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block')
+      || ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'collaboration')) {
     foreach ($variables['fields'] as $name => $field) {
       if ($name == 'uid') {
         $user_uid = $field->raw;
@@ -905,7 +906,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $new_output = '';
         if (!empty($user_uid)) {
           $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
-          $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
+          $new_output = '' . $author_name . '';
         }
       
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
