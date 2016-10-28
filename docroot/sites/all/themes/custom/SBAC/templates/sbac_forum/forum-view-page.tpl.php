@@ -84,6 +84,11 @@
   <?php else: ?>
     <div class="no-resource">
       <div class="col narrow">
+			<?php if (!empty($fields['forum_image'])): ?>
+		<div class="vp-state-or-district-image">
+			<?php print $fields['forum_image']; ?>
+		</div>
+			<?php endif; ?>
      	<?php if (!empty($fields['description'])): ?>
 	  <div class="vp-desc-field">
 	    <?php print $fields['description']; ?>

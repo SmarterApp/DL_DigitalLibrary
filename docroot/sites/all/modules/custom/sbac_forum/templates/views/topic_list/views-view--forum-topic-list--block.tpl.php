@@ -70,7 +70,6 @@
         print flag_create_link('subscribe_node', $node->nid);
       }
     }
-    
     ?>
     <?php if ($topic_count): ?>
       <div class="topic-count">

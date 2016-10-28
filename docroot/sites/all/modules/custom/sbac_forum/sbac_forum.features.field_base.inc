@@ -10,7 +10,7 @@
 function sbac_forum_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'comment_body'
+  // Exported field_base: 'comment_body'.
   $field_bases['comment_body'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,32 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_fc_forum_member'
+  // Exported field_base: 'field_add_to_leaderboard'.
+  $field_bases['field_add_to_leaderboard'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_add_to_leaderboard',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => 'Off',
+        1 => 'Feature our forum\'s goals on the Most Active Member\'s Board',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
+  );
+
+  // Exported field_base: 'field_fc_forum_member'.
   $field_bases['field_fc_forum_member'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -64,7 +89,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_fc_forum_member_is_removed'
+  // Exported field_base: 'field_fc_forum_member_is_removed'.
   $field_bases['field_fc_forum_member_is_removed'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -89,7 +114,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_fc_forum_member_joined'
+  // Exported field_base: 'field_fc_forum_member_joined'.
   $field_bases['field_fc_forum_member_joined'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -118,7 +143,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_fc_forum_member_partip_scr'
+  // Exported field_base: 'field_fc_forum_member_partip_scr'.
   $field_bases['field_fc_forum_member_partip_scr'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -137,7 +162,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_decimal',
   );
 
-  // Exported field_base: 'field_fc_forum_member_post_count'
+  // Exported field_base: 'field_fc_forum_member_post_count'.
   $field_bases['field_fc_forum_member_post_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -152,7 +177,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_fc_forum_member_rcnt_actvt'
+  // Exported field_base: 'field_fc_forum_member_rcnt_actvt'.
   $field_bases['field_fc_forum_member_rcnt_actvt'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -181,7 +206,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'datestamp',
   );
 
-  // Exported field_base: 'field_fc_forum_member_reco_count'
+  // Exported field_base: 'field_fc_forum_member_reco_count'.
   $field_bases['field_fc_forum_member_reco_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -196,7 +221,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_fc_forum_member_removed'
+  // Exported field_base: 'field_fc_forum_member_removed'.
   $field_bases['field_fc_forum_member_removed'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -225,7 +250,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_fc_forum_member_removedmsg'
+  // Exported field_base: 'field_fc_forum_member_removedmsg'.
   $field_bases['field_fc_forum_member_removedmsg'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -244,7 +269,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_fc_forum_member_tpic_count'
+  // Exported field_base: 'field_fc_forum_member_tpic_count'.
   $field_bases['field_fc_forum_member_tpic_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -259,7 +284,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_fc_forum_members'
+  // Exported field_base: 'field_fc_forum_members'.
   $field_bases['field_fc_forum_members'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -281,7 +306,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'field_collection',
   );
 
-  // Exported field_base: 'field_forum_access_role_list'
+  // Exported field_base: 'field_forum_access_role_list'.
   $field_bases['field_forum_access_role_list'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -303,7 +328,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_forum_access_states'
+  // Exported field_base: 'field_forum_access_states'.
   $field_bases['field_forum_access_states'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -328,7 +353,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_forum_access_user_roles'
+  // Exported field_base: 'field_forum_access_user_roles'.
   $field_bases['field_forum_access_user_roles'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -353,7 +378,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_forum_created'
+  // Exported field_base: 'field_forum_created'.
   $field_bases['field_forum_created'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -382,7 +407,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_forum_description'
+  // Exported field_base: 'field_forum_description'.
   $field_bases['field_forum_description'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -401,7 +426,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_forum_facilitators'
+  // Exported field_base: 'field_forum_facilitators'.
   $field_bases['field_forum_facilitators'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -434,7 +459,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_forum_last_activity'
+  // Exported field_base: 'field_forum_last_activity'.
   $field_bases['field_forum_last_activity'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -463,7 +488,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'datetime',
   );
 
-  // Exported field_base: 'field_forum_member_count'
+  // Exported field_base: 'field_forum_member_count'.
   $field_bases['field_forum_member_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -478,7 +503,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_forum_removed_member_count'
+  // Exported field_base: 'field_forum_removed_member_count'.
   $field_bases['field_forum_removed_member_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -493,7 +518,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_forum_resource_ref'
+  // Exported field_base: 'field_forum_resource_ref'.
   $field_bases['field_forum_resource_ref'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -528,7 +553,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_forum_topic_comment_count'
+  // Exported field_base: 'field_forum_topic_comment_count'.
   $field_bases['field_forum_topic_comment_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -545,7 +570,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_float',
   );
 
-  // Exported field_base: 'field_forum_topic_count'
+  // Exported field_base: 'field_forum_topic_count'.
   $field_bases['field_forum_topic_count'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -560,7 +585,29 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_topic_comment_files'
+  // Exported field_base: 'field_state_or_district_image'.
+  $field_bases['field_state_or_district_image'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_state_or_district_image',
+    'indexes' => array(
+      'fid' => array(
+        0 => 'fid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'image',
+    'settings' => array(
+      'default_image' => 0,
+      'uri_scheme' => 'public',
+    ),
+    'translatable' => 0,
+    'type' => 'image',
+  );
+
+  // Exported field_base: 'field_topic_comment_files'.
   $field_bases['field_topic_comment_files'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -583,7 +630,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_topic_comment_links'
+  // Exported field_base: 'field_topic_comment_links'.
   $field_bases['field_topic_comment_links'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -612,7 +659,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'link_field',
   );
 
-  // Exported field_base: 'field_topic_comment_recommended'
+  // Exported field_base: 'field_topic_comment_recommended'.
   $field_bases['field_topic_comment_recommended'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -645,7 +692,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_topic_default'
+  // Exported field_base: 'field_topic_default'.
   $field_bases['field_topic_default'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -670,7 +717,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_topic_files'
+  // Exported field_base: 'field_topic_files'.
   $field_bases['field_topic_files'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -693,7 +740,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_topic_forum_parent'
+  // Exported field_base: 'field_topic_forum_parent'.
   $field_bases['field_topic_forum_parent'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -714,12 +761,13 @@ function sbac_forum_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_topic_links'
+  // Exported field_base: 'field_topic_links'.
   $field_bases['field_topic_links'] = array(
     'active' => 1,
     'cardinality' => -1,

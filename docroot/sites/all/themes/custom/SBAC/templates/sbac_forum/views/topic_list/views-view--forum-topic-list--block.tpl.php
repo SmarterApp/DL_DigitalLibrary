@@ -69,8 +69,7 @@
         $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
         print flag_create_link('subscribe_node', $node->nid);
       }
-    }
-    
+    }  
     ?>
     <?php if ($topic_count): ?>
       <div class="topic-count">

@@ -314,20 +314,17 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   }
 
   // Resource Forums tab
-  $resource_forums_display = 'block_2';
-  if (isset($count_values[$resource_forums_display]) && !empty($count_values[$resource_forums_display])) {
-    $resource_forums_count_text = '(' . $count_values[$resource_forums_display] . ')';
-  }
-  $form['resource_forums'] = array(
-    '#prefix' => '<div class="forum-subnav-primary-wrapper">',
-    '#type' => 'submit',
-    '#value' => t('Resource Forums') . ' ' . $resource_forums_count_text,
-    '#title' => t('Resource Forums '),
-    '#attributes' => array(
-      'class' => array($resource_forums_classes),
-    ),
-    '#submit' => array('_sbac_forum_sub_nav__set_resource__submit'),
-  );
+
+  //$form['resource_forums'] = array(
+  //  '#prefix' => '<div class="forum-subnav-primary-wrapper">',
+  //  '#type' => 'submit',
+  //  '#value' => t('Resource Forums') . ' ' . $resource_forums_count_text,
+  //  '#title' => t('Resource Forums '),
+  //  '#attributes' => array(
+  //    'class' => array($resource_forums_classes),
+  //  ),
+  //  '#submit' => array('_sbac_forum_sub_nav__set_resource__submit'),
+  //);
 
   // Topic Forums tab
   $topic_forums_display = 'block_3';
@@ -389,23 +386,27 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
     )
   );
 
-  if ($active_tab == SBAC_FORUM_SUBNAV_TOPIC) {
+//  if ($active_tab == SBAC_FORUM_SUBNAV_TOPIC) {
     $vocab = taxonomy_vocabulary_machine_name_load('forum');
     $access_to_add = _sbac_forum_add_forum_user_access($vocab);
     if ($access_to_add) {
-      $link_options = array(
-        'attributes' => array(
-          'class' => 'new-forum-link',
-        ),
-      );
       $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
-      $new_forum_link_text .= l('Start a Forum', 'forums/forum/add', $link_options);
+      $new_forum_link_text .= '<a class="new-forum-link" href="#">Start a Forum</a>';
       $new_forum_link_text .= '</div>';
       $form['forum_start'] = array(
         '#markup' => $new_forum_link_text,
       );
+          $form['forum_modal'] = array(
+      '#markup' => '<div class="forum-modal">
+                      <h2>You are about to create a Forum.</h2>
+                      <p>Before continuing, please confirm that you wish to be responsible for moderating this forum.  Click Continue to proceed.</p> 
+                      <a id="forum-modal-continue" href="forums/forum/add" class="button right">Continue</a><button class="button right secondary close-reveal-modal" style="margin-right: 20px;">Cancel</button>   
+                    </div>',
+      '#prefix' => '<div id="forum-modal-container" class="reveal-modal">',
+      '#suffix' => '</div>'        
+    );
     }
-  }
+//  }
   return $form;
 }
 

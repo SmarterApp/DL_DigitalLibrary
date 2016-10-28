@@ -10,7 +10,7 @@
 function sbac_forum_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'comment-comment_node_topic-comment_body'
+  // Exported field_instance: 'comment-comment_node_topic-comment_body'.
   $field_instances['comment-comment_node_topic-comment_body'] = array(
     'bundle' => 'comment_node_topic',
     'default_value' => NULL,
@@ -52,7 +52,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'comment-comment_node_topic-field_topic_comment_files'
+  // 'comment-comment_node_topic-field_topic_comment_files'.
   $field_instances['comment-comment_node_topic-field_topic_comment_files'] = array(
     'bundle' => 'comment_node_topic',
     'deleted' => 0,
@@ -91,7 +91,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'comment-comment_node_topic-field_topic_comment_links'
+  // 'comment-comment_node_topic-field_topic_comment_links'.
   $field_instances['comment-comment_node_topic-field_topic_comment_links'] = array(
     'bundle' => 'comment_node_topic',
     'default_value' => NULL,
@@ -145,7 +145,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'comment-comment_node_topic-field_topic_comment_recommended'
+  // 'comment-comment_node_topic-field_topic_comment_recommended'.
   $field_instances['comment-comment_node_topic-field_topic_comment_recommended'] = array(
     'bundle' => 'comment_node_topic',
     'default_value' => NULL,
@@ -182,7 +182,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -222,7 +222,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_is_removed'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_is_removed'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_is_removed'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => array(
@@ -262,7 +262,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_joined'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_joined'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_joined'] = array(
     'bundle' => 'field_fc_forum_members',
     'deleted' => 0,
@@ -277,6 +277,7 @@ function sbac_forum_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 1,
@@ -312,7 +313,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_partip_scr'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -356,7 +357,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_post_count'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -400,7 +401,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_rcnt_actvt'] = array(
     'bundle' => 'field_fc_forum_members',
     'deleted' => 0,
@@ -415,6 +416,7 @@ function sbac_forum_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 9,
@@ -450,7 +452,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_reco_count'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => array(
@@ -498,7 +500,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_removed'] = array(
     'bundle' => 'field_fc_forum_members',
     'deleted' => 0,
@@ -513,6 +515,7 @@ function sbac_forum_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
         'weight' => 3,
@@ -548,7 +551,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_removedmsg'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -590,7 +593,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'
+  // 'field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'.
   $field_instances['field_collection_item-field_fc_forum_members-field_fc_forum_member_tpic_count'] = array(
     'bundle' => 'field_fc_forum_members',
     'default_value' => NULL,
@@ -633,7 +636,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-topic-body'
+  // Exported field_instance: 'node-topic-body'.
   $field_instances['node-topic-body'] = array(
     'bundle' => 'topic',
     'default_value' => NULL,
@@ -685,7 +688,7 @@ function sbac_forum_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'node-topic-field_topic_default'
+  // Exported field_instance: 'node-topic-field_topic_default'.
   $field_instances['node-topic-field_topic_default'] = array(
     'bundle' => 'topic',
     'default_value' => array(
@@ -728,7 +731,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-topic-field_topic_files'
+  // Exported field_instance: 'node-topic-field_topic_files'.
   $field_instances['node-topic-field_topic_files'] = array(
     'bundle' => 'topic',
     'deleted' => 0,
@@ -772,7 +775,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-topic-field_topic_forum_parent'
+  // Exported field_instance: 'node-topic-field_topic_forum_parent'.
   $field_instances['node-topic-field_topic_forum_parent'] = array(
     'bundle' => 'topic',
     'default_value' => NULL,
@@ -813,7 +816,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-topic-field_topic_links'
+  // Exported field_instance: 'node-topic-field_topic_links'.
   $field_instances['node-topic-field_topic_links'] = array(
     'bundle' => 'topic',
     'default_value' => NULL,
@@ -872,7 +875,51 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_attributes'
+  // Exported field_instance: 'taxonomy_term-forum-field_add_to_leaderboard'.
+  $field_instances['taxonomy_term-forum-field_add_to_leaderboard'] = array(
+    'bundle' => 'forum',
+    'default_value' => array(
+      0 => array(
+        'value' => 1,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 27,
+      ),
+      'forum_page_card' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 6,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_add_to_leaderboard',
+    'label' => 'Add to leaderboard',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+        'label_help_description' => '',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-forum-field_attributes'.
   $field_instances['taxonomy_term-forum-field_attributes'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -890,7 +937,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 19,
+        'weight' => 21,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -913,7 +960,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_digital_media_type'
+  // Exported field_instance: 'taxonomy_term-forum-field_digital_media_type'.
   $field_instances['taxonomy_term-forum-field_digital_media_type'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -931,7 +978,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 21,
+        'weight' => 22,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -950,11 +997,11 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 23,
+      'weight' => 11,
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_educational_use'
+  // Exported field_instance: 'taxonomy_term-forum-field_educational_use'.
   $field_instances['taxonomy_term-forum-field_educational_use'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -972,7 +1019,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 23,
+        'weight' => 24,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -991,11 +1038,11 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 27,
+      'weight' => 13,
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_fc_forum_members'
+  // Exported field_instance: 'taxonomy_term-forum-field_fc_forum_members'.
   $field_instances['taxonomy_term-forum-field_fc_forum_members'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1012,7 +1059,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 16,
+        'weight' => 18,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1034,7 +1081,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_focus'
+  // Exported field_instance: 'taxonomy_term-forum-field_focus'.
   $field_instances['taxonomy_term-forum-field_focus'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1052,7 +1099,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 22,
+        'weight' => 23,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1070,11 +1117,12 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 25,
+      'weight' => 12,
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_access_role_list'
+  // Exported field_instance:
+  // 'taxonomy_term-forum-field_forum_access_role_list'.
   $field_instances['taxonomy_term-forum-field_forum_access_role_list'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1091,7 +1139,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 15,
+        'weight' => 17,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1114,7 +1162,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_access_states'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_access_states'.
   $field_instances['taxonomy_term-forum-field_forum_access_states'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1135,7 +1183,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 13,
+        'weight' => 15,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1158,7 +1206,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-forum-field_forum_access_user_roles'
+  // 'taxonomy_term-forum-field_forum_access_user_roles'.
   $field_instances['taxonomy_term-forum-field_forum_access_user_roles'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1179,7 +1227,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 14,
+        'weight' => 16,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1201,7 +1249,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_created'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_created'.
   $field_instances['taxonomy_term-forum-field_forum_created'] = array(
     'bundle' => 'forum',
     'deleted' => 0,
@@ -1217,7 +1265,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 5,
+        'weight' => 7,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1249,7 +1297,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_description'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_description'.
   $field_instances['taxonomy_term-forum-field_forum_description'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1267,7 +1315,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 6,
+        'weight' => 8,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1296,7 +1344,7 @@ function sbac_forum_field_default_field_instances() {
     'xss' => 0,
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_facilitators'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_facilitators'.
   $field_instances['taxonomy_term-forum-field_forum_facilitators'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1316,7 +1364,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'inline',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 7,
+        'weight' => 9,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1341,7 +1389,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_last_activity'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_last_activity'.
   $field_instances['taxonomy_term-forum-field_forum_last_activity'] = array(
     'bundle' => 'forum',
     'deleted' => 0,
@@ -1362,9 +1410,10 @@ function sbac_forum_field_default_field_instances() {
           'multiple_from' => '',
           'multiple_number' => '',
           'multiple_to' => '',
+          'show_remaining_days' => FALSE,
         ),
         'type' => 'date_default',
-        'weight' => 0,
+        'weight' => 1,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1396,7 +1445,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_member_count'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_member_count'.
   $field_instances['taxonomy_term-forum-field_forum_member_count'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1423,7 +1472,7 @@ function sbac_forum_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_integer',
-        'weight' => 4,
+        'weight' => 5,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1450,7 +1499,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-forum-field_forum_removed_member_count'
+  // 'taxonomy_term-forum-field_forum_removed_member_count'.
   $field_instances['taxonomy_term-forum-field_forum_removed_member_count'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1471,7 +1520,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 18,
+        'weight' => 20,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1497,7 +1546,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_resource_ref'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_resource_ref'.
   $field_instances['taxonomy_term-forum-field_forum_resource_ref'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1518,7 +1567,7 @@ function sbac_forum_field_default_field_instances() {
         'module' => 'entityreference',
         'settings' => array(),
         'type' => 'entityreference_entity_id',
-        'weight' => 1,
+        'weight' => 2,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1544,7 +1593,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-forum-field_forum_topic_comment_count'
+  // 'taxonomy_term-forum-field_forum_topic_comment_count'.
   $field_instances['taxonomy_term-forum-field_forum_topic_comment_count'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1571,7 +1620,7 @@ function sbac_forum_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_decimal',
-        'weight' => 3,
+        'weight' => 4,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1597,7 +1646,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_forum_topic_count'
+  // Exported field_instance: 'taxonomy_term-forum-field_forum_topic_count'.
   $field_instances['taxonomy_term-forum-field_forum_topic_count'] = array(
     'bundle' => 'forum',
     'default_value' => array(
@@ -1624,7 +1673,7 @@ function sbac_forum_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_integer',
-        'weight' => 2,
+        'weight' => 3,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1650,48 +1699,7 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_geographical_settings'
-  $field_instances['taxonomy_term-forum-field_geographical_settings'] = array(
-    'bundle' => 'forum',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 20,
-      ),
-      'forum_page_card' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 20,
-      ),
-    ),
-    'entity_type' => 'taxonomy_term',
-    'field_name' => 'field_geographical_settings',
-    'label' => 'Geographic Settings',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'apply_chosen' => 1,
-        'label_help_description' => '',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
-      ),
-      'type' => 'options_select',
-      'weight' => 11,
-    ),
-  );
-
-  // Exported field_instance: 'taxonomy_term-forum-field_grades'
+  // Exported field_instance: 'taxonomy_term-forum-field_grades'.
   $field_instances['taxonomy_term-forum-field_grades'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1709,13 +1717,13 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 10,
       ),
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_grades',
     'label' => 'Grades',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
@@ -1725,14 +1733,13 @@ function sbac_forum_field_default_field_instances() {
       'settings' => array(
         'apply_chosen' => 1,
         'label_help_description' => '',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
       'weight' => 9,
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_intended_end_user'
+  // Exported field_instance: 'taxonomy_term-forum-field_intended_end_user'.
   $field_instances['taxonomy_term-forum-field_intended_end_user'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1750,12 +1757,12 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 12,
       ),
     ),
     'entity_type' => 'taxonomy_term',
     'field_name' => 'field_intended_end_user',
-    'label' => 'Intended Participants',
+    'label' => 'Title',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1766,14 +1773,13 @@ function sbac_forum_field_default_field_instances() {
       'settings' => array(
         'apply_chosen' => 1,
         'label_help_description' => '',
-        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
       'weight' => 10,
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_intended_student'
+  // Exported field_instance: 'taxonomy_term-forum-field_intended_student'.
   $field_instances['taxonomy_term-forum-field_intended_student'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1791,7 +1797,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 13,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1815,7 +1821,7 @@ function sbac_forum_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-forum-field_smarter_balanced_keyword'
+  // 'taxonomy_term-forum-field_smarter_balanced_keyword'.
   $field_instances['taxonomy_term-forum-field_smarter_balanced_keyword'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1833,7 +1839,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 24,
+        'weight' => 25,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1852,11 +1858,11 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 29,
+      'weight' => 14,
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_state'
+  // Exported field_instance: 'taxonomy_term-forum-field_state'.
   $field_instances['taxonomy_term-forum-field_state'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1873,7 +1879,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 12,
+        'weight' => 14,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1896,7 +1902,63 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_subject'
+  // Exported field_instance:
+  // 'taxonomy_term-forum-field_state_or_district_image'.
+  $field_instances['taxonomy_term-forum-field_state_or_district_image'] = array(
+    'bundle' => 'forum',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 26,
+      ),
+      'forum_page_card' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => 'thumbnail',
+        ),
+        'type' => 'image',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_state_or_district_image',
+    'label' => 'Add Forum Cover Image',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'label_help_description' => 'Please add a cover image that best represents your Forum.  Acceptable file types include png, jpg, and jpeg.',
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-forum-field_subject'.
   $field_instances['taxonomy_term-forum-field_subject'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
@@ -1914,7 +1976,7 @@ function sbac_forum_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 11,
       ),
     ),
     'entity_type' => 'taxonomy_term',
@@ -1939,6 +2001,8 @@ function sbac_forum_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Add Forum Cover Image');
+  t('Add to leaderboard');
   t('Attributes of the Formative Assessment Process');
   t('Comment');
   t('Created');
@@ -1951,9 +2015,7 @@ function sbac_forum_field_default_field_instances() {
   t('Files');
   t('Forum');
   t('Forum resource ref');
-  t('Geographic Settings');
   t('Grades');
-  t('Intended Participants');
   t('Last Activity');
   t('Links');
   t('Media Types');
@@ -1976,6 +2038,7 @@ function sbac_forum_field_default_field_instances() {
   t('States');
   t('Student Populations');
   t('Subjects and Domains');
+  t('Title');
   t('Topic Comment Files');
   t('Topic Comment Links');
   t('Topic Count');

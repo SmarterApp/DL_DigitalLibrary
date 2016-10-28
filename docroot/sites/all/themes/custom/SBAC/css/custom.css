@@ -36376,3 +36376,22 @@ form#sbac-user-filter-form #edit-email {
   background-color: #0b5d76;
   color: #FFFFFF;
 }
+
+#taxonomy-form-term .hidden {
+  display: none;
+}
+
+#taxonomy-form-term #forum-access {
+  float: left;
+  width: 100%;
+}
+
+#taxonomy-form-term .sbac-forum-add-forum-buttons {
+  float: left;
+  margin-top: 40px;
+  width: 100%;  
+}
+
+#taxonomy-form-term .field-group-tab-wrapper {
+  float: left;
+}

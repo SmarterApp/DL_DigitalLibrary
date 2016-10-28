@@ -247,7 +247,7 @@ function _sbac_forum_add_forum_user_access($vocabulary) {
   // Anon users should not have access.
   if (!empty($user->uid)) {
     // Facilitators or users with "administer taxonomy" perms can add forums
-    if (in_array('facilitator', $user->roles) ||
+    if (in_array('authenticated user', $user->roles) ||
       user_access('administer taxonomy')
     ) {
       $access = TRUE;
@@ -981,6 +981,14 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       else { // Add forum forum
         $form['actions']['submit']['#value'] = 'Start Forum';
         $form['actions']['submit']['#suffix'] = '</div>';
+      }
+
+      // Remove State fields for non-SLT's
+      $is_slt = sbac_report_is_slt($user);
+      if (!$is_slt  && !in_array('administrator', $user->roles)) { 
+        $form['field_state_or_district_image']['#access'] = FALSE;
+        $form['field_add_to_leaderboard']['#access'] = FALSE;
+        $form['field_forum_access_states']['#prefix'] = '<div class="forum-add-access-left hidden">';
       }
 
       $form['#validate'][] = '_sbac_forum__forum_form__title_profanity_validate';
