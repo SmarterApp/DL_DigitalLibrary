@@ -36393,5 +36393,38 @@ form#sbac-user-filter-form #edit-email {
 }
 
 #taxonomy-form-term .field-group-tab-wrapper {
+  float: left; 
+}
+
+.leave-forum-button-wrapper .button {
+  margin: 20px 0;
+  float: right;
+}
+
+#sbac-forum-sub-nav-form .forum-subnav-start-link-wrapper {
   float: left;
+  padding: 0 20px;
+  clear: none;
+  margin-top: 0;
+}
+
+#edit-topic-forums {
+  display: none;
+}
+
+#sbac-forum-sub-nav-form .forum-subnav-sort-wrapper, #sbac-forum-sub-nav-form .forum-subnav-keyword-wrapper {
+  float: left;
+  border-left: 0 none;
+  border-right: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 1px 0px 0px 0px #006082;
+  display: block;
+  float: left;
+  height: 34px;
+  margin: 0 0 0 20px;
+  padding: 0 30px 0 20px;
+}
+
+#sbac-forum-sub-nav-form .forum-subnav-sort-wrapper {
+  padding-left: 0;
+  margin-left: 0;
 }

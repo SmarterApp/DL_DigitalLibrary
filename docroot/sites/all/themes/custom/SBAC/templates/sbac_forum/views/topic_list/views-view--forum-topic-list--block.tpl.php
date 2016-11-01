@@ -59,17 +59,33 @@
   <div class="filter-bar">
     <?php
 
-    if (arg(1) == 'term' && is_numeric(arg(2))) {
-      $tid = arg(2);
-      print flag_create_link('subscribe_term', $tid);
-    }
-    else {
-      if ($view->exposed_input['section_id'] !== "section-collaboration") {
-        $node = node_load($view->result[0]->nid);
-        $tid = $node->field_topic_forum_parent[$node->language][0]['tid'];
-        print flag_create_link('subscribe_node', $node->nid);
-      }
-    }  
+    // Add join or leave forum buttons
+		$path_pieces = explode('/', $_GET['q']);
+		$tid = $path_pieces[2];
+		$term = taxonomy_term_load($tid);
+		$is_member = FALSE;
+		foreach($term->field_fc_forum_members['und'] as $member) {
+			$member_user = entity_load('field_collection_item', array($member['value']));
+			$member_uid = $member_user[$member['value']]->field_fc_forum_member['und'][0]['target_id'];
+			if ($user->uid == $member_uid) {
+				$is_member = TRUE;
+			}
+		}
+		if ($is_member) {
+			ctools_include('modal'); 
+			ctools_modal_add_js();
+
+			print '<div class="leave-forum-button-wrapper">';
+			print l('Leave Forum', 'sbac-forum/nojs/forum-leave/' . $tid, array(
+			 'attributes' => array('class' => 'ctools-use-modal button')));
+			print '</div>';
+		}
+		else {
+      module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+			module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.ajax');
+      $join_form = drupal_get_form('sbac_forum_join_button_form', $tid, $user->uid);
+			print drupal_render($join_form); 
+		}
     ?>
     <?php if ($topic_count): ?>
       <div class="topic-count">
