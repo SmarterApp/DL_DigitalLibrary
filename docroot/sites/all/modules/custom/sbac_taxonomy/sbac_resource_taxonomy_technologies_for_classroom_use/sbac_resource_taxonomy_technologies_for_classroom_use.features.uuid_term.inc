@@ -15,7 +15,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => '',
     'format' => 'full_html',
     'weight' => 0,
-    'uuid' => '11162ed8-a2a2-451a-abb9-3f401435fc45',
+    'uuid' => 'ec9715cf-76b1-4987-b42b-a1f37d390845',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -23,7 +23,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => NULL,
     'format' => NULL,
     'weight' => 0,
-    'uuid' => '4e5cdee9-27e5-4b68-93a1-801120cc30ca',
+    'uuid' => '3bafdefd-723f-426a-b830-7af013bb98db',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -31,7 +31,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => NULL,
     'format' => NULL,
     'weight' => 0,
-    'uuid' => '4faed31e-d9db-4abe-8754-6f9e19b80d05',
+    'uuid' => 'c6c3c676-4e31-4a3f-a791-5a8be10628e0',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -39,7 +39,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => '',
     'format' => 'full_html',
     'weight' => 0,
-    'uuid' => '6a426c77-b65c-4881-be85-a58cd2fbcf4f',
+    'uuid' => '76c498f4-2b28-4f69-9d7d-7056f5cff58b',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -47,7 +47,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => '',
     'format' => 'full_html',
     'weight' => 0,
-    'uuid' => '854de586-080c-439e-ab30-7a4fd024226f',
+    'uuid' => '7db12b2c-7c9e-4cc4-bce7-9eca943a3ebd',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -55,7 +55,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => NULL,
     'format' => NULL,
     'weight' => 1,
-    'uuid' => '9360d588-2deb-4ee0-874c-978038a9c6a0',
+    'uuid' => 'e6d3602c-2fec-44bc-b5cf-b309642d65b1',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -63,7 +63,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => '',
     'format' => 'full_html',
     'weight' => 4,
-    'uuid' => '9cf07358-a10e-47ff-8f67-a0106a2b6cc7',
+    'uuid' => '3bfff820-e75c-4f25-85c7-7e80c79346b2',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -71,7 +71,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => '',
     'format' => 'full_html',
     'weight' => 0,
-    'uuid' => '9f4e4206-fa63-41e7-b843-21eb6329e608',
+    'uuid' => 'fbb67700-4a3a-4765-b8e1-071430323ca1',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -79,7 +79,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => '',
     'format' => 'full_html',
     'weight' => 0,
-    'uuid' => 'a63b5124-c605-4d87-8ed9-860d7e500a2d',
+    'uuid' => 'ea38516a-26e5-4040-b247-64f7edb3bded',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -87,7 +87,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => '',
     'format' => 'full_html',
     'weight' => 3,
-    'uuid' => 'c798c07d-b637-4cb1-a493-a0342af7f641',
+    'uuid' => '329720af-b232-4cb8-bd28-b22f889f550b',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
@@ -95,7 +95,7 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'description' => NULL,
     'format' => NULL,
     'weight' => 2,
-    'uuid' => 'fa0c22d8-3817-465e-afaa-ae65e5a68989',
+    'uuid' => 'aeef5908-1f2e-4f43-b82b-620ea0ad52ca',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
   $terms[] = array(
