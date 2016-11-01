@@ -50,10 +50,6 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
                     $view_filters['field_intended_end_user_tid']['value'][] = $tid;
                     $view_filters['field_intended_end_user_tid']['operator'] = 'and';
                     break;
-                  case 'geographical_settings':
-                    $view_filters['field_geographical_settings_tid']['value'][] = $tid;
-                    $view_filters['field_geographical_settings_tid']['operator'] = 'and';
-                    break;
                   case 'attributes':
                     $view_filters['field_attributes_tid']['value'][] = $tid;
                     $view_filters['field_attributes_tid']['operator'] = 'and';

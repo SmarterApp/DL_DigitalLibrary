@@ -30756,10 +30756,6 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   opacity: 1;
 }
 
-/* line 3, ../sass/components/_page-digital-library-resources.scss */
-.page-digital-library-resources #facet-common-core-state-standards {
-  display: none;
-}
 /* line 6, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .categories-container {
   position: relative;
@@ -32186,7 +32182,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select {
 }
 /* line 673, ../sass/custom.scss */
 .sbac-favorites-menu a {
-  background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
+  background: url(../images/icons/icon-folder-heart.png) no-repeat 0 0;
   padding-left: 20px;
 }
 /* line 678, ../sass/custom.scss */
@@ -34876,7 +34872,8 @@ a.tabledrag-handle .handle {
 /* fix for back button block for resource node pages.*/
 /* line 3136, ../sass/custom.scss */
 .page-moderation .top-bar.last-top,
-.node-type-resource .top-bar.last-top {
+.node-type-resource .top-bar.last-top,
+.node-type-collection .top-bar.last-top {
   height: 25px;
   max-width: 960px;
   padding: 0 0 0;

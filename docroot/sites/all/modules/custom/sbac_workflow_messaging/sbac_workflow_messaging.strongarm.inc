@@ -1060,6 +1060,16 @@ function sbac_workflow_messaging_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'qc_level_0';
+  $strongarm->value = array(
+    'value' => '<p>Not Applicable</p>',
+    'format' => 'full_html',
+  );
+  $export['qc_level_0'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'qc_level_1';
   $strongarm->value = array(
     'value' => '<p>No Evidence</p>',
@@ -3087,7 +3097,7 @@ table.MsoNormalTable
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'sbac_resource_general_guide';
-  $strongarm->value = '<p class="MsoNormal" style="margin-bottom: 15.0pt;"><span style="font-size: 9pt; font-family: Arial, sans-serif;">You’re about to create a resource.&nbsp; Please review the&nbsp;<a href="/sites/all/themes/custom/SBAC/workflow_resources/Cover_Profile_Guide_Playlists_June2016.pdf" target="_blank"><strong>Cover Profile Guide</strong></a>&nbsp;for more information on how to begin this process.</span></p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 15.0pt; margin-left: 0in;"><span style="font-size: 9pt; font-family: Arial, sans-serif;">The Digital Library will walk you through four (4) tabs of required information.&nbsp; Be sure to complete all required fields and avoid using any inappropriate language. &nbsp;Should you miss a field and/or include inappropriate language, an error message will appear and request that you make adjustments. &nbsp;If you have any further questions, please&nbsp;visit the <strong><a href="https://beta.smarterbalancedlibrary.org/help-topics" target="_blank">Help Topics</a></strong> section.</span></p>';
+  $strongarm->value = '<p class="MsoNormal" style="margin-bottom: 15.0pt;"><span style="font-size: 9pt; font-family: Arial, sans-serif;">You’re about to create a resource.&nbsp; Please review the&nbsp;<a href="/sites/all/themes/custom/sbac/workflow_resources/Cover_Profile_Guide_Playlists_June2016.pdf" target="_blank"><strong>Cover Profile Guide</strong></a>&nbsp;for more information on how to begin this process.</span></p><p class="MsoNormal" style="margin-bottom: 15.0pt;"><span style="font-size: 9pt; font-family: Arial, sans-serif;">Here\'s a helpful <strong><a href="/sites/all/themes/custom/sbac/workflow_resources/resource_recording%20templat.docx" target="_blank">Template</a></strong> to use when creating your resource, for planning and recording the information that will be included.</span></p><p style="margin-top: 0in; margin-right: 0in; margin-bottom: 15.0pt; margin-left: 0in;"><span style="font-size: 9pt; font-family: Arial, sans-serif;">The Digital Library will walk you through four (4) tabs of required information.&nbsp; Be sure to complete all required fields and avoid using any inappropriate language. &nbsp;Should you miss a field and/or include inappropriate language, an error message will appear and request that you make adjustments. &nbsp;If you have any further questions, please&nbsp;visit the <strong><a href="https://beta.smarterbalancedlibrary.org/help-topics" target="_blank">Help Topics</a></strong> section.</span></p>';
   $export['sbac_resource_general_guide'] = $strongarm;
 
   $strongarm = new stdClass();

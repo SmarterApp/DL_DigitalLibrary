@@ -174,6 +174,35 @@ function sbac_forum_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_topic_collection|comment|comment_node_topic|form';
+  $field_group->group_name = 'group_topic_collection';
+  $field_group->entity_type = 'comment';
+  $field_group->bundle = 'comment_node_topic';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Attach Collection',
+    'weight' => '3',
+    'children' => array(
+      0 => 'field_topic_comment_collection',
+    ),
+    'format_type' => 'fieldset',
+    'format_settings' => array(
+      'label' => 'Attach Collection',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'id' => '',
+        'classes' => 'group-topic-collection field-group-fieldset',
+        'description' => '',
+      ),
+      'formatter' => 'collapsed',
+    ),
+  );
+  $field_groups['group_topic_collection|comment|comment_node_topic|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_topic_comments_links|comment|comment_node_topic|form';
   $field_group->group_name = 'group_topic_comments_links';
   $field_group->entity_type = 'comment';
@@ -182,7 +211,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attach link(s)',
-    'weight' => '3',
+    'weight' => '2',
     'children' => array(
       0 => 'field_topic_comment_links',
     ),
@@ -210,7 +239,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Attach file(s)',
-    'weight' => '2',
+    'weight' => '1',
     'children' => array(
       0 => 'field_topic_comment_files',
     ),
@@ -287,6 +316,7 @@ function sbac_forum_field_group_info() {
   // Included for use with string extractors like potx.
   t('Add Tags');
   t('Administrative (hidden)');
+  t('Attach Collection');
   t('Attach file(s)');
   t('Attach link(s)');
   t('Facilitators');

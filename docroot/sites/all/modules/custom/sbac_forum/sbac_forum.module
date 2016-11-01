@@ -934,7 +934,6 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       $form['field_subject']['#prefix'] = '<div class="forum-tags-left">';
       $form['field_intended_student']['#suffix'] = '</div>';
       $form['field_grades']['#prefix'] = '<div class="forum-tags-right">';
-      $form['field_geographical_settings']['#suffix'] = '</div><div class="clearfix"></div>';
 
 
       // Access fields. Modify behaviour.
@@ -1013,7 +1012,6 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       array('vid' => 'grades', 'field' => 'field_grades'),
       array('vid' => 'intended_student_populations', 'field' => 'field_intended_student'),
       array('vid' => 'intended_end_user', 'field' => 'field_intended_end_user'),
-      array('vid' => 'geographical_settings', 'field' => 'field_geographical_settings'),
       array('vid' => 'attributes', 'field' => 'field_attributes'),
     );
     foreach ($configs as $config) {
@@ -2446,13 +2444,6 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
     $build['field_forum_topic_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Discussions</div></div>';
 
     // Forum resource reference
-    if (!empty($build['field_forum_resource_ref'][0]['#markup'])) {
-      $favorites = sbac_favorites_get_favorites($user->uid, $build['field_forum_resource_ref'][0]['#markup']);
-      $build['field_forum_resource_ref'][0]['#markup'] = '';
-      if ($favorites) {
-        $build['field_forum_resource_ref'][0]['#markup'] = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
-      }
-    }
 
     if (arg(0) !== 'forums' && empty($build['field_forum_resource_ref'][0]['#markup'])) {
       $is_faci = FALSE;

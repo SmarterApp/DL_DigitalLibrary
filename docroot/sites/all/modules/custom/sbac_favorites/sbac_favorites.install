@@ -28,6 +28,14 @@ function sbac_favorites_schema() {
         'auto_increment' => FALSE,
         'description' => t('The uid who viewed the resource.'),
       ),
+      'cid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the collection or 0 if a general favorite.'),
+      ),
       'weight' => array(
         'type' => 'int',
         'not null' => FALSE,
@@ -41,10 +49,11 @@ function sbac_favorites_schema() {
         'not null' => TRUE,
       ),
     ),
-    'primary key' => array('id', 'uid', 'type'),
+    'primary key' => array('id', 'uid', 'cid', 'type'),
     'indexes' => array(
       'id' => array('id'),
       'uid' => array('uid'),
+      'cid' => array('cid'),
       'type' => array('type'),
       'weight' => array('weight'),
     ),
@@ -71,4 +80,21 @@ function sbac_favorites_update_7001() {
   db_query("alter table sbac_favorites change nid id int");
   db_add_index('sbac_favorites', 'id', array('id'));
   db_query("alter table sbac_favorites drop primary key, add primary key (id, uid, type)");
+}
+
+/**
+ * Add cid column to sbac_favorites table
+ */
+function sbac_favorites_update_7002() {
+    $column = array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the collection or 0 if a general favorite.'),
+    );
+    db_add_field('sbac_favorites', 'cid', $column);
+    db_add_index('sbac_favorites', 'cid', array('cid'));
+    db_query("alter table sbac_favorites drop primary key, add primary key (id, uid, cid, type)");
 }

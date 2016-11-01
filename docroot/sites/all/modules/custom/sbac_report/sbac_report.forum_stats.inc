@@ -255,12 +255,6 @@ function sbac_report_forum_get_columns() {
         'field_name' => 'field_intended_end_user',
       )
     ),
-    'Geographic Settings' => array(
-      'function' => 'sbac_report_get_entity_wrapper_multi_value',
-      'arguments' => array(
-        'field_name' => 'field_geographical_settings',
-      )
-    ),
     'Number of Participants' => array(
       'function' => 'sbac_report_get_entity_wrapper_value',
       'arguments' => array(

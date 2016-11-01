@@ -463,6 +463,7 @@ function sbac_forum_view_forum_page($term) {
     }
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
+
   if (!empty($term->field_state_or_district_image)) {
       $forum_image_url = file_create_url($term->field_state_or_district_image['und'][0]['uri']);
       $image_tag = '<img typeof="foaf:Image" src="' . $forum_image_url . '" width="268" height="138" alt="Forum thumbnail image" />';
@@ -484,7 +485,6 @@ function sbac_forum_view_forum_page($term) {
     'end_users' => $end_user_text,
     'students' => $student_text,
     'tabs' => $tab_output,
-    'favorites_link' => $favorite_link,
     'resource_link' => $resource_link,
     'forum_image' => $image_tag,
     'resource_image' => $image_tag,

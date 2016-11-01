@@ -3604,6 +3604,9 @@ View Topic Page, Comment Page
 .comment-form .fieldset-wrapper {
   width: 100%;
 }
+.comment-form .group-topic-collection .fieldset-wrapper {
+    overflow: visible !important;
+}
 /* line 3093, ../sass/sbac_forum.scss */
 .comment-form #comment_comment_node_topic_form_group_topic_comments_materials,
 .comment-form #comment_comment_node_topic_form_group_topic_comments_links {
@@ -3897,14 +3900,26 @@ h2.title {
   position: relative;
   top: -2px;
 }
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper .node-collection {
+  clear:both;
+  background-color: inherit;
+}
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper h2 {
+  font-weight: normal;
+}
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper ul.links {
+  display: none;
+}
 /* line 3377, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .field-name-field-topic-comment-files .file img,
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper img {
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper img,
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper img {
   display: none;
 }
 /* line 3379, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .field-name-field-topic-comment-files .file a,
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper a {
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper a,
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper a {
   color: #0583AC;
   display: inline-block;
   font-size: 13px;
@@ -3915,7 +3930,8 @@ h2.title {
 }
 /* line 3389, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .field-name-field-topic-comment-files .file a:before,
-.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper a:before {
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-links.field-wrapper a:before,
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper a:before {
   content: " ";
   background: #101010;
   width: 5px;
@@ -3926,6 +3942,21 @@ h2.title {
   font-weight: normal;
   margin-right: 5px;
   position: relative;
+}
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper a {
+  background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-blue.png) no-repeat 0 0;
+  line-height: 16px;
+  margin-left: -6px;
+}
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper a:hover {
+    text-decoration: underline;
+}
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper a:before {
+  background-color: inherit;
+  width: 16px;
+}
+.comment .topic-node-comment-region-right .field-name-field-topic-comment-collection.field-wrapper .contextual-links-wrapper {
+  display: none;
 }
 /* line 3403, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .field-name-field-topic-comment-files .file-widget form-managed-file .file:before {

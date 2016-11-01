@@ -1467,7 +1467,6 @@ function sbac_resource_smart_search_welcome__preprocess(&$vars) {
     'intended_student_populations' => t('Intended Student Populations'),
     'educational_use' => t('Educational Use'),
     'smarter_balanced_keyword' => t('Module Type'),
-    'geographical_settings' => t('Geographic Settings'),
     'education_alignment' => t('Common Core State Standards'),
   );
 

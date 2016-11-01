@@ -99,6 +99,7 @@
         hide($content['links']);
         hide($content['field_topic_comment_links']);
         hide($content['field_topic_comment_files']);
+        hide($content['field_topic_comment_collection']);
         print render($content);
         if (isset($removed)) {
           print $removed;
@@ -111,6 +112,7 @@
             <?php
             print render($content['field_topic_comment_files']);
             print render($content['field_topic_comment_links']);
+            print render($content['field_topic_comment_collection']);
             ?>
           <?php endif; ?>
         </div>

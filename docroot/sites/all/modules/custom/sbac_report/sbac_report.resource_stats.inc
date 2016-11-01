@@ -1290,7 +1290,6 @@ function get_total_tags($fieldkey, $data, $resource) {
   $count += count($resource->field_subject->value());
   $count += count($resource->field_intended_end_user->value());
   $count += count($resource->field_intended_student->value());
-  $count += count($resource->field_geographical_settings->value());
   $count += count($resource->field_smarter_balanced_keyword->value());
   $count += count($resource->field_digital_media_type->value());
   $count += count($resource->field_educational_use->value());
@@ -1779,7 +1778,6 @@ function set_report_columns() {
           array('field_principles', 'Principles Literature or Research'),
           array('field_digital_media_type', 'Media Type(s)'),
           array('field_intended_student', 'Intended Student Population(s)'),
-          array('field_geographical_settings', 'Geographic Setting(s)'),
           array('field_educational_use', 'Educational Use'),
           array('field_classroom_technologies', 'Technologies Required for Use in the Classroom'),
           array('field_smarter_balanced_keyword', 'Smarter Balanced Keyword(s)'),
