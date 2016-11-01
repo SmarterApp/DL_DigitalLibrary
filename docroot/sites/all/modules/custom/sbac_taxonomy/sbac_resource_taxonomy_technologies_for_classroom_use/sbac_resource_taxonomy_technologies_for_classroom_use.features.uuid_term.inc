@@ -98,5 +98,13 @@ function sbac_resource_taxonomy_technologies_for_classroom_use_uuid_features_def
     'uuid' => 'fa0c22d8-3817-465e-afaa-ae65e5a68989',
     'vocabulary_machine_name' => 'technologies_for_classroom_use',
   );
+  $terms[] = array(
+    'name' => 'None',
+    'description' => NULL,
+    'format' => NULL,
+    'weight' => 11,
+    'uuid' => '9cbac353-c0b3-422d-b12a-df2b111fc97c',
+    'vocabulary_machine_name' => 'technologies_for_classroom_use',
+  );
   return $terms;
 }

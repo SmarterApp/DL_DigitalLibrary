@@ -464,7 +464,6 @@ function sbac_forum_view_forum_page($term) {
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
 
-  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $fav_type);
 
   // Add all the markup to variable for tpl.
   $fields = array(
@@ -478,7 +477,6 @@ function sbac_forum_view_forum_page($term) {
     'end_users' => $end_user_text,
     'students' => $student_text,
     'tabs' => $tab_output,
-    'favorites_link' => $favorite_link,
     'resource_link' => $resource_link,
     'resource_image' => $image_tag,
     'resource_rating' => $resource_rating,

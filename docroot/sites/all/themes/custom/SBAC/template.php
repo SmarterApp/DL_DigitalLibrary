@@ -602,11 +602,6 @@ function sbac_preprocess_page(&$variables) {
       $variables['blocks']['intended_end_users'] = render($block_intended_end_users['content']);
     }
 
-    $block_geographic_settings = module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') ?  module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') : NULL ;
-    if($block_geographic_settings) {
-      $variables['blocks']['geographic_settings'] = render($block_geographic_settings['content']);
-    }
-
     $block_formative_assessment_attributes = module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') ?  module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') : NULL ;
     if($block_formative_assessment_attributes) {
       $variables['blocks']['formative_assessment_attributes'] = render($block_formative_assessment_attributes['content']);
@@ -887,6 +882,43 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->wrapper_suffix = '</div>';
     $variables['fields']['entity_id']->content = $output;
   }
+  // Leaderboard preprocessing
+  if ($variables['view']->name == 'rated_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'rated_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
+  if ($variables['view']->name == 'reviewed_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'reviewed_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
+  if ($variables['view']->name == 'contributed_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
   // Forum topic list view field preprocessing
   if ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block') {
     foreach ($variables['fields'] as $name => $field) {
@@ -1037,5 +1069,59 @@ function sbac_preprocess_lexicon_overview(&$variables) {
   /* edit glossary button */
   if(user_access('administer lexicon')) {
     $variables['edit_link'] = l(t('Edit Glossary'), 'admin/structure/taxonomy/glossary_terms', array('absolute' => TRUE));
+  }
+}
+
+/**
+ * Returns the rendered tooltip for a user.
+ *
+ * @param $user_id
+ * @param bool $add_comma
+ * @return null|string
+ */
+function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
+  $cached_output = cache_get('authpane_goals' . $user_id);
+  if ($cached_output) {
+    return $cached_output->data;
+  }
+  else {
+    $account = user_load($user_id);
+    $account_renderable = user_view($account, 'tooltip');
+    $account_data = entity_metadata_wrapper('user', $account);
+    $fn = $account_data->field_first_name->value();
+    $ln = ''; // last name hide by default.
+    if (!sbac_user_privacy_check('picture', $account) || !$account->picture) {
+      $filepath = variable_get('user_picture_default', '');
+      $alt = t("@user's picture", array('@user' => format_username($fn)));
+      $user_picture = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt, 'width' => '30px', 'height' => '30px'));
+    }
+    else {
+      $image = array('path' => $account->picture->uri, 'width' => '30px', 'height' => '30px');
+      $user_picture = theme_image($image);
+    } 
+    if (isset($account_data->field_privacy)) { // user is using non-default settings.
+      $privacy_settings = $account_data->field_privacy->value();
+      if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+        $ln = ' ' . $account_data->field_last_name->value();
+      }
+    }
+    $full_name = substr($fn . $ln, 0, 10) . '...';
+    $tooltip = '
+              <div class="devtools-tooltip account-tooltip">
+                <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . '
+                <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
+              </div>
+             ';
+
+    $created = isset($account->created) ? $account->created : time();
+    
+    $output = $user_picture;
+    $output .= t('!name', array(
+      '!name' => $tooltip,
+      '!date' => format_date($created, 'simple'),
+    ));
+
+    cache_set('goals_authpane_' . $user_id, $output);
+    return $output;
   }
 }

@@ -64,14 +64,7 @@ function sbac_favorites_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_favorites',
     'template' => 'no-favorites-resource',
   );
-  $items['sbac_favorites_no_favorites_forum'] = array(
-    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_favorites',
-    'template' => 'no-favorites-forum',
-  );
   $items['sbac_favorites_resource_tabledrag'] = array(
-    'render element' => 'form',
-  );
-  $items['sbac_favorites_forum_tabledrag'] = array(
     'render element' => 'form',
   );
 
@@ -110,14 +103,36 @@ function sbac_favorites_get_entity_by_type($id, $type) {
 /**
  * Adds or deletes the entry from the custom table.
  */
-function sbac_favorites_ajax_click() {
+function sbac_favorites_ajax_click($id = null, $uid = null, $cid = null, $type = 'node') {
   global $user;
+
+  if (isset($id)) {
+    $_POST['id'] = $id;
+  }
+  if (isset($uid)) {
+    $_POST['uid'] = $uid;
+  }
+  if (isset($cid)) {
+    $_POST['cid'] = $cid;
+  }
+  if (isset($type)) {
+    $_POST['type'] = $type;
+  }
+
   if (!$_POST['id'] || !$_POST['uid'] || !$_POST['type']) {
-    exit;
+    drupal_exit();
   }
   // Ensure the user making the ajax request is the user who is logged in.
   if ($user->uid != $_POST['uid']) {
-    exit;
+    drupal_exit();
+  }
+
+  $cid = check_plain(array_key_exists('cid', $_POST) ? $_POST['cid'] : '0');
+  if ('0' !== $cid) {
+    $collection = sbac_favorites_get_entity_by_type($cid, 'node');
+    if ('collection' !== $collection->type || $user->uid !== $collection->uid) {
+      drupal_exit();
+    }
   }
 
   $id = check_plain($_POST['id']);
@@ -132,6 +147,7 @@ function sbac_favorites_ajax_click() {
       $obj = new stdClass();
       $obj->id = $id;
       $obj->uid = $account->uid;
+      $obj->cid = $cid;
       $obj->type = $type;
       $obj->weight = -1000;
       $obj->created = time();
@@ -141,16 +157,17 @@ function sbac_favorites_ajax_click() {
       db_delete('sbac_favorites')
         ->condition('id', $id)
         ->condition('uid', $account->uid)
+        ->condition('cid', $cid)
         ->condition('type', $type)
         ->execute();
     }
     unset($_SESSION['favorites']['count']);
     $output = array();
     print drupal_json_encode($output);
-    exit;
+    drupal_exit();
   }
   else {
-    exit;
+    drupal_exit();
   }
 }
 
@@ -162,11 +179,19 @@ function sbac_favorites_ajax_click() {
 function sbac_favorites_ajax_delete() {
   global $user;
   if (!$_POST['id'] || !$_POST['uid'] || !$_POST['type']) {
-    exit;
+    drupal_exit();
   }
   // Ensure the user making the ajax request is the user who is logged in.
   if ($user->uid != $_POST['uid']) {
-    exit;
+    drupal_exit();
+  }
+
+  $cid = check_plain(array_key_exists('cid', $_POST) ? $_POST['cid'] : '0');
+  if ('0' !== $cid) {
+    $collection = sbac_favorites_get_entity_by_type($cid, 'node');
+    if ('collection' !== $collection->type || $user->uid !== $collection->uid) {
+      drupal_exit();
+    }
   }
 
   unset($_SESSION['favorites']['count']);
@@ -174,19 +199,12 @@ function sbac_favorites_ajax_delete() {
   db_delete('sbac_favorites')
     ->condition('id', $_POST['id'])
     ->condition('uid', $_POST['uid'])
+    ->condition('cid', $cid)
     ->condition('type', $_POST['type'])
     ->execute();
-  $count = sbac_favorites_get_count($_POST['uid']);
   $output = array();
-  if ($count) {
-    $output['total'] = $count;
-  }
-  else {
-    $output['total'] = 0;
-    $output['no_results'] = sbac_favorites_get_html_content();
-  }
   print drupal_json_encode($output);
-  exit;
+  drupal_exit();
 }
 
 /**
@@ -200,9 +218,8 @@ function sbac_favorites_get_count($uid) {
     return $_SESSION['favorites']['count'];
   }
 
-  $forum_favorites = sbac_favorites_get_favorite_forum_list_count($uid);
   $resource_favorites = sbac_favorites_get_favorite_resource_list_count($uid);
-  $count = $forum_favorites + $resource_favorites;
+  $count = $resource_favorites;
   $_SESSION['favorites']['count'] = $count;
   return $count;
 }
@@ -216,7 +233,7 @@ function sbac_favorites_get_count($uid) {
 function sbac_favorites_get_favorites($uid, $id = FALSE, $type = 'node') {
   $favorites = array();
   $query = db_select('sbac_favorites', 'sf')
-    ->fields('sf', array('id', 'uid', 'type', 'weight', 'created'))
+    ->fields('sf', array('id', 'uid', 'cid', 'type', 'weight', 'created'))
     ->condition('sf.uid', $uid)
     ->condition('sf.type', $type);
   if ($id) {
@@ -236,18 +253,8 @@ function sbac_favorites_get_favorites($uid, $id = FALSE, $type = 'node') {
  * @param $uid
  * @return array
  */
-function sbac_favorites_get_favorite_resource_list($uid) {
-  return sbac_favorites_get_favorites_list($uid, 'node');
-}
-
-/**
- * Get the list of favorite forums
- *
- * @param $uid
- * @return array
- */
-function sbac_favorites_get_favorite_forum_list($uid) {
-  return sbac_favorites_get_favorites_list($uid, 'term');
+function sbac_favorites_get_favorite_resource_list($uid, $cid = 0) {
+  return sbac_favorites_get_favorites_list($uid, 'node', $cid);
 }
 
 /**
@@ -270,45 +277,29 @@ function sbac_favorites_get_favorite_resource_list_count($uid) {
 }
 
 /**
- * Get the count of the favorited forums.
- *
- * @param $uid
- * @return array
- */
-function sbac_favorites_get_favorite_forum_list_count($uid) {
-  $type = 'term';
-  $query = db_select('sbac_favorites', 'sf')
-    ->fields('sf', array('id', 'uid', 'weight', 'type', 'created'))
-    ->condition('sf.uid', $uid);
-  $query->condition('sf.type', $type);
-  $query->innerJoin('taxonomy_term_data', 'term', 'term.tid = sf.id');
-  $result = $query
-    ->orderBy('sf.weight', 'ASC')
-    ->orderBy('sf.created', 'DESC')
-    ->execute()->rowCount();
-  return $result;
-}
-
-/**
  * Gets the favorites for a given user.
  *
  * @param $uid
  * @return array
  */
-function sbac_favorites_get_favorites_list($uid, $type = NULL) {
+function sbac_favorites_get_favorites_list($uid, $type = 'node', $cid = 0) {
   $favorites = array();
   $args = array();
   $query = db_select('sbac_favorites', 'sf')
-    ->fields('sf', array('id', 'uid', 'weight', 'type', 'created'))
-    ->condition('sf.uid', $uid);
+    ->fields('sf', array('id', 'uid', 'weight', 'type', 'cid', 'created'))
+    ->condition('sf.uid', $uid)
+    ->condition('sf.cid', $cid);
   if ($type) {
     $query->condition('sf.type', $type);
-    if ($type == 'node') {
+    if ($type === 'node') {
       $query->innerJoin('node', 'n', 'n.nid = sf.id'); // make sure the node hasn't been hard deleted
       $query->innerJoin('workbench_moderation_node_history', 'h', 'n.nid = h.nid AND h.current = 1 AND h.state <> \'removed\''); // make sure the node is not soft deleted
     }
-    elseif ($type == 'term') {
+    elseif ($type === 'term') {
       $query->innerJoin('taxonomy_term_data', 'term', 'term.tid = sf.id');
+    }
+    elseif ($type === 'collection') {
+      $query->innerJoin('node', 'n', 'n.nid = sf.id');
     }
   }
   $result = $query
@@ -348,7 +339,7 @@ function sbac_favorites_get_html_content() {
   $account = $user;
   $output = render(drupal_get_form('sbac_favorites_user_favorites', $account));
   $favorites_content  = '<div id="favorites">';
-  if ($favorites) {
+  if (false) {
     $favorites_content .= '<div class="favorites-helpful-info">';
     $favorites_content .= 'Drag and drop items in the list to reorder your favorites';
     $favorites_content .= '</div>';
@@ -383,140 +374,219 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
 
   $form['#tree'] = TRUE;
   $form['tab_container'] = array(
-    '#type' => 'vertical_tabs'
-  );
-  // Resource Tab
-  $form['tab_container']['resource_tab'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Resources'),
-  );
-  $form['tab_container']['resource_tab']['content'] = array(
+    '#type' => 'container',
     '#theme' => 'sbac_favorites_resource_tabledrag',
+    '#weight' => 100,
   );
-  $fav_resources = sbac_favorites_get_favorite_resource_list($account->uid);
-  if (!empty($fav_resources)) {
-    foreach ($fav_resources as $favorite) {
-      $element = array();
-      $resource = node_load($favorite->id);
-      $term = taxonomy_term_load($resource->field_focus['und'][0]['tid']);
-      switch ($term->name) {
-        case 'Combination of Instructional and Professional Learning Resource';
-          $type = 'Combination';
-          break;
-        case 'Professional Learning Resource';
-          $type = 'Professional Learning';
-          break;
-        case 'Instructional Resource';
-          $type = 'Instructional';
-          break;
-      }
-      $element['name'] = array(
-        '#markup' => l($resource->title, $resource->path['alias']),
-      );
-      $element['type'] = array(
-        '#markup' => $type,
-      );
-      $element['created'] = array(
-        '#markup' => date('M jS g:ia', $favorite->created),
-      );
-      $element['delete'] = array(
-        '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" id="' . $resource->nid . '" uid="' . $favorite->uid . '" type="' . $favorite->type . '">Delete</a>',
-      );
-      $element['weight'] = array(
-        '#type' => 'weight',
-        '#title' => t('Weight'),
-        '#default_value' => $favorite->weight,
-        '#delta' => 100,
-        '#title_display' => 'invisible',
-        '#attributes' => array(
-          'class' => array('favorite-item-weight')
-        )
-      );
-      $form['tab_container']['resource_tab']['content']['favorites'][$favorite->id . ':' . $favorite->uid . ':' . $favorite->type] = $element;
-    }
-    $form['tab_container']['resource_tab']['buttons'] = array(
-      '#type' => 'container',
-    );
-    $form['tab_container']['resource_tab']['buttons']['save'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save Order'),
-      '#weight' => -100,
-//      '#attributes' => array('id' => 'sbac-favorites-resource-submit'),
-      '#name' => 'sbac-favorites-resource-submit',
-      '#ajax' => array(
-        'wrapper' => 'sbac-user-profile-favorites-form',
-        'callback' => 'sbac_favorites_user_favorites_submit',
-        'method' => 'replace',
-        'effect' => 'fade'
-      ),
-    );
-    $form['tab_container']['resource_tab']['buttons']['cancel'] = array(
-      '#type' => 'submit',
-      '#value' => t('Cancel'),
-      '#weight' => 100,
-      '#attributes' => array('id' => 'sbac-favorites-resource-cancel', 'class' => array('gray')),
-      '#name' => 'sbac-favorites-resource-cancel',
-    );
-  }
-  // Forum Tab
-  $form['tab_container']['forum_tab'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Forums'),
-  );
-  $form['tab_container']['forum_tab']['content'] = array(
-    '#theme' => 'sbac_favorites_forum_tabledrag',
-  );
-  $fav_forums = sbac_favorites_get_favorite_forum_list($account->uid);
-  if (!empty($fav_forums)) {
-    foreach ($fav_forums as $favorite) {
-      $element = array();
-      $forum = taxonomy_term_load($favorite->id);
-      $element['name'] = array(
-        '#markup' => l($forum->name, 'forums/term/' . $forum->tid),
-      );
-      $element['created'] = array(
-        '#markup' => date('M jS g:ia', $favorite->created),
-      );
-      $element['delete'] = array(
-        '#markup' => '<i class="general foundicon-trash" "=""></i><a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" id="' . $forum->tid . '" uid="' . $favorite->uid . '" type="' . $favorite->type . '">Delete</a>',
-      );
-      $element['weight'] = array(
-        '#type' => 'weight',
-        '#title' => t('Weight'),
-        '#default_value' => $favorite->weight,
-        '#delta' => 100,
-        '#title_display' => 'invisible',
-        '#attributes' => array(
-          'class' => array('favorite-item-weight')
-        )
-      );
 
-      $form['tab_container']['forum_tab']['content']['favorites'][$favorite->id . ':' . $favorite->uid . ':' . $favorite->type] = $element;
-    }
-    $form['tab_container']['forum_tab']['buttons'] = array(
-      '#type' => 'container',
-    );
-    $form['tab_container']['forum_tab']['buttons']['save'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save Order'),
-      '#weight' => -100,
-//      '#attributes' => array('id' => 'sbac-favorites-forum-submit'),
-      '#name' => 'sbac-favorites-forum-submit',
-      '#ajax' => array(
-        'wrapper' => 'sbac-user-profile-favorites-form',
-        'callback' => 'sbac_favorites_user_favorites_submit',
-        'method' => 'replace',
-        'effect' => 'fade'
+  $fav_collection = new \stdClass();
+  $fav_collection->nid = 0;
+  $fav_collection->id = 0;
+  $fav_collection->title = t('Favorites');
+
+  $collections = node_load_multiple(array(), array('type'=>'collection', 'uid'=>$account->uid));
+  $collection_ordered = sbac_favorites_get_favorites_list($account->uid, 'collection', 0);
+  $collection_list = array_map(function($c) {return $c->id;}, $collection_ordered);
+  usort($collections, function($a, $b) use ($collection_list) {
+    $sa = array_search($a->nid, $collection_list);
+    if ($sa === false) { return 1; }
+    $sb = array_search($b->nid, $collection_list);
+    if ($sb === false) { return -1; }
+    return ($sa - $sb);
+  });
+  array_unshift($collections, $fav_collection);
+
+
+
+  $content = array(
+    '#title' => t('Favorites'),
+  );
+
+  // @TODO: Order collections by $collection_list order
+  $weight = 0;
+  foreach ($collections as $collection) {
+    $content[$collection->nid . ':0:' . $account->uid . ':' . 'collection'] = array(
+      'name' => array(
+        '#markup' => '<span class="expander"></span> <span class="favorite-title">'.$collection->title.'</span>',
+      ),
+      'links' => array(
+        '#markup' => l('view', (0 != $collection->nid)
+              ? 'node/'.$collection->nid
+              : 'favorites',
+          array(
+            'attributes' => array(
+              'class' => array('sbac-favorites-links-favorite'),
+            ),
+          )
+        )
+        .((0 != $collection->nid)
+            ?' '.l('edit', 'sbac_collections/nojs/0/'.$collection->nid, array(
+              'attributes' => array(
+                'class' => array('sbac-favorites-links-favorite', 'ctools-use-modal', 'ctools-modal-collection-form-modal'),
+              ),
+            ))
+            : ''
+        ),
+      ),
+      'id' => array(
+        '#type' => 'hidden',
+        '#default_value' => $collection->nid,
+        '#attributes' => array(
+          'class' => array('favorite-item-id'),
+        ),
+      ),
+      'pid' => array(
+        '#type' => 'hidden',
+        '#default_value' => -1,
+        '#attributes' => array(
+          'class' => array('favorite-item-pid'),
+        ),
+      ),
+      'weight' => array(
+        '#type' => 'weight',
+        '#title' => t('Weight'),
+        '#default_value' => $weight++,
+        '#delta' => 100,
+        '#title_display' => 'invisible',
+        '#attributes' => array(
+          'class' => array('favorite-item-weight'),
+        ),
+      ),
+      'type' => array(
+        '#type' => 'hidden',
+        '#value' => 'collection',
       ),
     );
-    $form['tab_container']['forum_tab']['buttons']['cancel'] = array(
-      '#type' => 'submit',
-      '#value' => t('Cancel'),
-      '#weight' => 100,
-      '#attributes' => array('id' => 'sbac-favorites-forum-cancel', 'class' => array('gray')),
-      '#name' => 'sbac-favorites-forum-cancel',
-    );
+
+    $fav_resources = sbac_favorites_get_favorite_resource_list($account->uid, $collection->nid);
+
+    if (!empty($fav_resources)) {
+      foreach ($fav_resources as $favorite) {
+        $resource = node_load($favorite->id);
+        $element = array(
+          'name' => array(
+            '#markup' => l($resource->title, $resource->path['alias']),
+          ),
+          'links' => array(
+            '#markup' => '<a href="/sbac-favorites-delete-favorite" class="sbac-favorites-delete-favorite" data-nid="' . $resource->nid . '" data-cid="' . $collection->nid . '" data-uid="' . $favorite->uid . '" data-type="' . $favorite->type . '">remove</a>',
+          ),
+          'id' => array(
+            '#type' => 'hidden',
+            '#default_value' => $collection->nid.'-'.$resource->nid,
+            '#attributes' => array(
+              'class' => array('favorite-item-id'),
+            ),
+          ),
+          'pid' => array(
+            '#type' => 'hidden',
+            '#default_value' => $collection->nid,
+            '#attributes' => array(
+              'class' => array('favorite-item-pid'),
+            ),
+          ),
+          'weight' => array(
+            '#type' => 'weight',
+            '#title' => t('Weight'),
+            '#default_value' => $favorite->weight,
+            '#delta' => 100,
+            '#title_display' => 'invisible',
+            '#attributes' => array(
+              'class' => array('favorite-item-weight'),
+            )
+          ),
+          'type' => array(
+            '#type' => 'hidden',
+            '#value' => 'node',
+          ),
+        );
+        $content[$favorite->id . ':' . $collection->nid . ':' . $favorite->uid . ':' . $favorite->type] = $element;
+      }
+    }
   }
+
+  $form['tab_container']['favorites'] = $content;
+
+  $form['tab_container']['buttons'] = array(
+    '#type' => 'container',
+  );
+  $form['tab_container']['buttons']['save'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save Order'),
+    '#weight' => -100,
+    //      '#attributes' => array('id' => 'sbac-favorites-resource-submit'),
+    '#name' => 'sbac-favorites-resource-submit',
+    '#ajax' => array(
+      'wrapper' => 'sbac-user-profile-favorites-form',
+      'callback' => 'sbac_favorites_user_favorites_submit',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+  $form['tab_container']['buttons']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#weight' => 100,
+    '#attributes' => array(
+      'id' => 'sbac-favorites-resource-cancel',
+      'class' => array('gray')
+    ),
+    '#name' => 'sbac-favorites-resource-cancel',
+  );
+
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  $createButton = array(
+    '#type' => 'container',
+    '#weight' => 0,
+    '#attributes' => array(
+      'class' => array('sbac-favorites-collection-create-wrapper'),
+    ),
+    'content' => array(
+      '#type' => 'markup',
+      '#markup' => l(t('Create a Collection'), url('sbac_collections/nojs/0/0'), array(
+        'attributes' => array(
+          'class' => array(
+            'button',
+            'sbac-favorites-collection-create',
+            'ctools-use-modal',
+            'ctools-modal-collection-form-modal',
+          ),
+        )
+      )),
+    ),
+    /*
+    '#type' => 'form',
+    '#action' => url('sbac_collections/nojs'),
+    '#method' => 'get',
+    '#weight' => -9999,
+    '#attributes' => array(
+      'style' => array(
+        'text-align: right;',
+      )
+    ),
+    'content' => array(
+      '#type' => 'button',
+      '#button_type' => 'no-submit',
+      '#name' => 'sbac-favorites-collection-create',
+      '#value' => t('Create a Collection'),
+      '#weight' => -100,
+      '#attributes' => array(
+        'class' => array(
+          'sbac-favorites-collection-create',
+          'ctools-use-modal',
+          'ctools-modal-collection-form-modal',
+        ),
+        'onclick' => 'return false;',
+        'id' => 'favorites-create-btn',
+        'favorites-create-btn-url' => url('sbac_collections/nojs'),
+      ),
+    ),
+    */
+  );
+
+  $form['create_collection'] = $createButton;
+
   return $form;
 }
 
@@ -527,33 +597,34 @@ function sbac_favorites_user_favorites($form, &$form_state, $account) {
  * @param $form_state
  */
 function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
-  $tab = '';
-//  switch ($form_state['clicked_button']['#attributes']['id']) {
-  switch ($form_state['clicked_button']['#name']) {
-    case 'sbac-favorites-resource-submit':
-      $tab = 'resource_tab';
-      break;
-    case 'sbac-favorites-forum-submit':
-      $tab = 'forum_tab';
-      break;
+  global $user;
+
+  foreach ($form_state['values']['tab_container']['favorites'] as $favorite_id => $item) {
+    $identifiers = explode(':', $favorite_id);
+    $id = $identifiers[0];
+    $cid = $identifiers[1];
+    $uid = $identifiers[2];
+    $type = $identifiers[3];
+
+    if (0 == $id) {
+      // The Favorites collection is always on top
+      continue;
+    }
+
+    if ('node' !== $type && 'collection' !== $type) {
+      drupal_exit();
+    }
+
+    if ($user->uid != $uid) {
+      drupal_exit();
+    }
+
+    db_merge('sbac_favorites')
+      ->key(array('id' => $id, 'uid' => $uid, 'cid' => $cid, 'type' => $type))
+      ->fields(array('weight' => $item['weight']))
+      ->execute();
   }
 
-  if (!empty($tab)) {
-    foreach ($form_state['values']['tab_container'][$tab]['content']['favorites'] as $favorite_id => $item) {
-      $identifiers = explode(':', $favorite_id);
-      $id = $identifiers[0];
-      $uid = $identifiers[1];
-      $type = $identifiers[2];
-      db_query("UPDATE {sbac_favorites} SET weight = :weight WHERE id = :id AND uid = :uid AND type = :type",
-        array(
-          ':weight' => $item['weight'],
-          ':id' => $id,
-          ':uid' => $uid,
-          ':type' => $type
-        )
-      );
-    }
-  }
   return drupal_rebuild_form('sbac_favorites_user_favorites', $form_state);
 }
 
@@ -563,7 +634,7 @@ function sbac_favorites_user_favorites_submit(&$form, &$form_state) {
  * @param $vars
  */
 function sbac_favorites_preprocess_page(&$vars) {
-  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources') {
+  if (in_array(arg(0), array('digital-library-resources', 'my-resources', 'favorites'))) {
     drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites.js');
     drupal_add_css(drupal_get_path('module', 'sbac_favorites') . '/css/sbac_favorites.css');
   }
@@ -590,10 +661,164 @@ function sbac_favorites_get_favorite_link($uid, $id, $type) {
   $favorites = sbac_favorites_get_favorites($uid, $id, $type);
   if ($favorites) {
     $favorites_class = 'sbac-favorites-link-yes';
-    $favorite_text = t('Unfavorite');
   }
 
+  $fav_collection = new \stdClass();
+  $fav_collection->nid = 0;
+  $fav_collection->title = t('Favorites');
+  $collections = node_load_multiple(array(), array('type'=>'collection', 'uid'=>$uid));
+  $collection_ordered = sbac_favorites_get_favorites_list($uid, 'collection', 0);
+  $collection_list = array_map(function($c) {return $c->id;}, $collection_ordered);
+  usort($collections, function($a, $b) use ($collection_list) {
+    $sa = array_search($a->nid, $collection_list);
+    if ($sa === false) { return 1; }
+    $sb = array_search($b->nid, $collection_list);
+    if ($sb === false) { return -1; }
+    return ($sa - $sb);
+  });
+  array_unshift($collections, $fav_collection);
+
+  $popup = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array(
+        'sbac-favorites-collections',
+        'f-dropdown',
+        'right',
+      ),
+      'style' => 'display:none;',
+      'data-nid' => $id,
+      'data-uid' => $uid,
+      'data-type' => $type,
+    ),
+  );
+
+  $element = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array(
+        'sbac-favorites-collection-list',
+      ),
+    ),
+  );
+  foreach ($collections as $collection) {
+    $hasFavorite = 'no';
+    $collectionType = 'collection';
+    if (0 === $collection->nid) {
+      $collectionType = 'favorites';
+    }
+    foreach ($favorites as $favorite) {
+      if ($favorite->cid == $collection->nid) {
+        $hasFavorite = 'yes';
+        break;
+      }
+    }
+
+    $element['collection-'.$collection->nid] = array(
+      '#markup' => l($collection->title, $_GET['q'], array(
+        'attributes' => array(
+          'class' => array(
+            'sbac-favorites-collection',
+            'sbac-favorites-collection-'.$collectionType,
+            'sbac-favorite-'.$hasFavorite,
+          ),
+          'data-cid' => $collection->nid,
+        )
+      )),
+    );
+  }
+
+  $popup['content'] = $element;
+
+  $popup['buttons'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('sbac-favorites-collection-create-wrapper'),
+    ),
+  );
+
+  /*
+  $popup['buttons']['create'] = array(
+    '#type' => 'markup',
+    '#markup' => l(t('Create a Collection'), 'sbac_collections/nojs', array(
+      'attributes' => array(
+        'class' => array(
+          'ctools-use-modal',
+        ),
+      ),
+    )),
+  );
+  */
+
+  $popup['buttons']['form'] = array(
+    '#type' => 'form',
+    '#action' => url('sbac_collections/nojs/'.$id.'/0'),
+    '#method' => 'get',
+    'content' => array(
+      '#type' => 'button',
+      '#button_type' => 'no-submit',
+      '#name' => 'sbac-favorites-collection-create',
+      '#value' => t('Create a Collection'),
+      '#weight' => -100,
+      '#attributes' => array(
+        'class' => array(
+          'tiny',
+          'sbac-favorites-collection-create',
+          'ctools-use-modal',
+          'ctools-modal-collection-form-modal',
+        ),
+        'id' => 'favorites-create-btn',
+        'favorites-create-btn-url' => url('sbac_collections/nojs/'.$id.'/0'),
+      ),
+    )
+  );
+
+//  $popup['buttons']['create_btn'] = array(
+//    '#type' => 'button',
+//    '#button_type' => 'no-submit',
+//    '#name' => 'sbac-favorites-collection-create',
+//    '#value' => t('Create a Collection'),
+//    '#weight' => -100,
+//    '#attributes' => array(
+//      'class' => array(
+//        'tiny',
+//        'sbac-favorites-collection-create',
+////        'ctools-use-modal',
+//      ),
+//      'id' => 'favorites-create-btn',
+//      'favorites-create-btn-url' => url('sbac_collections/nojs'),
+//    ),
+//    /*
+//    '#ajax' => array(
+//      'wrapper' => 'sbac-user-profile-favorites-form',
+//      'callback' => 'sbac_favorites_user_favorites_submit',
+//      'method' => 'replace',
+//      'effect' => 'fade'
+//    ),
+//    */
+//  );
+
+  $div = drupal_render($popup);
+
   drupal_add_js(drupal_get_path("module", "sbac_favorites") . "/js/sbac_favorites.js");
+  drupal_add_js(drupal_get_path("module", "sbac_collections") . "/js/sbac_collections.ctools.js");
+  drupal_add_css(drupal_get_path('module', 'sbac_favorites') . '/css/sbac_favorites.css');
+  ctools_include('modal');
+  ctools_modal_add_js();
+  drupal_add_js(array(
+    'collection-form-modal' => array(
+//      'closeText' => t('Close Window'),
+      'modalSize' => array(
+        'type' => 'fixed',
+        'width' => 800,
+        'height' => 600,
+//        'contentBottom' => 800,
+      ),
+      'animation' => 'fadeIn',
+      'modalTheme' => 'CtoolsSbacCollectionsModal',
+    ),
+  ), 'setting');
+
   $favorite_link = l($favorite_text, $_GET['q'], array(
     'attributes' => array(
       'class' => array(
@@ -605,7 +830,8 @@ function sbac_favorites_get_favorite_link($uid, $id, $type) {
       'type' => $type,
     )
   ));
-  return $favorite_link;
+
+  return $favorite_link.$div;
 }
 
 /**
@@ -617,87 +843,80 @@ function sbac_favorites_get_favorite_link($uid, $id, $type) {
 function theme_sbac_favorites_resource_tabledrag($vars) {
   $form = $vars['form'];
   $rows = array();
-  $weight_class = 'favorite-item-weight';
+  $lastCollection = 'collection';
   foreach (element_children($form['favorites']) as $key) {
+    $rows[$key] = array();
     $element = & $form['favorites'][$key];
-    $element['weight']['#attributes']['class'] = array($weight_class);
 
-    $row = array('data' => array());
-    $row['data']['name'] = drupal_render($element['name']);
-    $row['data']['type'] = drupal_render($element['type']);
-    $row['data']['created'] = drupal_render($element['created']);
-    $row['data']['delete'] = drupal_render($element['delete']);
-    $row['data']['weight'] = drupal_render($element['weight']);
+    $class = array();
+    $class[] = 'draggable';
+    $indent = '';
+    if ($element['type']['#value'] === 'collection') {
+      $class[] = 'tabledrag-root';
+      if (preg_match('/^0:0:/', $key)) {
+        $class[] = 'collection-favorites';
+        $lastCollection = 'favorites';
+        $class[] = 'expanded';
+      } else {
+        $lastCollection = 'collection';
+        $class[] = 'collapsed';
+      }
+    } else {
+      $class[] = 'tabledrag-leaf';
+      $indent = theme('indentation', array('size' => 1));
+      if ('collection' === $lastCollection) {
+        $rows[$key]['style'] = 'display: none;';
+      }
+    }
+    unset($element['type']);
 
-    $rows[$key] = $row;
-    $rows[$key]['class'] = array('draggable');
+    $data = array(
+      'name' => $indent.drupal_render($element['name']),
+      'links' => drupal_render($element['links']),
+      'id' => drupal_render($element['id']),
+      'pid' => drupal_render($element['pid']),
+      'weight' => drupal_render($element['weight']),
+    );
+
+    $rows[$key]['data'] = $data;
+    $rows[$key]['class'] = $class;
   }
   if (!empty($rows)) {
     $table_id = 'sbac-favorites-resource-table-drag-drop';
     $header = array(
-      t('Resource Name'),
-      t('Resource Type'),
-      t('Date Added'),
+      $form['#title'],
+      t(''),
+      t(''),
       t(''),
       t(''),
     );
     $output = theme('table', array(
-      'header' => $header,
+      //'header' => $header,
       'rows' => $rows,
       'attributes' => array('id' => $table_id, 'class' => array('width-auto'))
     ));
     $output .= drupal_render_children($form);
-    drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
+
+    drupal_add_tabledrag($table_id, 'match', 'parent', 'favorite-item-pid', 'favorite-item-pid', 'favorite-item-id');
+    drupal_add_tabledrag($table_id, 'order', 'sibling', 'favorite-item-weight');
+    drupal_add_js(drupal_get_path('module', 'sbac_favorites') . '/js/sbac_favorites_tabledrag.js');
+    drupal_add_js(drupal_get_path("module", "sbac_collections") . "/js/sbac_collections.ctools.js");
+    drupal_add_js(array(
+      'collection-form-modal' => array(
+  //      'closeText' => t('Close Window'),
+        'modalSize' => array(
+          'type' => 'fixed',
+          'width' => 800,
+          'height' => 600,
+  //        'contentBottom' => 800,
+        ),
+        'animation' => 'fadeIn',
+        'modalTheme' => 'CtoolsSbacCollectionsModal',
+      ),
+    ), 'setting');
   }
   else {
     $output = theme('sbac_favorites_no_favorites_resource');
-  }
-  return $output;
-}
-
-/**
- * Default theme implementation
- *
- * @param $vars
- * @return string
- */
-function theme_sbac_favorites_forum_tabledrag($vars) {
-  $form = $vars['form'];
-  $rows = array();
-  $weight_class = 'favorite-forum-weight';
-  foreach (element_children($form['favorites']) as $key) {
-    $element = & $form['favorites'][$key];
-    $element['weight']['#attributes']['class'] = array($weight_class);
-
-    $row = array('data' => array());
-    $row['data']['name'] = drupal_render($element['name']);
-    $row['data']['created'] = drupal_render($element['created']);
-    $row['data']['delete'] = drupal_render($element['delete']);
-    $row['data']['weight'] = drupal_render($element['weight']);
-
-    $rows[$key] = $row;
-    $rows[$key]['class'] = array('draggable');
-  }
-  if (!empty($rows)) {
-    $table_id = 'sbac-favorites-forum-table-drag-drop';
-    $header = array(
-      t('Forum Name'),
-      t('Date Added'),
-      t(''),
-      t(''),
-    );
-    $output = theme('table', array(
-      'header' => $header,
-      'rows' => $rows,
-      'attributes' => array('id' => $table_id, 'class' => array('width-auto'))
-    ));
-
-    $output .= drupal_render_children($form);
-
-    drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
-  }
-  else {
-    $output = theme('sbac_favorites_no_favorites_forum');
   }
   return $output;
 }
@@ -712,3 +931,4 @@ function sbac_favorites_user_logout($account) {
     unset($_SESSION['favorites']['count']);
   }
 }
+

@@ -1653,6 +1653,12 @@ html.js .category-hide {
   top: -2px;
 }
 
+.page-favorites .block-sbac-resource-sbac-resource-back-button {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
 /* line 1582, ../sass/sbac_resource.scss */
 .preview {
   margin-top: 1em;
@@ -3294,7 +3300,7 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 
 /* line 3233, ../sass/sbac_resource.scss */
 .favorites-link a {
-  background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
+  background: url(../../../../../themes/custom/SBAC/images/icons/icon-folder-heart.png) no-repeat 0 0;
   display: block;
   padding-left: 20px;
   vertical-align: middle;
@@ -3306,22 +3312,18 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 }
 /* line 3244, ../sass/sbac_resource.scss */
 .favorites-link a.sbac-favorites-link-yes {
-  background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
   color: #62676e;
 }
 /* line 3249, ../sass/sbac_resource.scss */
 .favorites-link a.sbac-favorites-link-yes:hover {
-  background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
   color: #0c84ad;
 }
 /* line 3254, ../sass/sbac_resource.scss */
 .favorites-link a.sbac-favorites-link-no {
-  background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
   color: #62676e;
 }
 /* line 3259, ../sass/sbac_resource.scss */
 .favorites-link a.sbac-favorites-link-no:hover {
-  background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
   color: #0c84ad;
 }
 /* line 3265, ../sass/sbac_resource.scss */
@@ -3804,4 +3806,89 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
 /* Resource Playlist template messaging */
 .playlist-template {
   display: none;
+}
+
+
+
+/* Viewing Collection */
+/* line 3649, ../sass/sbac_resource.scss */
+.item-list-field-pane {
+  padding-bottom: 20px;
+}
+/* line 3652, ../sass/sbac_resource.scss */
+.item-list-field-pane .pane-title {
+  display: block;
+  margin: 0;
+  padding: 5px 0 3px 0;
+  border-radius: 0;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 12px;
+  line-height: normal;
+  background: transparent;
+  color: #04384e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #CECECE;
+}
+/* line 3667, ../sass/sbac_resource.scss */
+.item-list-field-pane .item-list {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+/* line 3672, ../sass/sbac_resource.scss */
+.item-list-field-pane ul {
+  margin: 0;
+}
+/* line 3675, ../sass/sbac_resource.scss */
+.item-list-field-pane ul li {
+  background-color: #F2F2F2;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 24px;
+  margin: 7px 4px 0 0;
+  padding: 0 7px;
+}
+
+/* line 3687, ../sass/sbac_resource.scss */
+.node-type-collection-view #main .button-group {
+  display: none;
+}
+
+/* line 3708, ../sass/sbac_resource.scss */
+.node-type-collection-view .pane-node-body .field {
+  font-size: inherit;
+}
+
+/* line 3714, ../sass/sbac_resource.scss */
+.node-type-collection-view .view-id-collection .resource-card {
+  background-color: rgba(6,132,173,0.15);
+}
+
+
+/* line 3692, ../sass/sbac_resource.scss */
+.node-type-collection-view h1.title {
+  border-bottom: 1px solid #62676E;
+  color: #04384E;
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0 25px 5px 25px;
+  padding: 20px 0 0;
+}
+
+/* line 3701, ../sass/sbac_resource.scss */
+.node-type-collection-view h1.title .title-by {
+  font-size: smaller;
+  font-weight: normal;
+}
+
+.node-type-collection-view .pane-node-body {
+  padding: 15px 25px;
+}
+.node-type-collection-view .pane-node-field-subject {
+  padding-left: 25px;
+}
+.node-type-collection-view .pane-node-field-grade {
+  padding-right: 25px;
 }

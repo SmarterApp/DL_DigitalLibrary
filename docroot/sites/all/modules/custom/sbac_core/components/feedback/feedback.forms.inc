@@ -274,6 +274,26 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       $task = taskit_get_object('resource_rejected');
       sbac_resource_save_current_state($node);
 
+      // Send email to user
+      // Add resource link to message
+      global $base_url;
+      $values = array(
+        'arguments' => array(
+          '!resource-link' => $base_url . '/node/' . $node->nid,
+        ),
+        'uid' => $node->uid,
+      );
+      $message = message_create('gatekeeper_reject', $values);
+    
+      $wrapper = entity_metadata_wrapper('message', $message);
+    
+      // Replace explicit notification with subscription-based notification
+      message_notify_send_message($message);
+    
+      if (module_exists('message_subscribe')) {
+        // If Message-subscribe exists, let this example module use it.
+        //message_subscribe_send_message('user', $node, $message, array('email' => $options));
+      }
       $completed_review = TRUE;
       break;
 
@@ -314,6 +334,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
   }
 
   if ($completed_review && $node = node_load($entity->node_id)) {
+    // Notify Reviewer
     $task = taskit_get_object('review_completed');
     $task->addVisibility($task::VISIBILITY_USER);
     $task->addEntity('node', $node->nid);
@@ -321,6 +342,14 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
     $task->addOwningUser($user->uid);
     $task->addTriggeringUser(1);
     $task->save();
+    // Notify Contributor
+    $task2 = taskit_get_object('review_completed');
+    $task2->addVisibility($task::VISIBILITY_USER);
+    $task2->addEntity('node', $node->nid);
+    $task2->addEntity('feedback', $entity->id);
+    $task2->addOwningUser($node->uid);
+    $task2->addTriggeringUser(1);
+    $task2->save();
   }
 
   sbac_resource_remove_default_status_messages();
@@ -530,6 +559,26 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'rejected');
       $task = taskit_get_object('resource_rejected');
       sbac_resource_save_current_state($node);
+
+      // Send email to user
+      global $base_url;
+      $values = array(
+        'arguments' => array(
+          '!resource-link' => $base_url . '/node/' . $node->nid,
+        ),
+        'uid' => $node->uid,
+      );
+      $message = message_create('post_reject', $values);
+    
+      $wrapper = entity_metadata_wrapper('message', $message);
+    
+      // Replace explicit notification with subscription-based notification
+      message_notify_send_message($message);
+    
+      if (module_exists('message_subscribe')) {
+        // If Message-subscribe exists, let this example module use it.
+        //message_subscribe_send_message('user', $node, $message, array('email' => $options));
+      }
 
       $completed_review = TRUE;
 

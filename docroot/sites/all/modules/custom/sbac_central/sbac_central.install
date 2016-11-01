@@ -1164,6 +1164,30 @@ function sbac_central_update_7095() {
 }
 
 /**
+ * Enable panels modules and sbac_collections
+ */
+function sbac_central_update_7096() {
+  $modules = array(
+    'panels',
+    'panels_node',
+    'panels_mini',
+    'page_manager',
+    'sbac_collections',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enable new sbac_export_csv module
+ */
+function sbac_central_update_7097() {
+  $modules = array(
+    'sbac_export_csv',
+  );
+  module_enable($modules);
+}
+
+/**
  * Impliments hook_uninstall().
  */
 

@@ -309,12 +309,6 @@ function sbac_resource_profile_fields(&$node) {
     $resource_node->resource_profile_left['classroom']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_classroom_technologies);
   }
 
-  // Geographics Settings
-  if (isset($resource_node->field_geographical_settings['und']['0'])) {
-    $resource_node->resource_profile_left['geo']['title'] = 'Geographics Settings';
-    $resource_node->resource_profile_left['geo']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_geographical_settings);
-  }
-
   // Module Type
   if (isset($resource_node->field_smarter_balanced_keyword['und']['0'])) {
     $resource_node->resource_profile_left['smarter']['title'] = 'Module Type';
@@ -1956,7 +1950,6 @@ function sbac_resource_query_alter(&$query) {
         'field_data_field_attributes_value_',
         'field_data_field_intended_student_value_',
         'field_data_field_digital_media_type_value_',
-        'field_data_field_geographical_settings_value_',
         'field_data_field_educational_use_value_',
         'field_data_field_intended_end_user_value_',
         'field_data_field_smarter_balanced_keyword_value_',
@@ -1972,7 +1965,6 @@ function sbac_resource_query_alter(&$query) {
         'field_data_field_attributes_value_',
         'field_data_field_intended_student_value_',
         'field_data_field_digital_media_type_value_',
-        'field_data_field_geographical_settings_value_',
         'field_data_field_educational_use_value_',
         'field_data_field_intended_end_user_value_',
         'field_data_field_smarter_balanced_keyword_value_',
@@ -2902,7 +2894,7 @@ function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
     $blocks['sbac_resource']['sbac_resource_mr_sort_form']['weight'] = -23;
   }
   if (isset($blocks['sbac_resource']['sbac_resource_back_button']) && $theme == 'SBAC') {
-    $blocks['sbac_resource']['sbac_resource_back_button']['pages'] = "content*\nterms-of-service";
+      $blocks['sbac_resource']['sbac_resource_back_button']['pages'] = "content*\nterms-of-service\nfavorites*";
   }
 }
 

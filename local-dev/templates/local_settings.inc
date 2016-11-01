@@ -37,3 +37,12 @@ $conf['image_allow_insecure_derivatives'] = TRUE;
 
 $conf['file_private_path'] = '/var/www/html/docroot/sites/default/files-private';
 $conf['file_temporary_path'] = '/tmp';
+
+/**
+ * SBAC SSO Settings.
+ */
+define('SBAC_SSO_URL', 'https://openam-dev.teaching3.com/auth/SSORedirect/metaAlias/sbac/idp');
+define('SBAC_SSO_DESTROY_SESSION_URL', 'https://openam-dev.teaching3.com/auth/UI/Logout');
+define('SBAC_SSO_LOGOUT_REDIRECT_URL', 'https://openam-dev.teaching3.com/auth/IDPSloRedirect/metaAlias/sbac/idp');
+
+$conf['fast_404_HTML_error_all_paths'] = FALSE;
