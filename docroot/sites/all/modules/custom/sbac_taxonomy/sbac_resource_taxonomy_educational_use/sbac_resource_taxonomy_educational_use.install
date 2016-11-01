@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Implementation of hook_install()
+ */
+function sbac_resource_taxonomy_educational_use_install() {
+  // Data existed before this taxonomy feature was created,
+  // so we need to remove the old data when we first install this
+  sbac_resource_taxonomy_educational_use_update_7001();
+}
+
+/**
  * Implementation of hook_update_N().
  *
  * Removes the old terms
@@ -12,20 +21,12 @@ function sbac_resource_taxonomy_educational_use_update_7001() {
 
   foreach ($terms as $term) {
     if (!in_array($term->uuid, array(
-      '041f1dcf-6722-48de-a15a-886ef9612535',
-      '9903c669-3729-461b-8b02-ae001b5b7837',
-      '4182a7de-03a3-40a5-b256-00857c606768',
-      'a5d86157-a3de-4cb1-8597-2d79f22cc926',
-      '1850a66a-d52e-463e-b15c-2eb156318d23',
-      'f4ffc135-a1a0-4799-b3bd-d85aa042febc',
-      /* Term names
-      'Unit',
-      'Lesson',
-      'Classroom Activity/Assignment',
-      'Tool (i.e., rubric, observation protocol, organizational tool, etc.)',
-      'Assessment (i.e., quiz, test, exit ticket, etc.)',
-      'Other',
-      */
+      '041f1dcf-6722-48de-a15a-886ef9612535', // Unit
+      '9903c669-3729-461b-8b02-ae001b5b7837', // Lesson
+      '4182a7de-03a3-40a5-b256-00857c606768', // Classroom Activity/Assignment
+      'a5d86157-a3de-4cb1-8597-2d79f22cc926', // Tool (i.e., rubric, observation protocol, organizational tool, etc.)
+      '1850a66a-d52e-463e-b15c-2eb156318d23', // Assessment (i.e., quiz, test, exit ticket, etc.)
+      'f4ffc135-a1a0-4799-b3bd-d85aa042febc', // Other
     ))) {
       taxonomy_term_delete($term->tid);
     }
