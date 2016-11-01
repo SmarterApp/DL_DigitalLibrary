@@ -3865,6 +3865,11 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
   background-color: rgba(6,132,173,0.15);
 }
 
+/* line 3733, ../sass/sbac_resource.scss */
+.node-type-collection-view .view-id-collection .resource-card .column.large-4 {
+  display: none;
+}
+
 
 /* line 3692, ../sass/sbac_resource.scss */
 .node-type-collection-view h1.title {
