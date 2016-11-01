@@ -474,7 +474,9 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
                 SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME => $existing_removed_list,
               );
               user_save($this_user, array('data' => $data));
-
+              // Automatically unsubscribe user from forum notifications 
+              $flag = flag_get_flag('subscribe_term');
+              $flag->flag('unflag', $forum_term->tid, $this_user, TRUE); 
             }
             elseif ($operation == 'restore') {
               // UnSet the current removed member flag.

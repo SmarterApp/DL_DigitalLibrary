@@ -213,6 +213,9 @@ function sbac_forum_strongarm() {
         'redirect' => array(
           'weight' => '8',
         ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(),
     ),
@@ -244,13 +247,16 @@ function sbac_forum_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'path' => array(
-          'weight' => '11',
+          'weight' => '10',
         ),
         'name' => array(
           'weight' => '0',
         ),
         'description' => array(
           'weight' => '1',
+        ),
+        'redirect' => array(
+          'weight' => '15',
         ),
       ),
       'display' => array(
@@ -260,7 +266,7 @@ function sbac_forum_strongarm() {
             'visible' => FALSE,
           ),
           'forum_page_card' => array(
-            'weight' => '17',
+            'weight' => '19',
             'visible' => FALSE,
           ),
         ),

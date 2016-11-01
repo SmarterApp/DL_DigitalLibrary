@@ -25,7 +25,7 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
   // Get correct set of category filters based on subnav.
   switch ($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_RESOURCE:
-      $active_display = 'block_2';
+      $active_display = 'block_3';
       $passive_display = 'block_3';
       if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS];
@@ -464,6 +464,14 @@ function sbac_forum_view_forum_page($term) {
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
 
+  if (!empty($term->field_state_or_district_image)) {
+      $forum_image_url = file_create_url($term->field_state_or_district_image['und'][0]['uri']);
+      $image_tag = '<img typeof="foaf:Image" src="' . $forum_image_url . '" width="268" height="138" alt="Forum thumbnail image" />';
+      $variables['image'] = $image_tag;
+      $variables['mime-type'] = file_get_mimetype($forum_image_url);
+      $variables['file-type-icon'] = 'document';
+  }
+  $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $fav_type);
 
   // Add all the markup to variable for tpl.
   $fields = array(
@@ -478,6 +486,7 @@ function sbac_forum_view_forum_page($term) {
     'students' => $student_text,
     'tabs' => $tab_output,
     'resource_link' => $resource_link,
+    'forum_image' => $image_tag,
     'resource_image' => $image_tag,
     'resource_rating' => $resource_rating,
     'resource_rating_count' => $resource_rating_count,

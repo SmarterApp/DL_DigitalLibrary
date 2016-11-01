@@ -89,6 +89,8 @@ Drupal.behaviors.review = {
           }
         });
       }
+      // add placeholder text to review form long text details field
+      $('#edit-field-details-und-0-value').attr('placeholder','Begin typing your feedback here...');
   },
 
   submit: function () {

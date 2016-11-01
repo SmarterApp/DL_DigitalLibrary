@@ -21,7 +21,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Who Can Participate?',
-    'weight' => '5',
+    'weight' => '6',
     'children' => array(
       0 => 'field_forum_access_role_list',
       1 => 'field_forum_access_states',
@@ -33,7 +33,7 @@ function sbac_forum_field_group_info() {
       'label' => 'Who Can Participate?',
       'instance_settings' => array(
         'required_fields' => 0,
-        'id' => '',
+        'id' => 'forum_access',
         'classes' => '',
         'description' => 'By default, a forum is visible to all Digital Library members and any member can participate.',
         'show_label' => '1',
@@ -57,7 +57,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Members',
-    'weight' => '7',
+    'weight' => '8',
     'children' => array(
       0 => 'field_fc_forum_members',
     ),
@@ -84,7 +84,7 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Facilitators',
-    'weight' => '6',
+    'weight' => '7',
     'children' => array(
       0 => 'field_forum_facilitators',
     ),
@@ -118,9 +118,9 @@ function sbac_forum_field_group_info() {
       1 => 'field_forum_last_activity',
       2 => 'field_forum_member_count',
       3 => 'field_forum_removed_member_count',
-      4 => 'field_forum_topic_comment_count',
-      5 => 'field_forum_topic_count',
-      6 => 'field_forum_resource_ref',
+      4 => 'field_forum_resource_ref',
+      5 => 'field_forum_topic_comment_count',
+      6 => 'field_forum_topic_count',
     ),
     'format_type' => 'fieldset',
     'format_settings' => array(
@@ -145,13 +145,13 @@ function sbac_forum_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Add Tags',
-    'weight' => '3',
+    'weight' => '5',
     'children' => array(
-      0 => 'field_grades',
-      1 => 'field_intended_end_user',
-      2 => 'field_intended_student',
-      3 => 'field_subject',
-      4 => 'field_attributes',
+      0 => 'field_attributes',
+      1 => 'field_grades',
+      2 => 'field_intended_end_user',
+      3 => 'field_intended_student',
+      4 => 'field_subject',
     ),
     'format_type' => 'div',
     'format_settings' => array(
