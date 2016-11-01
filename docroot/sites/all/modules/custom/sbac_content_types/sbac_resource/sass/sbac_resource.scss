@@ -3729,6 +3729,10 @@ form[id*="sbac-resource-submit-resource-form"] {
   .view-id-collection {
     .resource-card {
       background-color: rgba(6,132,173,0.15);
+
+      .column.large-4 {
+          display: none;
+      }
     }
   }
 }
