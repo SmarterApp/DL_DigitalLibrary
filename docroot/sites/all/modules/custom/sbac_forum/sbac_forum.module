@@ -505,9 +505,12 @@ function sbac_forum_delete_orphaned_topics_process($item_nid) {
 /**
  * Implementation of hook_theme()
  */
+/**
+ * Implementation of hook_theme()
+ */
 function sbac_forum_theme($existing, $type, $theme, $path) {
   $items['sbac_forum_filter_categories'] = array(
-    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates',
     'template' => 'forum-filter-categories',
     'variables' => array(
       'categories' => NULL,
@@ -517,7 +520,7 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['sbac_forum_render_target_forum'] = array(
-    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates',
     'template' => 'forum-view-page',
     'variables' => array(
       'fields' => NULL,
@@ -527,8 +530,9 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   // Node template override
   $items['node__topic'] = array(
     'render element' => 'elements',
-    'file' => '/includes/sbac_forum.preprocess.inc',
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/node--topic',
+    'path' => $path, // . '/templates',
+    'file' => 'includes/sbac_forum.preprocess.inc',
+    'template' => 'templates/node--topic',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_node',
@@ -538,8 +542,9 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
 
   $items['sbac_forum_comment__node_topic'] = array(
     'render element' => 'elements',
-    'file' => '/includes/sbac_forum.preprocess.inc',
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/sbac-forum-comment--node-topic',
+    'path' => $path, // . '/templates',
+    'file' => 'includes/sbac_forum.preprocess.inc',
+    'template' => 'templates/sbac-forum-comment--node-topic',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_comment',
@@ -552,10 +557,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
    * ---------- Forum list View.---------------
    */
   $items['views_view__forum_list__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forum_list/views-view--forum-list--block',
+    'template' => 'views-view--forum-list--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list',
     'arguments' => array('view' => NULL,),
     'original hook' => 'views_view',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view',
@@ -564,10 +570,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_unformatted__forum_list__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forum_list/views-view-unformatted--forum-list--block',
+    'template' => 'views-view-unformatted--forum-list--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list',
     'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
     'original hook' => 'views_view_unformatted',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_unformatted',
@@ -576,10 +583,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_fields__forum_list__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forum_list/views-view-fields--forum-list--block',
+    'template' => 'views-view-fields--forum-list--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list',
     'arguments' => array('view' => NULL, 'fields' => NULL, 'row' => NULL),
     'original hook' => 'views_view_fields',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_fields',
@@ -591,10 +599,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
    * ---------- Forum list EMPTY View.---------------
    */
   $items['views_view__forum_list_empty__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forum_list_empty/views-view--forum-list-empty--block',
+    'template' => 'views-view--forum-list-empty--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list_empty',
     'arguments' => array('view' => NULL,),
     'original hook' => 'views_view',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view',
@@ -603,10 +612,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_unformatted__forum_list_empty__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forum_list_empty/views-view-unformatted--forum-list-empty--block',
+    'template' => 'views-view-unformatted--forum-list-empty--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list_empty',
     'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
     'original hook' => 'views_view_unformatted',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_unformatted',
@@ -615,10 +625,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_fields__forum_list_empty__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forum_list_empty/views-view-fields--forum-list-empty--block',
+    'template' => 'views-view-fields--forum-list-empty--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forum_list_empty',
     'arguments' => array('view' => NULL, 'fields' => NULL, 'row' => NULL),
     'original hook' => 'views_view_fields',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_fields',
@@ -631,10 +642,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
    * ---------- Topic list View.---------------
    */
   $items['views_view__forum_topic_list__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/topic_list/views-view--forum-topic-list--block',
+    'template' => 'views-view--forum-topic-list--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
     'arguments' => array('view' => NULL,),
     'original hook' => 'views_view',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view',
@@ -643,10 +655,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_unformatted__forum_topic_list__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/topic_list/views-view-unformatted--forum-topic-list--block',
+    'template' => 'views-view-unformatted--forum-topic-list--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
     'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
     'original hook' => 'views_view_unformatted',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_unformatted',
@@ -655,10 +668,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_fields__forum_topic_list__block'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/topic_list/views-view-fields--forum-topic-list--block',
+    'template' => 'views-view-fields--forum-topic-list--block',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
     'arguments' => array('view' => NULL, 'fields' => NULL, 'row' => NULL),
     'original hook' => 'views_view_fields',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_fields',
@@ -667,10 +681,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_field__forum_topic_list__block__uid'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/topic_list/views-view-field--forum-topic-list--block--uid',
+    'template' => 'views-view-field--forum-topic-list--block--uid',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
     'arguments' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
     'original hook' => 'views_view_field',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_field',
@@ -679,10 +694,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_field__forum_topic_list__block__last_comment_uid'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/topic_list/views-view-field--forum-topic-list--block--last-comment-uid',
+    'template' => 'views-view-field--forum-topic-list--block--last-comment-uid',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/topic_list',
     'arguments' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
     'original hook' => 'views_view_field',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_field',
@@ -697,10 +713,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
    *    NOTE: Affects both displays (block and block-1 aka Member and Removed)
    */
   $items['views_view__forum_member_list'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/member_list/views-view--forum-member-list',
+    'template' => 'views-view--forum-member-list',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
     'arguments' => array('view' => NULL,),
     'original hook' => 'views_view',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view',
@@ -709,10 +726,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_unformatted__forum_member_list'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/member_list/views-view-unformatted--forum-member-list',
+    'template' => 'views-view-unformatted--forum-member-list',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
     'arguments' => array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
     'original hook' => 'views_view_unformatted',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_unformatted',
@@ -721,10 +739,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_fields__forum_member_list'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/member_list/views-view-fields--forum-member-list',
+    'template' => 'views-view-fields--forum-member-list',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
     'arguments' => array('view' => NULL, 'fields' => NULL, 'row' => NULL),
     'original hook' => 'views_view_fields',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_fields',
@@ -733,10 +752,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_field__forum_member_list__picture'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/member_list/views-view-field--forum-member-list--picture',
+    'template' => 'views-view-field--forum-member-list--picture',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
     'arguments' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
     'original hook' => 'views_view_field',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_field',
@@ -745,10 +765,11 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
   );
 
   $items['views_view_field__forum_member_list__uid'] = array(
-    'template' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/member_list/views-view-field--forum-member-list--uid',
+    'template' => 'views-view-field--forum-member-list--uid',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/member_list',
     'arguments' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
     'original hook' => 'views_view_field',
-    'file' => '/includes/sbac_forum.preprocess.inc',
+    'file' => '../../../includes/sbac_forum.preprocess.inc',
     'preprocess functions' => array(
       'template_preprocess',
       'template_preprocess_views_view_field',
@@ -762,21 +783,21 @@ function sbac_forum_theme($existing, $type, $theme, $path) {
 
   // Keyword search templates
   $items['sbac_forum_keyword_search_render_forum'] = array(
-    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forums_keyword_search',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forums_keyword_search',
     'template' => 'kw-search-entity-forum',
     'variables' => array(
       'fields' => NULL,
     ),
   );
   $items['sbac_forum_keyword_search_render_topic'] = array(
-    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forums_keyword_search',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forums_keyword_search',
     'template' => 'kw-search-entity-topic',
     'variables' => array(
       'fields' => NULL,
     ),
   );
   $items['sbac_forum_keyword_search_render_comment'] = array(
-    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_forum/views/forums_keyword_search',
+    'path' => drupal_get_path('module', 'sbac_forum') . '/templates/views/forums_keyword_search',
     'template' => 'kw-search-entity-comment',
     'variables' => array(
       'fields' => NULL,

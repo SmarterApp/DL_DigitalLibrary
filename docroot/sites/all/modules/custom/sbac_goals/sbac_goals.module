@@ -797,7 +797,7 @@ function sbac_goals_check_for_reset($user) {
   $date_range = $current_end_date - $current_start_date;
   $prev_start_date = date('Y-m-d', ($current_start_date - $date_range));
   $report_date_range = format_date($current_start_date - $date_range, 'custom', 'Ymd') . '--' . format_date($current_start_date, 'custom', 'Ymd');
-  $pdf_name = $user->uid . '_' . $prev_start_date . '_' . variable_get('goals_start_date');
+  $pdf_name = $user->uid . '_' . $prev_start_date . '_' . variable_get('goals_start_date') . '.pdf';
   $pdf_path = 'sites/default/files/user_certificates/' . $user->uid;
   // Reset goals to default values if previous period pdf doesn't exist
   // and configured goals date is not in the future
@@ -1353,7 +1353,7 @@ function sbac_goals_report_form_submit($form, &$form_state, $user) {
     else {
       $report_date_range = format_date(strtotime($start), 'custom', 'Ymd') . '--' . format_date(strtotime($end), 'custom', 'Ymd');
     }
-    $pdf_name = 'Current_Progress';
+    $pdf_name = 'Current_Progress.pdf';
     sbac_goals_create_period_pdf($user, $report_date_range, $pdf_name, FALSE);
     $pdfurl = "/sites/default/files/user_certificates/" . $user->uid . '/temp/' . $pdf_name;
     drupal_goto($pdfurl);
@@ -1362,4 +1362,49 @@ function sbac_goals_report_form_submit($form, &$form_state, $user) {
     $pdfurl = "/sites/default/files/user_certificates/" . $user->uid . '/' . $form_state['values']['pdf_select'];
     drupal_goto($pdfurl); 
   }
+}
+
+/* A function to update a forums goal values from its members */
+function sbac_goals_update_forum_goals($tid) {
+  // Load taxonomy term
+  $term = taxonomy_term_load($tid);
+
+  //Find current values if not saved(new forum) set to 0
+  isset($term->field_educator_goal) ? $educator_goals = $term->field_educator_goal['und'][0]['value'] : $educator_goals = 0;
+  isset($term->field_educator_goal_complete) ? $educator_completed = $term->field_educator_goal_complete['und'][0]['value'] : $educator_completed = 0;
+  isset($term->field_reviewer_goal) ? $reviewer_goals = $term->field_reviewer_goal['und'][0]['value'] : $reviewer_goals = 0;
+  isset($term->field_reviewer_goal_complete) ? $reviewer_completed = $term->field_reviewer_goal_complete['und'][0]['value'] : $reviewer_completed = 0;
+  isset($term->field_contributor_goal) ? $contributor_goals = $term->field_contributor_goal['und'][0]['value'] : $contributor_goals = 0;
+  isset($term->field_contributor_goal_complete) ? $contributor_completed = $term->field_contributor_goal_complete['und'][0]['value'] : $contributor_completed = 0;
+
+  // Collect member uids
+  foreach($term->field_fc_forum_members['und'] as $member) {
+    $member_user = entity_load('field_collection_item', array($member['value']));
+    $member_uid = $member_user[$member['value']]->field_fc_forum_member['und'][0]['target_id'];
+    $user = user_load($member_uid);
+
+    // Only add to total if user hasn't hidden themselves from the leaderboards
+    if ($user->field_hide_from_leaderboards['und'][0]['value'] == 0) {
+      // Get goals and completed values for each member and add to forum totals
+      // Star rating goals
+      $educator_goals = $educator_goals + $user->field_star_rating_goal['und'][0]['value'];
+      $educator_completed = $educator_completed + $user->field_resources_rated['und'][0]['value'];
+
+      // Resource Reviewer goals
+      if (in_array('resource reviewer', $user->roles) ||  in_array('resource publisher', $user->roles)) {
+        $reviewer_goals = $reviewer_goals + $user->field_resources_reviewed_goal['und'][0]['value'];
+        $reviewer_completed = $reviewer_completed + $user->field_resources_reviewed['und'][0]['value'];
+      }
+
+      // Resource Contributor
+      if (in_array('resource contributor', $user->roles)) {
+        $contributor_goals = $contributor_goals + $user->field_resources_posted_goal['und'][0]['value'];
+        $contributor_completed = $contributor_completed + $user->field_resources_contributed['und'][0]['value'];
+      }
+    }
+  }
+
+  
+  
+  // Save goals and completed items to taxonomy term 
 }
