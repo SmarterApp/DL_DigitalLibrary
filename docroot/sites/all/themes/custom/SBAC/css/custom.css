@@ -36435,3 +36435,72 @@ form#sbac-user-filter-form #edit-email {
   padding-left: 0;
   margin-left: 0;
 }
+
+/* Forum page goals */
+.forum-goal-container {
+  float: left;
+  margin-top: 20px;
+}
+.page-forums-term .goal-container {
+  float: left;
+  margin-right: 20px;
+  width: 270px;
+}
+.page-forums-term .goal-container.last {
+   margin: 0;
+}
+.page-forums-term .goal-header {
+  border-radius: 3px 3px 0 0;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 10px;
+}
+.page-forums-term .goal-header.educator {
+  background-color: #515152;
+}
+.page-forums-term .goal-header.reviewer {
+  background-color: #4b7e40;
+}
+.page-forums-term .goal-header.contributor {
+  background-color: #0b5d76;
+}
+.page-forums-term .forum-goal-container .goal-perc {
+  float: right;
+}
+.page-forums-term .goal-body {
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-radius: 0px 0px 5px 5px;
+  font-size: 14px;
+  position: relative;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+.page-forums-term .members {
+  display: inline;
+  width: 50%;
+}
+.page-forums-term .members img {
+  margin-right: 10px;
+}
+.page-forums-term .forum-goal-container .goals {
+  width: 50%;
+  float: right;
+  margin-top: 8px;
+  text-align: right;
+}
+.page-forums-term .complete {
+  border-radius: 3px;
+  padding: 6px;
+  color: #FFFFFF;
+}
+.page-forums-term .complete.educator {
+  background-color: #515152;
+}
+.page-forums-term .complete.reviewer {
+  background-color: #4b7e40;
+}
+.page-forums-term .complete.contributor {
+  background-color: #0b5d76;
+}

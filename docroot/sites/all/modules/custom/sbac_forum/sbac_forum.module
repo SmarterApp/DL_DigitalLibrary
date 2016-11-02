@@ -2454,7 +2454,7 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
     global $user;
     // Participants
     $count = $build['field_forum_member_count']['#items'][0]['value'];
-    $build['field_forum_member_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Participants</div></div>';
+    $build['field_forum_member_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Members</div></div>';
 
     // Posts
     $count = $build['field_forum_topic_comment_count']['#items'][0]['value'];
