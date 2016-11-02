@@ -1198,6 +1198,12 @@ function sbac_central_update_7098() {
   module_enable($modules);
 }
 
+function sbac_central_update_7099() {
+  // remove field_geographical_settings field (from resource and forum)
+  field_delete_field('field_geographical_settings');
+  field_purge_batch(1);
+}
+
 /**
  * Impliments hook_uninstall().
  */
