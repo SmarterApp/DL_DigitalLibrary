@@ -10,21 +10,13 @@
 function sbac_resource_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'field_alignment_tags'
+  // Exported field_base: 'field_alignment_tags'.
   $field_bases['field_alignment_tags'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_alignment_tags',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -39,21 +31,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_alignment_term'
+  // Exported field_base: 'field_alignment_term'.
   $field_bases['field_alignment_term'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_alignment_term',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -68,26 +52,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_alt_body'
+  // Exported field_base: 'field_alt_body'.
   $field_bases['field_alt_body'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_alt_body',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -100,14 +77,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_asset_downloads'
+  // Exported field_base: 'field_asset_downloads'.
   $field_bases['field_asset_downloads'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_asset_downloads',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',
@@ -116,21 +92,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_attributes'
+  // Exported field_base: 'field_attributes'.
   $field_bases['field_attributes'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_attributes',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -145,26 +113,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_author'
+  // Exported field_base: 'field_author'.
   $field_bases['field_author'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_author',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -179,21 +140,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_classroom_technologies'
+  // Exported field_base: 'field_classroom_technologies'.
   $field_bases['field_classroom_technologies'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_classroom_technologies',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -208,26 +161,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_connection_to_ccss'
+  // Exported field_base: 'field_connection_to_ccss'.
   $field_bases['field_connection_to_ccss'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_connection_to_ccss',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -240,21 +186,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_connection_to_fap'
+  // Exported field_base: 'field_connection_to_fap'.
   $field_bases['field_connection_to_fap'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_connection_to_fap',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -267,21 +205,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_contexts'
+  // Exported field_base: 'field_contexts'.
   $field_bases['field_contexts'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_contexts',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -294,21 +224,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_copyright_clearace_forms'
+  // Exported field_base: 'field_copyright_clearace_forms'.
   $field_bases['field_copyright_clearace_forms'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_copyright_clearace_forms',
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
     'indexes' => array(
       'fid' => array(
         0 => 'fid',
@@ -325,21 +247,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'file',
   );
 
-  // Exported field_base: 'field_digital_media_type'
+  // Exported field_base: 'field_digital_media_type'.
   $field_bases['field_digital_media_type'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_digital_media_type',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -354,26 +268,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_document_id'
+  // Exported field_base: 'field_document_id'.
   $field_bases['field_document_id'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_document_id',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -388,21 +295,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_educational_use'
+  // Exported field_base: 'field_educational_use'.
   $field_bases['field_educational_use'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_educational_use',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -417,26 +316,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_focus'
+  // Exported field_base: 'field_focus'.
   $field_bases['field_focus'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_focus',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -451,26 +343,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_geographical_settings'
+  // Exported field_base: 'field_geographical_settings'.
   $field_bases['field_geographical_settings'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_geographical_settings',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -485,26 +370,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_grades'
+  // Exported field_base: 'field_grades'.
   $field_bases['field_grades'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_grades',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -519,19 +397,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_html5'
+  // Exported field_base: 'field_html5'.
   $field_bases['field_html5'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_html5',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -550,21 +428,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_intended_end_user'
+  // Exported field_base: 'field_intended_end_user'.
   $field_bases['field_intended_end_user'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_intended_end_user',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -579,26 +449,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_intended_student'
+  // Exported field_base: 'field_intended_student'.
   $field_bases['field_intended_student'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_intended_student',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -613,19 +476,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_is_hidden'
+  // Exported field_base: 'field_is_hidden'.
   $field_bases['field_is_hidden'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_is_hidden',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -644,21 +507,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_learning_goals'
+  // Exported field_base: 'field_learning_goals'.
   $field_bases['field_learning_goals'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_learning_goals',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -671,21 +526,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_license'
+  // Exported field_base: 'field_license'.
   $field_bases['field_license'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_license',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -701,19 +548,19 @@ function sbac_resource_field_default_field_bases() {
         ),
       ),
       'allowed_values_function' => '',
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_license_information'
+  // Exported field_base: 'field_license_information'.
   $field_bases['field_license_information'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_license_information',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -732,21 +579,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_license_secondary'
+  // Exported field_base: 'field_license_secondary'.
   $field_bases['field_license_secondary'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_license_secondary',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -761,19 +600,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_node_avg_rating'
+  // Exported field_base: 'field_node_avg_rating'.
   $field_bases['field_node_avg_rating'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_node_avg_rating',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',
@@ -784,14 +623,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'number_float',
   );
 
-  // Exported field_base: 'field_permanent_link_settings'
+  // Exported field_base: 'field_permanent_link_settings'.
   $field_bases['field_permanent_link_settings'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_permanent_link_settings',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -810,14 +648,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_pii'
+  // Exported field_base: 'field_pii'.
   $field_bases['field_pii'] = array(
     'active' => 1,
     'cardinality' => 2,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_pii',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -836,14 +673,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_posting_options'
+  // Exported field_base: 'field_posting_options'.
   $field_bases['field_posting_options'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_posting_options',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -863,21 +699,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_posting_options_comment'
+  // Exported field_base: 'field_posting_options_comment'.
   $field_bases['field_posting_options_comment'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_posting_options_comment',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -890,21 +718,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_principles'
+  // Exported field_base: 'field_principles'.
   $field_bases['field_principles'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_principles',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -917,21 +737,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_publisher'
+  // Exported field_base: 'field_publisher'.
   $field_bases['field_publisher'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_publisher',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -946,21 +758,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text',
   );
 
-  // Exported field_base: 'field_recent_publishers'
+  // Exported field_base: 'field_recent_publishers'.
   $field_bases['field_recent_publishers'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_recent_publishers',
-    'foreign keys' => array(
-      'users' => array(
-        'columns' => array(
-          'target_id' => 'uid',
-        ),
-        'table' => 'users',
-      ),
-    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -987,21 +791,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_recent_reviewers'
+  // Exported field_base: 'field_recent_reviewers'.
   $field_bases['field_recent_reviewers'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_recent_reviewers',
-    'foreign keys' => array(
-      'users' => array(
-        'columns' => array(
-          'target_id' => 'uid',
-        ),
-        'table' => 'users',
-      ),
-    ),
     'indexes' => array(
       'target_id' => array(
         0 => 'target_id',
@@ -1028,14 +824,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_resource_actions'
+  // Exported field_base: 'field_resource_actions'.
   $field_bases['field_resource_actions'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_resource_actions',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1054,14 +849,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_resource_state'
+  // Exported field_base: 'field_resource_state'.
   $field_bases['field_resource_state'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_resource_state',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1093,21 +887,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_text',
   );
 
-  // Exported field_base: 'field_resource_thumbnail'
+  // Exported field_base: 'field_resource_thumbnail'.
   $field_bases['field_resource_thumbnail'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_resource_thumbnail',
-    'foreign keys' => array(
-      'fid' => array(
-        'columns' => array(
-          'fid' => 'fid',
-        ),
-        'table' => 'file_managed',
-      ),
-    ),
     'indexes' => array(
       'fid' => array(
         0 => 'fid',
@@ -1123,21 +909,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_smarter_balanced_keyword'
+  // Exported field_base: 'field_smarter_balanced_keyword'.
   $field_bases['field_smarter_balanced_keyword'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_smarter_balanced_keyword',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -1152,26 +930,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_student_agency'
+  // Exported field_base: 'field_student_agency'.
   $field_bases['field_student_agency'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_student_agency',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1184,21 +955,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_subject'
+  // Exported field_base: 'field_subject'.
   $field_bases['field_subject'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_subject',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -1213,19 +976,19 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_subscription_package_type'
+  // Exported field_base: 'field_subscription_package_type'.
   $field_bases['field_subscription_package_type'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_subscription_package_type',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1244,21 +1007,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_success_criteria'
+  // Exported field_base: 'field_success_criteria'.
   $field_bases['field_success_criteria'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_success_criteria',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1271,21 +1026,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_supporting_evidence'
+  // Exported field_base: 'field_supporting_evidence'.
   $field_bases['field_supporting_evidence'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_supporting_evidence',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1298,14 +1045,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_temp'
+  // Exported field_base: 'field_temp'.
   $field_bases['field_temp'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_temp',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1324,14 +1070,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
-  // Exported field_base: 'field_temporary_public_link'
+  // Exported field_base: 'field_temporary_public_link'.
   $field_bases['field_temporary_public_link'] = array(
     'active' => 1,
     'cardinality' => 2,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_temporary_public_link',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1349,14 +1094,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_temporary_public_link_time'
+  // Exported field_base: 'field_temporary_public_link_time'.
   $field_bases['field_temporary_public_link_time'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_temporary_public_link_time',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1381,21 +1125,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_thumbnail_uri'
+  // Exported field_base: 'field_thumbnail_uri'.
   $field_bases['field_thumbnail_uri'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_thumbnail_uri',
-    'foreign keys' => array(
-      'format' => array(
-        'columns' => array(
-          'format' => 'format',
-        ),
-        'table' => 'filter_format',
-      ),
-    ),
     'indexes' => array(
       'format' => array(
         0 => 'format',
@@ -1408,14 +1144,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'text_long',
   );
 
-  // Exported field_base: 'field_total_views'
+  // Exported field_base: 'field_total_views'.
   $field_bases['field_total_views'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_total_views',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',
@@ -1424,14 +1159,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_unique_downloads'
+  // Exported field_base: 'field_unique_downloads'.
   $field_bases['field_unique_downloads'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_unique_downloads',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',
@@ -1440,14 +1174,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_unique_views'
+  // Exported field_base: 'field_unique_views'.
   $field_bases['field_unique_views'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_unique_views',
-    'foreign keys' => array(),
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',
@@ -1456,14 +1189,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
-  // Exported field_base: 'field_view_permissions'
+  // Exported field_base: 'field_view_permissions'.
   $field_bases['field_view_permissions'] = array(
     'active' => 1,
     'cardinality' => 1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_view_permissions',
-    'foreign keys' => array(),
     'indexes' => array(
       'value' => array(
         0 => 'value',
@@ -1482,21 +1214,13 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'list_integer',
   );
 
-  // Exported field_base: 'field_view_permissions_per_state'
+  // Exported field_base: 'field_view_permissions_per_state'.
   $field_bases['field_view_permissions_per_state'] = array(
     'active' => 1,
     'cardinality' => -1,
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_view_permissions_per_state',
-    'foreign keys' => array(
-      'tid' => array(
-        'columns' => array(
-          'tid' => 'tid',
-        ),
-        'table' => 'taxonomy_term_data',
-      ),
-    ),
     'indexes' => array(
       'tid' => array(
         0 => 'tid',
@@ -1511,6 +1235,7 @@ function sbac_resource_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',

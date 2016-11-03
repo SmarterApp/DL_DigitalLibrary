@@ -1,11 +1,28 @@
-# Ignore paths that contain user-generated content.
-docroot/files
-#config
+# OS specific temporary files
+.DS_Store*
+ehthumbs.db
+Thumbs.db
+
+# IDEs
+.buildpath
 .idea
-docroot/phpinfo.php
-_settings.php
-.DS_Store
-atlassian-ide-plugin.xml
-docroot/sites/default/settings.php
-docroot/sites/default/settings.local.php
-docroot/sites/default/files-private/
+.project
+.settings
+*.esproj
+*.komodoproject
+*.komodotools
+nbproject
+
+# Tools
+.svn
+.sass-cache
+
+# Build temporary files
+/build
+/*/**/.git
+
+#Composer installed
+/docroot/sites/all/modules/contrib/*
+/docroot/sites/all/themes/contrib/*
+/vendor
+#Composer end

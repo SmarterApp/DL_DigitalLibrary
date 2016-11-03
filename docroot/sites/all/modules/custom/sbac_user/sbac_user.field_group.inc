@@ -8,7 +8,7 @@
  * Implements hook_field_group_info().
  */
 function sbac_user_field_group_info() {
-  $export = array();
+  $field_groups = array();
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -22,9 +22,7 @@ function sbac_user_field_group_info() {
   $field_group->data = array(
     'label' => 'Email Settings',
     'weight' => '3',
-    'children' => array(
-      0 => 'sbac_user_email_options',
-    ),
+    'children' => array(),
     'format_type' => 'tab',
     'format_settings' => array(
       'formatter' => 'closed',
@@ -35,7 +33,7 @@ function sbac_user_field_group_info() {
       ),
     ),
   );
-  $export['group_email_settings|user|user|form'] = $field_group;
+  $field_groups['group_email_settings|user|user|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -51,10 +49,9 @@ function sbac_user_field_group_info() {
     'weight' => '1',
     'children' => array(
       0 => 'field_introduction',
-      1 => 'field_swd_ell',
+      1 => 'field_special_populations',
       2 => 'field_grade_level_s_',
-      3 => 'field_special_populations',
-      4 => 'field_subject_s_',
+      3 => 'field_subject_s_',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -66,7 +63,7 @@ function sbac_user_field_group_info() {
       ),
     ),
   );
-  $export['group_expertise|user|user|form'] = $field_group;
+  $field_groups['group_expertise|user|user|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -99,7 +96,7 @@ function sbac_user_field_group_info() {
       ),
     ),
   );
-  $export['group_personal_information|user|user|form'] = $field_group;
+  $field_groups['group_personal_information|user|user|form'] = $field_group;
 
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
@@ -126,7 +123,14 @@ function sbac_user_field_group_info() {
       ),
     ),
   );
-  $export['group_privacy|user|user|form'] = $field_group;
+  $field_groups['group_privacy|user|user|form'] = $field_group;
 
-  return $export;
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Email Settings');
+  t('Expertise');
+  t('Personal Information');
+  t('Privacy');
+
+  return $field_groups;
 }

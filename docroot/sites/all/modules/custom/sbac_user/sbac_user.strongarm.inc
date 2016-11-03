@@ -116,6 +116,12 @@ function sbac_user_strongarm() {
         'googleanalytics' => array(
           'weight' => '3',
         ),
+        'mimemail' => array(
+          'weight' => '0',
+        ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(
         'summary' => array(
@@ -354,7 +360,7 @@ The Digital Library team';
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_picture_default';
-  $strongarm->value = 'sites/all/themes/SBAC/images/user-default-image.png';
+  $strongarm->value = 'sites/all/themes/custom/SBAC/images/user-default-image.png';
   $export['user_picture_default'] = $strongarm;
 
   $strongarm = new stdClass();

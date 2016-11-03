@@ -10,7 +10,7 @@ function sbac_user_theme__theme() {
 
   $items['user_login'] = array(
     'render element' => 'form',
-    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_user',
     'template' => 'user-login',
     'preprocess functions' => array(
       'template_preprocess',
@@ -19,7 +19,7 @@ function sbac_user_theme__theme() {
   );
   $items['user_pass'] = array(
     'render element' => 'form',
-    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_user',
     'template' => 'user-pass',
     'preprocess functions' => array(
       'template_preprocess',
@@ -27,21 +27,21 @@ function sbac_user_theme__theme() {
   );
   $items['sbac_user_change_password_form'] = array(
     'render element' => 'form',
-    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_user',
     'template' => 'change-password',
     'preprocess functions' => array(
       'template_preprocess',
     ),
   );
   $items['user_pass_confirmation'] = array(
-    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_user',
     'template' => 'user-pass-confirmation',
   );
 
   $items['user_profile']['preprocess functions'][] = 'sbac_user_theme__preprocess_user_profile';
 
   $items['user_setup_nav'] = array(
-    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_user',
     'template' => 'user-setup-nav',
     'variables' => array(
       'page1' => NULL,
@@ -51,7 +51,7 @@ function sbac_user_theme__theme() {
   );
 
   $items['user_setup_preview'] = array(
-    'path' => drupal_get_path('module', 'sbac_user') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_user',
     'template' => 'user-setup-preview',
   );
 

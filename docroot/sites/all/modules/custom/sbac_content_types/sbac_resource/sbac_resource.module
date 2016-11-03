@@ -264,145 +264,82 @@ function sbac_resource_profile_fields(&$node) {
   // Subjects and Domains
   if (isset($resource_node->field_subject['und']['0'])) {
     $resource_node->resource_profile_left['subjects']['title'] = 'Subjects and Domains';
-    $resource_node->resource_profile_left['subjects']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_subject);
+    $resource_node->resource_profile_left['subjects']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_subject);
   }
 
   // Common Core State Standards
   if (isset($resource_node->field_alignment_term['und']['0'])) {
     $resource_node->resource_profile_left['ccss']['title'] = 'Common Core State Standards';
-    $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_alignment_term, TRUE);
+    $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_alignment_term, TRUE);
   }
 
   // Grades
   if (isset($resource_node->field_grades['und']['0'])) {
     $resource_node->resource_profile_left['grades']['title'] = 'Grades';
-    $resource_node->resource_profile_left['grades']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_grades);
+    $resource_node->resource_profile_left['grades']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_grades);
   }
 
   // Intended End Use
   if (isset($resource_node->field_intended_end_user['und']['0'])) {
     $resource_node->resource_profile_left['end_use']['title'] = 'Intended End Users';
-    $resource_node->resource_profile_left['end_use']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_intended_end_user);
+    $resource_node->resource_profile_left['end_use']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_intended_end_user);
   }
 
   // Intended Student Populations
   if (isset($resource_node->field_intended_student['und']['0'])) {
     $resource_node->resource_profile_left['student_pop']['title'] = 'Intended Student Populations';
-    $resource_node->resource_profile_left['student_pop']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_intended_student);
+    $resource_node->resource_profile_left['student_pop']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_intended_student);
   }
 
   // Media Types
   if (isset($resource_node->field_digital_media_type['und']['0'])) {
     $resource_node->resource_profile_left['media']['title'] = 'Media Types';
-    $resource_node->resource_profile_left['media']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_digital_media_type);
+    $resource_node->resource_profile_left['media']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_digital_media_type);
   }
 
   // Educational Use
   if (isset($resource_node->field_educational_use['und']['0'])) {
     $resource_node->resource_profile_left['educational']['title'] = 'Educational Use';
-    $resource_node->resource_profile_left['educational']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_educational_use);
+    $resource_node->resource_profile_left['educational']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_educational_use);
   }
 
   // Technologies for use in classroom
   if (isset($resource_node->field_classroom_technologies['und']['0'])) {
     $resource_node->resource_profile_left['classroom']['title'] = 'Technologies Required for use in Classroom';
-    $resource_node->resource_profile_left['classroom']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_classroom_technologies);
+    $resource_node->resource_profile_left['classroom']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_classroom_technologies);
   }
 
   // Geographics Settings
   if (isset($resource_node->field_geographical_settings['und']['0'])) {
     $resource_node->resource_profile_left['geo']['title'] = 'Geographics Settings';
-    $resource_node->resource_profile_left['geo']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_geographical_settings);
+    $resource_node->resource_profile_left['geo']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_geographical_settings);
   }
 
   // Module Type
   if (isset($resource_node->field_smarter_balanced_keyword['und']['0'])) {
     $resource_node->resource_profile_left['smarter']['title'] = 'Module Type';
-    $resource_node->resource_profile_left['smarter']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_smarter_balanced_keyword);
+    $resource_node->resource_profile_left['smarter']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_smarter_balanced_keyword);
   }
 
   // License for primary material
   if (isset($resource_node->field_license['und']['0'])) {
     $resource_node->resource_profile_left['primary']['title'] = 'License For Primary Material';
-    $resource_node->resource_profile_left['primary']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_license);
+    $resource_node->resource_profile_left['primary']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_license);
   }
 
   // License for a secondary material
   if (isset($resource_node->field_license_secondary['und']['0'])) {
     $resource_node->resource_profile_left['secondary']['title'] = 'Licenses For Secondary Material';
-    $resource_node->resource_profile_left['secondary']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_license_secondary);
+    $resource_node->resource_profile_left['secondary']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_license_secondary);
   }
 
   // Focus
   if (isset($resource_node->field_attributes['und']['0'])) {
     $resource_node->resource_profile_right['attributes']['title'] = 'Attributes of the Formative Assessment Process';
-    $resource_node->resource_profile_right['attributes']['content'] = sbac_resource_get_taxonomy_terms($resource_node->field_attributes);
+    $resource_node->resource_profile_right['attributes']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_attributes);
   }
 
   $node['node'] = $resource_node;
-}
-
-/**
- * Load the taxonomy terms and get there names.
- *
- * @param $field
- * @param $ccss
- *
- * @return string
- */
-function sbac_resource_get_taxonomy_terms($field, $ccss = FALSE) {
-  $terms = array();
-  foreach ($field['und'] as $key => $term) {
-    if ($ccss) {
-      if (isset($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'])){
-        $terms[] = $term['taxonomy_term']->field_alignment_shortname['und'][0]['value'];
-      }
-      else {
-        $temp_term = taxonomy_term_load($term['tid']);
-        if ($temp_term) {
-          $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
-        }
-      }
-    }
-    else {
-      if (isset($term['taxonomy_term']->name)) {
-        $terms[] = $term['taxonomy_term']->name;
-      }
-      else {
-        $temp_term = taxonomy_term_load($term['tid']);
-        if ($temp_term) {
-          $terms[] = $temp_term->name;
-        }
-      }
-    }
-  }
-
-  $list = theme('item_list', array('items' => $terms, 'title' => '', 'type' => 'ul', 'attributes' => array('class' => 'field-content')));
-  return $list;
-}
-
-/**
- * Concatenate the term name with the parents term names
- * @param $tid
- * @return string
- */
-function sbac_resource_term_concat_parents($tid, $term_name) {
-  $parents = array();
-  $parents[] = (object) array(
-    'tid' => $tid,
-    'name' => $term_name,
-  );
-  $n = 0;
-  while ($parent = _sbac_resource_taxonomy_get_parents($parents[$n]->tid)) {
-    $parents = array_merge($parents, $parent);
-    $n++;
-  }
-  $names = array();
-  foreach ($parents as $p) {
-    $names[] = $p->name;
-  }
-  $names = array_reverse($names);
-  return implode(' - ', $names);
 }
 
 /**
@@ -1826,7 +1763,12 @@ function sbac_resource_save_current_state($node) {
             }
           }
 
-          if ($total_count < 3) {
+          $quality_count = 3;
+          // Set required quality reviews to 2 for playlists
+          if ($node->field_focus[LANGUAGE_NONE][0]['tid'] == '78306') {
+            $quality_count = 2;
+          } 
+          if ($total_count < $quality_count) {
             // everyone has access and is set to needs review
             sbac_resource_delete_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review');
             sbac_resource_save_resource_state_for_all_role($node, SBAC_RESOURCE_REVIEWER_ROLE, 'qc_needs_review', TRUE);
@@ -4072,58 +4014,6 @@ function sbac_resource_remove_default_status_messages(){
 }
 
 /**
- * Mimic taxonomy get parent but we don't want to trigger the load hook
- */
-function _sbac_resource_taxonomy_get_parents($tid){
-  $query = db_select('taxonomy_term_data', 't');
-  $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
-  $query->fields('t', array('tid', 'name'));
-  $query->condition('h.tid', $tid);
-  $query->addTag('term_access');
-  $query->orderBy('t.weight');
-  $query->orderBy('t.name');
-  return $query->execute()->fetchAll();
-}
-
-/**
- *  Implements hook_taxonomy_term_load().
- */
-function sbac_resource_taxonomy_term_load($terms) {
-  foreach ($terms as $term) {
-    if ($term->vocabulary_machine_name == 'education_alignment') {
-      continue;
-    }
-
-    // remove the parent terms. We're implement our own query because we don't want to trigger this load hook again.
-    $query = db_select('taxonomy_term_data', 't');
-    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-    $query->addField('t', 'tid');
-    $query->condition('h.parent', $term->tid);
-    $query->addTag('term_access');
-    $query->orderBy('t.weight');
-    $query->orderBy('t.name');
-    $children = $query->execute()->fetchCol();
-    if (!empty($children)) {
-      unset($terms[$term->tid]);
-    }
-    // concatenate the children name with parents. We're using our own get parent function because we don't want to trigger this hook again.
-    $term->name = sbac_resource_term_concat_parents($term->tid, $term->name);
-  }
-}
-
-/**
- *  Implements hook_form_FORM_ID_alter().
- */
-function sbac_resource_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
-  // because we concatenate the term name in sbac_resource_taxonomy_term_load, we don't want to show this concatenated name in the term edit form
-  $form['name']['#default_value'] = db_select('taxonomy_term_data', 't')
-    ->condition('t.tid', $form['#term']['tid'])
-    ->fields('t', array('name'))
-    ->execute()
-    ->fetchField();
-}
-
-/**
  *  Implements hook_form_FORM_ID_alter().
  */
 function sbac_resource_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
@@ -4139,7 +4029,7 @@ function sbac_resource_form_user_profile_form_alter(&$form, &$form_state, $form_
     foreach ($terms as $term) {
       $children = taxonomy_get_children($term->tid);
       if (empty($children)) {
-        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+        $options[$term->tid] = sbac_resource_taxonomy_term_concat_parents($term->tid, $term->name);
       }
     }
     $form[$config['field']]['und']['#options'] = $options;
@@ -4162,7 +4052,7 @@ function sbac_resource_form_user_register_form_alter(&$form, &$form_state, $form
     foreach ($terms as $term) {
       $children = taxonomy_get_children($term->tid);
       if (empty($children)) {
-        $options[$term->tid] = sbac_resource_term_concat_parents($term->tid, $term->name);
+        $options[$term->tid] = sbac_resource_taxonomy_term_concat_parents($term->tid, $term->name);
       }
     }
     $form[$config['field']]['und']['#options'] = $options;
@@ -4221,22 +4111,6 @@ function sbac_resource_failed_arbitration_twice($resource_id){
  */
 function sbac_resource_menu_alter(&$items) {
   if(!empty($items['taxonomy/term/%taxonomy_term/edit'])){
-    $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'sbac_resource_edit_taxonomy_access';
-  }
-}
-
-/**
- * Access rule for taxonomy term edit
- *
- * @param $term
- * @return bool
- */
-function sbac_resource_edit_taxonomy_access($term) {
-  // restrict access for resource forums
-  if (isset($term->field_forum_resource_ref) && !empty($term->field_forum_resource_ref[LANGUAGE_NONE])) {
-    return sbac_central_user_has_role(array('administrator'));
-  }
-  else {
-    return user_access("edit terms in $term->vid") || user_access('administer taxonomy');
+    $items['taxonomy/term/%taxonomy_term/edit']['access callback'] = 'sbac_resource_taxonomy_edit_taxonomy_access';
   }
 }

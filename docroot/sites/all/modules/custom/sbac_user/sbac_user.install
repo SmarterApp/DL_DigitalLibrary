@@ -58,151 +58,6 @@ function sbac_user_update_7004() {
 /**
  * Implements of hook_update_N().
  *
- * Delete the field_position field
- */
-function sbac_user_update_7005() {
-  $ret = array();
-
-  // Retrieve the crud operations for fields.
-  module_load_include('inc','field','field.crud');
-  field_delete_field('field_position');
-  $field = field_info_instance('user', 'field_position', 'user');
-  field_delete_instance($field);
-
-  $title = array(
-    'title' => array(
-      0 => 'Doctor',
-      1 => 'Professor',
-      2 => 'Teacher',
-    ),
-    'description' => array(
-      0 => '',
-      1 => '',
-      2 => '',
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'title'))->fetchAssoc();
-  if (!$vocab) {
-    $edit = array(
-      'name' => 'Title',
-      'machine_name' => 'title',
-      'description' => t('Title'),
-      'module' => 'taxonomy',
-    );
-    $vocabulary = (object) $edit;
-    taxonomy_vocabulary_save($vocabulary);
-    $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'title'))->fetchAssoc();
-  }
-  $terms = db_select('taxonomy_term_data', 't')
-          ->fields('t', array('tid'))
-          ->condition('vid', $vocab['vid'])
-          ->execute()->fetchAll();
-  foreach ($terms as $term) {
-    taxonomy_term_delete($term->tid);
-  }
-  foreach ($title['title'] as $index => $term) {
-    taxonomy_term_save((object) array(
-      'name' => $term,
-      'description' => $title['description'][$index],
-      'weight' => 0,
-      'vid' => $vocab['vid'],
-    ));
-  }
-
-  return $ret;
-}
-
-/**
- * Implements of hook_update_N().
- *
- * Populating proper terms to the title taxonomy.
- */
-function sbac_user_update_7006() {
-  $ret = array();
-
-  // Retrieve the crud operations for fields.
-  module_load_include('inc','field','field.crud');
-  field_delete_field('field_position');
-  $field = field_info_instance('user', 'field_position', 'user');
-  field_delete_instance($field);
-
-  $title = array(
-    'title' => array(
-      0 => 'State Personnel',
-      1 => 'Regional Learning Consultant',
-      2 => 'District Administrator',
-      3 => 'Building Administrator',
-      4 => 'Teacher',
-      5 => 'School Counselor',
-      6 => 'Librarian / Media Specialist',
-      7 => 'Instructional Coach',
-      8 => 'Instructional / Curriculum Coordinator',
-      9 => 'Higher Education Personnel',
-      10 => 'Student Teacher',
-      11 => 'Other',
-    ),
-    'description' => array(
-      0 => '',
-      1 => '',
-      2 => '',
-      3 => '',
-      4 => '',
-      5 => '',
-      6 => '',
-      7 => '',
-      8 => '',
-      9 => '',
-      10 => '',
-      11 => '',
-    ),
-    'weight' => array(
-      0 => -10,
-      1 => -9,
-      2 => -8,
-      3 => -7,
-      4 => -6,
-      5 => -5,
-      6 => -4,
-      7 => -3,
-      8 => -2,
-      9 => -1,
-      10 => 0,
-      11 => 1,
-    ),
-  );
-  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'title'))->fetchAssoc();
-  if (!$vocab) {
-    $edit = array(
-      'name' => 'Title',
-      'machine_name' => 'title',
-      'description' => t('Title'),
-      'module' => 'taxonomy',
-    );
-    $vocabulary = (object) $edit;
-    taxonomy_vocabulary_save($vocabulary);
-    $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'title'))->fetchAssoc();
-  }
-  $terms = db_select('taxonomy_term_data', 't')
-          ->fields('t', array('tid'))
-          ->condition('vid', $vocab['vid'])
-          ->execute()->fetchAll();
-  foreach ($terms as $term) {
-    taxonomy_term_delete($term->tid);
-  }
-  foreach ($title['title'] as $index => $term) {
-    taxonomy_term_save((object) array(
-      'name' => $term,
-      'description' => $title['description'][$index],
-      'weight' => $title['weight'][$index],
-      'vid' => $vocab['vid'],
-    ));
-  }
-
-  return $ret;
-}
-/**
- * Implements of hook_update_N().
- *
  * Delete the field_state
  */
 function sbac_user_update_7007() {
@@ -215,6 +70,7 @@ function sbac_user_update_7007() {
 
   return $ret;
 }
+
 /**
  * Implements of hook_update_N().
  *
@@ -338,4 +194,15 @@ function sbac_user_update_7010() {
 
   $ret = array();
   return $ret;
+}
+
+/**
+ * Enable sbac_goals module
+ */
+function sbac_user_update_8001() {
+  $modules = array(
+    'sbac_goals',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
 }

@@ -96,7 +96,8 @@ function sbac_search_preprocess_page(&$vars) {
       $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
     }
 
-    $js = "var pageTracker1 = _gat._getTracker(\"UA-27429193-1\");
+    $ga_account = variable_get('googleanalytics_account');
+    $js = "var pageTracker1 = _gat._getTracker(\"" . $ga_account . "\");
             pageTracker1._initData();
             pageTracker1._trackPageview(\"" . $search_term . "\");";
     drupal_add_js($js, array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
@@ -998,7 +999,7 @@ function sbac_search_form_submit(&$form, &$form_state) {
  */
 function sbac_search_theme($existing, $type, $theme, $path) {
   $items['sbac_digital_library_categories'] = array(
-    'path' => drupal_get_path('module', 'sbac_search') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_search',
     'template' => 'digital-library-categories',
     'variables' => array(
       'categories' => NULL,
@@ -1008,7 +1009,7 @@ function sbac_search_theme($existing, $type, $theme, $path) {
   );
 
   $items['sbac_my_resources_categories'] = array(
-    'path' => drupal_get_path('module', 'sbac_search') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_search',
     'template' => 'my-resources-categories',
     'variables' => array(
       'categories' => NULL,
@@ -1018,7 +1019,7 @@ function sbac_search_theme($existing, $type, $theme, $path) {
   );
 
   $items['sbac_resource_review_categories'] = array(
-    'path' => drupal_get_path('module', 'sbac_search') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_search',
     'template' => 'resource-review-categories',
     'variables' => array(
       'categories' => NULL,
@@ -1036,7 +1037,7 @@ function sbac_search_theme($existing, $type, $theme, $path) {
     ),
   );
   $items['sbac_landing_page_categories'] = array(
-    'path' => drupal_get_path('module', 'sbac_search') . '/templates',
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_search',
     'template' => 'landing-page-categories',
     'variables' => array(
       'categories' => NULL,

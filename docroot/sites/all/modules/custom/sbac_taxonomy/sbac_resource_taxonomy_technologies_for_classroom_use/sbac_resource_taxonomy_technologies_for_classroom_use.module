@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Resource Taxonomy - Technologies for Classroom Use feature.
+ */
+
+include_once 'sbac_resource_taxonomy_technologies_for_classroom_use.features.inc';

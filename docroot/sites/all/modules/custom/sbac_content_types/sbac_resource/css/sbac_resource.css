@@ -3767,3 +3767,27 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
   position: absolute;
   top: 4px;
 }
+
+/* Playlist Modal CSS */
+#playlist-modal-container button {
+  color: white;
+  margin-left: 20px;
+}
+
+/* Resource Review */
+.view-resource-review .resource-type {
+  position: absolute;    
+  color: #0684ad;
+  font-size: 14px;
+  bottom: 5px;
+  right: 5px;
+}
+
+.view-resource-review .resource-stats {
+  margin-bottom: 15px;
+}
+
+/* Resource Playlist template messaging */
+.playlist-template {
+  display: none;
+}

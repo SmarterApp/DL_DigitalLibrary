@@ -74,7 +74,7 @@ function sbac_featured_content(){
  */
 function sbac_featured_content_theme($existing, $type, $theme, $path) {
   $theme = array();
-  $tpl_dir = drupal_get_path('module', 'sbac_featured_content') . '/templates';
+  $tpl_dir = drupal_get_path('theme', 'SBAC') . '/templates/sbac_featured_content';
   $theme['sbac_featured_content'] = array(
     'render element' => 'content',
     'template' => 'sbac-featured-content',

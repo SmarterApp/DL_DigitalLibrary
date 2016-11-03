@@ -10,7 +10,7 @@
 function sbac_alignment_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-alignment-body'
+  // Exported field_instance: 'node-alignment-body'.
   $field_instances['node-alignment-body'] = array(
     'bundle' => 'alignment',
     'default_value' => NULL,
@@ -55,7 +55,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-alignment-field_alignment_type'
+  // Exported field_instance: 'node-alignment-field_alignment_type'.
   $field_instances['node-alignment-field_alignment_type'] = array(
     'bundle' => 'alignment',
     'default_value' => NULL,
@@ -96,7 +96,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-alignment-field_dot_notation'
+  // Exported field_instance: 'node-alignment-field_dot_notation'.
   $field_instances['node-alignment-field_dot_notation'] = array(
     'bundle' => 'alignment',
     'default_value' => array(
@@ -140,7 +140,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-alignment-field_education_alignment'
+  // Exported field_instance: 'node-alignment-field_education_alignment'.
   $field_instances['node-alignment-field_education_alignment'] = array(
     'bundle' => 'alignment',
     'default_value' => NULL,
@@ -181,7 +181,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-alignment-field_item_url'
+  // Exported field_instance: 'node-alignment-field_item_url'.
   $field_instances['node-alignment-field_item_url'] = array(
     'bundle' => 'alignment',
     'default_value' => NULL,
@@ -221,7 +221,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-alignment-field_resource_reference'
+  // Exported field_instance: 'node-alignment-field_resource_reference'.
   $field_instances['node-alignment-field_resource_reference'] = array(
     'bundle' => 'alignment',
     'default_value' => NULL,
@@ -267,7 +267,7 @@ function sbac_alignment_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-education_alignment-field_alignment_grade'
+  // 'taxonomy_term-education_alignment-field_alignment_grade'.
   $field_instances['taxonomy_term-education_alignment-field_alignment_grade'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -311,7 +311,7 @@ function sbac_alignment_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-education_alignment-field_alignment_key'
+  // 'taxonomy_term-education_alignment-field_alignment_key'.
   $field_instances['taxonomy_term-education_alignment-field_alignment_key'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -355,7 +355,7 @@ function sbac_alignment_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-education_alignment-field_alignment_publication'
+  // 'taxonomy_term-education_alignment-field_alignment_publication'.
   $field_instances['taxonomy_term-education_alignment-field_alignment_publication'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -399,7 +399,7 @@ function sbac_alignment_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-education_alignment-field_alignment_shortname'
+  // 'taxonomy_term-education_alignment-field_alignment_shortname'.
   $field_instances['taxonomy_term-education_alignment-field_alignment_shortname'] = array(
     'bundle' => 'education_alignment',
     'default_value' => NULL,
@@ -444,7 +444,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbacdrupaluid'
+  // Exported field_instance:
+  // 'taxonomy_term-sbac_alignment-field_sbacdrupaluid'.
   $field_instances['taxonomy_term-sbac_alignment-field_sbacdrupaluid'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,
@@ -481,7 +482,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbacgrade'
+  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbacgrade'.
   $field_instances['taxonomy_term-sbac_alignment-field_sbacgrade'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,
@@ -516,7 +517,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbackey'
+  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbackey'.
   $field_instances['taxonomy_term-sbac_alignment-field_sbackey'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,
@@ -553,7 +554,7 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbacparent'
+  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbacparent'.
   $field_instances['taxonomy_term-sbac_alignment-field_sbacparent'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,
@@ -591,7 +592,7 @@ function sbac_alignment_field_default_field_instances() {
   );
 
   // Exported field_instance:
-  // 'taxonomy_term-sbac_alignment-field_sbacpublication'
+  // 'taxonomy_term-sbac_alignment-field_sbacpublication'.
   $field_instances['taxonomy_term-sbac_alignment-field_sbacpublication'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,
@@ -626,7 +627,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbacshortname'
+  // Exported field_instance:
+  // 'taxonomy_term-sbac_alignment-field_sbacshortname'.
   $field_instances['taxonomy_term-sbac_alignment-field_sbacshortname'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,
@@ -663,7 +665,8 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-sbac_alignment-field_sbactreelevel'
+  // Exported field_instance:
+  // 'taxonomy_term-sbac_alignment-field_sbactreelevel'.
   $field_instances['taxonomy_term-sbac_alignment-field_sbactreelevel'] = array(
     'bundle' => 'sbac_alignment',
     'default_value' => NULL,

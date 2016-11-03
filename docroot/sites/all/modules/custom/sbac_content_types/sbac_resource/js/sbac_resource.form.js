@@ -19,6 +19,14 @@
       setTimeout(function() {
         $('.sbac-alert-box').fadeOut('fast');
       }, 5000);
+
+      // Playlist Modal
+      $('input[name="field_focus[und]"]').change(function() {
+        if($(this).is(':checked') && $(this).val() == '78306') {
+          $('#playlist-modal-container').foundation('reveal', 'open');
+          $('.reveal-modal-bg').hide();
+        }
+      });
     }
   };
 

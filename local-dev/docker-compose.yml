@@ -1,0 +1,40 @@
+version: "2"
+services:
+  db:
+    image: percona:${MYSQL_VERSION}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE:
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+    ports:
+      - "3306"
+  solr:
+    image: blinkreaction/drupal-solr:4.x-stable
+  phpfpm:
+    image: gened/php:latest-fpm
+    links:
+      - db
+      - solr
+    environment:
+      MYSQL_DATABASE:
+      MYSQL_USER:
+      MYSQL_PASSWORD:
+      MYSQL_HOST: db
+      SOLR_HOST: solr
+    volumes:
+      - &project_root "..:/var/www/html"
+  nginx:
+    image: gened/nginx:latest
+    links:
+      - phpfpm
+    environment:
+      UPSTREAM_HOST: phpfpm:9000
+    ports:
+      - "44000:80"
+    volumes:
+      - *project_root
+volumes:
+  mysql-data: {}

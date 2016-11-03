@@ -18,7 +18,7 @@
       if (isset($fields['sticky']) && $fields['sticky']->raw == 1) {
         $class = 'distinction';
         $text = 'Posted with Distinction';
-        $image =  '<a href="#" data-dropdown="distinction-drop-'. $fields['nid']->raw.'"><img src="/sites/all/themes/SBAC/images/icons/icon-shield.png" alt="Posted With Distinction Logo"></a>
+        $image =  '<a href="#" data-dropdown="distinction-drop-'. $fields['nid']->raw.'"><img src="/' . drupal_get_path('theme', 'SBAC') . '/images/icons/icon-shield.png" alt="Posted With Distinction Logo"></a>
           <ul id="distinction-drop-'. $fields['nid']->raw.'" class="f-dropdown" data-dropdown-content>
             <li>Posted with Distinction</li>
           </ul>';
@@ -42,6 +42,11 @@
     <div class='resource-stats'>
       <?php if (isset($fields['field_alt_body'])): ?>
         <?php echo $fields['field_alt_body']->content; ?>
+      <?php endif; ?>
+    </div>
+    <div class='resource-type'>
+      <?php if (isset($fields['field_focus'])): ?>
+        <?php echo $fields['field_focus']->content; ?>
       <?php endif; ?>
     </div>
   </div>

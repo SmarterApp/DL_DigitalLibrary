@@ -18,6 +18,7 @@ dependencies[] = list
 dependencies[] = morecomments
 dependencies[] = node
 dependencies[] = options
+dependencies[] = sbac_resource_taxonomy
 dependencies[] = sbac_user
 dependencies[] = strongarm
 dependencies[] = taxonomy

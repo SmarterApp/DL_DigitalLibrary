@@ -10,7 +10,7 @@
 function sbac_help_field_default_field_bases() {
   $field_bases = array();
 
-  // Exported field_base: 'body'
+  // Exported field_base: 'body'.
   $field_bases['body'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -31,7 +31,7 @@ function sbac_help_field_default_field_bases() {
     'type' => 'text_with_summary',
   );
 
-  // Exported field_base: 'field_help_icon'
+  // Exported field_base: 'field_help_icon'.
   $field_bases['field_help_icon'] = array(
     'active' => 1,
     'cardinality' => 1,
@@ -53,7 +53,7 @@ function sbac_help_field_default_field_bases() {
     'type' => 'image',
   );
 
-  // Exported field_base: 'field_help_page_topic'
+  // Exported field_base: 'field_help_page_topic'.
   $field_bases['field_help_page_topic'] = array(
     'active' => 1,
     'cardinality' => 2,
@@ -74,12 +74,13 @@ function sbac_help_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_help_user_roles'
+  // Exported field_base: 'field_help_user_roles'.
   $field_bases['field_help_user_roles'] = array(
     'active' => 1,
     'cardinality' => -1,
@@ -100,12 +101,13 @@ function sbac_help_field_default_field_bases() {
           'parent' => 0,
         ),
       ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
     ),
     'translatable' => 0,
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_summary'
+  // Exported field_base: 'field_summary'.
   $field_bases['field_summary'] = array(
     'active' => 1,
     'cardinality' => 1,

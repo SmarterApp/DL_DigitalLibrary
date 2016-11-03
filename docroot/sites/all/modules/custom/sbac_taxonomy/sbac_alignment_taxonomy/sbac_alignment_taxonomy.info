@@ -1,0 +1,9 @@
+name = SBAC Alignment Taxonomy
+description = A module to contain sbac_alignment taxonomy functionality
+core = 7.x
+package = ~SBAC
+version = 7.x-1.0
+
+dependencies[] = sbac_alignment
+
+project path = sites/all/modules/custom/sbac_taxonomy

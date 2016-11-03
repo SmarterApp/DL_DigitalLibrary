@@ -157,45 +157,6 @@ function sbac_core_update_7010() {
 }
 
 /**
- * Creates Applied Category taxonomy & populates it with terms.
- * @return [type] [description]
- */
-function sbac_core_update_7011() {
-  $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
-
-  if (!$vocab) {
-    taxonomy_vocabulary_save((object) array(
-      'name' => 'Applied Category',
-      'machine_name' => 'applied_category',
-    ));
-
-    $vocab = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'applied_category'")->fetch();
-  }
-
-  if ($vocab) {
-    $terms = array(
-      'Elementary School',
-      'Educators to Use During Instruction',
-      'High Quality Professional Learning',
-      'Middle School',
-      'Students to Use During Learning',
-      'Collaborative Learning',
-      'High School',
-      'Use with Families'
-    );
-
-    $weight = 0;
-    foreach ($terms as $term) {
-      taxonomy_term_save((object) array(
-        'name' => $term,
-        'weight' => $weight++,
-        'vid' => $vocab->vid,
-      ));
-    }
-  }
-}
-
-/**
  * Implementation of hook_update_N().
  *
  * Enables Rate.
@@ -225,48 +186,6 @@ function sbac_core_update_7013() {
 function sbac_core_update_7014() {
   db_query("DELETE FROM field_data_field_license_information WHERE field_license_information_value = 2");
   db_query("DELETE FROM field_revision_field_license_information WHERE field_license_information_value = 2");
-}
-
-/**
- * Implementation of hook_update_N().
- *
- * Updates license taxonomy.
- */
-function sbac_core_update_7015() {
-  $vid = db_query("SELECT vid FROM taxonomy_vocabulary WHERE machine_name = 'license'")->fetchField();
-  db_query("UPDATE taxonomy_term_data SET name = :new_name WHERE vid = :vid AND name = :name", array(
-    ':new_name' => 'Public Domain (free of copyright restrictions)',
-    ':vid' => $vid,
-    ':name' => 'All of the submitted materials are free of copyright restrictions and in the public domain.',
-  ));
-
-  $terms = array(
-    'Smarter Balanced Terms of Service (owned by the contributor)',
-    'License Available at Approved Content Site (e.g., YouTube, Slideshare)',
-  );
-
-  $weight = -6;
-  foreach ($terms as $term) {
-    taxonomy_term_save((object) array(
-      'name' => $term,
-      'weight' => $weight++,
-      'vid' => $vid,
-    ));
-  }
-}
-
-/**
- * Implementation of hook_update_N().
- *
- * Updates license taxonomy.
- */
-function sbac_core_update_7016() {
-  $vid = db_query("SELECT vid FROM taxonomy_vocabulary WHERE machine_name = 'license'")->fetchField();
-  db_query("UPDATE taxonomy_term_data SET name = :new_name WHERE vid = :vid AND name = :name", array(
-    ':new_name' => 'Smarter Balanced Copyright Clearance Form (signed by the owner)',
-    ':vid' => $vid,
-    ':name' => 'The Smarter Balanced Copyright Clearance Form',
-  ));
 }
 
 /**
@@ -309,20 +228,34 @@ function sbac_core_update_7018() {
   }
 }
 
-function sbac_core_uninstall(){
-  variable_del('sbac_core_cmis_creds_default');
-  variable_del('cmis_repositories');
-  variable_del('taskit_visibility');
+/**
+ * Implementation of hook_update_N().
+ * Removes unnecessary cmis configuration from db
+ */
+function sbac_core_update_8000() {
+  global $conf;
+  if (isset($conf['cmis_repositories'])) {
+    variable_del('cmis_repositories');
+  }
+  if (isset($conf['sbac_core_cmis_creds_default'])) {
+    variable_del('sbac_core_cmis_creds_default');  
+  }
 }
 
 /**
- * Implementation of hook_update_N().
- *
- * Deletes redundant content from terms.
+ * Implementation of hook_update_N()
+ * 
+ * Enable module missing message fixer module
  */
-function sbac_core_update_7019() {
-  $name = 'NA';
-  db_delete('taxonomy_term_data')
-    ->condition('name', $name, '=')
-    ->execute();
+function sbac_core_update_8001() {
+  $modules = array(
+    'module_missing_message_fixer',
+    'views_bulk_operations',
+  );
+
+  module_enable($modules);
+}
+
+function sbac_core_uninstall(){
+  variable_del('taskit_visibility');
 }
