@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the SBAC Acquia feature.
- */
-
-include_once 'sbac_acquia.features.inc';
