@@ -94,12 +94,17 @@ function lp_get_leaderboards() {
                     array('Educator', 'rated_resources_rankings'),
                     array('Resource Reviewer', 'reviewed_resources_rankings'),
                     array('Resource Contributor', 'contributed_resources_rankings'),
-                    array('Regional', '')
+                    array('Regional', array(array('forum_rankings', 'rating_leaderboard'),
+                                            array('forum_rankings','reviewed_leaderboard'),
+                                            array('forum_rankings', 'contributed_leaderboard')
+                                      )
+                    )
                   );
   $output = '';
   
   foreach ($leaderboards as $leaderboard) {
     $leaderboard_link = '';
+    $leaderboard_select = '';
     switch ($leaderboard[0]) {
       case 'Educator':
         if ($user->field_resources_rated['und'][0]['value'] == 0 || $user->field_hide_from_leaderboards['und'][0]['value'] == '1') {
@@ -109,6 +114,10 @@ function lp_get_leaderboards() {
           $rank_arr = sbac_goals_get_rank($user->uid, 'rated');
           $tooltip = $rank_arr[0] . ' out of ' . $rank_arr[1];
           $leaderboard_link = '<a href="#" class="has-tip" data-tooltip title="' . $tooltip . '">See your ranking here</a>';
+        }
+        $leaderboard_view = '';
+        if ($leaderboard[1]) {
+          $leaderboard_view = views_embed_view($leaderboard[1],'block');
         }
       break;
       case 'Resource Reviewer':
@@ -123,6 +132,10 @@ function lp_get_leaderboards() {
         else {
           $leaderboad_link - '<a href="">Learn about contributing and reviewing resources here.</a>';
         }
+        $leaderboard_view = '';
+        if ($leaderboard[1]) {
+          $leaderboard_view = views_embed_view($leaderboard[1],'block');
+        }
       break;
       case 'Resource Contributor':
         if ($user->field_resources_contributed['und'][0]['value'] == 0 || $user->field_hide_from_leaderboards['und'][0]['value'] == '1') {
@@ -136,17 +149,30 @@ function lp_get_leaderboards() {
         else {
           $leaderboad_link - '<a href="">Learn about contributing and reviewing resources here.</a>';
         }
+        $leaderboard_view = '';
+        if ($leaderboard[1]) {
+          $leaderboard_view = views_embed_view($leaderboard[1],'block');
+        }
+      break;
+      case 'Regional':
+        $leaderboard_link = '<a href="/forums">Find a Community to Join</a>';
+        $leaderboard_view = '';
+        foreach ($leaderboard[1] as $view) {
+          $leaderboard_view .= views_embed_view($view[0], $view[1]);
+        }
+        $leaderboard_select = '<select class="forum-goal-select">
+                                <option value="view-display-id-rating_leaderboard">Educator</option>
+                                <option value="view-display-id-reviewed_leaderboard">Reviewer</option>
+                                <option value="view-display-id-contributed_leaderboard">Contributor</option>
+                              </select>';
       break;
     }
-    $leaderboard_view = '';
-    if ($leaderboard[1]) {
-      $leaderboard_view = views_embed_view($leaderboard[1],'block');
-    }
+
     $output .= '<div class="leaderboard">
                   <div class="leaderboard-header ' . strtolower(str_replace(' ', '-', $leaderboard[0])) . '">' .
-                    $leaderboard[0] .
+                    $leaderboard[0] . $leaderboard_select .
                   '</div>
-                  <div class="leaderboard-body">' .
+                  <div class="leaderboard-body ' . strtolower(str_replace(' ', '-', $leaderboard[0])) . '">' .
                     $leaderboard_view . $leaderboard_link .
                   '</div>
                 </div>';

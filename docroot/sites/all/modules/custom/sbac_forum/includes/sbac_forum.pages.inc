@@ -473,6 +473,14 @@ function sbac_forum_view_forum_page($term) {
       $variables['mime-type'] = file_get_mimetype($forum_image_url);
       $variables['file-type-icon'] = 'document';
   }
+  // Use default image for State forum if none uploaded
+  if ($term->field_forum_access_states['und'][0]['value'] == 0 && empty($term->field_state_or_district_image)) {
+      $forum_image_url = '/' . drupal_get_path('theme', 'SBAC') . '/images/state-forum-default.png';
+      $image_tag = '<img typeof="foaf:Image" src="' . $forum_image_url . '" width="268" height="138" alt="Forum thumbnail image" />';
+      $variables['image'] = $image_tag;
+      $variables['mime-type'] = file_get_mimetype($forum_image_url);
+      $variables['file-type-icon'] = 'document';
+  }
   $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $fav_type);
 
   // Forum Goals
@@ -507,7 +515,8 @@ function sbac_forum_view_forum_page($term) {
     $contributor_perc = sbac_goals_calc_percent($contributor_complete, $contributor_goal);
     $member_count = count($term->field_fc_forum_members['und']);
 
-    $goals = '<div class="forum-goal-container">
+    $goals = '<a class="goals-toggle">Show Member Goals</a>
+              <div class="forum-goal-container">
                 <div class="goal-container">
                   <div class="goal-header educator">
                     <span class="goal-title">Educator</span><span class="goal-perc"><strong>' . $educator_perc . '%</strong> Complete</span>

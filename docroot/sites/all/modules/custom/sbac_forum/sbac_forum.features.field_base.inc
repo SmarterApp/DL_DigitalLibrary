@@ -56,6 +56,66 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'list_boolean',
   );
 
+  // Exported field_base: 'field_contributor_goal'.
+  $field_bases['field_contributor_goal'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_contributor_goal',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_contributor_goal_complete'.
+  $field_bases['field_contributor_goal_complete'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_contributor_goal_complete',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_educator_goal'.
+  $field_bases['field_educator_goal'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_educator_goal',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_educator_goal_complete'.
+  $field_bases['field_educator_goal_complete'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_educator_goal_complete',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_fc_forum_member'.
   $field_bases['field_fc_forum_member'] = array(
     'active' => 1,
@@ -585,6 +645,36 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
+  // Exported field_base: 'field_reviewer_goal'.
+  $field_bases['field_reviewer_goal'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_reviewer_goal',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_reviewer_goal_complete'.
+  $field_bases['field_reviewer_goal_complete'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_reviewer_goal_complete',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_state_or_district_image'.
   $field_bases['field_state_or_district_image'] = array(
     'active' => 1,
@@ -609,6 +699,10 @@ function sbac_forum_field_default_field_bases() {
 
   // Exported field_base: 'field_topic_comment_collection'.
   $field_bases['field_topic_comment_collection'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
     'field_name' => 'field_topic_comment_collection',
     'indexes' => array(
       'target_id' => array(
@@ -637,7 +731,7 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'entityreference',
   );
 
-  // Exported field_base: 'field_topic_comment_files'
+  // Exported field_base: 'field_topic_comment_files'.
   $field_bases['field_topic_comment_files'] = array(
     'active' => 1,
     'cardinality' => -1,

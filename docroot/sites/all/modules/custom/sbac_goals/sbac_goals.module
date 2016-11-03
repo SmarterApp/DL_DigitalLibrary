@@ -1410,3 +1410,35 @@ function sbac_goals_update_forum_goals($tid) {
   $term->field_contributor_goal_complete['und'][0]['value'] = $contributor_completed;
   taxonomy_term_save($term);
 }
+
+/**
+ * Implements hook_cron()
+ */
+function sbac_goals_cron() {
+  // Updates forum goal values
+  // Get forums to update
+  $sql = <<<SQL
+
+  SELECT
+    t.tid
+  FROM {taxonomy_term_data} t
+    LEFT JOIN {field_data_field_add_to_leaderboard} al
+      ON t.tid = al.entity_id
+    LEFT JOIN {field_data_field_forum_access_states} acs
+      ON t.tid = acs.entity_id
+  WHERE
+    t.vid = :vid
+    AND al.field_add_to_leaderboard_value = :leader
+    AND acs.field_forum_access_states_value = :state
+
+SQL;
+
+  $result = db_query($sql, array(':vid' => '51', ':leader' => '1', ':state' => '0'));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+  // Update forum goal values
+  foreach($completed as $forum) {
+    sbac_goals_update_forum_goals($forum->tid);
+  } 
+}

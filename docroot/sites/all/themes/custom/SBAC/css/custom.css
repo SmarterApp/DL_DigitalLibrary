@@ -36299,7 +36299,7 @@ form#sbac-user-filter-form #edit-email {
   border-radius: 5px 5px 0px 0;
   padding: 10px;
   color: #FFFFFF;
-  text-align: center;
+  text-align: left;
 }
 
 .leaderboard-header.educator {
@@ -36316,6 +36316,7 @@ form#sbac-user-filter-form #edit-email {
 
 .leaderboard-header.regional {
   background-color: #e1632f;
+  padding: 3px 10px;
 }
 
 .leaderboard-body {
@@ -36374,6 +36375,34 @@ form#sbac-user-filter-form #edit-email {
   color: #FFFFFF;
 }
 
+.leaderboard-body .view-display-id-reviewed_leaderboard,
+.leaderboard-body .view-display-id-contributed_leaderboard {
+  display: none;
+}
+
+.regional .forum-goal-select {
+  margin-left: 30px;
+  width: 102px;
+}
+
+.regional a {
+  color: #515152;
+  font-weight: bold;
+}
+
+.regional .views-field-name {
+  width: 85px;
+}
+
+.regional .views-field-field-educator-goal-complete,
+.regional .views-field-field-reviewer-goal-complete,
+.regional .views-field-field-contributor-goal-complete {
+  border-radius: 3px;
+  padding: 6px;
+  background-color: #e1632f;
+  color: #FFFFFF;
+}
+
 #taxonomy-form-term .hidden,
 #taxonomy-form-term #edit-field-educator-goal,
 #taxonomy-form-term #edit-field-educator-goal-complete,
@@ -36406,6 +36435,7 @@ form#sbac-user-filter-form #edit-email {
 
 #join-forum-button-wrapper #edit-join-forum {
   margin-left: 20px;
+  margin-top: 20px;
 }
 
 #sbac-forum-sub-nav-form .forum-subnav-start-link-wrapper {
@@ -36437,36 +36467,65 @@ form#sbac-user-filter-form #edit-email {
 }
 
 /* Forum page goals */
+.page-forums-term .goals-toggle {
+  color: #0583AC;
+  width: 100%;
+  float: left;
+}
+
+.page-forums-term .goals-toggle:hover {
+  color: #0583AC;
+}
+
+.page-forums-term .goals-toggle:before {
+  content: "\e610";
+  display: inline-block;
+  font-family: 'sbac';
+  font-size: 20px;
+  font-weight: normal;
+  position: relative;
+  top: 4px;
+}
+
 .forum-goal-container {
+  display: none;
   float: left;
   margin-top: 20px;
 }
+
 .page-forums-term .goal-container {
   float: left;
   margin-right: 20px;
   width: 270px;
 }
+
 .page-forums-term .goal-container.last {
    margin: 0;
 }
+
 .page-forums-term .goal-header {
   border-radius: 3px 3px 0 0;
   color: #FFFFFF;
   font-size: 14px;
   padding: 10px;
 }
+
 .page-forums-term .goal-header.educator {
   background-color: #515152;
 }
+
 .page-forums-term .goal-header.reviewer {
   background-color: #4b7e40;
 }
+
 .page-forums-term .goal-header.contributor {
   background-color: #0b5d76;
 }
+
 .page-forums-term .forum-goal-container .goal-perc {
   float: right;
 }
+
 .page-forums-term .goal-body {
   border-bottom: 1px solid #ddd;
   border-left: 1px solid #ddd;
@@ -36477,30 +36536,41 @@ form#sbac-user-filter-form #edit-email {
   padding: 10px;
   margin-bottom: 20px;
 }
+
 .page-forums-term .members {
   display: inline;
   width: 50%;
 }
+
 .page-forums-term .members img {
   margin-right: 10px;
 }
+
 .page-forums-term .forum-goal-container .goals {
   width: 50%;
   float: right;
   margin-top: 8px;
   text-align: right;
 }
+
 .page-forums-term .complete {
   border-radius: 3px;
   padding: 6px;
   color: #FFFFFF;
 }
+
 .page-forums-term .complete.educator {
   background-color: #515152;
 }
+
 .page-forums-term .complete.reviewer {
   background-color: #4b7e40;
 }
+
 .page-forums-term .complete.contributor {
   background-color: #0b5d76;
+}
+
+.page-forums-term .view-forum-topic-list .join-forum-start-topic-wrapper a {
+  margin-top: 20px;
 }
