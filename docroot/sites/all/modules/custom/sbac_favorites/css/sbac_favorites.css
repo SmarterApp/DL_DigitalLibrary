@@ -188,3 +188,6 @@
 #modalContent .node-collection-form button#edit-preview-changes {
     display: none;
 }
+#modalContent .node-collection-form button#edit-delete {
+    display: none;
+}
