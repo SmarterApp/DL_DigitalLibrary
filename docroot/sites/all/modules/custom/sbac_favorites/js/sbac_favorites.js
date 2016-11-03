@@ -29,7 +29,7 @@
         }).mouseleave(function() {
           timeoutId = setTimeout(function() {
             $('.sbac-favorites-collections').fadeOut(400);
-          }, 3000);
+          }, 2000);
           return false;
         });
       });
