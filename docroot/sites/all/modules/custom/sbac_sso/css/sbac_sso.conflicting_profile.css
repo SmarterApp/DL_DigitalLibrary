@@ -1,0 +1,84 @@
+/*SBAC user conflicting profile page*/
+/* line 4, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row {
+  max-width: 650px;
+  margin-top: 30px;
+}
+/* line 8, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row #main.columns {
+  background: none repeat scroll 0 0 #f2f2f2;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  margin-bottom: -15px;
+  padding: 0 40px;
+}
+/* line 17, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row #page-title {
+  background: none repeat scroll 0 0 #fff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+  color: #04384e;
+  font-family: Arial,sans-serif;
+  font-size: 22px;
+  margin: -15px -40px 20px;
+  padding: 20px 40px;
+  position: relative;
+  z-index: 3;
+}
+/* line 31, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .sbac-conflict-wrapper {
+  line-height: 1.6;
+}
+/* line 34, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .sbac-conflict-wrapper strong {
+  font-weight: normal;
+}
+/* line 38, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .sbac-conflict-wrapper #edit-choices {
+  margin-top: 20px;
+}
+/* line 43, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .form-item-choices {
+  border-bottom: 1px #ccc solid;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  clear: both;
+  width: 100%;
+  float: left;
+  position: relative;
+}
+/* line 52, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .form-item-choices input {
+  float: left;
+  width: 20px;
+}
+/* line 57, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .form-item-choices label {
+  width: auto;
+  float: left;
+  margin-top: -22px;
+  margin-left: 30px;
+  clear: left;
+}
+/* line 64, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .form-item-choices label > strong {
+  font-weight: bold;
+  margin-right: 5px;
+}
+/* line 71, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .form-item-choices:last-child {
+  border-bottom: none;
+}
+/* line 75, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .row .sbac-user-conflict-submit {
+  float: right;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+  margin: 50px 0 30px;
+  clear: both;
+}
+/* line 85, ../sass/sbac_user.conflicting_profile.scss */
+.page-sbac-sso-conflicting-profile .bottom-bar .row {
+  margin-top: 0;
+}

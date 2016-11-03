@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Resource Taxonomy - Resource States feature.
+ */
+
+include_once 'sbac_resource_taxonomy_resource_states.features.inc';

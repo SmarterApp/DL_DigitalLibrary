@@ -1,0 +1,514 @@
+<?php
+/**
+ * Gets html content for goals tab on user profile
+ */
+function sbac_goals_get_html_content() {
+  global $user;
+  // Grab User Profile form
+  $user = user_load($user->uid);
+  module_load_include('inc', 'user', 'user.pages');
+  $user_form = drupal_get_form('user_profile_form', $user);
+
+  // Add star rating goal customization
+  $all_star_ratings = sbac_goals_get_completed('star_rating', $user->uid);
+  $star_ratings = $all_star_ratings[0];
+  $star_goal = $user_form['field_star_rating_goal'][LANGUAGE_NONE][0]['value']['#default_value'];
+  $complete = FALSE;
+  $completed = '';
+  $completed_icon = '';
+  $starred_goal_zero = '';
+
+  // Deal with when more than the goal are completed
+  if ($star_ratings >= $star_goal) {
+    $star_ratings = $star_goal;
+    $complete = TRUE;
+    $completed_icon = '&#x2605;';
+  }
+
+  // Remove progress bar and success messages if goal value is 0
+  if ($star_goal == 0) {
+    $starred_goal_zero = 'progress-hidden';
+    $complete = FALSE;
+  }
+
+  // Create and populate tooltip if goal complete
+  if ($complete) {
+    $completed = 'completed';
+    foreach ($all_star_ratings[1] as $star_rated) {
+      // Grab titles for rated nodes
+      $node = node_load($star_rated[0]);
+      $title = check_plain($node->title);
+
+      //Stash in array for completed tooltip
+      $starred_nodes[] = '<p>New rating given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $star_rated[1]) . '</p>'; 
+    }
+    $starred_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p>";
+    foreach ($starred_nodes as $entry) {
+      $starred_tooltip .= $entry;
+    }
+  }
+  $star_perc = sbac_goals_calc_percent($star_ratings, $star_goal);
+  $user_form['field_star_rating_goal']['#prefix'] = '
+    <div class="star-rating goal-header">
+      <h3>Educator</h3><span class="goal-percentage">' . $star_perc . '%' . '</span>' . '
+    </div>
+    <div class="star-rating-container goal-container">';
+
+  if ($complete) {
+    //Add completed prompt if goal reached
+    $user_form['field_star_rating_goal']['#prefix'] .= '
+      <div class="completed-prompt ' . $starred_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
+  }
+  $user_form['field_star_rating_goal']['#suffix'] = '
+      <div class="progress-container ' . $starred_goal_zero . '">
+        <div class="goal-status">Current Status</div>';
+  // Add tooltip if goal completed
+  if ($complete) {
+    $user_form['field_star_rating_goal']['#suffix'] .= '
+        <div class="progress-bar-container has-tip" data-tooltip title="' . $starred_tooltip . '">';
+  }
+  else {
+    $user_form['field_star_rating_goal']['#suffix'] .= '
+        <div class="progress-bar-container">';
+  }
+  $user_form['field_star_rating_goal']['#suffix'] .= '   
+          <div class="progress-bar" style="width:' . $star_perc . '%;"> </div>
+          <span class="progress-info ' . $completed . '"><strong>' . $star_ratings . '</strong> out of ' . $star_goal . ' completed ' . $completed_icon .  '</span>
+        </div>
+      </div>';
+      if ($complete) {
+        $user_form['field_star_rating_goal']['#suffix'] .= '
+        <div class="completed-message"><strong>Goal Achieved!</strong></div>
+      </div>
+    </div>';
+      }
+      else {
+        $user_form['field_star_rating_goal']['#suffix'] .= '
+      </div>
+    </div>';
+      }
+
+  // Add Resource Reviewer Goals in for a resource reviewer or resource publisher
+  if (in_array('resource reviewer', $user->roles) ||  in_array('resource publisher', $user->roles)) {
+    // Add resources reviewed goal customization
+    $all_resources_reviewed = sbac_goals_get_completed('resources_reviewed', $user->uid);
+    if ($all_resources_reviewed) {
+      $resources_reviewed = $all_resources_reviewed[0];
+    }
+    else {
+      $resources_reviewed = 0;
+    }
+    $review_goal = $user_form['field_resources_reviewed_goal'][LANGUAGE_NONE][0]['value']['#default_value'];
+    $complete = FALSE;
+    $completed_icon = '';
+    $completed = '';
+    $reviewed_goal_zero = '';
+
+    // Deal with when more than the goal are completed and goal complete
+    if ($resources_reviewed >= $review_goal) {
+      $resources_reviewed = $review_goal;
+      $complete = TRUE;
+      $completed_icon = '&#x2605;';
+    }
+
+    // Remove progress bar and success messages if goal value is 0
+    if ($review_goal == 0) {
+      $reviewed_goal_zero = 'progress-hidden';
+      $complete = FALSE;
+    }
+
+    // Create and populate tooltip if goal complete
+    if ($complete) {
+      $completed = 'completed';
+      foreach ($all_resources_reviewed[1] as $reviewed) {
+        if ($counter >= $review_goal) {
+          break;
+        }
+        // Grab titles for rated nodes
+        $node = node_load($reviewed[0]);
+        $title = check_plain($node->title);
+  
+        //Stash in array for completed tooltip
+        $reviewed_nodes[] = '<p>New review given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $reviewed[1]) . '</p>';
+        $counter++;
+      }
+      $reviewed_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p>";
+      foreach ($reviewed_nodes as $entry) {
+        $reviewed_tooltip .= $entry;
+      }
+    }
+
+    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed, $review_goal);
+    $user_form['field_resources_reviewed_goal']['#prefix'] = '      
+      <div class="resources-reviewed goal-header">
+        <h3>Resource Reviewer</h3><span class="goal-percentage">' . $reviewed_perc . '%' . '</span>' . '
+      </div>
+      <div class="resources-reviewed-container goal-container">';
+    // Add completed prompt if goal reached
+    if ($complete) {
+      $user_form['field_resources_reviewed_goal']['#prefix'] .= '
+        <div class="completed-prompt ' . $reviewed_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
+    }
+  
+    $user_form['field_resources_reviewed_goal']['#suffix'] = '
+        <div class="progress-container ' . $reviewed_goal_zero . '">
+          <div class="goal-status">Current Status</div>';
+    // Add tooltip if goal completed
+    if ($complete) {
+      $user_form['field_resources_reviewed_goal']['#suffix'] .= '
+         <div class="progress-bar-container has-tip" data-tooltip title="' . $reviewed_tooltip . '">';
+    }
+    else {
+      $user_form['field_resources_reviewed_goal']['#suffix'] .= '
+          <div class="progress-bar-container">';
+    }
+    $user_form['field_resources_reviewed_goal']['#suffix'] .= '
+            <div class="progress-bar" style="width: ' . $reviewed_perc . '%;"> </div>
+            <span class="progress-info ' . $completed . '"><strong>' . $resources_reviewed . '</strong> out of ' . $review_goal . ' completed ' . $completed_icon .  '</span>
+          </div>';
+        // Add completed prompt if goal completed
+        if ($complete) {
+          $user_form['field_resources_reviewed_goal']['#suffix'] .= '
+          <div class="completed-message"><strong>Goal Achieved!</strong></div>
+        </div>
+      </div>';
+        }
+        else {
+          $user_form['field_resources_reviewed_goal']['#suffix'] .= '
+        </div>
+      </div>';
+        }
+  }
+  else {
+    // Remove from goals form
+    $user_form['field_resources_reviewed_goal']['#access'] = FALSE;
+  }
+
+  // Add Resource Contributor Goals in for a resource contributor
+  if (in_array('resource contributor', $user->roles)) {
+    // Add resources posted goal customization
+    $all_resources_posted = sbac_goals_get_completed('resources_posted', $user->uid);
+    if ($all_resources_posted) {
+      $resources_posted = $all_resources_posted[0];
+    }
+    else {
+      $resources_posted = 0;
+    }
+    $posted_goal = $user_form['field_resources_posted_goal'][LANGUAGE_NONE][0]['value']['#default_value'];
+    $complete = FALSE;
+    $completed_icon = '';
+    $posted_goal_zero = '';
+
+    // Deal with when more than the goal are completed and goal complete
+    if ($resources_posted >= $posted_goal) {
+      $resources_posted = $posted_goal;
+      $complete = TRUE;
+      $completed_icon = '&#x2605;';
+    }
+
+    // Remove progress bar and success messages if goal value is 0
+    if ($posted_goal == 0) {
+      $posted_goal_zero = 'progress-hidden';
+      $complete = FALSE;
+    }
+
+    // Create and populate tooltip if goal complete
+    if ($complete) {
+      $completed = 'completed';
+      foreach ($all_resources_posted[1] as $posted) {
+        if ($counter >= $posted_goal) {
+          break;
+        }
+        // Grab title for posted node
+        $title = check_plain($posted[0]);
+  
+        //Stash in array for completed tooltip
+        $posted_nodes[] = '<p>New resource ' . $title . ' posted on ' . date('n/j/Y \a\t g:i A', $posted[1]) . '</p>';
+        $counter++;
+      }
+      $posted_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p>";
+      foreach ($posted_nodes as $entry) {
+        $posted_tooltip .= $entry;
+      }
+    }
+
+    $posted_perc = sbac_goals_calc_percent($resources_posted, $posted_goal);
+    $user_form['field_resources_posted_goal']['#prefix'] = '      
+      <div class="resources-posted goal-header">
+        <h3>Resource Contributor</h3><span class="goal-percentage">' . $posted_perc . '%' . '</span>' . '
+      </div>
+      <div class="resources-posted-container goal-container">';
+
+    // Add completed prompt if goal reached
+    if ($complete) {
+      $user_form['field_resources_posted_goal']['#prefix'] .= '
+        <div class="completed-prompt ' . $posted_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
+    }  
+    $user_form['field_resources_posted_goal']['#suffix'] = '
+        <div class="progress-container ' . $posted_goal_zero . '">
+          <div class="goal-status">Current Status</div>';
+    // Add tooltip if goal completed
+    if ($complete) {
+      $user_form['field_resources_posted_goal']['#suffix'] .= '
+          <div class="progress-bar-container has-tip" data-tooltip title="' . $posted_tooltip . '">';
+    }
+    else {
+      $user_form['field_resources_posted_goal']['#suffix'] .= '
+          <div class="progress-bar-container">';
+    }
+        $user_form['field_resources_posted_goal']['#suffix'] .= '
+            <div class="progress-bar" style="width:' . $posted_perc . '%;"> </div>
+            <span class="progress-info ' . $completed . '"><strong>' . $resources_posted . '</strong> out of ' . $posted_goal . ' completed ' . $completed_icon .  '</span>
+          </div>';
+        if ($complete) {
+          $user_form['field_resources_posted_goal']['#suffix'] .= '
+          <div class="completed-message ' . $posted_goal_zero . '"><strong>Goal Achieved!</strong></div>
+        </div>
+      </div>';
+        }
+        else {
+          $user_form['field_resources_posted_goal']['#suffix'] .= '
+        </div>
+      </div>';
+        }
+  }
+  else {
+    $user_form['field_resources_posted_goal']['#access'] = FALSE;
+ }
+
+  //
+  $user_path = 	drupal_get_path_alias('user/' . $user->uid);
+  $user_form['#action'] = '/' . $user_path . '#profile-goals';
+  return render($user_form);  
+}
+
+/**
+ * SBAC Goals form_alter
+ */
+function sbac_goals_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'user_profile_form') {
+    //Deal with existing users who don't have values in goals yet
+    if ($form['field_star_rating_goal'][LANGUAGE_NONE][0]['value']['#default_value'] == '') {
+      $star_rating_default = $form_state['field']['field_star_rating_goal'][LANGUAGE_NONE]['instance']['default_value'][0]['value'];
+      $form['field_star_rating_goal'][LANGUAGE_NONE][0]['value']['#default_value'] = $star_rating_default;
+    }
+    if ($form['field_resources_reviewed_goal'][LANGUAGE_NONE][0]['value']['#default_value'] == '') {
+      $resources_reviewed_default = $form_state['field']['field_resources_reviewed_goal'][LANGUAGE_NONE]['instance']['default_value'][0]['value'];
+      $form['field_resources_reviewed_goal'][LANGUAGE_NONE][0]['value']['#default_value'] = $resources_reviewed_default;
+    }
+    if ($form['field_resources_posted_goal'][LANGUAGE_NONE][0]['value']['#default_value'] == '') {
+      $resources_posted_default = $form_state['field']['field_resources_posted_goal'][LANGUAGE_NONE]['instance']['default_value'][0]['value'];
+      $form['field_resources_posted_goal'][LANGUAGE_NONE][0]['value']['#default_value'] = $resources_posted_default;
+    }
+  }
+}
+
+/**
+ * SBAC Goals get completed items
+ */
+function sbac_goals_get_completed($goal, $uid) {
+  global $user;
+  $user_profile = user_load($user->uid);
+  $date_range = format_date(strtotime(date('Y-01-01')), 'custom', 'Ymd') . '--' . format_date(time(), 'custom', 'Ymd');
+  //Get completed items
+  switch ($goal) {
+    case "star_rating":
+      // Grab star reviews from eck_review table
+      $sql = <<<SQL
+    
+      SELECT
+        r.node_id,
+        r.created
+      FROM {eck_review} r
+      WHERE
+        r.uid = :uid
+        AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL r.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+        AND r.status = 1
+      
+SQL;
+    
+      $dates = explode('--', $date_range);
+      $from_date = $dates[0];
+      $to_date = $dates[1];
+    
+      $result = db_query($sql, array(':uid' => $uid, ':from_date' => $from_date, ':to_date' => $to_date));
+      $star_count = $result->rowCount();
+      $nids = array();
+      foreach ($result as $nid) {
+        $nids[] = array($nid->node_id, $nid->created);
+      }
+      $star_ratings = array();
+      $star_ratings[] = $star_count;
+      $star_ratings[] = $nids;
+      return $star_ratings;
+      break;
+  
+    case "resources_reviewed":
+      $reviewed = sbac_goals_get_current_completed_reviews($user->uid, $date_range);
+      if ($reviewed) {
+        $reviewed_count = count($reviewed);
+        $reviewed_info = array();
+        foreach ($reviewed as $review) {
+          $reviewed_info[] = array($review->node_id, $review->changed);  
+        }
+        $reviewed_results = array($reviewed_count, $reviewed_info);
+        return $reviewed_results;
+      }
+      else {
+        return FALSE;
+      }     
+    break;
+  
+    case "resources_posted":
+      $posted = sbac_goals_get_contributed_resources($user->uid, $date_range);
+      if ($posted) {
+        $posted_count = count($posted);
+        $posted_info = array();
+        foreach ($posted as $post) {
+          $posted_info[] = array($post->title, $post->created);  
+        }
+        $posted_results = array($posted_count, $posted_info);
+        return $posted_results;
+      }
+      else {
+        return FALSE;
+      }  
+    break;
+  }
+}
+
+function sbac_goals_calc_percent($complete, $goal) {
+  $count1 = $complete / $goal;
+  $count2 = $count1 * 100;
+  $count = number_format($count2, 0);
+  return $count;
+}
+
+/**
+ * Get the goals for a given user
+ */
+function sbac_goals_get_goals() {
+  global $user;
+  $user_obj = user_load($user->uid);
+  $goals = array();
+  $goals['starred_goal'] = $user_obj->field_star_rating_goal[LANGUAGE_NONE][0]['value'];
+  // If user hasn't saved goal yet, use default
+  if (!$goals['starred_goal'] && $goals['starred_goal'] !== '0') {
+    $goals['starred_goal'] = 10;
+  }
+  // Add Resource Reviewer Goals for a resource reviewer or resource publisher
+  if (in_array('resource reviewer', $user->roles) ||  in_array('resource publisher', $user->roles)) {
+    $goals['reviewed_goal'] = $user_obj->field_resources_reviewed_goal[LANGUAGE_NONE][0]['value'];
+    // If user hasn't saved goal yet, use default
+    if (!$goals['reviewed_goal'] && $goals['reviewed_goal'] !== '0') {
+      $goals['reviewed_goal'] = 9;
+    }
+  }
+  
+  // Add Resource Contributor Goals for a resource contributor
+  if (in_array('resource contributor', $user->roles)) {
+    $goals['posted_goal'] = $user_obj->field_resources_posted_goal[LANGUAGE_NONE][0]['value'];
+    // If user hasn't saved goal yet, use default
+    if (!$goals['posted_goal'] && $goals['posted_goal'] !== '0') {
+      $goals['posted_goal'] = 3;
+    }
+  }
+
+  return $goals;
+}
+
+
+/**
+ * Gets all the reviews in the "completed" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+function sbac_goals_get_current_completed_reviews($uid, $date_range) {
+  $completed = array();
+
+  $sql = <<<SQL
+
+SELECT
+  f.id,
+  f.uid,
+  f.node_id,
+  f.changed
+FROM {eck_feedback} f
+  LEFT JOIN {workbench_moderation_node_history} h
+    ON f.node_id = h.nid
+WHERE
+  f.uid = :uid
+  AND (type = :type OR type = :type1 OR type = :type2)
+  AND f.status = :status
+  AND f.completed = :completed
+  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+  AND h.current = 1
+ORDER BY
+  f.changed
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // anything with status = 1 and completed = 1 is completed.
+  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gatekeeper', ':type2' => 'post', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
+}
+
+/**
+ * Gets all the resources in the "published" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+
+function sbac_goals_get_contributed_resources($uid, $date_range) {
+  $completed = array();
+  $sql = <<<SQL
+
+SELECT
+  n.nid,
+  n.uid,
+  n.created,
+  n.title
+FROM {node} n
+  LEFT JOIN {workbench_moderation_node_history} wmnh
+    ON n.nid = wmnh.nid
+    AND n.vid = wmnh.vid
+WHERE
+  n.type = :type
+  AND n.uid = :uid
+  AND wmnh.state = :state
+  AND wmnh.current = 1
+  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+ORDER BY
+  n.created
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  $result = db_query($sql, array(':type' => 'resource', ':uid' => $uid, ':state' => 'published', ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
+}

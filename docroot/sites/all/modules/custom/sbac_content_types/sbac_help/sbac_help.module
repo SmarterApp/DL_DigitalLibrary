@@ -1,0 +1,848 @@
+<?php
+
+/**
+ * @file.
+ * Module to handle the Welcome Tutorial and related help topics.
+ *
+ * Provides:
+ *  - Welcome tutorial output.
+ *  - Exports the help topic alignment type.
+ *  - Management related to the help topics nodes.
+ */
+
+include_once 'sbac_help.features.inc';
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_help_update_projects_alter(&$projects) {
+  unset($projects['sbac_help']);
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @param $existing
+ * @param $type
+ * @param $theme
+ * @param $path
+ * @return array
+ */
+function sbac_help_theme($existing, $type, $theme, $path) {
+  $themes = array();
+
+  $themes['sbac-help-topics'] = array(
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
+    'template' => 'help-topics',
+  );
+  $themes['sbac-help-topic'] = array(
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
+    'template' => 'help-topic',
+  );
+
+  $themes['views_view__help_topics__block'] = array(
+    'template' => drupal_get_path('theme', 'SBAC') . 'templates/sbac_help/views-view--help-topics--block',
+    'arguments' => array('view' => NULL),
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_help_preprocess_views_view__help_topics__block',
+    ),
+  );
+
+  $themes['help_dropdown'] = array(
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
+    'template' => 'help-drop-down',
+  );
+
+  $themes['welcome_tutorial_list'] = array(
+    'variables' => array(
+      'nid' => NULL,
+      'title' => NULL,
+      'summary' => NULL,
+      'image' => NULL,
+    ),
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
+    'template' => 'welcome-tutorial-list',
+  );
+
+  $themes['welcome_tutorial_post'] = array(
+    'variables' => array(
+      'back_link' =>  NULL,
+      'title'     => NULL,
+      'image'     => NULL,
+      'body'      => NULL,
+    ),
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
+    'template' => 'welcome-tutorial-post',
+  );
+
+  $themes['help_dropdown_footer'] = array(
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_help',
+    'template' => 'help-drop-down-footer',
+  );
+
+  return $themes;
+}
+
+/*
+ * Implements hook_menu().
+ */
+function sbac_help_menu() {
+  $items['help-topics'] = array(
+    'title'         => 'Help Topics',
+    'page callback' => 'sbac_help_topics',
+    'access arguments'  => array('access content'),
+    'type'          => MENU_CALLBACK,
+  );
+
+  $items['get-node-content'] = array(
+    'title'         => 'Get Node Content',
+    'page callback' => 'sbac_help_get_node_content',
+    'access arguments'  => array('access content'),
+    'type'          => MENU_CALLBACK,
+  );
+
+  $items['welcome-tutorial/remove/%'] = array(
+    'title' => 'Welcome Tutorial Remove',
+    'page callback' => 'sbac_help_remove',
+    'page arguments' => array(2),
+    'access callback' => 'user_access',
+    'access arguments' => array('send approval emails'),
+  );
+
+  $items['welcome-tutorial/%ctools_js'] = array(
+    'title'             => 'Welcome Tutorial',
+    'page callback'     => 'sbac_help_welcome_callback',
+    'page arguments'    => array(1),
+    'access arguments'  => array('access content'),
+    'type'              => MENU_CALLBACK,
+  );
+
+  $items['welcome-tutorial/%ctools_js/%node'] = array(
+    'title'             => 'Welcome Tutorial',
+    'page callback'     => 'sbac_help_welcome_callback',
+    'page arguments'    => array(1, 2),
+    'access arguments'  => array('access content'),
+    'type'              => MENU_CALLBACK,
+  );
+
+  $items['sbac-help/%ctools_js/resource-help-modal'] = array(
+    'title' => 'Resource Help Modal',
+    'page callback' => 'sbac_help_resource_help_modal',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+  );
+  $items['happy/%ctools_js/%'] = array(
+      'title' => 'The Happy Modal',
+      'page arguments' => array(1, 2),
+      'page callback' => 'happy_modal_page',
+      'access callback' => TRUE,
+      'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+function sbac_help_topics(){
+  $topics = '';
+  $variables = array();
+  
+  $query = db_select('node', 'n');
+  $query->join('draggableviews_structure', 'dv', 'n.nid = dv.entity_id');
+  $query->fields('n', array('nid'));
+  $query->orderBy('dv.weight','ASC');
+  $query->condition('n.type', 'help_page');
+  $query->condition('n.status', '1');
+  $query->condition('dv.view_name', 'sort_content');
+  $query->condition('dv.view_display', 'sort_help_topics');
+  $result = $query->execute()->fetchAll();
+  foreach($result as $topic){
+    $node = node_load($topic->nid);
+    $variables['title'] = $node->title;
+    $variables['body'] = more_less_text($node->body['und'][0]['value'], 300,FALSE);
+    $topics .= theme('sbac-help-topic', $variables);
+  }
+  $vars['topics'] = $topics;
+  if(user_access('Help Page: Edit any content')){
+    $vars['edit'] = '<a class="help-topic-link" href="/sort-content/help-topics">Edit Help Topics</a>';
+  }
+  return theme('sbac-help-topics', $vars);
+}
+
+/**
+ * Preprocessor for the help_topics__block view.
+ *
+ * @param $vars
+ */
+function sbac_help_preprocess_views_view__help_topics__block(&$vars){
+	drupal_add_css(drupal_get_path('module','sbac_help') . '/css/help.css');
+}
+
+/**
+ * Preprocessor to add modal js to pages.
+ *
+ * @param $vars
+ */
+function sbac_help_preprocess_help_dropdown(&$vars) {
+  ctools_include('modal');
+  drupal_add_js(drupal_get_path('module', 'sbac_help') . '/js/sbac_help.ctools.js');
+  $js_settings = array('sbac-help-welcome-tutorial' => array('modalSize' => array('type' => 'fixed', 'width' => 925, 'height' => 650), 'modalTheme' => 'CtoolSbacWelcomeTutorial'));
+  drupal_add_js($js_settings, 'setting');
+  ctools_modal_add_js();
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ * Prepares the template variables.
+ * @param  [type] $vars [description]
+ */
+function sbac_help_preprocess_welcome_tutorial_list(&$vars) {
+  $vars['link_open'] = '<a href="welcome-tutorial/nojs/' . $vars['nid'] . '" class="ctools-use-ajax use-ajax ctools-modal-sbac-help-welcome-tutorial" id="sbac-help-welcome-tutorial">';
+  $vars['link_close'] = '</a>';
+  $vars['summary'] = truncate_utf8($vars['summary'], 140, TRUE);
+  if (isset($vars['image'])) {
+    $file = file_load($vars['image']);
+    if ($file) {
+      $tut_image = array(
+        'style_name' => 'landing_page_help_topic',
+        'path' => $file->uri,
+        'alt' => $vars['img_alt'],
+      );
+      $vars['image'] = theme('image_style', $tut_image);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ * Prepares the template variables.
+ * @param  [type] $vars [description]
+ */
+function sbac_help_preprocess_welcome_tutorial_post(&$vars) {
+  $vars['title'] = $vars['node']->title;
+  $vars['body'] = $vars['node']->body['und'][0]['value'];
+
+  if (!empty($vars['node']->field_help_icon)) {
+    $file = file_load($vars['node']->field_help_icon['und'][0]['fid']);
+    if ($file) {
+      $tut_image = array(
+        'style_name' => 'help_topics_modal_image',
+        'path' => $file->uri,
+        'alt' => $vars['img_alt'],
+      );
+      $vars['image'] = theme('image_style', $tut_image);
+    }
+  }
+  unset($vars['node']);
+}
+
+/*
+ * Form to enable/disable helper modal
+ */
+function sbac_help_disable_help() {
+  global $user;
+  $form = array();
+
+  $form['disable_help'] = array (
+    '#type'           => 'checkbox',
+    '#title'          => t('Do not show this screen after next Log in') . '<br /><i>' . t('View this screen again by selecting Welcome Tutorial from Help on top menu') . '</i>',
+  );
+
+  $form['submit'] = array (
+    '#type'           => 'submit',
+    '#value'          => 'Close Welcome Tutorial',
+  );
+
+  if (!isset($user->data['disable_help'])) {
+    $form['disable_help']['#default_value'] = 0;
+  }
+  else {
+    $form['disable_help']['#default_value'] = $user->data['disable_help'];
+  }
+  // remove cookie only when welcome modal is displayed
+  user_cookie_delete('sbac_just_logged_in');
+  return $form;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * @param $variables
+ */
+function sbac_help_preprocess_page(&$variables) {
+  global $user;
+  $variables['help_dropdown'] = NULL;
+  if ($user->uid) {
+    $variables['help_dropdown'] = theme('help_dropdown');
+  }
+  if (isset($_SESSION['user_setup'])) {
+    drupal_add_js("jQuery(document).ready( function () { jQuery('.user-nav').hide(); jQuery('.sub-top').hide();jQuery('.footer-links').hide();});", array('type' => 'inline'));
+    drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
+  }
+}
+
+/**
+ * Function callback for get-node-content
+ *
+ * @param $nid
+ */
+function sbac_help_get_node_content() {
+  $data = array();
+  $nid = $_GET['nid'];
+  if ($nid) {
+    $node = node_load($nid, $vid = NULL, $reset = FALSE);
+    if ($node) {
+      $node_view = node_view($node, $view_mode = 'full', $langcode = NULL);
+      $data = array(
+        'results' => array(
+          'body' => drupal_render($node_view['body']),
+          'title' => $node->title
+        )
+      );
+    }
+  }
+
+  print drupal_json_encode($data);
+  exit();
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_help_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'help_page_node_form') {
+    unset($form['field_help_permissions']);
+    $form['actions']['submit']['#submit'][] = 'sbac_help_remove_previous_resource_tutorial';
+  }
+
+  if ($form_id == 'resource_node_form') {
+    if (!isset($form['nid']['#value'])) {
+      drupal_add_js(drupal_get_path('module', 'sbac_help') . '/js/sbac_help.resource.js');
+      $form['#attached']['css'][] = drupal_get_path('module', 'sbac_help') . '/css/help.css';
+      $form['actions']['resource_help_modal'] = array(
+        '#markup' => l(t('Resource Help Modal (modal)'), 'sbac-help/nojs/resource-help-modal', array(
+          'attributes' => array(
+            'class' => 'ctools-use-modal button red use-ajax ctools-modal-sbac-resource-help-modal',
+            'id' => 'sbac-resource-help-modal'
+          ),
+        )),
+      );
+      $js_settings = array('sbac-resource-help-modal' => array('modalSize' => array('type' => 'fixed', 'width' => 900, 'height' => '')));
+      drupal_add_js($js_settings, 'setting');
+    }
+  }
+}
+
+/**
+ * Remove the previously set resource tutorial help page
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_help_remove_previous_resource_tutorial(&$form, &$form_state) {
+  foreach ($form['field_help_page_topic']['und']['#options'] as $key => $value) {
+    if ($value == 'Resource Tutorial') {
+      $val = $key;
+    }
+  }
+  // Check if Resource Tutorial checkbox is checked
+  $nid = $form_state['values']['nid'];
+  if (isset($val) && $form_state['input']['field_help_page_topic']['und'][$val]) {
+    db_query('DELETE FROM {field_data_field_help_page_topic} WHERE field_help_page_topic_tid = :val AND entity_id <> :nid', array(':val' => $val, ':nid' => $nid));
+    db_query('DELETE FROM {field_revision_field_help_page_topic} WHERE field_help_page_topic_tid = :val AND entity_id <> :nid', array(':val' => $val, ':nid' => $nid));
+  }
+}
+
+/*
+ * Implements hook_permission().
+ *
+ * remove welcome topics from list
+ */
+function sbac_help_permission() {
+  return array(
+    'send approval emails' => array(
+      'title' => t('remove from list'),
+    ),
+  );
+}
+
+/**
+ * Looks like it saves the node field and goes to a tab.
+ *
+ * @param $nid
+ */
+function sbac_help_remove($nid) {
+  $node = node_load($nid);
+  $node->field_help_page_topic = array();
+  node_save($node);
+  drupal_goto(drupal_get_origin() . '#topics-tab2');
+}
+
+/**
+ * Gets the origin of the request.
+ *
+ * @return mixed
+ */
+function drupal_get_origin() {
+  /* @var $_SERVER HTTP_REFERER works on our servers. */
+  $path = $_SERVER['HTTP_REFERER'];
+  if (isset($_GET['destination'])) {
+    $path = $_GET['destination'];
+  }
+  return $path;
+}
+
+/*
+ * Implements hook_form_alter().
+ *
+ * change "save" to "save order"
+ */
+function sbac_help_form_views_form_help_topics_page_2_alter(&$form, &$form_state, $form_id) {
+  $form['actions']['submit']['#value'] = 'Save Order';
+  $form['actions']['reset'] = array(
+    '#type'   =>  'submit',
+    '#value'  =>  'Reset to Alphabetical',
+    '#submit' =>  array('sbac_help_delete_draggableviews_weights'),
+  );
+}
+
+/**
+ * Implemnts a hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_help_form_views_form_help_topics_page_4_alter(&$form, &$form_state, $form_id) {
+  $form['actions']['submit']['#value'] = 'Save Order';
+  $form['actions']['submit']['#submit'][] = 'sbac_help_stay_on_welcome_tutorial_tab';
+}
+
+/**
+ * A submit callback on a form.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_help_stay_on_welcome_tutorial_tab(&$form, &$form_state) {
+  drupal_custom_goto('/admin/help-topics#topics-tab2');
+}
+
+/**
+ * Delete previous draggableviews weights on sort help topics screen
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_help_delete_draggableviews_weights(&$form, &$form_state) {
+  db_delete('draggableviews_structure')
+    ->condition('view_name', 'help_topics')
+    ->condition('view_display', 'page_2')
+    ->execute();
+}
+
+/**
+ * Implements hook_query_alter().
+ * Only displays help topics associated to user roles.
+ * @param  QueryAlterableInterface $query A Query object describing the composite parts of a SQL query.
+ */
+function sbac_help_query_alter(&$query) {
+  if ($query->hasTag('views_help_topics')) {
+    global $user;
+    $roles = $user->roles;
+
+    $can_view_all = array(
+      'DLRB member',
+      'digital library administrator',
+      'system administrator',
+    );
+
+    // Do not alter view if user is allowed to view all or site admin.
+    if ($user->uid == 1 || array_intersect($roles, $can_view_all)) {
+      return;
+    }
+
+    $user_roles = array();
+
+    // Add 'All User Roles'
+    $all_roles = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+    $all_roles = array_pop($all_roles);
+    if ($all_roles) {
+      $user_roles[] = $all_roles->tid;
+    }
+
+    foreach($roles as $rid => $role) {
+      $term = taxonomy_get_term_by_name($role, 'sbac_user_roles');
+      $term = array_pop($term);
+      $user_roles[] = $term->tid;
+    }
+
+    $query->innerJoin('field_data_field_help_user_roles',
+                      'sur',
+                      'node.nid = sur.entity_id');
+    $query->condition('sur.field_help_user_roles_tid', $user_roles, 'IN');
+    $query->groupBy('node.nid');
+  }
+}
+
+/**
+ * Implements hook_post_features_revert().
+ * @param  String   $component String name of the component that has just been reverted.
+ */
+function sbac_help_post_features_revert($component) {
+  if ($component == 'field_instance') {
+    $instance_info = field_info_instance('node', 'field_help_user_roles', 'help_page');
+    if (isset($instance_info['default_value'][0]['tid'])) {
+      $term = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+      $term = array_pop($term);
+      $instance_info['default_value'][0]['tid'] = $term->tid;
+      field_update_instance($instance_info);
+    }
+  }
+}
+
+/**
+ * Callback for Welcome Tutorial.
+ * @param  boolean $js   ctools_js enabled
+ * @param  stdObj  $node Node object to be rendered.
+ */
+function sbac_help_welcome_callback($js = FALSE, $node = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+    $title      = $node->title;
+    $tutorials  = sbac_help_welcome_tutorial_topics();
+
+    $form_state = array(
+      'title'     => t($title),
+      'ajax'      => TRUE,
+      'packages'  => array(
+        'tutorials' => $tutorials,
+        'node'      => $node,
+      ),
+    );
+
+    if (!$node) {
+      $output = ctools_modal_form_wrapper('sbac_help_welcome_tutorial_list_form', $form_state);
+    }
+    else {
+      $output = ctools_modal_form_wrapper('sbac_help_welcome_tutorial_list_form', $form_state);
+    }
+
+    if (!empty($form_state['executed'])) {
+      if ($form_state['triggering_element']['#value'] == 'Close Tutorial') {
+        $output = array();
+        $output[] = ctools_modal_command_dismiss();
+      }
+    }
+
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Implements hook_form().
+ * 
+ * Generates form for SBAC Welcome tutorial.
+ * @param  [type] $form       [description]
+ * @param  [type] $form_state [description]
+ * @return [type]             [description]
+ */
+function sbac_help_welcome_tutorial_list_form($form, &$form_state) {
+  $form = array();
+  global $user;
+  $account = $user;
+  $account->data['disable_recent'] = time();
+  $data = $account->data;
+  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
+
+  $form['container_prefix'] = array(
+    '#prefix' => '<div class="welcome-modal-container" id="welcome-modal-container">',
+  );
+
+  if (!($form_state['packages']['node'])) {
+    $form['tutorial_header'] = array(
+      '#markup' => '<div class="sbac-tutorial-header-cont">',
+    );
+
+    $form['tutorial_topics'] = array(
+      '#markup' => '<h2>Tutorial Topics</h2>',
+    );
+
+    $admin_roles = array(
+      'administrator',
+      'digital library administrator',
+      'system administrator',
+      'DLRB member'
+    );
+    if (array_intersect($user->roles, $admin_roles)) {
+      $form['edit_topics'] = array(
+        '#prefix' => '<div class="welcome-tutorial-edit-topics">',
+        '#markup' => l('Edit topics', 'admin/help-topics'),
+        '#suffix' => '</div>',
+      );
+    }
+
+    $form['tutorial_header_suffix'] = array(
+      '#markup' => '</div>',
+    );
+
+    foreach ($form_state['packages']['tutorials'] AS $idx => $tutorial) {
+      $form['tutorial-' . $tutorial['nid']] = array(
+        '#markup' => theme('welcome_tutorial_list',
+          array(
+            'nid'     => $tutorial['nid'],
+            'title'   => $tutorial['title'],
+            'summary' => strip_tags($tutorial['body']),
+            'image'   => $tutorial['img_fid'],
+            'img_alt' => $tutorial['img_alt'],
+          )
+        ),
+      );
+    }
+  }
+  else {
+    $form['tutorial-post'] = array(
+      '#markup' => theme(
+        'welcome_tutorial_post',
+        array(
+          'node' => $form_state['packages']['node'],
+        )
+      ),
+    );
+  }
+
+  $form['container_suffix'] = array(
+    '#suffix' => '</div>',
+  );
+
+  $form['button_prefix'] = array(
+    '#prefix' => '<div class="welcome-modal-buttons">',
+  );
+
+
+  $form['close_tutorial'] = array(
+    '#type' => 'submit',
+    '#value' => 'Close Tutorial',
+    '#attributes' => array(
+      'class' => array(
+        'button',
+        'gray',
+      ),
+    ),
+  );
+
+  $form['button_suffix'] = array(
+    '#suffix' => '</div>',
+  );
+
+  return $form;
+}
+
+function sbac_help_welcome_tutorial_list_form_submit($form, &$form_state) {
+  global $user;
+  $account = $user;
+  $account->data['disable_help'] = (int) $form_state['values']['disable_tut'];
+  $data = $account->data;
+  db_query('UPDATE {users} u SET u.data = :data WHERE u.uid = :uid', array(':data' => serialize($data), ':uid' => $account->uid));
+}
+
+/**
+ * Returns a list of Node Entities that the currently logged in user can view.
+ * @return array of stdClass representing nodes.
+ */
+function sbac_help_welcome_tutorial_topics($limit = NULL) {
+  $ar_welcome = taxonomy_get_term_by_name('Welcome tutorial', 'help_page_topic');
+  $welcome_term = array_pop($ar_welcome);
+  $roles = array();
+  $topics = array();
+
+  global $user;
+  foreach ($user->roles AS $idx => $role) {
+    $ar_tid = taxonomy_get_term_by_name($role, 'sbac_user_roles');
+    $roles[] = array_pop($ar_tid)->tid;
+  }
+  $all_roles = taxonomy_get_term_by_name('All User Roles', 'sbac_user_roles');
+  $roles[] = array_pop($all_roles)->tid;
+
+  $query = db_select('node', 'n');
+  $query->join('draggableviews_structure', 'dv', 'n.nid = dv.entity_id');
+  $query->join('flagging', 'fl', 'fl.entity_id = dv.entity_id');
+  $query->join('flag', 'f', 'fl.fid = f.fid');
+  $query->fields('n', array('nid'));
+  $query->fields('dv', array('entity_id', 'weight'));
+  $query->orderBy('dv.weight','ASC');
+  if($limit){
+    $query->range('0',$limit);
+  }
+  $query->condition('f.name', 'welcome_help_topic');
+  $query->condition('dv.view_name', 'sort_content');
+  $query->condition('dv.view_display', 'welcome_topics');
+
+  $results = $query->execute();
+  while ($result = $results->fetchAssoc()) {
+    $node = node_load($result['entity_id']);
+    $lang = $node->language;
+    $topic = array(
+      'nid'     => $node->nid,
+      'title'   => $node->title,
+      'img_fid' => ($node->field_help_icon ? $node->field_help_icon[$lang][0]['fid'] : NULL),
+      'img_alt' => ($node->field_help_icon ? $node->field_help_icon[$lang][0]['alt'] : NULL),
+
+    );
+    $topics[] = $topic;
+  }
+    
+  return $topics;
+}
+
+/**
+ * Resource Help Modal.
+ *
+ * @param bool $js
+ */
+function sbac_help_resource_help_modal($js = FALSE) {
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $title = "<h2 class='resource-help-box-title'>You're About to Create a Resource</h2>";
+    $form_state = array(
+      'title' => $title,
+      'ajax' => TRUE,
+    );
+    $output = ctools_modal_form_wrapper('sbac_help_resource_help_form', $form_state);
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] == 'Cancel') {
+        $output[] = ctools_ajax_command_redirect('my-resources');
+      }
+    }
+    print ajax_render($output);
+    exit();
+  }
+  else {
+    return;
+  }
+}
+
+/**
+ * Form for modal.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_help_resource_help_form($form, $form_state) {
+  $form['view']['#markup'] = '<div id="resource-help-body">' . views_embed_view('resource_tutorial', 'resource_tutorial') . '</div>';
+  $form['submit'] = array (
+    '#type' => 'submit',
+    '#value' => 'Continue',
+    '#attributes' => array('class' => array('otherClose', 'button', 'right')),
+  );
+  $form['cancel'] = array (
+    '#type' => 'submit',
+    '#value' => 'Cancel',
+    '#attributes' => array('class' => array('button', 'right', 'secondary', 'backButton')),
+  );
+  return $form;
+}
+
+/**
+ * Display Help Topics Call to Action open in a modal
+ *
+ * @param $limit Number of help topics to return
+ * @return mixed
+ */
+function sbac_help_topic_ctas($limit){
+  $topics = '';
+  $i = 0;  
+  $help_topics = sbac_help_welcome_tutorial_topics($limit);
+  $topic_count = count($help_topics);
+  foreach($help_topics as $topic){
+    $class = array();
+    $i = ++$i;
+    if($i === 1){
+      $class[] = 'first';
+    }
+    if($i === $topic_count) {
+      $class[] = 'last';
+    }
+    if($i % 2 == 0){
+      $class[] = 'even';
+    }else{
+      $class[] = 'odd';
+    }
+    $topics .= theme('welcome_tutorial_list',
+          array(
+            'nid'     => $topic['nid'],
+            'title'   => $topic['title'],
+            'image'   => $topic['img_fid'],
+            'img_alt' => $topic['img_alt'],
+            'class'   => implode(' ', $class)
+          ));
+  }
+  return $topics;
+}
+
+/*
+ * Implements hook_flag_flag().
+ * 
+ * Check to see if help topic has been registered to the draggable views table,
+ * and if not add to ensure the topic displays on landing page.
+ */
+
+function sbac_help_flag_flag($flag, $content_id, $account, $flagging) {
+  $view_name = 'sort_content';
+  $view_display = 'welcome_topics';
+  
+  $query = db_select('draggableviews_structure', 'dv');
+  $query->fields('dv', array('entity_id'));
+  $query->orderBy('dv.weight','ASC');
+  $query->condition('dv.view_name', $view_name);
+  $query->condition('dv.view_display', $view_display);
+  $query->condition('dv.entity_id', $content_id);
+
+  $result = $query->execute()->fetchAll();
+    if(empty($result)){
+      $sort = db_insert('draggableviews_structure') // Table name no longer needs {}
+        ->fields(array(
+          'view_name' => $view_name,
+          'view_display' => $view_display,
+          'entity_id' => $content_id,
+          'args' => '[]',
+          'weight' => '0',
+        ))
+        ->execute();
+  }
+}
+
+function sbac_help_flag_unflag($flag, $content_id, $account, $flagging) {
+
+  $view_name = 'sort_content';
+  $view_display = 'welcome_topics';
+  
+  $query = db_delete('draggableviews_structure');
+  $query->condition('view_name', $view_name);
+  $query->condition('view_display', $view_display);
+  $query->condition('entity_id', $content_id);
+  $query->execute();
+}

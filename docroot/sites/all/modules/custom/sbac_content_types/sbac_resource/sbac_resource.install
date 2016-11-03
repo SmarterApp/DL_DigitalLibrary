@@ -1,0 +1,730 @@
+<?php
+
+/**
+ * Implementation of hook_install()
+ */
+
+function sbac_resource_install() {
+  if (db_table_exists('node_user_paradata') == FALSE) {
+    drupal_install_schema('sbac_resource_schema');
+  }
+}
+
+/**
+ * Implementation of hook_uninstall()
+ */
+
+function sbac_resource_uninstall() {
+  $delete = db_query("drop table if exists `node_user_paradata`");
+  variable_del('sbac_resource_general_guide');				
+  variable_del('sbac_resource_materials_guide');				
+  variable_del('sbac_resource_summary_guide');				
+  variable_del('sbac_resource_tags_guide');				
+  variable_del('sbac_resource_advanced_guide');				
+  variable_del('sbac_resource_flag_guide');				
+  variable_del(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME);		
+  variable_del(SBAC_RESOURCE_SMART_SEARCH_URL_VAR_NAME);
+  variable_del(SBAC_RESOURCE_SMART_SEARCH_URL_HISTORY_VAR_NAME);
+
+}
+
+/**
+ * Implementation of hook_schema()
+ */
+function sbac_resource_schema() {
+  $schema['node_user_paradata'] = array(
+    'description' => t('Stores data for resource hits by uid.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who viewed the resource'),
+      ),
+      'hits' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('A counter by uid/nid for views of this nid'),
+      ),
+    ),
+    'primary key' => array('nid', 'uid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+    ),
+  );
+
+  $schema['sbac_resource_download_stats'] = array(
+    'description' => t('Stores data for resource downloads by uid.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who downloaded the resource'),
+      ),
+      'hits' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('A counter by uid/nid for downloads of this nid'),
+      ),
+    ),
+    'primary key' => array('nid', 'uid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+    ),
+  );
+
+  $schema['sbac_node_resource_state'] = array(
+    'description' => t('Stores data for resource hits by uid.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The nid of the resource'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The uid who modified the resource'),
+      ),
+      'state' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => t('The actual resource state'),
+      ),
+      'flag' => array(
+        'type' => 'varchar',
+        'length' => 1000,
+        'default' => '',
+        'description' => t('A flag to flag an entire role'),
+      ),
+    ),
+    'primary key' => array('nid', 'uid', 'state'),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'uid' => array('uid'),
+      'state' => array('state'),
+      'both' => array('nid', 'uid'),
+      'three' => array('nid', 'uid', 'state'),
+      'all' => array('nid', 'uid', 'state', 'flag'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the body and alt_summary fields
+ */
+function sbac_resource_update_7001() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_alt_summary');
+  $field = field_info_instance('node', 'body', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_resource_location_view_per field
+ */
+function sbac_resource_update_7002() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_resource_location_view_per');
+  $field = field_info_instance('node', 'field_resource_location_view_per', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Helper function to create terms.
+ *
+ * @param $terms
+ */
+function sbac_resource_save_taxonomy_term($terms, $vocab) {
+  foreach ($terms as $term) {
+    taxonomy_term_save((object) array(
+      'name' => $term['name'],
+      'vid' => $vocab['vid'],
+    ));
+  }
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_resource_location_view_per field
+ */
+function sbac_resource_update_7004() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_resource_location_view_per');
+  $field = field_info_instance('node', 'field_resource_location_view_per', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_resource_location_view_per field
+ */
+function sbac_resource_update_7005() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_resource_location_view_per');
+  $field = field_info_instance('node', 'field_resource_location_view_per', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the body and alt_summary fields
+ */
+function sbac_resource_update_7006() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('body');
+  $field = field_info_instance('node', 'body', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_user_tags field
+ */
+function sbac_resource_update_7008() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_user_tags');
+  $field = field_info_instance('node', 'field_user_tags', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_user_tags field
+ */
+function sbac_resource_update_7009() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_user_tags');
+  $field = field_info_instance('node', 'field_user_tags', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_resource_permalink field
+ */
+function sbac_resource_update_7010() {
+  $ret = array();
+
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_resource_permalink');
+  $field = field_info_instance('node', 'field_resource_permalink', 'resource');
+  field_delete_instance($field);
+
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_body_summary
+ */
+function sbac_resource_update_7011() {
+  $ret = array();
+  // Retrieve the crud operations for fields.
+  module_load_include('inc','field','field.crud');
+  $field = field_info_instance('node', 'field_body_summary', 'resource');
+  field_delete_field($field);
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_license
+ */
+function sbac_resource_update_7013() {
+  $ret = array();
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_license');
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_alt_summary
+ */
+function sbac_resource_update_7014() {
+  $ret = array();
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_alt_summary');
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_age_range
+ */
+function sbac_resource_update_7017() {
+  $ret = array();
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_age_range');
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_media_types
+ */
+function sbac_resource_update_7021() {
+  $ret = array();
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_media_types');
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the two taxonomy fields.
+ */
+function sbac_resource_update_7027() {
+  $ret = array();
+  module_load_include('inc','field','field.crud');
+  field_delete_field('field_learning_resource_type');
+  $field = field_info_instance('node', 'field_learning_resource_type', 'resource');
+  field_delete_instance($field);
+
+  field_delete_field('field_interactivity_type');
+  $field = field_info_instance('node', 'field_interactivity_type', 'resource');
+  field_delete_instance($field);
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Delete the field_review_set field.
+ */
+function sbac_resource_update_7029() {
+  $ret = array();
+  // field_delete_field('field_review_set');
+  $field = field_info_instance('node', 'field_review_set', 'resource');
+  field_delete_instance($field);
+  return $ret;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function sbac_resource_update_7030() {
+  // do not use, it's already been taken.
+}
+
+/**
+ * Removes old License terms and creates new ones.
+ */
+function sbac_resource_update_7032() {
+  // sbac_resource_update_7031();
+}
+
+/**
+ * Removes old License terms and creates new ones.
+ */
+function sbac_resource_update_7033() {
+  // sbac_resource_update_7031();
+}
+
+/**
+ * Removes old License terms and creates new ones.
+ */
+function sbac_resource_update_7034() {
+  sbac_resource_update_7031();
+}
+
+/**
+ * Delete the Use of Student Images field.
+ */
+function sbac_resource_update_7035() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_use_of_student_images', 'node', 'resource');
+  field_delete_field('field_use_of_student_images');
+
+  return $ret;
+}
+
+/**
+ * Delete the Use of View Permissions field.
+ */
+function sbac_resource_update_7036() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_view_permissions', 'node', 'resource');
+  field_delete_field('field_view_permissions');
+
+  return $ret;
+}
+
+
+/**
+ * Delete the Use of Resource Action field.
+ */
+function sbac_resource_update_7037() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_resource_action', 'node', 'resource');
+  field_delete_field('field_resource_action');
+
+  return $ret;
+}
+
+/**
+ * Delete the Use of Resource Action field.
+ */
+function sbac_resource_update_7038() {
+  /*
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+
+  $field = field_info_instance('node', 'field_resource_action', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_resource_action');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_view_permissions', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_view_permissions');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_posting_options', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_posting_options');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_posting_options_comment', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_posting_options_comment');
+  field_delete_field($field);
+
+  $field = field_info_instance('node', 'field_subscription_package_type', 'resource');
+  field_delete_instance($field);
+  $field = field_info_field('field_subscription_package_type');
+  field_delete_field($field);
+
+  return $ret;
+  */
+}
+
+/**
+ * Rebuild node access perms on resources.
+ */
+function sbac_resource_update_7039() {
+  $ret = array();
+  // node_access_rebuild(TRUE);
+  return $ret;
+}
+
+/**
+ * Build the sbac_resource state table.
+ */
+function sbac_resource_update_7040() {
+  db_create_table('sbac_node_resource_state', drupal_get_schema_unprocessed('sbac_resource', 'sbac_node_resource_state'));
+  return 'Add the Resource State table.';
+}
+
+/**
+ * Creates states for reviewer and publisher roles.
+ */
+function sbac_resource_update_7041() {
+  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
+  foreach ($results as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      sbac_resource_save_current_state($node);
+    }
+  }
+}
+
+/**
+ * Delete the old file / video upload fields.
+ */
+function sbac_resource_update_7042() {
+  $ret = array();
+
+  module_load_include('inc','field','field.crud');
+  field_del_instance('field_file', 'node', 'resource');
+  field_delete_field('field_file');
+
+  field_del_instance('field_video', 'node', 'resource');
+  field_delete_field('field_video');
+
+  return $ret;
+}
+
+/**
+ * Remove categories block from certain pages.
+ */
+function sbac_resource_update_7043() {
+  $query = "UPDATE {block} SET status = :status WHERE module = :module AND delta = :delta";
+  db_query($query, array(':status' => 0, ':module' => 'sbac_search', ':delta' => 'sbac_search_categories_button'));
+  cache_clear_all();
+}
+
+/**
+ * Add back categories block to certain pages.
+ */
+function sbac_resource_update_7044() {
+  $query = "UPDATE {block} SET status = :status WHERE module = :module AND delta = :delta";
+  db_query($query, array(':status' => 1, ':module' => 'sbac_search', ':delta' => 'sbac_search_categories_button'));
+  cache_clear_all();
+}
+
+/**
+ * Remove categories block from certain pages.
+ */
+function sbac_resource_update_7045() {
+  // Running 43 again.
+  sbac_resource_update_7043();
+}
+
+/**
+ * Remove categories block from certain pages.
+ */
+function sbac_resource_update_7046() {
+  // Running 43 again.
+  sbac_resource_update_7043();
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Uninstall and re-install db table.
+ */
+function sbac_resource_update_7047() {
+  $ret = array();
+
+  // Uninstall table.
+  $schema = drupal_get_schema_unprocessed('sbac_resource');
+  _drupal_schema_initialize($schema, 'sbac_resource', FALSE);
+
+  foreach ($schema as $table) {
+    if ($table['name'] == 'sbac_node_resource_state' && db_table_exists($table['name'])) {
+      db_drop_table($table['name']);
+    }
+  }
+
+  // Install table
+  $schema = drupal_get_schema_unprocessed('sbac_resource');
+  _drupal_schema_initialize($schema, 'sbac_resource', FALSE);
+
+  foreach ($schema as $name => $table) {
+    if ($table['name'] == 'sbac_node_resource_state') {
+      db_create_table($name, $table);
+    }
+  }
+  return $ret;
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Alter the table column type.
+ */
+function sbac_resource_update_7048() {
+  db_query("ALTER TABLE {sbac_node_resource_state} MODIFY flag VARCHAR(1000) DEFAULT ''");
+  return "Increased size of column flag";
+}
+
+/**
+ * Creates states for each user / node in the system.
+ */
+function sbac_resource_update_7049() {
+  ini_set('memory_limit', '512M');
+  $sql  = 'SELECT n.*, w.state AS state ';
+  $sql .= 'FROM {node} n ';
+  $sql .= 'JOIN {workbench_moderation_node_history} w ';
+  $sql .= 'ON n.nid = w.nid AND n.vid = w.vid ';
+  $sql .= 'WHERE n.type = :type';
+  $results = db_query($sql, array(':type' => 'resource'));
+
+  $nodes = array();
+  foreach ($results as $row) {
+    $node = $row;
+    if (isset($row->state) && $row->state) {
+      $nodes[] = $row->nid;
+    }
+    unset($node);
+  }
+
+  // Unset all the variables.
+  unset($results);
+  unset($row);
+  unset($sql);
+
+  foreach ($nodes as $nid) {
+    $node = node_load($nid, NULL, TRUE);
+    if ($node) {
+      sbac_resource_save_current_state($node);
+    }
+    // nodes are stored in memory, delete that cache.
+    node_load(FALSE, NULL, TRUE);
+    entity_get_controller('node')->resetCache(array($node->nid));
+    unset($node);
+  }
+  unset($nodes);
+
+  return "Added states for each node";
+}
+
+/**
+ * Add thumbail uri to resource field.
+ */
+function sbac_resource_update_7052() {
+  ini_set('memory_limit', '512M');
+  $results = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'resource'));
+  foreach ($results as $row) {
+    $node = node_load($row->nid);
+    if ($node) {
+      sbac_resource_determine_thumbnail_uri($node);
+      entity_save_field(array('field_thumbnail_uri'), $node, 'node', $node->nid);
+    }
+    node_load(FALSE, NULL, TRUE);
+    entity_get_controller('node')->resetCache(array($node->nid));
+    unset($node);
+  }
+}
+
+/**
+ * Create sbac_resource_download_stats table
+ */
+function sbac_resource_update_7053(){
+  db_create_table('sbac_resource_download_stats', drupal_get_schema_unprocessed('sbac_resource', 'sbac_resource_download_stats'));
+}
+
+/**
+ * Clean up the notification table
+ */
+function sbac_resource_update_7054(){
+  db_query("
+DELETE
+	t1, t2
+FROM taskit_entity t1
+	LEFT JOIN taskit t2
+		ON t1.task_id = t2.task_id
+	LEFT JOIN node n
+		ON t1.entity_id = n.nid
+WHERE t1.entity_type = 'node' AND n.nid IS null");
+}
+
+/**
+ * Fix a resource with missing db entry
+ */
+function sbac_resource_update_7055() {
+  $nid = 53526;
+  $query = db_select('workbench_moderation_node_history', 'h');
+  $query->leftJoin('sbac_node_resource_state', 's', 's.nid = h.nid');
+  $exists = $query->condition('h.current', 1)
+    ->condition('h.state', 'approved')
+    ->condition('h.nid', $nid)
+    ->condition('s.state', 'post_needs_review')
+    ->fields('h')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  if (!$exists) {
+    db_insert('sbac_node_resource_state')
+      ->fields(array(
+        'nid' => $nid,
+        'uid' => 0,
+        'state' => 'post_needs_review'
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Enable workflow help text messaging feature
+ */
+function sbac_resource_update_8001() {
+  $modules = array('sbac_workflow_messaging');
+  module_enable($modules);  
+}

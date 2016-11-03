@@ -1,0 +1,1196 @@
+<?php
+
+/**
+ * Implemnts hook_update_N().
+ *
+ * Initial setup of contrib modules, disable some core.
+ */
+function sbac_central_install() {
+  $modules = array(
+    'admin_menu',
+    'admin_menu_toolbar',
+    'ctools',
+    'diff',
+    'features',
+    'imce',
+    'imce_wysiwyg',
+    'libraries',
+    'module_filter',
+    'pathauto',
+    'strongarm',
+    'token',
+    'views',
+    'views_ui',
+    'wysiwyg'
+  );
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_ldap module.
+ */
+function sbac_central_update_7001() {
+  $modules = array('sbac_ldap');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_user
+ */
+function sbac_central_update_7002() {
+  $modules = array('sbac_user');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the SBAC theme
+ */
+function sbac_central_update_7003() {
+  theme_disable(array('bartik'));
+  theme_enable(array('SBAC', 'seven'));
+  variable_set('theme_default', 'SBAC');
+  variable_set('admin_theme', 'seven');
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the views_bulk_operations, entityreference, og module
+ */
+function sbac_central_update_7004() {
+  $modules = array('views_bulk_operations', 'entityreference', 'og');
+  module_enable($modules);
+}
+
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_page, sbac_search
+ */
+function sbac_central_update_7005() {
+  $modules = array('sbac_page', 'sbac_search');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables apache_solr attachments, apachesolr_user, apachesolr_views
+ */
+function sbac_central_update_7006() {
+  $modules = array('apachesolr_attachments', 'apachesolr_user', 'apachesolr_views');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable the views_bulk_operations, entityreference, og module
+ */
+function sbac_central_update_7007() {
+  $modules = array('views_bulk_operations', 'entityreference', 'og');
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables joyride module
+ */
+function sbac_central_update_7008() {
+  $modules = array('joyride');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables features extra module
+ */
+function sbac_central_update_7009() {
+  $modules = array('fe_block');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables Views PDF and JQuery Update
+ */
+function sbac_central_update_7010() {
+  $modules = array('views_pdf', 'jquery_update');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables SBAC_help
+ */
+function sbac_central_update_7011() {
+  $modules = array('sbac_help');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables SBAC_digital_library
+ */
+function sbac_central_update_7012() {
+  $modules = array('sbac_digital_library');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables print, print_pdf
+ */
+function sbac_central_update_7013() {
+  $modules = array('print', 'print_pdf');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable views_pdf
+ */
+function sbac_central_update_7014() {
+  $modules = array('views_pdf');
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Removes page content type.
+ */
+function sbac_central_update_7015() {
+  node_type_delete('page');
+  variable_del('node_preview_page');
+  node_types_rebuild();
+  menu_rebuild();
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_resource and sbac_user module.
+ */
+function sbac_central_update_7016() {
+  $modules = array('sbac_resource', 'sbac_user');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the field_groups module.
+ */
+function sbac_central_update_7017() {
+  $modules = array('field_group');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_alignment module
+ */
+function sbac_central_update_7019() {
+  $modules = array('sbac_alignment');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the label_help module
+ */
+function sbac_central_update_7020() {
+  $modules = array('label_help');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the Chosen module for sbac_resource
+ */
+function sbac_central_update_7021() {
+  $modules = array('chosen');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable sbac_digital_library module
+ */
+function sbac_central_update_7022() {
+  $modules = array('sbac_digital_library');
+  module_disable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the link module
+ */
+function sbac_central_update_7023() {
+  $modules = array('link');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the title and maxlength modules
+ */
+function sbac_central_update_7024() {
+  $modules = array('title', 'maxlength');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Disable seven theme.
+ */
+function sbac_central_update_7025() {
+  theme_disable(array('seven'));
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Removes page content type.
+ */
+function sbac_central_update_7026() {
+  node_type_delete('page');
+  variable_del('node_preview_page');
+  node_types_rebuild();
+  menu_rebuild();
+}
+
+/**
+ * Add the taxonomy terms to the help_page_topic vocab
+ */
+function sbac_central_update_7027() {
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'help_page_topic'))->fetchAssoc();
+  if ($vocab) {
+    // Define the terms.
+    $terms[] = array('name' => 'Resource Tutorial');
+    $terms[] = array('name' => 'Welcome Tutorial');
+    sbac_central_save_taxonomy_term($terms, $vocab);
+  }
+}
+
+/**
+ * Helper function to create terms.
+ *
+ * @param $terms
+ */
+function sbac_central_save_taxonomy_term($terms, $vocab) {
+  foreach ($terms as $term) {
+    taxonomy_term_save((object) array(
+      'name' => $term['name'],
+      'vid' => $vocab['vid'],
+    ));
+  }
+}
+
+/**
+ * Set all current Help Pages to Welcome Tutorial type
+ */
+function sbac_central_update_7028() {
+  $terms = taxonomy_get_term_by_name('Welcome Tutorial', 'help_page_topic');
+  $term = array_shift($terms);
+
+  $result = db_query('SELECT nid FROM {node} WHERE type = :type', array(':type' => 'help_page'));
+  foreach($result as $record) {
+    $node = node_load($record->nid);
+    $node->field_help_page_topic[LANGUAGE_NONE][0]['tid'] = $term->tid;
+    node_save($node);
+  }
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the phonetic module
+ */
+function sbac_central_update_7029() {
+  $modules = array('phonetic');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables sbac_core module
+ */
+function sbac_central_update_7030() {
+  $modules = array('sbac_core');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_lexicon module
+ */
+function sbac_central_update_7031() {
+  $modules = array('lexicon', 'sbac_lexicon');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the sbac_paradata module
+ */
+function sbac_central_update_7032() {
+  $modules = array('sbac_paradata');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables the Google Analytics module
+ */
+function sbac_central_update_7033() {
+  $modules = array('googleanalytics');
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables modules for help topics user and admin page
+ */
+function sbac_central_update_7034() {
+  $modules = array(
+    'views_fields_combine',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Enables Views Load More module.
+ */
+function sbac_central_update_7036() {
+  $modules = array(
+    'views_load_more'
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Embedded Media Feld & related modules.
+ */
+function sbac_central_update_7037() {
+  $modules = array(
+    'file_entity',
+    'media',
+    'media_internet',
+    'emfield',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Enables media_vimeo and media_youtube.
+ */
+function sbac_central_update_7038() {
+  $modules = array(
+    'media_vimeo',
+    'media_youtube',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Enables Upload QC.
+ */
+function sbac_central_update_7039() {
+  sbac_central_update_7036();
+  sbac_central_update_7037();
+  sbac_central_update_7038();
+
+  $modules = array(
+    'upload_qc',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enable m4032404 module
+ */
+function sbac_central_update_7041() {
+  $modules = array(
+    'm4032404',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Report.
+ */
+function sbac_central_update_7042() {
+  $modules = array(
+    'contextual_range_filter',
+    'sbac_report',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Date and Date Popup.
+ */
+function sbac_central_update_7043() {
+  $modules = array(
+    'date',
+    'date_popup',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables SMTP.
+ */
+function sbac_central_update_7044() {
+  $modules = array(
+    'smtp',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Sets the module weight.
+ */
+function sbac_central_update_7045() {
+//  $ret = array();
+//  db_query("UPDATE system SET weight = 6 WHERE name = 'sbac_resource'");
+//  // db_query('UPDATE system SET weight = 6 WHERE name = "sbac_resource"', array());
+//  return $ret;
+}
+
+/**
+ * Enables SBAC Media.
+ */
+function sbac_central_update_7046() {
+  $modules = array(
+    'sbac_media',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Sets the module weight. Revert!
+ */
+function sbac_central_update_7047() {
+//  $ret = array();
+//  db_query("UPDATE system SET weight = 0 WHERE name = 'sbac_resource'");
+//  return $ret;
+}
+
+/**
+ * Sets the module weight. Revert!
+ */
+function sbac_central_update_7048() {
+//  $ret = array();
+//  db_query("UPDATE system SET weight = 6 WHERE name = 'sbac_resource'");
+//  return $ret;
+}
+
+/**
+ * Sets the module weight. Revert!
+ */
+function sbac_central_update_7049() {
+  $ret = array();
+  db_query("UPDATE system SET weight = 0 WHERE name = 'sbac_resource'");
+  return $ret;
+}
+
+/**
+ * Disables workbench email module.
+ */
+function sbac_central_update_7051() {
+  $modules = array(
+    'workbench_email',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Disables sbac paradata module.
+ */
+function sbac_central_update_7052() {
+  $modules = array(
+    'sbac_paradata',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Removes resource nodes with no title
+ * Sets all resources to published.
+ */
+function sbac_central_update_7053() {
+  _sbac_central_delete_no_title_nodes();
+}
+
+/**
+ * Delete nodes that have no title, or publish them.
+ */
+function _sbac_central_delete_no_title_nodes() {
+  $result = db_query("SELECT nid, vid, title FROM {node} WHERE type = :resource", array(':resource' => 'resource'));
+  foreach ($result as $row) {
+    if ($row->title == '') {
+      node_delete($row->nid);
+    }
+    else {
+      db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
+      db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
+    }
+  }
+}
+
+/**
+ * Publishes all alignments.
+ */
+function sbac_central_update_7054() {
+  _sbac_central_publish_all_alignments();
+}
+
+/**
+ * Publishes all alignments.
+ */
+function _sbac_central_publish_all_alignments() {
+  $result = db_query("SELECT nid, vid FROM {node} WHERE type = :alignment", array(':alignment' => 'alignment'));
+  foreach ($result as $row) {
+    db_query('UPDATE {node} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
+    db_query('UPDATE {node_revision} SET status = 1 WHERE nid = :nid AND vid = :vid', array(':nid' => $row->nid, ':vid' => $row->vid));
+  }
+}
+
+/**
+ * Disables youtube / vimeo module.
+ */
+function sbac_central_update_7055() {
+  $modules = array(
+    'media_vimeo',
+    'media_youtube',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Add the taxonomy terms to the resource_states vocab
+ */
+function sbac_central_update_7056() {
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'resource_states'))->fetchAssoc();
+  if ($vocab) {
+    // Define the terms.
+    $terms[] = array('name' => 'Being Reviewed');
+    $terms[] = array('name' => 'Draft');
+    $terms[] = array('name' => 'In Review');
+    $terms[] = array('name' => 'Needs Posting');
+    $terms[] = array('name' => 'Needs Review');
+    $terms[] = array('name' => 'Posted');
+    $terms[] = array('name' => 'Returned');
+    $terms[] = array('name' => 'Submitted');
+    sbac_central_save_taxonomy_term($terms, $vocab);
+  }
+}
+
+/**
+ * Add a taxonomy term to the resource_states vocab
+ */
+function sbac_central_update_7057() {
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'resource_states'))->fetchAssoc();
+  if ($vocab) {
+    // Define the terms.
+    $terms[] = array('name' => 'Removed');
+    sbac_central_save_taxonomy_term($terms, $vocab);
+  }
+}
+
+/**
+ * Enables Air API
+ */
+function sbac_central_update_7058() {
+  $modules = array(
+    'sbac_air',
+  );
+  module_enable($modules);
+}
+
+
+/**
+ * Enables Transliteration module.
+ */
+function sbac_central_update_7060() {
+  $modules = array(
+    'transliteration',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables SBAC Favorites module.
+ */
+function sbac_central_update_7061() {
+  $modules = array(
+    'sbac_favorites',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables SBAC Share module.
+ */
+function sbac_central_update_7062() {
+  $modules = array(
+    'sbac_share',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables SBAC Flag module.
+ */
+function sbac_central_update_7063() {
+  $modules = array(
+    'sbac_flag',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Filter Perms module.
+ */
+function sbac_central_update_7064() {
+  $modules = array(
+    'filter_perms',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
+
+/**
+ * Script to flag the new archive
+ */
+function sbac_central_update_7065() {
+  /**
+   * select all workbench_moderation_node_history for a node;
+   *  if there is a state of rejected in the "state" field, then keep looping ahead,
+   *  then, if you find a state of "needs review" in the "state" field,
+   *  then you need to loop back through the previous states, finding each user
+   *  load the user, then load the related eck_feedback
+   *  set the archived flag to 1.
+   */
+
+  $the_changed_ones = array();
+  $count = 0;
+  $sql = "SELECT * FROM {node} WHERE type = 'resource'";
+  $result = db_query($sql);
+  foreach ($result as $row) {
+    $sql = "SELECT * FROM {workbench_moderation_node_history} WHERE nid = :nid";
+    $records = db_query($sql, array(':nid' => $row->nid));
+    $all_node_states = array();
+    $possible = FALSE;
+    foreach ($records as $record) {
+      $all_node_states[$record->hid] = $record;
+      if ($record->state == 'rejected') {
+        $possible = TRUE;
+      }
+    }
+
+    if ($possible) {
+      // reverse the array so that we start at the bottom. loop back up through the list.
+      // once you find rejected, start on that review and load it up, then set the archive flag.
+      $all_node_states = array_reverse($all_node_states);
+      foreach ($all_node_states as $node_state) {
+        if ($node_state->state == 'rejected' || $node_state->state == 'needs_review' || $node_state->state == 'being_reviewed' || $node_state->state == 'approved') {
+          // load all eck_feedback for this node and this user id.
+          // the user could have more then one review, how to determine your setting the right one?????
+          // no relationship between the two.
+          $query = "SELECT * FROM {eck_feedback} WHERE node_id = :nid AND uid = :uid";
+          $eck_feedback_results = db_query($query, array(':nid' => $node_state->nid, ':uid' => $node_state->uid));
+          foreach ($eck_feedback_results as $eck_feedback) {
+            if ($eck_feedback->status == 0 ) {
+              // get stamp from workbench moderation, minus 30 seconds of it to get the start time
+              // 30 seconds adding to get the end time, thats your range to check if the record your looking
+              // at is the record created by the workbench moderation event firing, cause when it fires
+              // the record got updated.
+              $stamp = $node_state->stamp;
+              $start_time = $stamp - 30;
+              $end_time = $stamp + 30;
+              if (($eck_feedback->changed >= $start_time && $eck_feedback->changed <= $end_time) || ($eck_feedback->created >= $start_time && $eck_feedback->created <= $end_time)) {
+                $the_changed_ones[$node_state->hid]['eck_entity'] = $eck_feedback;
+                $the_changed_ones[$node_state->hid]['workbench_moderation'] = $node_state;
+                $count++;
+                db_query('UPDATE {eck_feedback} SET archived = 1 WHERE id = :id', array(':id' => $eck_feedback->id));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Ended
+  $entities = array();
+  $users_data = array();
+  $user_count = array();
+  foreach($the_changed_ones as $id => $records) {
+    $e_output = "The eck_feedback entity with the ID of " . $records['eck_entity']->id . " was archived because it was suspected ";
+    $e_output .= "of being set to inactive because the node with ID of " . $records['eck_entity']->node_id . " was rejected but, ";
+    $e_output .= "then the user resubmitted the draft causing the inactive status on the eck entity.";
+    $entities[] = $e_output;
+    $user = user_load($records['eck_entity']->uid);
+    if ($user) {
+      $user_output = "Which means the user (uid: " . $user->uid . "), ";
+      if (isset($user->field_first_name['und'][0]['value']) && $user->field_first_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_first_name['und'][0]['value']) . " ";
+      }
+      if (isset($user->field_last_name['und'][0]['value']) && $user->field_last_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_last_name['und'][0]['value']) . " ";
+      }
+      $user_output .= "now should have his/her ";
+      if ($records['eck_entity']->type == 'qc') {
+        $user_output .= "resource review contributed ";
+      }
+      else if ($records['eck_entity']->type == 'gate_keeper') {
+        $user_output .= "gate keeper contributed ";
+      }
+      $user_output .= "count incremented by one";
+      $users_data[] = $user_output;
+      if (isset($user_count[$user->uid]['count'])) {
+        $user_count[$user->uid]++;
+      }
+      else {
+        $user_count[$user->uid] = 1;
+      }
+    }
+  }
+
+  $data = "There was a total of " . count($the_changed_ones) . " eck entities effected by this script\n\n";
+  $entity_output = implode("\n", $entities);
+  $users_output = implode("\n", $users_data);
+  $output = $data . "\n\n" . $entity_output . "\n\n" . $users_output;
+  file_save_data($output, 'private://results_from_update.txt');
+}
+
+/**
+ * Run through the eck_feedback, if a row is completed, status is 0
+ * and title of the review does not contain the users uid.
+ *
+ */
+function sbac_central_update_7066() {
+  $sql = "SELECT * FROM {eck_feedback} WHERE completed = 1 AND status = 0 AND archived = 0";
+  $results = db_query($sql);
+  $count = 0;
+  $the_changed_ones = array();
+  foreach ($results as $row) {
+    if (strpos($row->title, $row->uid) === FALSE) {
+      db_query("UPDATE {eck_feedback} SET archived = 1 WHERE id = :id", array(':id' => $row->id));
+      $count++;
+      $the_changed_ones[$row->id] = $row;
+    }
+  }
+
+  // Ended
+  $user_output_array = array();
+  foreach($the_changed_ones as $id => $records) {
+    $user = user_load($records->uid);
+    if ($user) {
+      $user_output = "The user (uid: " . $user->uid . "), ";
+      if (isset($user->field_first_name['und'][0]['value']) && $user->field_first_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_first_name['und'][0]['value']) . " ";
+      }
+      if (isset($user->field_last_name['und'][0]['value']) && $user->field_last_name['und'][0]['value'] != '') {
+        $user_output .= trim($user->field_last_name['und'][0]['value']) . " ";
+      }
+      $user_output .= "has had his/her " . $records->type . " count incremented by one";
+      $user_output_array[] = $user_output;
+    }
+  }
+  $data = "There was a total of " . count($the_changed_ones) . " users effected by this script\n\n";
+  $user_data = implode("\n", $user_output_array);
+  $output = $data . "\n\n" . $user_data;
+  file_save_data($output, 'private://results_from_update_7066.txt');
+  return "Fixed qc reviews that have been set to inactive";
+}
+
+
+/*
+ * Enables SBAC_Forum module.
+ *
+ * ** Changed to 7068 because 7067 has already
+ * ** been ran on production. so when we push, this will run.
+ */
+function sbac_central_update_7068() {
+  $modules = array(
+    'sbac_forum',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
+
+/*
+ * Gets records that were not saved correctly because
+ * of the missing entity_save within sbac_core.
+ */
+function sbac_central_update_7069() {
+  $sql = "SELECT e.* FROM {eck_feedback} e JOIN {node} n ON e.node_id = n.nid WHERE e.type = 'post' AND n.sticky = 1";
+  $results = db_query($sql);
+  foreach ($results as $row) {
+    db_query("UPDATE {eck_feedback} SET completed = 1, status = 1 WHERE id = :id", array(':id' => $row->id));
+  }
+}
+
+/*
+ * Enables SBAC_Forum module.
+ *
+ * ** Changed to 7068 because 7067 has already
+ * ** been ran on production. so when we push, this will run.
+ */
+function sbac_central_update_7070() {
+  $modules = array(
+    'google_cdn',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Disable LDAP and associated modules.
+ */
+function sbac_central_update_7071() {
+  $modules = array(
+    'sbac_ldap',
+    'ldap',
+    'ldap_authentication',
+    'ldap_authorization',
+    'ldap_authorization_drupal_role',
+    'ldap_query',
+    'ldap_servers',
+    'ldap_user',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Enabled sbac_learning_registry module
+ */
+function sbac_central_update_7072(){
+  module_enable(array('sbac_learning_registry'));
+}
+
+/**
+ * Migrates old files to new Google CDN.
+ */
+function sbac_central_update_7074() {
+  drupal_set_message('Run /admin/settings/sbac-central/google-cdn-migrate');
+}
+
+/**
+ * Enabled xautoload module.
+ */
+function sbac_central_update_7076(){
+  module_enable(array('xautoload'));
+}
+
+/**
+ * Enables views_data_export module.
+ */
+function sbac_central_update_7077() {
+  $modules = array(
+    'views_data_export',
+    'sbac_user_export_view',
+  );
+
+  module_enable($modules);
+}
+
+/**
+ * Implements hook_update_N().
+ * Disables sbac_user_export_view feature.
+ */
+function sbac_central_update_7078() {
+  $modules = array(
+    'sbac_user_export_view',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Add an index into the legal conditions.
+ */
+function sbac_central_update_7079() {
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX version (version)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX revision (revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX language (language)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX multi (version, revision)");
+  db_query("ALTER TABLE {legal_conditions} ADD INDEX entire (version, revision, language)");
+}
+
+
+/**
+ * Enable SSO on Acquia sites.
+ */
+function sbac_central_update_7080() {
+  if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    $modules = array(
+      'sbac_sso',
+    );
+    module_enable($modules);
+  }
+}
+
+
+/**
+ * Enable sbac_forum module
+ */
+function sbac_central_update_7081() {
+  module_enable(array('sbac_forum'));
+}
+
+/**
+ * Enable httprl module
+ */
+function sbac_central_update_7082() {
+  module_enable(array('httprl'));
+}
+
+/**
+ * Move no-preview-image.png to the file directory.
+ * Need this so that image_style can work with the image.
+ */
+function sbac_central_update_7083() {
+  global $base_url;
+  $image_path = $base_url . base_path() . 'sites/all/themes/SBAC/images/no-preview-html5.jpg';
+  $public_path = drupal_realpath('public://') . '/no-preview-html5.jpg';
+  copy($image_path, $public_path);
+}
+
+/**
+ * If cache_eck exits, drop the table.
+ *
+ * In place because we update the module but broke stuff, so reverted back to non-cache version.
+ */
+function sbac_central_update_7084() {
+  if (db_table_exists('cache_eck')) {
+    db_drop_table('cache_eck');
+  }
+}
+
+/**
+ * Enable views content cache.
+ */
+function sbac_central_update_7085() {
+  $modules = array(
+    'views_content_cache',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Add an index into the legal conditions.
+ */
+function sbac_central_update_7086() {
+  // db_query("ALTER TABLE {legal_conditions} ADD INDEX version (version)");
+  // db_query("ALTER TABLE {legal_conditions} ADD INDEX revision (revision)");
+  // db_query("ALTER TABLE {legal_conditions} ADD INDEX language (language)");
+  // db_query("ALTER TABLE {legal_conditions} ADD INDEX multi (version, revision)");
+  // db_query("ALTER TABLE {legal_conditions} ADD INDEX entire (version, revision, language)");
+}
+
+/**
+ * Disable views ui, and taxonomy manager. Enable elysia_cron.
+ */
+function sbac_central_update_7087() {
+  $modules = array(
+    'views_ui',
+    'taxonomy_manager',
+  );
+  module_disable($modules);
+  unset($modules);
+
+  $modules = array(
+    'elysia_cron',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enable entitycache module
+ */
+function sbac_central_update_7088() {
+  module_enable(array('entitycache'));
+}
+
+/**
+ * Enables feedback-box block.
+ */
+function sbac_central_update_7089() {
+  $update = db_update('block');
+  $update->fields(
+    array(
+      'region' => 'feedback',
+      'status' => 1,
+      )
+  );
+  $update->condition('module', 'sbac_central', '=');
+  $update->condition('delta', 'feedback-box', '=');
+  $update->execute();
+}
+
+/**
+ * Enable views content cache.
+ */
+function sbac_central_update_7090() {
+  $modules = array(
+    'views_content_cache',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Disable Reroute Emails, SMTP modules (not used anymore since site does not send emails)
+ */
+function sbac_central_update_7091() {
+  $modules = array(
+    'reroute_email', 'smtp',
+  );
+  module_disable($modules);
+}
+
+/**
+ * Enable oscaddie_gcs.
+ */
+function sbac_central_update_7092() {
+  $modules = array(
+    'oscaddie_gcs',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enable learning registry modules, set configurations, and queue all resources
+ */
+function sbac_central_update_7093() {
+  if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+      case 'prod':
+        $modules = array(
+          'learning_registry',
+          'learning_resource_metadata_initiative',
+          'sbac_learning_registry'
+        );
+        module_enable($modules);
+        variable_set('learning_registry_node_types', array(
+          'resource' => 'resource',
+          'alignment' => 0,
+          'topic' => 0,
+          'help_page' => 0,
+        ));
+        variable_set('learning_registry_queuing', 0);
+        variable_set('learning_registry_schema_type', array(
+          'name' => 'LRMI',
+          'resource_data_callback' => 'learning_resource_metadata_initiative_create_lrmi_payload',
+          'payload_schema' => array(
+            'schema.org',
+            'LRMI',
+            'application/microdata+json'
+          ),
+          'slice_callback' => 'learning_resource_metadata_initiative_slice'
+        ));
+        variable_set('learning_registry_schema_type_default_value', 'lrmi');
+        variable_set('learning_registry_signing_method', 'LR-PGP.1.0');
+        variable_set('learning_registry_submitter', 'Smarter Balanced');
+        variable_set('learning_registry_tos', 'http://creativecommons.org/choose/');
+        variable_set('learning_registry_url_type', 1);
+        $salt = 'KrP7FgnpjK4hXfVDIAwC';
+        variable_set('learning_registry_oauth_salt', $salt);
+        sbac_learning_registry_queue_all_resources();
+        break;
+    }
+  }
+}
+
+/**
+ * Add indexes to taskit table.
+ */
+function sbac_central_update_7094() {
+  if (db_table_exists('taskit')) {
+    db_add_index('taskit', 'type', array('type'));
+    db_add_index('taskit', 'created', array('created'));
+    db_add_index('taskit', 'viewed', array('viewed'));
+    db_add_index('taskit', 'state', array('state'));
+    db_add_index('taskit', 'visibility', array('visibility'));
+  }
+}
+
+/**
+ * Add indexes to eck_flag table.
+ */
+function sbac_central_update_7095() {
+  if (db_table_exists('eck_flag')) {
+    db_add_index('eck_flag', 'type', array('type'));
+    db_add_index('eck_flag', 'uid', array('uid'));
+    db_add_index('eck_flag', 'nid', array('nid'));
+    db_add_index('eck_flag', 'target_id', array('target_id'));
+    db_add_index('eck_flag', 'resolved', array('resolved'));
+    db_add_index('eck_flag', 'being_moderated', array('being_moderated'));
+    db_add_index('eck_flag', 'urgent', array('urgent'));
+  }
+}
+
+/**
+ * Impliments hook_uninstall().
+ */
+
+function sbac_central_uninstall() {
+  variable_del('google_cdn_bucket_name');
+  variable_del('google_cdn_extensions');
+  variable_del('google_cdn_client_id');
+  variable_del('google_cdn_service_account_name');
+  variable_del('google_cdn_signed_url_expiry');
+  variable_del('google_cdn_library_version');
+  variable_del('oscaddie_gcs_bucket_name');
+  variable_del('oscaddie_gcs_extensions');
+  variable_del('oscaddie_gcs_client_id');
+  variable_del('oscaddie_gcs_service_account_name');
+  variable_del('oscaddie_gcs_signed_url_expiry');
+  variable_del('oscaddie_gcs_library_version');
+  variable_del('theme_default');
+  variable_del('admin_theme');
+  variable_del('learning_registry_node_types');
+  variable_del('learning_registry_queuing');
+  variable_del('learning_registry_schema_type');
+  variable_del('learning_registry_schema_type_default_value');
+  variable_del('learning_registry_signing_method');
+  variable_del('learning_registry_submitter');
+  variable_del('learning_registry_tos');
+  variable_del('learning_registry_url_type');
+  variable_del('learning_registry_oauth_salt');
+  variable_del('feedback_block_body');
+  variable_del('enable_feedback');
+}

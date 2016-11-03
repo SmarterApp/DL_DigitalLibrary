@@ -1,0 +1,249 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function sbac_forum_schema() {
+  $schema = array();
+
+  $schema['sbac_forum_deleted_log'] = array(
+    'description' => 'Keep track of titles of deleted forums and topics.',
+    'fields' => array(
+      'fdlid' => array(
+        'description' => 'The primary key.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'entity_id' => array(
+        'description' => 'The related entity id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_type' => array(
+        'description' => 'The related entity type.',
+        'type' => 'varchar',
+        'length' => 150,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'title' => array(
+        'description' => 'The title to store.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'description' => 'The Unix timestamp when the forum was deleted.',
+        'type' => 'int',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The uid of the user who deleted',
+        'type' => 'int',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+      'forum_type' => array(
+        'description' => 'Topic or resource forum.',
+        'type' => 'varchar',
+        'length' => 150,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'entity' => array('entity_id', 'entity_type'),
+    ),
+    'primary key' => array('fdlid'),
+  );
+
+  $schema['sbac_forum_views'] = array(
+    'description' => t('Stores data for forum hits by uid.'),
+    'fields' => array(
+      'tid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The tid of the forum'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('The uid who viewed the resource'),
+      ),
+      'hits' => array(
+        'type' => 'int',
+        'size' => 'big',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'auto_increment' => FALSE,
+        'description' => t('A counter by uid/nid for views of this tid'),
+      ),
+    ),
+    'primary key' => array('tid', 'uid'),
+    'indexes' => array(
+      'nid' => array('tid'),
+      'uid' => array('uid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ *
+ */
+function sbac_forum_install() {
+  $modules = array(
+    'quicktabs',
+  );
+  module_enable($modules);
+}
+
+/**
+ * Enables Quicktabs module.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7002() {
+  $modules = array(
+    'quicktabs',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
+
+
+/**
+ * Enables morecomments module.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7003() {
+  $modules = array(
+    'morecomments',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
+
+
+/**
+ * Enables comment_sort_created module.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7004() {
+  $modules = array(
+    'comment_goodness',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
+
+
+/**
+ * Enables apachesolr_comments and apachesolr_term module.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7005() {
+  $modules = array(
+    'apachesolr_comments',
+    'apachesolr_term',
+  );
+  module_enable($modules);
+  drupal_flush_all_caches();
+}
+
+
+/**
+ * Disables apachesolr_access.
+ *
+ *  Implemnts hook_update_N().
+ */
+function sbac_forum_update_7006() {
+  $modules = array(
+    'apachesolr_access',
+  );
+  module_disable($modules);
+  drupal_flush_all_caches();
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Adds the new table.
+ */
+function sbac_forum_update_7007() {
+  $ret = array();
+  $schema = drupal_get_schema('sbac_forum_deleted_log', TRUE);
+  db_create_table('sbac_forum_deleted_log', $schema);
+  return $ret;
+}
+
+/**
+ * Delete field_alignment_term from the Forum taxonomy
+ */
+function sbac_forum_update_7008() {
+  $instance = field_info_instance('taxonomy_term', 'field_alignment_term', 'forum');
+  field_delete_instance($instance);
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Adds the new table.
+ */
+function sbac_forum_update_7009() {
+  $ret = array();
+  $table = 'sbac_forum_views';
+  if (!db_table_exists($table)) {
+    $schema = drupal_get_schema($table, TRUE);
+    db_create_table($table, $schema);
+  }
+  return $ret;
+}
+
+/**
+ * Update the schema
+ */
+function sbac_forum_update_7010() {
+  db_add_field('sbac_forum_deleted_log', 'created', array(
+    'description' => 'The Unix timestamp when the forum was deleted.',
+    'type' => 'int',
+    'default' => 0,
+    'not null' => TRUE,
+  ));
+  db_add_field('sbac_forum_deleted_log', 'uid', array(
+    'description' => 'The uid of the user who deleted',
+    'type' => 'int',
+    'default' => 0,
+    'not null' => TRUE,
+  ));
+}
+
+/**
+ * Update the schema
+ */
+function sbac_forum_update_7011() {
+  db_add_field('sbac_forum_deleted_log', 'forum_type', array(
+    'description' => 'Topic or resource forum.',
+    'type' => 'varchar',
+    'length' => 150,
+    'default' => '',
+  ));
+}
+
+function sbac_forum_uninstall(){
+  variable_del('date_format_');
+}

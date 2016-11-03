@@ -1,0 +1,593 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Share feature.
+ */
+
+include_once 'sbac_share.features.inc';
+
+/**
+ * @file.
+ * Module to handle "guest" user functionality
+ *
+ * Provides:
+ *  - Handles creation of Share tab on resource node view
+ *  - Creates custom table to track related data
+ *  - Allows guest users to view content that has been shared
+ *  - Controls guest user movement
+ */
+
+define('SBAC_SHARE_GUEST', 'guest');
+define('SBAC_SHARE_CRON', 7200);
+define('SBAC_SHARE_PERMANENT_LINK_TYPE', 0);
+define('SBAC_SHARE_TEMPORARY_LINK_TYPE', 1);
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_share_update_projects_alter(&$projects) {
+  unset($projects['sbac_share']);
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function sbac_share_menu() {
+  $items = array();
+
+  $items['sbac-share'] = array(
+    'title' => 'Guest Access',
+    'description' => 'Gives access to a node temporarily',
+    'page callback' => 'sbac_share_login_redirect_view',
+    'page arguments' => array(1),
+    'type' => MENU_CALLBACK,
+    'access callback' => TRUE,
+  );
+
+  $items['sbac-share-generate-link'] = array(
+    'title' => 'Generate a URL',
+    'description' => 'Generates an expiring URL',
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'page callback' => 'sbac_share_generate_link_ajax_callback',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-share-remove-link'] = array(
+    'title' => 'Removes the link',
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'page callback' => 'sbac_share_remove_link_ajax_callback',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sbac-share-increment-permanent-copy-count'] = array(
+    'title' => 'Increments the permanent link copy count',
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'page callback' => 'sbac_share_increment_permanent_link_copy_count_ajax_callback',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function sbac_share_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'resource_node_form') {
+    $form['#submit'][] = 'sbac_share_submit_handler';
+  }
+}
+
+/**
+ * Submit handler.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_share_submit_handler($form, $form_state) {
+  if (isset($form_state['values']['field_permanent_link_settings']['und'][0]['value']) &&
+    $form_state['values']['field_permanent_link_settings']['und'][0]['value'] == 1) { // public
+    sbac_share_generate_url($form_state['values']['nid'], TRUE);
+  }
+}
+
+/**
+ * Implements hook_page_alter().
+ *
+ * @param $page
+ */
+function sbac_share_page_alter(&$page) {
+  global $user;
+
+  // If the user is a guest and they clicked the 'sign in' link, send them there.
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && !isset($_GET['key'])) {
+    session_destroy();
+    drupal_goto('user');
+  }
+
+  // if the user is trying to access a page they don't have access to.
+  if (in_array(SBAC_SHARE_GUEST, $user->roles) && (!isset($_SESSION['sbac-share-not-found']) || $_SESSION['sbac-share-not-found'] == FALSE)) {
+    $provided_key = NULL;
+    if (isset($_GET['key'])) {
+      $provided_key = $_GET['key'];
+    }
+    if (!$provided_key) {
+      // SEND USER TO SSO
+      drupal_goto('user');
+      $_SESSION['sbac-share-not-found'] = TRUE;
+      sbac_share_get_outta_here();
+      drupal_exit();
+    }
+  }
+
+  if (isset($page['content']['system_main']['main']['#markup']) && strpos($page['content']['system_main']['main']['#markup'], 'sbac-share-page-not-found') !== FALSE) {
+    // set this parameter when condition above is met.
+    $_SESSION['sbac-share-log-user-out'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_exit().
+ *
+ * @param null $destination
+ */
+function sbac_share_exit($destination = NULL) {
+  // delete session (logout) when session variable is found.
+  if (isset($_SESSION['sbac-share-log-user-out']) && $_SESSION['sbac-share-log-user-out'] == TRUE) {
+    session_destroy();
+  }
+}
+
+/**
+ * Packages and sends the result of a page callback to the browser as HTML.
+ *
+ * @see drupal_deliver_html_page()
+ */
+function sbac_share_get_outta_here() {
+  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  // Send appropriate HTTP-Header for browsers and search engines.
+  global $language;
+  drupal_add_http_header('Content-Language', $language->language);
+  // Print a 404 page.
+  drupal_add_http_header('Status', '404 Not Found');
+  watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
+  // Standard 404 handler.
+  drupal_set_title(t('Page not found'));
+  $return = '<div class="sbac-share-page-not-found">' . t('You are unable to view this page as a guest. Please become a SBAC member to see all our content.') . '</div>';
+  drupal_set_page_content($return);
+  $page = element_info('page');
+  print drupal_render_page($page);
+  // Perform end-of-request tasks.
+  drupal_page_footer();
+}
+
+/**
+ * Login and redirect the guest user
+ */
+function sbac_share_login_redirect_view() {
+  if (isset($_GET['key']) && $_GET['key']) {
+    global $user;
+    $provided_key = $_GET['key'];
+    if (!$user->uid) {
+      $stored_key = sbac_share_get_node_by_key($provided_key);
+      if ($stored_key && $stored_key['key'] == $provided_key) {
+        // create the temp guest.
+        $new_guest = sbac_share_create_guest_user($provided_key);
+        // sign them up for the legal acceptance.
+        sbac_share_create_legal_acceptance($new_guest);
+        // create temp form variables.
+        $form_state['uid'] = $new_guest->uid;
+        $form_state['sbac-share'] = TRUE;
+        // Log user in.
+        user_login_submit(array(), $form_state);
+        $node = node_load($stored_key['nid']);
+        if ($node) {
+          // increment access count
+          $access_count = db_query("SELECT access_count FROM {sbac_share} WHERE nid = :nid AND `key` = :key", array(':nid' => $node->nid, ':key' => $stored_key['key']))->fetchField();
+          $access_count++;
+          db_query("UPDATE {sbac_share} SET access_count = :access_count WHERE nid = :nid AND `key` = :key", array(':access_count' => $access_count, ':nid' => $node->nid, ':key' => $stored_key['key']));
+          // redirect to correct page.
+          drupal_custom_goto($node->path['alias'] . '?key=' . $stored_key['key']);
+        }
+      }
+    }
+    else {
+      // if already logged in, send to node url.
+      $stored_key = sbac_share_get_node_by_key($provided_key);
+      if ($stored_key) {
+        $node = node_load($stored_key['nid']);
+        if ($node) {
+          drupal_custom_goto($node->path['alias'] . '?key=' . $stored_key['key']);
+        }
+      }
+    }
+  }
+  // if not logged in, go to 404 or 403 page.
+  drupal_not_found();
+}
+
+/**
+ * Create a guest user.
+ *
+ * @return bool|stdClass
+ */
+function sbac_share_create_guest_user() {
+  // create a new user with junk username/password/email
+  $guest_role = user_role_load_by_name('guest');
+  $guest_account = array(
+    'name' => sbac_share_rand_username(SBAC_SHARE_GUEST, 16),
+    'pass' => user_password(10),
+    'mail' => sbac_share_rand_email('nomail.local', 16),
+    'status' => 1,
+    'roles' => array($guest_role->rid => 'guest'),
+    'init' => 'email address',
+  );
+  $new_user = user_save(drupal_anonymous_user(), $guest_account);
+  return $new_user;
+}
+
+/**
+ * Saves the legal acceptance for this guest user.
+ *
+ * @param $new_guest
+ */
+function sbac_share_create_legal_acceptance($new_guest) {
+  $legal_conditions = legal_get_conditions();
+  legal_save_accept($legal_conditions['version'], $legal_conditions['revision'], $legal_conditions['language'], $new_guest->uid);
+}
+
+/**
+ * Generates the key and returns to the UI.
+ */
+function sbac_share_generate_link_ajax_callback() {
+  $output = array();
+  $nid = $_POST['nid'];
+  if ($nid) {
+    $key = sbac_share_generate_url($nid);
+    if ($key) {
+      global $base_url;
+      $url = $base_url . '/sbac-share?key=' . $key;
+      $output['result'] = $url;
+    }
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Deletes the key from the table.
+ */
+function sbac_share_remove_link_ajax_callback() {
+  $output = array();
+  $key = $_POST['key'];
+  if ($key) {
+    $pos = strpos($key, '?key=');
+    $key = substr($key, $pos + 5);
+    $stored_key = sbac_share_get_node_by_key($key);
+    if ($stored_key && isset($stored_key['key'])) {
+      db_query("DELETE FROM {sbac_share} WHERE `key` = :key", array(':key' => $key));
+    }
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Increments the permanent copy link count.
+ */
+function sbac_share_increment_permanent_link_copy_count_ajax_callback() {
+  $output = array();
+  $nid = $_POST['nid'];
+  if ($nid) {
+    global $user;
+    $entity = new stdClass();
+    $entity->nid = $nid;
+    $entity->uid = $user->uid;
+    $entity->created = time();
+    $entity->type = SBAC_SHARE_PERMANENT_LINK_TYPE;
+    drupal_write_record('sbac_share_link_copy_count', $entity);
+  }
+  print drupal_json_encode($output);
+  exit;
+}
+
+/**
+ * Generates the link entity.
+ *
+ * @param $nid
+ * @return string
+ */
+function sbac_share_generate_url($nid, $public = FALSE) {
+  $key = NULL;
+  global $user;
+  $node = node_load($nid);
+  if ($node) {
+    //get the path of the node
+    $path = drupal_lookup_path('alias', "node/" . $node->nid);
+    $key = md5(time() . $node->nid . $path);
+    //generate the new path
+    if (!$public) {
+      $expire_date = time() + (60 * 60 * 24 * $node->field_temporary_public_link_time['und'][0]['value']);
+      if ($node->field_temporary_public_link_time['und'][0]['value'] == 100) {
+        $expire_date = time() + (60 * 5); // developer, expire in 5 minutes.
+      }
+      $public = 0;
+    }
+    else {
+      $expire_date = time() + (60 * 60 * 24 * 3650); //3650 days = 10 years
+      $public = 1;
+    }
+    $query = "INSERT INTO {sbac_share} (nid, uid, `key`, create_datetime, expire_datetime, public, access_count) values (" . $node->nid . ", " . $user->uid . ", '" . $key . "', " . time() . ", ". $expire_date . ", " . $public . ", 0)";
+    db_query($query);
+  }
+  return $key;
+}
+
+/**
+ * Creates the form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function sbac_share_form($form, &$form_state) {
+  global $user;
+  $form['#action'] = url('generate_url');
+
+  // Returns a generate url form
+  $form['ttl'] = array(
+    '#title' => t('Days to Live'),
+    '#type' => 'select',
+    '#options' => range(0, 31),
+    '#default_value' => 1,
+    '#required' => TRUE,
+    '#description' => t('Select the number of days to keep this link active'),
+  );
+  // Nid.
+  $form['nid'] = array(
+    '#type' => 'hidden',
+  );
+  // Submit.
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Create Expiring URL', //this comes in as the $form->op value
+  );
+  // ? John K special.
+  if (in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles) || $user->uid == 1) {
+    $form['ttl']['#options']['32'] = 'Infinite';
+  }
+  return $form;
+}
+
+/**
+ * Grabs the node by key.
+ *
+ * @param $key
+ * @return int
+ */
+function sbac_share_get_node_by_key($key) {
+  $return = array();
+  $now = time();
+  $query = "SELECT * FROM {sbac_share} WHERE `key` = :key AND expire_datetime > :time LIMIT 1";
+  $row = db_query($query, array(':key' => $key, ':time' => $now))->fetchAssoc();
+  if ($row) {
+    $return = $row;
+  }
+  return $return;
+}
+
+/**
+ * Gets the nid and retrieves a public url.
+ *
+ * @param $nid
+ * @return array
+ */
+function sbac_share_get_public_key($nid) {
+  $return = array();
+  $now = time();
+  $query = "SELECT * FROM {sbac_share} WHERE nid = :nid AND public = :public AND expire_datetime > :time LIMIT 1";
+  $row = db_query($query, array(':nid' => $nid, ':public' => 1, ':time' => $now))->fetchAssoc();
+  if ($row) {
+    $return = $row;
+  }
+  return $return;
+}
+
+/**
+ * @param $form
+ * @param $form_state
+ * @param $node
+ * @return string
+ */
+function sbac_share_resource_form($form, $form_state, $node) {
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'sbac_share') . '/js/sbac_share.js',
+    libraries_get_path('zeroclipboard') . '/ZeroClipboard.js',
+  );
+  $form['#attached']['css'] = array(
+    drupal_get_path('module','sbac_share').'/css/sbac_share.css',
+  );
+
+  // Sharing options header
+  $form['sharing_options'] = array(
+    '#type' => 'item',
+    '#markup' => '<h2>'.t('Sharing Options') . '</h2>',
+    '#prefix' => '<div class="form-item-title resource-sharing-options">',
+    '#suffix' => '</div>',
+  );
+
+  $title = 'Permanent Link <span class="sbac-private"> - Private</span><i class="general foundicon-lock"></i>';
+  if (isset($node->field_permanent_link_settings['und'][0]['value']) && $node->field_permanent_link_settings['und'][0]['value']) {
+    $title = 'Permanent Link <span class="sbac-public"> - Public</span><i class="general foundicon-people" "=""></i>';
+  }
+  $form['permanent_link_text'] = array(
+    '#type' => 'item',
+    '#markup' => t($title),
+    '#title' => t('Permanent Link'),
+    '#title_display' => 'invisible',
+    '#description' => t('Use the permanent link to share with people who have access to the Digital Library.'),
+    '#prefix' => '<div class="form-item-title sbac-permanent-link">',
+    '#suffix' => '</div>',
+  );
+
+  global $base_url;
+  $url = $base_url . '/' . $node->path['alias'];
+  if (isset($node->field_permanent_link_settings['und'][0]['value']) && $node->field_permanent_link_settings['und'][0]['value']) {
+    // If its public, grab the public key and put that in the box.
+    $key = sbac_share_get_public_key($node->nid);
+    if ($key && isset($key['key'])) {
+      $url = $base_url . '/sbac-share?key=' . $key['key'];
+    }
+  }
+  else {
+    $url = $base_url . '/' . $node->path['alias'];
+  }
+
+  $form['permanent_link'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $url,
+    '#attributes' => array('id' => 'sbac-permanent-link-text', 'class' => array('clippable'), 'readonly' => 'readonly'),
+    '#prefix' => '<label class="element-invisible" for="sbac-permanent-link-text">Permanent Link</label>',
+  );
+
+  $form['permanent_link_button'] = array(
+    '#markup' => '<div id="sbac-permanent-link-button" data-clipboard-text="' . $url . '" class="button medium" nid="' . $node->nid . '">Copy Link to Clipboard</div>',
+  );
+
+  // Temporary Link
+  $active = FALSE;
+  $title = 'Generate a temporary link to share with people outside the Digital Library.';
+  if (isset($node->field_temporary_public_link['und']['0']['value']) && $node->field_temporary_public_link['und']['0']['value']) {
+    $active = TRUE;
+    $time = $node->field_temporary_public_link_time['und']['0']['value']; // value is 1, 2, 3, 4, 5, 6, 7 to represent days.
+    switch ($time) {
+      case 1:
+        $time_text = 'one';
+        break;
+      case 2:
+        $time_text = 'two';
+        break;
+      case 3:
+        $time_text = 'three';
+        break;
+      case 4:
+        $time_text = 'four';
+        break;
+      case 5:
+        $time_text = 'five';
+        break;
+      case 6:
+        $time_text = 'six';
+        break;
+      case 7:
+        $time_text = 'seven';
+        break;
+      case 100: //developer case to speed up testing.
+        $time_text = '5 mins';
+        break;
+      default:
+        $time_text = 'one';
+        break;
+    }
+    $title .= ' It will expire in ' . $time_text. ' (' . $time . ') days.';
+  }
+
+  $class = 'inactive';
+  if ($active) {
+    $class = 'active';
+  }
+  $form['temporary-link-prefix'] = array(
+    '#markup' => '<div class="temporary-link-container ' . $class . '">',
+  );
+
+  $form['temporary_link_text'] = array(
+    '#type' => 'item',
+    '#title' => t('Temporary Public Link'),
+    '#title_display' => 'invisible',
+    '#markup' => '<h2>'.t('Temporary Public Link') . '</h2>',
+    '#description' => t($title),
+    '#prefix' => '<div class="form-item-title sbac-temporary-link">',
+    '#suffix' => '</div>',
+  );
+
+  $form['temporary_link'] = array(
+    '#type' => 'textfield',
+    '#default_value' => '',
+    '#attributes' => array('id' => 'sbac-temporary-link-text', 'readonly' => 'readonly'),
+    '#prefix' => '<label class="element-invisible" for="sbac-temporary-link-text">Temporary Public Link</label>',
+  );
+
+  $form['temporary_link_button'] = array(
+    '#markup' => '<a href="#" title="Generate Temporary Link" id="sbac-temp-link-button" class="button medium" nid="' . $node->nid . '">Generate Temporary Link</a>',
+  );
+
+  $form['temporary-link-suffix'] = array(
+    '#markup' => '</div>',
+  );
+
+  return $form;
+}
+
+/**
+ * Generate a random URL
+ */
+function sbac_share_random_url($crumb, $len = 16) {
+  $rand_string = sbac_share_random_string($len);
+  $randURL = $crumb . '/' . $rand_string;
+  return $randURL;
+}
+
+/**
+ * Generate a random username
+ */
+function sbac_share_rand_username($prefix, $len = 16) {
+  $rand_string = sbac_share_random_string($len);
+  $randName = $prefix . '_' . $rand_string;
+  return $randName;
+}
+
+/**
+ * Generate dummy email address
+ */
+function sbac_share_rand_email($domain, $len = 16) {
+  $rand_string = sbac_share_random_string($len);
+  $randEmail = $rand_string . '@' . $domain;
+  return $randEmail;
+}
+
+/**
+ * Generate a random string
+ */
+function sbac_share_random_string($len = 16) {
+  $length = $len;
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+  $string = '';
+  for ($p = 0; $p < $length; $p++) {
+    $string .= $characters[mt_rand(0, drupal_strlen($characters)-1)];
+  }
+  return $string;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Deletes guest users whose accounts are older than 2 hours.
+ */
+function sbac_share_cron() {
+  $delta_time = SBAC_SHARE_CRON; // 2 hours.
+  $result = db_query("SELECT * FROM {users} WHERE name LIKE 'guest%' ORDER BY created")->fetchAll();
+  foreach ($result as $row) {
+    if ($row->created + $delta_time < time()) {
+      user_delete($row->uid);
+    }
+  }
+}

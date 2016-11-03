@@ -1,0 +1,55 @@
+.featured-resource-wrapper{
+  clear:both;
+}
+a.featured-resource-url:hover{
+}
+
+.col-resource {
+  float: left;
+  width: 21.25rem;
+}
+
+.col-resource .featured-resource-image{
+  width: 340px;
+  height:180px;
+  outline:1px solid #999999;
+}
+
+.col-resource .featured-resource-image img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
+.col-resource lable{
+  margin-bottom: 0.3125rem;
+}
+.col-details{
+  width: 16.75rem;
+  margin-left: 1.875rem;
+  float:right;
+  @media (min-width: 1100px) {
+    width:22rem;
+  }
+}
+
+.featured-resource-image {
+  display:block;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+.featured-resource-title{
+  display:block;
+}
+
+.featured-resource-summary{
+  display:block;
+}
+
+.featured-resource-grades{
+  display:block;
+}
+
+.featured-resource-formative{
+  display:block;
+}

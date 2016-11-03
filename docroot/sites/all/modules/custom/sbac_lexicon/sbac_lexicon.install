@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Initializes vocab-specific settings
+ */
+function sbac_lexicon_update_7002() {
+  $vocab = db_query('SELECT * FROM {taxonomy_vocabulary} WHERE machine_name = :vocab', array(':vocab' => 'glossary_terms'))->fetchAssoc();
+
+  // Enable lexicon to use the right vocab
+  $vids = variable_get('lexicon_vids');
+  foreach($vids as $key => $vid) {
+    $vids[$key] = 0;
+  }
+  $vids[$vocab['vid']] = $vocab['vid'];
+  variable_set('lexicon_vids', $vids);
+
+  variable_set("lexicon_title_" . $vocab['vid'], 'Glossary');
+  variable_set("lexicon_path_" . $vocab['vid'], 'glossary');
+  variable_set("lexicon_introduction_" . $vocab['vid'], array('value' => '', 'format' => 'full_html'));
+}
+
+/**
+ * Implements of hook_update_N().
+ *
+ * Enables lexicon terms to be shown even if there is no description.
+ */
+function sbac_lexicon_update_7003() {
+  variable_set("lexicon_allow_no_description", 1);
+}
+
+function sbac_lexicon_uninstall(){
+  $vids = variable_get('lexicon_vids');
+  foreach($vids as $key => $vid) {
+    variable_del("lexicon_title_" . $key);
+    variable_del("lexicon_path_" .$key);
+    variable_del("lexicon_introduction_" . $key);
+    
+  }
+  variable_del('lexicon_vids');
+}

@@ -1,0 +1,1360 @@
+<?php
+
+/**
+ * @file.
+ * Module to handle all report functionality.
+ *
+ * Provides:
+ *  - Creates UI for reports (individual report, resource activity, user statistics)
+ *  - Handles creation and export of the CSV files
+ *  - Creates the SQL required for report generation
+ */
+
+define('SBAC_REPORT_TAB_INDIVIDUAL', 'individual');
+define('SBAC_REPORT_TAB_USER', 'user_activity');
+define('SBAC_REPORT_TAB_STATES', 'resource_states');
+define('SBAC_REPORT_TAB_FORUM', 'sbac_report_tab_forum');
+define('SBAC_REPORT_FILTER_ERROR', t('No data exists for the filters you have selected. Please choose a new combination of filters and attempt your export again.'));
+define('SBAC_REPORT_RESOURCE_DETAILS_PAGER', 'sbac_report_resource_details_pager');
+
+include_once('sbac_report.utils.inc');
+include_once('sbac_report.features.inc');
+include_once('sbac_report.individual.inc');
+include_once('sbac_report.user_activity.inc');
+include_once('sbac_report.resource_stats.inc');
+include_once('sbac_report.forum_stats.inc');
+include_once 'sbac_report.gk.inc';
+include_once 'sbac_report.rr.inc';
+include_once 'sbac_report.preprocess.inc';
+
+/**
+ * Implements hook_update_projects_alter().
+ *
+ * @param $projects
+ */
+function sbac_report_update_projects_alter(&$projects) {
+  unset($projects['sbac_report']);
+}
+
+/**
+ * Implements hook_menu().
+ */
+function sbac_report_menu() {
+  $items['reports'] = array(
+    'title' => 'Reports',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_report_individual',
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'main-menu',
+    'weight' => -10,
+  );
+
+  $items['reports/set_tab'] = array(
+    'title' => 'Set active tab',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_reports_set_tab_ajax',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['sne/autocomplete'] = array(
+    'title' => 'Autocomplete SNE Names',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_report_sne_autocomplete',
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['reports/info/%ctools_js/%node/%user'] = array(
+    'title' => 'Resource Report Information',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_report_ct_individual_modal_callback',
+    'page arguments' => array(2, 3, 4),
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['export_report_user_activity'] = array(
+    'title' => 'Export Report User Activity',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_csv_report_user_activity_export_form_submit',
+    'access callback' => 'sbac_csv_report_user_activity_export_form_submit',
+    'type' => MENU_CALLBACK
+  );
+
+  $items['export_report_resource_stats'] = array(
+    'title' => 'Export Report Detailed Resource Statistics',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+    'access callback' => 'sbac_csv_report_resource_stats_export_form_submit',
+    'type' => MENU_CALLBACK
+  );
+
+  $items['reports/gk-report'] = array(
+    'title' => 'GK Report',
+    'file' => 'sbac_report.gk.inc',
+    'page callback' => 'sbac_report_gk_report',
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['reports/rr-report'] = array(
+    'title' => 'RR Report',
+    'file' => 'sbac_report.rr.inc',
+    'page callback' => 'sbac_report_rr_report',
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['reports/pmr-report'] = array(
+    'title' => 'PMR Report',
+    'file' => 'sbac_report.pmr.inc',
+    'page callback' => 'sbac_report_pmr_report',
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['reports/missing-files-report'] = array(
+    'title' => 'Missing Files Report',
+    'file' => 'sbac_report.mf.inc',
+    'page callback' => 'sbac_report_mf_report',
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * User access callback for the /report page.
+ */
+function sbac_report_user_access() {
+  global $user;
+
+  // SLT users are allowed to access the page, but only the individual reports tab
+  $account = user_load($user->uid);
+  $account->entity_type = 'user';
+  $account->entity_id = $account->uid;
+  $slt = field_entity_value($account, 'field_slt_member');
+  $sne = field_entity_value($account, 'field_sne_member');
+  if ($slt || $sne) {
+    return TRUE;
+  }
+
+  $allowed_roles = array(
+    'resource contributor',
+    'resource reviewer',
+    'resource publisher',
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+    'DLRB member',
+    'reports administrator',
+  );
+
+  if (array_intersect($user->roles, $allowed_roles)) {
+    return TRUE;
+  }
+
+  return sbac_report_user_access_all($account);
+}
+
+/**
+ * User access callback for the tabs on the /report page.
+ *
+ * @param $account
+ *
+ * @return bool
+ */
+function sbac_report_user_access_all($account = NULL) {
+  if (is_null($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  $allowed_roles = array(
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+    'DLRB member',
+    'reports administrator',
+  );
+
+  return (bool) array_intersect($account->roles, $allowed_roles);
+}
+
+/**
+ * Checks to see if the current user is allowed to search for other users
+ * @return bool
+ */
+function sbac_report_select_other_users($account) {
+  if (is_null($account)) {
+    global $user;
+    $account = user_load($user);
+  }
+
+  $allowed_roles = array(
+    'resource publisher',
+    'administrator',
+    'digital library administrator',
+    'system administrator',
+    'DLRB member',
+    'reports administrator'
+  );
+
+  return array_intersect($account->roles, $allowed_roles);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function sbac_report_theme($existing, $type, $theme, $path) {
+  $themes = array();
+  $module_path = drupal_get_path('module', 'sbac_report');
+
+  $themes['sbac_report_individual'] = array(
+    'template' => 'templates/sbac-report-individual',
+    'path' => $module_path,
+    'file' => 'sbac_report.preprocess.inc',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'sbac_report_preprocess_sbac_report_individual',
+    ),
+  );
+
+  $themes['sbac_report_output_sne'] = array(
+    'template' => 'templates/sbac-report-output-sne',
+    'path' => $module_path,
+    'variables' => array(
+      'user_output' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_resource_summary'] = array(
+    'template' => 'templates/sbac-report-resource-summary',
+    'path' => $module_path,
+    'variables' => array(
+      'rows' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_posted_resource_stats'] = array(
+    'template' => 'templates/sbac-report-user-posted-resources-stats',
+    'path' => $module_path,
+    'variables' => array(
+      'rows' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_resource_details'] = array(
+    'template' => 'templates/sbac-report-resource-details',
+    'path' => $module_path,
+    'variables' => array(
+      'rows' => NULL,
+      'form' => NULL,
+      'data' => NULL,
+    ),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_csv_report_user_activity'] = array(
+      'template' => 'templates/sbac-csv-report-user-activity',
+      'path' => $module_path,
+      'preprocess functions' => array(
+          'template_preprocess',
+      ),
+  );
+
+  $themes['sbac_csv_report_resource_stats'] = array(
+    'template' => 'templates/sbac-csv-report-resource-stats',
+    'path' => $module_path,
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_csv_report_forum_stats'] = array(
+    'template' => 'templates/sbac-csv-report-forum-stats',
+    'path' => $module_path,
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_date_range_dropdown'] = array(
+    'template' => 'templates/sbac-report-date-range-dropdown',
+    'path' => $module_path,
+    'arguments' => array('which'=>'','date_display' => NULL, 'ago_30' => NULL, 'ago_60' => NULL, 'ago_90' => NULL), //default values
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_user_group_dropdown'] = array(
+    'template' => 'templates/sbac-report-user-group-dropdown',
+    'path' => $module_path,
+    'arguments' => sbac_report_user_group_options(),
+    'attributes' => array ('class' => array('chzn-widget')),
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['views_view_fields__sne_details'] = array(
+    'template' => 'views-view-fields--sne-details',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'orginal hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+    ),
+  );
+
+  // Take care of the pager and "items per page".
+  $themes['views_view__contributed_resources'] = array(
+    'template' => 'views-view--contributed-resources',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL),
+    'orginal hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+    ),
+  );
+
+  // Resource Details
+  $themes['views_view_table__contributed_resources__resources_details'] = array(
+    'template' => 'views-view-table--contributed-resources--resources-details',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'orginal hook' => 'views_view_table',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_table',
+    ),
+  );
+
+  $themes['views_view_table__contributed_resources__resources_summary'] = array(
+    'template' => 'views-view-table--contributed-resources--resources-summary',
+    'path' => $module_path . '/templates/views',
+    'arguments' => array('view' => NULL, 'options' => NULL, 'row' => NULL),
+    'orginal hook' => 'views_view_table',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_table',
+    ),
+  );
+
+  return $themes;
+}
+
+/**
+ * Build the date range dropdown for the filter form.
+ *
+ * @param array $form
+ *   The form array passed by reference.
+ * @param string $default_date_range
+ *   The default value for the date range field in format Ymd--Ymd.
+ * @param string $date_display
+ *   The date display on the dropdown top level.
+ * @param array $date_options
+ *   An associative array of default date options.
+ */
+function sbac_report_build_date_range_dropdown(&$form, $default_date_range, $date_display, $date_options, $which) {
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_report') . '/js/sbac_report.date_dropdown.js';
+
+  // Hidden, used to pass the value through submit handler.
+  // Value is set when the user selects an item in the dropdown.
+  // @see sbac_report.js
+  $form["date_range$which"] = array(
+    '#type' => 'hidden',
+    '#title' => t('Choose a time period'),
+    '#default_value' => $default_date_range,
+    '#attributes' => array(
+      'id' => "date-range-field$which",
+    ),
+  );
+
+  if ($which) {
+    $form["date_range_dropdown$which"] = array(
+      '#type' => 'markup',
+      '#markup' => theme("sbac_report_date_range_dropdown",
+        array(
+          'which' => $which,
+          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+          'cumulative' => $date_options['Cumulative to date'],
+          'ago_30' => $date_options['Last 30 Days'],
+          'ago_60' => $date_options['Last 60 Days'],
+          'ago_90' => $date_options['Last 90 Days'],
+        )
+      )
+    );
+  }
+  else {
+    $form["date_range_dropdown"] = array(
+      '#type' => 'markup',
+      '#markup' => theme("sbac_report_date_range_dropdown",
+        array(
+          'which' => $which,
+          'date_display' => $date_display ? $date_display : t('Last 30 Days'),
+          'cumulative' => $date_options['Cumulative to date'],
+          'ago_30' => $date_options['Last 30 Days'],
+          'ago_60' => $date_options['Last 60 Days'],
+          'ago_90' => $date_options['Last 90 Days'],
+        )
+      )
+    );
+  }
+
+  $form["from_date$which"] = array(
+    '#id' => "from-date$which",
+    '#title' => t('From'),
+    '#type' => 'date_popup',
+    '#date_type' => DATE_DATETIME,
+    '#date_format' => 'm/d/Y',
+    '#date_increment' => 1,
+    '#date_year_range' => '-3:+3',
+    '#datepicker_options' => array(),
+  );
+
+  $form["to_date$which"] = array(
+    '#id' => "to-date$which",
+    '#title' => t('To'),
+    '#type' => 'date_popup',
+    '#date_type' => DATE_DATETIME,
+    '#date_format' => 'm/d/Y',
+    '#date_increment' => 1,
+    '#date_year_range' => '-3:+3',
+    '#datepicker_options' => array(),
+    //'#suffix' => '</div></div>', // Closing tags for the dropdown template.
+    '#suffix' => '</fieldset></fieldset>',
+  );
+}
+
+/**
+ * Options for the state field.
+ */
+function sbac_report_state_options() {
+  global $user;
+  $roles = $user->roles;
+  $options = array();
+
+  $first_only =  FALSE;
+
+  // Admin user can select between state.
+  if ($user->uid == 1 ||
+    in_array('DLRB member', $roles) ||
+    in_array('digital library administrator', $roles) ||
+    in_array('system administrator', $roles) ||
+    in_array('administrator', $roles)) {
+
+    $options['all'] = t('All');
+    // Return if we only want the first one.
+    if (isset($first_only) && $first_only) {
+      return $options;
+    }
+
+    $states = taxonomy_vocabulary_machine_name_load("states");
+    $vid = $states->vid;
+    $terms = taxonomy_get_tree($vid);
+    foreach ($terms as $key => $val) {
+      $options[$val->tid] = $val->name;
+    }
+  }
+  // SLT user can only select their own states.
+  else {
+    $result = db_select('field_data_field_state', 'fs')
+      ->fields('fs', array('field_state_tid'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $user->uid)
+      ->orderBy('field_state_tid')
+      ->execute();
+    foreach ($result as $record) {
+      $tid = $record->field_state_tid;
+      $state_term = taxonomy_term_load($tid);
+      $state = $state_term->name;
+      $options[$tid] = $state;
+      // Return if we only want the first one.
+      if ($first_only) {
+        return $options;
+      }
+    }
+  }
+
+  return $options;
+}
+
+/**
+ *  Get default state.
+ */
+function sbac_report_get_default_state_tid() {
+  $state_tid = sbac_report_get_session_value('state', 'tid');
+  if (empty($state_tid)) {
+    $state = sbac_report_state_options();
+    $state_tid = key($state);
+  }
+  return $state_tid;
+}
+/**
+ *  Get the default user group, either the values in the session, or 'all'.
+ */
+function sbac_report_get_default_usergroup() {
+  $usergroups = sbac_report_get_session_value('usergroups', 'user_ids');
+
+  if (empty($usergroups)) {
+    return array('0'); // 0 is 'all', 1 is 'admins'
+  }
+  return $usergroups;
+}
+
+/**
+ * Check if the user is an SLT.
+ *
+ * @param object $account
+ *   User object.
+ *
+ * @return bool
+ *   True if an SLT. False otherwise.
+ */
+function sbac_report_is_slt($account) {
+  // First check if the user has resource publisher role.
+  if (in_array('resource publisher', $account->roles)) {
+    $result = db_select('field_data_field_slt_member', 'slt')
+      ->fields('slt', array('field_slt_member_value'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $account->uid)
+      ->condition('field_slt_member_value', '1')
+      ->execute();
+    return $result->rowCount();
+  }
+  return FALSE;
+}
+
+/**
+ * Check if the user is an SNE.
+ *
+ * @param object $account
+ *   User object.
+ *
+ * @return bool
+ *   True if an SNE. False otherwise.
+ */
+function sbac_report_is_sne($account) {
+  // First check if the user has resource contributor role.
+  if (in_array('resource contributor', $account->roles)) {
+    $result = db_select('field_data_field_sne_member', 'sne')
+      ->fields('sne', array('field_sne_member_value'))
+      ->condition('entity_type', 'user')
+      ->condition('entity_id', $account->uid)
+      ->condition('field_sne_member_value', '1')
+      ->execute();
+    $count = $result->rowCount();
+    return $result->rowCount();
+  }
+  return FALSE;
+}
+
+/**
+ * Options for the date range field.
+ */
+function sbac_report_date_range_options() {
+  $today = format_date(REQUEST_TIME, 'custom', 'Ymd');
+  $beginning = format_date(0, 'custom', 'Ymd');
+  $ago_30 = format_date(strtotime('30 days ago'), 'custom', 'Ymd');
+  $ago_60 = format_date(strtotime('60 days ago'), 'custom', 'Ymd');
+  $ago_90 = format_date(strtotime('90 days ago'), 'custom', 'Ymd');
+  $options = array(
+    'Cumulative to date' => $beginning . '--' . $today,
+    'Last 30 Days' => $ago_30 . '--' . $today,
+    'Last 60 Days' => $ago_60 . '--' . $today,
+    'Last 90 Days' => $ago_90 . '--' . $today,
+  );
+
+  return $options;
+}
+
+
+/**
+ * Get the admin user groups.
+ */
+function sbac_report_user_group_admins() {
+  $options = get_user_groups();
+
+  $admin_aggregates = array();
+  // admins aggregated:
+//  $key = array_search('DLRB member',$options);
+//  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('system administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+  $key = array_search('digital library administrator',$options);
+  $admin_aggregates[$key] = $options[$key];
+
+  return $admin_aggregates;
+}
+
+/**
+ * Options for the sne/slt dropdown.
+ */
+function sbac_report_sne_slt_options() {
+  $options = array(
+    'Neither SNE nor SLT',
+    'SNE members only',
+    'SLT members only',
+    'Combination SLT/SNE members',
+    );
+  return $options;
+}
+/*
+ * Default options for the SNE/SLT dropdown.  The default is what's in the session, or 0 which is the niether option.
+ */
+function sbac_report_get_default_sne_slt() {
+
+  $snesltfilter = sbac_report_get_session_value('sne-slt-filter', 'filter');
+
+  if (empty($snesltfilter)) {
+    return array('0'); // 0 is niether
+  }
+  return $snesltfilter;
+}
+
+/**
+ * Options for the user groups.  Note, three admin roles are aggregated as 'admins' for option 1.
+ * 'All' is option 0.  The rest are retrireved from the database, but 4 users are filtered out of the query.
+ */
+function sbac_report_user_group_options() {
+  $options = get_user_groups();
+
+  // filter out unwanted values from the database query.
+  // remove drupalisms:
+  unset($options[array_search('anonymous user',$options)]);
+  unset($options[array_search('authenticated user',$options)]);
+
+  // remove unused, but included in all:
+  unset($options[array_search('on-boarding',$options)]);
+  unset($options[array_search('help desk',$options)]);
+
+  // admins aggregated:
+  $key = array_search('administrator',$options);
+  unset($options[$key]);
+  $key = array_search('system administrator',$options);
+  unset($options[$key]);
+  $key = array_search('digital library administrator',$options);
+  unset($options[$key]);
+
+  // add back a selector for the 4 admins as an aggregate:
+  $options[1] = 'admins';
+
+  return $options;
+}
+
+/**
+ * Get the stored SESSION values.
+ * @see submit handler.
+ *
+ * @param string $field
+ *   The field name: state, date_range, sne.
+ * @param string $key
+ *   The type of the value to be returned.
+ *   e.g: for state field: "tid", "name".
+ *        for date field: "range".
+ *        for SNE field: "uid".
+ *
+ * @return string|int|array|NULL
+ *   The value stored in SESSION.
+ */
+function sbac_report_get_session_value($field, $key) {
+  if (isset($_SESSION['sbac_report'][$field][$key]) && !empty($_SESSION['sbac_report'][$field][$key])) {
+    $value = $_SESSION['sbac_report'][$field][$key];
+    // If the stored date range is invalid, unset everything to prevent further error.
+    if ($field == 'date_range' && !sbac_report_validate_date_range($value)) {
+      unset($_SESSION['sbac_report']);
+      $value = NULL;
+    }
+
+    if (is_array($value)) {
+      return $value;
+    }
+    return check_plain($value);
+  }
+
+  return NULL;
+}
+
+/**
+ * Ajax callback for the State field.
+ * Store the selected state in SESSION
+ * so the autocomplete for SNE text field is filtered based on the state.
+ */
+function sbac_report_state_ajax($form, &$form_state) {
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
+
+  if (isset($form_state['values']['state'])) {
+    $state_tid = $form_state['values']['state'];
+    $_SESSION['sbac_report']['state']['tid'] = $state_tid;
+    if (!is_numeric($state_tid) && $state_tid == 'all') {
+      $_SESSION['sbac_report']['state']['name'] = 'all';
+    }
+    else {
+      $state_options = $form['state']['#options'];
+      $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
+    }
+  }
+  return $form;
+}
+
+/**
+ * Validate the date range string used for Views Contextual Range filter.
+ */
+function sbac_report_validate_date_range($str) {
+  if (!preg_match("/^\d{4}\d{2}\d{2}--\d{4}\d{2}\d{2}$/", $str)) {
+    return FALSE;
+  }
+  // If the regex check passed, check again by creating a DateTime object.
+  else {
+    $date_range = contextual_range_filter_split($str);
+    $from_date = DateTime::createFromFormat("Ymd", $date_range[0]);
+    $to_date = DateTime::createFromFormat("Ymd", $date_range[1]);
+    return is_object($from_date) && is_object($to_date);
+  }
+}
+
+/**
+ * Format the date range 'Ymd--Ymd' to 'm/d/Y to m/d/Y'.
+ */
+function sbac_report_format_date_range($str) {
+  $date_range = contextual_range_filter_split($str);
+  $from_date = DateTime::createFromFormat("Ymd", $date_range[0]);
+  $to_date = DateTime::createFromFormat("Ymd", $date_range[1]);
+
+  if (is_object($from_date) && is_object($to_date)) {
+    $from_date_format = $from_date->format("m/d/Y");
+    $to_date_format = $to_date->format("m/d/Y");
+    return t($from_date_format . ' to ' . $to_date_format);
+  }
+  else {
+    return '';
+  }
+}
+
+/**
+ * Custom embed view. Return NULL if no result.
+ */
+function sbac_report_embed_view($name, $display_id = 'default') {
+  $args = func_get_args();
+  array_shift($args); // remove $name.
+  if (count($args)) {
+    array_shift($args); // remove $display_id.
+  }
+
+  $view = views_get_view($name);
+  if (is_object($view)) {
+    if (is_array($args)) {
+      $view->set_arguments($args);
+    }
+    $preview = $view->preview($display_id);
+    if (!empty($view->result)) {
+      return $preview;
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Fix the broken contextual filter for eck "created" date field.
+ * Current ECK version: 7.x-2.0-rc2
+ *
+ * TODO: !! need to sync the feedback entity's date record with the resource's submission date
+ * (i.e: the "created" timestamp, @see sbac_report_workbench_moderation_transition),
+ * since the submission date should always be the base for the date range filter.
+ */
+function sbac_report_views_query_alter(&$view, &$query) {
+  if ($view->name == 'gate_keeping_reviews') {
+    foreach ($query->where as &$condition_group) {
+      foreach ($condition_group['conditions'] as &$condition) {
+        if ($condition['operator'] == 'formula' && strpos($condition['field'], 'eck_feedback. SECOND') !== FALSE) {
+          $condition['field'] = str_replace('eck_feedback. SECOND', 'eck_feedback.created SECOND', $condition['field']);
+          break 2;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter.
+ */
+function sbac_report_form_views_exposed_form_alter(&$form, &$form_state) {
+  switch ($form['#id']) {
+    case 'views-exposed-form-contributed-resources-resources-details':
+      if (isset($form['items_per_page'])) {
+        foreach ($form['items_per_page']['#options'] as $key => $val) {
+          if (is_numeric($key)) {
+            $form['items_per_page']['#options'][$key] = t('Up to !num', array('!num' => $val));
+          }
+        }
+      }
+      break;
+  }
+}
+
+
+/**
+ * Calculate the Gate Keeping reviews rate.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @param array
+ *   An associative array of the reviews rate.
+ */
+function sbac_report_gate_keeping_reviews_rate($uid, $date_range) {
+  $rate = array(
+    'total' => 0,
+    'acceptance' => 0,
+    'return' => 0,
+  );
+
+  $result = views_get_view_result('gate_keeping_reviews', 'gk_reviews', $uid, $date_range);
+  if (!empty($result)) {
+    $rate['total'] = $result[0]->id ? $result[0]->id : 0;
+    $rate['acceptance'] = $result[0]->eck_feedback_met_criteria ? $result[0]->eck_feedback_met_criteria : 0;
+    $rate['return'] = $rate['total'] - $rate['acceptance'];
+  }
+  return $rate;
+}
+
+/**
+ * Returns the accepted gate keeper results for the given user and data range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_ind_accepted_gate_keeper($uid, $date_range) {
+  $accepted_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 1
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':met_criteria' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $accepted_gk[] = $row;
+  }
+  return $accepted_gk;
+}
+
+/**
+ * Returns the returned gate keeper results for the given user and data range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_ind_returned_gate_keeper($uid, $date_range) {
+  $returned_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 0
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':met_criteria' => 0, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $returned_gk[] = $row;
+  }
+  return $returned_gk;
+}
+
+/**
+ * Returns the accepted gate keeper results for all users and the data range.
+ *
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_all_accepted_gate_keeper($date_range) {
+  $accepted_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 1
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':status' => 1, ':completed' => 1, ':met_criteria' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $accepted_gk[] = $row;
+  }
+  return $accepted_gk;
+}
+
+/**
+ * Returns the returned gate keeper results for all users and the data range.
+ *
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ *   An associative array of the gate keeper reviews.
+ */
+function sbac_report_get_all_returned_gate_keeper($date_range) {
+  $returned_gk = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
+    completed = :completed AND
+    met_criteria = :met_criteria AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // so an accepted GK is status 1, completed 1, met_criteria 0
+  $result = db_query($sql, array(':type' => 'gate_keeper', ':status' => 1, ':completed' => 1, ':met_criteria' => 0, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $returned_gk[] = $row;
+  }
+  return $returned_gk;
+}
+
+/**
+ * Gets all the reviews in the "in review" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+function sbac_report_get_in_reviews($uid, $date_range) {
+  $in_review = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    (status = :status) AND
+    completed = :completed AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // anything with status = 1 and completed = 0 is an active, on-going review
+  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 0, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $in_review[] = $row;
+  }
+
+  return $in_review;
+}
+
+/**
+ * Gets all the reviews in the "completed" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+function sbac_report_get_completed_reviews($uid, $date_range) {
+  $completed = array();
+
+  $sql = <<<SQL
+
+  SELECT
+    id,
+    uid,
+    node_id
+  FROM {eck_feedback}
+  WHERE
+    type = :type AND
+    uid = :uid AND
+    ((status = :status) OR (status = 0 AND archived = 1)) AND
+    completed = :completed AND
+    DATE_FORMAT((DATE_ADD('19700101', INTERVAL created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // anything with status = 1 and completed = 1 is completed.
+  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
+}
+
+/**
+ * Gets all the reviews in the "completed" state given the UID and date range.
+ *
+ * @param int $uid
+ *   User ID or 'all' for all SNEs.
+ * @param string $date_range
+ *   The date range in format 'Ymd--Ymd'.
+ *
+ * @return array
+ */
+function sbac_report_get_current_completed_reviews($uid, $date_range) {
+  $completed = array();
+
+  $sql = <<<SQL
+
+SELECT
+  f.id,
+  f.uid,
+  f.node_id
+FROM {eck_feedback} f
+  LEFT JOIN {workbench_moderation_node_history} h
+    ON f.node_id = h.nid
+WHERE
+  type = :type
+  AND f.uid = :uid
+  AND f.status = :status
+  AND f.completed = :completed
+  AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
+  AND h.current = 1
+  AND h.state IN ('published', 'rejected')
+
+SQL;
+
+  $dates = explode('--', $date_range);
+  $from_date = $dates[0];
+  $to_date = $dates[1];
+
+  // anything with status = 1 and completed = 1 is completed.
+  $result = db_query($sql, array(':type' => 'qc', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  foreach ($result as $row) {
+    $completed[] = $row;
+  }
+
+  return $completed;
+}
+
+/**
+ *
+ *
+ * @param $reviews
+ *
+ * @return array
+ */
+function sbac_report_get_average_consistency_rate_acr($uid, $reviews) {
+  $consistency_rates = array();
+  foreach($reviews as $review) {
+    $consistency_rates[] = sbac_report_get_posting_consistency_rate($uid, $review);
+  }
+
+  $rate = 0;
+  foreach ($consistency_rates as $consistency_rate) {
+    $rate += $consistency_rate;
+  }
+
+  if ($consistency_rates && count($consistency_rates) != 0) {
+    $average_consistency_rate = abs($rate / count($consistency_rates));
+    return $average_consistency_rate;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
+ *
+ * @param $reviews
+ *
+ * @return string
+ */
+function sbac_report_get_posting_consistency_rate($uid, $review = NULL) {
+  $consistency_rate = NULL;
+  if ($review == NULL) {
+    return $consistency_rate;
+  }
+
+
+  // Get the Reviewer's A, B and C options to determine rate.
+  // Ordering of the result set is the order of the reviews.
+  // First record changed = Reviewer A etc.
+  $sql = <<<SQL
+
+    SELECT *
+    FROM eck_feedback
+      AS f
+    JOIN field_data_field_rec_options
+      AS o
+    ON f.id = o.entity_id
+    WHERE f.node_id = :nid
+      AND f.type = :type
+      AND f.status = :feedback_status
+      AND f.completed = :feedback_completed
+      AND o.deleted = :deleted
+    ORDER BY f.changed
+
+SQL;
+
+  //  Values as stored in DB are:
+  //  0|Do not recommend
+  //  1|Recommend with Revisions
+  //  2|Recommend
+  //  3|Recommend with Distinction
+  $review_data = db_query($sql, array(':nid' => $review->node_id, ':type' => 'qc', ':feedback_status' => 1, ':feedback_completed' => 1, ':deleted' => 0))->fetchAll();
+  if ($review_data) {
+    $reviewer_alpha = array(0 => 'Reviewer A', 1 => 'Reviewer B', 2 => 'Reviewer C');
+    $math_value = 1; $count = 1;
+    $math_elements = array();
+    foreach ($review_data as $review) {
+      switch ($review->field_rec_options_value) {
+        case '0':
+          $math_value = 1;
+          break;
+        case '1':
+          $math_value = 2;
+          break;
+        case '2':
+          $math_value = 3;
+          break;
+        case '3':
+          $math_value = 4;
+          break;
+      }
+
+      if ($uid == $review->uid) {
+        $math_elements[$reviewer_alpha[0]] = $math_value;
+      }
+      else {
+        $math_elements[$reviewer_alpha[$count]] = $math_value;
+        $count++;
+      }
+    }
+
+    if ($math_elements) {
+      $consistency_rate = abs(1 - (abs($math_elements['Reviewer A'] - $math_elements['Reviewer B']) + abs($math_elements['Reviewer A'] - $math_elements['Reviewer C'])) / 6);
+    }
+  }
+
+  return $consistency_rate;
+}
+
+/**
+ * Implements hook_workbench_moderation_transition().
+ */
+function sbac_report_workbench_moderation_transition($node, $previous_state, $new_state) {
+  // Update "created" timestamp when resource is submitted for review.
+  // This is to help the views display the contributed time correctly as well as filtering on the right the date range.
+  if ($new_state == 'needs_review') {
+    db_update('node')
+      ->fields(array('created' => REQUEST_TIME))
+      ->condition('nid', $node->nid)
+      ->execute();
+  }
+}
+
+/**
+ * Preprocess for views_view_field.
+ */
+function sbac_report_preprocess_views_view_field(&$vars) {
+  // Output for number of "contributed resources posted" using SUM(workbench_moderation_node_history_published) in view is incorrect.
+  // (it's always either 1 or 0 even after setting the format to boolean).
+  // Current workbench_moderation version: 7.x-1.3
+  if ($vars['view']->current_display == 'resources_summary' && $vars['field']->field_alias == 'workbench_moderation_node_history_published') {
+    $vars['output'] = $vars['row']->workbench_moderation_node_history_published;
+  }
+  // Alter the output for the Resource state
+  // e.g: "Needs Review" to "Submitted",
+  //      "Being Reviewed" to "In Review",
+  //      "Published" to "Posted" or "Posted with Distinction".
+  elseif ($vars['view']->current_display == 'resources_details') {
+    if ($vars['field']->field_alias == 'workbench_moderation_node_history_state') {
+      $state = $vars['row']->workbench_moderation_node_history_state;
+      if ($state == 'needs_review') {
+        $vars['output'] = t('Submitted');
+      }
+      elseif ($state == 'being_reviewed') {
+        $vars['output'] = t('In Review');
+      }
+      elseif ($state == 'published') {
+        $vars['output'] = t('Posted');
+        if ($vars['row']->node_sticky == 1) {
+          $vars['output'] = t('Posted with Distinction');
+        }
+      }
+    }
+    elseif ($vars['field']->field_alias == 'node_title') {
+      $vars['output'] = truncate($vars['output'], 55, array('check_markup' => FALSE));
+    }
+  }
+  elseif ($vars['view']->current_display == 'resources_activity_report') {
+
+  }
+}
+/**
+ *  Get user groups from the role table, add 'all' option to the list.
+ */
+function get_user_groups() {
+  $sql = <<<SQL
+    SELECT *
+    FROM role
+    ORDER BY weight
+SQL;
+  $result = db_query($sql,
+    array(
+      '',
+    )
+  );
+
+  $values = array();
+  $values[0] = 'all';
+  foreach ($result as $record) {
+    $values[$record->rid] = $record->name;
+  }
+  return $values;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Load files found in these directories. If older then two days, delete them.
+ */
+function sbac_report_cron() {
+  $reports = array('resource_stats_csv', 'user_activity_stats_csv', 'forum_stats_csv');
+  foreach ($reports as $uri) {
+    $query = db_select('file_managed', 'f');
+    $query->fields('f');
+    $query->condition('f.uri', '%' . db_like($uri) . '%', 'LIKE');
+    $query->range(0, 10);
+    $result = $query->execute();
+    $two_days_ago = strtotime('-2 days');
+    foreach ($result as $file) {
+      if ($file->timestamp < $two_days_ago) {
+        $file_obj = file_load($file->fid);
+        file_delete($file_obj);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_file_download
+ */
+function sbac_report_file_download($uri) {
+  global $user;
+// Only provide access to report URL's if you had perms to run the report
+  // in the first place.
+  $report_urls = array('user_activity_stats_csv', 'forum_stats_csv', 'resource_stats_csv');
+  foreach ($report_urls as $url) {
+    if (strpos($uri, $url) !== FALSE) {
+      if (!sbac_report_user_access_all($user)) {
+        drupal_set_message(t("You do not have access to that URL"));
+        return -1;
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+diff --git a/STARTER/templates/page.tpl.php b/STARTER/templates/page.tpl.php
+index 3731996..ef0b4db 100644
+--- a/STARTER/templates/page.tpl.php
++++ b/STARTER/templates/page.tpl.php
+@@ -2,7 +2,7 @@
+ <nav class="top-bar">
+   <ul class="title-area">
+     <li class="name"><h1><?php print $linked_site_name; ?></h1></li>
+-    <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
++    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+   </ul>
+   <section class="top-bar-section">
+     <?php if ($main_menu_links) :?>
+diff --git a/inc/form.inc b/inc/form.inc
+index 6df2a0f..1961d42 100644
+--- a/inc/form.inc
++++ b/inc/form.inc
+@@ -30,9 +30,8 @@ function zurb_foundation_form_element_label($vars) {
+   if (!empty($vars['element']['#title'])) {
+     $vars['element']['#title'] = '<label>' . $vars['element']['#title'] . '</label>';
+   }
+-  if (!empty($vars['element']['#description'])) {
+-    $vars['element']['#description'] = ' <span class="has-tip tip-top radius" data-width="250" title="' . $vars['element']['#description'] . '">' . t('More information?') . '</span>';
+-  }
++  $vars['element']['#description'] = "";
++  
+   return theme_form_element_label($vars);
+ }
+ 
+@@ -52,7 +51,7 @@ function zurb_foundation_button($vars) {
+   // Prepare input whitelist - added to ensure ajax functions don't break
+   $whitelist = _zurb_foundation_element_whitelist();
+ 
+-  if (in_array($element['#id'], $whitelist)) {
++  if (isset($element['#id']) && in_array($element['#id'], $whitelist)) {
+     return '<input' . drupal_attributes($element['#attributes']) . ">\n"; // This line break adds inherent margin between multiple buttons
+   }
+   else {
+diff --git a/sass/_settings.scss b/sass/_settings.scss
+index 9883f79..87828c7 100644
+--- a/sass/_settings.scss
++++ b/sass/_settings.scss
+@@ -30,6 +30,6 @@
+ //============================
+ // Default SCSS Variables
+ //============================
+-$row-width:     62.5em !default;
++$row-width:     emCalc(930px);
+ $column-gutter: 1.875em !default;
+ $total-columns: 12 !default;
+diff --git a/template.php b/template.php
+index 05b3ef7..31ad63e 100644
+--- a/template.php
++++ b/template.php
+@@ -11,10 +11,10 @@ $files = array(
+ );
+ 
+ // Zepto Fallback
+-drupal_add_js('document.write(\'<script src=/' . drupal_get_path('theme', 'zurb_foundation') .'/js/vendor/\'
+-      + (\'__proto__\' in {} ? \'zepto\' : \'jquery\')
+-      + \'.js><\/script>\');',
+-      'inline', array('group',JS_LIBRARY));
++// drupal_add_js('document.write(\'<script src=/' . drupal_get_path('theme', 'zurb_foundation') .'/js/vendor/\'
++//       + (\'__proto__\' in {} ? \'zepto\' : \'jquery\')
++//       + \'.js><\/script>\');',
++//       'inline', array('group',JS_LIBRARY));
+ 
+ function _zurb_foundation_load($files) {
+   $tp = drupal_get_path('theme', 'zurb_foundation');
+@@ -73,7 +73,7 @@ function zurb_foundation_html_head_alter(&$head_elements) {
+ 
+ /**
+  * Implements theme_breadrumb().
+- *
++ * 
+  * Print breadcrumbs as a list, with separators.
+  */
+ function zurb_foundation_breadcrumb($vars) {
+@@ -581,7 +581,7 @@ function zurb_foundation_js_alter(&$js) {
+     $js['misc/jquery.js']['version'] = '1.9.1';
+   }
+   // @TODO moving scripts to footer possibly remove?
+-  foreach ($js as $key => $js_script) {
+-    $js[$key]['scope'] = 'footer';
+-  }
++  // foreach ($js as $key => $js_script) {
++    // $js[$key]['scope'] = 'footer';
++  // }
+ }
+diff --git a/templates/page.tpl.php b/templates/page.tpl.php
+index dd51dcd..9a3cd6d 100644
+--- a/templates/page.tpl.php
++++ b/templates/page.tpl.php
+@@ -2,7 +2,7 @@
+ <nav class="top-bar">
+   <ul class="title-area">
+     <li class="name"><h1><?php print $linked_site_name; ?></h1></li>
+-    <li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></li>
++    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+   </ul>
+   <section class="top-bar-section">
+     <?php if ($main_menu_links) :?>
+diff --git a/zurb_foundation.info b/zurb_foundation.info
+index d559f79..dcd711a 100644
+--- a/zurb_foundation.info
++++ b/zurb_foundation.info
+@@ -42,7 +42,7 @@ scripts[] = js/foundation/foundation.clearing.js
+ scripts[] = js/foundation/foundation.cookie.js
+ scripts[] = js/foundation/foundation.dropdown.js
+ scripts[] = js/foundation/foundation.forms.js
+-scripts[] = js/foundation/foundation.joyride.js
++; scripts[] = js/foundation/foundation.joyride.js
+ scripts[] = js/foundation/foundation.magellan.js
+ scripts[] = js/foundation/foundation.orbit.js
+ scripts[] = js/foundation/foundation.placeholder.js

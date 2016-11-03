@@ -1,0 +1,13 @@
+diff --git a/morecomments.pages.inc b/morecomments.pages.inc
+index 13820b2..1a4e106 100644
+--- a/morecomments.pages.inc
++++ b/morecomments.pages.inc
+@@ -54,7 +54,7 @@ function morecomments_comment_render($nid, $page) {
+     }
+     else {
+       $query->addExpression('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'torder');
+-      $query->orderBy('torder', 'ASC');
++      $query->orderBy('torder', $order_direction);
+     }
+ 
+     $cids = $query->execute()->fetchCol();

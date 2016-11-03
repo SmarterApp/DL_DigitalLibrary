@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Lexicon Taxonomy - Forum Flags feature.
+ */
+
+include_once 'sbac_lexicon_taxonomy_forum_flags.features.inc';

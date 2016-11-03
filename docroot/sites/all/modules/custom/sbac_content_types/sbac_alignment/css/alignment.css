@@ -1,0 +1,378 @@
+/* -----------------------------------------
+   Alignment Tags Browser
+   ----------------------------------------- */
+/* line 8, ../sass/alignment.scss */
+#modal-content {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* line 14, ../sass/alignment.scss */
+.alignment-container-no-scroll {
+  overflow-y: hidden !important;
+}
+
+/* line 19, ../sass/alignment.scss */
+#alignment-page .form-item {
+  margin: 5px 0;
+}
+/* line 24, ../sass/alignment.scss */
+#alignment-page .add-aligmnet table {
+  width: 100%;
+}
+/* line 30, ../sass/alignment.scss */
+#alignment-page .alignment-error {
+  background-color: #E2C4CD;
+  border: 1px solid #8A1538;
+  color: #8A1538;
+  font-weight: normal;
+  margin: 1em 0;
+  border-radius: 12px;
+  padding: 30px;
+}
+/* line 39, ../sass/alignment.scss */
+#alignment-page .alignment-error ul {
+  list-style-type: none;
+  margin: 0 !important;
+}
+/* line 47, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb ul {
+  margin: 0 20px 20px;
+  padding: 0;
+}
+/* line 52, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb li {
+  margin: 0;
+  padding: 0;
+}
+/* line 58, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb li:last-child .arrow {
+  display: none;
+}
+/* line 62, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb li:last-child .sbac-custom-term-remove {
+  -webkit-border-radius: 0 10px 10px 0;
+  -moz-border-radius: 0 10px 10px 0;
+  -ms-border-radius: 0 10px 10px 0;
+  -o-border-radius: 0 10px 10px 0;
+  border-radius: 0 10px 10px 0;
+}
+/* line 68, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb li:first-child .sbac-custom-term-remove .b-label {
+  padding-left: 5px;
+}
+/* line 72, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb .sbac-custom-term-remove {
+  display: inline-block;
+  cursor: pointer;
+  margin-right: -20px;
+  background-color: #DFE5CC;
+  color: #3C7646;
+  border: none;
+  height: 28px;
+  line-height: normal;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  font-size: emCalc(12px);
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+}
+/* line 86, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb .sbac-custom-term-remove:hover {
+  background-color: #0085AD;
+  color: white;
+  text-shadow: 0px -1px 0px black;
+}
+/* line 91, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb .sbac-custom-term-remove:hover .arrow span {
+  background-color: #0085AD;
+}
+/* line 96, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb .sbac-custom-term-remove .b-label {
+  padding: 5px 7px 7px 7px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  display: inline-block;
+  padding-left: 25px;
+}
+/* line 103, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb .sbac-custom-term-remove .arrow {
+  width: 20px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  margin-left: -5px;
+}
+/* line 111, ../sass/alignment.scss */
+#alignment-page .alignment-breadcrumb .sbac-custom-term-remove .arrow span {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+  width: 26px;
+  height: 26px;
+  display: inline-block;
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  margin-left: -12px;
+  margin-top: 1px;
+  border: 2px solid #fff;
+  background-color: #DFE5CC;
+}
+/* line 130, ../sass/alignment.scss */
+#alignment-page .standards-browser {
+  background: #E6F4F8;
+  padding: 0 40px 30px 40px;
+  margin: 0px 0 20px;
+  border: 1px solid #BDE3F8;
+  border-width: 1px 0;
+  height: 400px;
+  overflow-y: auto;
+}
+/* line 139, ../sass/alignment.scss */
+#alignment-page .standards-browser h2 {
+  margin: 20px 0;
+}
+/* line 143, ../sass/alignment.scss */
+#alignment-page .standards-browser .button {
+  width: 100%;
+  padding: 10px 40px 10px 20px;
+  background: white url("../images/caret-blue-right.png") no-repeat 95% center;
+  border: 1px solid #AED9E5;
+  position: relative;
+  float: left;
+  text-align: left;
+  font-size: emCalc(16px);
+  -webkit-box-shadow: #aed9e5 0 0 3px;
+  -moz-box-shadow: #aed9e5 0 0 3px;
+  box-shadow: #aed9e5 0 0 3px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+  text-shadow: none;
+  color: #0785AD;
+  font-weight: bold;
+  height: auto;
+  line-height: 1.3;
+}
+/* line 161, ../sass/alignment.scss */
+#alignment-page .standards-browser .button:hover {
+  background: #0085ad url("../images/caret-right.png") no-repeat 95% center;
+  color: #FFF !important;
+}
+/* line 164, ../sass/alignment.scss */
+#alignment-page .standards-browser .button:hover .tooltip-b {
+  opacity: 1;
+  display: block;
+}
+/* line 172, ../sass/alignment.scss */
+#alignment-page .standards-browser .tooltip-b {
+  opacity: 0;
+  display: none;
+  transition-property: opacity;
+  transition-duration: 500ms;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 500ms;
+  width: 272px;
+  position: absolute;
+  top: 62px;
+  left: 20px;
+  background: #DFE5CC;
+  padding: 20px;
+  border-radius: 6px;
+  color: #3C7646;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  z-index: 999;
+  border: 1px solid #3C7646;
+}
+/* line 192, ../sass/alignment.scss */
+#alignment-page .standards-browser .tooltip-b p {
+  font-size: inherit;
+  margin: 0;
+}
+/* line 197, ../sass/alignment.scss */
+#alignment-page .standards-browser .tooltip-b:after {
+  content: ' ';
+  position: absolute;
+  top: -28px;
+  left: 16px;
+  border-color: transparent transparent #DFE5CC transparent;
+  border-style: solid;
+  border-width: 14px;
+  width: 0;
+  height: 0;
+  z-index: 99;
+}
+/* line 210, ../sass/alignment.scss */
+#alignment-page .standards-browser .tooltip-b:before {
+  content: ' ';
+  position: absolute;
+  top: -30px;
+  left: 15px;
+  border-color: transparent transparent #3C7646 transparent;
+  border-style: solid;
+  border-width: 15px;
+  width: 0;
+  height: 0;
+  z-index: 97;
+}
+/* line 224, ../sass/alignment.scss */
+#alignment-page .standards-browser .arrow_box {
+  position: absolute;
+  background: #DFE5CC;
+  border: 1px solid #3C7646;
+}
+/* line 230, ../sass/alignment.scss */
+#alignment-page .standards-browser .standard {
+  padding: 10px;
+  border: 1px solid silver;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  background-color: white;
+}
+/* line 236, ../sass/alignment.scss */
+#alignment-page .standards-browser .standard p {
+  font-size: 16px;
+  color: #8d9297;
+}
+/* line 241, ../sass/alignment.scss */
+#alignment-page .standards-browser .standard .checkbox-more-less {
+  color: #8d9297;
+}
+/* line 245, ../sass/alignment.scss */
+#alignment-page .standards-browser .more-info {
+  display: block;
+  cursor: pointer;
+  position: relative;
+  width: 100px;
+  height: 15px;
+}
+/* line 252, ../sass/alignment.scss */
+#alignment-page .standards-browser .more-info a {
+  display: block;
+}
+/* line 256, ../sass/alignment.scss */
+#alignment-page .standards-browser .more-info .more {
+  display: none;
+  transition-property: opacity;
+  transition-duration: 500ms;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 500ms;
+  width: 272px;
+  position: absolute;
+  top: 25px;
+  left: 20px;
+  background: #DFE5CC;
+  padding: 20px;
+  border-radius: 6px;
+  color: #3C7646;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  z-index: 999;
+  border: 1px solid #3C7646;
+}
+/* line 275, ../sass/alignment.scss */
+#alignment-page .standards-browser .more-info .more p {
+  font-size: inherit;
+  margin: 0;
+}
+/* line 280, ../sass/alignment.scss */
+#alignment-page .standards-browser .more-info .more:after {
+  content: ' ';
+  position: absolute;
+  top: -28px;
+  left: 16px;
+  border-color: transparent transparent #DFE5CC transparent;
+  border-style: solid;
+  border-width: 14px;
+  width: 0;
+  height: 0;
+  z-index: 99;
+}
+/* line 292, ../sass/alignment.scss */
+#alignment-page .standards-browser .more-info .more:before {
+  content: ' ';
+  position: absolute;
+  top: -30px;
+  left: 15px;
+  border-color: transparent transparent #3C7646 transparent;
+  border-style: solid;
+  border-width: 15px;
+  width: 0;
+  height: 0;
+  z-index: 97;
+}
+/* line 307, ../sass/alignment.scss */
+#alignment-page .standards-browser .more-info:hover .more {
+  display: block;
+}
+/* line 314, ../sass/alignment.scss */
+#alignment-page .form-type-checkbox label {
+  color: #0085AD;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: default;
+}
+
+/* line 322, ../sass/alignment.scss */
+#edit-field-education-alignment {
+  display: none;
+}
+
+/* line 327, ../sass/alignment.scss */
+.form-item-alignment-type select {
+  width: 200px;
+  display: inline-block;
+}
+/* line 332, ../sass/alignment.scss */
+.form-item-alignment-type label {
+  width: 120px !important;
+  float: left !important;
+  display: inline-block;
+}
+
+/* line 339, ../sass/alignment.scss */
+.alignment-buttons {
+  text-align: right;
+  margin-right: 20px;
+}
+/* line 343, ../sass/alignment.scss */
+.alignment-buttons a.button {
+  display: inline-block;
+  margin-left: 10px;
+}
+/* line 348, ../sass/alignment.scss */
+.alignment-buttons #edit-submit {
+  float: right;
+  margin-left: 10px;
+}
+
+/* line 354, ../sass/alignment.scss */
+#ccss-submit {
+  margin-left: 10px;
+  margin-right: 20px;
+  float: right;
+}

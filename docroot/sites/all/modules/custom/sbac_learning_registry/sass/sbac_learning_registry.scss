@@ -1,0 +1,416 @@
+@import "compass/css3/";
+
+/* -----------------------------------------
+    Variables
+   ----------------------------------------- */
+$white: #FFF;
+$text: #5a5a5a;
+$header: #18577e;
+$teal: #0085ad;
+$lightblue: #00b5e2;
+$darkgreen: #246a34;
+$darkblue: #006082;
+$gray: #464B54;
+
+
+/* -----------------------------------------
+   Header
+   ----------------------------------------- */
+body.page-external-resources {
+	background-color: #CECECE;
+
+
+	.sbac-external-logo {
+		background: url(../images/external-resources.png) no-repeat 0 0;
+		height: 40px;
+		width: 421px;
+		display: block;
+		float: left;
+		margin: 12px 15px 10px;
+	
+		h1 {
+			float: left;
+			text-indent: -999999em;
+		}
+	}
+
+	/*Search box on the navigation Bar*/
+	.search {
+	  display: block;
+	  float: right;
+	  height: 34px;
+	  margin: 14px 0 12px;
+	  text-align: right;
+	  width: 500px;
+	}
+	
+	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	 .search {margin-top: 10px;} 
+	}
+	
+	.top-bar.sub-top {
+		border-bottom: 2px solid #b1b3b6;
+	}
+	
+	.filters {
+		background-color: #e6e6e6;
+		border-bottom: 1px solid #9da2a5;
+	}
+}
+
+#sbac-learning-registry-external-resources-solr-search-form {
+	.form-item {
+		margin: 0;
+		position: relative;
+	}
+	
+	input#edit-solr-keywords {
+		-moz-box-sizing: border-box;
+	  background: url("../images/icon-nav-search.png") no-repeat 14px 9px #fff;
+    border: 1px solid #CECECE;
+    @include border-radius(17px);
+    box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1) inset, 1px 1px 0 0 #FFFFFF;
+    display: block;
+    height: 34px;
+    /*margin-top: -15px;*/
+    padding: 0 15px 0 44px;
+    position: relative;
+		z-index: 2;
+    right: 30px;
+    top: 0;
+    width: 360px;
+	}
+	
+	.sbac-clear-search {
+	  background: url("../images/icon-validation-fail.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    cursor: pointer;
+    display: block;
+    float: right;
+    height: 15px;
+    position: absolute;
+    right: 45px;
+    top: 9px;
+    width: 15px;
+		z-index: 999;
+	}
+	
+	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	 .sbac-clear-search  {top: 10px;} 
+	}
+		
+	button#edit-submit {
+		display: none;
+	}
+}
+
+
+/* -----------------------------------------
+   Responsive Grid
+   ----------------------------------------- */
+.grid-view {
+  .grid-library {
+    margin: 0;
+    padding: 0;
+
+    .resource-card {
+      max-width: 290px;
+    }
+
+    li {
+      list-style-type: none;
+      float: left;
+      margin: 0 10px 10px;
+    }
+  }
+}
+
+@media all and (min-width: 1281px){
+  
+	.main-row {
+     max-width: 1280px !important;
+
+		.results-view {
+			width: 960px;
+			margin: 0 auto;
+			padding: 0 15px;
+		}
+   }
+
+	.ex-resource-card {
+      &:nth-child(4n+1){
+        clear:left;
+      }
+   }
+}
+
+@media all and (max-width: 1280px) and (min-width: 961px){
+	
+  .main-row {
+     max-width: 960px;
+   }
+
+  .ex-resource-card {
+      &:nth-child(4n+1){
+        clear:left;
+      }
+   }
+}
+
+@media all and (max-width: 960px){
+	
+  .main-row {
+     max-width: 696px;
+
+		.results-view {
+			width: 696px;
+			margin: 0 auto;
+		}
+   }
+
+  .ex-resource-card {
+      &:nth-child(3n+1){
+        clear:left;
+      }
+   }
+}
+
+
+/* -----------------------------------------
+    External Resources List
+   ----------------------------------------- */
+.page-external-resources {
+	
+	.main-container {
+		background-color: transparent;
+		border-radius: 0;
+    box-shadow: none;
+		padding-top: 10px;
+	}
+	
+	h1#page-title {
+		display: none;		
+	}
+	
+	.keyword-search-message,
+	.no-result-message {
+		background: none repeat scroll 0 0 #fff;
+	  border: 1px solid #EEEEEE;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    @include border-radius(6px);
+		padding: 20px 30px 18px;
+		margin: 0 15px 250px 12px;
+		
+		p {
+			font-size: 16px;
+			color: #464b54;
+			margin-top: 5px;
+			margin-bottom: 10px;
+		}
+		
+		h2 {
+			color: #464B54;
+			font-size: 21px;
+			font-weight: normal;
+		}
+	}
+	
+	.no-result-message {
+		p {color: #62676e;}
+	}
+	
+	.feature-message {
+		background: none repeat scroll 0 0 #FDF2B1;
+	  border: 1px solid #EEEEEE;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    @include border-radius(6px);
+		padding: 12px 30px;
+		margin: 0 15px 25px 12px;
+		
+		p {
+			color: #04384e;
+			font-size: 14px;
+			line-height: 25px;
+			margin: 0;
+		}
+		
+		p:before {
+			background-image: url("../images/icon-exclamation.png");
+	    background-position: center center;
+	    content: " ";
+	    display: inline-block;
+	    height: 25px;
+	    width: 28px;
+	    margin-right: 12px;
+	    margin-top: -2px;
+	    vertical-align: middle;
+		}
+	}
+	
+	.ex-resource-card {
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+		width: 212px;
+		height: 220px;
+		background: none repeat scroll 0 0 #FFFFFF;
+    @include border-radius(6px);
+    padding: 0;
+    position: relative;
+		float: left;
+		margin: 0 10px;
+		margin-bottom: 20px;
+		
+		.resource-title {
+			background-color: rgba(206, 206, 206, 0.5);
+			@include border-radius(5px 5px 0 0);
+			padding: 12px 15px;
+			font-size: 14px;
+			color: #04384E;
+			height: 61px;
+			border-bottom: solid #04384E 1px;
+			border-color: rgba(4, 56, 78, 0.4);
+			
+			a {
+				color: #04384E;
+				line-height: 1.4;
+			}
+		}
+		
+		.resource-content {
+			padding: 12px 15px;
+			font-size: 13px;
+			line-height: 1.4;
+		}
+	}
+	
+	.load-more {
+		clear: both;
+		display: block;
+		width: 292px;
+		text-align: center;
+		background-color: #006298;
+		margin: 15px auto 0;
+		border: 1px solid #006298;
+		
+		&:hover,  &:focus {
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+			background-color: #006298 !important;
+			border: 1px solid #006298 !important;
+		}		
+	}
+}
+
+
+/*back button*/
+.page-external-resources {
+	.sbac-back-button {
+		width: 320px;
+		height: 25px;
+		line-height: 25px;
+		display: block;
+		margin: 20px auto;
+		font-size: 15px;	
+		position: relative;	
+		
+		a {
+			color: #0583AC;
+		}
+	}
+	
+	.sbac-back-button:before {
+	  content:"\e620";
+    display: inline;
+    font-family: 'sbac';
+    font-size: 20px;
+    font-weight: normal;
+    margin-right: 7px;
+    position: relative;
+		color: #0583AC;
+    top: -2px;
+	}
+}
+
+/*Modal of Search External Resources*/
+#external-resource-help-box {
+	padding: 0 15px;
+	
+	h2 {
+		color: #464B54;
+		font-size: 18px;
+	}
+	
+	p{
+		color: #62676e;
+		font-size: 15px;
+	}
+	
+	p:first-child {
+		margin-bottom: 5px;
+	}
+	
+	a {
+		margin-left: 30px;
+		margin-bottom: 0;
+	}
+	
+	a.next:after {
+	  background-image: url("../images/icon-buttonNext.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-left: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 17px;
+	}
+	
+	a.cancel:after {
+	  background-image: url("../images/icon-buttonCancel.png");
+    background-position: center center;
+    content: " ";
+    display: inline-block;
+    height: 18px;
+    margin-left: 12px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 17px;
+	}
+	
+	a.cancel {
+		background-color: #6E7379;
+		border: 1px solid #4D5457;
+		box-shadow: 0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset;
+		
+		&:focus, &:hover {
+			background-image: -moz-linear-gradient(center top , rgba(0, 0, 0, 0.075) 30%, rgba(0, 0, 0, 0.1) 100%);
+		  background-color: #6E7379;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

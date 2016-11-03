@@ -1,0 +1,362 @@
+<?php
+
+/*----------------------------------------------------------------------------
+      DRUPAL HOOKS
+----------------------------------------------------------------------------*/
+
+/**
+ * Implements hook_schema().
+ */
+function taskit_schema() {
+  $schema['taskit'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'created' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'viewed' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'state' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'visibility' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('task_id'),
+  );
+
+  $schema['taskit_entity'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'entity_type' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'task_id' => array('task_id', 'entity_type', 'entity_id')
+    ),
+  );
+
+  $schema['taskit_notify'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'last_sent' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  $schema['taskit_removed'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'user_id' => array('user_id', 'task_id'),
+    ),
+  );
+
+  $schema['taskit_role'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'type' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'role_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('type', 'role_id'),
+  );
+
+  $schema['taskit_user_owner'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'task_id' => array('task_id', 'user_id')
+    ),
+  );
+
+  $schema['taskit_user_trigger'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'task_id' => array('task_id', 'user_id')
+    ),
+  );
+
+  $schema['taskit_viewed'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'user_id' => array('user_id', 'task_id'),
+    ),
+  );
+
+  $schema['taskit_user_unread_notifications_count'] = array(
+    'description' => 'The count of notifications for a given user',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'count' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('uid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_schema().
+ */
+function taskit_uninstall() {
+  drupal_uninstall_schema('taskit');
+}
+
+/**
+ * Adds 'viewed' column to {taskit}.
+ */
+function taskit_update_7001(&$sandbox) {
+  db_query("ALTER TABLE taskit ADD viewed INT NOT NULL DEFAULT 0 AFTER created;");
+}
+
+/**
+ * Creates the {taskit_notify} table.
+ */
+function taskit_update_7002(&$sandbox) {
+  $schema['taskit_notify'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'last_sent' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  db_create_table('taskit_notify', $schema['taskit_notify']);
+}
+
+/**
+ * Adds 'removed' column on {taskit_removed}.
+ * Creates the {taskit_viewed} table.
+ */
+function taskit_update_7003(&$sandbox) {
+  $schema['taskit_viewed'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'task_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'user_id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'user_id' => array('user_id', 'task_id'),
+    ),
+  );
+
+  db_create_table('taskit_viewed', $schema['taskit_viewed']);
+}
+
+/**
+ * Removes unnecessary primary keys on taskit_removed and taskit_viewed.
+ */
+function taskit_update_7004(&$sandbox) {
+  //db_query("ALTER TABLE taskit_removed DROP INDEX `PRIMARY`");
+  //db_query("ALTER TABLE taskit_viewed DROP INDEX `PRIMARY`");
+}
+
+/**
+ * Creates the {taskit_user_unread_notifications_count} table.
+ */
+function taskit_update_7005(&$sandbox) {
+  $schema['taskit_user_unread_notifications_count'] = array(
+    'description' => 'The unread count of notifications for a given user',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'count' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('uid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+  );
+
+  db_create_table('taskit_user_unread_notifications_count', $schema['taskit_user_unread_notifications_count']);
+}
+

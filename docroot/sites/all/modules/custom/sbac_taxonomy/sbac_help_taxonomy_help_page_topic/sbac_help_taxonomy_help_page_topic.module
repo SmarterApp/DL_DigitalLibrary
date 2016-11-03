@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Help Taxonomy - Help Page Topic feature.
+ */
+
+include_once 'sbac_help_taxonomy_help_page_topic.features.inc';
