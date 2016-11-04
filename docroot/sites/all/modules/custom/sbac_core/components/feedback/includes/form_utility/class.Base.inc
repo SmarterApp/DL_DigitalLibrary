@@ -251,10 +251,9 @@ class Base {
     unset($item[$this->_radio_field][$this->_lang]['#options']['_none']);
 
     // add back in a N/A value for the Integrates media and technology effectively entry
-    if (!preg_match("/Integrates media and technology effectively/", $item['set_title']['#value'])) {
+    if ($this->_radio_field == 'field_level' && !preg_match("/Integrates media and technology effectively/", $item['set_title']['#value'])) {
       unset($item[$this->_radio_field][$this->_lang]['#options'][0]);
     }
-    //dpm($item);
   }
 
   /**
