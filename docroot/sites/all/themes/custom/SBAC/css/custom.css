@@ -31337,6 +31337,9 @@ ul {
   margin: 0 0 10px 15px;
   color: black;
 }
+.page-digital-library-resources .filters .facet-block .item-list ul li li {
+  margin-bottom: 0;
+}
 /* line 529, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a {
   color: black;
@@ -31352,7 +31355,7 @@ ul {
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
   color: black;
   font-weight: normal;
-  padding-left: 15px;
+  padding-left: 13px;
   text-indent: -9999px;
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
