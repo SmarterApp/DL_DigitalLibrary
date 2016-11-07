@@ -645,6 +645,33 @@ function sbac_forum_field_default_field_bases() {
     'type' => 'number_integer',
   );
 
+  // Exported field_base: 'field_intended_participants'.
+  $field_bases['field_intended_participants'] = array(
+    'active' => 1,
+    'cardinality' => -1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_intended_participants',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'title',
+          'parent' => 0,
+        ),
+      ),
+      'options_list_callback' => 'title_taxonomy_allowed_values',
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
+  );
+
   // Exported field_base: 'field_reviewer_goal'.
   $field_bases['field_reviewer_goal'] = array(
     'active' => 1,

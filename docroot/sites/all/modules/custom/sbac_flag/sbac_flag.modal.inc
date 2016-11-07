@@ -1202,7 +1202,7 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
     $flag_cid = $form_state['info']['cid'];
     $node = node_load($flag_nid);
 
-    
+    $forum = taxonomy_term_load($node->field_topic_forum_parent['und'][0]['value']);
     $user_profile = user_load($node->uid);
 
     // Notify topic creator
@@ -1213,10 +1213,44 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
       $task->addTriggeringUser($user_profile->uid);
       $task->save();
     }
+    // Notify forum creator
+    if ($task = taskit_get_object('forum_flagged')) {
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('node', $node->nid);
+      $task->addOwningUser($forum->uid);
+      $task->addTriggeringUser($forum->uid);
+      $task->save();
+    }    
     // Send email to topic creator
+    global $base_url;
+    $values = array(
+      'arguments' => array(
+        '!forum-link' => $base_url . '/content/' . $node->nid,
+      ),
+      'uid' => $node->uid,
+    );
     if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
       // Create message
-      $message = message_create('forum_flagged', array('uid' => $node->uid));
+      $message = message_create('forum_flagged', $values);
+      $wrapper = entity_metadata_wrapper('message', $message);
+      if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+        // send email
+        message_notify_send_message($message);
+        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+        message_delete_multiple(array($message->mid));
+      }
+    }
+    // Send email to forum creator
+    $user_profile = user_load($forum->uid);
+    $values = array(
+      'arguments' => array(
+        '!forum-link' => $base_url . '/content/' . $node->nid,
+      ),
+      'uid' => $user_profile->uid,
+    );
+    if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+      // Create message
+      $message = message_create('forum_flagged', $values);
       $wrapper = entity_metadata_wrapper('message', $message);
       if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
         // send email

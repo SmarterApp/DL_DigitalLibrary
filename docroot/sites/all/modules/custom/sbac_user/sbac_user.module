@@ -417,15 +417,15 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       );
       unset($form['mimemail']);
       global $user;
-      $form['sbac_user_email_options'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Email Notification Options'),
-        '#collapsible' => TRUE,
-        '#collapsed' => FALSE,
-      );
-      $form['sbac_user_email_options']['sbac_user_email_options_toggle'] = array(
-        '#prefix' => flag_create_link('email', $user->uid),
-      );
+      //$form['sbac_user_email_options'] = array(
+      //  '#type' => 'fieldset',
+      //  '#title' => t('Email Notification Options'),
+      //  '#collapsible' => TRUE,
+      //  '#collapsed' => FALSE,
+      //);
+      //$form['sbac_user_email_options']['sbac_user_email_options_toggle'] = array(
+      //  '#prefix' => flag_create_link('email', $user->uid),
+      //);
       $form['#group_children']['sbac_user_email_options'] = 'group_email_settings';
 
       // form modifications to field_privacy

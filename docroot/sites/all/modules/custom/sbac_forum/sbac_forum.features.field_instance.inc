@@ -1042,7 +1042,7 @@ function sbac_forum_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 25,
+      'weight' => 21,
     ),
   );
 
@@ -1088,7 +1088,7 @@ function sbac_forum_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 26,
+      'weight' => 22,
     ),
   );
 
@@ -1129,7 +1129,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 11,
+      'weight' => 12,
     ),
   );
 
@@ -1170,7 +1170,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 13,
+      'weight' => 14,
     ),
   );
 
@@ -1215,7 +1215,7 @@ function sbac_forum_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 21,
+      'weight' => 17,
     ),
   );
 
@@ -1264,7 +1264,7 @@ function sbac_forum_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 22,
+      'weight' => 18,
     ),
   );
 
@@ -1343,7 +1343,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 12,
+      'weight' => 13,
     ),
   );
 
@@ -1384,7 +1384,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 14,
+      'weight' => 13,
     ),
   );
 
@@ -1471,7 +1471,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_buttons',
-      'weight' => 13,
+      'weight' => 12,
     ),
   );
 
@@ -1519,7 +1519,7 @@ function sbac_forum_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 19,
+      'weight' => 17,
     ),
   );
 
@@ -1667,7 +1667,7 @@ function sbac_forum_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => 18,
+      'weight' => 16,
     ),
   );
 
@@ -1720,7 +1720,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 16,
+      'weight' => 14,
     ),
   );
 
@@ -1768,7 +1768,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 17,
+      'weight' => 15,
     ),
   );
 
@@ -1814,7 +1814,7 @@ function sbac_forum_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'entityreference_autocomplete',
-      'weight' => 20,
+      'weight' => 18,
     ),
   );
 
@@ -1868,7 +1868,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 15,
+      'weight' => 13,
     ),
   );
 
@@ -1921,7 +1921,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 14,
+      'weight' => 12,
     ),
   );
 
@@ -1965,8 +1965,8 @@ function sbac_forum_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'taxonomy_term-forum-field_intended_end_user'.
-  $field_instances['taxonomy_term-forum-field_intended_end_user'] = array(
+  // Exported field_instance: 'taxonomy_term-forum-field_intended_participants'.
+  $field_instances['taxonomy_term-forum-field_intended_participants'] = array(
     'bundle' => 'forum',
     'default_value' => NULL,
     'deleted' => 0,
@@ -1977,18 +1977,18 @@ function sbac_forum_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 4,
+        'weight' => 34,
       ),
       'forum_page_card' => array(
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 12,
+        'weight' => 0,
       ),
     ),
     'entity_type' => 'taxonomy_term',
-    'field_name' => 'field_intended_end_user',
-    'label' => 'Title',
+    'field_name' => 'field_intended_participants',
+    'label' => 'Intended Participants',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -2087,7 +2087,7 @@ function sbac_forum_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 23,
+      'weight' => 19,
     ),
   );
 
@@ -2136,7 +2136,7 @@ function sbac_forum_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 24,
+      'weight' => 20,
     ),
   );
 
@@ -2178,7 +2178,7 @@ function sbac_forum_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_select',
-      'weight' => 14,
+      'weight' => 15,
     ),
   );
 
@@ -2341,6 +2341,7 @@ function sbac_forum_field_default_field_instances() {
   t('Forum');
   t('Forum resource ref');
   t('Grades');
+  t('Intended Participants');
   t('Last Activity');
   t('Links');
   t('Media Types');
@@ -2365,7 +2366,6 @@ function sbac_forum_field_default_field_instances() {
   t('States');
   t('Student Populations');
   t('Subjects and Domains');
-  t('Title');
   t('Topic Comment Files');
   t('Topic Comment Links');
   t('Topic Count');

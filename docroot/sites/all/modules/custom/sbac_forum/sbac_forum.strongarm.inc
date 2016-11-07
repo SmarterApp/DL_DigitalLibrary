@@ -253,7 +253,7 @@ function sbac_forum_strongarm() {
           'weight' => '1',
         ),
         'redirect' => array(
-          'weight' => '15',
+          'weight' => '16',
         ),
       ),
       'display' => array(
