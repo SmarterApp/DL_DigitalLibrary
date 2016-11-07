@@ -31360,6 +31360,11 @@ ul {
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
 }
+@-moz-document url-prefix() {
+  .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
+    padding-left: 25px;
+  }
+}
 /* line 548, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul > li > a:hover {
   color: #0684AD;
