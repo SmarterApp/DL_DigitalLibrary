@@ -31337,6 +31337,9 @@ ul {
   margin: 0 0 10px 15px;
   color: black;
 }
+.page-digital-library-resources .filters .facet-block .item-list ul li li {
+  margin-bottom: 0;
+}
 /* line 529, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block .item-list ul li a {
   color: black;
@@ -31352,7 +31355,7 @@ ul {
 .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
   color: black;
   font-weight: normal;
-  padding-left: 15px;
+  padding-left: 13px;
   text-indent: -9999px;
   display: inline-block !important;
   background: url('../images/filter/icon-check-mark.png?1446141811') no-repeat 0 0;
@@ -34800,6 +34803,10 @@ a.tabledrag-handle .handle {
   max-width: 960px;
 }
 
+.list-view .row {
+    max-width: 1260px;
+}
+
 /* line 3065, ../sass/custom.scss */
 .page-admin-structure #edit-cancel {
   padding: 7px 18px;
@@ -34866,7 +34873,7 @@ a.tabledrag-handle .handle {
 }
 /* line 3131, ../sass/custom.scss */
 .list-view .top-bar.last-top {
-  max-width: 960px;
+  max-width: 1280px;
 }
 
 /* fix for back button block for resource node pages.*/

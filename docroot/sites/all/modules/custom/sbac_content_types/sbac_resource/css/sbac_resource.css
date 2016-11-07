@@ -506,6 +506,18 @@ a.sbac-grid-layout {
   margin-bottom: 0.5em;
   padding: 0;
 }
+.digital-library .resource-card .resource-state-icons {
+  width: 110px;
+  text-align: right;
+  float: right;
+  padding-top: 5px;
+}
+.list-view .digital-library .resource-card .resource-state-icons {
+  padding-top: 15px;
+}
+.digital-library .resource-card .resource-state-icons img {
+  height: 20px;
+}
 /* line 469, ../sass/sbac_resource.scss */
 .digital-library .resource-card h3, .digital-library .resource-card h4, .page-digital-library-resources .resource-card h3, .page-digital-library-resources .resource-card h4, .node-resource .resource-card h3, .node-resource .resource-card h4 {
   margin: 0;
@@ -740,9 +752,11 @@ a.sbac-grid-layout {
 }
 /* line 699, ../sass/sbac_resource.scss */
 .digital-library .view-display-id-list_view .resource-card .resoruce-bottom, .page-digital-library-resources .view-display-id-list_view .resource-card .resoruce-bottom, .node-resource .view-display-id-list_view .resource-card .resoruce-bottom {
-  margin: -10px;
-  border-radius: 0 8px 8px 0;
-  background: transparent;
+  border-radius: 0 6px 6px 0;
+  border: 1px #b7bfc4 solid;
+  margin: -13px -11px 0 0;
+  height: 115px;
+  background-color: #c8e9f7;
 }
 /* line 707, ../sass/sbac_resource.scss */
 .digital-library .view-display-id-list_view .resource-card .shield-drop img, .page-digital-library-resources .view-display-id-list_view .resource-card .shield-drop img, .node-resource .view-display-id-list_view .resource-card .shield-drop img {
@@ -3849,6 +3863,11 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
 /* line 3714, ../sass/sbac_resource.scss */
 .node-type-collection-view .view-id-collection .resource-card {
   background-color: rgba(6,132,173,0.15);
+}
+
+/* line 3733, ../sass/sbac_resource.scss */
+.node-type-collection-view .view-id-collection .resource-card .column.large-4 {
+  display: none;
 }
 
 

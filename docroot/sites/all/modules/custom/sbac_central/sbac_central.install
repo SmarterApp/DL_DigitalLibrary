@@ -1188,6 +1188,23 @@ function sbac_central_update_7097() {
 }
 
 /**
+ * Enable Educational Use and Technologies Required for Classroom use modules
+ */
+function sbac_central_update_7098() {
+  $modules = array(
+    'sbac_resource_taxonomy_educational_use',
+    'sbac_resource_taxonomy_technologies_for_classroom_use',
+  );
+  module_enable($modules);
+}
+
+function sbac_central_update_7099() {
+  // remove field_geographical_settings field (from resource and forum)
+  field_delete_field('field_geographical_settings');
+  field_purge_batch(1);
+}
+
+/**
  * Impliments hook_uninstall().
  */
 
