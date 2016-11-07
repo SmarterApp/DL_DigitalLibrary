@@ -1201,19 +1201,32 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
     $flag_nid = $form_state['info']['nid'];
     $flag_cid = $form_state['info']['cid'];
     $node = node_load($flag_nid);
-    // Send email to user
-    $message = message_create('forum_flagged', array('uid' => $node->uid));
-  
-    $wrapper = entity_metadata_wrapper('message', $message);
-  
-    // Replace explicit notification with subscription-based notification
-    // message_notify_send_message($message);
-  
-    if (module_exists('message_subscribe')) {
-      // If Message-subscribe exists, let this example module use it.
-      message_subscribe_send_message('user', $node, $message, array('email' => $options));
+
+    
+    $user_profile = user_load($node->uid);
+
+    // Notify topic creator
+    if ($task = taskit_get_object('forum_flagged')) {
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('node', $node->nid);
+      $task->addOwningUser($user_profile->uid);
+      $task->addTriggeringUser($user_profile->uid);
+      $task->save();
+    }
+    // Send email to topic creator
+    if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+      // Create message
+      $message = message_create('forum_flagged', array('uid' => $node->uid));
+      $wrapper = entity_metadata_wrapper('message', $message);
+      if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+        // send email
+        message_notify_send_message($message);
+        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+        message_delete_multiple(array($message->mid));
+      }
     }
     sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+    
   }
 }
 

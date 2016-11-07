@@ -1189,6 +1189,43 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
         $people_to_notify[] = $comment->uid;
       }
     }
+    
+    // Notify users of the same state if new state forum created
+    if ($term->field_forum_access_states['und'][0]['value'] === 0) {
+      $state = $term->field_state['und'][0]['value'];
+      $users = sbac_forum_get_state_users($state);
+      foreach ($users as $state_user) {
+        if ($task = taskit_get_object('new_state_forum')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('taxonomy_term', $term->tid);
+          $task->addOwningUser($state_user->uid);
+          $task->addTriggeringUser($term->uid);
+          $task->save();
+        }
+        global $base_url;
+        $values = array(
+          'arguments' => array(
+            '!forum-link' => $base_url . '/forums/term/' . $term->tid,
+          ),
+          'uid' => $state_user->uid,
+        );
+        $user_profile = user_load($state_user->uid);
+    
+        $email_preference = $user_profile->field_email_reference[0]['und']['value'];
+        if ($email_preference !== '' && $email_preference !== 'never') {
+          // Create message
+          $message = message_create('now_state_forum', $values);
+          $wrapper = entity_metadata_wrapper('message', $message);
+          if ($email_preference == 'immediately') {
+            // Send email
+            message_notify_send_message($message);
+            // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+            message_delete_multiple(array($message->mid));
+          }
+        }
+      }
+    }
+    
 
     if (!empty($people_to_notify)) {
       sbac_forum__api__send_bulk_notifications($term, 'access-change', $people_to_notify);
@@ -2500,4 +2537,29 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
       }
     }
   }
+}
+
+// function to get users of a specific state
+function sbac_forum_get_state_users($state) {
+  $sql = <<<SQL
+
+  SELECT
+    u.uid
+  FROM {users} u
+    LEFT JOIN {field_data_field_state} st
+      ON u.uid = st.entity_id
+  WHERE
+    u.status = :status
+    AND st.field_state_tid = :state
+  
+
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':state' => $state, ':state' => '0'));
+
+  foreach ($result as $row) {
+    $users[] = $row;
+  }
+
+  return $users;
 }
