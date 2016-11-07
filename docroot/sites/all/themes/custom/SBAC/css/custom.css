@@ -32190,7 +32190,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select {
 }
 /* line 673, ../sass/custom.scss */
 .sbac-favorites-menu a {
-  background: url(../images/icons/icon-folder-heart.png) no-repeat 0 0;
+  background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 5px;
   padding-left: 20px;
 }
 /* line 678, ../sass/custom.scss */
