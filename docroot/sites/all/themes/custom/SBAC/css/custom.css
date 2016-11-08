@@ -31301,6 +31301,9 @@ body.page-reports .flexslider:hover .flex-direction-nav .flex-prev {
   height: 100%;
   box-shadow: 2px 14px 29px -8px #9e999e;
 }
+.page-digital-library-resources .filters .facet-block .item-list ul {
+  margin-top: 4px;
+}
 /* line 498, ../sass/components/_page-digital-library-resources.scss */
 .page-digital-library-resources .filters .facet-block ul li {
   background-image: none;
