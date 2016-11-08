@@ -717,6 +717,14 @@ function sbac_preprocess_views_view(&$variables) {
     );
     drupal_add_js(array('sbac_alert_settings' => $alert_settings), 'setting');
   }
+  if ($variables['view']->name == 'forum_topic_list') {
+    $view = $variables['view'];
+    $forum_id = array_shift($view->args);
+    if ($forum_id) {
+      module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.api');
+      $variables['join_button'] = sbac_forum__api__create_start_new_topic_link($forum_id);
+    }
+  }
 }
 
 /**
@@ -882,6 +890,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->wrapper_suffix = '</div>';
     $variables['fields']['entity_id']->content = $output;
   }
+
   // Leaderboard preprocessing
   if ($variables['view']->name == 'rated_resources_rankings') {
     foreach ($variables['fields'] as $name => $field) {
@@ -915,46 +924,6 @@ function sbac_preprocess_views_view_fields(&$variables) {
         if (!empty($user_uid)) {
           $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard');
         }
-        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
-      }
-    }
-  }
-  // Forum topic list view field preprocessing
-  if ($variables['view']->name == 'forum_topic_list' && $variables['view']->current_display == 'block') {
-    foreach ($variables['fields'] as $name => $field) {
-      if ($name == 'uid') {
-        $user_uid = $field->raw;
-        $new_output = '';
-        if (!empty($user_uid)) {
-          $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
-          $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
-        }
-      
-        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
-      }
-      if ($name == 'last_comment_uid') {
-        $user_uid = $field->raw;
-        $new_output = '';
-        if (!empty($user_uid)) {
-          $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
-          $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
-        }
-      
-        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
-      }
-    }
-  }
-  // Forum member list view preprocessing
-  if ($variables['view']->name == 'forum_member_list' && $variables['view']->current_display == 'block') {
-    foreach ($variables['fields'] as $name => $field) {
-      if ($name == 'uid') {
-        $user_uid = $field->raw;
-        $new_output = '';
-        if (!empty($user_uid)) {
-          $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
-          $new_output = '' . $author_name . '';
-        }
-      
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
       }
     }

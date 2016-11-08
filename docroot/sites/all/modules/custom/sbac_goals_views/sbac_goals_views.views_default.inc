@@ -126,6 +126,235 @@ function sbac_goals_views_views_default_views() {
   $export['contributed_resources_rankings'] = $view;
 
   $view = new view();
+  $view->name = 'forum_rankings';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'taxonomy_term_data';
+  $view->human_name = 'Forum Rankings';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_taxonomy'] = TRUE;
+  /* Field: Taxonomy term: Add Forum Cover Image */
+  $handler->display->display_options['fields']['field_state_or_district_image']['id'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
+  $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
+    'image_style' => 'forum_profile_image_60x60',
+    'image_link' => '',
+  );
+  /* Filter criterion: Taxonomy vocabulary: Machine name */
+  $handler->display->display_options['filters']['machine_name']['id'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['table'] = 'taxonomy_vocabulary';
+  $handler->display->display_options['filters']['machine_name']['field'] = 'machine_name';
+  $handler->display->display_options['filters']['machine_name']['value'] = array(
+    'forum' => 'forum',
+  );
+  /* Filter criterion: Taxonomy term: Add to leaderboard (field_add_to_leaderboard) */
+  $handler->display->display_options['filters']['field_add_to_leaderboard_value']['id'] = 'field_add_to_leaderboard_value';
+  $handler->display->display_options['filters']['field_add_to_leaderboard_value']['table'] = 'field_data_field_add_to_leaderboard';
+  $handler->display->display_options['filters']['field_add_to_leaderboard_value']['field'] = 'field_add_to_leaderboard_value';
+  $handler->display->display_options['filters']['field_add_to_leaderboard_value']['value'] = array(
+    1 => '1',
+  );
+  /* Filter criterion: Taxonomy term: States (field_forum_access_states) */
+  $handler->display->display_options['filters']['field_forum_access_states_value']['id'] = 'field_forum_access_states_value';
+  $handler->display->display_options['filters']['field_forum_access_states_value']['table'] = 'field_data_field_forum_access_states';
+  $handler->display->display_options['filters']['field_forum_access_states_value']['field'] = 'field_forum_access_states_value';
+  $handler->display->display_options['filters']['field_forum_access_states_value']['value'] = array(
+    0 => '0',
+  );
+
+  /* Display: Rating Leaderboard */
+  $handler = $view->new_display('block', 'Rating Leaderboard', 'rating_leaderboard');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Taxonomy term: Add Forum Cover Image */
+  $handler->display->display_options['fields']['field_state_or_district_image']['id'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
+  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['text'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
+    'image_style' => 'forum_profile_image_60x60',
+    'image_link' => '',
+  );
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['max_length'] = '10';
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Field: Taxonomy term: Educator Goal Complete */
+  $handler->display->display_options['fields']['field_educator_goal_complete']['id'] = 'field_educator_goal_complete';
+  $handler->display->display_options['fields']['field_educator_goal_complete']['table'] = 'field_data_field_educator_goal_complete';
+  $handler->display->display_options['fields']['field_educator_goal_complete']['field'] = 'field_educator_goal_complete';
+  $handler->display->display_options['fields']['field_educator_goal_complete']['label'] = '';
+  $handler->display->display_options['fields']['field_educator_goal_complete']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_educator_goal_complete']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Taxonomy term: Educator Goal */
+  $handler->display->display_options['fields']['field_educator_goal']['id'] = 'field_educator_goal';
+  $handler->display->display_options['fields']['field_educator_goal']['table'] = 'field_data_field_educator_goal';
+  $handler->display->display_options['fields']['field_educator_goal']['field'] = 'field_educator_goal';
+  $handler->display->display_options['fields']['field_educator_goal']['label'] = '';
+  $handler->display->display_options['fields']['field_educator_goal']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_educator_goal']['alter']['text'] = 'of [field_educator_goal]';
+  $handler->display->display_options['fields']['field_educator_goal']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_educator_goal']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Taxonomy term: Educator Goal Complete (field_educator_goal_complete) */
+  $handler->display->display_options['sorts']['field_educator_goal_complete_value']['id'] = 'field_educator_goal_complete_value';
+  $handler->display->display_options['sorts']['field_educator_goal_complete_value']['table'] = 'field_data_field_educator_goal_complete';
+  $handler->display->display_options['sorts']['field_educator_goal_complete_value']['field'] = 'field_educator_goal_complete_value';
+  $handler->display->display_options['sorts']['field_educator_goal_complete_value']['order'] = 'DESC';
+
+  /* Display: Reviewed Leaderboard */
+  $handler = $view->new_display('block', 'Reviewed Leaderboard', 'reviewed_leaderboard');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Taxonomy term: Add Forum Cover Image */
+  $handler->display->display_options['fields']['field_state_or_district_image']['id'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
+  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['text'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
+    'image_style' => 'forum_profile_image_60x60',
+    'image_link' => '',
+  );
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['max_length'] = '10';
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Field: Taxonomy term: Reviewer Goal Complete */
+  $handler->display->display_options['fields']['field_reviewer_goal_complete']['id'] = 'field_reviewer_goal_complete';
+  $handler->display->display_options['fields']['field_reviewer_goal_complete']['table'] = 'field_data_field_reviewer_goal_complete';
+  $handler->display->display_options['fields']['field_reviewer_goal_complete']['field'] = 'field_reviewer_goal_complete';
+  $handler->display->display_options['fields']['field_reviewer_goal_complete']['label'] = '';
+  $handler->display->display_options['fields']['field_reviewer_goal_complete']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_reviewer_goal_complete']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Taxonomy term: Reviewer Goal */
+  $handler->display->display_options['fields']['field_reviewer_goal']['id'] = 'field_reviewer_goal';
+  $handler->display->display_options['fields']['field_reviewer_goal']['table'] = 'field_data_field_reviewer_goal';
+  $handler->display->display_options['fields']['field_reviewer_goal']['field'] = 'field_reviewer_goal';
+  $handler->display->display_options['fields']['field_reviewer_goal']['label'] = '';
+  $handler->display->display_options['fields']['field_reviewer_goal']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_reviewer_goal']['alter']['text'] = 'of [field_reviewer_goal]';
+  $handler->display->display_options['fields']['field_reviewer_goal']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_reviewer_goal']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Taxonomy term: Reviewer Goal Complete (field_reviewer_goal_complete) */
+  $handler->display->display_options['sorts']['field_reviewer_goal_complete_value']['id'] = 'field_reviewer_goal_complete_value';
+  $handler->display->display_options['sorts']['field_reviewer_goal_complete_value']['table'] = 'field_data_field_reviewer_goal_complete';
+  $handler->display->display_options['sorts']['field_reviewer_goal_complete_value']['field'] = 'field_reviewer_goal_complete_value';
+  $handler->display->display_options['sorts']['field_reviewer_goal_complete_value']['order'] = 'DESC';
+
+  /* Display: Contributed Leaderboard */
+  $handler = $view->new_display('block', 'Contributed Leaderboard', 'contributed_leaderboard');
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Taxonomy term: Add Forum Cover Image */
+  $handler->display->display_options['fields']['field_state_or_district_image']['id'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
+  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['text'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
+    'image_style' => 'forum_profile_image_60x60',
+    'image_link' => '',
+  );
+  /* Field: Taxonomy term: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['alter']['max_length'] = '10';
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['trim'] = TRUE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Field: Taxonomy term: Contributor Goal Complete */
+  $handler->display->display_options['fields']['field_contributor_goal_complete']['id'] = 'field_contributor_goal_complete';
+  $handler->display->display_options['fields']['field_contributor_goal_complete']['table'] = 'field_data_field_contributor_goal_complete';
+  $handler->display->display_options['fields']['field_contributor_goal_complete']['field'] = 'field_contributor_goal_complete';
+  $handler->display->display_options['fields']['field_contributor_goal_complete']['label'] = '';
+  $handler->display->display_options['fields']['field_contributor_goal_complete']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_contributor_goal_complete']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Taxonomy term: Contributor Goal */
+  $handler->display->display_options['fields']['field_contributor_goal']['id'] = 'field_contributor_goal';
+  $handler->display->display_options['fields']['field_contributor_goal']['table'] = 'field_data_field_contributor_goal';
+  $handler->display->display_options['fields']['field_contributor_goal']['field'] = 'field_contributor_goal';
+  $handler->display->display_options['fields']['field_contributor_goal']['label'] = '';
+  $handler->display->display_options['fields']['field_contributor_goal']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['field_contributor_goal']['alter']['text'] = 'of [field_contributor_goal]';
+  $handler->display->display_options['fields']['field_contributor_goal']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_contributor_goal']['settings'] = array(
+    'thousand_separator' => '',
+    'prefix_suffix' => 1,
+  );
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Taxonomy term: Contributor Goal Complete (field_contributor_goal_complete) */
+  $handler->display->display_options['sorts']['field_contributor_goal_complete_value']['id'] = 'field_contributor_goal_complete_value';
+  $handler->display->display_options['sorts']['field_contributor_goal_complete_value']['table'] = 'field_data_field_contributor_goal_complete';
+  $handler->display->display_options['sorts']['field_contributor_goal_complete_value']['field'] = 'field_contributor_goal_complete_value';
+  $handler->display->display_options['sorts']['field_contributor_goal_complete_value']['order'] = 'DESC';
+  $export['forum_rankings'] = $view;
+
+  $view = new view();
   $view->name = 'rated_resources_rankings';
   $view->description = '';
   $view->tag = 'default';

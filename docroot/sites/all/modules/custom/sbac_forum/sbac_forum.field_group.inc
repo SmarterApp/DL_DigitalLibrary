@@ -149,9 +149,9 @@ function sbac_forum_field_group_info() {
     'children' => array(
       0 => 'field_attributes',
       1 => 'field_grades',
-      2 => 'field_intended_end_user',
-      3 => 'field_intended_student',
-      4 => 'field_subject',
+      2 => 'field_intended_student',
+      3 => 'field_subject',
+      4 => 'field_intended_participants',
     ),
     'format_type' => 'div',
     'format_settings' => array(

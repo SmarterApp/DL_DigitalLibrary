@@ -166,6 +166,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Removed Resource Review'),
         'class' => 'RemovedResourceReview',
       ),
+      // new state forum created
+      array(
+        'name' => 'new_state_forum',
+        'description' => t('New State Forum'),
+        'class' => 'NewStateForum',
+      ),
       // removed forum user membership
       array(
         'name' => 'removed_forum_member',
@@ -219,6 +225,12 @@ class Hooks extends \devtools\Hooks {
         'name' => 'forum_access_change',
         'description' => t('Forum Access Change'),
         'class' => 'ForumAccessChange',
+      ),
+      // forum flagged
+      array(
+        'name' => 'forum_flagged',
+        'description' => t('Forum Flagged'),
+        'class' => 'ForumFlagged',
       ),
       // removed topic
       array(

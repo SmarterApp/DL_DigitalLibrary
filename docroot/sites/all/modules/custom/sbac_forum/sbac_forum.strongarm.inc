@@ -208,10 +208,7 @@ function sbac_forum_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '6',
-        ),
-        'redirect' => array(
-          'weight' => '8',
+          'weight' => '5',
         ),
         'redirect' => array(
           'weight' => '30',
@@ -256,7 +253,7 @@ function sbac_forum_strongarm() {
           'weight' => '1',
         ),
         'redirect' => array(
-          'weight' => '15',
+          'weight' => '16',
         ),
       ),
       'display' => array(

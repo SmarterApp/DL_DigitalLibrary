@@ -1,6 +1,17 @@
 (function($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
+  Drupal.behaviors.forumSelect = {
+    attach: function(context, settings) {
+      $(function() {
+        $('.forum-goal-select').change(function () {
+          $('.regional .view').hide();
+          $('.'+$(this).val()).show();
+        });
+      });
+    }
+  };
+
   Drupal.behaviors.accountDropdown = {
     attach: function(context, settings) {
       $('.user-info').click(function() {

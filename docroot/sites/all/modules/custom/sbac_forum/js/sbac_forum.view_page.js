@@ -18,7 +18,11 @@
         $(this).text(moreAndLess);
         $(".read-more").slideToggle();
       });
-
+      $('.goals-toggle').click(function () {
+        var hideShowGoals = $(".forum-goal-container").is(':visible') ? 'Show Member Goals' : 'Hide Member Goals';
+        $(this).text(hideShowGoals);
+        $(".forum-goal-container").slideToggle();
+      });
     }
   };
 

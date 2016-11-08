@@ -96,15 +96,15 @@ function sbac_email_flag_default_flags() {
     ),
     'api_version' => 3,
   );
-  // Exported flag: "Forum Subscribe".
+  // Exported flag: "Join Forum".
   $flags['subscribe_term'] = array(
     'entity_type' => 'taxonomy_term',
-    'title' => 'Forum Subscribe',
+    'title' => 'Join Forum',
     'global' => 0,
     'types' => array(
       0 => 'forum',
     ),
-    'flag_short' => 'Subscribe to Forum',
+    'flag_short' => 'Join Group',
     'flag_long' => 'Receive notifications of new discussions in this forum',
     'flag_message' => '',
     'unflag_short' => 'Unsubscribe from Forum',
@@ -237,6 +237,11 @@ function sbac_email_default_message_type() {
           "value" : "\\u003Cp\\u003EA forum you created has been flagged.\\u003C\\/p\\u003E",
           "format" : "full_html",
           "safe_value" : "\\u003Cp\\u003EA forum you created has been flagged.\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EAn item has been flagged in a forum that you moderate.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EBegin moderation on this flag by clicking \\u003Ca href=\\u0022!forum-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EAn item has been flagged in a forum that you moderate.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EBegin moderation on this flag by clicking \\u003Ca href=\\u0022!forum-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -264,6 +269,33 @@ function sbac_email_default_message_type() {
           "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
           "format" : "full_html",
           "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url]users\\/[message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['new_state_forum'] = entity_import('message_type', '{
+    "name" : "new_state_forum",
+    "description" : "New State Forum",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA State Forum for your state has been created\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA State Forum for your state has been created\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EA new forum for your state has been created. \\u003Ca href=\\u0022!forum_link\\u0022\\u003EClick here\\u003C\\/a\\u003E to view.\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\r\\n",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA new forum for your state has been created. \\u003Ca href=\\u0022!forum_link\\u0022\\u003EClick here\\u003C\\/a\\u003E to view.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022[site:url][message:user:uid]\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
         }
       ]
     },

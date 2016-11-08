@@ -349,7 +349,8 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
  * @return null|string
  */
 function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
-  $cached_output = cache_get('authpane_' . $user_id);
+//  $cached_output = cache_get('authpane_' . $user_id);
+  $cached_output = FALSE;
   if ($cached_output) {
     return $cached_output->data;
   }
@@ -382,7 +383,7 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
       '!date' => format_date($created, 'simple'),
     ));
 
-    cache_set('authpane_' . $user_id, $output);
+//    cache_set('authpane_' . $user_id, $output);
     return $output;
   }
 }

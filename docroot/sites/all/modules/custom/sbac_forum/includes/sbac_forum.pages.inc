@@ -239,7 +239,9 @@ function sbac_forum_view_forum_page($term) {
     ':uid' => $user->uid,
     ':tid' => $term->tid,
   ));
-
+  if ($term->field_add_to_leaderboard['und'][0]['value'] == 1 && $term->field_forum_access_states['und'][0]['value'] == 0) {
+    sbac_goals_update_forum_goals($term->tid);
+  }
   // Load up forum data.
   $forum_data = entity_metadata_wrapper('taxonomy_term', $term);
   // $test = $forum_data->getPropertyInfo();
@@ -370,7 +372,7 @@ function sbac_forum_view_forum_page($term) {
     'vid' => 'forum_member_list',
     'display' => 'block',
     'args' => $term->tid,
-    'title' => t('Participants ' . $member_count_text),
+    'title' => t('Members ' . $member_count_text),
     'weight' => -98,
     'type' => 'view',
   );
@@ -471,8 +473,93 @@ function sbac_forum_view_forum_page($term) {
       $variables['mime-type'] = file_get_mimetype($forum_image_url);
       $variables['file-type-icon'] = 'document';
   }
+  // Use default image for State forum if none uploaded
+  if ($term->field_forum_access_states['und'][0]['value'] == 0 && empty($term->field_state_or_district_image)) {
+      $forum_image_url = '/' . drupal_get_path('theme', 'SBAC') . '/images/state-forum-default.png';
+      $image_tag = '<img typeof="foaf:Image" src="' . $forum_image_url . '" width="268" height="138" alt="Forum thumbnail image" />';
+      $variables['image'] = $image_tag;
+      $variables['mime-type'] = file_get_mimetype($forum_image_url);
+      $variables['file-type-icon'] = 'document';
+  }
   $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $fav_type);
 
+  // Forum Goals
+  $goals = FALSE;
+  if ($term->field_add_to_leaderboard['und'][0]['value'] == 1 && $term->field_forum_access_states['und'][0]['value'] == 0) {
+    $educator_goal = 0;
+    $educator_complete = 0;
+    $reviewer_goal = 0;
+    $reviewer_complete = 0;
+    $contributor_goal = 0;
+    $contributor_complete = 0;
+    if ($term->field_educator_goal['und'][0]['value'] > 0) {
+      $educator_goal = $term->field_educator_goal['und'][0]['value'];  
+    }
+    if ($term->field_educator_goal_complete['und'][0]['value'] > 0) {
+      $educator_complete = $term->field_educator_goal_complete['und'][0]['value'];
+    }
+    if ($term->field_reviewer_goal['und'][0]['value'] > 0) {
+      $reviewer_goal = $term->field_reviewer_goal['und'][0]['value'];
+    }
+    if ($term->field_reviewer_goal_complete['und'][0]['value'] > 0) {
+      $reviewer_complete = $term->field_reviewer_goal_complete['und'][0]['value'];
+    }
+    if ($term->field_contributor_goal['und'][0]['value'] > 0) {
+      $contributor_goal = $term->field_contributor_goal['und'][0]['value'];
+    }
+    if ($term->field_contributor_goal_complete['und'][0]['value'] > 0) {
+      $contributor_complete = $term->field_contributor_goal_complete['und'][0]['value'];
+    }
+    $educator_perc = sbac_goals_calc_percent($educator_complete, $educator_goal);
+    $reviewer_perc = sbac_goals_calc_percent($reviewer_complete, $reviewer_goal);
+    $contributor_perc = sbac_goals_calc_percent($contributor_complete, $contributor_goal);
+    $member_count = count($term->field_fc_forum_members['und']);
+
+    $goals = '<a class="goals-toggle">Show Member Goals</a>
+              <div class="forum-goal-container">
+                <div class="goal-container">
+                  <div class="goal-header educator">
+                    <span class="goal-title">Educator</span><span class="goal-perc"><strong>' . $educator_perc . '%</strong> Complete</span>
+                  </div>
+                  <div class="goal-body">
+                    <div class="members">
+                      <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
+                      <span class="member-count">' . $member_count . ' Members</span>
+                    </div>
+                    <div class="goals">
+                      <span class="complete educator">' . $educator_complete . '</span> of ' . $educator_goal . '
+                    </div>
+                  </div>
+                </div>
+                <div class="goal-container">
+                  <div class="goal-header reviewer">
+                    <span class="goal-title">Resource Reviewer</span><span class="goal-perc"><strong>' . $reviewer_perc . '%</strong> Complete</span>
+                  </div>
+                  <div class="goal-body">
+                    <div class="members">
+                      <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
+                      <span class="member-count">' . $member_count . ' Members</span>
+                    </div>
+                    <div class="goals">
+                      <span class="complete reviewer">' . $reviewer_complete . '</span> of ' . $reviewer_goal . '
+                    </div>
+                  </div>
+                </div>
+                <div class="goal-container last">
+                  <div class="goal-header contributor">
+                    <span class="goal-title">Resource Contributor</span><span class="goal-perc"><strong>' . $contributor_perc . '%</strong> Complete</span>
+                  </div>
+                  <div class="goal-body">
+                    <div class="members">
+                      <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
+                      <span class="member-count">' . $member_count . ' Members</span>
+                    </div>
+                    <div class="goals">
+                      <span class="complete contributor">' . $contributor_complete . '</span> of ' . $contributor_goal . '
+                    </div>
+                  </div>
+                </div>';
+  }
   // Add all the markup to variable for tpl.
   $fields = array(
     'welcome_message' => $welcome_message,
@@ -492,6 +579,7 @@ function sbac_forum_view_forum_page($term) {
     'resource_rating_count' => $resource_rating_count,
     'resource_views' => $resource_views,
     'resource_downloads' => $resource_downloads,
+    'goals' => $goals,
   );
 
   $output = theme('sbac_forum_render_target_forum', array('fields' => $fields));

@@ -58,7 +58,6 @@
 
   <div class="filter-bar">
     <?php
-
     // Add join or leave forum buttons
 		$path_pieces = explode('/', $_GET['q']);
 		$tid = $path_pieces[2];
