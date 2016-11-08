@@ -1109,8 +1109,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
                   <h1 style="color: #6cb9d1; margin-bottom: 0px;">IN PROGRESS</h1>
                   <p style="color: #6cb9d1; margin: 5px;">As of ' . date('m/d/Y', time()) . '</p>
                   <div class="logo"></div>
-                </div>
-';
+                </div>';
   }
   // Get user profile
   $user_profile = user_load($user->uid);
