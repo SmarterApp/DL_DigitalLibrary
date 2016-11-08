@@ -21,6 +21,15 @@ function sbac_core_user_default_permissions() {
     'module' => 'print',
   );
 
+  // Exported permission: 'access sbac configuration menu'.
+  $permissions['access sbac configuration menu'] = array(
+    'name' => 'access sbac configuration menu',
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
+    'module' => 'sbac_core',
+  );
+
   // Exported permission: 'configure sbac'.
   $permissions['configure sbac'] = array(
     'name' => 'configure sbac',
