@@ -972,21 +972,13 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
                     background-image: url("/sites/all/themes/custom/SBAC/logo.png");
                     background-position: center center;
                     background-repeat: no-repeat;
-                    background-size: contain;
+                    background-size: 100px;
                     display: block;
                     width: 114px;
                     height: 36px;
                   }
                   .view-sne-details .profile-pic .user-picture {
-                    background-image: url("/sites/all/modules/custom/sbac_report/images/avatar.png");
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                    display: block;
-                    float: left;
-                    margin-right: 20px;
-                    width: 100px;
-                    height: 100px;
+                    display: none;
                   }
                   .user-profile {
                     font-family: sans-serif;
@@ -1108,7 +1100,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   $user_profile = user_load($user->uid);
   if ($user_profile) {
     module_load_include('inc', 'sbac_report', 'sbac_report.pages');
-    $user_output = sbac_report_build_sne_output($user_profile);
+    $user_output = sbac_goalspdf_profile_output($user_profile);
     $output .= theme('sbac_report_output_sne', array('user_output' => $user_output));
   }
   // Get rated data
@@ -1464,4 +1456,104 @@ SQL;
   foreach($completed as $forum) {
     sbac_goals_update_forum_goals($forum->tid);
   } 
+}
+
+/**
+ * Checks user privacy options and outputs.
+ *
+ * @param $user
+ * @return array
+ */
+function sbac_goalspdf_profile_output($user) {
+  $user_output = array();
+  $always_show[] = array('value' => 'field_first_name');
+  $always_show[] = array('value' => 'field_position');
+  $always_show[] = array('value' => 'field-state');
+  $always_show[] = array('value' => 'field-grade-level-s-');
+  $always_show[] = array('value' => 'field-subject-s-');
+  $always_show[] = array('value' => 'special-populations');
+  $privacy_list = array_merge($user->field_privacy['und'], $always_show);
+  // Privacy is set all the time.
+  if ($privacy_list) {
+    foreach ($privacy_list as $key => $privacy) {
+      switch ($privacy['value']) {
+        case 'picture':
+          if (isset($user->picture->uri)) {
+            $picture = theme('image_style', array(
+              'style_name' => 'profile_image',
+              'path' => $user->picture->uri,
+              'attributes' => array('class' => 'profile-img')
+            ));
+            $user_output['picture'] = '<a href="/user/' . $user->uid . '">' . $picture . '</a>';
+          }
+          break;
+        case 'field_first_name':
+          if (isset($user->field_first_name['und'][0]['value'])) {
+            $user_output['first_name'] = $user->field_first_name['und'][0]['value'];
+          }
+          break;
+        case 'field_last_name':
+          if (isset($user->field_last_name['und'][0]['value'])) {
+            $user_output['last_name'] = $user->field_last_name['und'][0]['value'];
+          }
+          break;
+        case 'field_position':
+          if (isset($user->field_position['und'][0]['tid'])) {
+            $term = taxonomy_term_load($user->field_position['und'][0]['tid']);
+            $user_output['position'] = $term->name;
+          }
+          break;
+        case 'field-state':
+          if (isset($user->field_state['und'][0]['tid'])) {
+            $term = taxonomy_term_load($user->field_state['und'][0]['tid']);
+            $user_output['state'] = $term->name;
+          }
+          break;
+        case 'field-grade-level-s-':
+          if (isset($user->field_grade_level_s_['und'][0])) {
+            foreach ($user->field_grade_level_s_['und'] as $key => $term) {
+              $term = taxonomy_term_load($term['tid']);
+              $user_output['grade_level'][$term->tid] = $term->name;
+            }
+          }
+          break;
+        case 'field-subject-s-':
+          if (isset($user->field_subject_s_['und'][0])) {
+            foreach ($user->field_subject_s_['und'] as $key => $term) {
+              $term = taxonomy_term_load($term['tid']);
+              $user_output['subjects'][$term->tid] = $term->name;
+            }
+          }
+          break;
+        case 'special-populations':
+          if (isset($user->field_special_populations['und'][0])) {
+            foreach ($user->field_special_populations['und'] as $key => $term) {
+              $term = taxonomy_term_load($term['tid']);
+              $user_output['populations'][$term->tid] = $term->name;
+            }
+          }
+          break;
+        case 'mail':
+          $user_output['email'] = $user->mail;
+          break;
+        case 'field_school_name':
+          if (isset($user->field_school_name['und'][0])) {
+            $user_output['school_name'] = $user->field_school_name['und'][0]['value'];
+          }
+          break;
+        case 'field_district_name':
+          if (isset($user->field_district_name['und'][0])) {
+            $user_output['district_name'] = $user->field_district_name['und'][0]['value'];
+          }
+          break;
+        case 'field_introduction':
+          if (isset($user->field_introduction['und'][0])) {
+            $user_output['introduction'] = $user->field_introduction['und'][0]['value'];
+          }
+          break;
+      }
+    }
+  }
+
+  return $user_output;
 }
