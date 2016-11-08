@@ -1,0 +1,274 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function sbac_art_api_menu()
+{
+  $items = array();
+  $items['admin/sbac/art-api'] = array(
+    'title' => 'SBAC ART API Configuration',
+    'description' => 'Configure the OAuth2 and REST settings for the ART API.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_art_api_settings_form'),
+    'access arguments' => array('configure art api'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'settings.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function sbac_art_api_permission() {
+  return array(
+    'configure art api' => array(
+      'title' => t('Configure ART API'),
+      'description' => t('Allow users to change the OAuth2 and REST credentials and endpoints for the ART API.')
+    )
+  );
+}
+
+/**
+ * Helper for encrypting/decrypting data
+ */
+function sbac_art_api_encrypt($data) {
+  if ($data) {
+    $key = pack('H*', substr(drupal_get_hash_salt(), 0, 64));
+    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+    $ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
+    $ciphertext = $iv . $ciphertext;
+    $ciphertext_base64 = base64_encode($ciphertext);
+    return $ciphertext_base64;
+  } else {
+    return $data;
+  }
+}
+
+/**
+ * Helper for decrypting data
+ */
+function sbac_art_api_decrypt($data) {
+  if ($data) {
+    $key = pack('H*', substr(drupal_get_hash_salt(), 0, 64));
+    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+    $ciphertext = base64_decode($data);
+    $iv = substr($ciphertext, 0, $iv_size);
+    $ciphertext = substr($ciphertext, $iv_size);
+    $plaintext = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ciphertext, MCRYPT_MODE_CBC, $iv);
+    return rtrim($plaintext);
+  } else {
+    return $data;
+  }
+}
+
+/**
+ * Implements hook_oauth2_clients
+ *
+ * @return mixed Client array, or false on missing data
+ */
+function sbac_art_api_oauth2_clients() {
+  $server_url = variable_get('sbac_art_api_oauth_url', FALSE);
+  $oauth_client_id = variable_get('sbac_art_api_oauth_id', FALSE);
+  $oauth_secret = sbac_art_api_decrypt(variable_get('sbac_art_api_oauth_secret', ''));
+  $oauth_username = variable_get('sbac_art_api_oauth_username', FALSE);
+  $oauth_password = sbac_art_api_decrypt(variable_get('sbac_art_api_oauth_password', ''));
+
+  if ($server_url && $oauth_client_id && $oauth_secret && $oauth_username && $oauth_password) {
+    // ART API OAuth2 client
+    $oauth2_clients['art_api'] = array(
+      'token_endpoint' => $server_url,
+      'auth_flow' => 'user-password',
+      'client_id' => $oauth_client_id,
+      'client_secret' => $oauth_secret,
+      'username' => $oauth_username,
+      'password' => $oauth_password,
+    );
+
+    return $oauth2_clients;
+  }
+  return FALSE;
+}
+
+/**
+ * Gets the OAuth2 token
+ *
+ * @return mixed Token on success, false on failure
+ */
+function sbac_art_api_get_token() {
+  try {
+    $oauth2_client = oauth2_client_load('art_api');
+    $access_token = $oauth2_client->getAccessToken();
+  }
+  catch (Exception $e) {
+    drupal_set_message($e->getMessage(), 'error');
+    $access_token = FALSE;
+  }
+  return $access_token;
+}
+
+/**
+ * Does the actual request and returns any data received
+ *
+ * @param array $options The request options
+ * @param string $url The URL to make the request against
+ * @param bool $raw Whether to return the raw JSON or parsed
+ * @return mixed False if the return code isn't a success, raw data if $raw, decoded JSON if not $raw, TRUE if no content
+ */
+function _sbac_art_api_do_request($url, $options, $raw) {
+  $request = drupal_http_request($url, $options);
+  switch ($request->code) {
+    case 200:
+    case 201:
+      if ($raw) {
+        return $request->data;
+      }
+      return drupal_json_decode($request->data);
+    case 204:
+      return TRUE;
+    default:
+      return FALSE;
+  }
+}
+
+/**
+ * Does a GET to get a list of states as JSON data
+ *
+ * @param bool $raw Whether to return the raw JSON or parsed
+ * @return mixed See _sbac_art_api_do_request
+ */
+function sbac_art_api_get_states($raw = TRUE) {
+  $access_token = sbac_art_api_get_token();
+  $base_url = variable_get('sbac_art_api_base_rest_url');
+  $options = array(
+    'headers' => array(
+      'Authorization' => "Bearer $access_token"
+    )
+  );
+  return _sbac_art_api_do_request($base_url . '/states', $options, $raw);
+}
+
+/**
+ * Does a GET to get a list of districts in a state as JSON data
+ *
+ * @param string $state The state ID (abbreviation)
+ * @param bool $raw Whether to return the raw JSON or parsed
+ * @return mixed See _sbac_art_api_do_request
+ */
+function sbac_art_api_get_districts($state, $raw = TRUE) {
+  $access_token = sbac_art_api_get_token();
+  $base_url = variable_get('sbac_art_api_base_rest_url');
+  $options = array(
+    'headers' => array(
+      'Authorization' => "Bearer $access_token"
+    )
+  );
+  return _sbac_art_api_do_request($base_url . '/district?stateId=' . $state, $options, $raw);
+}
+
+/**
+ * Does a GET to get a user's details as JSON data
+ *
+ * @param string $email The user email
+ * @param bool $raw Whether to return the raw JSON or parsed
+ * @return mixed See _sbac_art_api_do_request
+ */
+function sbac_art_api_get_user($email, $raw = TRUE) {
+  $access_token = sbac_art_api_get_token();
+  $base_url = variable_get('sbac_art_api_base_rest_url');
+  $options = array(
+    'headers' => array(
+      'Authorization' => "Bearer $access_token"
+    )
+  );
+  return _sbac_art_api_do_request($base_url . '/external/user/' . $email . '/details', $options, $raw);
+}
+
+/**
+ * Does a POST to create a user using JSON data
+ *
+ * @param string $user_json The user, represented as a JSON object
+ * @param bool $raw Whether to return the raw JSON or parsed
+ * @return mixed See _sbac_art_api_do_request
+ */
+function sbac_art_api_set_user($user_json, $raw = TRUE) {
+  $access_token = sbac_art_api_get_token();
+  $base_url = variable_get('sbac_art_api_base_rest_url');
+  $options = array(
+    'headers' => array(
+      'Authorization' => "Bearer $access_token",
+      'Content-Type' => "application/json"
+    ),
+    'method' => 'POST',
+    'data' => $user_json
+  );
+  return _sbac_art_api_do_request($base_url . '/external/user', $options, $raw);
+}
+
+/**
+ * Does a POST to reset a user's password
+ *
+ * @param string $email The user email
+ * @param bool $raw Whether to return the raw JSON or parsed
+ * @return mixed See _sbac_art_api_do_request
+ */
+function sbac_art_api_reset_password($email, $raw = TRUE) {
+  $access_token = sbac_art_api_get_token();
+  $base_url = variable_get('sbac_art_api_base_rest_url');
+  $options = array(
+    'headers' => array(
+      'Authorization' => "Bearer $access_token",
+      'Content-Type' => "application/json"
+    ),
+    'method' => 'POST'
+  );
+  return _sbac_art_api_do_request($base_url . '/external/user/' . $email . '/reset', $options, $raw);
+}
+
+/**
+ * Creates a user object represented as JSON
+ *
+ * @param $first_name
+ * @param $last_name
+ * @param $email
+ * @param $state
+ * @param $district
+ * @return string The JSON string
+ */
+function sbac_art_api_user_create_json($first_name, $last_name, $email, $state, $district) {
+  return '{
+"firstName": "' . check_plain($first_name) . '",
+"lastName": "' . check_plain($last_name) . '",
+"email": "' . check_plain($email) . '",
+"roleAssociations": [{ 
+    "role": "DL_EndUser",
+    "level": "STATE",
+    "entityId": "' . check_plain($state) . '"
+  }, {
+    "role": "DL_EndUser",
+    "level": "DISTRICT",
+    "entityId": "' . check_plain($district) . '"
+  }]
+}';
+}
+
+/**
+ * @param array $user_json The decoded JSON user object
+ * @param string $state The user's state ID (2 letter abbreviation)
+ * @param string $district The user's district ID
+ * @return string The JSON string
+ */
+function sbac_art_api_user_update_json($user_json, $state, $district) {
+  foreach ($user_json['roleAssociations'] as $key => $association) {
+    if ($association['role'] =='DL_EndUser') {
+      unset($user_json['roleAssociations'][$key]);
+    }
+  }
+  $user_json['roleAssociations'][] = array('role' => 'DL_EndUser', 'level' => 'STATE', 'entityId' => $state);
+  $user_json['roleAssociations'][] = array('role' => 'DL_EndUser', 'level' => 'DISTRICT', 'entityId' => $district);
+  $user_json['roleAssociations'] = array_values($user_json['roleAssociations']);
+  $json_string = drupal_json_encode($user_json);
+  return $json_string;
+}
