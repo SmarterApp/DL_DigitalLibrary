@@ -1194,3 +1194,26 @@ function sbac_central_uninstall() {
   variable_del('feedback_block_body');
   variable_del('enable_feedback');
 }
+
+/**
+ * Enable self-reg modules.
+ */
+function sbac_central_update_7096() {
+    $modules = array(
+        'sbac_authorized_domains',
+        'sbac_art_api',
+        'sbac_self_registration',
+        'sbac_districts_taxonomy',
+    );
+    module_enable($modules);
+}
+
+/**
+ * Enable oauth2 module.
+ */
+function sbac_central_update_7097() {
+    $modules = array(
+        'oauth2_client',
+    );
+    module_enable($modules);
+}

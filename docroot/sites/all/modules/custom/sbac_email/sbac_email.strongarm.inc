@@ -81,6 +81,55 @@ function sbac_email_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'mailgun_format';
+  $strongarm->value = 'full_html';
+  $export['mailgun_format'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mailgun_log';
+  $strongarm->value = 0;
+  $export['mailgun_log'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mailgun_queue';
+  $strongarm->value = 0;
+  $export['mailgun_queue'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mailgun_test';
+  $strongarm->value = 0;
+  $export['mailgun_test'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mailgun_tracking';
+  $strongarm->value = 'disabled';
+  $export['mailgun_tracking'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mailgun_tracking_clicks';
+  $strongarm->value = 'disabled';
+  $export['mailgun_tracking_clicks'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'mailgun_tracking_opens';
+  $strongarm->value = 'disabled';
+  $export['mailgun_tracking_opens'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'mailsystem_theme';
   $strongarm->value = 'SBAC';
   $export['mailsystem_theme'] = $strongarm;
@@ -90,7 +139,7 @@ function sbac_email_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'mail_system';
   $strongarm->value = array(
-    'default-system' => 'SmtpMailSystem',
+    'default-system' => 'MailgunMailSystem',
   );
   $export['mail_system'] = $strongarm;
 
@@ -184,13 +233,6 @@ function sbac_email_strongarm() {
   $strongarm->name = 'site_mail';
   $strongarm->value = 'DoNotReply@smarterbalancedlibrary.org';
   $export['site_mail'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'smtp_allowhtml';
-  $strongarm->value = 0;
-  $export['smtp_allowhtml'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
