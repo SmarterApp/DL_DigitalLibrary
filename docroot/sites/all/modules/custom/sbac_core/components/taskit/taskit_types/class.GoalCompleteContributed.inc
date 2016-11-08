@@ -11,8 +11,7 @@ class GoalCompleteContributed extends \taskit\sbac_core\BaseTask {
       $this->setTaskUrl(check_plain('users/' . $account->uid . '#profile-goals'));
 
       $output = array();
-      $output[] = t('Congratulations: Your goal of !title resources contributed has been met! !goal_page', array(
-        '!title' => '<span class="taskit-title">' . $rating_goal . '</span>',
+      $output[] = t('Congratulations: You have reached your goal for resources contributed! !goal_page', array(
         '!goal_page' => '<span class="taskit-title">View your goals to increase your goal number.</span>',
       ));
 
