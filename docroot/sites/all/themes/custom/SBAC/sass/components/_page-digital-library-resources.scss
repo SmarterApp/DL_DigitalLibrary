@@ -614,3 +614,9 @@
     position:relative !important;
   }
 }
+
+@-moz-document url-prefix() {
+  .page-digital-library-resources .filters .facet-block .item-list ul li a.facetapi-active {
+    padding-left: 25px;
+  }
+}
