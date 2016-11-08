@@ -667,12 +667,12 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select{
   }
 }
 
-.sbac-favorites-menu {
+.user-nav .sbac-favorites-menu {
 	padding-left: 19px;
 
 	a {
-		background: url(../images/icons/icon-folder-heart.png) no-repeat 0 0;
-		padding-left: 20px;
+		background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 4px;
+		padding-left: 22px;
 	}
 
 	.sbac-favorites-menu-tooltip {
@@ -4228,5 +4228,11 @@ form#sbac-user-filter-form #edit-email {
     cursor: pointer;
     right: 55px;
     top: -3px;
+  }
+}
+
+@-moz-document url-prefix() {
+  .user-nav .sbac-favorites-menu a {
+    background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 0;
   }
 }

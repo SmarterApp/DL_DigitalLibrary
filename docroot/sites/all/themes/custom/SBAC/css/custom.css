@@ -32185,16 +32185,22 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select {
 }
 
 /* line 670, ../sass/custom.scss */
-.sbac-favorites-menu {
+.user-nav .sbac-favorites-menu {
   padding-left: 19px;
 }
 /* line 673, ../sass/custom.scss */
-.sbac-favorites-menu a {
-  background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 5px;
-  padding-left: 20px;
+.user-nav .sbac-favorites-menu a {
+  background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 4px;
+  padding-left: 22px;
+}
+/* line 4234, ../sass/custom.scss */
+@-moz-document url-prefix() {
+  .user-nav .sbac-favorites-menu a {
+    background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 0;
+  }
 }
 /* line 678, ../sass/custom.scss */
-.sbac-favorites-menu .sbac-favorites-menu-tooltip {
+.user-nav .sbac-favorites-menu .sbac-favorites-menu-tooltip {
   width: 142px;
   font-size: 0.8em;
   position: absolute;
@@ -32207,7 +32213,7 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select {
   overflow: visible !important;
 }
 /* line 690, ../sass/custom.scss */
-.sbac-favorites-menu .sbac-favorites-menu-tooltip.f-dropdown {
+.user-nav .sbac-favorites-menu .sbac-favorites-menu-tooltip.f-dropdown {
   line-height: 1.6;
 }
 
