@@ -972,21 +972,13 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
                     background-image: url("/sites/all/themes/custom/SBAC/logo.png");
                     background-position: center center;
                     background-repeat: no-repeat;
-                    background-size: contain;
+                    background-size: 100px;
                     display: block;
                     width: 114px;
                     height: 36px;
                   }
                   .view-sne-details .profile-pic .user-picture {
-                    background-image: url("/sites/all/modules/custom/sbac_report/images/avatar.png");
-                    background-position: center center;
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                    display: block;
-                    float: left;
-                    margin-right: 20px;
-                    width: 100px;
-                    height: 100px;
+                    display: none;
                   }
                   .user-profile {
                     font-family: sans-serif;
@@ -1136,87 +1128,101 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
                   $resources_rated . ' (' . $rated_perc . '%)
                 </span>
               </div>';
-  if (!empty($rated_table_vals)) {
-    $rated_header = array('Resource Title', 'Star Rating', 'Date Rated');
+  $rated_header = array('Resource Title', 'Star Rating', 'Date Rated');
+  if (!empty($rated_table_vals)) { 
+    $output .= theme('table', array('header' => $rated_header, 'rows' => $rated_table_vals));
+  }
+  else {
+    $rated_table_vals[] = array('-', '-', '-');
     $output .= theme('table', array('header' => $rated_header, 'rows' => $rated_table_vals));
   }
   // Get Reviewed data
-  $reviewed_table_vals = array();
-  $reviewed_raw = sbac_goals_get_current_completed_reviews($user->uid, $date_range);
-  $resources_reviewed = $user->field_resources_reviewed['und'][0]['value'];
-  $reviewed_goal = $user->field_resources_reviewed_goal['und'][0]['value'];
-  $reviewed_perc = sbac_goals_calc_percent($resources_reviewed, $reviewed_goal);
-  $output .= '<div class="resource-reviewer-header">Resource Reviewer</div>
-              <div class="goal-container">
-                <span class="goal">Goal: ' .
-                  $reviewed_goal .
-                '</span>
-                <span>Completed: ' .
-                  $resources_reviewed . ' (' . $reviewed_perc . '%)
-                </span>
-              </div>';  
-  // Process Reviewed data into table for report
-  foreach ($reviewed_raw as $reviewed) {
-    $node = node_load($reviewed->node_id);
-    $title = $node->title;
-    switch ($reviewed->type) {
-      case 'qc':
-        $type = 'Quality Criteria';
-        break;
-      case 'gate_keeper':
-        $type = 'Gate Keeping';
-        break;
-      case 'post':
-        $type = 'Post';
-        break;
+  if (in_array('resource reviewer', $user_profile->roles) || in_array('resource publisher', $user_profile->roles)) {
+    $reviewed_table_vals = array();
+    $reviewed_raw = sbac_goals_get_current_completed_reviews($user->uid, $date_range);
+    $resources_reviewed = $user->field_resources_reviewed['und'][0]['value'];
+    $reviewed_goal = $user->field_resources_reviewed_goal['und'][0]['value'];
+    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed, $reviewed_goal);
+    $output .= '<div class="resource-reviewer-header">Resource Reviewer</div>
+                <div class="goal-container">
+                  <span class="goal">Goal: ' .
+                    $reviewed_goal .
+                  '</span>
+                  <span>Completed: ' .
+                    $resources_reviewed . ' (' . $reviewed_perc . '%)
+                  </span>
+                </div>';  
+    // Process Reviewed data into table for report
+    foreach ($reviewed_raw as $reviewed) {
+      $node = node_load($reviewed->node_id);
+      $title = $node->title;
+      switch ($reviewed->type) {
+        case 'qc':
+          $type = 'Quality Criteria';
+          break;
+        case 'gate_keeper':
+          $type = 'Gate Keeping';
+          break;
+        case 'post':
+          $type = 'Post';
+          break;
+      }
+      $completed = date('m/d/Y', $reviewed->changed);
+      $reviewed_table_vals[] = array($title, $type, $completed);
     }
-    $completed = date('m/d/Y', $reviewed->changed);
-    $reviewed_table_vals[] = array($title, $type, $completed);
-  }
-  if (!empty($reviewed_table_vals)) {
     $reviewed_header = array('Title of Resource', 'Type of Review', 'Date Completed');
-    $output .= theme('table', array('header' => $reviewed_header, 'rows' => $reviewed_table_vals));
+    if (!empty($reviewed_table_vals)) {
+      $output .= theme('table', array('header' => $reviewed_header, 'rows' => $reviewed_table_vals));
+    }
+    else {
+      $reviewed_table_vals[] = array('-', '-', '-');
+      $output .= theme('table', array('header' => $reviewed_header, 'rows' => $reviewed_table_vals));
+    }
   }
-
   // Get Contributed data
-  $contributed_goal = '';
-  $contributed_complete = '';
-  $contributed_perc = '';
-  $contributed_table_vals = array();
-  $contributed_raw = sbac_goals_get_contributed_resources($user->uid, $date_range);
-  foreach ($contributed_raw as $contributed) {
-    $node = node_load($contributed->nid);
-    $title = $node->title;
-    $term = taxonomy_term_load($node->field_focus['und'][0]['tid']);
-    $type = $term->name;
-    $views = $node->field_total_views['und'][0]['value'] ? $node->field_total_views['und'][0]['value'] : '0';
-    $star_avg = ceil(sbac_resource_get_rating_average($contributed->nid) * .05);
-    $star_avg ? $star_avg : $star_avg = 'Not Rated';
-    $downloads = sbac_goals_get_total_downloads($contributed->nid);
-    $downloads ? $downloads : $downloads = '0';
-    $status = 'Published';
-    $created = date('m/d/Y', $node->created);
-    $contributed_table_vals[] = array($title, $type, $views, $star_avg, $downloads, $status, $created);
+  if (in_array('resource contributor', $user_profile->roles)) {
+    $contributed_goal = '';
+    $contributed_complete = '';
+    $contributed_perc = '';
+    $contributed_table_vals = array();
+    $contributed_raw = sbac_goals_get_contributed_resources($user->uid, $date_range);
+    foreach ($contributed_raw as $contributed) {
+      $node = node_load($contributed->nid);
+      $title = $node->title;
+      $term = taxonomy_term_load($node->field_focus['und'][0]['tid']);
+      $type = $term->name;
+      $views = $node->field_total_views['und'][0]['value'] ? $node->field_total_views['und'][0]['value'] : '0';
+      $star_avg = ceil(sbac_resource_get_rating_average($contributed->nid) * .05);
+      $star_avg ? $star_avg : $star_avg = 'Not Rated';
+      $downloads = sbac_goals_get_total_downloads($contributed->nid);
+      $downloads ? $downloads : $downloads = '0';
+      $status = 'Published';
+      $created = date('m/d/Y', $node->created);
+      $contributed_table_vals[] = array($title, $type, $views, $star_avg, $downloads, $status, $created);
+    }
+    $resources_contributed = $user->field_resources_contributed['und'][0]['value'];
+    $contributed_goal = $user->field_resources_posted_goal['und'][0]['value'];
+    $contributed_perc = sbac_goals_calc_percent($resources_contributed, $contributed_goal);
+    $output .= '<div class="resource-contributor-header">Resource Contributor</div>
+                <div class="goal-container">
+                  <span class="goal">Goal: ' .
+                    $contributed_goal .
+                  '</span>
+                  <span>Completed: ' .
+                    $resources_contributed . ' (' . $contributed_perc . '%)
+                  </span>
+                </div>'; 
+    $contributed_header = array('Resource Title', 'Resource Type', 'Total Views', 'Star Ratings', 'Total Downloads', 'Status', 'Date Created');
+    // Title, type of resource, views, star_rating average , downloads, Status, Date created
+    // Process Contributed data into table for report
+    if (!empty($contributed_table_vals)) {  
+      $output .= theme('table', array('header' => $contributed_header, 'rows' => $contributed_table_vals));
+    }
+    else {
+      $contributed_table_vals[] = array('-', '-', '-', '-', '-', '-', '-');
+      $output .= theme('table', array('header' => $contributed_header, 'rows' => $contributed_table_vals));
+    }
   }
-  $resources_contributed = $user->field_resources_contributed['und'][0]['value'];
-  $contributed_goal = $user->field_resources_posted_goal['und'][0]['value'];
-  $contributed_perc = sbac_goals_calc_percent($resources_contributed, $contributed_goal);
-  $output .= '<div class="resource-contributor-header">Resource Contributor</div>
-              <div class="goal-container">
-                <span class="goal">Goal: ' .
-                  $contributed_goal .
-                '</span>
-                <span>Completed: ' .
-                  $resources_contributed . ' (' . $contributed_perc . '%)
-                </span>
-              </div>'; 
-  $contributed_header = array('Resource Title', 'Resource Type', 'Total Views', 'Star Ratings', 'Total Downloads', 'Status', 'Date Created');
-  // Title, type of resource, views, star_rating average , downloads, Status, Date created
-  // Process Contributed data into table for report
-  if (!empty($contributed_table_vals)) {  
-    $output .= theme('table', array('header' => $contributed_header, 'rows' => $contributed_table_vals));
-  }
-  
   // Footer
   $output .= '<div class="footer">Smarter Balanced Digital Library Goal Certificate</div></body></html>';
   // Create pdf
@@ -1228,6 +1234,9 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $dompdf->render();
     $pdfoutput = $dompdf->output();
     //  Checks whether there is an output folder inside sites/default/files
+    if (!is_dir('public://user_certificates')) {
+      mkdir("public://user_certificates", 0777);
+    } 
     if (!is_dir('public://user_certificates/' . $user->uid)) {
       mkdir("public://user_certificates/" . $user->uid, 0777);
     }
@@ -1246,6 +1255,12 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $dompdf->render();
     $pdfoutput = $dompdf->output();
     //  Checks whether there is an output folder inside sites/default/files
+    if (!is_dir('public://user_certificates')) {
+      mkdir("public://user_certificates", 0777);
+    }
+    if (!is_dir('public://user_certificates/' . $user->uid)) {
+      mkdir("public://user_certificates/" . $user->uid, 0777);
+    }
     if (!is_dir('public://user_certificates/' . $user->uid . '/temp')) {
       mkdir("public://user_certificates/" . $user->uid . '/temp', 0777);
     }

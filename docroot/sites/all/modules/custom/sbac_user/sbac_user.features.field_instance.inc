@@ -100,6 +100,50 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_email_preference'.
+  $field_instances['user-user-field_email_preference'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 'never',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 30,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_email_preference',
+    'label' => 'Email Preference',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 1,
+        'label_help_description' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 11,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_feedback_flag'.
   $field_instances['user-user-field_feedback_flag'] = array(
     'bundle' => 'user',
@@ -1225,6 +1269,7 @@ function sbac_user_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Alternate email address');
   t('District Name');
+  t('Email Preference');
   t('Feedback flag');
   t('Grade(s)');
   t('Hide From Leaderboards');

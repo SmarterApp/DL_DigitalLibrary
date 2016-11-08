@@ -1204,6 +1204,21 @@ function sbac_central_update_7099() {
   field_purge_batch(1);
 }
 
+function sbac_central_update_7100() {
+  // Delete intended end user field from forums
+  // Get the fields' info array for the given content type.
+  $field_instance = field_info_instances('taxonomy_term', 'forum');
+  
+  // Get the the value/instance of the Ad Tag folder field.
+  $instance = $field_instance['field_intended_end_user'];
+  
+  // Delete the ad tag folder field instance.
+  // This will also delete the ad tag folder field automatically
+  // if the last instance/object of this field had been deleted.
+  field_delete_instance($instance);
+
+}
+
 /**
  * Impliments hook_uninstall().
  */

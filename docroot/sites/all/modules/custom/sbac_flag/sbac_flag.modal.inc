@@ -1213,14 +1213,16 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
       $task->addTriggeringUser($user_profile->uid);
       $task->save();
     }
-    // Notify forum creator
-    if ($task = taskit_get_object('forum_flagged')) {
-      $task->addVisibility($task::VISIBILITY_USER);
-      $task->addEntity('node', $node->nid);
-      $task->addOwningUser($forum->uid);
-      $task->addTriggeringUser($forum->uid);
-      $task->save();
-    }    
+    // Notify forum creator if different user
+    if ($node->uid !== $forum->uid) {
+      if ($task = taskit_get_object('forum_flagged')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $node->nid);
+        $task->addOwningUser($forum->uid);
+        $task->addTriggeringUser($forum->uid);
+        $task->save();
+      }
+    }
     // Send email to topic creator
     global $base_url;
     $values = array(
@@ -1240,23 +1242,25 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
         message_delete_multiple(array($message->mid));
       }
     }
-    // Send email to forum creator
-    $user_profile = user_load($forum->uid);
-    $values = array(
-      'arguments' => array(
-        '!forum-link' => $base_url . '/content/' . $node->nid,
-      ),
-      'uid' => $user_profile->uid,
-    );
-    if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
-      // Create message
-      $message = message_create('forum_flagged', $values);
-      $wrapper = entity_metadata_wrapper('message', $message);
-      if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
-        // send email
-        message_notify_send_message($message);
-        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-        message_delete_multiple(array($message->mid));
+    // Send email to forum creator if different user
+    if ($node->uid !== $forum->uid) {
+      $user_profile = user_load($forum->uid);
+      $values = array(
+        'arguments' => array(
+          '!forum-link' => $base_url . '/content/' . $node->nid,
+        ),
+        'uid' => $user_profile->uid,
+      );
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+        // Create message
+        $message = message_create('forum_flagged', $values);
+        $wrapper = entity_metadata_wrapper('message', $message);
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));
+        }
       }
     }
     sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
