@@ -352,6 +352,9 @@
       },
       "drupal/zurb_foundation": {
 	"Changes to the theme": "patches/zurb_foundation-changes.patch"
+      },
+      "google/apiclient": {
+        "Ensure we only define the autoloader once": "patches/sbac-googleapi.patch"
       }
     }
   }
