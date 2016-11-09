@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f58b3282fecf9d5dfdc37aac8a51060e",
-    "content-hash": "1dfd1d4dd220f62f44014cde8458bf66",
+    "hash": "74999860bf2a154b8591b39c0508466e",
+    "content-hash": "efe76f80ef371f3651857b5318124ec8",
     "packages": [
         {
             "name": "components/jquery",
@@ -2162,6 +2162,39 @@
             "time": "2013-06-14 12:51:51"
         },
         {
+            "name": "drupal/mailgun",
+            "version": "dev-7.x-1.x",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/mailgun.git",
+                "reference": "41a297ffb4073568bcf9b6f1d51b0e1e6bd09be8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/mailgun-7.x-1.6.zip",
+                "reference": "41a297ffb4073568bcf9b6f1d51b0e1e6bd09be8",
+                "shasum": null
+            },
+            "require": {
+                "drupal/drupal": "7.*",
+                "drupal/libraries": "7.*",
+                "drupal/mailsystem": "7.*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-7.x-1.x": "7.1.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.drupal-composer.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Provides integration with Mailgun's email sending API.",
+            "homepage": "https://www.drupal.org/project/mailgun",
+            "time": "2016-06-26 04:07:34"
+        },
+        {
             "name": "drupal/maillog",
             "version": "dev-7.x-1.x",
             "source": {
@@ -2668,6 +2701,37 @@
             "description": "Replace comment pager with a more comment pager like twitter or facebook does",
             "homepage": "https://www.drupal.org/project/morecomments",
             "time": "2011-03-09 15:41:45"
+        },
+        {
+            "name": "drupal/oauth2_client",
+            "version": "7.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/oauth2_client",
+                "reference": "e81241be0feb75c9dba816a4ca4addc9e686890b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/oauth2_client-7.x-1.6.zip",
+                "reference": "e81241be0feb75c9dba816a4ca4addc9e686890b",
+                "shasum": null
+            },
+            "require": {
+                "drupal/drupal": "7.*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-7.x-1.x": "7.1.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.drupal-composer.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Provides OAuth2 client functionality.",
+            "homepage": "https://www.drupal.org/project/oauth2_client",
+            "time": "2016-08-24 20:51:31"
         },
         {
             "name": "drupal/oscaddie_gcs",
@@ -4592,6 +4656,7 @@
         "drupal/dialog": 20,
         "drupal/field_collection": 20,
         "drupal/httprl": 20,
+        "drupal/mailgun": 20,
         "drupal/maillog": 20,
         "drupal/upload_qc": 20,
         "drupal/views_infinite_scroll": 20,
