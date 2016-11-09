@@ -166,6 +166,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Removed Resource Review'),
         'class' => 'RemovedResourceReview',
       ),
+      // new forum created
+      array(
+        'name' => 'new_forum',
+        'description' => t('New Forum'),
+        'class' => 'NewForum',
+      ), 
       // new state forum created
       array(
         'name' => 'new_state_forum',
