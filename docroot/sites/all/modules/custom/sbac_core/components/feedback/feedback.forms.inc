@@ -277,7 +277,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       // Send email to user
       // Add resource link to message
       $author = user_load($node->uid);
-      $email_preference = $author->field_email_reference_value;
+      $email_preference = $author->field_email_preference_value;
       if ($author->field_email_preference['und'][0]['value'] != 'never' && $author->field_email_preference['und'][0]['value'] != '') {
         global $base_url;
         $values = array(
