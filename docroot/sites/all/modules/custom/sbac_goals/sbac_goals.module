@@ -978,7 +978,22 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
                     height: 36px;
                   }
                   .view-sne-details .profile-pic .user-picture {
-                    display: none;
+                    background-image: url("/sites/all/modules/custom/sbac_report/images/avatar-100.png");
+                    width: 100px;
+                    height: 100px;
+                    display: block;
+                    float: left;
+                    margin-right: 20px;
+                  }
+                  .view-sne-details .profile-pic .user-picture .profile-img-wrap {
+                    background: white;
+                    width: 100px;
+                    height: 100px;
+                    display: inline-block;
+                  }
+                  .view-sne-details .profile-pic .user-picture .profile-img {
+                    max-width: 100%;
+                    max-height: 100%;
                   }
                   .user-profile {
                     font-family: sans-serif;
@@ -1101,6 +1116,10 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   if ($user_profile) {
     module_load_include('inc', 'sbac_report', 'sbac_report.pages');
     $user_output = sbac_report_build_sne_output($user_profile);
+    if (!empty($user_profile->picture) && !empty($user_profile->picture->uri)) {
+      $picturePath = drupal_realpath($user_profile->picture->uri);
+      $user_output['picture'] = "<div class='profile-img-wrap'><img src='{$picturePath}' class='profile-img'/></div>";
+    }
     $output .= theme('sbac_report_output_sne', array('user_output' => $user_output));
   }
   // Get rated data
