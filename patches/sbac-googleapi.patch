@@ -1,0 +1,21 @@
+*** autoload.php,orig	2016-11-09 15:21:52.073347256 -0800
+--- autoload.php	2016-11-09 15:23:59.648930992 -0800
+***************
+*** 15,20 ****
+--- 15,23 ----
+   * limitations under the License.
+   */
+  
++ // WORKAROUND: This is getting loaded twice in the Acquia environment
++ //             so we make sure that it will only define the function once
++ if (!function_exists('google_api_php_client_autoload')) {
+  function google_api_php_client_autoload($className) {
+    $classPath = explode('_', $className);
+    if ($classPath[0] != 'Google') {
+***************
+*** 31,33 ****
+--- 34,37 ----
+  }
+  
+  spl_autoload_register('google_api_php_client_autoload');
++ }
