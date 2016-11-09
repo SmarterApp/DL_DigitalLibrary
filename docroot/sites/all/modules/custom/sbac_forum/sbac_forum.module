@@ -1217,6 +1217,7 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
           // Create message
           $message = message_create('new_state_forum', $values);
           $wrapper = entity_metadata_wrapper('message', $message);
+          $wrapper->save();
           if ($email_preference == 'immediately') {
             // Send email
             message_notify_send_message($message);

@@ -425,6 +425,7 @@ SQL;
             // Create message
             $message = message_create('rating_goal_complete', array('uid' => $user_profile->uid));
             $wrapper = entity_metadata_wrapper('message', $message);
+            $wrapper->save();
             if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
               // send email
               message_notify_send_message($message);
@@ -452,6 +453,7 @@ SQL;
                 // Create message
                 $message = message_create('rated_leaderboard', array('uid' => $user_profile->uid));      
                 $wrapper = entity_metadata_wrapper('message', $message);
+                $wrapper->save();
                 if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {          
                   // send email
                   message_notify_send_message($message);
@@ -504,6 +506,7 @@ SQL;
               // create message
               $message = message_create('reviewed_goal_complete', array('uid' => $user_profile->uid));          
               $wrapper = entity_metadata_wrapper('message', $message);
+              $wrapper->save();
               if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
                 // send message
                 message_notify_send_message($message);
@@ -533,6 +536,7 @@ SQL;
                 // Create message
                 $message = message_create('reviewed_leaderboard', array('uid' => $user_profile->uid));          
                 $wrapper = entity_metadata_wrapper('message', $message);
+                $wrapper->save();
                 if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
                   // send email
                   message_notify_send_message($message);
@@ -592,6 +596,7 @@ SQL;
               // Create message
               $message = message_create('contributed_goal_complete', array('uid' => $user_profile->uid));          
               $wrapper = entity_metadata_wrapper('message', $message);
+              $wrapper->save();
               if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
                 // Send email
                 message_notify_send_message($message);
@@ -621,6 +626,7 @@ SQL;
                 // Create message
                 $message = message_create('contributed_leaderboard', array('uid' => $user_profile->uid));          
                 $wrapper = entity_metadata_wrapper('message', $message);
+                $wrapper->save();
                 if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
                   // send email
                   message_notify_send_message($message);

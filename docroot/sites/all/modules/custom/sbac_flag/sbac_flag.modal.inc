@@ -1236,6 +1236,7 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
       // Create message
       $message = message_create('forum_flagged', $values);
       $wrapper = entity_metadata_wrapper('message', $message);
+      $wrapper->save();
       if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
         // send email
         message_notify_send_message($message);
@@ -1256,6 +1257,7 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
         // Create message
         $message = message_create('forum_flagged', $values);
         $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
         if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
           // send email
           message_notify_send_message($message);
