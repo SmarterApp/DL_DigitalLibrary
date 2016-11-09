@@ -1,4 +1,5 @@
 <?php
+require_once realpath(__DIR__ . '/../../../vendor/autoload.php');
 
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
