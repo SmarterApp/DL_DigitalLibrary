@@ -75,6 +75,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     }
   } catch (EntityMetadataWrapperException $e) {
   }
+
   if ($can_edit) {
     $edit_link = '<span class="tertiary-edit-link">' . l('Edit Discussion', $node_data->edit_url->value()) . '</span>';
   }
