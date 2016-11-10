@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "74999860bf2a154b8591b39c0508466e",
-    "content-hash": "efe76f80ef371f3651857b5318124ec8",
+    "hash": "8a41aeb501233ff88739e8284046873d",
+    "content-hash": "8087664ff39daadfe037eaab044333aa",
     "packages": [
         {
             "name": "components/jquery",
@@ -4126,6 +4126,9 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.1.x-dev"
+                },
+                "patches_applied": {
+                    "Ensure we only define the autoloader once": "patches/sbac-googleapi.patch"
                 }
             },
             "autoload": {
