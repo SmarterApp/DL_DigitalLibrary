@@ -36595,3 +36595,7 @@ form#sbac-user-filter-form #edit-email {
 .page-forums-term .view-forum-topic-list .join-forum-start-topic-wrapper a {
   margin-top: 20px;
 }
+
+.state-image-hidden .field-name-field-state-or-district-image {
+  display: none;
+}
