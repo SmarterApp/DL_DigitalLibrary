@@ -1094,3 +1094,4 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
     return $output;
   }
 }
+

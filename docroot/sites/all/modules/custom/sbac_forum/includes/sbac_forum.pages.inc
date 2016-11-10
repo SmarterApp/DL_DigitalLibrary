@@ -466,21 +466,14 @@ function sbac_forum_view_forum_page($term) {
     $resource_downloads = $resource_wrapper->field_asset_downloads->value();
   }
 
-  if (!empty($term->field_state_or_district_image)) {
+  if (!empty($term->field_state_or_district_image) && $term->field_forum_access_states['und'][0]['value'] == 0) {
       $forum_image_url = file_create_url($term->field_state_or_district_image['und'][0]['uri']);
       $image_tag = '<img typeof="foaf:Image" src="' . $forum_image_url . '" width="268" height="138" alt="Forum thumbnail image" />';
       $variables['image'] = $image_tag;
       $variables['mime-type'] = file_get_mimetype($forum_image_url);
       $variables['file-type-icon'] = 'document';
   }
-  // Use default image for State forum if none uploaded
-  if ($term->field_forum_access_states['und'][0]['value'] == 0 && empty($term->field_state_or_district_image)) {
-      $forum_image_url = '/' . drupal_get_path('theme', 'SBAC') . '/images/state-forum-default.png';
-      $image_tag = '<img typeof="foaf:Image" src="' . $forum_image_url . '" width="268" height="138" alt="Forum thumbnail image" />';
-      $variables['image'] = $image_tag;
-      $variables['mime-type'] = file_get_mimetype($forum_image_url);
-      $variables['file-type-icon'] = 'document';
-  }
+
   $favorite_link = sbac_favorites_get_favorite_link($user->uid, $id, $fav_type);
 
   // Forum Goals
