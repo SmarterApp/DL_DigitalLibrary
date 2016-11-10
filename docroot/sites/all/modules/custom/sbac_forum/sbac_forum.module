@@ -1189,7 +1189,31 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
         $people_to_notify[] = $comment->uid;
       }
     }
-    
+    // Add creator as member
+    global $user;
+    $forum_name = $term->name;
+  
+    // Create new field collection instance for member being added.
+    $params = array(
+      'field_name' => 'field_fc_forum_members'
+    );
+    $new_member_item = entity_create('field_collection_item', $params);
+    $new_member_item->setHostEntity('taxonomy_term', $term);
+    $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
+    $new_member_data->field_fc_forum_member->set($user->uid);
+    $date = strtotime('today');
+    $new_member_data->field_fc_forum_member_joined->set($date);
+    $new_member_data->save(TRUE);
+  
+    // Need to update fields on forum entity
+    $forum_term_data = entity_metadata_wrapper('taxonomy_term', $term);
+  
+    // Update member counter field.
+    if (isset($forum_term_data->field_forum_member_count)) {
+      $current_member_count = $forum_term_data->field_forum_member_count->value();
+      $forum_term_data->field_forum_member_count->set($current_member_count);
+    }
+
     // Notify users of the same state if new state forum created
     if ($term->field_forum_access_states['und'][0]['value'] === 0) {
       global $user;
