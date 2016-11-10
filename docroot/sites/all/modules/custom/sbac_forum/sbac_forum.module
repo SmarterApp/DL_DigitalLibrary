@@ -1215,9 +1215,9 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
     }
 
     // Notify users of the same state if new state forum created
-    if ($term->field_forum_access_states['und'][0]['value'] === 0) {
+    if ($term->field_forum_access_states['und'][0]['value'] == 0) {
       global $user;
-      $state = $term->field_state['und'][0]['value'];
+      $state = $term->field_state['und'][0]['tid'];
       $users = sbac_forum_get_state_users($state);
       foreach ($users as $state_user) {
         if ($task = taskit_get_object('new_state_forum')) {
@@ -2593,7 +2593,7 @@ function sbac_forum_get_state_users($state) {
 
 SQL;
 
-  $result = db_query($sql, array(':status' => '1', ':state' => $state, ':state' => '0'));
+  $result = db_query($sql, array(':status' => '1', ':state' => $state));
 
   foreach ($result as $row) {
     $users[] = $row;

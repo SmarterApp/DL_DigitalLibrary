@@ -12,7 +12,7 @@ class NewStateForum extends \taskit\sbac_core\BaseTask {
       $this->setTaskUrl('forums/term/' . $forum->tid);
 
       $output = array();
-      $output[] = t('A new State forum for your state has been created', array(
+      $output[] = t('A new State forum !title for your state has been created', array(
         '!title' => '<span class="taskit-title">' . $forum->name . '</span>',
       ));
 
