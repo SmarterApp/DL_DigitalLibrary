@@ -1414,10 +1414,12 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               // Email resource reviewers
               $reviewers = sbac_resource_get_reviewers_email();
               foreach ($reviewers as $reviewer) {
-                $email_preference = $reviewer->field_email_reference_value;
+                $email_preference = $reviewer->field_email_preference_value;
                 if ($email_preference !== '' || $email_preference !== 'never') {
                   // create message
                   $message = message_create('resource_ready_for_review', array('uid' => $reviewer->uid));
+                  $wrapper = entity_metadata_wrapper('message', $message);
+                  $wrapper->save();
                   if ($email_preference == 'immediately') {
                     // send email
                     message_notify_send_message($message);
@@ -3908,6 +3910,7 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
       // Create message
       $message = message_create('resource_resubmitted', $values);
       $wrapper = entity_metadata_wrapper('message', $message);
+      $wrapper->save();
       if ($email_preference == 'immediately') {
         // Send email
         message_notify_send_message($message);
@@ -4111,7 +4114,7 @@ function sbac_resource_get_reviewers_email() {
 
     SELECT
       u.uid,
-      ep.field_email_reference_value
+      ep.field_email_preference_value
     FROM {users} u
       LEFT JOIN {field_data_field_email_preference} ep
         ON u.uid = ep.entity_id
@@ -4119,7 +4122,7 @@ function sbac_resource_get_reviewers_email() {
         ON u.uid = r.uid
     WHERE
       u.status = :status
-      AND (ep.field_email_reference_value != :preference)
+      AND (ep.field_email_preference_value != :preference)
       AND (r.rid = :role OR r.rid = :role1)
     GROUP BY
       u.uid

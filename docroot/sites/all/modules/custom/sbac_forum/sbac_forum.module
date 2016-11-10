@@ -1192,6 +1192,7 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
     
     // Notify users of the same state if new state forum created
     if ($term->field_forum_access_states['und'][0]['value'] === 0) {
+      global $user;
       $state = $term->field_state['und'][0]['value'];
       $users = sbac_forum_get_state_users($state);
       foreach ($users as $state_user) {
@@ -1199,7 +1200,7 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
           $task->addVisibility($task::VISIBILITY_USER);
           $task->addEntity('taxonomy_term', $term->tid);
           $task->addOwningUser($state_user->uid);
-          $task->addTriggeringUser($term->uid);
+          $task->addTriggeringUser($user->uid);
           $task->save();
         }
         global $base_url;
@@ -1214,8 +1215,9 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
         $email_preference = $user_profile->field_email_reference[0]['und']['value'];
         if ($email_preference !== '' && $email_preference !== 'never') {
           // Create message
-          $message = message_create('now_state_forum', $values);
+          $message = message_create('new_state_forum', $values);
           $wrapper = entity_metadata_wrapper('message', $message);
+          $wrapper->save();
           if ($email_preference == 'immediately') {
             // Send email
             message_notify_send_message($message);
@@ -1225,7 +1227,16 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
         }
       }
     }
-    
+
+    // Notify forum creator that they are responsible for moderation
+    global $user;
+    if ($task = taskit_get_object('new_forum')) {
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('taxonomy_term', $term->tid);
+      $task->addOwningUser($user->uid);
+      $task->addTriggeringUser($user->uid);
+      $task->save();
+    }
 
     if (!empty($people_to_notify)) {
       sbac_forum__api__send_bulk_notifications($term, 'access-change', $people_to_notify);

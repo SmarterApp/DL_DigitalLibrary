@@ -1202,7 +1202,8 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
     $flag_cid = $form_state['info']['cid'];
     $node = node_load($flag_nid);
 
-    $forum = taxonomy_term_load($node->field_topic_forum_parent['und'][0]['value']);
+    $forum = taxonomy_term_load($node->field_topic_forum_parent['und'][0]['tid']);
+    $forum_author = $forum->field_forum_facilitators['und'][0]['target_id'];
     $user_profile = user_load($node->uid);
 
     // Notify topic creator
@@ -1214,12 +1215,12 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
       $task->save();
     }
     // Notify forum creator if different user
-    if ($node->uid !== $forum->uid) {
+    if ($node->uid !== $forum_author) {
       if ($task = taskit_get_object('forum_flagged')) {
         $task->addVisibility($task::VISIBILITY_USER);
         $task->addEntity('node', $node->nid);
-        $task->addOwningUser($forum->uid);
-        $task->addTriggeringUser($forum->uid);
+        $task->addOwningUser($forum_author);
+        $task->addTriggeringUser($forum_author);
         $task->save();
       }
     }
@@ -1235,6 +1236,7 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
       // Create message
       $message = message_create('forum_flagged', $values);
       $wrapper = entity_metadata_wrapper('message', $message);
+      $wrapper->save();
       if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
         // send email
         message_notify_send_message($message);
@@ -1243,8 +1245,8 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
       }
     }
     // Send email to forum creator if different user
-    if ($node->uid !== $forum->uid) {
-      $user_profile = user_load($forum->uid);
+    if ($node->uid !== $forum_author) {
+      $user_profile = user_load($forum_author);
       $values = array(
         'arguments' => array(
           '!forum-link' => $base_url . '/content/' . $node->nid,
@@ -1255,6 +1257,7 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
         // Create message
         $message = message_create('forum_flagged', $values);
         $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
         if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
           // send email
           message_notify_send_message($message);

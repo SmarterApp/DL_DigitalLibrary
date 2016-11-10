@@ -276,23 +276,22 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
 
       // Send email to user
       // Add resource link to message
-      global $base_url;
-      $values = array(
-        'arguments' => array(
-          '!resource-link' => $base_url . '/node/' . $node->nid,
-        ),
-        'uid' => $node->uid,
-      );
-      $message = message_create('gatekeeper_reject', $values);
-    
-      $wrapper = entity_metadata_wrapper('message', $message);
-    
-      // Replace explicit notification with subscription-based notification
-      message_notify_send_message($message);
-    
-      if (module_exists('message_subscribe')) {
-        // If Message-subscribe exists, let this example module use it.
-        //message_subscribe_send_message('user', $node, $message, array('email' => $options));
+      $author = user_load($node->uid);
+      $email_preference = $author->field_email_preference_value;
+      if ($author->field_email_preference['und'][0]['value'] != 'never' && $author->field_email_preference['und'][0]['value'] != '') {
+        global $base_url;
+        $values = array(
+          'arguments' => array(
+            '!resource-link' => $base_url . '/node/' . $node->nid,
+          ),
+          'uid' => $node->uid,
+        );
+        $message = message_create('gatekeeper_reject', $values); 
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($author->field_email_preference['und'][0]['value'] == 'immediately') {
+          message_notify_send_message($message);
+        }
       }
       $completed_review = TRUE;
       break;
@@ -562,22 +561,24 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
       // Send email to user
       global $base_url;
-      $values = array(
-        'arguments' => array(
-          '!resource-link' => $base_url . '/node/' . $node->nid,
-        ),
-        'uid' => $node->uid,
-      );
-      $message = message_create('post_reject', $values);
+      $user_profile = user_load($node->uid);
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') { 
+        $values = array(
+          'arguments' => array(
+            '!resource-link' => $base_url . '/node/' . $node->nid,
+          ),
+          'uid' => $node->uid,
+        );
+        $message = message_create('post_reject', $values);     
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));
+        }
     
-      $wrapper = entity_metadata_wrapper('message', $message);
-    
-      // Replace explicit notification with subscription-based notification
-      message_notify_send_message($message);
-    
-      if (module_exists('message_subscribe')) {
-        // If Message-subscribe exists, let this example module use it.
-        //message_subscribe_send_message('user', $node, $message, array('email' => $options));
       }
 
       $completed_review = TRUE;
