@@ -469,10 +469,10 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['field'] = 'field_alt_body';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  /* Sort criterion: Workbench Moderation: State */
+  $handler->display->display_options['sorts']['state']['id'] = 'state';
+  $handler->display->display_options['sorts']['state']['table'] = 'workbench_moderation_node_history';
+  $handler->display->display_options['sorts']['state']['field'] = 'state';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
