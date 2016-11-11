@@ -510,9 +510,21 @@ function sbac_forum_view_forum_page($term) {
     if ($term->field_contributor_goal_complete['und'][0]['value'] > 0) {
       $contributor_complete = $term->field_contributor_goal_complete['und'][0]['value'];
     }
-    $educator_perc = sbac_goals_calc_percent($educator_complete, $educator_goal);
-    $reviewer_perc = sbac_goals_calc_percent($reviewer_complete, $reviewer_goal);
-    $contributor_perc = sbac_goals_calc_percent($contributor_complete, $contributor_goal);
+    $educator_complete_perc = $educator_complete;
+    if ($educator_complete >= $educator_goal) {
+      $educator_complete_perc = $educator_goal;
+    }
+    $educator_perc = sbac_goals_calc_percent($educator_complete_perc, $educator_goal);
+    $reviewer_complete_perc = $reviewer_complete;
+    if ($reviewer_complete >= $reviewer_goal) {
+      $reviewer_complete_perc = $reviewer_goal;
+    }    
+    $reviewer_perc = sbac_goals_calc_percent($reviewer_complete_perc, $reviewer_goal);
+    $contributor_complete_perc = $contributor_complete;
+    if ($contributor_complete >= $contributor_goal) {
+      $contributor_complete_perc = $contributor_goal;
+    }
+    $contributor_perc = sbac_goals_calc_percent($contributor_complete_perc, $contributor_goal);
     $member_count = count($term->field_fc_forum_members['und']);
 
     $goals = '<a class="goals-toggle">Show Member Goals</a>
