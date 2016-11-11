@@ -48,7 +48,6 @@ function sbac_goals_get_html_content($user_uid) {
 
   // Deal with when more than the goal are completed
   if ($star_ratings >= $star_goal) {
-    $star_ratings = $star_goal;
     $complete = TRUE;
     $completed_icon = '&#x2605;';
   }
@@ -75,7 +74,11 @@ function sbac_goals_get_html_content($user_uid) {
       $starred_tooltip .= $entry;
     }
   }
-  $star_perc = sbac_goals_calc_percent($star_ratings, $star_goal);
+  $star_ratings_perc = $star_ratings;
+  if ($star_ratings > $star_goal) {
+    $star_ratings_perc = $star_goal;
+  }
+  $star_perc = sbac_goals_calc_percent($star_ratings_perc, $star_goal);
   $user_form['field_star_rating_goal']['#prefix'] = '
     <div class="star-rating goal-header">
       <h3>Educator</h3><span class="goal-percentage">' . $star_perc . '%' . '</span>' . '
@@ -134,7 +137,6 @@ function sbac_goals_get_html_content($user_uid) {
 
     // Deal with when more than the goal are completed and goal complete
     if ($resources_reviewed >= $review_goal) {
-      $resources_reviewed = $review_goal;
       $complete = TRUE;
       $completed_icon = '&#x2605;';
     }
@@ -166,8 +168,11 @@ function sbac_goals_get_html_content($user_uid) {
         $reviewed_tooltip .= $entry;
       }
     }
-
-    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed, $review_goal);
+    $resources_reviewed_perc = $resources_reviewed;
+    if ($resources_reviewed >= $review_goal) {
+      $resources_reviewed_perc = $review_goal;
+    }
+    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed_perc, $review_goal);
     $user_form['field_resources_reviewed_goal']['#prefix'] = '      
       <div class="resources-reviewed goal-header">
         <h3>Resource Reviewer</h3><span class="goal-percentage">' . $reviewed_perc . '%' . '</span>' . '
@@ -230,7 +235,6 @@ function sbac_goals_get_html_content($user_uid) {
 
     // Deal with when more than the goal are completed and goal complete
     if ($resources_posted >= $posted_goal) {
-      $resources_posted = $posted_goal;
       $complete = TRUE;
       $completed_icon = '&#x2605;';
     }
@@ -261,8 +265,11 @@ function sbac_goals_get_html_content($user_uid) {
         $posted_tooltip .= $entry;
       }
     }
-
-    $posted_perc = sbac_goals_calc_percent($resources_posted, $posted_goal);
+    $resources_posted_perc = $resources_posted;
+    if ($resources_posted >= $posted_goal) {
+      $resources_posted_perc = $posted_goal;
+    }
+    $posted_perc = sbac_goals_calc_percent($resources_posted_perc, $posted_goal);
     $user_form['field_resources_posted_goal']['#prefix'] = '      
       <div class="resources-posted goal-header">
         <h3>Resource Contributor</h3><span class="goal-percentage">' . $posted_perc . '%' . '</span>' . '
@@ -433,39 +440,37 @@ SQL;
               message_delete_multiple(array($message->mid));
             }
           }
-          // Check to see if user is on Most Active Member board
-          $most_active_rated = views_get_view('rated_resources_rankings', TRUE);
-          $most_active_rated->preview();
-          $rated_results = $most_active_rated->result;
+        }
+        // Check to see if user is on Most Active Member board
+        $most_active_rated = views_get_view('rated_resources_rankings', TRUE);
+        $most_active_rated->preview();
+        $rated_results = $most_active_rated->result;
 
-          // iterate through view to see if $user_profile-> uid is in it
-          foreach ($rated_results as $rated_result) {
-            if ($rated_result->uid == $user_profile->uid) {
-              // Notify user if on Most Active Member Board
-              if ($task = taskit_get_object('most_active_members_rated')) {
-                $task->addVisibility($task::VISIBILITY_USER);
-                $task->addOwningUser($user_profile->uid);
-                $task->addTriggeringUser($user_profile->uid);
-                $task->save();
-              }
-              // Send email to user
-              if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
-                // Create message
-                $message = message_create('rated_leaderboard', array('uid' => $user_profile->uid));      
-                $wrapper = entity_metadata_wrapper('message', $message);
-                $wrapper->save();
-                if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {          
-                  // send email
-                  message_notify_send_message($message);
-                  // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-                  message_delete_multiple(array($message->mid));
-                }
+        // iterate through view to see if $user_profile-> uid is in it
+        foreach ($rated_results as $rated_result) {
+          if ($rated_result->uid == $user_profile->uid) {
+            // Notify user if on Most Active Member Board
+            if ($task = taskit_get_object('most_active_members_rated')) {
+              $task->addVisibility($task::VISIBILITY_USER);
+              $task->addOwningUser($user_profile->uid);
+              $task->addTriggeringUser($user_profile->uid);
+              $task->save();
+            }
+            // Send email to user
+            if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
+              // Create message
+              $message = message_create('rated_leaderboard', array('uid' => $user_profile->uid));      
+              $wrapper = entity_metadata_wrapper('message', $message);
+              $wrapper->save();
+              if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {          
+                // send email
+                message_notify_send_message($message);
+                // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+                message_delete_multiple(array($message->mid));
               }
             }
           }
         }
-
-
 
         // update user's resources rated field
         user_save(
