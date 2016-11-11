@@ -412,7 +412,18 @@ SQL;
       $star_ratings = array();
       $star_ratings[] = $star_count;
       $star_ratings[] = $nids;
-      
+
+      // Check for rated goal saved
+      // Set to default if empty
+      if (empty($user->field_star_rating_goal) && $user->field_star_rating_goal['und'][0]['value'] !== '0') {
+        $edit = array();
+        $edit['field_star_rating_goal']['und'][0]['value'] = 10;
+        // Save rating default value
+        user_save(
+          $user_profile,
+          $edit
+        );
+      }
       // Check for user rated goal field update
       if ($user_profile->field_resources_rated['und'][0]['value'] != $star_count) {
         $edit = array();
@@ -483,6 +494,17 @@ SQL;
       break;
   
     case "resources_reviewed":
+      // Check for resources reviewed goal
+      // Set to default if empty
+      if (empty($user->field_resources_reviewed_goal) && $user->field_resources_reviewed_goal['und'][0]['value'] !== '0') {
+        $edit = array();
+        $edit['field_resources_reviewed_goal']['und'][0]['value'] = '9';
+        // Save review default value
+        user_save(
+          $user_profile,
+          $edit
+        );
+      }
       $reviewed = sbac_goals_get_current_completed_reviews($user_profile->uid, $date_range);
       if ($reviewed) {
         $reviewed_count = count($reviewed);
@@ -573,6 +595,17 @@ SQL;
     break;
   
     case "resources_posted":
+      // Check posted goal value
+      // Set to default if empty
+      if (empty($user_profile->field_resources_posted_goal) && $user_profile->field_resources_posted_goal['und'][0]['value'] !== '0') {
+        $edit = array();
+        $edit['field_resources_posted_goal']['und'][0]['value'] = '3';
+        // Save posted default value
+        user_save(
+          $user_profile,
+          $edit
+        );
+      }
       $posted = sbac_goals_get_contributed_resources($user_profile->uid, $date_range); 
 
       if ($posted) {
@@ -667,6 +700,10 @@ SQL;
 }
 
 function sbac_goals_calc_percent($complete, $goal) {
+  if ($complete == '0') {
+    $count = 0;
+    return $count;
+  }
   $count1 = $complete / $goal;
   $count2 = $count1 * 100;
   $count = number_format($count2, 0);
