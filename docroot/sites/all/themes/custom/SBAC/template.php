@@ -1071,8 +1071,15 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
       $user_picture = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt, 'width' => '30px', 'height' => '30px'));
     }
     else {
-      $image = array('path' => $account->picture->uri, 'width' => '30px', 'height' => '30px');
-      $user_picture = theme_image($image);
+      $user_picture = theme('image_style', array(
+        'path' => $account->picture->uri,
+        'style_name' => 'small',
+        'attributes' => array(
+          'class' => 'left',
+          'alt' => t("@user's picture", array('@user' => format_username($fn))),
+          'title' => t("@user's picture", array('@user' => format_username($fn)))
+        )
+      ));
     } 
     if (isset($account_data->field_privacy)) { // user is using non-default settings.
       $privacy_settings = $account_data->field_privacy->value();

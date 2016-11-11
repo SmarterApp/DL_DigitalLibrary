@@ -8,7 +8,7 @@ class MostActiveMembersReviewed extends \taskit\sbac_core\BaseTask {
     $account = user_load(current($accounts));
     if ($account) {
       $homepage = variable_get('site_frontpage');
-      $this->setTaskUrl(check_plain($homepage));
+      $this->setTaskUrl(check_plain($homepage . '#leaderboard-wrapper'));
 
       $output = array();
       $output[] = t('Congratulations! You have been added to the !title for your number of resources reviewed. Keep up the good work.', array(
