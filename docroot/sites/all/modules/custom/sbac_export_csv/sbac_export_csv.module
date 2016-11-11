@@ -14,7 +14,7 @@ function sbac_export_csv_menu_alter(&$items) {
   $item = array(
     'title' => t('Exports'),
     'weight' => 100,
-    'access callback' => TRUE,
+    'access arguments' => array('access sbac configuration menu'),
     'page callback' => 'drupal_goto',
     'page arguments' => array('exports'),
     'type' => MENU_NORMAL_ITEM,

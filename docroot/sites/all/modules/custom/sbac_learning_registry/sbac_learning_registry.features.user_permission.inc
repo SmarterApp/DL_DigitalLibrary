@@ -13,9 +13,7 @@ function sbac_learning_registry_user_default_permissions() {
   // Exported permission: 'administer sbac_learning_registry'.
   $permissions['administer sbac_learning_registry'] = array(
     'name' => 'administer sbac_learning_registry',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'sbac_learning_registry',
   );
 
