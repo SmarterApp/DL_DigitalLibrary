@@ -1073,9 +1073,8 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
     else {
       $user_picture = theme('image_style', array(
         'path' => $account->picture->uri,
-        'style_name' => 'small',
+        'style_name' => 'leaderboard_30x33',
         'attributes' => array(
-          'class' => 'left',
           'alt' => t("@user's picture", array('@user' => format_username($fn))),
           'title' => t("@user's picture", array('@user' => format_username($fn)))
         )
