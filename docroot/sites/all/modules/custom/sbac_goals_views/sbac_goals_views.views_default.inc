@@ -39,8 +39,8 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = '<p><strong>No activity yet!</strong></p>
-<p>Start <a href="my-resources">Start submitting resources</a> to get the list started.</p>
-<p>Learn about contributing and reviewing resources <a href=\'\'>here</a></p>';
+<!-- <p>Start <a href="my-resources">Start submitting resources</a> to get the list started.</p>
+<p>Learn about contributing and reviewing resources <a href=\'\'>here</a></p> -->';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Field: User: Uid */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
@@ -147,6 +147,13 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<p><strong>No activity yet!</strong></p>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Field: Taxonomy term: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'taxonomy_term_data';
@@ -196,13 +203,12 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
   $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
   $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
-  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_state_or_district_image']['alter']['text'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
   $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/state-forum-default.png" width="30px" height="30px" alt="Forum picture" title="Forum picture">';
   $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
-    'image_style' => 'forum_profile_image_60x60',
+    'image_style' => 'leaderboard_30x33',
     'image_link' => '',
   );
   /* Field: Taxonomy term: Name */
@@ -251,13 +257,12 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
   $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
   $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
-  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_state_or_district_image']['alter']['text'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
   $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/state-forum-default.png" width="30px" height="30px" alt="Forum picture" title="Forum picture">';
   $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
-    'image_style' => 'forum_profile_image_60x60',
+    'image_style' => 'leaderboard_30x33',
     'image_link' => '',
   );
   /* Field: Taxonomy term: Name */
@@ -306,13 +311,12 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
   $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
   $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
-  $handler->display->display_options['fields']['field_state_or_district_image']['alter']['alter_text'] = TRUE;
   $handler->display->display_options['fields']['field_state_or_district_image']['alter']['text'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
   $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">';
+  $handler->display->display_options['fields']['field_state_or_district_image']['empty'] = '<img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/state-forum-default.png" width="30px" height="30px" alt="Forum picture" title="Forum picture">';
   $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
-    'image_style' => 'forum_profile_image_60x60',
+    'image_style' => 'leaderboard_30x33',
     'image_link' => '',
   );
   /* Field: Taxonomy term: Name */
@@ -383,7 +387,7 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = '<p><strong>No activity yet!</strong></p>
-<p>Start <a href="sbac-digital-library">browsing and rating resources</a> to get the list started.</p>';
+<!--<p>Start <a href="sbac-digital-library">browsing and rating resources</a> to get the list started.</p>-->';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Field: User: Uid */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
@@ -496,8 +500,8 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['empty']['area']['field'] = 'area';
   $handler->display->display_options['empty']['area']['empty'] = TRUE;
   $handler->display->display_options['empty']['area']['content'] = '<p><strong>No activity yet!</strong></p>
-<p>Start <a href="resource-review">Start reviewing  resources</a> to get the list started.</p>
-<p>Learn about contributing and reviewing resources <a href=\'\'>here</a></p>';
+<!--<p>Start <a href="resource-review">Start reviewing  resources</a> to get the list started.</p>
+<p>Learn about contributing and reviewing resources <a href=\'\'>here</a></p>-->';
   $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Field: User: Uid */
   $handler->display->display_options['fields']['uid']['id'] = 'uid';
