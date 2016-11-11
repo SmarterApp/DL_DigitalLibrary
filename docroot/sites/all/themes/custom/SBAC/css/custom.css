@@ -29427,7 +29427,7 @@ body.page-sbac .slick-list:focus {
 }
 /* line 73, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-loading .slick-list {
-  background: #ffffff url("../loading.gif") center center no-repeat;
+  background: #ffffff url("../images/loading.gif") center center no-repeat;
 }
 /* line 76, ../sass/components/_landing-page.scss */
 body.page-sbac .slick-list.dragging {

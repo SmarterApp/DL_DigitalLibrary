@@ -4,21 +4,22 @@
   Drupal.behaviors.sbac_forum_js_view_page = {
     attach: function (context, settings) {
 
-      $('.sbac-forum-vp-controls').mouseenter(function () {
+      $('.sbac-forum-vp-controls').once('forumVPControls').mouseenter(function () {
         $('.sbac-forum-vp-controls-popup').show('fast');
       });
 
-      $('.sbac-forum-vp-controls-wrapper').mouseleave(function () {
+      $('.sbac-forum-vp-controls-wrapper').once('forumVPControlsWrapper').mouseleave(function () {
         $('.sbac-forum-vp-controls-popup').hide('fast');
       });
 
       $('.read-more').hide();
-      $(".read-more-link").click(function () {
+      $(".read-more-link").once('moreAndLess').click(function () {
         var moreAndLess = $(".read-more").is(':visible') ? 'More Attributes' : 'Less Attributes';
         $(this).text(moreAndLess);
         $(".read-more").slideToggle();
       });
-      $('.goals-toggle').click(function () {
+
+      $('.goals-toggle').once('hideShowGoals').click(function () {
         var hideShowGoals = $(".forum-goal-container").is(':visible') ? 'Show Member Goals' : 'Hide Member Goals';
         $(this).text(hideShowGoals);
         $(".forum-goal-container").slideToggle();

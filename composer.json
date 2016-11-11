@@ -111,6 +111,7 @@
     "derhasi/composer-preserve-paths": "0.1.*",
     "fxp/composer-asset-plugin": "~1.1",
     "mnsami/composer-custom-directory-installer": "~1.1",
+    "mailgun/mailgun-php": "1.7.2",
 
     "drupal/acquia_connector": "7.2.17",
     "drupal/acquia_search_multi_subs": "7.1.4",
@@ -168,6 +169,7 @@
     "drupal/libraries": "7.2.3",
     "drupal/link": "7.1.4",
     "drupal/m4032404": "7.1.0-beta2",
+    "drupal/mailgun": "7.1.x-dev#41a297ffb4073568bcf9b6f1d51b0e1e6bd09be8",
     "drupal/maillog": "7.1.x-dev#2591153d5ba486806ac660013f5834da94e98db0",
     "drupal/mailsystem": "7.2.34",
     "drupal/maxlength": "7.3.2",
@@ -196,7 +198,6 @@
     "drupal/rules": "7.2.9",
     "drupal/scheduler": "7.1.4",
     "drupal/simple_dialog": "7.1.9",
-    "drupal/smtp": "7.1.4",
     "drupal/stage_file_proxy": "7.1.6",
     "drupal/strongarm": "7.2.0",
     "drupal/taxonomy_manager": "7.1.0",
@@ -352,6 +353,9 @@
       },
       "drupal/zurb_foundation": {
 	"Changes to the theme": "patches/zurb_foundation-changes.patch"
+      },
+      "google/apiclient": {
+        "Ensure we only define the autoloader once": "patches/sbac-googleapi.patch"
       }
     }
   }
