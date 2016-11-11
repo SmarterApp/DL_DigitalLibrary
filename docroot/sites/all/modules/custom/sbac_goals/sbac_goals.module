@@ -841,42 +841,42 @@ SQL;
 
 function sbac_goals_check_for_reset($user) {
   // Grab current admin configured start date
-  $current_start_date = strtotime(variable_get('goals_start_date'));
-  $current_end_date = strtotime(variable_get('goals_end_date'));
-  $date_range = $current_end_date - $current_start_date;
-  $prev_start_date = date('Y-m-d', ($current_start_date - $date_range));
-  $report_date_range = format_date($current_start_date - $date_range, 'custom', 'Ymd') . '--' . format_date($current_start_date, 'custom', 'Ymd');
-  $pdf_name = $user->uid . '_' . $prev_start_date . '_' . variable_get('goals_start_date') . '.pdf';
-  $pdf_path = 'sites/default/files/user_certificates/' . $user->uid;
-  // Reset goals to default values if previous period pdf doesn't exist
-  // and configured goals date is not in the future
-  if ($current_start_date <= time() && !file_exists($pdf_path . '/' . $pdf_name)) {
-    sbac_goals_create_period_pdf($user, $report_date_range, $pdf_name, TRUE);
-    $edit = array();
-    if ($user->field_star_rating_goal['und'][0]['value']) {
-      $edit['field_star_rating_goal']['und'][0]['value'] = '10';
-    }
-    if (in_array('resource reviewer', $user->roles) || in_array('resource publisher', $user->roles)) {
-      if ($user->field_resources_reviewed_goal['und'][0]['value']) {
-        $edit['field_resources_reviewed_goal']['und'][0]['value'] = '9';
+  $current_start_date_string = variable_get('goals_start_date');
+  $current_start_date = strtotime($current_start_date_string);
+  $prev_start_date_string = variable_get('goals_previous_start_date', FALSE);
+  if ($prev_start_date_string) { // If there is no previous date, we don't want to generate a blank report.
+    $prev_start_date = strtotime($prev_start_date_string);
+    $report_date_range = format_date($prev_start_date, 'custom', 'Ymd') . '--' . format_date($current_start_date, 'custom', 'Ymd');
+    $pdf_name = $user->uid . '_' . $prev_start_date . '_' . $current_start_date_string . '.pdf';
+    $pdf_path = 'sites/default/files/user_certificates/' . $user->uid;
+    // Reset goals to default values if previous period pdf doesn't exist
+    // and configured goals date is not in the future
+    if ($user->created < $current_start_date) { // Don't generate a blank report if the user was added after the current start date.
+      if ($current_start_date <= time() && !file_exists($pdf_path . '/' . $pdf_name)) {
+        sbac_goals_create_period_pdf($user, $report_date_range, $pdf_name, TRUE);
+        $edit = array();
+        if ($user->field_star_rating_goal['und'][0]['value']) {
+          $edit['field_star_rating_goal']['und'][0]['value'] = '10';
+        }
+        if (in_array('resource reviewer', $user->roles) || in_array('resource publisher', $user->roles)) {
+          if ($user->field_resources_reviewed_goal['und'][0]['value']) {
+            $edit['field_resources_reviewed_goal']['und'][0]['value'] = '9';
+          }
+        }
+        if (in_array('resource contributor', $user->roles)) {
+          if ($user->field_resources_posted_goal['und'][0]['value']) {
+            $edit['field_resources_posted_goal']['und'][0]['value'] = '3';
+          }
+        }
+        // save existing user
+        user_save(
+          $user,
+          $edit
+        );
       }
     }
-    if (in_array('resource contributor', $user->roles)) {
-      if ($user->field_resources_posted_goal['und'][0]['value']) {
-        $edit['field_resources_posted_goal']['und'][0]['value'] = '3';
-      }
-    }
-    // save existing user
-    user_save(
-      $user,
-      $edit
-    );
-
-    return;
   }
-  else {
-    return;
-  }
+  return;
 }
 
 function sbac_goals_get_rank($uid, $category) {
