@@ -415,7 +415,7 @@ SQL;
 
       // Check for rated goal saved
       // Set to default if empty
-      if (empty($user->field_star_rating_goal) && $user->field_star_rating_goal['und'][0]['value'] !== '0') {
+      if (empty($user_profile->field_star_rating_goal) && $user_profile->field_star_rating_goal['und'][0]['value'] !== '0') {
         $edit = array();
         $edit['field_star_rating_goal']['und'][0]['value'] = 10;
         // Save rating default value
@@ -496,7 +496,7 @@ SQL;
     case "resources_reviewed":
       // Check for resources reviewed goal
       // Set to default if empty
-      if (empty($user->field_resources_reviewed_goal) && $user->field_resources_reviewed_goal['und'][0]['value'] !== '0') {
+      if (empty($user_profile->field_resources_reviewed_goal) && $user_profile->field_resources_reviewed_goal['und'][0]['value'] !== '0') {
         $edit = array();
         $edit['field_resources_reviewed_goal']['und'][0]['value'] = '9';
         // Save review default value
