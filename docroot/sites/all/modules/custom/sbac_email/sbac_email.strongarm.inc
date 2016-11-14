@@ -692,6 +692,9 @@ function sbac_email_strongarm() {
   $strongarm->name = 'mail_system';
   $strongarm->value = array(
     'default-system' => 'MailgunMailSystem',
+    'user_import' => 'UserImportMailSystem',
+    'maillog' => 'MaillogMailSystem',
+    'mailgun_test' => 'MailgunMailSystem',
   );
   $export['mail_system'] = $strongarm;
 
@@ -790,7 +793,7 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'update_last_email_notification';
-  $strongarm->value = 1476289944;
+  $strongarm->value = 1479149743;
   $export['update_last_email_notification'] = $strongarm;
 
   $strongarm = new stdClass();
