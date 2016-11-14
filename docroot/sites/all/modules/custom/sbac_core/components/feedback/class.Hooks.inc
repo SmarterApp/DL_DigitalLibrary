@@ -481,6 +481,7 @@ class Hooks extends \devtools\Hooks {
         // Create message
         $message = message_create('review_reminder', $values);
         $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
         if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
           // send email
           message_notify_send_message($message);
@@ -536,6 +537,7 @@ class Hooks extends \devtools\Hooks {
           // Create message
           $message = message_create('review_timeout', $values);
           $wrapper = entity_metadata_wrapper('message', $message);
+          $wrapper->save();
           if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
             // send email
             message_notify_send_message($message);
