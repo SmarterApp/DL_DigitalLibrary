@@ -192,7 +192,22 @@ function sbac_self_registration_state_convert($state, $inverse=FALSE) {
     'West Virginia'=>'WV',
     'Wisconsin'=>'WI',
     'Wyoming'=>'WY',
-    'Test State'=>'TS'
+    'Test State'=>'TS',
+    'American Samoa' => 'AS',
+    'Armed Forces Africa, Canada, Europe And Middle East' => 'AE',
+    'Armed Forces Americas' => 'AA',
+    'Armed Forces Pacific' => 'AP',
+    //'Consortium' => '?',
+    'District Of Columbia' => 'DC',
+    'Federated States Of Micronesia' => 'FM',
+    'Guam' => 'GU',
+    'Marshall Islands' => 'MH',
+    'Northern Mariana Islands' => 'MP',
+    'Other' => 'OT',
+    'Palau' => 'PW',
+    'Puerto Rico' => 'PR',
+    //'Smarter Balanced' => '?',
+    'Virgin Islands' => 'VI',
   );
 
   if ($inverse) {
