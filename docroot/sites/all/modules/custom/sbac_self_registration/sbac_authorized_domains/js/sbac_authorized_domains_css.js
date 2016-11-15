@@ -1,4 +1,7 @@
 (function ($) {
+	/**
+	 *Display of Download and Reset buttons and adjust Filter button position in authorized domain page
+	 */
 	$(document).ready(function() {
 		var domstr = "<style>" + 
 			"#edit-submit-authorized-domains{ top:-192px; left:430px;  position:relative;}" + 
