@@ -7,7 +7,9 @@
 include_once 'sbac_self_registration.features.inc';
 
 /**
- * Extends hook_menu().
+ * Nav for SBAC self-registration
+ *
+ * @return array nav to configure the items for SBAC self-registration
  */
 function sbac_self_registration_menu()
 {
@@ -74,6 +76,12 @@ function sbac_self_registration_menu()
   return $items;
 }
 
+/**
+* Decode Email token
+*
+* @param string $token Email token
+* @return mixed If the Email token is returned successfully by sabc art api, it returns the expiration time of the token and the corresponding email address, otherwise it returns FALSE
+*/
 function _sbac_self_registration_token_decode($token) {
   if ($decrypted = sbac_art_api_decrypt($token)) {
     $parts = explode(':', $decrypted);
@@ -82,12 +90,24 @@ function _sbac_self_registration_token_decode($token) {
   return FALSE;
 }
 
+/**
+* Generate Email token by sbac art api
+*
+* @param string $email The Email address
+* @return string Return the token string of the email
+*/
 function _sbac_self_registration_token_encode($email) {
   $time = time() + (60 * 60 * 72);
   $token = sbac_art_api_encrypt("$time:$email");
   return $token;
 }
 
+/**
+* Get domain entity data by Email address
+*
+* @param string $email The Email address
+* @return array Return the domain entity data of the Email
+*/
 function _sbac_self_registration_domain_query($email) {
   $email_parts = explode('@', $email);
   $domain =   $email_parts[1];
@@ -99,6 +119,12 @@ function _sbac_self_registration_domain_query($email) {
   return $result;
 }
 
+/**
+* Check whether the Email domain is an authorized domain
+*
+* @param string $email The Email address
+* @return mixed Return TRUE if domain is authorized, otherwise it returns FLASE
+*/
 function _sbac_self_registration_check_domain($email) {
   $result = _sbac_self_registration_domain_query($email);
   if (isset($result['authorized_domains']) && count($result['authorized_domains']) > 0) {
@@ -107,6 +133,13 @@ function _sbac_self_registration_check_domain($email) {
   return FALSE;
 }
 
+/**
+* Get the 2 letter abbreviation of the state that are the same as those in ART
+*
+* @param mixed $state an array of state names or states
+* @param boolean $inverse If the state is array, it is TRUE; if not, it is FALSE.
+* @return array Return the 2 letter abbreviation of the state that is the same as those in ART
+*/
 function sbac_self_registration_state_convert($state, $inverse=FALSE) {
   $states = array(
     'Alabama'=>'AL',
@@ -159,7 +192,22 @@ function sbac_self_registration_state_convert($state, $inverse=FALSE) {
     'West Virginia'=>'WV',
     'Wisconsin'=>'WI',
     'Wyoming'=>'WY',
-    'Test State'=>'TS'
+    'Test State'=>'TS',
+    'American Samoa' => 'AS',
+    'Armed Forces Africa, Canada, Europe And Middle East' => 'AE',
+    'Armed Forces Americas' => 'AA',
+    'Armed Forces Pacific' => 'AP',
+    //'Consortium' => '?',
+    'District Of Columbia' => 'DC',
+    'Federated States Of Micronesia' => 'FM',
+    'Guam' => 'GU',
+    'Marshall Islands' => 'MH',
+    'Northern Mariana Islands' => 'MP',
+    'Other' => 'OT',
+    'Palau' => 'PW',
+    'Puerto Rico' => 'PR',
+    //'Smarter Balanced' => '?',
+    'Virgin Islands' => 'VI',
   );
 
   if ($inverse) {
@@ -168,6 +216,12 @@ function sbac_self_registration_state_convert($state, $inverse=FALSE) {
   return $states[$state];
 }
 
+/**
+* Get authorized domain information of state and district by Email address
+*
+* @param string $email The Email address
+* @return mixed If it is an authorized domain, it returns the state name and district name, otherwise it returns FALSE
+*/
 function _sbac_self_registration_get_domain_info($email) {
   $domain_info = array();
   $result = _sbac_self_registration_domain_query($email);

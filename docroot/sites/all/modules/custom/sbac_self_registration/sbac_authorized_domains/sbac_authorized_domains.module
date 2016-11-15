@@ -76,7 +76,13 @@ function sbac_authorized_domains_permission() {
     )
   );
 }
-
+/**
+ * Modify entity page title
+ * @param array $form
+ * @param string $title
+ * @param array $entity
+ * @return If entity = true, return form array and entity array; else entity = false, return form array
+ */
 function sbac_authorized_domains_title_fix($form, $title, $entity=FALSE) {
   drupal_set_title($title);
   if ($entity) {
@@ -85,28 +91,46 @@ function sbac_authorized_domains_title_fix($form, $title, $entity=FALSE) {
     return drupal_get_form($form);
   }
 }
+/**
+ * Submission method when making changes in Add Authorized Domain and redirecting to sbac_authorized_domains_add_form_submit_fix
+ * @param array $form All form elements that are contained in Add Authorized Domain
+ * @param array $form_state All form functions that are contained in Add Authorized Domain
 
+ *
+ */
 function sbac_authorized_domains_form_eck__entity__form_add_authorized_domains_authorized_domains_alter(&$form, &$form_state) {
   $form['submit']['#value'] = t('Save');
   $form['#submit'][] = 'sbac_authorized_domains_add_form_submit_fix';
   $form['#validate'][] = 'sbac_authorized_domains_add_form_validate_duplicate';
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains.js';
 }
-
+/**
+ * Submission method when editing authorized domains and redirecting to sbac_authorized_domains_edit_form_validate_duplicate
+ * @param array $form All form elements that are contained in Edit Authorized Domain
+ * @param array $form_state All form functions that are contained in Edit Authorized Domain
+ */
 function sbac_authorized_domains_form_eck__entity__form_edit_authorized_domains_authorized_domains_alter(&$form, &$form_state) {
   $form['submit']['#value'] = t('Save');
   $form['#submit'][] = 'sbac_authorized_domains_add_form_submit_fix';
   $form['#validate'][] = 'sbac_authorized_domains_edit_form_validate_duplicate';
   $form['#attached']['js'][] = drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains.js';
 }
-
+/**
+ * Display message and redirecting page after adding authorized domain
+ * @param array $form All form elements that are contained in Add Authorized Domain
+ * @param array $form_state All form functions that are contained in Add Authorized Domain
+ */
 function sbac_authorized_domains_add_form_submit_fix($form, &$form_state) {
   $name = $form_state['values']['entity']->field_domain[LANGUAGE_NONE][0]['value'];
   drupal_get_messages('status');
   drupal_set_message(t('Domain @name has been saved.', array('@name' => $name)));
   $form_state['redirect'] = 'admin/sbac/authorized-domains/authorized';
 }
-
+/**
+ * Authentication method when adding authorized domain
+ * @param array $form All form elements that are contained in Add Authorized Domain
+ * @param array $form_state All form functions that are contained in Add Authorized Domain
+ */
 function sbac_authorized_domains_add_form_validate_duplicate(&$form, &$form_state) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'authorized_domains')
@@ -118,7 +142,11 @@ function sbac_authorized_domains_add_form_validate_duplicate(&$form, &$form_stat
     form_set_error('field_domain', 'This domain already exists in the system.');
   }
 }
-
+/**
+ * Validation when editing authorized domains
+ * @param array $form All form elements that are contained in Edit Authorized Domain
+ * @param array $form_state All form functions that are contained in Edit Authorized Domain
+ */
 function sbac_authorized_domains_edit_form_validate_duplicate(&$form, &$form_state) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'authorized_domains')
@@ -130,14 +158,23 @@ function sbac_authorized_domains_edit_form_validate_duplicate(&$form, &$form_sta
   if (isset($result['authorized_domains']) && count($result['authorized_domains']) > 0) {
     form_set_error('field_domain', 'This domain already exists in the system.');
   }
-}
+}/**
+ * Delete authorized domain and redirect to sbac_authorized_domains_eck_delete_fix
+ * @param array $form All form elements that are contained in Delete Authorized Domain
+ * @param array $form_state All form functions that are contained in Delete Authorized Domain
+ * @param array $form_id Obtain the entity ID
+ */
 
 function sbac_authorized_domains_form_eck__entity__delete_form_alter(&$form, &$form_state, $form_id) {
   $name = $form['entity']['#value']->field_domain[LANGUAGE_NONE][0]['value'];
   drupal_set_title(t("Are you sure that you want to delete @name?", array('@name' => $name)));
   $form['#submit'] = array('sbac_authorized_domains_eck_delete_fix');
 }
-
+/**
+ * Display message after deleting authorized domain
+ * @param array $form All form elements that are contained in Delete Authorized Domain
+ * @param array $form_state All form functions that are contained in Delete Authorized Domain
+ */
 function sbac_authorized_domains_eck_delete_fix($form, &$form_state) {
   $entity = $form_state['values']['entity'];
   $name = $entity->field_domain[LANGUAGE_NONE][0]['value'];
@@ -152,7 +189,11 @@ function sbac_authorized_domains_eck_delete_fix($form, &$form_state) {
   // Ok, lets delete the entity
   $form_state['redirect'] = $submit_redirect;
 }
-
+/**
+ * Validation of CSV file by lines when importing authorized domains
+ * @param array $line Parsing CSV import data in each row
+ * @param array $context Contents of the output
+ */
 function _sbac_authorized_domains_import_line($line, &$context) {
   global $user;
   if (!isset($context['results']['rows_imported'])) {
@@ -233,7 +274,12 @@ function _sbac_authorized_domains_import_line($line, &$context) {
     }
   }
 }
-
+/**
+ * Progress bar and redirecting page when importing authorized domains
+ * @param array $success
+ * @param array $results The import result messages
+ * @param array $operations
+ */
 function sbac_authorized_domains_import_finished($success, $results, $operations) {
   $errors = count($results['errors']);
 
@@ -249,7 +295,9 @@ function sbac_authorized_domains_import_finished($success, $results, $operations
   }
   drupal_goto('/admin/sbac/authorized-domains');
 }
-
+/**
+ * Get and save state and district info through ART_API in cron job
+ */
 function sbac_authorized_domains_cron() {
   $queue = DrupalQueue::get('district_import');
 
@@ -282,6 +330,8 @@ function sbac_authorized_domains_cron() {
 
 /**
  * Implements hook_cron_queue_info().
+ * @param array $queues
+ * @return queues array
  */
 function sbac_authorized_domains_cron_queue_info() {
   $queues = array();
@@ -291,7 +341,10 @@ function sbac_authorized_domains_cron_queue_info() {
   );
   return $queues;
 }
-
+/**
+ * Save data to Digital Library DB when getting info by ART_API
+ * @param array $data Access to the imported data
+ */
 function sbac_authorized_domains_import_district($data) {
   $district_vocab = taxonomy_vocabulary_machine_name_load('districts');
 

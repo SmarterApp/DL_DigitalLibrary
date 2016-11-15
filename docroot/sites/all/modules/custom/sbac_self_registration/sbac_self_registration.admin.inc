@@ -6,9 +6,12 @@
  */
 
 /**
- * Settings form for registration
+ * Self regsitration form
+ *
+ * @param array $form All form elements that are contained in self registration form
+ * @param array $form_state All form functions that are contained in self registration form
+ * @return array self registration form
  */
-
 function sbac_self_registration_form($form, &$form_state) {
 
   $form['browser'] = array(
@@ -46,12 +49,24 @@ function sbac_self_registration_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Check whether the Email address is in correct form
+ *
+ * @param array $form All form elements that are contained in self registration form
+ * @param array $form_state All form functions that are contained in self registration form
+ */
 function sbac_self_registration_form_validate($form, &$form_state) {
   if (!valid_email_address($form_state['values']['e-mail'])) {
     form_set_error('e-mail', 'This is an invalid email address.');
   }
 }
 
+/**
+ * Submit action in self registration form
+ *
+ * @param array $form All form elements that are contained in self registration form
+ * @param array $form_state All form functions that are contained in self registration form
+ */
 function sbac_self_registration_form_submit($form, &$form_state) {
   $first_name = $form_state['values']['first_name'];
   $last_name = $form_state['values']['last_name'];
@@ -91,6 +106,11 @@ function sbac_self_registration_form_submit($form, &$form_state) {
   drupal_goto('/self-registration-processing');
 }
 
+/**
+ * Add one unauthorized domain item and increase the access count
+ *
+ * @param string $domain The unauthorized domain
+ */
 function sbac_self_registration_add_unauthorized_domain($domain) {
     $unauthorized_domain_result = db_select('unauthorized_domain_audit', 'c')
       ->fields('c')
@@ -117,6 +137,11 @@ function sbac_self_registration_add_unauthorized_domain($domain) {
     }
 }
 
+/**
+ * Create self-Registration Success message page
+ *
+ * @return array Self-Registration Success message page
+ */
 function sbac_self_registration_processing() {
   $output = array(
     'registration' => array(
@@ -128,6 +153,14 @@ function sbac_self_registration_processing() {
   return $output;
 }
 
+/**
+ * Create Email verification form
+ *
+ * @param array $form All form elements that are contained in Email verification form
+ * @param array $form_state All form functions that are contained in Email verification form
+ * @param string $email The Email will be verified
+ * @return array Email verification form
+ */
 function sbac_self_registration_verify_email_form($form, &$form_state, $email) {
   if (!$email) {
     $email = '';
@@ -159,17 +192,34 @@ function sbac_self_registration_verify_email_form($form, &$form_state, $email) {
   return $form;
 }
 
+/**
+ * Check whether the Email address is in correct form
+ *
+ * @param array $form All form elements that are contained in Email verification form
+ * @param array $form_state All form functions that are contained in Email verification form
+ */
 function sbac_self_registration_verify_email_form_validate($form, &$form_state) {
   if (!valid_email_address($form_state['values']['e-mail'])) {
     form_set_error('e-mail', 'This is an invalid email address.');
   }
 }
 
+/**
+ * Verify button
+ *
+ * @param array $form All form elements that are contained in Email verification form
+ * @param array $form_state All form functions that are contained in Email verification form
+ */
 function sbac_self_registration_verify_email_form_submit($form, &$form_state) {
   $result = sbac_art_api_reset_password($form_state['values']['e-mail']);
   drupal_goto('/verify-email-processing');
 }
 
+/**
+ * Check if the link expires after 72 hours
+ *
+ * @return array if reset password token is expired then return to password reset failure message page else return to Email verification form
+ */
 function sbac_self_registration_verify_email() {
   $params = drupal_get_query_parameters();
   $token = $params['token'];
@@ -188,6 +238,11 @@ function sbac_self_registration_verify_email() {
   return $form;
 }
 
+/**
+ * Create Password Reset Success message page
+ *
+ * @return array Password Reset Success message page
+ */
 function sbac_self_registration_verify_email_processing() {
   $output = array(
     'reset' => array(
@@ -198,6 +253,13 @@ function sbac_self_registration_verify_email_processing() {
   return $output;
 }
 
+/**
+ * Create password reset form
+ *
+ * @param array $form All form elements that are contained in password reset form
+ * @param array $form_state All form functions that are contained in password reset form
+ * @return array password reset form
+ */
 function sbac_self_registration_reset_password_form($form, &$form_state) {
 
   $form['info'] = array(
@@ -225,12 +287,24 @@ function sbac_self_registration_reset_password_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Check whether the Email address is in correct form
+ *
+ * @param array $form All form elements that are contained in password reset form
+ * @param array $form_state All form functions that are contained in password reset form
+ */
 function sbac_self_registration_reset_password_form_validate($form, &$form_state) {
   if (!valid_email_address($form_state['values']['e-mail'])) {
     form_set_error('e-mail', 'This is an invalid email address.');
   }
 }
 
+/**
+ * Reset button in password reset form page
+ *
+ * @param array $form All form elements that are contained in password reset form
+ * @param array $form_state All form functions that are contained in password reset form
+ */
 function sbac_self_registration_reset_password_form_submit($form, &$form_state) {
   $email = $form_state['values']['e-mail'];
   $sbac_user = sbac_art_api_get_user($email);
@@ -249,6 +323,11 @@ function sbac_self_registration_reset_password_form_submit($form, &$form_state) 
   drupal_goto('/reset-password-processing');
 }
 
+/**
+ * Create password reset success message page
+ *
+ * @return array password reset success message page
+ */
 function sbac_self_registration_reset_password_processing() {
 
   $output = array(
@@ -261,6 +340,11 @@ function sbac_self_registration_reset_password_processing() {
   return $output;
 }
 
+/**
+ * Embed Email Verification Token and send password reset Email then redirect to Password Reset Success message page
+ *
+ * @param string $email Receive reset password email
+ */
 function sbac_self_registration_reset_password_token($email) {
   $emailer = new sbacEmails($email);
   $token = _sbac_self_registration_token_encode($email);

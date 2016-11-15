@@ -33,6 +33,10 @@ function sbac_authorized_domains_configuration()
   return $form;
 }
 
+/**
+ * Create import form for authorized domains
+ * @return form array
+ */
 function sbac_authorized_domains_import_domains_form()
 {
   $form['#attributes']['enctype'] = 'multipart/form-data';
@@ -62,7 +66,12 @@ function sbac_authorized_domains_import_domains_form()
 
   return $form;
 }
+/**
+ * Authentication methods when importing authorized domains
+ * @param array $form All form elements that are contained in Import Authorized Domain
+ * @param array $form_state All form functions that are contained in Import Authorized Domain
 
+ */
 function sbac_authorized_domains_import_domains_form_validate(&$form, &$form_state) {
   $validators = array(
     'file_validate_extensions' => array( 'csv CSV' ),
@@ -97,7 +106,11 @@ function sbac_authorized_domains_import_domains_form_validate(&$form, &$form_sta
     form_set_error('file_upload', t('File missing.'));
   }
 }
-
+/**
+ * Submission methods when importing authorized domains
+ * @param array $form All form elements that are contained in Import Authorized Domain
+ * @param array $form_state All form functions that are contained in Import Authorized Domain
+ */
 function sbac_authorized_domains_import_domains_form_submit(&$form, &$form_state) {
   $batch = array(
     'title' => t('Importing CSV...'),
@@ -121,7 +134,11 @@ function sbac_authorized_domains_import_domains_form_submit(&$form, &$form_state
   }
   batch_set($batch);
 }
-
+/**
+ * Create form for unauthorized domains
+ * @param array $form All form elements that are contained in Unauthorized Domain Log
+ * @param array $form_state All form functions that are contained in Unauthorized Domain Log
+ */
 function sbac_authorized_domains_log_form($form, & $form_state)
 {
   $form = array();
@@ -139,15 +156,16 @@ function sbac_authorized_domains_log_form($form, & $form_state)
     '#suffix' => '<br>' . t('Click the link above to download the Unauthorized Domain Audit Log as a CSV file.')
   );
 
-  // sbac_authorized_domains_log_submit();
   return $form;
 }
-
+/**
+ * Use export_csv method to export csv file in Unauthorized Domains
+ * @param array $form All form elements that are contained in Unauthorized Domain Audit Log
+ * @param array $form_state All form functions that are contained in Unauthorized Domain Audit Log
+ */
 function sbac_authorized_domains_log_validate($form, &$form_state)
 {
 
-  // Using $form_state to receive the form passed values. Write the database, or other operations
-  // $result = db_query('SELECT * FROM {unauthorized_domain_audit}');
   $query = db_select('unauthorized_domain_audit', 'c')->fields('c')->execute();
 
   $str = "Domain,AccessCount\n";
@@ -164,7 +182,9 @@ function sbac_authorized_domains_log_validate($form, &$form_state)
   form_set_error('', '');
   exit();
 }
-
+/**
+ * Use stateID to get district name and generate JSON data
+ */
 function sbac_authorized_domains_json_output()
 {
   // We are returning JSON, so tell the browser.
@@ -175,7 +195,11 @@ function sbac_authorized_domains_json_output()
 
   echo drupal_json_encode(array('data' => $result));
 }
-
+/**
+ * District data query method
+ * @param string $stateId Get state ID
+ * @return Return district array
+ */
 function get_state_district($stateId) {
   $output = array();
   $district_vocab = taxonomy_vocabulary_machine_name_load('districts');
@@ -195,7 +219,11 @@ function get_state_district($stateId) {
   }
   return $output;
 }
-
+/**
+ * CSV file output method of unauthorized domains and generate the CSV file
+ * @param string $filename Access to a file name
+ * @param array $data Obtain the data of unauthorized domain name and access count
+ */
 function export_csv($filename, $data)
 {
   header("Content-type:text/csv");
