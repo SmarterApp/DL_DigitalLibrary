@@ -128,7 +128,9 @@ class feedbackStatus
       $type = $node->field_focus[LANGUAGE_NONE][0]['tid'];
     }
     // Set required quality reviews to 2 for playlists.
-    if ($type == '78306') {
+    $playlist_term = array_keys(taxonomy_get_term_by_name('Playlist', 'focus'));
+    $playlist_tid = (string) $playlist_term[0];
+    if ($type == $playlist_tid) {
       $this->qc_count = 2;
     }
 

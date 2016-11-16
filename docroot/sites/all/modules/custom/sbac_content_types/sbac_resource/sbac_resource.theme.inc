@@ -1252,8 +1252,7 @@ function _sbac_resource_resource_review_links($fields, $row) {
     ),
   ));
   $nid = $fields['nid']->raw;
-  $type = $fields['field_focus']->raw;
-  $feedback = new feedbackStatus($nid, $type);
+  $feedback = $row->_field_data['nid']['entity']->feedback_status;
   $positionals = array('1st', '2nd', '3rd');
   if ($feedback->qc_count == 3) {
     $variables['status_icons'][3] =  array('image' => 'grey-2.png', 'hover' => 'Needs Review');
