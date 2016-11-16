@@ -224,8 +224,17 @@ function sbac_self_registration_verify_email() {
   $params = drupal_get_query_parameters();
   $token = $params['token'];
   $token_info = _sbac_self_registration_token_decode($token);
-  if (($token_info && $token_info['expiration'] <= time()) || !$token_info) {
-    $reset_link = l('click here', '/reset-password-token');
+  if (!$token_info || empty($token_info['email']) || !valid_email_address($token_info['email'])) {
+    $reset_link = l(t('click here'), '/reset-password/');
+    $output = array(
+      'expired' => array(
+        '#type' => 'markup',
+        '#markup' => t('This token is invalid. If you need to reset your password, please !link.', array('!link' => $reset_link)),
+      )
+    );
+    return $output;
+  } elseif (($token_info && $token_info['expiration'] <= time())) {
+    $reset_link = l(t('click here'), '/reset-password-token/' . urlencode($token_info['email']));
     $output = array(
       'expired' => array(
         '#type' => 'markup',
