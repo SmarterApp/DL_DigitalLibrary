@@ -1184,7 +1184,11 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   }
   $resources_rated = $user->field_resources_rated['und'][0]['value'];
   $rated_goal = $user->field_star_rating_goal['und'][0]['value'];
-  $rated_perc = sbac_goals_calc_percent($resources_rated, $rated_goal);
+  $resources_rated_perc = $resources_rated;
+  if ($resources_rated > $rated_goal) {
+    $resoures_rated_perc = $rated_goal;
+  }
+  $rated_perc = sbac_goals_calc_percent($resources_rated_perc, $rated_goal);
   // Process rated data into table for report
   $output .= '<div class="educator-header">Educator</div>
               <div class="goal-container">
@@ -1209,7 +1213,11 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $reviewed_raw = sbac_goals_get_current_completed_reviews($user->uid, $date_range);
     $resources_reviewed = $user->field_resources_reviewed['und'][0]['value'];
     $reviewed_goal = $user->field_resources_reviewed_goal['und'][0]['value'];
-    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed, $reviewed_goal);
+    $resources_reviewed_perc = $resources_reviewed;
+    if ($resources_reviewed > $reviewed_goal) {
+      $resources_reviewed_perc = $reviewed_goal;
+    }
+    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed_perc, $reviewed_goal);
     $output .= '<div class="resource-reviewer-header">Resource Reviewer</div>
                 <div class="goal-container">
                   <span class="goal">Goal: ' .
