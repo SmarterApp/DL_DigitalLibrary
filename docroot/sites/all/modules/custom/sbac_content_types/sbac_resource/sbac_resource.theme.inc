@@ -1240,6 +1240,7 @@ function _sbac_resource_get_review_progress($nid = NULL, $uid = NULL, $from_date
  * @return array
  */
 function _sbac_resource_resource_review_links($fields, $row) {
+  global $user;
   $variables = array('status_icons' => array(
     array('image' => 'grey.png',
       'hover' => 'Needs Review',
@@ -1300,7 +1301,18 @@ function _sbac_resource_resource_review_links($fields, $row) {
       } elseif ($feedback->qc_status[$x]['finished']) {
         // QC review is finished.
         $y = $x + 1;
-        $variables['status_icons'][$y] =  array('image' => 'green-check.png', 'hover' => 'Quality Review ' . $y . ' Passed');
+        // If all of the reviews are finished, and the current user is a resource publisher...
+        if ($feedback->qc_count == $feedback->qc_num_finished && in_array('resource publisher', $user->roles)) {
+          // Show the approval status by showing the green check or red x and set the hover accordingly.
+          if ($feedback->qc_status[$x]['approved']) {
+            $variables['status_icons'][$y] =  array('image' => 'green-check.png', 'hover' => 'Quality Review ' . $y . ' Passed');
+          } else {
+            $variables['status_icons'][$y] =  array('image' => 'red-x.png', 'hover' => 'Quality Review ' . $y . ' Failed');
+          }
+        // Otherwise we just want to stick with green checks and complete messages so reviewers don't know how others reviewed it.
+        } else {
+          $variables['status_icons'][$y] =  array('image' => 'green-check.png', 'hover' => 'Quality Review ' . $y . ' Complete');
+        }
       }
     }
   }
