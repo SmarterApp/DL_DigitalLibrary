@@ -143,12 +143,15 @@
 #modalContent #edit-title-counter {
     position: absolute;
     text-align: right;
-    top: 10px;
+    top: 0;
     right: 55px;
     font-size: smaller;
     color: #555;
     margin: 0;
-    padding: 0;
+    padding: 10px 0 0 35px;
+    background-position: 0;
+    border: none;
+    background-color: inherit;
 }
 #modalContent #edit-body {
     position: relative;
@@ -159,12 +162,15 @@
 #modalContent #edit-body-und-0-value-counter {
     position: absolute;
     text-align: right;
-    top: 10px;
+    top: 0;
     right: 55px;
     font-size: smaller;
     color: #555;
     margin: 0;
-    padding: 0;
+    padding: 10px 0 0 35px;
+    background-position: 0;
+    border: none;
+    background-color: inherit;
 }
 .node-collection-form .field-name-field-subject,
 .node-collection-form .field-name-field-grades {
