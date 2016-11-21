@@ -759,7 +759,7 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
  * @param $view
  */
 function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
-    global $user;
+  global $user;
   // Remove playlists for non-SLTs
   $is_slt = sbac_report_is_slt($user);
 
