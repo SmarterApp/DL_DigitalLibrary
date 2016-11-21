@@ -211,11 +211,10 @@ function _sbac_authorized_domains_import_line($line, &$context) {
 
   $context['results']['rows_imported']++;
   $line = array_map('base64_decode', $line);
-  if ($line[0] == ''){
+  $domain = $line[0];
+  if ($domain == ''){
       $domain = FALSE;
       $context['results']['errors'][] = t("Import of line @num failed as the domain doesn't exist.", array('@num' => $context['results']['rows_imported']));
-  } else{
-      $domain = $line[0];
   }
   $state = $line[1];
   $district = $line[2];
@@ -239,7 +238,7 @@ function _sbac_authorized_domains_import_line($line, &$context) {
     $district_tid = FALSE;
     $context['results']['errors'][] = t("Import of line @num failed as the district doesn't exist.", array('@num' => $context['results']['rows_imported']));
   }
-  if ($state_tid && $district_tid) {
+  if ($domain && $state_tid && $district_tid) {
     if($state_tid == $district_state_id) {
         try {
             $query = new EntityFieldQuery();
