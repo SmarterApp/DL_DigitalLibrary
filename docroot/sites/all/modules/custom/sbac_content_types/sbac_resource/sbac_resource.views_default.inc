@@ -469,10 +469,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['field'] = 'field_alt_body';
-  /* Sort criterion: Workbench Moderation: State */
-  $handler->display->display_options['sorts']['state']['id'] = 'state';
-  $handler->display->display_options['sorts']['state']['table'] = 'workbench_moderation_node_history';
-  $handler->display->display_options['sorts']['state']['field'] = 'state';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
@@ -580,7 +576,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
-  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -1172,7 +1168,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_educational_use_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_educational_use_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_educational_use_tid']['vocabulary'] = 'educational_use';
-  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
+  /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
