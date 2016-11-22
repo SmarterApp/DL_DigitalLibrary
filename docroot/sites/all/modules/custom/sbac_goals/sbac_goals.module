@@ -455,10 +455,10 @@ SQL;
         // Check to see if user is on Most Active Member board
         $most_active_rated = views_get_view('rated_resources_rankings', TRUE);
         $most_active_rated->preview();
-        $rated_results = $most_active_rated->result;
+        $rated_results_arr = $most_active_rated->result;
 
         // iterate through view to see if $user_profile-> uid is in it
-        foreach ($rated_results as $rated_result) {
+        foreach ($rated_results_arr as $rated_result) {
           if ($rated_result->uid == $user_profile->uid) {
             // Notify user if on Most Active Member Board
             if ($task = taskit_get_object('most_active_members_rated')) {
@@ -546,10 +546,10 @@ SQL;
           // Check to see if user is on Most Active Member board
           $most_active_reviewed = views_get_view('reviewed_resources_rankings', TRUE);
           $most_active_reviewed->preview();
-          $reviewed_results = $most_active_reviewed->result;
+          $reviewed_results_arr = $most_active_reviewed->result;
   
           // iterate through view to see if $user_profile-> uid is in it
-          foreach ($reviewed_results as $reviewed_result) {
+          foreach ($reviewed_results_arr as $reviewed_result) {
             if ($reviewed_result->uid == $user_profile->uid) {
               // Notify user if on Most Active Member Board
               if ($task = taskit_get_object('most_active_members_reviewed')) {
