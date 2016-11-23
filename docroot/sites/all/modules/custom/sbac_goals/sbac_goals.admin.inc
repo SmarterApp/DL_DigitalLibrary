@@ -37,6 +37,10 @@ function sbac_goals_admin() {
     '#type' => 'hidden',
     '#value' => variable_get('goals_start_date', FALSE),
   );
+  $form['goals_start_date_timestamp'] = array(
+    '#type' => 'hidden',
+    '#value' => variable_get('goals_start_date_timestamp', FALSE),
+  );
 
   return system_settings_form($form);
 }
@@ -51,5 +55,12 @@ function sbac_goals_admin_validate($form, &$form_state) {
   if ($form_state['values']['goals_current_start_date'] && $form_state['values']['goals_start_date'] != $form_state['values']['goals_current_start_date']) {
     $form_state['values']['goals_previous_start_date'] = $form_state['values']['goals_current_start_date'];
   }
+
   unset($form_state['values']['goals_current_start_date']);
+
+  // Store timestamp for views filtering if goals_start_date is set and in correct format
+  if ($form_state['values']['goals_start_date'] && preg_match("/^\d{4}-\d{2}-\d{2}$/", $form_state['values']['goals_start_date'])) {
+    $form_state['values']['goals_start_date_timestamp'] = strtotime($form_state['values']['goals_start_date']);
+  }
+  
 }

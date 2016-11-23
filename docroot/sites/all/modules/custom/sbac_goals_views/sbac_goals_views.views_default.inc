@@ -79,6 +79,15 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['fields']['field_last_name']['label'] = '';
   $handler->display->display_options['fields']['field_last_name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_last_name']['element_label_colon'] = FALSE;
+  /* Field: User: Last login */
+  $handler->display->display_options['fields']['login']['id'] = 'login';
+  $handler->display->display_options['fields']['login']['table'] = 'users';
+  $handler->display->display_options['fields']['login']['field'] = 'login';
+  $handler->display->display_options['fields']['login']['label'] = '';
+  $handler->display->display_options['fields']['login']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['login']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['login']['date_format'] = 'forum_listing';
+  $handler->display->display_options['fields']['login']['second_date_format'] = 'forum_listing';
   /* Sort criterion: User: Resources Contributed (field_resources_contributed) */
   $handler->display->display_options['sorts']['field_resources_contributed_value']['id'] = 'field_resources_contributed_value';
   $handler->display->display_options['sorts']['field_resources_contributed_value']['table'] = 'field_data_field_resources_contributed';
@@ -120,6 +129,13 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['filters']['field_resources_contributed_value_1']['field'] = 'field_resources_contributed_value';
   $handler->display->display_options['filters']['field_resources_contributed_value_1']['operator'] = '>';
   $handler->display->display_options['filters']['field_resources_contributed_value_1']['value']['value'] = '0';
+  /* Filter criterion: Global: Field against variable comparison */
+  $handler->display->display_options['filters']['variable_compare']['id'] = 'variable_compare';
+  $handler->display->display_options['filters']['variable_compare']['table'] = 'views';
+  $handler->display->display_options['filters']['variable_compare']['field'] = 'variable_compare';
+  $handler->display->display_options['filters']['variable_compare']['operator'] = '>=';
+  $handler->display->display_options['filters']['variable_compare']['variable'] = 'goals_start_date_timestamp';
+  $handler->display->display_options['filters']['variable_compare']['left_field'] = 'login';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
@@ -425,6 +441,15 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['fields']['field_last_name']['label'] = '';
   $handler->display->display_options['fields']['field_last_name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_last_name']['element_label_colon'] = FALSE;
+  /* Field: User: Last login */
+  $handler->display->display_options['fields']['login']['id'] = 'login';
+  $handler->display->display_options['fields']['login']['table'] = 'users';
+  $handler->display->display_options['fields']['login']['field'] = 'login';
+  $handler->display->display_options['fields']['login']['label'] = '';
+  $handler->display->display_options['fields']['login']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['login']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['login']['date_format'] = 'forum_listing';
+  $handler->display->display_options['fields']['login']['second_date_format'] = 'forum_listing';
   /* Sort criterion: User: Resources Rated (field_resources_rated) */
   $handler->display->display_options['sorts']['field_resources_rated_value']['id'] = 'field_resources_rated_value';
   $handler->display->display_options['sorts']['field_resources_rated_value']['table'] = 'field_data_field_resources_rated';
@@ -466,6 +491,13 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['filters']['field_star_rating_goal_value']['field'] = 'field_star_rating_goal_value';
   $handler->display->display_options['filters']['field_star_rating_goal_value']['operator'] = '!=';
   $handler->display->display_options['filters']['field_star_rating_goal_value']['value']['value'] = '0';
+  /* Filter criterion: Global: Field against variable comparison */
+  $handler->display->display_options['filters']['variable_compare']['id'] = 'variable_compare';
+  $handler->display->display_options['filters']['variable_compare']['table'] = 'views';
+  $handler->display->display_options['filters']['variable_compare']['field'] = 'variable_compare';
+  $handler->display->display_options['filters']['variable_compare']['operator'] = '>=';
+  $handler->display->display_options['filters']['variable_compare']['variable'] = 'goals_start_date_timestamp';
+  $handler->display->display_options['filters']['variable_compare']['left_field'] = 'login';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
@@ -540,6 +572,15 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['fields']['field_last_name']['label'] = '';
   $handler->display->display_options['fields']['field_last_name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_last_name']['element_label_colon'] = FALSE;
+  /* Field: User: Last login */
+  $handler->display->display_options['fields']['login']['id'] = 'login';
+  $handler->display->display_options['fields']['login']['table'] = 'users';
+  $handler->display->display_options['fields']['login']['field'] = 'login';
+  $handler->display->display_options['fields']['login']['label'] = '';
+  $handler->display->display_options['fields']['login']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['login']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['login']['date_format'] = 'forum_listing';
+  $handler->display->display_options['fields']['login']['second_date_format'] = 'forum_listing';
   /* Sort criterion: User: Resources Reviewed (field_resources_reviewed) */
   $handler->display->display_options['sorts']['field_resources_reviewed_value']['id'] = 'field_resources_reviewed_value';
   $handler->display->display_options['sorts']['field_resources_reviewed_value']['table'] = 'field_data_field_resources_reviewed';
@@ -581,6 +622,13 @@ function sbac_goals_views_views_default_views() {
   $handler->display->display_options['filters']['field_resources_reviewed_value_1']['field'] = 'field_resources_reviewed_value';
   $handler->display->display_options['filters']['field_resources_reviewed_value_1']['operator'] = '>';
   $handler->display->display_options['filters']['field_resources_reviewed_value_1']['value']['value'] = '0';
+  /* Filter criterion: Global: Field against variable comparison */
+  $handler->display->display_options['filters']['variable_compare']['id'] = 'variable_compare';
+  $handler->display->display_options['filters']['variable_compare']['table'] = 'views';
+  $handler->display->display_options['filters']['variable_compare']['field'] = 'variable_compare';
+  $handler->display->display_options['filters']['variable_compare']['operator'] = '>=';
+  $handler->display->display_options['filters']['variable_compare']['variable'] = 'goals_start_date_timestamp';
+  $handler->display->display_options['filters']['variable_compare']['left_field'] = 'login';
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block');
