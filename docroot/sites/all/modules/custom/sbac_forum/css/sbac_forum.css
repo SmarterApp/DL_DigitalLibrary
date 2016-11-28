@@ -3081,7 +3081,7 @@ View Topic Page, Comment Page
   padding-top: 50px;
   position: relative;
   right: 0;
-  width: 130px;
+  width: 135px;
   z-index: 999;
   /*.sbac-forum-topic-node-view-controls-popup:after {
   			  background-color: rgba(0, 0, 0, 0);
@@ -3232,7 +3232,7 @@ View Topic Page, Comment Page
 .page-comment .topic-node-view-tertiary-nav .topic-node-view-tertiary-nav-right .action {
   clear: both;
   display: block;
-  padding-top: 10px;
+  padding-top: 30px;
 }
 /* line 2752, ../sass/sbac_forum.scss */
 .node-type-topic .topic-node-view-tertiary-nav .topic-node-view-tertiary-nav-right .tertiary-edit-link a:before,
