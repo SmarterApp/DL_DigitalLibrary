@@ -5,7 +5,7 @@ define('FEEDBACK_REVIEW_TIMEOUT', 72); // value in hours;
 define('FEEDBACK_REVIEW_REMINDER', 24); // value in hours
 define('FEEDBACK_RESUBMISSION_TIMEOUT', 432000); // 5 days in seconds
 define('FEEDBACK_MAX_REVIEW', 3); // number of reviews before publishing
-define('FEEDBACK_REVIEW_NOTIFICATION', 48); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
+define('FEEDBACK_REVIEW_NOTIFICATION', 24); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user within 24 hours after review started;
 define('FEEDBACK_REVIEWER_RID', 17); // id of the 'resource reviewer' role;
 define('FEEDBACK_PUBLISHER_RID', 16); // id of the 'resource publisher' role;
 define('FEEDBACK_AUTHENTICATED_RID', 2); // id of the 'authenticated' role;
