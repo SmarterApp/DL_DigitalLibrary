@@ -68,7 +68,7 @@ function sbac_user_field_default_field_bases() {
     'module' => 'list',
     'settings' => array(
       'allowed_values' => array(
-        'never' => 'Never',
+        'never' => 'None',
         'immediately' => 'Real Time',
         'daily' => 'Daily',
         'weekly' => 'Weekly',
