@@ -5135,6 +5135,11 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
 
 #edit-field-state-or-district-image .image-widget-data {
   margin: 20px 0;
+  max-width: 300px;
+}
+
+#edit-field-state-or-district-image .image-widget-data a {
+    overflow-wrap: break-word;
 }
 
 #edit-field-state-or-district-image-und-0-upload {
@@ -5144,6 +5149,11 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
 
 #edit-field-state-or-district-image-und-0-upload-button {
   float: left;
+}
+
+#edit-field-state-or-district-image-und-0-remove-button {
+    float: right;
+    margin: 10px;
 }
 
 #edit-field-state {
