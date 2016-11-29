@@ -178,6 +178,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('New State Forum'),
         'class' => 'NewStateForum',
       ),
+      // new state forum created for slt
+      array(
+        'name' => 'new_state_forum_slt',
+        'description' => t('New State Forum Slt'),
+        'class' => 'NewStateForumSlt',
+      ),
       // removed forum user membership
       array(
         'name' => 'removed_forum_member',
