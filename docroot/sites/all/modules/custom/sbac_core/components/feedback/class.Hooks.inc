@@ -442,14 +442,13 @@ class Hooks extends \devtools\Hooks {
    */
   function hook_cron() {
     // send out reminder notifications for resources which are approaching expiry time
-    $notification_time = strtotime('-' . FEEDBACK_REVIEW_NOTIFICATION . ' hours'); // - 48 hours
+    $notification_time = strtotime('-' . FEEDBACK_REVIEW_NOTIFICATION . ' hours'); // - 24 hours
 
     $query = " SELECT    id, uid, node_id
                   FROM      eck_feedback
                   WHERE     status = 1
                   AND       completed = 0
                   AND       created  <= :time
-                  AND       type = 'post'
                   AND       reminder = 0
                 ";
 
