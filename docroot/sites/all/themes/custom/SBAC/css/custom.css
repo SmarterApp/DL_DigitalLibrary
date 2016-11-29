@@ -35837,7 +35837,7 @@ form#sbac-user-filter-form #edit-email {
 .topic-node-view-tertiary-nav-right .flag-wrapper {
   position: absolute;
   top: 10px;
-  right: 120px;
+  right: 135px;
 }
 /* line 4056, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right .flag-wrapper .flag-message {
@@ -35859,6 +35859,7 @@ form#sbac-user-filter-form #edit-email {
 /* line 4072, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag.flagged, .topic-node-view-tertiary-nav-right a.flag.unflag-action {
   background: url('../images/subscribe_icons.png?1446141811') no-repeat 0 -22px;
+  left: 30px;
 }
 /* line 4076, ../sass/custom.scss */
 .topic-node-view-tertiary-nav-right a.flag:hover {
