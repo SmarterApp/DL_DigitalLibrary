@@ -526,7 +526,7 @@ function sbac_forum_view_forum_page($term) {
     }
     $contributor_perc = sbac_goals_calc_percent($contributor_complete_perc, $contributor_goal);
     $member_count = count($term->field_fc_forum_members['und']);
-
+    $member_count > 1 ? $member_desc = ' Members' : $member_desc = ' Member';
     $goals = '<a class="goals-toggle">Show Member Goals</a>
               <div class="forum-goal-container">
                 <div class="goal-container">
@@ -536,7 +536,7 @@ function sbac_forum_view_forum_page($term) {
                   <div class="goal-body">
                     <div class="members">
                       <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
-                      <span class="member-count">' . $member_count . ' Members</span>
+                      <span class="member-count">' . $member_count . $member_desc . '</span>
                     </div>
                     <div class="goals">
                       <span class="complete educator">' . $educator_complete . '</span> of ' . $educator_goal . '
@@ -550,7 +550,7 @@ function sbac_forum_view_forum_page($term) {
                   <div class="goal-body">
                     <div class="members">
                       <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
-                      <span class="member-count">' . $member_count . ' Members</span>
+                      <span class="member-count">' . $member_count . $member_desc . '</span>
                     </div>
                     <div class="goals">
                       <span class="complete reviewer">' . $reviewer_complete . '</span> of ' . $reviewer_goal . '
@@ -564,7 +564,7 @@ function sbac_forum_view_forum_page($term) {
                   <div class="goal-body">
                     <div class="members">
                       <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
-                      <span class="member-count">' . $member_count . ' Members</span>
+                      <span class="member-count">' . $member_count . $member_desc . '</span>
                     </div>
                     <div class="goals">
                       <span class="complete contributor">' . $contributor_complete . '</span> of ' . $contributor_goal . '
