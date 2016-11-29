@@ -180,7 +180,7 @@ function sbac_self_registration_verify_email_form($form, &$form_state, $email) {
     '#type' => 'textfield',
     '#title' => t('E-mail Address'),
     '#required' => TRUE,
-    '#description' => t('Email address must be from an authorized educational institution (school, district, etc.)'),
+    '#disabled' => TRUE,
     '#default_value' => $email,
   );
 
