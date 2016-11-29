@@ -1393,6 +1393,31 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                     $recipients[] = entity_load_single('feedback', $feedback->id);
                   }
                 }
+                // email reviewers
+                foreach ($recipients as $recipient) {
+                  $reviewer = user_load($recipient->uid);
+                  // Add resource link to message
+                  global $base_url;
+                  $values = array(
+                    'arguments' => array(
+                      '!resource-link' => $base_url . '/node/' . $node->nid,
+                    ),
+                    'uid' => $reviewer->uid,
+                  );
+                  $email_preference = $reviewer->field_email_preference_value['und'][0]['value'];
+                  if ($email_preference !== '' || $email_preference !== 'never') {
+                    // create message
+                    $message = message_create('resource_resubmitted', array('uid' => $reviewer->uid));
+                    $wrapper = entity_metadata_wrapper('message', $message);
+                    $wrapper->save();
+                    if ($email_preference == 'immediately') {
+                      // send email
+                      message_notify_send_message($message);
+                      // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+                      message_delete_multiple(array($message->mid));
+                    }
+                  }
+                }       
               }
             }
             else {
