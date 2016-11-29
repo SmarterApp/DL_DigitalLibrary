@@ -4053,7 +4053,7 @@ form#sbac-user-filter-form #edit-email {
    .flag-wrapper {
     position: absolute;
     top: 10px;
-    right:120px;
+    right:135px;
     .flag-message {
       background:none;
     }
@@ -4073,6 +4073,7 @@ form#sbac-user-filter-form #edit-email {
      &.flagged,
      &.unflag-action {
        background: image-url('subscribe_icons.png') no-repeat 0 -22px;
+       left: 30px;
      }
      &:hover {
        color:#0684ad;

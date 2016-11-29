@@ -11,9 +11,12 @@ class ForumFlagged extends \taskit\sbac_core\BaseTask {
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
 
+      $forum = entity_load_single('taxonomy_term', $node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid']);
+
       $output = array();
-      $output[] = t('This topic !title has been flagged as urgent and needs moderation.', array(
+      $output[] = t('A post in discussion topic !title in Forum !forum was flagged and needs moderation.', array(
         '!title' => '<span class="taskit-title">' . $node->title . '</span>',
+        '!forum' => '<span class="taskit-title">' . $forum->name . '</span>',
       ));
 
 //      $flag = sbac_flag_get_user_flag($node->nid, $account->uid);

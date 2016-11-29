@@ -17,6 +17,11 @@ function sbac_goals_menu() {
     'access arguments' => array('access sbac configuration menu')
   );
 
+  $items['goals/redirect'] = array(
+    'page callback' => 'sbac_goals_redirect',
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 /**
@@ -455,10 +460,10 @@ SQL;
         // Check to see if user is on Most Active Member board
         $most_active_rated = views_get_view('rated_resources_rankings', TRUE);
         $most_active_rated->preview();
-        $rated_results = $most_active_rated->result;
+        $rated_results_arr = $most_active_rated->result;
 
         // iterate through view to see if $user_profile-> uid is in it
-        foreach ($rated_results as $rated_result) {
+        foreach ($rated_results_arr as $rated_result) {
           if ($rated_result->uid == $user_profile->uid) {
             // Notify user if on Most Active Member Board
             if ($task = taskit_get_object('most_active_members_rated')) {
@@ -546,10 +551,10 @@ SQL;
           // Check to see if user is on Most Active Member board
           $most_active_reviewed = views_get_view('reviewed_resources_rankings', TRUE);
           $most_active_reviewed->preview();
-          $reviewed_results = $most_active_reviewed->result;
+          $reviewed_results_arr = $most_active_reviewed->result;
   
           // iterate through view to see if $user_profile-> uid is in it
-          foreach ($reviewed_results as $reviewed_result) {
+          foreach ($reviewed_results_arr as $reviewed_result) {
             if ($reviewed_result->uid == $user_profile->uid) {
               // Notify user if on Most Active Member Board
               if ($task = taskit_get_object('most_active_members_reviewed')) {
@@ -847,7 +852,7 @@ function sbac_goals_check_for_reset($user) {
   if ($prev_start_date_string) { // If there is no previous date, we don't want to generate a blank report.
     $prev_start_date = strtotime($prev_start_date_string);
     $report_date_range = format_date($prev_start_date, 'custom', 'Ymd') . '--' . format_date($current_start_date, 'custom', 'Ymd');
-    $pdf_name = $user->uid . '_' . $prev_start_date . '_' . $current_start_date_string . '.pdf';
+    $pdf_name = $user->uid . '_' . $prev_start_date_string . '_' . $current_start_date_string . '.pdf';
     $pdf_path = 'sites/default/files/user_certificates/' . $user->uid;
     // Reset goals to default values if previous period pdf doesn't exist
     // and configured goals date is not in the future
@@ -873,10 +878,24 @@ function sbac_goals_check_for_reset($user) {
           $user,
           $edit
         );
+        // clear views cache so a user is up to date after reset
+        $view = views_get_view('rated_resources_rankings');
+        $view->set_display('Block');
+        $cache = $view->display_handler->get_plugin('cache');
+        $cache->cache_flush();
+        $view = views_get_view('reviewed_resources_rankings');
+        $view->set_display('Block');
+        $cache = $view->display_handler->get_plugin('cache');
+        $cache->cache_flush();
+        $view = views_get_view('contributed_resources_rankings');
+        $view->set_display('Block');
+        $cache = $view->display_handler->get_plugin('cache');
+        $cache->cache_flush();
+        return TRUE;
       }
     }
   }
-  return;
+  return FALSE;
 }
 
 function sbac_goals_get_rank($uid, $category) {
@@ -1184,7 +1203,11 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   }
   $resources_rated = $user->field_resources_rated['und'][0]['value'];
   $rated_goal = $user->field_star_rating_goal['und'][0]['value'];
-  $rated_perc = sbac_goals_calc_percent($resources_rated, $rated_goal);
+  $resources_rated_perc = $resources_rated;
+  if ($resources_rated > $rated_goal) {
+    $resoures_rated_perc = $rated_goal;
+  }
+  $rated_perc = sbac_goals_calc_percent($resources_rated_perc, $rated_goal);
   // Process rated data into table for report
   $output .= '<div class="educator-header">Educator</div>
               <div class="goal-container">
@@ -1209,7 +1232,11 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $reviewed_raw = sbac_goals_get_current_completed_reviews($user->uid, $date_range);
     $resources_reviewed = $user->field_resources_reviewed['und'][0]['value'];
     $reviewed_goal = $user->field_resources_reviewed_goal['und'][0]['value'];
-    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed, $reviewed_goal);
+    $resources_reviewed_perc = $resources_reviewed;
+    if ($resources_reviewed > $reviewed_goal) {
+      $resources_reviewed_perc = $reviewed_goal;
+    }
+    $reviewed_perc = sbac_goals_calc_percent($resources_reviewed_perc, $reviewed_goal);
     $output .= '<div class="resource-reviewer-header">Resource Reviewer</div>
                 <div class="goal-container">
                   <span class="goal">Goal: ' .
@@ -1269,6 +1296,8 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     }
     $resources_contributed = $user->field_resources_contributed['und'][0]['value'];
     $contributed_goal = $user->field_resources_posted_goal['und'][0]['value'];
+    $resources_contributed_perc = $resources_contributed;
+    if ($resources_contributed > $contr)
     $contributed_perc = sbac_goals_calc_percent($resources_contributed, $contributed_goal);
     $output .= '<div class="resource-contributor-header">Resource Contributor</div>
                 <div class="goal-container">
@@ -1390,8 +1419,9 @@ function sbac_goals_report_form($form, &$form_state, $user) {
   $options['current'] = 'SY ' . substr($year1[0], -2) . '-' . substr($year2[0], -2);
   $counter = 0;
   foreach ($options_raw as $option) {
-    if (strpos($option, $user->uid) !== FALSE) {      
-      $pieces = explode('-', $option);
+    if (strpos($option, $user->uid) !== FALSE) {
+      $option_name = substr($option, 0, -4); 
+      $pieces = explode('-', $option_name);
       $entry = 'SY ' . substr($pieces[0], -2) . '-' . substr($pieces[2], -2);
       if (in_array($entry, $options)) {
         $new_entry = $entry . '-' . $counter;
@@ -1523,4 +1553,31 @@ SQL;
   foreach($completed as $forum) {
     sbac_goals_update_forum_goals($forum->tid);
   } 
+}
+
+/**
+  * Implements hook_user_login() to check if goals reset is required(new goals time period)
+  */
+function sbac_goals_user_login(&$edit, $account) {
+  if ($account) {
+    $user = user_load($account->uid);
+    if (sbac_goals_check_for_reset($user)) {
+      $_GET['destination'] = 'goals/redirect';
+    }
+  }
+}
+
+function sbac_goals_redirect() {
+  return theme('goals_redirect_template');
+}
+
+/*
+ * Implementation of hook_theme().
+ */
+function sbac_goals_theme(){
+  return array(
+    'goals_redirect_template' => array(
+      'template' => 'templates/goals-redirect',
+    ),
+  );
 }

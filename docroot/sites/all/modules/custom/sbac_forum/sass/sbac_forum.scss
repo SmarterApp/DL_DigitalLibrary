@@ -2614,7 +2614,7 @@ View Topic Page, Comment Page
 	    padding-top: 50px;
 	    position: relative;
 	    right: 0;
-	    width: 130px;
+	    width: 135px;
 	    z-index: 999;
 
 		 .sbac-forum-topic-node-view-controls:before {
@@ -2746,7 +2746,7 @@ View Topic Page, Comment Page
 			.action {
 				clear: both;
 				display: block;
-				padding-top: 10px;
+				padding-top: 30px;
 			}
 
 			.tertiary-edit-link a:before {
@@ -4548,4 +4548,55 @@ a.sbac-favorites-link {
     font-weight: bold;
     color: #5a5a5a;
   }
+}
+
+
+#edit-topic-forums {
+  float: left;
+}
+
+#edit-field-add-to-leaderboard {
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  width: 420px;
+}
+
+#edit-field-state-or-district-image {
+  position: absolute;
+  top: 100px;
+  right: 0px;
+  width: 420px;
+  float: left;
+}
+
+#edit-field-state-or-district-image .image-widget-data {
+  margin: 20px 0;
+  max-width: 300px;
+
+  a {
+    overflow-wrap: break-word;
+  }
+}
+
+#edit-field-state-or-district-image-und-0-upload {
+  width: 263px;
+  float: left;
+}
+
+#edit-field-state-or-district-image-und-0-upload-button {
+  float: left;
+}
+
+#edit-field-state-or-district-image-und-0-remove-button {
+    float: right;
+    margin: 10px;
+}
+
+#edit-field-state {
+  display: block;
+}
+
+.forum-add-access-right {
+  display: none;
 }

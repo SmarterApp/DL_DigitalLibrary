@@ -6,6 +6,7 @@ version = 7.x-1.0
 dependencies[] = image
 dependencies[] = sbac_goals
 dependencies[] = views
+dependencies[] = vvf
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
 features[image][] = leaderboard_30x33

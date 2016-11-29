@@ -13,14 +13,9 @@ class ReviewReminder extends \taskit\sbac_core\BaseTask {
 
       $viewing_account = current_user();
 
-      $feedback = entity_load('feedback', FALSE, array(
-        'node_id' => $node->nid,
-        'type' => 'post',
-      ));
-
       $output = array();
-      $output[] = t('You have !hours hours left to complete the review for !title', array(
-        '!hours' => FEEDBACK_REVIEW_REMINDER,
+      $output[] = t('You have a resource review in process for !title that has not been completed. Complete your review by !here.', array(
+        '!here' => '<span class="taskit-title">clicking here</span>',
         '!title' => '<span class="taskit-title">' . $node->title . '</span>',
       ));
 

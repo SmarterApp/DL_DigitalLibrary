@@ -314,6 +314,10 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if ($form_id == 'user_profile_form') {
+    // Get rid of unneeded duplicate value. The default should be the regular 'None'.
+    if (isset($form['field_email_preference']['und']['#options']['_none'])) {
+      unset($form['field_email_preference']['und']['#options']['_none']);
+    }
     $user = $form_state['user'];
     if ($user->data['login_count'] == 1 && (empty($user->field_position) || empty($user->field_subject_s_) || empty($user->field_grade_level_s_) || empty($user->field_special_populations))) {
       drupal_add_js(array('sbac_user_required_fields' => 0), 'setting');

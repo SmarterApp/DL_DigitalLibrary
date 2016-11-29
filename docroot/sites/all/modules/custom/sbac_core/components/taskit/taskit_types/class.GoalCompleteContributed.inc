@@ -8,7 +8,8 @@ class GoalCompleteContributed extends \taskit\sbac_core\BaseTask {
     $account  = user_load(current($accounts));
     $rating_goal = $account->field_resources_posted_goal['und'][0]['value'];
     if ($account) {
-      $this->setTaskUrl(check_plain('users/' . $account->uid . '#profile-goals'));
+      $user_name = strtolower(sbac_user_format_username($account));
+      $this->setTaskUrl(check_plain('users/' . $user_name . '#profile-goals'));
 
       $output = array();
       $output[] = t('Congratulations: You have reached your goal for resources contributed! !goal_page', array(
