@@ -1259,6 +1259,16 @@ function sbac_central_update_7101() {
 }
 
 /**
+ * Enable Views Variable Field Module
+ */
+function sbac_central_update_7102() {
+  $modules = array(
+    'vvf',
+  );
+  module_enable($modules);
+}
+
+/**
  * Impliments hook_uninstall().
  */
 

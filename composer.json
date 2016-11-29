@@ -220,6 +220,7 @@
     "drupal/views_infinite_scroll": "7.1.x-dev#dca76871d9732ad2d681e19e117fde0d81da75bd",
     "drupal/views_load_more": "7.1.5",
     "drupal/votingapi": "7.2.12",
+    "drupal/vvf": "7.1.2",
     "drupal/wordfilter": "7.1.x-dev#6a6a8bb1f6158b1238e51fb94686e2a93fbec360",
     "drupal/workbench": "7.1.2",
     "drupal/workbench_moderation": "7.1.3",

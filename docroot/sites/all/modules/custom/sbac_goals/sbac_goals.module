@@ -17,6 +17,11 @@ function sbac_goals_menu() {
     'access arguments' => array('access sbac configuration menu')
   );
 
+  $items['goals/redirect'] = array(
+    'page callback' => 'sbac_goals_redirect',
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 /**
@@ -847,7 +852,7 @@ function sbac_goals_check_for_reset($user) {
   if ($prev_start_date_string) { // If there is no previous date, we don't want to generate a blank report.
     $prev_start_date = strtotime($prev_start_date_string);
     $report_date_range = format_date($prev_start_date, 'custom', 'Ymd') . '--' . format_date($current_start_date, 'custom', 'Ymd');
-    $pdf_name = $user->uid . '_' . $prev_start_date . '_' . $current_start_date_string . '.pdf';
+    $pdf_name = $user->uid . '_' . $prev_start_date_string . '_' . $current_start_date_string . '.pdf';
     $pdf_path = 'sites/default/files/user_certificates/' . $user->uid;
     // Reset goals to default values if previous period pdf doesn't exist
     // and configured goals date is not in the future
@@ -873,10 +878,24 @@ function sbac_goals_check_for_reset($user) {
           $user,
           $edit
         );
+        // clear views cache so a user is up to date after reset
+        $view = views_get_view('rated_resources_rankings');
+        $view->set_display('Block');
+        $cache = $view->display_handler->get_plugin('cache');
+        $cache->cache_flush();
+        $view = views_get_view('reviewed_resources_rankings');
+        $view->set_display('Block');
+        $cache = $view->display_handler->get_plugin('cache');
+        $cache->cache_flush();
+        $view = views_get_view('contributed_resources_rankings');
+        $view->set_display('Block');
+        $cache = $view->display_handler->get_plugin('cache');
+        $cache->cache_flush();
+        return TRUE;
       }
     }
   }
-  return;
+  return FALSE;
 }
 
 function sbac_goals_get_rank($uid, $category) {
@@ -1400,8 +1419,9 @@ function sbac_goals_report_form($form, &$form_state, $user) {
   $options['current'] = 'SY ' . substr($year1[0], -2) . '-' . substr($year2[0], -2);
   $counter = 0;
   foreach ($options_raw as $option) {
-    if (strpos($option, $user->uid) !== FALSE) {      
-      $pieces = explode('-', $option);
+    if (strpos($option, $user->uid) !== FALSE) {
+      $option_name = substr($option, 0, -4); 
+      $pieces = explode('-', $option_name);
       $entry = 'SY ' . substr($pieces[0], -2) . '-' . substr($pieces[2], -2);
       if (in_array($entry, $options)) {
         $new_entry = $entry . '-' . $counter;
@@ -1533,4 +1553,31 @@ SQL;
   foreach($completed as $forum) {
     sbac_goals_update_forum_goals($forum->tid);
   } 
+}
+
+/**
+  * Implements hook_user_login() to check if goals reset is required(new goals time period)
+  */
+function sbac_goals_user_login(&$edit, $account) {
+  if ($account) {
+    $user = user_load($account->uid);
+    if (sbac_goals_check_for_reset($user)) {
+      $_GET['destination'] = 'goals/redirect';
+    }
+  }
+}
+
+function sbac_goals_redirect() {
+  return theme('goals_redirect_template');
+}
+
+/*
+ * Implementation of hook_theme().
+ */
+function sbac_goals_theme(){
+  return array(
+    'goals_redirect_template' => array(
+      'template' => 'templates/goals-redirect',
+    ),
+  );
 }

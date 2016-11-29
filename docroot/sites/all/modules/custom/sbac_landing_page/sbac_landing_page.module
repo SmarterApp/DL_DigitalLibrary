@@ -89,7 +89,7 @@ function lp_find_resource(){
 
 function lp_get_leaderboards() {
   global $user;
-  $user = user_load($user->uid);
+  $user = user_load($user->uid, TRUE);
   $leaderboards = array(
                     array('Educator', 'rated_resources_rankings'),
                     array('Resource Reviewer', 'reviewed_resources_rankings'),
