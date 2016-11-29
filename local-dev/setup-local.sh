@@ -51,18 +51,23 @@ cd $LDIR
 echo 'Bring up containers'
 docker-compose up -d
 
-echo 'Load Example DB'
-./load-example-db.sh
+#echo 'Load Example DB'
+#./load-example-db.sh
+echo 'Load Pre-initialized DB'
+./rsync-db.sh
 
 echo 'Adjust settings via drush'
 ./exec-drush dis google_analytics acquia_spi learning_registry
-./exec-drush user-password admin --password="password"
+#./exec-drush user-password admin --password="password"
 ./exec-drush vset reroute_email_address beads2nibs@mailinator.com
 ./exec-drush vset reroute_enable 1
 
 ./exec-drush updb -y
 ./exec-drush fra -y
 ./exec-drush cc all
+
+#echo 'Load test users'
+#./load-test-users.sh
 
 
 echo
