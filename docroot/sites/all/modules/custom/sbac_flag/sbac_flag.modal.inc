@@ -1228,7 +1228,7 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
     global $base_url;
     $values = array(
       'arguments' => array(
-        '!forum-link' => $base_url . '/content/' . $node->nid,
+        '!forum-link' => $base_url . '/node/' . $node->nid,
       ),
       'uid' => $node->uid,
     );
