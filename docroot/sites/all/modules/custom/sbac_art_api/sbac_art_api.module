@@ -154,7 +154,7 @@ function sbac_art_api_get_states($raw = TRUE) {
       'Authorization' => "Bearer $access_token"
     )
   );
-  return _sbac_art_api_do_request($base_url . '/states', $options, $raw);
+  return _sbac_art_api_do_request($base_url . '/states/lookup', $options, $raw);
 }
 
 /**
