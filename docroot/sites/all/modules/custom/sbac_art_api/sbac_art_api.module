@@ -100,6 +100,9 @@ function sbac_art_api_oauth2_clients() {
 function sbac_art_api_get_token() {
   try {
     $oauth2_client = oauth2_client_load('art_api');
+    if (variable_get('sbac_art_api_debug', FALSE)) {
+      $oauth2_client->clearToken();
+    }
     $access_token = $oauth2_client->getAccessToken();
   }
   catch (Exception $e) {
@@ -118,6 +121,10 @@ function sbac_art_api_get_token() {
  * @return mixed False if the return code isn't a success, raw data if $raw, decoded JSON if not $raw, TRUE if no content
  */
 function _sbac_art_api_do_request($url, $options, $raw) {
+  if (variable_get('sbac_art_api_logging', FALSE)) {
+    $poptions = print_r($options, TRUE);
+    watchdog('sbac_art_api', t("The URL !url was called with the data:\n!options", array('!url' => $url, '!options' => $poptions)));
+  }
   $request = drupal_http_request($url, $options);
   switch ($request->code) {
     case 200:

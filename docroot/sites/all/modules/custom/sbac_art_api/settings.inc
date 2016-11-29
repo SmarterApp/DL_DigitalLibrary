@@ -24,7 +24,7 @@ function sbac_art_api_settings_form($form, &$form_state) {
     '#description' => t('The secret to access this server (Similar to a password).'),
     '#element_validate' => array('_sbac_art_api_encrypted_field_validate'),
     '#default_value' => sbac_art_api_decrypt(variable_get('sbac_art_api_oauth_secret', '')),
-    '#required' => FALSE,
+    '#required' => TRUE,
   );
   $form['sbac_art_api_oauth_username'] = array(
     '#type' => 'textfield',
@@ -47,6 +47,13 @@ function sbac_art_api_settings_form($form, &$form_state) {
     '#description' => t('Enter the base path to the REST URL. No trailing slash.'),
     '#default_value' => variable_get('sbac_art_api_base_rest_url', ''),
     '#required' => TRUE,
+  );
+  $form['sbac_art_api_logging'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Log API requests'),
+    '#description' => t('Check this to turn on API logging.'),
+    '#default_value' => variable_get('sbac_art_api_logging', 0),
+    '#return_value' => 1,
   );
 
   return system_settings_form($form);
