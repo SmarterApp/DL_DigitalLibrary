@@ -1416,7 +1416,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               foreach ($reviewers as $reviewer) {
                 global $base_url;
                 $user_profile = user_load($reviewer->uid);
-                $username = sbac_user_format_username($user_profile);
+                $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
                 $values = array(
                   'arguments' => array(
                     '!user-link' => $base_url . '/users/' . $username,
@@ -3907,7 +3907,7 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
     // Add resource link to message
     global $base_url;
     $user_profile = user_load($last_reviewer);
-    $username = sbac_user_format_username($user_profile);
+    $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
     $values = array(
       'arguments' => array(
         '!resource-link' => $base_url . '/node/' . $node->nid,

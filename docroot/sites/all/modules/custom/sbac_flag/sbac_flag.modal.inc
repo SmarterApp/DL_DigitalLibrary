@@ -1226,7 +1226,7 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
     }
     // Send email to topic creator
     global $base_url;
-    $username = sbac_user_format_username($user_profile);
+    $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
     $values = array(
       'arguments' => array(
         '!forum-link' => $base_url . '/node/' . $node->nid,

@@ -280,7 +280,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       $email_preference = $author->field_email_preference_value;
       if ($author->field_email_preference['und'][0]['value'] != 'never' && $author->field_email_preference['und'][0]['value'] != '') {
         global $base_url;
-        $username = sbac_user_format_username($author);
+        $username = str_replace(' ', '-', strtolower(sbac_user_format_username($author)));
         $values = array(
           'arguments' => array(
             '!resource-link' => $base_url . '/node/' . $node->nid,
@@ -566,7 +566,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       $user_profile = user_load($node->uid);
       if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') { 
         global $base_url;
-        $username = sbac_user_format_username($user_profile);
+        $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
         $values = array(
           'arguments' => array(
             '!resource-link' => $base_url . '/node/' . $node->nid,

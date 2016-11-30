@@ -15,7 +15,8 @@ function sbac_email_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'elysia_cron_script';
   $strongarm->value = '0 0 * * 0 sbac_email_weekly_cron();
-* 19 * * * sbac_email_daily_cron();';
+* 19 * * * sbac_email_daily_cron();
+* * * * * sbac_goals_notify_leaderboard();';
   $export['elysia_cron_script'] = $strongarm;
 
   $strongarm = new stdClass();
