@@ -1251,7 +1251,25 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
         }
       }
     }
-
+    // Notify SLT users of same state as author of non-state restricted forum creation
+    if ($term->field_forum_access_states['und'][0]['value'] == 1) {
+      global $user;
+      $account = user_load($user->uid);
+      $state = $account->field_state['und'][0]['tid'];
+      $users = sbac_forum_get_state_slt_users($state);
+      foreach ($users as $state_user) {
+        // Prevent forum author from getting notification
+        if ($state_user->uid !== $user->uid) {
+          if ($task = taskit_get_object('new_state_forum_slt')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('taxonomy_term', $term->tid);
+            $task->addOwningUser($state_user->uid);
+            $task->addTriggeringUser($user->uid);
+            $task->save();
+          }
+        }
+      }
+    }
     // Notify forum creator that they are responsible for moderation
     global $user;
     if ($task = taskit_get_object('new_forum')) {
@@ -2594,6 +2612,34 @@ function sbac_forum_get_state_users($state) {
 SQL;
 
   $result = db_query($sql, array(':status' => '1', ':state' => $state));
+
+  foreach ($result as $row) {
+    $users[] = $row;
+  }
+
+  return $users;
+}
+
+// Get SLTs for a given state
+function sbac_forum_get_state_slt_users($state) {
+  $sql = <<<SQL
+
+  SELECT
+    u.uid
+  FROM {users} u
+    LEFT JOIN {field_data_field_state} st
+      ON u.uid = st.entity_id
+    LEFT JOIN {field_data_field_slt_member} slt
+      ON u.uid = slt.entity_id
+  WHERE
+    u.status = :status
+    AND slt.field_slt_member_value = :slt
+    AND st.field_state_tid = :state
+  
+
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':slt' => '1', ':state' => $state));
 
   foreach ($result as $row) {
     $users[] = $row;
