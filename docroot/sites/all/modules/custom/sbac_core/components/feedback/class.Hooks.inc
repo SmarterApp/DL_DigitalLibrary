@@ -470,9 +470,11 @@ class Hooks extends \devtools\Hooks {
       // Send email notification
       $user_profile = user_load($row->uid);
       global $base_url;
+      $username = sbac_user_format_username($user_profile);
       $values = array(
         'arguments' => array(
           '!resource-link' => $base_url . '/node/' . $row->node_id,
+          '!user-link' => $base_url . '/users/' . $username,
         ),
         'uid' => $row->uid,
       );
@@ -526,9 +528,11 @@ class Hooks extends \devtools\Hooks {
         // Send email notification
         $user_profile = user_load($row->uid);
         global $base_url;
+        $username = sbac_user_format_username($user_profile);
         $values = array(
           'arguments' => array(
             '!resource-link' => $node->title,
+            '!user-link' => $base_url . '/users/' . $username,
           ),
           'uid' => $row->uid,
         );

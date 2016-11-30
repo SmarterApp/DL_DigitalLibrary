@@ -3916,7 +3916,6 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
       'uid' => $last_reviewer,
     );
     
-
     $email_preference = $user_profile->field_email_reference[0]['und']['value'];
     if ($email_preference !== '' && $email_preference !== 'never') {
       // Create message
