@@ -1228,14 +1228,16 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
           $task->save();
         }
         global $base_url;
+        $user_profile = user_load($state_user->uid);
+        $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
         $values = array(
           'arguments' => array(
             '!forum-link' => $base_url . '/forums/term/' . $term->tid,
+            '!user-link' => $base_url . '/users/' . $username,
           ),
           'uid' => $state_user->uid,
         );
-        $user_profile = user_load($state_user->uid);
-    
+        
         $email_preference = $user_profile->field_email_reference[0]['und']['value'];
         if ($email_preference !== '' && $email_preference !== 'never') {
           // Create message

@@ -61,7 +61,6 @@ features[message_type][] = reviewed_goal_complete
 features[message_type][] = reviewed_leaderboard
 features[message_type][] = sbac_email_comment_insert
 features[message_type][] = weekly_email
-features[user_permission][] = administer smtp module
 features[user_permission][] = edit mimemail user settings
 features[user_permission][] = flag email
 features[user_permission][] = flag subscribe_term
