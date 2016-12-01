@@ -77,7 +77,7 @@ function sbac_self_registration_form_submit($form, &$form_state) {
     $emailer->send_sr_unauthorized_mail($first_name, $last_name);
     
     $email_parts = explode('@', $email);
-    $domain =   $email_parts[1];
+    $domain = $email_parts[1];
     sbac_self_registration_add_unauthorized_domain($domain);
   } else {
     $sbac_user = sbac_art_api_get_user($email, FALSE);

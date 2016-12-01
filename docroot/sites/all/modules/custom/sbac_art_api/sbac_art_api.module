@@ -249,14 +249,11 @@ function sbac_art_api_user_create_json($first_name, $last_name, $email, $state, 
 "firstName": "' . check_plain($first_name) . '",
 "lastName": "' . check_plain($last_name) . '",
 "email": "' . check_plain($email) . '",
-"roleAssociations": [{ 
-    "role": "DL_EndUser",
-    "level": "STATE",
-    "entityId": "' . check_plain($state) . '"
-  }, {
+"roleAssociations": [{
     "role": "DL_EndUser",
     "level": "DISTRICT",
-    "entityId": "' . check_plain($district) . '"
+    "entityId": "' . check_plain($district) . '",
+    "stateAbbreviation": "' . check_plain($state) . '"
   }]
 }';
 }
@@ -273,8 +270,12 @@ function sbac_art_api_user_update_json($user_json, $state, $district) {
       unset($user_json['roleAssociations'][$key]);
     }
   }
-  $user_json['roleAssociations'][] = array('role' => 'DL_EndUser', 'level' => 'STATE', 'entityId' => $state);
-  $user_json['roleAssociations'][] = array('role' => 'DL_EndUser', 'level' => 'DISTRICT', 'entityId' => $district);
+  $user_json['roleAssociations'][] = array(
+    'role' => 'DL_EndUser',
+    'level' => 'DISTRICT',
+    'entityId' => $district,
+    'stateAbbreviation' => $state
+  );
   $user_json['roleAssociations'] = array_values($user_json['roleAssociations']);
   $json_string = drupal_json_encode($user_json);
   return $json_string;

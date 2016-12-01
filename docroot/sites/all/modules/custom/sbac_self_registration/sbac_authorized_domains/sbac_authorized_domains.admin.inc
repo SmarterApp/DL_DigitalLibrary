@@ -56,7 +56,7 @@ function sbac_authorized_domains_import_domains_form()
     '#type' => 'file',
     '#title' => '',
     '#size' => 40,
-    '#description' => '' . '<p>' . check_plain(t('Select the CSV file to be imported.') . ' ' . $file_size) . '<br/>' . t('Allowed file types: CSV') . '</p><p>' . t('The CSV file must include 1 domain per line, in the format: domain,state,district.')
+    '#description' => '' . '<p>' . check_plain(t('Select the CSV file to be imported.') . ' ' . $file_size) . '<br/>' . t('Allowed file types: CSV') . '</p><p>' . t('The CSV file must include 1 domain per line, in the format: domain,state_name,district_id.')
   );
 
   $form['browser']['scan'] = array(
