@@ -245,6 +245,10 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
   $extra_classes = '';
+  // Add edit links for admins and facilitator role
+  if (in_array('facilitator', $user->roles) || in_array('administrator', $user->roles)) {
+    $is_facilitator = TRUE;
+  }
   // Remove edit links if a user does not have the facilitator role
   if (!in_array('facilitator', $user->roles)) {
     $is_facilitator = FALSE;
