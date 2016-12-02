@@ -249,8 +249,8 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
   if (in_array('facilitator', $user->roles) || in_array('administrator', $user->roles)) {
     $is_facilitator = TRUE;
   }
-  // Remove edit links if a user does not have the facilitator role
-  if (!in_array('facilitator', $user->roles)) {
+  // Remove edit links if a user does not have the facilitator or administrator role
+  if (!in_array('facilitator', $user->roles) && !in_array('administrator', $user->roles)) {
     $is_facilitator = FALSE;
   }
   if (($is_facilitator) || ($user->uid == 1)) { // Edit and delete forum
