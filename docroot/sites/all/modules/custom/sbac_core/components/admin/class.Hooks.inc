@@ -27,7 +27,7 @@ class Hooks extends \devtools\Hooks {
     $items['admin/sbac'] = array(
       'title' => 'SBAC Configuration',
       'page callback' => 'sbac_core_index_page',
-      'access arguments' => array('configure sbac'),
+      'access arguments' => array('access sbac configuration menu'),
       'weight' => 9,
     );
 
@@ -50,9 +50,13 @@ class Hooks extends \devtools\Hooks {
   function hook_permission() {
     return array(
       'configure sbac' => array(
-        'title' => t('Configure SBAC.'),
+        'title' => t('Configure SBAC'),
         'description' => t('Grants permission to configure SBAC settings.'),
       ),
+      'access sbac configuration menu' => array(
+        'title' => t('Access SBAC Configuration Menu'),
+        'description' => t('Grants permission to see the SBAC Configuration menu.'),
+      )
     );
   }
   /*----------------------------------------------------------------------------

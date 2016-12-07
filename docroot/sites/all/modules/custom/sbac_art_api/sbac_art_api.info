@@ -1,0 +1,7 @@
+name = SBAC ART API
+description = Provides the API functions for connecting to ART
+core = 7.x
+package = ~SBAC
+version = 7.x-1.0
+project = sbac_art_api
+dependencies[] = oauth2_client
