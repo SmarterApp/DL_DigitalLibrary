@@ -90,6 +90,7 @@ features[field_instance][] = review-end_use-field_ease_use
 features[field_instance][] = review-end_use-field_pro_dev
 features[field_instance][] = review-end_use-field_student_learning
 features[user_permission][] = access print
+features[user_permission][] = access sbac configuration menu
 features[user_permission][] = configure sbac
 features[user_permission][] = eck add feedback bundles
 features[user_permission][] = eck add feedback gate_keeper entities
