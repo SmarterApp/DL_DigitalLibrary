@@ -146,7 +146,7 @@ function sbac_self_registration_processing() {
   $output = array(
     'registration' => array(
       '#type' => 'markup',
-      '#markup' => t('Your information has been sent to the Digital Library. You will be receive a welcome email shortly.'),
+      '#markup' => t('Your information has been sent to the Digital Library. You will be receiving a welcome email shortly.'),
     )
   );
 
