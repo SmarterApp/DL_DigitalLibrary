@@ -1653,6 +1653,11 @@ function _sbac_resource_create_open_container(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_create_resource_title(&$form, &$form_state) {
+  global $user;
+  $admin_link = '';
+  if (in_array('administrator', $user->roles)) {
+    $admin_link = '<a class="help-topic-link" href="/admin/sbac/feedback/resource">Edit Help Text</a>';
+  }
   $default_value = "Untitled Resource";
   if ($form['title']['#default_value']) {
     $default_value = $form['title']['#default_value'];
@@ -1664,35 +1669,35 @@ function _sbac_resource_create_resource_title(&$form, &$form_state) {
   $form['title_of_resource_basic'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_basic'] = "group_basic";
 
   $form['title_of_resource_summary'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_summary'] = "group_summary";
 
   $form['title_of_resource_materials'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_materials'] = "group_materials";
 
   $form['title_of_resource_tags'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_tags'] = "group_tags";
 
   $form['title_of_resource_advanced'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_advanced'] = "group_advanced";
 }

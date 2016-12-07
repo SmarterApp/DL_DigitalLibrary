@@ -99,6 +99,13 @@ function sbac_help_menu() {
     'type'          => MENU_CALLBACK,
   );
 
+  $items['help'] = array(
+    'title'         => 'Help',
+    'page callback' => 'sbac_help_page',
+    'access arguments' => array('access content'),
+    'type'          => MENU_CALLBACK,
+  );
+
   $items['get-node-content'] = array(
     'title'         => 'Get Node Content',
     'page callback' => 'sbac_help_get_node_content',
@@ -172,6 +179,10 @@ function sbac_help_topics(){
     $vars['edit'] = '<a class="help-topic-link" href="/sort-content/help-topics">Edit Help Topics</a>';
   }
   return theme('sbac-help-topics', $vars);
+}
+
+function sbac_help_page() {
+  return;
 }
 
 /**

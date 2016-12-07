@@ -36606,3 +36606,43 @@ form#sbac-user-filter-form #edit-email {
 .state-image-hidden .field-name-field-state-or-district-image {
   display: none;
 }
+
+.sbac-resource-container .help-topic-link {
+  margin-top: -35px;
+}
+
+#glossary_terms {
+  margin-top: 70px;
+}
+
+.help-tabs {
+  width: 960px;
+  position: absolute;
+}
+
+.help-tabs a {
+  padding: 12px 28px;
+  font-family: "Open Sans",sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  color: #0583AC;
+  height: 48px;
+  line-height: 45px;
+  background: none repeat scroll 0 0 #FAFAFA;
+  border-left: 1px solid #FFFFFF;
+  border-right: 1px solid #CECECE;
+  border-top: 1px solid #CECECE;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.help-tabs .active {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border-left: 1px solid #CECECE;
+  box-shadow: 0 1px 5px 0 rgba(0,95,130,0.75);
+  color: #464B54;
+  height: 43px;
+  position: relative;
+  z-index: 9;
+}
+

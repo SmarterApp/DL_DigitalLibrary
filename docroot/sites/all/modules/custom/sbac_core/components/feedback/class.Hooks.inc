@@ -124,7 +124,7 @@ class Hooks extends \devtools\Hooks {
     );
 
     $items['admin/sbac/feedback'] = array(
-      'title' => 'Feedback Flow', 
+      'title' => 'Workflow/Resource Help Text', 
       'page callback' => 'sbac_core_index_page',
       'access arguments' => array('configure sbac'), 
     ) + $base;
@@ -135,7 +135,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_gate_keeper_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 0,
+      'weight' => 1,
     ) + $base;
 
     $items['admin/sbac/feedback/quality_review'] = array(
@@ -144,7 +144,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_quality_review_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 1,
+      'weight' => 2,
     ) + $base;
 
     $items['admin/sbac/feedback/post'] = array(
@@ -153,7 +153,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_post_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 2,
+      'weight' => 3,
     ) + $base;
 
     $items['node/%node/feedback'] = array(

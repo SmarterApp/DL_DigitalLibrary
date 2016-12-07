@@ -565,6 +565,20 @@ function sbac_preprocess_rate_template_yesno(&$variables) {
  * Preprocess function for page template.
  */
 function sbac_preprocess_page(&$variables) {
+  if (strpos($_GET['q'], 'glossary') !== FALSE) {
+    $variables['help_tabs'] =
+    '<div class="help-tabs">
+      <a href="/help-topics">Help Topics/FAQ</a>
+      <a class="active">Glossary</a>
+    </div>';
+  }
+  if ($_GET['q'] == 'help-topics') {
+    $variables['help_tabs'] =
+    '<div class="help-tabs">
+      <a class="active" href="/help-topics">Help Topics/FAQ</a>
+      <a href="glossary">Glossary</a>
+    </div>';
+  }
   if (arg(0) == 'digital-library-resources') {
     $errors = drupal_get_messages('error');
     foreach($errors['error'] as $error) {

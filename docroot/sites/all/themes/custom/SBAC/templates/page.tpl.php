@@ -172,7 +172,9 @@
           <?php print render($action_links); ?>
         </ul>
       <?php endif; ?>
-
+      <?php if ($help_tabs): ?>
+         <?php print $help_tabs; ?>
+      <?php endif; ?>
       <?php print render($page['content']); ?>
     </div>
     <?php if ($user->uid && !empty($page['sidebar_first'])): ?>
