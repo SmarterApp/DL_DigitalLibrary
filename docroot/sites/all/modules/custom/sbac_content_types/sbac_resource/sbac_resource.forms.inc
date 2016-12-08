@@ -1404,7 +1404,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                     ),
                     'uid' => $reviewer->uid,
                   );
-                  $email_preference = $reviewer->field_email_preference_value['und'][0]['value'];
+                  $email_preference = $reviewer->field_email_preference['und'][0]['value'];
                   if ($email_preference !== '' || $email_preference !== 'never') {
                     // create message
                     $message = message_create('resource_resubmitted', array('uid' => $reviewer->uid));
