@@ -1229,11 +1229,11 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
         }
         global $base_url;
         $user_profile = user_load($state_user->uid);
-        $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+        $username = sbac_email_user_link($user_profile);
         $values = array(
           'arguments' => array(
             '!forum-link' => $base_url . '/forums/term/' . $term->tid,
-            '!user-link' => $base_url . '/users/' . $username,
+            '!user-link' => $username,
           ),
           'uid' => $state_user->uid,
         );
