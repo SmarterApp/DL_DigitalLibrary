@@ -1134,7 +1134,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   $rated_goal = $user->field_star_rating_goal['und'][0]['value'];
   $resources_rated_perc = $resources_rated;
   if ($resources_rated > $rated_goal) {
-    $resoures_rated_perc = $rated_goal;
+    $resources_rated_perc = $rated_goal;
   }
   $rated_perc = sbac_goals_calc_percent($resources_rated_perc, $rated_goal);
   // Process rated data into table for report
