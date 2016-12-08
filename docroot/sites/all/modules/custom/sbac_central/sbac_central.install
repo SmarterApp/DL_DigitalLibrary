@@ -1303,7 +1303,7 @@ function sbac_central_uninstall() {
 /**
  * Enable self-reg modules.
  */
-function sbac_central_update_7096() {
+function sbac_central_update_7103() {
     $modules = array(
         'sbac_authorized_domains',
         'sbac_art_api',
@@ -1316,7 +1316,7 @@ function sbac_central_update_7096() {
 /**
  * Enable oauth2 module.
  */
-function sbac_central_update_7097() {
+function sbac_central_update_7104() {
     $modules = array(
         'oauth2_client',
     );
