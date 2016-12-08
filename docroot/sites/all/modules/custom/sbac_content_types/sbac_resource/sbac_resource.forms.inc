@@ -1396,11 +1396,13 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                 // email reviewers
                 foreach ($recipients as $recipient) {
                   $reviewer = user_load($recipient->uid);
+                  $username = sbac_email_user_link($reviewer);
                   // Add resource link to message
                   global $base_url;
                   $values = array(
                     'arguments' => array(
                       '!resource-link' => $base_url . '/node/' . $node->nid,
+                      '!user-link' => $username,
                     ),
                     'uid' => $reviewer->uid,
                   );
@@ -1439,12 +1441,11 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               // Email resource reviewers
               $reviewers = sbac_resource_get_reviewers_email();
               foreach ($reviewers as $reviewer) {
-                global $base_url;
                 $user_profile = user_load($reviewer->uid);
-                $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+                $username = sbac_email_user_link($user_profile);
                 $values = array(
                   'arguments' => array(
-                    '!user-link' => $base_url . '/users/' . $username,
+                    '!user-link' => $username,
                   ),
                   'uid' => $reviewer->uid,
                 );
@@ -3932,11 +3933,11 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
     // Add resource link to message
     global $base_url;
     $user_profile = user_load($last_reviewer);
-    $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+    $username = sbac_email_user_link($user_profile);
     $values = array(
       'arguments' => array(
         '!resource-link' => $base_url . '/node/' . $node->nid,
-        '!user-link' => $base_url . '/users/' . $username,
+        '!user-link' => $username,
       ),
       'uid' => $last_reviewer,
     );
