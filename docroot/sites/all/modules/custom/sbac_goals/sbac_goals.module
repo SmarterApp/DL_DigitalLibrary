@@ -1134,7 +1134,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   $rated_goal = $user->field_star_rating_goal['und'][0]['value'];
   $resources_rated_perc = $resources_rated;
   if ($resources_rated > $rated_goal) {
-    $resoures_rated_perc = $rated_goal;
+    $resources_rated_perc = $rated_goal;
   }
   $rated_perc = sbac_goals_calc_percent($resources_rated_perc, $rated_goal);
   // Process rated data into table for report
@@ -1226,8 +1226,10 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $resources_contributed = $user->field_resources_contributed['und'][0]['value'];
     $contributed_goal = $user->field_resources_posted_goal['und'][0]['value'];
     $resources_contributed_perc = $resources_contributed;
-    if ($resources_contributed > $contr)
-    $contributed_perc = sbac_goals_calc_percent($resources_contributed, $contributed_goal);
+    if ($resources_contributed > $contributed_goal) {
+      $resources_contributed_perc = $contributed_goal;
+    }
+    $contributed_perc = sbac_goals_calc_percent($resources_contributed_perc, $contributed_goal);
     $output .= '<div class="resource-contributor-header">Resource Contributor</div>
                 <div class="goal-container">
                   <span class="goal">Goal: ' .
