@@ -104,3 +104,96 @@ function send_review_notifications($task, $node, $reviews) {
     $task->save();
   }
 }
+
+/**
+ * Class feedbackStatus
+ * Creates an object which includes the current QC status of the node.
+ */
+class feedbackStatus
+{
+  public $qc_count = 3; // The number of QCs that are needed for this node.
+  public $gatekeeper_started = 0; // If the Gate Keeper review has started.
+  public $gatekeeper_finished = 0; // If the Gate Keeper review is finished.
+  public $gatekeeper_approved = 0; // If the Gate Keeper review was passed.
+  public $qc_num_finished = 0; // The number of finished QCs.
+  public $qc_status = array(); // An array of the QCs and their status ('started' and 'finished').
+  public $post_started = 0; // Whether the Post review has started.
+  public $post_finished = 0; // Whether the Post review has finished.
+  public $post_approved = 0; // Whether the Post review was approved.
+
+  public function __construct(&$node, $type = false)
+  {
+    if (is_int($node) || (is_string($node) && preg_match("/^\d+$/", $node))) {
+      $nid = $node;
+    } else {
+      $nid = $node->nid;
+      $type = $node->field_focus[LANGUAGE_NONE][0]['tid'];
+    }
+    // Set required quality reviews to 2 for playlists.
+    $playlist_term = array_keys(taxonomy_get_term_by_name('Playlist', 'focus'));
+    $playlist_tid = (string) $playlist_term[0];
+    if ($type == $playlist_tid) {
+      $this->qc_count = 2;
+    }
+
+    // Get all of the feedback for this node that is current and active.
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'feedback')
+      ->propertyCondition('node_id', $nid)
+      ->propertyCondition('current', 1)
+      ->propertyCondition('status', 1);
+    $results = $query->execute();
+
+    if (isset($results['feedback']) && count($results['feedback']) > 0) {
+      $entity_ids = array_keys($results['feedback']);
+      $entities = entity_load('feedback', $entity_ids);
+      foreach ($entities as $entity) {
+        switch ($entity->type) {
+          case 'gate_keeper':
+            // It's active, so it's started.
+            $this->gatekeeper_started = 1;
+            // Copy the finished state.
+            $this->gatekeeper_finished = $entity->completed;
+            // Copy the approval state.
+            $this->gatekeeper_approved = $entity->met_criteria;
+            break;
+          case 'qc':
+            $current = count($this->qc_status);
+            // It's active, so it's started.
+            $this->qc_status[$current]['started'] = 1;
+            // Copy the finished state.
+            $this->qc_status[$current]['finished'] = $entity->completed;
+            if ($entity->completed == 1) {
+              // It's completed, so add it to the count of completed reviews.
+              $this->qc_num_finished++;
+            }
+            // Only set to approved if Recommend (2) or Recommend with Distinction (3) is set.
+            if ((int) $entity->field_rec_options[LANGUAGE_NONE][0]['value'] >= 2) {
+              $this->qc_status[$current]['approved'] = 1;
+            } else {
+              $this->qc_status[$current]['approved'] = 0;
+            }
+            break;
+          case 'post':
+            // It's active, so it's started.
+            $this->post_started = 1;
+            // Copy the finished state.
+            $this->post_finished = $entity->completed;
+            // Only set to approved if Post (1) or Post with Distinction (2) is set.
+            if ((int) $entity->field_post_options[LANGUAGE_NONE][0]['value'] > 0) {
+              $this->post_approved = 1;
+            } else {
+              $this->post_approved = 0;
+            }
+            break;
+        }
+      }
+    }
+    // Add the rest of the QC review statuses.
+    for ($x = count($this->qc_status); $x < $this->qc_count; $x++) {
+      $this->qc_status[$x]['started'] = 0;
+      $this->qc_status[$x]['finished'] = 0;
+      $this->qc_status[$x]['approved'] = 0;
+    }
+  }
+}

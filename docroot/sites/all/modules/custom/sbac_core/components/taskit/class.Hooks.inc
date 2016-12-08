@@ -166,6 +166,24 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Removed Resource Review'),
         'class' => 'RemovedResourceReview',
       ),
+      // new forum created
+      array(
+        'name' => 'new_forum',
+        'description' => t('New Forum'),
+        'class' => 'NewForum',
+      ), 
+      // new state forum created
+      array(
+        'name' => 'new_state_forum',
+        'description' => t('New State Forum'),
+        'class' => 'NewStateForum',
+      ),
+      // new state forum created for slt
+      array(
+        'name' => 'new_state_forum_slt',
+        'description' => t('New State Forum Slt'),
+        'class' => 'NewStateForumSlt',
+      ),
       // removed forum user membership
       array(
         'name' => 'removed_forum_member',
@@ -220,6 +238,12 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Forum Access Change'),
         'class' => 'ForumAccessChange',
       ),
+      // forum flagged
+      array(
+        'name' => 'forum_flagged',
+        'description' => t('Forum Flagged'),
+        'class' => 'ForumFlagged',
+      ),
       // removed topic
       array(
         'name' => 'topic_removed',
@@ -244,6 +268,54 @@ class Hooks extends \devtools\Hooks {
         'description' => t('Notify HTML5 Poster'),
         'class' => 'HTML5UploadError',
       ),
+      // notify user a rating goal has been met
+      array(
+        'name' => 'goal_complete_rating',
+        'description' => t('Notify Rating Goal completer'),
+        'class' => 'GoalCompleteRating',
+      ),
+      // notify user a reviewed goal has been met
+      array(
+        'name' => 'goal_complete_reviewed',
+        'description' => t('Notify Reviewed Goal completer'),
+        'class' => 'GoalCompleteReviewed',
+      ),
+      // notify user a contributed goal has been met
+      array(
+        'name' => 'goal_complete_contributed',
+        'description' => t('Notify Reviewed Goal completer'),
+        'class' => 'GoalCompleteContributed',
+      ),
+       // notify user when added to most active users rated board
+      array(
+        'name' => 'most_active_members_rated',
+        'description' => t('Notify Most Active Rated member'),
+        'class' => 'MostActiveMembersRated',
+      ),
+       // notify user when added to most active users reviewed board
+      array(
+        'name' => 'most_active_members_reviewed',
+        'description' => t('Notify Most Active Reviewed member'),
+        'class' => 'MostActiveMembersReviewed',
+      ),
+       // notify user when added to most active users reviewed board
+      array(
+        'name' => 'most_active_members_contributed',
+        'description' => t('Notify Most Active Contributed member'),
+        'class' => 'MostActiveMembersContributed',
+      ),
+       // notify user resource has been rated
+      array(
+        'name' => 'resource_rated',
+        'description' => t('Notify resource contributor of rating'),
+        'class' => 'ResourceRated',
+      ),
+       // notify user in process review has timed out
+      array(
+        'name' => 'review_timeout',
+        'description' => t('Notify resource reviewer of review timeout'),
+        'class' => 'ReviewTimeout',
+      ), 
     );
 
     foreach ($types as &$type) {

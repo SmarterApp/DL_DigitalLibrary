@@ -274,6 +274,27 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
       $task = taskit_get_object('resource_rejected');
       sbac_resource_save_current_state($node);
 
+      // Send email to user
+      // Add resource link to message
+      $author = user_load($node->uid);
+      $email_preference = $author->field_email_preference_value;
+      if ($author->field_email_preference['und'][0]['value'] != 'never' && $author->field_email_preference['und'][0]['value'] != '') {
+        global $base_url;
+        $username = str_replace(' ', '-', strtolower(sbac_user_format_username($author)));
+        $values = array(
+          'arguments' => array(
+            '!resource-link' => $base_url . '/node/' . $node->nid,
+            '!user-link' => $base_url . '/users/' . $username,
+          ),
+          'uid' => $node->uid,
+        );
+        $message = message_create('gatekeeper_reject', $values); 
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($author->field_email_preference['und'][0]['value'] == 'immediately') {
+          message_notify_send_message($message);
+        }
+      }
       $completed_review = TRUE;
       break;
 
@@ -314,6 +335,7 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
   }
 
   if ($completed_review && $node = node_load($entity->node_id)) {
+    // Notify Reviewer
     $task = taskit_get_object('review_completed');
     $task->addVisibility($task::VISIBILITY_USER);
     $task->addEntity('node', $node->nid);
@@ -321,6 +343,14 @@ function feedback_eck_gate_keeper_form_submit($form, &$form_state) {
     $task->addOwningUser($user->uid);
     $task->addTriggeringUser(1);
     $task->save();
+    // Notify Contributor
+    $task2 = taskit_get_object('review_completed');
+    $task2->addVisibility($task::VISIBILITY_USER);
+    $task2->addEntity('node', $node->nid);
+    $task2->addEntity('feedback', $entity->id);
+    $task2->addOwningUser($node->uid);
+    $task2->addTriggeringUser(1);
+    $task2->save();
   }
 
   sbac_resource_remove_default_status_messages();
@@ -530,6 +560,31 @@ function feedback_eck_post_form_submit($form, &$form_state) {
       workbench_moderation_moderate($node, 'rejected');
       $task = taskit_get_object('resource_rejected');
       sbac_resource_save_current_state($node);
+
+      // Send email to user
+      global $base_url;
+      $user_profile = user_load($node->uid);
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') { 
+        global $base_url;
+        $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+        $values = array(
+          'arguments' => array(
+            '!resource-link' => $base_url . '/node/' . $node->nid,
+            '!user-link' => $base_url . '/users/' . $username,
+          ),
+          'uid' => $node->uid,
+        );
+        $message = message_create('post_reject', $values);     
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));
+        }
+    
+      }
 
       $completed_review = TRUE;
 

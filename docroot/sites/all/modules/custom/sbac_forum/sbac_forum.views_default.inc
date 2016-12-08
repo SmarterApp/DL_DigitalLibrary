@@ -50,6 +50,17 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['table'] = 'field_data_field_fc_forum_members';
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['field'] = 'field_fc_forum_members_value';
   $handler->display->display_options['relationships']['field_fc_forum_members_value']['delta'] = '-1';
+  /* Field: Taxonomy term: Add Forum Cover Image */
+  $handler->display->display_options['fields']['field_state_or_district_image']['id'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['table'] = 'field_data_field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['field'] = 'field_state_or_district_image';
+  $handler->display->display_options['fields']['field_state_or_district_image']['label'] = '';
+  $handler->display->display_options['fields']['field_state_or_district_image']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_state_or_district_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_state_or_district_image']['settings'] = array(
+    'image_style' => 'medium',
+    'image_link' => '',
+  );
   /* Field: Taxonomy term: Term ID */
   $handler->display->display_options['fields']['tid']['id'] = 'tid';
   $handler->display->display_options['fields']['tid']['table'] = 'taxonomy_term_data';
@@ -219,7 +230,7 @@ function sbac_forum_views_default_views() {
     27 => 0,
   );
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
+  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -425,7 +436,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
+  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';
@@ -557,7 +568,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_attributes_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_attributes_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_attributes_tid']['vocabulary'] = 'attributes';
-  /* Filter criterion: Field: Geographic Settings (field_geographical_settings) */
+  /* Filter criterion: Broken/missing handler */
   $handler->display->display_options['filters']['field_geographical_settings_tid']['id'] = 'field_geographical_settings_tid';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['table'] = 'field_data_field_geographical_settings';
   $handler->display->display_options['filters']['field_geographical_settings_tid']['field'] = 'field_geographical_settings_tid';
@@ -585,9 +596,6 @@ function sbac_forum_views_default_views() {
     26 => 0,
     31 => 0,
   );
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['vocabulary'] = 'geographical_settings';
   /* Filter criterion: Field: Media Types (field_digital_media_type) */
   $handler->display->display_options['filters']['field_digital_media_type_tid']['id'] = 'field_digital_media_type_tid';
   $handler->display->display_options['filters']['field_digital_media_type_tid']['table'] = 'field_data_field_digital_media_type';
@@ -779,7 +787,7 @@ function sbac_forum_views_default_views() {
   $handler->display->display_options['filters']['field_grades_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_grades_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_grades_tid']['vocabulary'] = 'grades';
-  /* Filter criterion: Field: Intended Participants (field_intended_end_user) */
+  /* Filter criterion: Content: Intended End User(s) (field_intended_end_user) */
   $handler->display->display_options['filters']['field_intended_end_user_tid']['id'] = 'field_intended_end_user_tid';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['table'] = 'field_data_field_intended_end_user';
   $handler->display->display_options['filters']['field_intended_end_user_tid']['field'] = 'field_intended_end_user_tid';

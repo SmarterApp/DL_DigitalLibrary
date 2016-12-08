@@ -247,7 +247,7 @@ function _sbac_forum_add_forum_user_access($vocabulary) {
   // Anon users should not have access.
   if (!empty($user->uid)) {
     // Facilitators or users with "administer taxonomy" perms can add forums
-    if (in_array('facilitator', $user->roles) ||
+    if (in_array('authenticated user', $user->roles) ||
       user_access('administer taxonomy')
     ) {
       $access = TRUE;
@@ -502,6 +502,9 @@ function sbac_forum_delete_orphaned_topics_process($item_nid) {
 }
 
 
+/**
+ * Implementation of hook_theme()
+ */
 /**
  * Implementation of hook_theme()
  */
@@ -952,7 +955,6 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       $form['field_subject']['#prefix'] = '<div class="forum-tags-left">';
       $form['field_intended_student']['#suffix'] = '</div>';
       $form['field_grades']['#prefix'] = '<div class="forum-tags-right">';
-      $form['field_geographical_settings']['#suffix'] = '</div><div class="clearfix"></div>';
 
 
       // Access fields. Modify behaviour.
@@ -1001,6 +1003,14 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
         $form['actions']['submit']['#suffix'] = '</div>';
       }
 
+      // Remove State fields for non-SLT's
+      $is_slt = sbac_report_is_slt($user);
+      if (!$is_slt  && !in_array('administrator', $user->roles)) { 
+        $form['field_state_or_district_image']['#access'] = FALSE;
+        $form['field_add_to_leaderboard']['#access'] = FALSE;
+        $form['field_forum_access_states']['#prefix'] = '<div class="forum-add-access-left hidden">';
+      }
+
       $form['#validate'][] = '_sbac_forum__forum_form__title_profanity_validate';
       $form['#validate'][] = '_sbac_forum__forum_form__access_field_validate';
 
@@ -1023,7 +1033,6 @@ function sbac_forum_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id
       array('vid' => 'grades', 'field' => 'field_grades'),
       array('vid' => 'intended_student_populations', 'field' => 'field_intended_student'),
       array('vid' => 'intended_end_user', 'field' => 'field_intended_end_user'),
-      array('vid' => 'geographical_settings', 'field' => 'field_geographical_settings'),
       array('vid' => 'attributes', 'field' => 'field_attributes'),
     );
     foreach ($configs as $config) {
@@ -1179,6 +1188,98 @@ function _sbac_forum__add_forum_form_redirect_submit($form, &$form_state) {
       } else {
         $people_to_notify[] = $comment->uid;
       }
+    }
+    // Add creator as member
+    global $user;
+    $forum_name = $term->name;
+  
+    // Create new field collection instance for member being added.
+    $params = array(
+      'field_name' => 'field_fc_forum_members'
+    );
+    $new_member_item = entity_create('field_collection_item', $params);
+    $new_member_item->setHostEntity('taxonomy_term', $term);
+    $new_member_data = entity_metadata_wrapper('field_collection_item', $new_member_item);
+    $new_member_data->field_fc_forum_member->set($user->uid);
+    $date = strtotime('today');
+    $new_member_data->field_fc_forum_member_joined->set($date);
+    $new_member_data->save(TRUE);
+  
+    // Need to update fields on forum entity
+    $forum_term_data = entity_metadata_wrapper('taxonomy_term', $term);
+  
+    // Update member counter field.
+    if (isset($forum_term_data->field_forum_member_count)) {
+      $current_member_count = $forum_term_data->field_forum_member_count->value();
+      $forum_term_data->field_forum_member_count->set($current_member_count);
+    }
+
+    // Notify users of the same state if new state forum created
+    if ($term->field_forum_access_states['und'][0]['value'] == 0) {
+      global $user;
+      $state = $term->field_state['und'][0]['tid'];
+      $users = sbac_forum_get_state_users($state);
+      foreach ($users as $state_user) {
+        if ($task = taskit_get_object('new_state_forum')) {
+          $task->addVisibility($task::VISIBILITY_USER);
+          $task->addEntity('taxonomy_term', $term->tid);
+          $task->addOwningUser($state_user->uid);
+          $task->addTriggeringUser($user->uid);
+          $task->save();
+        }
+        global $base_url;
+        $user_profile = user_load($state_user->uid);
+        $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+        $values = array(
+          'arguments' => array(
+            '!forum-link' => $base_url . '/forums/term/' . $term->tid,
+            '!user-link' => $base_url . '/users/' . $username,
+          ),
+          'uid' => $state_user->uid,
+        );
+        
+        $email_preference = $user_profile->field_email_reference[0]['und']['value'];
+        if ($email_preference !== '' && $email_preference !== 'never') {
+          // Create message
+          $message = message_create('new_state_forum', $values);
+          $wrapper = entity_metadata_wrapper('message', $message);
+          $wrapper->save();
+          if ($email_preference == 'immediately') {
+            // Send email
+            message_notify_send_message($message);
+            // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+            message_delete_multiple(array($message->mid));
+          }
+        }
+      }
+    }
+    // Notify SLT users of same state as author of non-state restricted forum creation
+    if ($term->field_forum_access_states['und'][0]['value'] == 1) {
+      global $user;
+      $account = user_load($user->uid);
+      $state = $account->field_state['und'][0]['tid'];
+      $users = sbac_forum_get_state_slt_users($state);
+      foreach ($users as $state_user) {
+        // Prevent forum author from getting notification
+        if ($state_user->uid !== $user->uid) {
+          if ($task = taskit_get_object('new_state_forum_slt')) {
+            $task->addVisibility($task::VISIBILITY_USER);
+            $task->addEntity('taxonomy_term', $term->tid);
+            $task->addOwningUser($state_user->uid);
+            $task->addTriggeringUser($user->uid);
+            $task->save();
+          }
+        }
+      }
+    }
+    // Notify forum creator that they are responsible for moderation
+    global $user;
+    if ($task = taskit_get_object('new_forum')) {
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('taxonomy_term', $term->tid);
+      $task->addOwningUser($user->uid);
+      $task->addTriggeringUser($user->uid);
+      $task->save();
     }
 
     if (!empty($people_to_notify)) {
@@ -2112,59 +2213,59 @@ function sbac_forum_get_posted_resources($limit = NULL) {
  */
 function sbac_forum_create_resource_forum($nid, $vid = NULL) {
   // Check to make sure this forum doesn't exist already
-  $query = "
-      SELECT
-        count(*)
-      FROM {taxonomy_term_data} term
-        LEFT JOIN {field_data_field_forum_resource_ref} ref
-          ON term.tid = ref.entity_id
-      WHERE ref.entity_type = 'taxonomy_term'
-            AND ref.field_forum_resource_ref_target_id = :nid";
-  $exists = db_query($query, array(':nid' => $nid))->fetchField();
-  if (!$exists) {
-    $node = node_load($nid);
-    if (!$vid) {
-      $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
-      $vid = $vocab->vid;
-    }
-    if ($node && $node->type == 'resource') {
-      $term = (object) array(
-        'vid' => $vid,
-        'name' => $node->title,
-        'description' => '',
-        'format' => 1,
-        'field_forum_resource_ref' => array(
-          LANGUAGE_NONE => array(
-            0 => array(
-              'target_id' => $node->nid
-            )
-          )
-        ),
-        'field_forum_description' => $node->field_alt_body,
-        'field_subject' => $node->field_subject,
-        'field_grades' => $node->field_grades,
-        'field_intended_end_user' => $node->field_intended_end_user,
-        'field_intended_student' => $node->field_intended_student,
-        'field_attributes' => $node->field_attributes,
-        'field_geographical_settings' => $node->field_geographical_settings,
-        'field_digital_media_type' => $node->field_digital_media_type,
-        'field_focus' => $node->field_focus,
-        'field_educational_use' => $node->field_educational_use,
-        'field_smarter_balanced_keyword' => $node->field_smarter_balanced_keyword,
-      );
-      taxonomy_term_save($term);
-      $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
-      $term_wrapper->field_forum_last_activity->set(time());
-      $term_wrapper->save(TRUE);
-      if (isset($term->tid)) {
-        // reset to avoid adding the same user 2 more times by the sbac_forum_create_forum_topic() below
-        drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
-        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC, 1);
-        drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
-        sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC, 1);
-      }
-    }
-  }
+  //$query = "
+  //    SELECT
+  //      count(*)
+  //    FROM {taxonomy_term_data} term
+  //      LEFT JOIN {field_data_field_forum_resource_ref} ref
+  //        ON term.tid = ref.entity_id
+  //    WHERE ref.entity_type = 'taxonomy_term'
+  //          AND ref.field_forum_resource_ref_target_id = :nid";
+  //$exists = db_query($query, array(':nid' => $nid))->fetchField();
+  //if (!$exists) {
+  //  $node = node_load($nid);
+  //  if (!$vid) {
+  //    $vocab = taxonomy_vocabulary_machine_name_load(SBAC_FORUM_VOCAB_NAME);
+  //    $vid = $vocab->vid;
+  //  }
+  //  if ($node && $node->type == 'resource') {
+  //    $term = (object) array(
+  //      'vid' => $vid,
+  //      'name' => $node->title,
+  //      'description' => '',
+  //      'format' => 1,
+  //      'field_forum_resource_ref' => array(
+  //        LANGUAGE_NONE => array(
+  //          0 => array(
+  //            'target_id' => $node->nid
+  //          )
+  //        )
+  //      ),
+  //      'field_forum_description' => $node->field_alt_body,
+  //      'field_subject' => $node->field_subject,
+  //      'field_grades' => $node->field_grades,
+  //      'field_intended_end_user' => $node->field_intended_end_user,
+  //      'field_intended_student' => $node->field_intended_student,
+  //      'field_attributes' => $node->field_attributes,
+  //      'field_geographical_settings' => $node->field_geographical_settings,
+  //      'field_digital_media_type' => $node->field_digital_media_type,
+  //      'field_focus' => $node->field_focus,
+  //      'field_educational_use' => $node->field_educational_use,
+  //      'field_smarter_balanced_keyword' => $node->field_smarter_balanced_keyword,
+  //    );
+  //    taxonomy_term_save($term);
+  //    $term_wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+  //    $term_wrapper->field_forum_last_activity->set(time());
+  //    $term_wrapper->save(TRUE);
+  //    if (isset($term->tid)) {
+  //      // reset to avoid adding the same user 2 more times by the sbac_forum_create_forum_topic() below
+  //      drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
+  //      sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_1_TITLE, SBAC_FORUM_DEFAULT_FORUM_1_DESC, 1);
+  //      drupal_static_reset('sbac_forum__api__check_user_is_forum_member');
+  //      sbac_forum_create_forum_topic($term->tid, $node->uid, SBAC_FORUM_DEFAULT_FORUM_2_TITLE, SBAC_FORUM_DEFAULT_FORUM_2_DESC, 1);
+  //    }
+  //  }
+  //}
 }
 
 /**
@@ -2215,7 +2316,8 @@ function sbac_forum_create_forum_topic($forum_id, $uid, $topic, $description, $d
  */
 function sbac_forum_workbench_moderation_transition($node, $previous_state, $new_state) {
   if ($node->type == 'resource' && $new_state == 'published') {
-    sbac_forum_create_resource_forum($node->nid);
+// Removing per SBAC-205
+//    sbac_forum_create_resource_forum($node->nid);
     // this node is published through the review process, remove the auto favourite
     // entry from this user
     global $user;
@@ -2433,6 +2535,9 @@ function sbac_forum_go_to_thread($nid, $cid) {
 function sbac_forum_preprocess_taxonomy_term(&$vars) {
   if ($vars['view_mode'] == 'forum_page_card') {
     $vars['term_url'] = '/forums/term/' . $vars['term']->tid;
+    if ($vars['field_forum_access_states']['und'][0]['value'] == 1) {
+      $vars['classes_array'][] = 'state-image-hidden';
+    }
   }
 }
 
@@ -2444,7 +2549,7 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
     global $user;
     // Participants
     $count = $build['field_forum_member_count']['#items'][0]['value'];
-    $build['field_forum_member_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Participants</div></div>';
+    $build['field_forum_member_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Members</div></div>';
 
     // Posts
     $count = $build['field_forum_topic_comment_count']['#items'][0]['value'];
@@ -2455,13 +2560,6 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
     $build['field_forum_topic_count'][0]['#markup'] = '<div class="field-content">' . $count . '<div class="forum-listing-suffix-label">Discussions</div></div>';
 
     // Forum resource reference
-    if (!empty($build['field_forum_resource_ref'][0]['#markup'])) {
-      $favorites = sbac_favorites_get_favorites($user->uid, $build['field_forum_resource_ref'][0]['#markup']);
-      $build['field_forum_resource_ref'][0]['#markup'] = '';
-      if ($favorites) {
-        $build['field_forum_resource_ref'][0]['#markup'] = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
-      }
-    }
 
     if (arg(0) !== 'forums' && empty($build['field_forum_resource_ref'][0]['#markup'])) {
       $is_faci = FALSE;
@@ -2496,5 +2594,115 @@ function sbac_forum_taxonomy_term_view_alter(&$build) {
         $build['field_facilitator'] = array('#type' => 'markup', '#markup' => $facilitator_text, '#weight' => -1);
       }
     }
+  }
+}
+
+// function to get users of a specific state
+function sbac_forum_get_state_users($state) {
+  $sql = <<<SQL
+
+  SELECT
+    u.uid
+  FROM {users} u
+    LEFT JOIN {field_data_field_state} st
+      ON u.uid = st.entity_id
+  WHERE
+    u.status = :status
+    AND st.field_state_tid = :state
+  
+
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':state' => $state));
+
+  foreach ($result as $row) {
+    $users[] = $row;
+  }
+
+  return $users;
+}
+
+// Get SLTs for a given state
+function sbac_forum_get_state_slt_users($state) {
+  $sql = <<<SQL
+
+  SELECT
+    u.uid
+  FROM {users} u
+    LEFT JOIN {field_data_field_state} st
+      ON u.uid = st.entity_id
+    LEFT JOIN {field_data_field_slt_member} slt
+      ON u.uid = slt.entity_id
+  WHERE
+    u.status = :status
+    AND slt.field_slt_member_value = :slt
+    AND st.field_state_tid = :state
+  
+
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':slt' => '1', ':state' => $state));
+
+  foreach ($result as $row) {
+    $users[] = $row;
+  }
+
+  return $users;
+}
+
+/**
+ * Implements hook_field_default_fields_alter().
+ *
+ * Alter the default fields right before they are cached into the database.
+ *
+ * @param &$fields
+ *   By reference. The fields that have been declared by another feature.
+ */
+function sbac_forum_field_default_fields_alter(&$fields) {
+  $source_dir = drupal_get_path('module', 'sbac_forum') . '/images';
+
+  $field_default_images = array(
+    'field_state_or_district_image' => 'state-forum-default.png',
+  );
+
+  foreach ($field_default_images as $field_name => $filename) {
+    $source = $source_dir . '/' . $filename;
+    $destination = 'default_images/' . $filename;
+    if (isset($fields[$field_name])) {
+      sbac_forum_set_default_image($fields[$field_name], $filename, $source, $destination);
+    }
+  }
+}
+
+function sbac_forum_set_default_image(&$field, $filename, $source, $destination) {
+  // See if a default image hasn't been set for this field yet
+  if (empty($field['field_config']['settings']['default_image'])) {
+    // Dynamically set the user default image on the field
+    $destination = file_default_scheme() . '://' . $destination;
+
+    // Check to see if it exists already
+    $result = db_select('file_managed', 'f')
+      ->fields('f', array('fid'))
+      ->condition('f.uri', $destination)
+      ->execute();
+
+    $fid = $result->fetchField();
+
+    // Simulate an upload of the default user image
+    if (!$fid && file_exists($source)) {
+      $file = new stdClass;
+      $file->filename = $filename;
+      $file->timestamp = REQUEST_TIME;
+      $file->uri = $source;
+      $file->filemime = file_get_mimetype($source);
+      $file->uid = 1;
+      $file->status = 1;
+
+      $file = file_copy($file, 'public://', FILE_EXISTS_REPLACE);
+
+      $fid = $file->fid;
+    }
+
+    $field['field_config']['settings']['default_image'] = (string) $fid;
   }
 }

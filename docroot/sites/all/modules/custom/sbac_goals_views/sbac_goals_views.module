@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Goals Views feature.
+ */
+
+include_once 'sbac_goals_views.features.inc';

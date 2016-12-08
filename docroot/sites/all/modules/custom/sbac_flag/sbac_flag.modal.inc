@@ -1196,11 +1196,80 @@ function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
  */
 function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
   if ($form_state['triggering_element']['#value'] == 'Flag') {
-     $flag_tid = $form_state['input']['flag_options'];
-     $flag_txt = $form_state['input']['comment'];
-     $flag_nid = $form_state['info']['nid'];
-     $flag_cid = $form_state['info']['cid'];
-     sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+    $flag_tid = $form_state['input']['flag_options'];
+    $flag_txt = $form_state['input']['comment'];
+    $flag_nid = $form_state['info']['nid'];
+    $flag_cid = $form_state['info']['cid'];
+    $node = node_load($flag_nid);
+
+    $forum = taxonomy_term_load($node->field_topic_forum_parent['und'][0]['tid']);
+    $forum_author = $forum->field_forum_facilitators['und'][0]['target_id'];
+    $user_profile = user_load($node->uid);
+
+    // Notify topic creator
+    if ($task = taskit_get_object('forum_flagged')) {
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('node', $node->nid);
+      $task->addOwningUser($user_profile->uid);
+      $task->addTriggeringUser($user_profile->uid);
+      $task->save();
+    }
+    // Notify forum creator if different user
+    if ($node->uid !== $forum_author) {
+      if ($task = taskit_get_object('forum_flagged')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addEntity('node', $node->nid);
+        $task->addOwningUser($forum_author);
+        $task->addTriggeringUser($forum_author);
+        $task->save();
+      }
+    }
+    // Send email to topic creator
+    global $base_url;
+    $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+    $values = array(
+      'arguments' => array(
+        '!forum-link' => $base_url . '/node/' . $node->nid,
+        '!user-link' => $base_url . '/users/' . $username,
+      ),
+      'uid' => $node->uid,
+    );
+    if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+      // Create message
+      $message = message_create('forum_flagged', $values);
+      $wrapper = entity_metadata_wrapper('message', $message);
+      $wrapper->save();
+      if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+        // send email
+        message_notify_send_message($message);
+        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+        message_delete_multiple(array($message->mid));
+      }
+    }
+    // Send email to forum creator if different user
+    if ($node->uid !== $forum_author) {
+      $user_profile = user_load($forum_author);
+      $values = array(
+        'arguments' => array(
+          '!forum-link' => $base_url . '/content/' . $node->nid,
+        ),
+        'uid' => $user_profile->uid,
+      );
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+        // Create message
+        $message = message_create('forum_flagged', $values);
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));
+        }
+      }
+    }
+    sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+    
   }
 }
 

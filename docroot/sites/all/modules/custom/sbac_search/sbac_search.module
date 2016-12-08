@@ -907,7 +907,6 @@ function sbac_search_digital_library_categories() {
     _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
     _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
     _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
-    _sbac_search_create_taxonomy_filter($categories, 'geographical_settings', 'Geographic Settings');
   }
 
   $attrs = array(

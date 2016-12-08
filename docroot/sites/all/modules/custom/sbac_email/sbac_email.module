@@ -173,3 +173,100 @@ function sbac_email_init() {
     }
   }
 }
+
+/**
+ * Implements hook_cron()
+ */
+function sbac_email_daily_cron() {
+  $daily = sbac_email_get_subscription('daily');
+  foreach ($daily as $subscriber) {
+    $array = array($subscriber->uid);
+    $view = views_get_view('message_list');
+    $view->set_display("master");
+    $view->set_arguments($array);
+    $view->pre_execute();
+    $view->execute();
+    $messages = $view->render(); 
+    $values = array(
+      'arguments' => array(
+        '!message-view' => $messages,
+      ),
+      'uid' => $subscriber->uid,
+    );
+    if (!empty($view->result)) {
+      // Create message
+      $message = message_create('daily_email', $values);
+      $wrapper = entity_metadata_wrapper('message', $message);
+      // Send email
+      message_notify_send_message($message);
+      // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+      message_delete_multiple(array($message->mid));
+      // delete messages so they aren't resent
+      foreach ($view->result as $result) {
+        $message_array[] = $result->mid;
+      }
+      message_delete_multiple($message_array);
+    }
+  }
+}
+
+function sbac_email_weekly_cron() {
+  $daily = sbac_email_get_subscription('weekly');
+  foreach ($daily as $subscriber) {
+    $array = array($subscriber->uid);
+    $view = views_get_view('message_list');
+    $view->set_display("master");
+    $view->set_arguments($array);
+    $view->pre_execute();
+    $view->execute();
+    $messages = $view->render(); 
+    $values = array(
+      'arguments' => array(
+        '!message-view' => $messages,
+      ),
+      'uid' => $subscriber->uid,
+    );
+    if (!empty($view->result)) {
+      // Create message
+      $message = message_create('weekly_email', $values);
+      $wrapper = entity_metadata_wrapper('message', $message);
+      // Send email
+      message_notify_send_message($message);
+      // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+      message_delete_multiple(array($message->mid));
+      // delete messages so they aren't resent
+      foreach ($view->result as $result) {
+        $message_array[] = $result->mid;
+      }
+      message_delete_multiple($message_array);
+    }
+  }
+}
+
+/**
+ * Gets users with daily or weekly email subscription
+ */
+function sbac_email_get_subscription($preference) {
+  $sql = <<<SQL
+
+    SELECT
+      u.uid,
+      ep.field_email_preference_value
+    FROM {users} u
+      LEFT JOIN {field_data_field_email_preference} ep
+        ON u.uid = ep.entity_id
+    WHERE
+      u.status = :status
+      AND (ep.field_email_preference_value = :preference)
+    GROUP BY
+      u.uid
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':preference' => $preference));
+
+  foreach ($result as $row) {
+    $reviewers[] = $row;
+  }
+
+  return $reviewers;
+}

@@ -161,6 +161,15 @@ function review_form_submit($form, &$form_state) {
     // Ensure the parent node gets its total avg rating recalculated.
     sbac_resource_update_average_rating_score($node->nid);
 
+    // Notify author of resource review
+    if ($task = taskit_get_object('resource_rated')) {
+      global $user;
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('node', $node->nid);
+      $task->addOwningUser($node->uid);
+      $task->addTriggeringUser($user->uid);
+      $task->save();
+    }
     drupal_set_message(t('Your review posted successfully.'));
 
     $form_state['redirect'] = url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE));
