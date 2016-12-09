@@ -285,7 +285,7 @@ function sbac_self_registration_reset_password_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('E-mail Address'),
     '#required' => TRUE,
-    '#description' => t('Email address must be from an authorized educational institution (school, district, etc.)'),
+    '#description' => t('Enter the email address you use to access Smarter Balanced and the Digital Library.'),
   );
 
   $form['scan'] = array(
