@@ -1,0 +1,10 @@
+Facet API Taxonomy Sort 7.x-1.x, xxxx-xx-xx
+-------------------------------------------
+- Sort should include term name to mimic taxonomy module sorting.
+- Support for entityreference fields that reference taxonomy terms.
+- Fix for typo in function name "taxonopmy".
+
+Facet API Taxonomy Sort 7.x-1.0-beta1, 2011-12-31
+-------------------------------------------------
+- Resolve incompatibility with the Apache Solr Search Integration module
+- Adjust facetapi_taxonomy_sort_is_term_reference_field so that it looks at the field type supplied directly by facetapi

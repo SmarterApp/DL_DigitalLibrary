@@ -21,8 +21,3 @@ nbproject
 /build
 /*/**/.git
 
-#Composer installed
-/docroot/sites/all/modules/contrib/*
-/docroot/sites/all/themes/contrib/*
-/vendor
-#Composer end

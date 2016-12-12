@@ -1,0 +1,4 @@
+name = HTTP Parallel Request Library
+description = Send http requests out in parallel in a blocking or non-blocking manner.
+package = Performance and scalability
+core = 7.x
