@@ -3931,6 +3931,7 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
     $last_reviewer = $form_state['values']['field_recent_reviewers']['und'][0]['target_id'];
     // Send email to user
     // Add resource link to message
+    $node = $form_state['node'];
     global $base_url;
     $user_profile = user_load($last_reviewer);
     $username = sbac_email_user_link($user_profile);
