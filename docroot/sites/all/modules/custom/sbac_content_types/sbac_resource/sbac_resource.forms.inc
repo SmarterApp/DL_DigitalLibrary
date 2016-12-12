@@ -1409,7 +1409,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                   $email_preference = $reviewer->field_email_preference['und'][0]['value'];
                   if ($email_preference !== '' || $email_preference !== 'never') {
                     // create message
-                    $message = message_create('resource_resubmitted', array('uid' => $reviewer->uid));
+                    $message = message_create('resource_resubmitted', $values);
                     $wrapper = entity_metadata_wrapper('message', $message);
                     $wrapper->save();
                     if ($email_preference == 'immediately') {
