@@ -36618,6 +36618,15 @@ form#sbac-user-filter-form #edit-email {
 .help-tabs {
   width: 960px;
   position: absolute;
+  top: 82px;
+  padding-left: 40px;
+  left: 2px;
+}
+
+.help-topic-link {
+  position: absolute;
+  top: 90px;
+  right: 40px;
 }
 
 .help-tabs a {
@@ -36646,3 +36655,7 @@ form#sbac-user-filter-form #edit-email {
   z-index: 9;
 }
 
+body.page-help-topics h1 {
+    margin-bottom: 100px;
+    margin-top: 30px;
+}
