@@ -36729,3 +36729,24 @@ body.page-help-topics h1 {
 .page-glossary #page-title {
   display: block;
 }
+
+.view-display-id-sort_help_topics  caption {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.view-display-id-sort_help_topics .views-table {
+  width: 100%;
+}
+
+.view-display-id-sort_help_topics .help-topic-link {
+  position: relative;
+  top: 5px;
+  right: 0px;
+}
+
+.view-display-id-sort_help_topics .help-topic-link1 {
+  right: 238px;
+}
