@@ -122,14 +122,25 @@
 
 	  <?php if (!empty($fields['end_users'])): ?>
 	  <div class="vp-end-users-field">
-	    <div class="title-tags"><?php print t('Intended End Users'); ?></div>
+	    <div class="title-tags"><?php print t('Intended Participants'); ?></div>
 	    <?php print $fields['end_users']; ?>
 	  </div>
 	  <?php endif; ?>
+
 	  <?php if (!empty($fields['students'])): ?>
 	  <div class="vp-students-field read-more">
 	    <div class="title-tags"><?php print t('Intended Student Populations'); ?></div>
 	    <?php print $fields['students']; ?>
+	  </div>
+		<?php if (empty($fields['attributes'])): ?>
+			<a class="read-more-link">More Attributes</a>
+		<?php endif; ?>
+		<?php endif; ?>
+
+	  <?php if (!empty($fields['attributes'])): ?>
+	  <div class="vp-students-field read-more">
+	    <div class="title-tags"><?php print t('Attributes of the Formative Assessment Process'); ?></div>
+	    <?php print $fields['attributes']; ?>
 	  </div>
 	  <a class="read-more-link">More Attributes</a>
 	  <?php endif; ?>
