@@ -99,45 +99,45 @@ function _sbac_forum_filter_categories() {
   _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
   _sbac_search_create_taxonomy_filter($categories, 'title', 'Intended Participants');
   _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
-  if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
-    _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
-    _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
-    _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
-    _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
-  }
+//  if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
+//    _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
+//    _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
+//    _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
+//    _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
+//  }
 
   // Our custom filters
-  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['display_name'] = 'Distinctions';
-  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['vocabulary'] = (object) array(
-    'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID
-  );
-  if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
-    $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
-      'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
-      'name' => 'Posted with Distinction',
-    );
-    $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
-      'data' => 'Posted with Distinction',
-      'term' => (object) array(
-        'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
-        'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
-        'name' => 'Posted with Distinction',
-      )
-    );
-  }
-  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
-    'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
-    'name' => 'Favorited',
-  );
-  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
-    'data' => 'Favorited',
-    'term' => (object) array(
-      'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
-      'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
-      'name' => 'Favorited',
-    )
-  );
-  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#theme'] = 'sbac_filter_item_list';
+//  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['display_name'] = 'Distinctions';
+//  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['vocabulary'] = (object) array(
+//    'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID
+//  );
+  //if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
+  //  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
+  //    'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
+  //    'name' => 'Posted with Distinction',
+  //  );
+  //  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
+  //    'data' => 'Posted with Distinction',
+  //    'term' => (object) array(
+  //      'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
+  //      'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
+  //      'name' => 'Posted with Distinction',
+  //    )
+  //  );
+  //}
+  //$categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
+  //  'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
+  //  'name' => 'Favorited',
+  //);
+  //$categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
+  //  'data' => 'Favorited',
+  //  'term' => (object) array(
+  //    'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
+  //    'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
+  //    'name' => 'Favorited',
+  //  )
+  //);
+//  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#theme'] = 'sbac_filter_item_list';
 
   $cf_value = NULL;
   $cf_html = array();
@@ -148,7 +148,7 @@ function _sbac_forum_filter_categories() {
   switch ($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_RESOURCE:
       if (isset($_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS])) {
-        $cf_value = $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS];
+        $cf_value = $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS];
       }
       break;
     case SBAC_FORUM_SUBNAV_TOPIC:
@@ -208,7 +208,7 @@ function sbac_forum_category_forum_form_submit($form, &$form_state) {
   // Get correct set of category filters based on subnav.
   switch ($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_RESOURCE:
-      $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
+      $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
       break;
     case SBAC_FORUM_SUBNAV_TOPIC:
       $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = $current_cat_filters;
@@ -233,7 +233,7 @@ function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
   // Get correct set of category filters based on subnav.
   switch ($active_tab) { // Get correct current filter.
     case SBAC_FORUM_SUBNAV_RESOURCE:
-      $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
+      $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
       unset($_SESSION['load_more']['forums']['page']);
       break;
     case SBAC_FORUM_SUBNAV_TOPIC:
