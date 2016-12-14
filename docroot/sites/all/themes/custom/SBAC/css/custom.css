@@ -36612,7 +36612,7 @@ form#sbac-user-filter-form #edit-email {
 }
 
 #glossary_terms {
-  margin-top: 70px;
+  margin-top: 140px;
 }
 
 .help-tabs {
@@ -36621,6 +36621,34 @@ form#sbac-user-filter-form #edit-email {
   top: 82px;
   padding-left: 40px;
   left: 2px;
+}
+.help-tabs:before {
+  background: none repeat scroll 0 0 #FFFFFF;
+  top: 45px;
+  box-shadow: 0 1px 6px 0 rgba(0,95,130,0.75);
+  content: " ";
+  display: block;
+  height: 10px;
+  width: 100%;
+  left: -2px;
+  position: absolute;
+  width: 100%;
+  width: 960px;
+  z-index: 1;
+}
+
+.help-tabs:after {
+  background: none repeat scroll 0 0 #FFFFFF;
+  top: 55px;
+  content: " ";
+  display: block;
+  height: 10px;
+  width: 100%;
+  left: -2px;
+  position: absolute;
+  width: 100%;
+  width: 960px;
+  z-index: 2;
 }
 
 .help-topic-link {
@@ -36638,11 +36666,15 @@ form#sbac-user-filter-form #edit-email {
   height: 48px;
   line-height: 45px;
   background: none repeat scroll 0 0 #FAFAFA;
-  border-left: 1px solid #FFFFFF;
+  border-left: 1px solid #CECECE;
   border-right: 1px solid #CECECE;
   border-top: 1px solid #CECECE;
   white-space: nowrap;
   cursor: pointer;
+}
+
+.help-tabs .glossary {
+  margin-left: -5px;
 }
 
 .help-tabs .active {
@@ -36655,7 +36687,45 @@ form#sbac-user-filter-form #edit-email {
   z-index: 9;
 }
 
+.help-tabs .active:after {
+  background: none repeat scroll 0 0 #FFFFFF;
+  bottom: -6px;
+  content: " ";
+  display: block;
+  height: 10px;
+  left: 0px;
+  padding: 0 20px;
+  position: absolute;
+  width: 100%;
+  z-index: 9;
+}
+
 body.page-help-topics h1 {
-    margin-bottom: 100px;
-    margin-top: 30px;
+    margin-bottom: 120px;
+    margin-top: 20px;
+}
+
+.view-display-id-page_1 .views-field-title {
+  color: #3b953f;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.view-display-id-page_1 p {
+  font-size: 16px;
+}
+
+.page-help-topics #main.columns .view-help-topics h3 {
+  font-size: 24px;
+}
+
+.page-help-topics #main.columns .view-help-topics li {
+  margin-left: 0;
+  font-size: 15px;
+  list-style: none;
+  padding-left: 30px;
+}
+
+.page-glossary #page-title {
+  display: block;
 }

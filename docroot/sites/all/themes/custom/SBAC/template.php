@@ -569,14 +569,14 @@ function sbac_preprocess_page(&$variables) {
     $variables['help_tabs'] =
     '<div class="help-tabs">
       <a href="/help-topics">Help Topics/FAQ</a>
-      <a class="active">Glossary</a>
+      <a class="active glossary">Glossary</a>
     </div>';
   }
   if ($_GET['q'] == 'help-topics') {
     $variables['help_tabs'] =
     '<div class="help-tabs">
       <a class="active" href="/help-topics">Help Topics/FAQ</a>
-      <a href="glossary">Glossary</a>
+      <a class="glossary" href="glossary">Glossary</a>
     </div>';
   }
   if (arg(0) == 'digital-library-resources') {

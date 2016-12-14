@@ -156,33 +156,30 @@ function sbac_help_menu() {
 
 
 function sbac_help_topics(){
-  $topics = '';
-  $variables = array();
-  
-  $query = db_select('node', 'n');
-  $query->join('draggableviews_structure', 'dv', 'n.nid = dv.entity_id');
-  $query->fields('n', array('nid'));
-  $query->orderBy('dv.weight','ASC');
-  $query->condition('n.type', 'help_page');
-  $query->condition('n.status', '1');
-  $query->condition('dv.view_name', 'sort_content');
-  $query->condition('dv.view_display', 'sort_help_topics');
-  $result = $query->execute()->fetchAll();
-  foreach($result as $topic){
-    $node = node_load($topic->nid);
-    $variables['title'] = $node->title;
-    $variables['body'] = more_less_text($node->body['und'][0]['value'], 300,FALSE);
-    $topics .= theme('sbac-help-topic', $variables);
-  }
+  $topics = views_embed_view('help_topics','page_1');
+  //$topics = '';
+  //$variables = array();
+  //
+  //$query = db_select('node', 'n');
+  //$query->join('draggableviews_structure', 'dv', 'n.nid = dv.entity_id');
+  //$query->fields('n', array('nid'));
+  //$query->orderBy('dv.weight','ASC');
+  //$query->condition('n.type', 'help_page');
+  //$query->condition('n.status', '1');
+  //$query->condition('dv.view_name', 'sort_content');
+  //$query->condition('dv.view_display', 'sort_help_topics');
+  //$result = $query->execute()->fetchAll();
+  //foreach($result as $topic){
+  //  $node = node_load($topic->nid);
+  //  $variables['title'] = $node->title;
+  //  $variables['body'] = more_less_text($node->body['und'][0]['value'], 300,FALSE);
+  //  $topics .= theme('sbac-help-topic', $variables);
+  //}
   $vars['topics'] = $topics;
-  if(user_access('Help Page: Edit any content')){
+  if (user_access('Help Page: Edit any content')){
     $vars['edit'] = '<a class="help-topic-link" href="/sort-content/help-topics">Edit Help Topics</a>';
   }
   return theme('sbac-help-topics', $vars);
-}
-
-function sbac_help_page() {
-  return;
 }
 
 /**
