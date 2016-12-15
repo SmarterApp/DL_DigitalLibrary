@@ -60,6 +60,14 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '3';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'field_help_topic_category',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
@@ -205,13 +213,15 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Help Topic Category */
+  $handler->display->display_options['fields']['field_help_topic_category']['id'] = 'field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['table'] = 'field_data_field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['field'] = 'field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['label'] = '';
+  $handler->display->display_options['fields']['field_help_topic_category']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_help_topic_category']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_help_topic_category']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Sort criterion: Draggableviews: Weight */
-  $handler->display->display_options['sorts']['weight']['id'] = 'weight';
-  $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
-  $handler->display->display_options['sorts']['weight']['field'] = 'weight';
-  $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'help_topics:page_2';
-  $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
   /* Sort criterion: Content: Title */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';

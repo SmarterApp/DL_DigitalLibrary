@@ -292,6 +292,9 @@ function sbac_help_preprocess_page(&$variables) {
     drupal_add_js("jQuery(document).ready( function () { jQuery('.user-nav').hide(); jQuery('.sub-top').hide();jQuery('.footer-links').hide();});", array('type' => 'inline'));
     drupal_add_css(drupal_get_path('module', 'sbac_user') . '/css/profile.css');
   }
+  if ($_GET['q'] == 'sort-content/help-topics') {
+    drupal_add_js(drupal_get_path('module', 'sbac_help') . '/js/sbac_help.js');
+  }
 }
 
 /**

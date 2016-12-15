@@ -36750,3 +36750,8 @@ body.page-help-topics h1 {
 .view-display-id-sort_help_topics .help-topic-link1 {
   right: 238px;
 }
+
+#help-topics-modal-continue {
+  color: #FFFFFF;
+  font-size: 16px;
+}
