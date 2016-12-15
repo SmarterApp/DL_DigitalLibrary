@@ -36618,3 +36618,7 @@ form#sbac-user-filter-form #edit-email {
   width: 135px;
   z-index: 999;
 }
+
+.page-forums-term .sbac-alert-box {
+  margin-bottom: 35px;
+}
