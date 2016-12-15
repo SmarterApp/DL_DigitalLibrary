@@ -216,7 +216,7 @@ function sbac_forum_keyword_search_redirect($where = FALSE) {
       sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
       break;
     default:
-      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
       break;
   }
   drupal_goto('forums');

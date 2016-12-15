@@ -42,6 +42,10 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
                     $view_filters['field_intended_student_tid']['value'][] = $tid;
                     $view_filters['field_intended_student_tid']['operator'] = 'and';
                     break;
+                  case 'title':
+                    $view_filters['field_intended_participants_tid']['value'][] = $tid;
+                    $view_filters['field_intended_participants_tid']['operator'] = 'and';
+                    break;
                   case 'subject':
                     $view_filters['field_subject_tid']['value'][] = $tid;
                     $view_filters['field_subject_tid']['operator'] = 'and';
