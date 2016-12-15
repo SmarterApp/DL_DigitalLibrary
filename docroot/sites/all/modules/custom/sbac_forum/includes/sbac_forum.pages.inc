@@ -315,8 +315,8 @@ function sbac_forum_view_forum_page($term) {
 
 
   $end_user_text = '';
-  if (isset($forum_data->field_intended_end_user)) {
-    $end_users = $forum_data->field_intended_end_user->value();
+  if (isset($forum_data->field_intended_participants)) {
+    $end_users = $forum_data->field_intended_participants->value();
     if (!empty($end_users)) {
       $item_list = array();
       foreach ($end_users as $end_user) {
@@ -346,6 +346,23 @@ function sbac_forum_view_forum_page($term) {
         'attributes' => array('class' => 'vp-grades-list'),
       );
       $student_text = theme('item_list', $list_args);
+    }
+  }
+
+  $attributes_text = '';
+  if (isset($forum_data->field_attributes)) {
+    $attributes = $forum_data->field_attributes->value();
+    if (!empty($attributes)) {
+      $item_list = array();
+      foreach ($attributes as $attribute) {
+        $item_list[] = $attribute->name;
+      }
+      $list_args = array(
+        'type' => 'ul',
+        'items' => $item_list,
+        'attributes' => array('class' => 'vp-attributes-list'),
+      );
+      $attributes_text = theme('item_list', $list_args);
     }
   }
 
@@ -583,6 +600,7 @@ function sbac_forum_view_forum_page($term) {
     'subjects' => $subject_text,
     'end_users' => $end_user_text,
     'students' => $student_text,
+    'attributes' => $attributes_text,
     'tabs' => $tab_output,
     'resource_link' => $resource_link,
     'forum_image' => $image_tag,
