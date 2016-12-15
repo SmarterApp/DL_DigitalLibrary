@@ -202,7 +202,7 @@ function sbac_forum_category_forum_form_submit($form, &$form_state) {
 
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
   }
 
   // Get correct set of category filters based on subnav.
@@ -227,7 +227,7 @@ function sbac_forum_category_forum_form_submit($form, &$form_state) {
 function sbac_forum_category_forum_form_reset_submit($form, &$form_state) {
   $active_tab = sbac_forum__api__get_active_subnav();
   if (empty($active_tab)) {
-    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
+    sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
   }
 
   // Get correct set of category filters based on subnav.

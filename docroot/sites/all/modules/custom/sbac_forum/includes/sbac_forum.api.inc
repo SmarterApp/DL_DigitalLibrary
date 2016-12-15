@@ -4,7 +4,7 @@
 
 
 function sbac_forum__api__get_active_subnav() {
-  $active_subnav = SBAC_FORUM_SUBNAV_RESOURCE;
+  $active_subnav = SBAC_FORUM_SUBNAV_TOPIC;
 
   if (isset($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
     if (!empty($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
