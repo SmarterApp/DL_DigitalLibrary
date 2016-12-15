@@ -1168,8 +1168,9 @@ function sbac_resource_enable_submit($errors) {
  * @param bool $js
  * @return array|mixed
  */
-function sbac_resource_modal_callback($js = FALSE) {
-  if ($js) {
+function sbac_resource_modal_callback($alignment_type = FALSE, $js = FALSE) {
+  if ($js && $alignment_type) {
+    sbac_alignment_type($alignment_type);
     ctools_include('ajax');
     ctools_include('modal');
     drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_alignment.js");
@@ -1204,6 +1205,7 @@ function sbac_resource_modal_callback($js = FALSE) {
  *
  * @param bool $js
  * @return array|mixed
+ * TODO: Delete this when the filter widget is no longer needed.
  */
 function sbac_resource_filter_modal_callback($js = FALSE) {
   if ($js) {
@@ -1934,13 +1936,21 @@ function _sbac_resource_form_summary(&$form, $form_state) {
 
     // Alignment Button
     $form['add_alignment_tag_button'] = array(
-      '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
+      '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment/ccss', array(
         'attributes' => array('title' => 'Add Standard(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
         'query' => array('nid' => $form['#node']->nid)
       )),
       '#weight' => 23.6,
     );
+    $form['add_target_alignment_tag_button'] = array(
+      '#markup' => l('Add Target(s)', 'sbac_resource/nojs/add-alignment/target', array(
+        'attributes' => array('title' => 'Add Target(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-target-alignment'),
+        'query' => array('nid' => $form['#node']->nid)
+      )),
+      '#weight' => 23.7,
+    );
     $form['#group_children']['add_alignment_tag_button'] = "group_summary";
+    $form['#group_children']['add_target_alignment_tag_button'] = "group_summary";
   }
 
   // Contexts

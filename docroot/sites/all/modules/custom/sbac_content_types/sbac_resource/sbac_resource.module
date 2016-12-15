@@ -60,14 +60,15 @@ function sbac_resource_update_projects_alter(&$projects) {
 function sbac_resource_menu() {
   $items = array();
 
-  $items['sbac_resource/%ctools_js/add-alignment'] = array(
+  $items['sbac_resource/%ctools_js/add-alignment/%'] = array(
     'title' => 'Add Alignment',
     'page callback' => 'sbac_resource_modal_callback',
-    'page arguments' => array(1),
+    'page arguments' => array(3, 1),
     'access arguments' => array('access content'),
     'file' => 'sbac_resource.forms.inc',
   );
 
+  // TODO: Delete this when the filter widget is no longer needed.
   $items['sbac_resource/%ctools_js/filter-by-alignment'] = array(
     'title' => 'Filter',
     'page callback' => 'sbac_resource_filter_modal_callback',

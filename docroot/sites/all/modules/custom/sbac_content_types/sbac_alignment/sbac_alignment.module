@@ -15,6 +15,7 @@ include_once 'sbac_alignment.theme.inc';
  * Variable Definition
  */
 define('SBAC_ALIGNMENT_VOCAB_NAME', 'education_alignment');
+define('SBAC_ALIGNMENT_TARGET_VOCAB_NAME', 'target_alignment');
 define('SBAC_ALIGNMENT_TYPE_VOCAB_NAME', 'alignment_type');
 define('SBAC_ALIGNMENT_MAX_DEPTH', 1);
 define('SBAC_ALIGNMENT_MOD_PATH', drupal_get_path('module', 'sbac_alignment'));
@@ -62,6 +63,7 @@ function sbac_alignment_menu() {
   );
 
   // AJAX for Filter dialog. Mimics Ajax callbacks ^
+  // TODO: Delete this when the filter widget is no longer needed.
   $items['ajax-alignment-filter-page'] = array(
     'title' => 'AJAX',
     'page callback' => 'sbac_alignment_ajax_filter_alignment_page',
@@ -127,6 +129,32 @@ function sbac_alignment_menu() {
 }
 
 /**
+ * Stores the alignment type in the session so it doesn't need to be passed around everywhere, and returns it on request.
+ * @param bool $alignment_type If this is a ccss or target tag selector.
+ * @return bool|string
+ */
+function sbac_alignment_type($alignment_type = FALSE) {
+  static $storage;
+  if ($alignment_type) {
+    switch ($alignment_type) {
+      case 'ccss':
+        $t = SBAC_ALIGNMENT_VOCAB_NAME;
+        break;
+      case 'target':
+        $t = SBAC_ALIGNMENT_TARGET_VOCAB_NAME;
+        break;
+      default:
+        $t = FALSE;
+    }
+    $storage['alignment_type'] = $t;
+    $_SESSION['lists']['alignment_type'] = $t;
+  } elseif (empty($storage['alignment_type']) && isset($_SESSION['lists']['alignment_type'])) {
+    $storage['alignment_type'] = $_SESSION['lists']['alignment_type'];
+  }
+  return $storage['alignment_type'];
+}
+
+/**
  * Form Callback
  * Alignment form.
  */
@@ -153,7 +181,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
     ),
   );
 
-  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $vocab = taxonomy_vocabulary_machine_name_load(sbac_alignment_type());
   $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
   if (!empty($terms)) {
@@ -222,6 +250,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
 /**
  * Form Callback
  * Alignment form.
+ * TODO: Delete this when the filter widget is no longer needed.
  */
 function sbac_alignment_filter_alignment_form($form, $form_state, $tid = 0) {
   $form['#attached']['js'] = array(

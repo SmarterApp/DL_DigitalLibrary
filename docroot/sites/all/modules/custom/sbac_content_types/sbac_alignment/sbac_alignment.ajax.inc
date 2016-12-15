@@ -10,7 +10,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
   drupal_add_js(drupal_get_path('theme', 'sbac') . '/js/custom.js');
   drupal_add_css(drupal_get_path('module', 'sbac_alignment') . '/css/alignment.css');
 
-  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $vocab = taxonomy_vocabulary_machine_name_load(sbac_alignment_type());
   $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
 
   $output = '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
@@ -28,6 +28,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
 /**
  * Page Callback
  * Outputs the alignment tagger UI.
+ * TODO: Delete this when the filter widget is no longer needed.
  */
 function sbac_alignment_ajax_filter_alignment_page($ref_node = NULL) {
   drupal_add_js(libraries_get_path('jquery.more') . '/jquery.more.js');
@@ -57,20 +58,32 @@ function sbac_alignment_ajax_filter_alignment_page($ref_node = NULL) {
  */
 function sbac_alignment_ajax_terms_callback() {
   $subject_array = $output_array = array();
-  $ela_titles = array(
+  $ela_cc_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Strand/Domain',
     'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
-  $ma_titles = array(
+  $ma_cc_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Domain',
     'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
   );
+  $ela_ta_titles = array(
+    'Choose Your Subject Area',
+    'Choose Your Grade',
+    'Choose Your Domain',
+    'Choose Your Target Alignment ELA Standard(s)',
+  );
+  $ma_ta_titles = array(
+    'Choose Your Subject Area',
+    'Choose Your Grade',
+    'Choose Your Domain',
+    'Choose Your Target Alignment Math Standard(s)',
+  );
 
-  $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  $vocab = taxonomy_vocabulary_machine_name_load(sbac_alignment_type());
   $parent = taxonomy_term_load($_POST['parent']);
   if (isset($_POST['remove'])) {
     $temp = array_shift(taxonomy_get_parents($parent->tid));
@@ -87,11 +100,21 @@ function sbac_alignment_ajax_terms_callback() {
   $publication = $parent->field_alignment_publication['und'][0]['value'];
   $output_array['publication'] = (empty($publication)) ? 0 : $publication;
   $output_array['depth'] = $depth = sbac_alignment_taxonomy_term_depth($parent->tid);
-  if ($publication == 'CC-MA-v1') {
-    $level_title = $ma_titles[$depth];
-  }
-  else {
-    $level_title = $ela_titles[$depth];
+  switch ($publication) {
+    case 'CC-MA-v1':
+      $level_title = $ma_cc_titles[$depth];
+      break;
+    case 'CC-ELA-v1':
+      $level_title = $ela_cc_titles[$depth];
+      break;
+    case 'TA-MA-v1':
+      $level_title = $ma_ta_titles[$depth];
+      break;
+    case 'TA-ELA-v1':
+      $level_title = $ela_ta_titles[$depth];
+      break;
+    default:
+      $level_title = 'N/A';
   }
 
   $output_array['tids'] = array();
@@ -126,6 +149,9 @@ function sbac_alignment_ajax_terms_callback() {
   exit;
 }
 
+/**
+ * TODO: Delete this when the filter widget is no longer needed.
+ */
 function sbac_alignment_ajax_filter_alignment_confirm_remove_callback() {
   $output = theme('alignment_modal_confirm', array('terms' => array()));
   $output_array['html'] = $output;
@@ -227,6 +253,7 @@ function sbac_alignment_ajax_alignment_crud_callback() {
 /**
  * AJAX Callback
  * CRUD for Alignment nodes.
+ * TODO: Delete this when the filter widget is no longer needed.
  */
 function sbac_alignment_ajax_filter_alignment_finish_set_callback() {
   global $user;
@@ -289,6 +316,7 @@ function sbac_alignment_ajax_alignment_form_callback() {
 /**
  * AJAX Callback - filter dialog for ccss
  * Lazy-loading the form.
+ * TODO: Delete this when the filter widget is no longer needed.
  */
 function sbac_alignment_ajax_filter_alignment_form_callback() {
   $tid = $_POST['tid'];

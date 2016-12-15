@@ -112,7 +112,9 @@
           var obj = jQuery.parseJSON(data);
 
           if ((obj.publication == 'CC-ELA-v1' && obj.depth > 2)
-            || (obj.publication == 'CC-MA-v1' && obj.depth > 2)) {
+            || (obj.publication == 'CC-MA-v1' && obj.depth > 2)
+            || (obj.publication == 'TA-ELA-v1' && obj.depth > 2)
+            || (obj.publication == 'TA-MA-v1' && obj.depth > 2)) {
             $('.alignment-form').show();
             $('.alignment-buttons').hide();
             $('.alignment-filter').html('');
