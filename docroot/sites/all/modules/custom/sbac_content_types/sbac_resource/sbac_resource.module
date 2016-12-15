@@ -2838,6 +2838,9 @@ function sbac_resource_block_view($delta = '') {
           $js = TRUE;
           break;
       }
+      if (!$js && 0 === strpos($previous_url, '/users/')) {
+          $js = TRUE;
+      }
       if ($js) {
         $block['content'] = '<span class="button" onclick="parent.history.back();">Back</span>';
       }
@@ -2894,7 +2897,7 @@ function sbac_resource_block_info_alter(&$blocks, $theme, $code_blocks) {
     $blocks['sbac_resource']['sbac_resource_mr_sort_form']['weight'] = -23;
   }
   if (isset($blocks['sbac_resource']['sbac_resource_back_button']) && $theme == 'SBAC') {
-      $blocks['sbac_resource']['sbac_resource_back_button']['pages'] = "content*\nterms-of-service\nfavorites*";
+      $blocks['sbac_resource']['sbac_resource_back_button']['pages'] = "content*\nterms-of-service\nfavorites*\ncollection*";
   }
 }
 
