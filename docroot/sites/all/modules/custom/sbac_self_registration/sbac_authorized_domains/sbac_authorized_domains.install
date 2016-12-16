@@ -1,0 +1,57 @@
+<?php
+
+function sbac_authorized_domains_schema() {
+  $schema['unauthorized_domain_audit'] = array(
+    'description' => 'Unauthorized_Domain_Audit',
+    'fields' => array(
+      'rowid' => array(
+        'description' => 'The Unique ID for this row',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'domain' => array(
+        'description' => 'Unauthorized email domain',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'accesscount' => array(
+        'description' => 'Number of times this domain has been used',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'date' => array(
+        'description' => 'Date added',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timeupdated' => array(
+        'description' => 'Date updated',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('rowid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Install the Unauthorized Domain schema.
+ *
+ * Implements hook_update_N().
+ */
+function sbac_authorized_domains_update_7011() {
+  $ret = array();  
+  drupal_install_schema('unauthorized_domain_audit');
+  return $ret;  
+}

@@ -36751,7 +36751,24 @@ body.page-help-topics h1 {
   right: 238px;
 }
 
-#help-topics-modal-continue {
+#help-topics-modal-continue,
+#playlist-modal-continue  {
   color: #FFFFFF;
   font-size: 16px;
+}
+
+.page-forums-term .sbac-forum-vp-controls-wrapper {
+  display: block;
+  float: right;
+  height: 80px;
+  bottom: 35px;
+  padding-top: 50px;
+  position: relative;
+  right: 0;
+  width: 135px;
+  z-index: 999;
+}
+
+.page-forums-term .sbac-alert-box {
+  margin-bottom: 35px;
 }

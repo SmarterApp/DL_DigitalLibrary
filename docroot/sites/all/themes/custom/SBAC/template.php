@@ -745,6 +745,10 @@ function sbac_preprocess_views_view(&$variables) {
       $variables['join_button'] = sbac_forum__api__create_start_new_topic_link($forum_id);
     }
   }
+  if ($variables['view']->name == 'authorized_domains') {
+    drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_reset.js');
+    drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_css.js');
+  }
 }
 
 /**

@@ -1396,18 +1396,20 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                 // email reviewers
                 foreach ($recipients as $recipient) {
                   $reviewer = user_load($recipient->uid);
+                  $username = sbac_email_user_link($reviewer);
                   // Add resource link to message
                   global $base_url;
                   $values = array(
                     'arguments' => array(
                       '!resource-link' => $base_url . '/node/' . $node->nid,
+                      '!user-link' => $username,
                     ),
                     'uid' => $reviewer->uid,
                   );
-                  $email_preference = $reviewer->field_email_preference_value['und'][0]['value'];
+                  $email_preference = $reviewer->field_email_preference['und'][0]['value'];
                   if ($email_preference !== '' || $email_preference !== 'never') {
                     // create message
-                    $message = message_create('resource_resubmitted', array('uid' => $reviewer->uid));
+                    $message = message_create('resource_resubmitted', $values);
                     $wrapper = entity_metadata_wrapper('message', $message);
                     $wrapper->save();
                     if ($email_preference == 'immediately') {
@@ -1439,12 +1441,11 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               // Email resource reviewers
               $reviewers = sbac_resource_get_reviewers_email();
               foreach ($reviewers as $reviewer) {
-                global $base_url;
                 $user_profile = user_load($reviewer->uid);
-                $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+                $username = sbac_email_user_link($user_profile);
                 $values = array(
                   'arguments' => array(
-                    '!user-link' => $base_url . '/users/' . $username,
+                    '!user-link' => $username,
                   ),
                   'uid' => $reviewer->uid,
                 );
@@ -3935,13 +3936,14 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
     $last_reviewer = $form_state['values']['field_recent_reviewers']['und'][0]['target_id'];
     // Send email to user
     // Add resource link to message
+    $node = $form_state['node'];
     global $base_url;
     $user_profile = user_load($last_reviewer);
-    $username = str_replace(' ', '-', strtolower(sbac_user_format_username($user_profile)));
+    $username = sbac_email_user_link($user_profile);
     $values = array(
       'arguments' => array(
         '!resource-link' => $base_url . '/node/' . $node->nid,
-        '!user-link' => $base_url . '/users/' . $username,
+        '!user-link' => $username,
       ),
       'uid' => $last_reviewer,
     );

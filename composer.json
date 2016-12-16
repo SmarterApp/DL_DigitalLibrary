@@ -185,6 +185,7 @@
     "drupal/module_filter": "7.2.0",
     "drupal/module_missing_message_fixer": "7.1.1",
     "drupal/morecomments": "7.1.0-beta3",
+    "drupal/oauth2_client": "7.1.6",
     "drupal/oscaddie_gcs": "7.2.0",
     "drupal/panels": "7.3.7",
     "drupal/pathauto": "7.1.3",

@@ -9,7 +9,8 @@ class GoalCompleteReviewed extends \taskit\sbac_core\BaseTask {
     $rating_goal = $account->field_resources_reviewed_goal['und'][0]['value'];
     if ($account) {
       $user_name = str_replace(' ', '-', strtolower(sbac_user_format_username($account)));
-      $this->setTaskUrl(check_plain('users/' . $user_name . '#profile-goals'));
+      $user_name_clean = str_replace('.', '', $user_name);
+      $this->setTaskUrl(check_plain('users/' . $user_name_clean . '#profile-goals'));
 
       $output = array();
       $output[] = t('Congratulations: You have reached your goal for resources reviewed! !goal_page', array(
