@@ -794,6 +794,16 @@ function sbac_resource_preprocess_node(&$vars) {
       $vars['materials'] = $materials;
     }
 
+    if ($_GET['rating-goal'] == 'in-process') {
+      drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource_guidance.js');
+      $user_profile = user_load($user-uid);
+      $vars['goal_link_ip'] = sbac_email_user_link($user_profile) . '#profile-goals';
+    }
+    if ($_GET['rating-goal'] == 'complete') {
+      drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource_guidance.js');
+      $vars['goal_link_complete'] = ''; //TODO populate with correct link after SNE form is built
+    }
+
     $vars['favorites_link'] = sbac_favorites_get_favorite_link($user->uid, $vars['nid'], 'node');
   }
 }

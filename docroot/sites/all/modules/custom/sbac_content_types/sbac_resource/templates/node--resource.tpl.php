@@ -77,6 +77,24 @@
 
 drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
 ?>
+<?php  if (isset($goal_link_ip)): ?>
+  <div id="star-rating-modal-container" class="reveal-modal">
+    <div class="star-rating-modal">
+      <h2>Congratulations! You have completed a Star Rating.</h2>
+      <p>You are one step closer to reaching your goal, you can update your goal <a href="' . $goal_link_ip . '">here</a>.</p> 
+      <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
+    </div>
+  </div>
+<?php endif; ?>
+<?php  if (isset($goal_link_complete)): ?>
+  <div id="star-rating-modal-container" class="reveal-modal">
+    <div class="star-rating-modal">
+      <h2>Congratulations! You have completed your goal for Star Ratings.</h2>
+      <p>Click <a href="' . $goal_link_complete . '">here</a> to become a contributor to the digital library.</p> 
+      <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
+    </div>
+  </div>
+<?php endif; ?>
 <?php if (isset($resource_type) && $resource_type): ?>
   <span class="resource-type"><?php echo $resource_type; ?></span>
 <?php endif; ?>

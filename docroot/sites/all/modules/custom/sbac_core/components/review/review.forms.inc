@@ -172,7 +172,25 @@ function review_form_submit($form, &$form_state) {
     }
     drupal_set_message(t('Your review posted successfully.'));
 
-    $form_state['redirect'] = url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE));
+    // create redirect 
+    global $user;
+    $user_profile = user_load($user->uid);
+    if (!in_array('resource contributor', $user_profile->roles) && !in_array('resource reviewer', $user_profiel->roles) && !in_array('resource publisher', $user_profile->roles)) {
+      $star_rating_goal = $user_profile->field_star_rating_goal['und'][0]['value'];
+      $resources_rated = $user_profile->field_resources_rated['und'][0]['value'];
+      // Create popup for star rating complete
+      // Do this for star rating goal - rated resources <= 1 because the current rating hasn't been counted yet
+      if (($star_rating_goal - $resources_rated) <= 1) {
+        $form_state['redirect'] = url('node/' . $node->nid, array('absolute' => TRUE, 'query' => array('rating-goal' => 'complete')));
+      }
+      // Create popup for star rating in-process
+      else {  
+        $form_state['redirect'] = url('node/' . $node->nid, array('absolute' => TRUE, 'query' => array('rating-goal' => 'in-process')));
+      }
+    }
+    else {
+      $form_state['redirect'] = url('node/' . $node->nid . '/feedback/redirect/review-reviews', array('absolute' => TRUE));
+    }
   }
 }
 
