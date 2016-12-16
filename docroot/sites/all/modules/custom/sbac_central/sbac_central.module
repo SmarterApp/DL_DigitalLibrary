@@ -61,7 +61,7 @@ function sbac_central_menu() {
     'description' => '',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('sbac_central_google_cdn_admin'),
-    'access arguments' => array('administer sbac_central settings'),
+    'access arguments' => array('administer sbac_central'),
     'file'=> 'sbac_central.admin.inc',
     'type' => MENU_NORMAL_ITEM,
    );
