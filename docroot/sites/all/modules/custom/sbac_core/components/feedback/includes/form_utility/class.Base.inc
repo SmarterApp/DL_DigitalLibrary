@@ -189,13 +189,37 @@ class Base {
    * Attaches helpful info.
    * @return [type] [description]
    */
-  public function attachHelpfulInfo() {
+  public function attachHelpfulInfo($bundle) {
+    global $user;
+    // determine which review this attachment is for
+    switch ($bundle) {
+      case 'gate_keeper':
+        $edit_link = '/admin/sbac/feedback/gate_keeper';
+        break;
+
+      case 'qc':
+        $edit_link = '/admin/sbac/feedback/quality_review';
+        break;
+
+      case 'post':
+        $edit_link = '/admin/sbac/feedback/post';
+        break;
+    }
     // attach helpful info
     if ($helpful_info = $this->getVar('help')) {
-      $output = theme('feedback_helpful_info', array(
-        'helpful_info' => more_less_text($helpful_info),
-      ));
-
+      // add edit link for appropriate roles
+      if (in_array('administrator', $user->roles) || in_array('moderator', $user->roles) || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+        $output = theme('feedback_helpful_info', array(
+          'helpful_info' => more_less_text($helpful_info),
+          'edit_link' => '<a href="' . $edit_link . '" class="help-topic-link">Edit Help Text</a>',
+        ));
+      }
+      else {
+        $output = theme('feedback_helpful_info', array(
+          'helpful_info' => more_less_text($helpful_info),
+          'edit_link' => '',
+        ));
+      }
       $this->_form['helpful_info'] = array(
         '#markup' => $output,
       );

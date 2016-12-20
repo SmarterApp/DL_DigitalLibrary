@@ -221,6 +221,17 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['field_help_topic_category']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_help_topic_category']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_help_topic_category']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: PDF or Word Doc */
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['id'] = 'field_pdf_or_word_doc';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['table'] = 'field_data_field_pdf_or_word_doc';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['field'] = 'field_pdf_or_word_doc';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['label'] = '';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['type'] = 'file_download_link';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['settings'] = array(
+    'text' => 'Download [file:name]',
+  );
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Content: Help Topic Category (field_help_topic_category) */
   $handler->display->display_options['sorts']['field_help_topic_category_tid']['id'] = 'field_help_topic_category_tid';

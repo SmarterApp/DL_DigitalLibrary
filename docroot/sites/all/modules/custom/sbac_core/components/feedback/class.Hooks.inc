@@ -291,7 +291,7 @@ class Hooks extends \devtools\Hooks {
           $full_class_name = 'sbac_core\\components\\feedback\\form_utility\\' . $class_name;
           $form_utility = new $full_class_name($form, $form_state, $this->_info[$bundle]);
 
-          $form_utility->attachHelpfulInfo();
+          $form_utility->attachHelpfulInfo($bundle);
           $form_utility->process();
           $form_utility->postProcess();
         }
