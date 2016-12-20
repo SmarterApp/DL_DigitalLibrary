@@ -36657,6 +36657,22 @@ form#sbac-user-filter-form #edit-email {
   right: 40px;
 }
 
+.sbac-resource-container .help-topic-link {
+  top: 70px;
+  padding: 5px 5px 5px 27px;
+  background: url(/sites/all/themes/custom/SBAC/images/icons/icon-edit.png) no-repeat left center;
+  font-size: 14px;
+  font-weight: normal;
+  color: #0085ad;
+  border-radius: 0.25rem;
+  border: 0 none;
+  background-color: transparent;
+}
+
+.sbac-resource-container .help-topic-link:hover {
+  text-shadow: 0 0 0 rgba(0,0,0,0.5);
+}
+
 .help-tabs a {
   padding: 12px 28px;
   font-family: "Open Sans",sans-serif;
