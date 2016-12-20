@@ -175,6 +175,7 @@ function review_form_submit($form, &$form_state) {
     // create redirect 
     global $user;
     $user_profile = user_load($user->uid);
+    // Redirect Basic End Users for rating guidance popups
     if (!in_array('resource contributor', $user_profile->roles) && !in_array('resource reviewer', $user_profiel->roles) && !in_array('resource publisher', $user_profile->roles)) {
       $star_rating_goal = $user_profile->field_star_rating_goal['und'][0]['value'];
       $resources_rated = $user_profile->field_resources_rated['und'][0]['value'];

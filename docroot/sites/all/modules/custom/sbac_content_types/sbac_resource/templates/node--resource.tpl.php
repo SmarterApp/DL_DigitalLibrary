@@ -149,7 +149,15 @@ endif;
             echo "<p>This is a <span id='sbac-partial-download'>partial download</span></p>";
           }
           if (isset($download)) {
-            echo $download;
+            // TODO fill in with correct link when built
+            print $download .
+              '<div id="resource-download-modal-container" class="reveal-modal">
+                <div class="resource-download-modal">
+                  <h2>Thank you for downloading this Resource Matierial.</h2>
+                  <p>Please be sure and rate this resource after you have used it.  You can learn how <a href="/help-topic/star-rating-placeholder">here</a>.</p> 
+                  <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
+                </div>
+              </div>';
           }
         ?>
       </div>

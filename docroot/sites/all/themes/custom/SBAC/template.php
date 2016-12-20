@@ -565,6 +565,14 @@ function sbac_preprocess_rate_template_yesno(&$variables) {
  * Preprocess function for page template.
  */
 function sbac_preprocess_page(&$variables) {
+  // kill rating cookie value so guidance popups can be created on new page load
+  if (isset($_COOKIE['rating'])) {
+    unset($_COOKIE['rating']);
+    // unset FF cookie since path is different than Chrome
+    setcookie('rating', NULL, time() - 3600, '/content/'); // empty value and old timestamp
+    // unset Chrome cookie
+    setcookie('rating', NULL, time() - 3600, '/content'); // empty value and old timestamp
+  }
   if (strpos($_GET['q'], 'glossary') !== FALSE) {
     $variables['help_tabs'] =
     '<div class="help-tabs">

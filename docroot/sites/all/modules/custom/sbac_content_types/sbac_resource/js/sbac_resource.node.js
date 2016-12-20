@@ -152,6 +152,11 @@
         selectedDiv.removeClass('selectedDiv');
         selectedDiv.removeClass('open');
       });
+      // Playlist Modal
+      $('.download-modal').click(function() {
+        $('#resource-download-modal-container').foundation('reveal', 'open');
+      //  $('.reveal-modal-bg').hide();
+      });
     }
   };
 

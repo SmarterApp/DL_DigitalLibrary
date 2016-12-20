@@ -222,6 +222,11 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['field_help_topic_category']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_help_topic_category']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Help Topic Category (field_help_topic_category) */
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['id'] = 'field_help_topic_category_tid';
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['table'] = 'field_data_field_help_topic_category';
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['field'] = 'field_help_topic_category_tid';
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['order'] = 'DESC';
   /* Sort criterion: Content: Title */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';

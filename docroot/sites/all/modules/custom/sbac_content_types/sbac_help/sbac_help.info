@@ -8,6 +8,7 @@ dependencies[] = ctools
 dependencies[] = draggableviews
 dependencies[] = features
 dependencies[] = field_group
+dependencies[] = file
 dependencies[] = flag
 dependencies[] = flexslider
 dependencies[] = flexslider_views
