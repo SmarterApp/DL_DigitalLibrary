@@ -110,6 +110,15 @@ drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css
   </div>
 <?php endif; ?>
   <article id="node-<?php echo $node->nid; ?>" class="<?php echo $classes; ?>"<?php echo $attributes; ?>>
+  <?php if (isset($download)): ?>
+    <div id="resource-download-modal-container" class="reveal-modal">
+      <div class="resource-download-modal">
+        <h2>Thank you for downloading this Resource Material.</h2>
+        <p>Please be sure and rate this resource after you have used it.  You can learn how <a href="/help-topic/star-rating-placeholder">here</a>.</p> 
+        <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
+      </div>
+    </div>
+  <?php endif; ?>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>
       <p><span class="author">Author: </span class="publisher"><?php echo $author; ?> | Owner: <?php print $owner; ?></p>
@@ -150,14 +159,7 @@ endif;
           }
           if (isset($download)) {
             // TODO fill in with correct link when built
-            print $download .
-              '<div id="resource-download-modal-container" class="reveal-modal">
-                <div class="resource-download-modal">
-                  <h2>Thank you for downloading this Resource Matierial.</h2>
-                  <p>Please be sure and rate this resource after you have used it.  You can learn how <a href="/help-topic/star-rating-placeholder">here</a>.</p> 
-                  <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
-                </div>
-              </div>';
+            print $download; 
           }
         ?>
       </div>
