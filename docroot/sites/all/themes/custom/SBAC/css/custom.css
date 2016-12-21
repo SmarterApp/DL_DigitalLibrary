@@ -36607,6 +36607,15 @@ form#sbac-user-filter-form #edit-email {
   display: none;
 }
 
+/* Help/Guidance css */
+.page-sort-content-help-topics .sbac-alert-box {
+  margin-bottom: 80px;
+}
+
+.view-display-id-sort_help_topics .views-field-title {
+  width: 76%;
+}
+
 .sbac-resource-container .help-topic-link {
   top: 70px;
 }
@@ -36653,7 +36662,7 @@ form#sbac-user-filter-form #edit-email {
 
 .help-topic-link {
   position: absolute;
-  top: 90px;
+  top: 210px;
   right: 40px;
 }
 
@@ -36698,6 +36707,12 @@ form#sbac-user-filter-form #edit-email {
 
 .help-tabs .glossary {
   margin-left: -5px;
+}
+
+.lexicon-overview .edit a {
+  position: relative;
+  top: -74px;
+  z-index: 3;
 }
 
 .help-tabs .active {
@@ -36798,4 +36813,13 @@ body.page-help-topics h1 {
 
 .page-forums-term .sbac-alert-box {
   margin-bottom: 35px;
+}
+
+/* Help Text edit form */
+.hide-criteria {
+  display: none;
+}
+
+#feedback-gate-keeper-admin-form #edit-submit {
+  margin-top: 20px;
 }
