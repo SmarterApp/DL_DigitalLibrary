@@ -15,7 +15,9 @@ include_once 'sbac_alignment.theme.inc';
  * Variable Definition
  */
 define('SBAC_ALIGNMENT_VOCAB_NAME', 'education_alignment');
+define('SBAC_ALIGNMENT_CONTAINER', '#sbac-resource-alignment-tag-view');
 define('SBAC_ALIGNMENT_TARGET_VOCAB_NAME', 'target_alignment');
+define('SBAC_ALIGNMENT_TARGET_CONTAINER', '#sbac-resource-target-tag-view');
 define('SBAC_ALIGNMENT_TYPE_VOCAB_NAME', 'alignment_type');
 define('SBAC_ALIGNMENT_MAX_DEPTH', 1);
 define('SBAC_ALIGNMENT_MOD_PATH', drupal_get_path('module', 'sbac_alignment'));
@@ -139,19 +141,25 @@ function sbac_alignment_type($alignment_type = FALSE) {
     switch ($alignment_type) {
       case 'ccss':
         $t = SBAC_ALIGNMENT_VOCAB_NAME;
+        $c = SBAC_ALIGNMENT_CONTAINER;
         break;
       case 'target':
         $t = SBAC_ALIGNMENT_TARGET_VOCAB_NAME;
+        $c = SBAC_ALIGNMENT_TARGET_CONTAINER;
         break;
       default:
-        $t = FALSE;
+        $t = $c = FALSE;
     }
     $storage['alignment_type'] = $t;
+    $storage['alignment_container'] = $c;
     $_SESSION['lists']['alignment_type'] = $t;
-  } elseif (empty($storage['alignment_type']) && isset($_SESSION['lists']['alignment_type'])) {
+    $_SESSION['lists']['alignment_container'] = $c;
+  } elseif (empty($storage['alignment_type'] && empty($storage['alignment_container']))
+    && isset($_SESSION['lists']['alignment_type']) && isset($_SESSION['lists']['alignment_container'])) {
     $storage['alignment_type'] = $_SESSION['lists']['alignment_type'];
+    $storage['alignment_container'] = $_SESSION['lists']['alignment_container'];
   }
-  return $storage['alignment_type'];
+  return array('type' => $storage['alignment_type'], 'container' => $storage['alignment_container']);
 }
 
 /**
@@ -168,20 +176,21 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
     $tid = $_GET['tid'];
   }
 
-  if (isset($_POST['ref_node'])) {
-    $ref_node = $_POST['ref_node'];
-  }
+  //if (isset($_POST['ref_node'])) {
+  //  $ref_node = $_POST['ref_node'];
+  //}
 
-  $form['alignment_ref'] = array(
-    '#type' => 'hidden',
-    '#value' => $ref_node,
-    '#default_value' => $ref_node,
-    '#attributes' => array(
-      'id' => 'alignment_ref',
-    ),
-  );
+  //$form['alignment_ref'] = array(
+  //  '#type' => 'hidden',
+  //  '#value' => $ref_node,
+  //  '#default_value' => $ref_node,
+  //  '#attributes' => array(
+  //    'id' => 'alignment_ref',
+  //  ),
+  //);
 
-  $vocab = taxonomy_vocabulary_machine_name_load(sbac_alignment_type());
+  $alignment = sbac_alignment_type();
+  $vocab = taxonomy_vocabulary_machine_name_load($alignment['type']);
   $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
 
   if (!empty($terms)) {
@@ -203,12 +212,12 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   }
 
   //@TODO KS- change to terms
-  $form['alignment_type'] = array(
-    '#type' => 'hidden',
-    '#title' => 'Choose Alignment Type',
-    '#default_value' => 'Teaches',
-    '#attributes' => array('id' => 'edit-alignment-type'),
-  );
+  //$form['alignment_type'] = array(
+  //  '#type' => 'hidden',
+  //  '#title' => 'Choose Alignment Type',
+  //  '#default_value' => 'Teaches',
+  //  '#attributes' => array('id' => 'edit-alignment-type'),
+  //);
 
   $form['ccss-submit'] = array(
     '#markup' => l(t('Add Standard(s) to Resource'), '#',

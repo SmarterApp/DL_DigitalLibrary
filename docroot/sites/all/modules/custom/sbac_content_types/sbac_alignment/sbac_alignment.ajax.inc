@@ -10,8 +10,15 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
   drupal_add_js(drupal_get_path('theme', 'sbac') . '/js/custom.js');
   drupal_add_css(drupal_get_path('module', 'sbac_alignment') . '/css/alignment.css');
 
-  $vocab = taxonomy_vocabulary_machine_name_load(sbac_alignment_type());
+  $alignment = sbac_alignment_type();
+  $vocab = taxonomy_vocabulary_machine_name_load($alignment['type']);
   $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
+
+  drupal_add_js(array(
+      'sbac_alignment_everything' => array('type' => $alignment['type'], 'container' => $alignment['container'])
+    ),
+    array('type' => 'setting')
+  );
 
   $output = '<div id="alignment-page"><input id="ref_node" style="display:none" value="' . $ref_node . '"> ';
   $output .= '<div class="alignment-breadcrumb"></div>';
@@ -82,8 +89,15 @@ function sbac_alignment_ajax_terms_callback() {
     'Choose Your Domain',
     'Choose Your Target Alignment Math Standard(s)',
   );
+  $defaults = array(
+    'Choose Your Subject Area',
+    'Choose Your Grade',
+    'Choose Your Domain',
+    'Choose Your Standard(s)',
+  );
 
-  $vocab = taxonomy_vocabulary_machine_name_load(sbac_alignment_type());
+  $alignment = sbac_alignment_type();
+  $vocab = taxonomy_vocabulary_machine_name_load($alignment['type']);
   $parent = taxonomy_term_load($_POST['parent']);
   if (isset($_POST['remove'])) {
     $temp = array_shift(taxonomy_get_parents($parent->tid));
@@ -114,7 +128,7 @@ function sbac_alignment_ajax_terms_callback() {
       $level_title = $ela_ta_titles[$depth];
       break;
     default:
-      $level_title = 'N/A';
+      $level_title = $defaults[$depth];
   }
 
   $output_array['tids'] = array();

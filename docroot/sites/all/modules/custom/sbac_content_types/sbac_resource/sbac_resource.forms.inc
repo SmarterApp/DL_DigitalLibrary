@@ -1908,12 +1908,18 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     unset($form['field_grades']['und']['#options']['_none']);
   }
 
+  // CC Alignment Container Start
+  $form['alignment_tag_container'] = array(
+    '#markup' => '<div id="alignment-tag-container">',
+    '#weight' => 22,
+  );
+  $form['#group_children']['alignment_tag_container'] = "group_summary";
   // Title
   $form['alignment_tag_title'] = array(
     '#markup' => '<h2>' . t('Common Core State Standard(s)') . '</h2>',
     '#prefix' => '<div class="form-item-title alignment-tag-title">',
     '#suffix' => '</div>',
-    '#weight' => 22,
+    '#weight' => 22.1,
   );
   $form['#group_children']['alignment_tag_title'] = "group_summary";
   // Description
@@ -1921,7 +1927,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     '#markup' => '<p>' . t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards and Mathematical Practices are included alongside content standards for all grades.') . '</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
-    '#weight' => 23,
+    '#weight' => 22.2,
   );
   $form['#group_children']['alignment_tag_description'] = "group_summary";
   // Alignment View -> The initial load of the form does not have an nid.
@@ -1930,7 +1936,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
       '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
       '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
       '#suffix' => '</div>',
-      '#weight' => 23.5,
+      '#weight' => 22.3,
     );
     $form['#group_children']['alignment_tag_view'] = "group_summary";
 
@@ -1940,18 +1946,65 @@ function _sbac_resource_form_summary(&$form, $form_state) {
         'attributes' => array('title' => 'Add Standard(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
         'query' => array('nid' => $form['#node']->nid)
       )),
-      '#weight' => 23.6,
+      '#weight' => 22.4,
     );
+    $form['#group_children']['add_alignment_tag_button'] = "group_summary";
+  }
+  // Container End
+  $form['alignment_tag_container_end'] = array(
+    '#markup' => '</div>',
+    '#weight' => 22.5,
+  );
+  $form['#group_children']['alignment_tag_container_end'] = "group_summary";
+
+  // Target Container Start
+  $form['target_tag_container'] = array(
+    '#markup' => '<div id="target-tag-container">',
+    '#weight' => 23,
+  );
+  $form['#group_children']['target_tag_container'] = "group_summary";
+  // Title
+  $form['target_tag_title'] = array(
+    '#markup' => '<h2>' . t('Assessment Target(s)') . '</h2>',
+    '#prefix' => '<div class="form-item-title alignment-tag-title">',
+    '#suffix' => '</div>',
+    '#weight' => 23.1,
+  );
+  $form['#group_children']['target_tag_title'] = "group_summary";
+  // Description
+  $form['target_tag_description'] = array(
+    '#markup' => '<p>' . t('Identify the assesment target(s) to which this resource is aligned. Note that the assessment targets are directly from the Smarter Balanced Content Specifications in ELA/Literacy and Mathematics, and are organized by subject, grade, claim, then target.') . '</p>',
+    '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
+    '#suffix' => '</div>',
+    '#weight' => 23.2,
+  );
+  $form['#group_children']['target_tag_description'] = "group_summary";
+  // Alignment View -> The initial load of the form does not have an nid.
+  if (isset($form['#node']->nid)) {
+    $form['target_tag_view'] = array(
+      '#markup' => views_embed_view('target', 'resource_admin_view', $form['#node']->nid),
+      '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
+      '#suffix' => '</div>',
+      '#weight' => 23.3,
+    );
+    $form['#group_children']['target_tag_view'] = "group_summary";
+
+    // Target Button
     $form['add_target_alignment_tag_button'] = array(
       '#markup' => l('Add Target(s)', 'sbac_resource/nojs/add-alignment/target', array(
         'attributes' => array('title' => 'Add Target(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-target-alignment'),
         'query' => array('nid' => $form['#node']->nid)
       )),
-      '#weight' => 23.7,
+      '#weight' => 23.4,
     );
-    $form['#group_children']['add_alignment_tag_button'] = "group_summary";
     $form['#group_children']['add_target_alignment_tag_button'] = "group_summary";
   }
+  // Container End
+  $form['target_tag_container_end'] = array(
+    '#markup' => '</div>',
+    '#weight' => 23.5,
+  );
+  $form['#group_children']['target_tag_container_end'] = "group_summary";
 
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
