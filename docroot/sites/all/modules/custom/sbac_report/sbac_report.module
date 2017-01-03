@@ -715,7 +715,7 @@ function sbac_report_state_ajax($form, &$form_state) {
       $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
     }
   }
-  return $form;
+  return $form['user_wrapper'];
 }
 
 /**
