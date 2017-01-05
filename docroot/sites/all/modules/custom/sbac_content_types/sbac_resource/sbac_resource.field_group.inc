@@ -177,6 +177,7 @@ function sbac_resource_field_group_info() {
       7 => 'field_success_criteria',
       8 => 'field_supporting_evidence',
       9 => 'field_alignment_term',
+      10 => 'field_target_term',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

@@ -267,6 +267,52 @@ function sbac_alignment_field_default_field_instances() {
   );
 
   // Exported field_instance:
+  // 'taxonomy_term-education_alignment-field_alignment_crosswalk'.
+  $field_instances['taxonomy_term-education_alignment-field_alignment_crosswalk'] = array(
+    'bundle' => 'education_alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 7,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_alignment_crosswalk',
+    'label' => 'Alignment Crosswalk',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 39,
+    ),
+    'xss' => 0,
+  );
+
+  // Exported field_instance:
   // 'taxonomy_term-education_alignment-field_alignment_grade'.
   $field_instances['taxonomy_term-education_alignment-field_alignment_grade'] = array(
     'bundle' => 'education_alignment',
@@ -703,11 +749,215 @@ function sbac_alignment_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance:
+  // 'taxonomy_term-target_alignment-field_alignment_crosswalk'.
+  $field_instances['taxonomy_term-target_alignment-field_alignment_crosswalk'] = array(
+    'bundle' => 'target_alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Alignment Keys of items related to this tag.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 4,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_alignment_crosswalk',
+    'label' => 'Alignment Crosswalk',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 39,
+    ),
+    'xss' => 0,
+  );
+
+  // Exported field_instance:
+  // 'taxonomy_term-target_alignment-field_alignment_grade'.
+  $field_instances['taxonomy_term-target_alignment-field_alignment_grade'] = array(
+    'bundle' => 'target_alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 3,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_alignment_grade',
+    'label' => 'Alignment Grade',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 38,
+    ),
+    'xss' => 0,
+  );
+
+  // Exported field_instance:
+  // 'taxonomy_term-target_alignment-field_alignment_key'.
+  $field_instances['taxonomy_term-target_alignment-field_alignment_key'] = array(
+    'bundle' => 'target_alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_alignment_key',
+    'label' => 'Alignment Key',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 32,
+    ),
+    'xss' => 0,
+  );
+
+  // Exported field_instance:
+  // 'taxonomy_term-target_alignment-field_alignment_publication'.
+  $field_instances['taxonomy_term-target_alignment-field_alignment_publication'] = array(
+    'bundle' => 'target_alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 2,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_alignment_publication',
+    'label' => 'Alignment Publication',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 36,
+    ),
+    'xss' => 0,
+  );
+
+  // Exported field_instance:
+  // 'taxonomy_term-target_alignment-field_alignment_shortname'.
+  $field_instances['taxonomy_term-target_alignment-field_alignment_shortname'] = array(
+    'bundle' => 'target_alignment',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_alignment_shortname',
+    'label' => 'Alignment ShortName',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => '',
+        'maxlength_js_enforce' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_truncate_html' => 0,
+        'rows' => 5,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 34,
+    ),
+    'xss' => 0,
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('A category of alignment between the learning resource and the framework node.');
+  t('Alignment Crosswalk');
   t('Alignment Grade');
   t('Alignment Key');
+  t('Alignment Keys of items related to this tag.');
   t('Alignment Publication');
   t('Alignment ShortName');
   t('Alignment Type');
