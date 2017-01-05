@@ -3,6 +3,8 @@
  * CSV Report filter form.
  */
 function sbac_csv_report_user_activity_form($form, &$form_state) {
+  global $user;
+  $account = user_load($user->uid);
   $form = array();
 
   // Make sure to load this after autocomplete.js
@@ -23,9 +25,6 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#attributes' => array('class' => array('chosen-widget')),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
-      'event' => 'change',
-      'wrapper' => 'user-wrapper',
-      'method' => 'replace',
     ),
     '#required' => TRUE,
   );
@@ -61,28 +60,30 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['user_wrapper'] = array('#prefix' => '<div id="user-wrapper">', '#suffix' => '</div>');
+  $see_others = sbac_report_select_other_users($account);
+  $name_value = sbac_user_format_username($user);
+  $form['sne'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Choose a Contributor or Reviewer'),
+    '#autocomplete_path' => 'sne/autocomplete',
+    '#required' => TRUE,
+    '#size' => 30,
+    '#disabled' => !$see_others,
+    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'name') : $name_value,
+    '#attributes' => array('aria-required' => "true"),
+  );
 
-  if (isset($form_state['values']['state']) && !in_array('all', $form_state['values']['state'])) {
-    foreach ($form_state['values']['state'] as $tid) {
-      $uids = sbac_forum_get_state_users($tid);
-      $state_users = array();
-      foreach ($uids as $uid) {
-        $user = user_load($uid->uid);
-        $user_name = sbac_user_format_username($user);
-        $state_users[$uid->uid] = $user_name;
-      }
-    }
-    asort($state_users);
-    if ($state_users) {
-      $form['user_wrapper']['specific_user'] = array(
-        '#type' => 'select',
-        '#title' => t('Choose a contributor or reviewer'),
-        '#options' => $state_users,
-        '#multiple' => TRUE,
-      );
-    }
-  }
+  // Hidden field to store the selected uid.
+  // When the autocomplete suggetion is selected,
+  // the uid value will be set here.
+  // @see sbac_report.js
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'uid') : $user->uid,
+    '#attributes' => array(
+      'id' => 'sne-uid-field',
+    ),
+  );
 
   $date_options = sbac_report_date_range_options();
   $session_date_range = sbac_report_get_session_value('date_range', 'range');
@@ -141,10 +142,13 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     $_SESSION['sbac_report']['state']['tid'] = $form_state['values']['state'];
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
+    $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
+    $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
   }
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range1', 'range');
   $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
+  $individual = sbac_report_get_session_value('sne', 'uid');
 
   if (count($user_groups) == 0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
@@ -153,13 +157,11 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   }
 
   $users = get_users_for_user_groups($state_tid, $user_groups);
-  // Override user groups if specific users are selected
-  if (isset($form_state['values']['specific_user'])) {
+  // Override user groups if specific user is selected
+  if (isset($individual)) {
     $users = array();
-    foreach ($form_state['values']['specific_user'] as $specific_user) {
-      $user_obj = user_load($specific_user);
-      $users[$user_obj->uid] = $user_obj;
-    }
+    $user_obj = user_load($individual);
+    $users[$user_obj->uid] = $user_obj;
   }
   if ($users) {
     batch_set(array(

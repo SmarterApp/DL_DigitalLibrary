@@ -752,7 +752,22 @@ function sbac_report_sne_autocomplete($string = '') {
     // Do nothing
   }
   elseif (!empty($state_tid)) {
-    $query->condition('s.field_state_tid', $state_tid);
+    // Add array support for user activity report form
+    if (is_array($state_tid)) {
+      if (count($state_tid > 1)) {
+        $or = db_or();
+        foreach ($state_tid as $tid) {
+          $or->condition('s.field_state_tid', $tid);
+        }
+        $query->condition($or);
+      }
+      else {
+        $query->condition('s.field_state_tid', $tid);
+      }
+    }
+    else {
+      $query->condition('s.field_state_tid', $state_tid);
+    }
   }
   else {
     $matches['none'] = t('Please select a state');
