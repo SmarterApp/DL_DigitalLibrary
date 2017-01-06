@@ -36606,3 +36606,44 @@ form#sbac-user-filter-form #edit-email {
 .state-image-hidden .field-name-field-state-or-district-image {
   display: none;
 }
+
+/* Reports css */
+.report-form-container .form-item-user {
+    width: 30%;
+    float: left;
+    margin-right: 10px;
+    padding-right: 20px;
+    margin-top: 0;
+}
+
+.page-reports #resource_states .results-summary {
+  width: 100%;
+}
+
+.page-reports #resource_states .results-summary tr th {
+  background-color: #F2F2F2;
+  font-size: 13px;
+  padding: 10px;
+  color: #464B54;
+  line-height: 1.5;
+  width: 50%;
+}
+
+.page-reports #resource_states .results-summary tr td {
+  background-color: #FFFFFF;
+  background-image: none;
+  border: 1px solid #ccc;
+  text-align: center;
+  width: 50%;
+}
+
+.page-reports #resource_states .results-summary .attribute {
+  background-color: #F2F2F2;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 22px;
+  margin-right: 7px;
+  margin-top: 7px;
+  padding: 0 5px;
+}

@@ -18,6 +18,7 @@ function sbac_report_individual() {
   $uid = sbac_report_get_session_value('sne', 'uid');
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range', 'range');
+  $resource_output = sbac_report_get_session_value('resource_output', 'output');
 
   $error_message = '';
   if (isset($_SESSION['sbac_report']['error_message'])) {
@@ -95,9 +96,13 @@ function sbac_report_individual() {
     )
   );
 
+  if ($resource_output) {
+    $resource_summaries = theme('sbac_report_resource_summaries', array('resource_output' => $resource_output));
+  }
   $csv_form2 = drupal_get_form('sbac_csv_report_resource_stats_form');
   $csv_resource_stats_tab = theme('sbac_csv_report_resource_stats', array(
       'form' => $csv_form2,
+      'resource_summaries' => $resource_summaries,
     )
   );
 

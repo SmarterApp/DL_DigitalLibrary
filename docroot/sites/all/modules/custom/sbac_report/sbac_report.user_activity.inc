@@ -62,15 +62,13 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 
   $see_others = sbac_report_select_other_users($account);
   $name_value = sbac_user_format_username($user);
-  $form['sne'] = array(
+  $form['user'] = array(
     '#type' => 'textfield',
     '#title' => t('Choose a Contributor or Reviewer'),
     '#autocomplete_path' => 'sne/autocomplete',
-    '#required' => TRUE,
     '#size' => 30,
     '#disabled' => !$see_others,
-    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'name') : $name_value,
-    '#attributes' => array('aria-required' => "true"),
+    '#default_value' => $see_others ? sbac_report_get_session_value('user', 'name') : $name_value,
   );
 
   // Hidden field to store the selected uid.
@@ -79,9 +77,9 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
   // @see sbac_report.js
   $form['uid'] = array(
     '#type' => 'hidden',
-    '#default_value' => $see_others ? sbac_report_get_session_value('sne', 'uid') : $user->uid,
+    '#default_value' => $see_others ? sbac_report_get_session_value('user', 'uid') : $user->uid,
     '#attributes' => array(
-      'id' => 'sne-uid-field',
+      'id' => 'uid-field',
     ),
   );
 
