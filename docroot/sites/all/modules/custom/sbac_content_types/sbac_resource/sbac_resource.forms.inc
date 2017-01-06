@@ -1186,11 +1186,11 @@ function sbac_resource_modal_callback($alignment_type = FALSE, $js = FALSE) {
     ), 'setting');
     $output = array();
     $output[] = ctools_modal_command_dismiss();
-    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view', theme('status_messages'));
-    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+//    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view', theme('status_messages'));
+//    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
-    $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
+    $output[] = ctools_modal_command_display('Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
 
     print ajax_render($output);
     exit();
@@ -1421,7 +1421,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                       message_delete_multiple(array($message->mid));
                     }
                   }
-                }       
+                }
               }
             }
             else {
@@ -1866,7 +1866,7 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
 
   // Remove Playlist form option for non-SLT's
   $is_slt  = sbac_report_is_slt($user);
-  
+
   if (!$is_slt && !in_array('administrator', $user->roles)) {
     unset($form['field_focus'][LANGUAGE_NONE]['#options']['78306']);
   }
@@ -1878,10 +1878,10 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
                       <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button><button class="button right secondary close-reveal-modal">Cancel</button>   
                     </div>',
       '#prefix' => '<div id="playlist-modal-container" class="reveal-modal">',
-      '#suffix' => '</div>'        
+      '#suffix' => '</div>'
     );
     $form['#group_children']['playlist_modal'] = 'group_basic';
-    
+
   }
 
   // Connection to FAP
@@ -1908,6 +1908,17 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     unset($form['field_grades']['und']['#options']['_none']);
   }
 
+  $terms = [];
+  if (isset($form['#node']->nid)) {
+    foreach ($form['#node']->field_alignment_term[LANGUAGE_NONE] as $fat) {
+      $terms[] = $fat['tid'];
+    }
+    foreach ($form['#node']->field_target_term[LANGUAGE_NONE] as $ftt) {
+      $terms[] = $ftt['tid'];
+    }
+  }
+  $tables = _sbac_alignment_table_builder(array(), $terms, SBAC_ALIGNMENT_VOCAB_NAME);
+
   // CC Alignment Container Start
   $form['alignment_tag_container'] = array(
     '#markup' => '<div id="alignment-tag-container">',
@@ -1933,7 +1944,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Alignment View -> The initial load of the form does not have an nid.
   if (isset($form['#node']->nid)) {
     $form['alignment_tag_view'] = array(
-      '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
+      '#markup' => $tables[SBAC_ALIGNMENT_VOCAB_NAME],
       '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
       '#suffix' => '</div>',
       '#weight' => 22.3,
@@ -1982,8 +1993,8 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Alignment View -> The initial load of the form does not have an nid.
   if (isset($form['#node']->nid)) {
     $form['target_tag_view'] = array(
-      '#markup' => views_embed_view('target', 'resource_admin_view', $form['#node']->nid),
-      '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
+      '#markup' => $tables[SBAC_ALIGNMENT_TARGET_VOCAB_NAME],
+      '#prefix' => '<div id="sbac-resource-target-tag-view">',
       '#suffix' => '</div>',
       '#weight' => 23.3,
     );
@@ -2030,9 +2041,9 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   sbac_media_widget_form_element($form, $form_state);
   global $user;
 
-  // Add Playlist template to Materials help text for SLTs 
+  // Add Playlist template to Materials help text for SLTs
   $is_slt  = sbac_report_is_slt($user);
-   
+
   if ($is_slt || in_array('administrator', $user->roles)) {
     drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.playlist.form.js');
   }
@@ -2904,6 +2915,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_unique_downloads']['#access'] = FALSE;
   $form['field_node_avg_rating']['#access'] = FALSE;
   $form['field_alignment_term']['#access'] = FALSE;
+  $form['field_target_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
   $form['field_resource_state']['#access'] = FALSE;
