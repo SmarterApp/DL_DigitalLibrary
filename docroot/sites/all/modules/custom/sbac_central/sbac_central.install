@@ -1289,6 +1289,14 @@ function sbac_central_update_7104() {
   module_enable($modules);
 }
 
+function sbac_central_update_7105() {
+  $terms = taxonomy_get_term_by_name('Needs Posting', 'resource_states');
+  $term = reset($terms);
+  $term->name = 'Needs Arbitration';
+  taxonomy_term_save($term);
+  return t('"Needs Posting" updated to "Needs Arbitration"');
+}
+
 /**
  * Impliments hook_uninstall().
  */

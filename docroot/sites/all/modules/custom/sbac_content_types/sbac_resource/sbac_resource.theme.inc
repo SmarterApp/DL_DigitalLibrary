@@ -1322,13 +1322,13 @@ function _sbac_resource_resource_review_links($fields, $row) {
       $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title']);
       $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
       $variables['links'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title'], 'link');
-      $variables['text'] = t('Needs Posting');
+      $variables['text'] = t('Needs Arbitration');
     } elseif ($feedback->post_started && !$feedback->post_finished) {
       $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
       $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
       $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
       $variables['links'][] = l('Continue Review', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
-      $variables['text'] = t('Posting In Process');
+      $variables['text'] = t('Arbitration In Process');
     }
   }
   return $variables;
@@ -1436,7 +1436,6 @@ function _sbac_resource_start_review_link($nid, $type, $title, $style = 'button'
   }
   elseif ($type == 'post') {
     $stub = 'post';
-    $link_text = t('Post');
   }
   else {
     return '';
