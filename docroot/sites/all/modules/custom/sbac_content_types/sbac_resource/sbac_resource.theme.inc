@@ -1436,7 +1436,6 @@ function _sbac_resource_start_review_link($nid, $type, $title, $style = 'button'
   }
   elseif ($type == 'post') {
     $stub = 'post';
-    $link_text = t('Post');
   }
   else {
     return '';
