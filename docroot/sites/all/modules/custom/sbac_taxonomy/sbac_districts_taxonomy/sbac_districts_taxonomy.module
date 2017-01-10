@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Districts Taxonomy feature.
+ */
+
+include_once 'sbac_districts_taxonomy.features.inc';

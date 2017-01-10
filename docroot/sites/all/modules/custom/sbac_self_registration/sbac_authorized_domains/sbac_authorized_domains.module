@@ -1,0 +1,394 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Share feature.
+ */
+
+include_once 'sbac_authorized_domains.features.inc';
+
+
+/**
+ * Extends hook_menu().
+ */
+function sbac_authorized_domains_menu() {
+  $entity_type = entity_type_load('authorized_domains');
+  $bundle = bundle_load('authorized_domains', 'authorized_domains');
+
+  $entity = entity_create($entity_type->name, array('type' => $bundle->name));
+
+  $items = array();
+
+  $items['admin/sbac/authorized-domains'] = array(
+    'title' => 'Domain Configuration',
+    'page callback' => 'sbac_authorized_domains_configuration',
+    'access arguments' => array('administer authorized domains'),
+    'file' => 'sbac_authorized_domains.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/sbac/authorized-domains/add'] = array(
+    'title' => 'Add Authorized Domain',
+    'page callback' => 'sbac_authorized_domains_title_fix',
+    'page arguments' => array('eck__entity__form_add_authorized_domains_authorized_domains', 'Add Authorized Domain', $entity),
+    'access arguments' => array('administer authorized domains'),
+    'weight' => -3,
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  $items['admin/sbac/authorized-domains/domain-log'] = array(
+    'title' => 'Unauthorized Domain Audit Log',
+    'page callback' => 'sbac_authorized_domains_title_fix',
+    'page arguments' => array('sbac_authorized_domains_log_form', 'Unauthorized Domain Audit Log'),
+    'access arguments' => array('administer authorized domains'),
+    'weight' => -1,
+    'file' => 'sbac_authorized_domains.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/sbac/authorized-domains/import-domains'] = array(
+    'title' => 'Import Domains',
+    'page callback' => 'sbac_authorized_domains_title_fix',
+    'page arguments' => array('sbac_authorized_domains_import_domains_form', 'Import Domains'),
+    'access arguments' => array('administer authorized domains'),
+    'weight' => -2,
+    'file' => 'sbac_authorized_domains.admin.inc',
+    'type' => MENU_LOCAL_ACTION,
+  );
+  
+  $items['admin/sbac/authorized-domains/get_districts_json'] = array(
+    'page callback' => 'sbac_authorized_domains_json_output',
+    'access arguments' => array('administer authorized domains'),
+    'file' => 'sbac_authorized_domains.admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function sbac_authorized_domains_permission() {
+  return array(
+    'administer authorized domains' => array(
+      'title' => t('Administer Authorized SBAC Domains'),
+      'description' => t('Allow users to administer the list of domains that are authorized to sign up for the Digital Library.')
+    )
+  );
+}
+
+/**
+ * Modify entity page title
+ * @param array $form
+ * @param string $title
+ * @param array $entity
+ * @return If entity = true, return form array and entity array; else entity = false, return form array
+ */
+function sbac_authorized_domains_title_fix($form, $title, $entity=FALSE) {
+  drupal_set_title($title);
+  if ($entity) {
+    return drupal_get_form($form, $entity);
+  } else {
+    return drupal_get_form($form);
+  }
+}
+
+/**
+ * Submission method when making changes in Add Authorized Domain and redirecting to sbac_authorized_domains_add_form_submit_fix
+ * @param array $form All form elements that are contained in Add Authorized Domain
+ * @param array $form_state All form functions that are contained in Add Authorized Domain
+ */
+function sbac_authorized_domains_form_eck__entity__form_add_authorized_domains_authorized_domains_alter(&$form, &$form_state) {
+  $form['submit']['#value'] = t('Save');
+  $form['#submit'][] = 'sbac_authorized_domains_add_form_submit_fix';
+  $form['#validate'][] = 'sbac_authorized_domains_add_form_validate_duplicate';
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains.js';
+}
+
+/**
+ * Submission method when editing authorized domains and redirecting to sbac_authorized_domains_edit_form_validate_duplicate
+ * @param array $form All form elements that are contained in Edit Authorized Domain
+ * @param array $form_state All form functions that are contained in Edit Authorized Domain
+ */
+function sbac_authorized_domains_form_eck__entity__form_edit_authorized_domains_authorized_domains_alter(&$form, &$form_state) {
+  $form['submit']['#value'] = t('Save');
+  $form['#submit'][] = 'sbac_authorized_domains_add_form_submit_fix';
+  $form['#validate'][] = 'sbac_authorized_domains_edit_form_validate_duplicate';
+  $form['#attached']['js'][] = drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains.js';
+}
+
+/**
+ * Display message and redirecting page after adding authorized domain
+ * @param array $form All form elements that are contained in Add Authorized Domain
+ * @param array $form_state All form functions that are contained in Add Authorized Domain
+ */
+function sbac_authorized_domains_add_form_submit_fix($form, &$form_state) {
+  $name = $form_state['values']['entity']->field_domain[LANGUAGE_NONE][0]['value'];
+  drupal_get_messages('status');
+  drupal_set_message(t('Domain @name has been saved.', array('@name' => $name)));
+  $form_state['redirect'] = 'admin/sbac/authorized-domains/authorized';
+}
+
+/**
+ * Authentication method when adding authorized domain
+ * @param array $form All form elements that are contained in Add Authorized Domain
+ * @param array $form_state All form functions that are contained in Add Authorized Domain
+ */
+function sbac_authorized_domains_add_form_validate_duplicate(&$form, &$form_state) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'authorized_domains')
+    ->entityCondition('bundle', 'authorized_domains')
+    ->fieldCondition('field_domain', 'value', $form_state['values']['field_domain'][LANGUAGE_NONE][0]['value'], '=');
+  $result = $query->execute();
+
+  if (isset($result['authorized_domains']) && count($result['authorized_domains']) > 0) {
+    form_set_error('field_domain', 'This domain already exists in the system.');
+  }
+}
+
+/**
+ * Validation when editing authorized domains
+ * @param array $form All form elements that are contained in Edit Authorized Domain
+ * @param array $form_state All form functions that are contained in Edit Authorized Domain
+ */
+function sbac_authorized_domains_edit_form_validate_duplicate(&$form, &$form_state) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'authorized_domains')
+    ->entityCondition('bundle', 'authorized_domains')
+    ->fieldCondition('field_domain', 'value', $form_state['values']['field_domain'][LANGUAGE_NONE][0]['value'], '=')
+    ->propertyCondition('id', $form_state['values']['entity']->id, '!=');
+  $result = $query->execute();
+
+  if (isset($result['authorized_domains']) && count($result['authorized_domains']) > 0) {
+    form_set_error('field_domain', 'This domain already exists in the system.');
+  }
+}
+
+/**
+ * Delete authorized domain and redirect to sbac_authorized_domains_eck_delete_fix
+ * @param array $form All form elements that are contained in Delete Authorized Domain
+ * @param array $form_state All form functions that are contained in Delete Authorized Domain
+ * @param array $form_id Obtain the entity ID
+ */
+function sbac_authorized_domains_form_eck__entity__delete_form_alter(&$form, &$form_state, $form_id) {
+  $name = $form['entity']['#value']->field_domain[LANGUAGE_NONE][0]['value'];
+  drupal_set_title(t("Are you sure that you want to delete @name?", array('@name' => $name)));
+  $form['#submit'] = array('sbac_authorized_domains_eck_delete_fix');
+}
+
+/**
+ * Display message after deleting authorized domain
+ * @param array $form All form elements that are contained in Delete Authorized Domain
+ * @param array $form_state All form functions that are contained in Delete Authorized Domain
+ */
+function sbac_authorized_domains_eck_delete_fix($form, &$form_state) {
+  $entity = $form_state['values']['entity'];
+  $name = $entity->field_domain[LANGUAGE_NONE][0]['value'];
+  $entity_type = $form_state['values']['entity_type'];
+  $bundle = $form_state['values']['bundle'];
+  $submit_redirect = $form_state['values']['submit_redirect'];
+
+  $entity->delete();
+
+  drupal_set_message(t('Domain @name has been deleted.', array('@name' => $name)));
+
+  // Ok, lets delete the entity
+  $form_state['redirect'] = $submit_redirect;
+}
+
+/**
+ * Validation of CSV file by lines when importing authorized domains
+ * @param array $line Parsing CSV import data in each row
+ * @param array $context Contents of the output
+ */
+function _sbac_authorized_domains_import_line($line, &$context) {
+  global $user;
+  if (!isset($context['results']['rows_imported'])) {
+    $context['results']['rows_imported'] = 0;
+  }
+  if (!isset($context['results']['new'])) {
+    $context['results']['new'] = 0;
+  }
+  if (!isset($context['results']['updated'])) {
+    $context['results']['updated'] = 0;
+  }
+  if (!isset($context['results']['errors'])) {
+    $context['results']['errors'] = array();
+  }
+
+  $context['results']['rows_imported']++;
+  $line = array_map('base64_decode', $line);
+  $domain = $line[0];
+  if ($domain == ''){
+      $domain = FALSE;
+      $context['results']['errors'][] = t("Import of line @num failed as the domain doesn't exist.", array('@num' => $context['results']['rows_imported']));
+  }
+  $state = $line[1];
+  $district = $line[2];
+
+  $context['message'] = t('Importing row !c', array( '!c' => $context['results']['rows_imported'] ));
+
+  $state_terms = taxonomy_get_term_by_name($state, 'states');
+  if (count($state_terms)) {
+    $tids = array_keys($state_terms);
+    $state_tid = $tids[0];
+  } else {
+    $state_tid = FALSE;
+    $context['results']['errors'][] = t("Import of line @num failed as the state doesn't exist.", array('@num' => $context['results']['rows_imported']));
+  }
+
+  $district_vocab = taxonomy_vocabulary_machine_name_load('districts');
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->propertyCondition('vid', $district_vocab->vid, '=')
+    ->fieldCondition('field_district_id', 'value', $district, '=')
+    ->fieldCondition('field_domain_state', 'tid', $state_tid, '=');
+  $district_terms = $query->execute();
+
+  if (isset($district_terms['taxonomy_term']) && count($district_terms['taxonomy_term']) > 0) {
+    $tids = array_keys($district_terms['taxonomy_term']);
+    $district_tid = $tids[0];
+    $district_term = taxonomy_term_load($district_tid);
+    $district_state_id = $district_term->field_domain_state[LANGUAGE_NONE][0]['tid'];
+  } else {
+    $district_tid = FALSE;
+    $context['results']['errors'][] = t("Import of line @num failed as the district doesn't exist.", array('@num' => $context['results']['rows_imported']));
+  }
+  if ($domain && $state_tid && $district_tid) {
+    if($state_tid == $district_state_id) {
+        try {
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type', 'authorized_domains')
+            ->entityCondition('bundle', 'authorized_domains')
+            ->fieldCondition('field_domain', 'value', $domain, '=');
+            $result = $query->execute();
+        
+            if (isset($result['authorized_domains']) && count($result['authorized_domains']) > 0) {
+                $entities = array_keys($result['authorized_domains']);
+                $entity_id = $entities[0];
+                $entity = entity_load_single('authorized_domains', $entity_id);
+                $wrapper = entity_metadata_wrapper('authorized_domains', $entity);
+                $wrapper->field_district->set($district_tid);
+                $wrapper->field_domain_state->set($state_tid);
+                $wrapper->save();
+                $context['results']['updated']++;
+            } else {
+                $entity = entity_create('authorized_domains', array('type' => 'authorized_domains'));
+                $wrapper = entity_metadata_wrapper('authorized_domains', $entity);
+                $wrapper->field_district->set($district_tid);
+                $wrapper->field_domain_state->set($state_tid);
+                $wrapper->field_domain->set($domain);
+                $wrapper->save();
+                $context['results']['new']++;
+            }
+        } catch (Exception $e) {
+            $context['results']['errors'][] = t('Line @num had the error: @error', array('@num' => $context['results']['rows_imported'], '@error' => $e->getMessage()));
+        }
+    } else {
+        $context['results']['errors'][] = t("Import of line @num failed as the district is not associated with the state.", array('@num' => $context['results']['rows_imported']));
+    }
+  }
+}
+
+/**
+ * Progress bar and redirecting page when importing authorized domains
+ * @param array $success
+ * @param array $results The import result messages
+ * @param array $operations
+ */
+function sbac_authorized_domains_import_finished($success, $results, $operations) {
+  $errors = count($results['errors']);
+
+  drupal_set_message(t('Import of @imported domains successful:</br>@new new domains created</br>@updated domains updated',
+    array('@imported' => $results['rows_imported'], '@new' => $results['new'], '@updated' => $results['updated'])));
+  if ($errors) {
+    $error_list = '<ul>';
+    foreach ($results['errors'] as $error) {
+      $error_list .= '<li>' . $error . '</li>';
+    }
+    $error_list .= '</ul>';
+    drupal_set_message(t('The following errors occurred during import: !list', array('!list' => $error_list)));
+  }
+  drupal_goto('/admin/sbac/authorized-domains');
+}
+
+/**
+ * Get and save state and district info through ART_API in cron job
+ */
+function sbac_authorized_domains_cron() {
+  $queue = DrupalQueue::get('district_import');
+
+  $states_json = sbac_art_api_get_states(FALSE);
+
+  for ($i = 0; $i < count($states_json); $i++){
+    $state_id = $states_json[$i]['entityId'];
+    $state_name = sbac_self_registration_state_convert($state_id, TRUE);
+    $state_terms = taxonomy_get_term_by_name($state_name, 'states');
+    if (count($state_terms)) {
+      $tids = array_keys($state_terms);
+      $state_tid = $tids[0];
+
+      $districts_json = sbac_art_api_get_districts($state_id, FALSE);
+      for ($x = 0; $x < count($districts_json); $x++) {
+        $district_id = $districts_json[$x]['entityId'];
+        $district_name = $districts_json[$x]['entityName'];
+
+        $data = array(
+          'state_tid' => $state_tid,
+          'district_id' => $district_id,
+          'district_name' => $district_name,
+        );
+
+        $queue->createItem($data);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_cron_queue_info().
+ * @return array queues
+ */
+function sbac_authorized_domains_cron_queue_info() {
+  $queues = array();
+  $queues['district_import'] = array(
+    'worker callback' => 'sbac_authorized_domains_import_district',
+    'time' => 60,
+  );
+  return $queues;
+}
+
+/**
+ * Save data to Digital Library DB when getting info by ART_API
+ * @param array $data Access to the imported data
+ */
+function sbac_authorized_domains_import_district($data) {
+  $district_vocab = taxonomy_vocabulary_machine_name_load('districts');
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->propertyCondition('vid', $district_vocab->vid, '=')
+    ->fieldCondition('field_district_id', 'value', $data['district_id'], '=')
+    ->fieldCondition('field_domain_state', 'tid', $data['state_tid'], '=');
+  $result = $query->execute();
+
+  if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) > 0) {
+    $entities = array_keys($result['taxonomy_term']);
+    $entity_id = $entities[0];
+    $entity = entity_load_single('taxonomy_term', $entity_id);
+    $wrapper = entity_metadata_wrapper('taxonomy_term', $entity);
+    $wrapper->name->set($data['district_name']);
+    $wrapper->field_domain_state->set($data['state_tid']);
+    $wrapper->save();
+  } else {
+    $term = new stdClass();
+    $term->name = $data['district_name'];
+    $term->vid = $district_vocab->vid;
+    $term->parent = 0;
+    taxonomy_term_save($term);
+    $wrapper = entity_metadata_wrapper('taxonomy_term', $term);
+    $wrapper->field_domain_state->set($data['state_tid']);
+    $wrapper->field_district_id->set($data['district_id']);
+    $wrapper->save();
+  }
+}
