@@ -664,7 +664,7 @@ function sbac_search_my_resources_categories() {
   $allowed_states = array(
     'draft' => 'Draft',
     'submitted' => 'Submitted',
-    'gk' => 'Gate-Keeping Review',
+    'gk' => 'Gatekeeping Review',
     'qc' => 'Quality Criteria Review',
     'artbitration' => 'Arbitration Review',
     'returned' => 'Returned',
