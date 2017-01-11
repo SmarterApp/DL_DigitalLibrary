@@ -159,7 +159,12 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   if (isset($individual)) {
     $users = array();
     $user_obj = user_load($individual);
-    $users[$user_obj->uid] = $user_obj;
+    $dates = explode('--', $date_range);
+    $from_date = strtotime($dates[0]);
+    // Only process user if last login is after date range "from date"
+    if ($user_obj->login > $from_date) {
+      $users[$user_obj->uid] = $user_obj;
+    }
   }
   if ($users) {
     batch_set(array(
