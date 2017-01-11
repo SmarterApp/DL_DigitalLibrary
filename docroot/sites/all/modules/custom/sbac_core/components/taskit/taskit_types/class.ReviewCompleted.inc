@@ -19,7 +19,7 @@ class ReviewCompleted extends \taskit\sbac_core\BaseTask {
         $review_type = '';
         switch($feedback->type) {
           case 'gate_keeper':
-            $review_type = 'Gate-Keeping Review';
+            $review_type = 'Gatekeeping Review';
             break;
           case 'qc':
             $review_type = 'Quality Criteria Review';
