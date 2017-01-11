@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Module install and update functions for the Wordfilter module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function wordfilter_schema() {
+  $schema['wordfilter'] = array(
+    'description' => 'The {wordfilter} table stores user ids of users and other users that they have chosen to ignore.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The ID of the wordfilter word pair.',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'words' => array(
+        'description' => 'The word to filter.',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'replacement' => array(
+        'description' => 'The replacement word to filter with.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this word to filter.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'standalone' => array(
+        'description' => 'A boolean to indicate if the word filtering should only be done if the word is not part of another word.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function wordfilter_uninstall() {
+  variable_del('wordfilter_default_replacement');
+  variable_del('wordfilter_node_title');
+  variable_del('wordfilter_comment_title');
+}
+
+/**
+ * Implements hook_update_last_removed().
+ *
+ * So we don't need to update all the update function to dbtng.
+ */
+function wordfilter_update_last_removed() {
+  return 6100;
+}

@@ -1,0 +1,15 @@
+name = Append View
+description = "Views plugin to include (download) a view as a field."
+dependencies[] = views
+package = Views
+core = 7.x
+
+files[] = views_append_handler_append_view.inc
+
+
+; Information added by  packaging script on 2013-11-18
+version = "7.x-1.3"
+core = "7.x"
+project = "views_pdf"
+datestamp = "1384819110"
+

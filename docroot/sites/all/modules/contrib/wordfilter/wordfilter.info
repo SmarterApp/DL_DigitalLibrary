@@ -1,0 +1,6 @@
+name = Word Filter
+description = Replaces words inside posts with filtered versions.
+core = 7.x
+files[] = wordfilter.module
+files[] = wordfilter.install
+files[] = wordfilter.admin.inc
