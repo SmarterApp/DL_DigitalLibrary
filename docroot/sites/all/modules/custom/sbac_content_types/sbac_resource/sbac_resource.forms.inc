@@ -1944,7 +1944,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Alignment View -> The initial load of the form does not have an nid.
   if (isset($form['#node']->nid)) {
     $form['alignment_tag_view'] = array(
-      '#markup' => $tables[SBAC_ALIGNMENT_VOCAB_NAME],
+      '#markup' => $tables['ccss_html'],
       '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
       '#suffix' => '</div>',
       '#weight' => 22.3,
@@ -1993,7 +1993,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Alignment View -> The initial load of the form does not have an nid.
   if (isset($form['#node']->nid)) {
     $form['target_tag_view'] = array(
-      '#markup' => $tables[SBAC_ALIGNMENT_TARGET_VOCAB_NAME],
+      '#markup' => $tables['target_html'],
       '#prefix' => '<div id="sbac-resource-target-tag-view">',
       '#suffix' => '</div>',
       '#weight' => 23.3,

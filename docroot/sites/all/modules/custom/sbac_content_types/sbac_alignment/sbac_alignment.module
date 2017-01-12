@@ -491,7 +491,7 @@ function sbac_alignment_form_submit_handler(&$form, &$form_state) {
 
 function _sbac_alignment_get_alignment_unique($tid) {
   $term = taxonomy_term_load($tid);
-  return $term['field_alignment_crosswalk'][LANGUAGE_NONE][0]['value'];
+  return $term->field_alignment_crosswalk[LANGUAGE_NONE][0]['value'];
 }
 
 function _sbac_alignment_child_lookup($alignment_type, $id) {
