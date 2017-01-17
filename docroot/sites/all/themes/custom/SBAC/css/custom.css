@@ -36622,3 +36622,10 @@ form#sbac-user-filter-form #edit-email {
 .page-forums-term .sbac-alert-box {
   margin-bottom: 35px;
 }
+
+/* Role edit CSS */
+#edit-roles .form-item-roles-22,
+#edit-roles .form-item-roles-26,
+#edit-roles .form-item-roles-31 {
+  display: none;
+}
