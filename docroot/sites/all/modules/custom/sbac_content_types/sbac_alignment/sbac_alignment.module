@@ -530,7 +530,7 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE) {
     $level_title = "Domain";
   }
   // Get the standard name from the term
-  $name = $term->name;
+  $name = $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'];
   // Build the id/name based on the parent/child state and the tid
   $id = "-$tid";
   if ($indent) {
