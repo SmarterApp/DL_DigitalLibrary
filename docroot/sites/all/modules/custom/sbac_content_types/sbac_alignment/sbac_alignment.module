@@ -489,20 +489,16 @@ function sbac_alignment_form_submit_handler(&$form, &$form_state) {
   }
 }
 
-function _sbac_alignment_get_alignment_unique($tid) {
-  $term = taxonomy_term_load($tid);
-  return $term->field_alignment_crosswalk[LANGUAGE_NONE][0]['value'];
-}
-
 function _sbac_alignment_child_lookup($alignment_type, $id) {
+  // Get the vocab we are going to look through
   $vocab = taxonomy_vocabulary_machine_name_load($alignment_type);
-
+  // Do the query to find the related items
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'taxonomy_term')
     ->propertyCondition('vid', $vocab->vid, '=')
     ->fieldCondition('field_alignment_crosswalk', 'value', $id, '=');
   $result = $query->execute();
-
+  // If there were results, get the tids and return them
   $entities = array();
   if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) > 0) {
     $entities = array_keys($result['taxonomy_term']);
@@ -511,32 +507,37 @@ function _sbac_alignment_child_lookup($alignment_type, $id) {
   return $entities;
 }
 
-function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE) {
-  // load the term and get the subject, grade, and clam from its parents
+function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last = FALSE) {
+  // Load the term and get the subject, grade, and clam from its parents
   $term = taxonomy_term_load($tid);
   $parents = taxonomy_get_parents_all($tid);
   $subject = array_pop($parents);
-  $grade = array_pop($parents);
-  $pos = strpos($grade->name, ':');
-  if ($pos !== FALSE) {
-    $grade = substr($grade->name, $pos + 1);
+  if (strlen($subject->name) > 2) {
+    $subject_name = $subject->name;
+  } else {
+    $subject_name = $subject->field_alignment_shortname[LANGUAGE_NONE][0]['value'];
   }
+  $grade = array_pop($parents);
   $claim = array_pop($parents);
   // Get the publication from the term, and set the label for CC-ELA-v1
-  $publication = $term->field_alignment_publication['und'][0]['value'];
+  $publication = $term->field_alignment_publication[LANGUAGE_NONE][0]['value'];
   if ($publication == 'CC-ELA-v1') {
     $level_title = "Strand/Domain";
   } else {
     $level_title = "Domain";
   }
   // Get the standard name from the term
-  $name = $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'];
+  $name = '<span class="standard-name">' . $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'] . '</span>';
   // Build the id/name based on the parent/child state and the tid
   $id = "-$tid";
   if ($indent) {
-    $name = "&nbsp;&nbsp" . $name;
+    $row_class = 'standard-child';
+    if ($last) {
+      $row_class .= '-last';
+    }
     $id = 'standard-child' . $id;
   } else {
+    $row_class = 'standard-parent';
     $id = 'standard-parent' . $id;
   }
   // Mark the items as checked if it is selected
@@ -547,28 +548,31 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE) {
 
   // Return the row array
   return array(
-    $name,
-    "<div class=\"read-more\">
-        <a href=\"#\" title=\"Read More\" class=\"\"><i class=\"accessibility foundicon-eyeball\"></i><span>Read More</span></a>
-        <div class=\"more description-hover\">
-          <div class=\"description-content\">
-            <h2>" . $subject->name . "</h2>
-            <div class=\"standard-description\">
-              <h3>Standard Description</h3>
-              " . $term->description . "
-            </div>
-            <div class=\"standard-grade\">
-              <h3>Grade</h3>
-              " . $grade . "
-            </div>
-            <div class=\"standard-claim\">
-              <h3>" . $level_title . "</h3>
-              " . $claim->field_alignment_shortname['und'][0]['value'] . "
+    'data' => array(
+      $name,
+      "<div class=\"read-more\">
+          <a href=\"#\" title=\"Read More\" class=\"\"><i class=\"accessibility foundicon-eyeball\"></i><span>Read More</span></a>
+          <div class=\"more description-hover\">
+            <div class=\"description-content\">
+              <h2>" . $subject_name . "</h2>
+              <div class=\"standard-description\">
+                <h3>Standard Description</h3>
+                " . $term->description . "
+              </div>
+              <div class=\"standard-grade\">
+                <h3>Grade</h3>
+                " . ltrim($term->field_alignment_grade[LANGUAGE_NONE][0]['value'], '0') . "
+              </div>
+              <div class=\"standard-claim\">
+                <h3>" . $level_title . "</h3>
+                " . $claim->field_alignment_shortname[LANGUAGE_NONE][0]['value'] . "
+              </div>
             </div>
           </div>
-        </div>
-      </div>",
-    '<input type="checkbox" name="' . $id . '" id="' . $id . '" value="' . $tid . '"' . $checked . '/>',
+        </div>",
+      '<input type="checkbox" name="' . $id . '" id="' . $id . '" value="' . $tid . '"' . $checked . '/>',
+    ),
+    'class' => array($row_class),
   );
 }
 
@@ -577,8 +581,15 @@ function _sbac_alignment_build_table_rows($alignment_array) {
   // Go through the selected items and their children and add the rows for these
   foreach ($alignment_array as $tid => $info) {
     $rows[] = _sbac_alignment_build_table_row($tid, $info['selected']);
+    $x = 1;
+    $child_n = count($info['children']);
     foreach ($info['children'] as $cid => $child) {
-      $rows[] = _sbac_alignment_build_table_row($cid, $child['selected'], TRUE);
+      $last = TRUE;
+      if ($x < $child_n) {
+        $last = FALSE;
+      }
+      $x++;
+      $rows[] = _sbac_alignment_build_table_row($cid, $child['selected'], TRUE, $last);
     }
   }
   return $rows;
@@ -596,25 +607,51 @@ function _sbac_alignment_table_builder($new, $current, $main_alignment) {
     $terms = taxonomy_term_load_multiple($all_terms);
     // Load the vocabs
     $main_alignment_vocab = taxonomy_vocabulary_machine_name_load($main_alignment);
-    $other_alignment_vocab = taxonomy_vocabulary_machine_name_load($other_alignment);
+    // $other_alignment_vocab = taxonomy_vocabulary_machine_name_load($other_alignment);
     // Initialize the array of selected items
     $alignment_selection = array(SBAC_ALIGNMENT_VOCAB_NAME => array(), SBAC_ALIGNMENT_TARGET_VOCAB_NAME => array());
 
     // Build the tables with the current items (if any)
     foreach ($terms as $tid => $term) {
-      $current_alignment = $term->vid == $main_alignment_vocab->vid ? $main_alignment : $other_alignment;
+      if ($term->vid == $main_alignment_vocab->vid) {
+        $current_alignment = $main_alignment;
+        $current_other_alignment = $other_alignment;
+      } else {
+        $current_alignment = $other_alignment;
+        $current_other_alignment = $main_alignment;
+      }
       // Add the term and it's children
       // Get the unique value for this standard
-      $alignment_unique = _sbac_alignment_get_alignment_unique($tid);
+      $alignment_unique = $term->field_alignment_key[LANGUAGE_NONE][0]['value'];
       // Get the tids of the associated tags from the other standard
-      $children = _sbac_alignment_child_lookup($other_alignment, $alignment_unique);
+      $children = _sbac_alignment_child_lookup($current_other_alignment, $alignment_unique);
       // Go through each tid and add it with the proper selection state
       foreach ($children as $child) {
-        // Mark it as selected if this child was selected as a parent item, or if the current parent is new (we select by default)
+        // Mark this term as selected on both tables if this child was selected as a parent item, or if the current parent is new (we select by default)
         if (in_array($child, $current) || in_array($tid, $new)) {
           $alignment_selection[$current_alignment][$tid]['children'][$child]['selected'] = 1;
+          $alignment_selection[$current_other_alignment][$child]['selected'] = 1;
         } else {
           $alignment_selection[$current_alignment][$tid]['children'][$child]['selected'] = 0;
+          $alignment_selection[$current_other_alignment][$child]['selected'] = 0;
+        }
+        // Process the children on the other side
+        // Load the term if it isn't already loaded
+        if (!isset($terms[$child])) {
+          $cterm = taxonomy_term_load($child);
+        } else {
+          $cterm = $terms[$child];
+        }
+        // get the unique value and children tids for this child
+        $other_alignment_unique = $cterm->field_alignment_key[LANGUAGE_NONE][0]['value'];
+        $other_children = _sbac_alignment_child_lookup($current_alignment, $other_alignment_unique);
+        // Mark this child using the same logic as above
+        foreach ($other_children as $other_child) {
+          if (in_array($other_child, $current)) {
+            $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 1;
+          } else {
+            $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 0;
+          }
         }
       }
       // Mark this item as selected

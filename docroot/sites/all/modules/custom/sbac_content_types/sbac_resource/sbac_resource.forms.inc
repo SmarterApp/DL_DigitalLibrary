@@ -2012,7 +2012,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   }
   // Container End
   $form['target_tag_container_end'] = array(
-    '#markup' => '</div>',
+    '#markup' => '</div><div class="clearer"></div>',
     '#weight' => 23.5,
   );
   $form['#group_children']['target_tag_container_end'] = "group_summary";
@@ -2020,7 +2020,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
   // Connection to CCSS
-  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards'); // . ' ' . theme('form_required_marker');
+  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards');
   // Learning Goals
   $form['field_learning_goals']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   // Success Critieria
