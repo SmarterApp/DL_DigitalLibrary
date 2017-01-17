@@ -36,7 +36,7 @@ function sbac_alignment_taxonomy_default_vocabularies() {
       'name' => 'Target Alignment',
       'machine_name' => 'target_alignment',
       'description' => 'Target Alignment Tags',
-      'hierarchy' => 1,
+      'hierarchy' => 0,
       'module' => 'taxonomy',
       'weight' => 0,
       'rdf_mapping' => array(
