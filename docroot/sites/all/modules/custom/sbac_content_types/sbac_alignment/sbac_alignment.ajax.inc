@@ -183,9 +183,9 @@ function sbac_alignment_ajax_alignment_crud_callback() {
 
   // Output the tables as JSON
   drupal_json_output(_sbac_alignment_table_builder(
-    $json_input['new_standards'],
-    $json_input['current_standards'],
-    $json_input['alignment_type']
+    $json_input->new_standards,
+    $json_input->current_standards,
+    $json_input->alignment_type
   ));
 
 //  global $user;
