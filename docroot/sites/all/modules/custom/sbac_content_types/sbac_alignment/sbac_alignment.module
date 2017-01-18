@@ -529,7 +529,7 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last
   // Get the standard name from the term
   $alignment_vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
   if ($term->vid == $alignment_vocab->vid) {
-  $name = '<span class="standard-name">' . $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'] . '</span>';
+    $name = '<span class="standard-name">' . $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'] . '</span>';
   } else {
     $name = '<span class="standard-name">' . $term->field_alignment_key[LANGUAGE_NONE][0]['value'] . '</span>';
   }
@@ -575,7 +575,7 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last
             </div>
           </div>
         </div>",
-      '<input type="checkbox" name="' . $id . '" id="' . $id . '" value="' . $tid . '"' . $checked . '/>',
+      '<input type="checkbox" name="' . $id . '" id="' . $id . '" class="standard-check standard-' . $tid . '" value="' . $tid . '"' . $checked . '/>',
     ),
     'class' => array($row_class),
   );
@@ -600,7 +600,7 @@ function _sbac_alignment_build_table_rows($alignment_array) {
   return $rows;
 }
 
-function _sbac_alignment_table_builder($new, $current, $main_alignment) {
+function _sbac_alignment_table_builder($new, $current, $main_alignment, $select_all = FALSE) {
   $all_terms = array_merge($new, $current);
   if (count($all_terms)) {
     // Make sure we know what the other taxonomy type is
@@ -633,7 +633,7 @@ function _sbac_alignment_table_builder($new, $current, $main_alignment) {
       // Go through each tid and add it with the proper selection state
       foreach ($children as $child) {
         // Mark this term as selected on both tables if this child was selected as a parent item, or if the current parent is new (we select by default)
-        if (in_array($child, $current) || in_array($tid, $new)) {
+        if (in_array($child, $all_terms) || ($select_all && in_array($tid, $new))) {
           $alignment_selection[$current_alignment][$tid]['children'][$child]['selected'] = 1;
           $alignment_selection[$current_other_alignment][$child]['selected'] = 1;
         } else {
@@ -652,7 +652,7 @@ function _sbac_alignment_table_builder($new, $current, $main_alignment) {
         $other_children = _sbac_alignment_child_lookup($current_alignment, $other_alignment_unique);
         // Mark this child using the same logic as above
         foreach ($other_children as $other_child) {
-          if (in_array($other_child, $current)) {
+          if (in_array($other_child, $all_terms)) {
             $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 1;
           } else {
             $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 0;

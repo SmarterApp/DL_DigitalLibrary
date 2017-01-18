@@ -3,6 +3,61 @@
 
   Drupal.behaviors.sbac_alignment_everything = {
     attach: function (context, settings) {
+      // Handler for syncing the checkboxes and adding parents as needed
+      $('.standard-check').click(function (e) {
+        // Get the tid so we can check if the parent version of this tid exists
+        var tid = $(this).attr('value');
+        // Check to see if the parent exists, and if it does, just sync the checkboxes
+        var parent = $('#standard-parent-' + tid);
+        if (parent.length) {
+          // Get the classes for this checkbox, and then get the one that is standard-TID
+          var classes = $(this).attr('class').split(' ');
+          var checkClass = '';
+          $.each(classes, function (key, value) {
+            if (value.match(/^standard-\d+$/)) {
+              checkClass = '.' + value;
+            }
+          });
+          // Make all of the other checkboxes with this class match the checked status of this one
+          $(checkClass).prop('checked', $(this).prop('checked'));
+        } else {
+          // Use the parent container to figure out the standard type
+          var alignment = 'education_alignment';
+          if ($(this).parents('#target-tag-container').length) {
+            alignment = 'target_alignment';
+          }
+          // If the parent doesn't already exist, we add it as a new item, and rebuild the tables
+          var currentStandards = [];
+          // For each item already selected on the page, add them to the array
+          $('input:checkbox[id*=standard-parent-]:checked').each(function () {
+            var id = $(this).attr('id').split('-')[2];
+            currentStandards.push(id);
+          });
+
+          // Function for adding the selected items to the page and closing the modal
+          var updateTables = function (data) {
+            $('#sbac-resource-alignment-tag-view').html(data.ccss_html);
+            $('#sbac-resource-target-tag-view').html(data.target_html);
+
+            Drupal.attachBehaviors('.standard-check');
+          };
+
+          // Call the helper AJAX function to build the tables of standards
+          $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/ajax-alignment-crud',
+            success: updateTables,
+            data: JSON.stringify({
+              'alignment_type': alignment,
+              'new_standards': [tid],
+              'current_standards': currentStandards,
+              'select_all': false
+            })
+          });
+        }
+      });
+
       $('#modal-content').addClass('alignment-container-no-scroll');
 
       // Close the open modal content and backdrop
@@ -84,7 +139,7 @@
                   });
 
                   var currentStandards = [];
-                  //For each item already selected on the page, add them to the array
+                  // For each item already selected on the page, add them to the array
                   $('input:checkbox[id*=standard-parent-]:checked').each(function () {
                     var id = $(this).attr('id').split('-')[2];
                     currentStandards.push(id);
@@ -94,15 +149,13 @@
                   if (newStandards.length) {
                     // Function for adding the selected items to the page and closing the modal
                     var closeModal = function (data) {
-                      var obj = jQuery.parseJSON(data);
-
                       //settings.sbac_alignment_everything.selection = obj.selection;
 
-                      $('#sbac-resource-alignment-tag-view').html(obj.ccss_html);
-                      $('#sbac-resource-target-tag-view').html(obj.target_html);
+                      $('#sbac-resource-alignment-tag-view').html(data.ccss_html);
+                      $('#sbac-resource-target-tag-view').html(data.target_html);
                       closeCtoolsModal();
 
-                      Drupal.attachBehaviors('.alignment-toggle');
+                      Drupal.attachBehaviors('.standard-check');
                     };
 
                     // Call the helper AJAX function to build the tables of standards
@@ -114,7 +167,8 @@
                       data: JSON.stringify({
                         'alignment_type': settings.sbac_alignment_everything.type,
                         'new_standards': newStandards,
-                        'current_standards': currentStandards
+                        'current_standards': currentStandards,
+                        'select_all': true
                       })
                     });
                   }
