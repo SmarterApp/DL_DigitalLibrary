@@ -709,6 +709,12 @@ function sbac_preprocess_page(&$variables) {
       $variables['goals']['resources_posted'][] = $posted_tooltip;
     }
   }
+  // Kill Search block for webform pages
+  if (isset($variables['node'])) {
+    if (isset($variables['page']['search']) && $variables['node']->type == 'webform') {
+      unset($variables['page']['search']);
+    }
+  }
 }
 /**
  * Preprocess function for views view

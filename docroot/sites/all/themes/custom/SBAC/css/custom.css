@@ -36252,6 +36252,7 @@ form#sbac-user-filter-form #edit-email {
 
 #sbac-goals-report-form {
   width: 26%;
+  position: relative;
   border: 1px solid #ddd;
   border-radius: 5px;
   float: right;
@@ -36276,6 +36277,15 @@ form#sbac-user-filter-form #edit-email {
   width: 49%;
   margin-top: 0px;
   margin-right: 10px;
+}
+
+#sbac-goals-report-form .sne-link {
+  background-color: #006184;
+  border-color: #006184;
+  position: absolute;
+  top: 204px;
+  width: 258px;
+  right: 0px;
 }
 
 /* Admin views */
@@ -36628,4 +36638,18 @@ form#sbac-user-filter-form #edit-email {
 #edit-roles .form-item-roles-26,
 #edit-roles .form-item-roles-31 {
   display: none;
+}
+
+/* SNE Webform CSS */
+.node-type-webform .block-sbac-resource-sbac-resource-back-button {
+  display: none;
+}
+
+.node-type-webform .sne-container {
+  border: 1px solid #ddd;
+  padding: 0 20px;
+}
+
+.node-type-webform h1 {
+  margin-left: 20px;
 }

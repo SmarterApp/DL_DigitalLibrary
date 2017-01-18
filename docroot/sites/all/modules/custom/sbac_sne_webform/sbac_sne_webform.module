@@ -1,0 +1,78 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC SNE webform feature.
+ */
+
+include_once 'sbac_sne_webform.features.inc';
+
+/**
+ * Implements hook_form_alter()
+ */
+function sbac_sne_webform_form_alter(&$form, &$form_state) {
+  $test = '';
+  if (isset($form['#node']) && $form['#node']->title == 'Help grow the Digital Library') {
+    $form['#submit'][] = sbac_sne_webform_submit;
+  }
+}
+
+/**
+ * Custom submit function to notify Lead SLTs with Taskit
+ */
+function sbac_sne_webform_submit($form, &$form_state) {
+  $users = sbac_sne_webform_get_lead_slt_users();
+  $webform_nid = sbac_sne_webform_get_nid('243e273a-8fd4-4689-8b3d-bafdea8b9514');
+  foreach ($users as $user) {
+    // Notify each user
+    if ($task = taskit_get_object('new_sne_request')) {
+      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addEntity('node', $webform_nid->nid);
+      $task->addOwningUser($user->uid);
+      $task->addTriggeringUser($user->uid);
+      $task->save();
+    }
+  }
+}
+
+/**
+ * Helper function to grab users with Lead SLT role(DLRB Member)
+ */
+function sbac_sne_webform_get_lead_slt_users() {
+  $sql = <<<SQL
+
+  SELECT
+    u.uid
+  FROM {users} u
+    LEFT JOIN {user_roles} ur
+      ON u.uid = ur.uid
+  WHERE
+    u.status = :status
+    AND ur.rid = :rid
+  
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':rid' => 7));
+
+  foreach ($result as $row) {
+    $users[] = $row;
+  }
+
+  return $users;
+}
+
+/**
+ * Helper function to get nid of webform from uuid
+ */
+function sbac_sne_webform_get_nid($uuid) {
+  $sql = <<<SQL
+    SELECT nid from node where uuid = ':uuid'
+SQL;
+
+  $result = db_query($sql, array(':uuid' => $uuid));
+
+  foreach ($result as $row) {
+    $nid = $row;
+  }
+
+  return $nid;
+}
