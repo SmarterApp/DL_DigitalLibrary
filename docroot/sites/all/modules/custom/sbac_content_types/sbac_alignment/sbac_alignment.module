@@ -527,7 +527,12 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last
     $level_title = "Domain";
   }
   // Get the standard name from the term
+  $alignment_vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
+  if ($term->vid == $alignment_vocab->vid) {
   $name = '<span class="standard-name">' . $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'] . '</span>';
+  } else {
+    $name = '<span class="standard-name">' . $term->field_alignment_key[LANGUAGE_NONE][0]['value'] . '</span>';
+  }
   // Build the id/name based on the parent/child state and the tid
   $id = "-$tid";
   if ($indent) {
