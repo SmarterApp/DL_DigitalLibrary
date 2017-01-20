@@ -10,8 +10,7 @@ include_once 'sbac_sne_webform.features.inc';
  * Implements hook_form_alter()
  */
 function sbac_sne_webform_form_alter(&$form, &$form_state) {
-  $test = '';
-  if (isset($form['#node']) && $form['#node']->title == 'Help grow the Digital Library') {
+  if (isset($form['#node']) && ($form['#node']->title == 'Help grow the Digital Library ')) {
     $form['#submit'][] = sbac_sne_webform_submit;
   }
 }
@@ -20,17 +19,42 @@ function sbac_sne_webform_form_alter(&$form, &$form_state) {
  * Custom submit function to notify Lead SLTs with Taskit
  */
 function sbac_sne_webform_submit($form, &$form_state) {
+  global $user;
+  $submitter_uid = $user->uid;
   $users = sbac_sne_webform_get_lead_slt_users();
   $webform_nid = sbac_sne_webform_get_nid('243e273a-8fd4-4689-8b3d-bafdea8b9514');
   foreach ($users as $user) {
+    $user_profile = user_load($user->uid);
     // Notify each user
     if ($task = taskit_get_object('new_sne_request')) {
       $task->addVisibility($task::VISIBILITY_USER);
       $task->addEntity('node', $webform_nid->nid);
       $task->addOwningUser($user->uid);
-      $task->addTriggeringUser($user->uid);
+      $task->addTriggeringUser($submitter_uid);
       $task->save();
     }
+    // Stub for undefined email
+    // Send email to user
+    //if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
+    //  // Create message
+    //  $username = sbac_email_user_link($user_profile);
+    //  $values = array(
+    //    'arguments' => array(
+    //      '!user-link' => $username,
+    //    ),
+    //    'uid' => $user_profile->uid,
+    //  );
+    //  // TODO populate message name with correct message id
+    //  $message = message_create('placeholder_message', $values);      
+    //  $wrapper = entity_metadata_wrapper('message', $message);
+    //  $wrapper->save();
+    //  if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {          
+    //    // send email
+    //    message_notify_send_message($message);
+    //    // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+    //    message_delete_multiple(array($message->mid));
+    //  }
+    //}    
   }
 }
 
@@ -43,7 +67,7 @@ function sbac_sne_webform_get_lead_slt_users() {
   SELECT
     u.uid
   FROM {users} u
-    LEFT JOIN {user_roles} ur
+    LEFT JOIN {users_roles} ur
       ON u.uid = ur.uid
   WHERE
     u.status = :status
@@ -65,7 +89,8 @@ SQL;
  */
 function sbac_sne_webform_get_nid($uuid) {
   $sql = <<<SQL
-    SELECT nid from node where uuid = ':uuid'
+    SELECT nid from node
+    WHERE uuid = :uuid
 SQL;
 
   $result = db_query($sql, array(':uuid' => $uuid));
@@ -75,4 +100,24 @@ SQL;
   }
 
   return $nid;
+}
+
+/**
+ * Helper function to get last webform submission for a uid
+ */
+function sbac_sne_webform_get_submission_id($uid) {
+  $sql = <<<SQL
+    SELECT sid from webform_submissions
+    WHERE uid = :uid
+    ORDER BY submitted DESC
+    LIMIT 1
+SQL;
+
+  $result = db_query($sql, array(':uid' => $uid));
+
+  foreach ($result as $row) {
+    $sid = $row;
+  }
+
+  return $sid;
 }
