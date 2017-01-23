@@ -111,7 +111,7 @@ function sbac_alignment_ajax_terms_callback() {
 
   $output_array['parent'] = $parent;
   $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
-  $publication = $parent->field_alignment_publication['und'][0]['value'];
+  $publication = $parent->field_alignment_publication[LANGUAGE_NONE][0]['value'];
   $output_array['publication'] = (empty($publication)) ? 0 : $publication;
   $output_array['depth'] = $depth = sbac_alignment_taxonomy_term_depth($parent->tid);
   switch ($publication) {
@@ -187,91 +187,6 @@ function sbac_alignment_ajax_alignment_crud_callback() {
     $json_input->current_standards,
     $json_input->alignment_type
   ));
-
-//  global $user;
-//  $op = 'none';
-//  $nid = 0;
-//  if (isset($_POST['op'])) {
-//    $op = $_POST['op'];
-//  }
-//
-//  switch ($op) {
-//    case 'delete':
-//      if (isset($_POST['nid'])) {
-//        $nid = $_POST['nid'];
-//      }
-//      // prep JSON response
-//      $data = array(
-//        'deleted_nid' => $nid,
-//      );
-//
-//      $node = node_load($nid);
-//      if (node_access('delete', $node)) {
-//        // node_delete($nid);
-//        $current_nid = $_POST['current_nid'];
-//        // set the entity reference field_data_field_resource_reference deleted flag to 2
-//        db_query('UPDATE field_data_field_resource_reference SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND entity_id = :entity_id', array(':deleted' => 2, ':target_id' => $current_nid, ':entity_id' => $nid));
-//      }
-//
-//      print drupal_json_encode($data);
-//
-//      break;
-//
-//    case 'create':
-//      if (isset($_POST['alignment_standards'])) {
-//        $standards = explode('|', $_POST['alignment_standards']);
-//        array_shift($standards);
-//      }
-//      if (isset($_POST['alignment_type'])) {
-//        $alignment_type = $_POST['alignment_type'];
-//      }
-//      if (isset($_POST['alignment_ref'])) {
-//        $alignment_ref = $_POST['alignment_ref'];
-//      }
-//      else {
-//        $alignment_ref = 537;
-//      }
-//
-//      $types = array();
-//      $vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_TYPE_VOCAB_NAME);
-//      $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
-//
-//      foreach ($terms as $term) {
-//        $types[$term->name] = $term->tid;
-//      }
-//
-//      $standards_terms = array();
-//      foreach ($standards as $tid) {
-//        //create alignment
-//        $node = new stdClass();
-//        $node->title = "resource-$alignment_ref-alignment-$tid";
-//        $node->type = 'alignment';
-//        $node->uid = $user->uid;
-//        node_object_prepare($node);
-//
-//        $node->field_education_alignment['und'][]['tid'] = $tid;
-//        $node->field_alignment_type['und'][]['tid'] = $types[$alignment_type];
-//        $node->field_resource_reference['und'][]['target_id'] = $alignment_ref;
-//        node_save($node);
-//
-//        // Set the deleted flag to 1 to create a temp new alignment.
-//        db_query('UPDATE field_data_field_resource_reference SET deleted = :deleted WHERE field_resource_reference_target_id = :target_id AND entity_id = :entity_id', array(':deleted' => 1, ':target_id' => $alignment_ref, ':entity_id' => $node->nid));
-//
-//        $term = taxonomy_term_load($tid);
-//        $standards_terms[] = $term->name;
-//      }
-//
-//      $data = array(
-//        'html' => views_embed_view('alignment', 'resource_admin_view', $alignment_ref),
-//        'terms' => $standards_terms,
-//      );
-//
-//      print drupal_json_encode($data);
-//
-//      exit;
-//      break;
-//  }
-//  exit;
 }
 
 /**
