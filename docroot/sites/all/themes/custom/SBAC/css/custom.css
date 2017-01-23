@@ -36653,3 +36653,33 @@ form#sbac-user-filter-form #edit-email {
 .node-type-webform h1 {
   margin-left: 20px;
 }
+
+/* User Badges CSS */
+
+
+.devtools-tooltip .devtools-tooltip-body {
+  width: 450px;
+}
+.page-user .badge-container {
+  position: absolute;
+  right: 0px;
+}
+
+.account-tooltip .badge-container {
+  position: absolute;
+  right: 0px;
+}
+
+.page-user .badge-container .user-badge {
+  width: 100px;
+  margin: 0 10px;
+}
+
+.account-tooltip .badge-container .user-badge {
+  width: 50px;
+  margin: 0 5px;
+}
+
+#section-account .field-name-field-paid-contributor {
+  display: none;
+}

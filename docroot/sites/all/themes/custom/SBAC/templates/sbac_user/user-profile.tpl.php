@@ -25,6 +25,84 @@
 	<?php endif; ?>
 
 	<div class="column large-9 user-profile">
+		<div class="badge-container">
+			<?php
+				// SLT Badge
+				$slt_badge = FALSE;
+				$sne_badge = FALSE;
+				$provider_badge = FALSE;
+				if (isset($user_profile['field_slt_member'])) {
+					if ($user_profile['field_slt_member']['#items'][0]['value'] == '1') {
+						$variables = array(
+							'path' => path_to_theme() . '/images/' . 'sltbadge.png', 
+							'alt' => 'SLT Badge',
+							'title' => 'SLT Badge',
+							'attributes' => array('class' => 'user-badge'),
+						);
+						print theme('image', $variables);
+						$slt_badge = TRUE;
+					}
+				}
+				// Paid Contributor badge
+				if (isset($user_profile['field_paid_contributor'])) {
+					if (isset($user_profile['field_sne_member'])) {
+						// Paid SNE badge
+						if ($user_profile['field_paid_contributor']['#items'][0]['value'] == '1' && $user_profile['field_sne_member']['#items'][0]['value'] == '1') {
+							$variables = array(
+								'path' => path_to_theme() . '/images/' . 'snebadgepaid.png', 
+								'alt' => 'SNE Paid Badge',
+								'title' => 'SNE Paid Badge',
+								'attributes' => array('class' => 'user-badge'),
+							);
+							print theme('image', $variables);
+							$sne_badge = TRUE;
+						}
+					}
+					elseif ($user_profile['field_paid_contributor']['#items'][0]['value'] == '1') {
+						$variables = array(
+							'path' => path_to_theme() . '/images/' . 'paidcontentproviderbadge.png', 
+							'alt' => 'Paid Content Provider Badge',
+							'title' => 'Paid Content Provider Badge',
+							'attributes' => array('class' => 'user-badge'),
+						);
+						print theme('image', $variables);
+						$provider_badge = TRUE;
+					}
+				}
+				// SNE Badge
+				if (isset($user_profile['field_sne_member'])) {
+					if ($user_profile['field_sne_member']['#items'][0]['value'] == '1' && $sne_badge == FALSE) {
+						$variables = array(
+							'path' => path_to_theme() . '/images/' . 'snebadge.png', 
+							'alt' => 'SNE Badge',
+							'title' => 'SNE Badge',
+							'attributes' => array('class' => 'user-badge'),
+						);
+						print theme('image', $variables);	
+					}
+				}
+				// Content Provider Badge
+				if (!$provider_badge && in_array('resource contributor', $user_profile['account_info']->roles)) {
+					$variables = array(
+						'path' => path_to_theme() . '/images/' . 'contentproviderbadge.png', 
+						'alt' => 'Content Provider Badge',
+						'title' => 'Content Provider Badge',
+						'attributes' => array('class' => 'user-badge'),
+					);
+					print theme('image', $variables);	
+				}
+				// Educator Badge
+				if (!$slt_badge && !$sne_badge) {
+					$variables = array(
+						'path' => path_to_theme() . '/images/' . 'educatorbadge.png', 
+						'alt' => 'Educator Badge',
+						'title' => 'Educator Badge',
+						'attributes' => array('class' => 'user-badge'),
+					);
+					print theme('image', $variables);						
+				}
+			?>
+		</div>
 		<div class="name clearfix">
 			<?php echo drupal_render($user_profile['field_first_name']) . ' '; ?>
       <?php echo drupal_render($user_profile['field_last_name']); ?>
