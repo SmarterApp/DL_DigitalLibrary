@@ -3,6 +3,21 @@
 
   Drupal.behaviors.sbac_alignment_everything = {
     attach: function (context, settings) {
+      var valueUpdater = function () {
+        var alignmentStandards = [];
+        $('#sbac-resource-alignment-tag-view input:checkbox[id*=standard-parent-]:checked').each(function () {
+          var id = $(this).attr('id').split('-')[2];
+          alignmentStandards.push(id);
+        });
+        var targetStandards = [];
+        $('#sbac-resource-target-tag-view input:checkbox[id*=standard-parent-]:checked').each(function () {
+          var id = $(this).attr('id').split('-')[2];
+          targetStandards.push(id);
+        });
+        $('input:hidden[name=alignment_term_values]').val(alignmentStandards.join(':'));
+        $('input:hidden[name=target_term_values]').val(targetStandards.join(':'));
+      };
+
       // Handler for syncing the checkboxes and adding parents as needed
       $('.standard-check').click(function (e) {
         // Get the tid so we can check if the parent version of this tid exists
@@ -20,6 +35,7 @@
           });
           // Make all of the other checkboxes with this class match the checked status of this one
           $(checkClass).prop('checked', $(this).prop('checked'));
+          valueUpdater();
         } else {
           // Use the parent container to figure out the standard type
           var alignment = 'education_alignment';
@@ -40,6 +56,7 @@
             $('#sbac-resource-target-tag-view').html(data.target_html);
 
             Drupal.attachBehaviors('.standard-check');
+            valueUpdater();
           };
 
           // Call the helper AJAX function to build the tables of standards
@@ -156,6 +173,7 @@
                       closeCtoolsModal();
 
                       Drupal.attachBehaviors('.standard-check');
+                      valueUpdater();
                     };
 
                     // Call the helper AJAX function to build the tables of standards

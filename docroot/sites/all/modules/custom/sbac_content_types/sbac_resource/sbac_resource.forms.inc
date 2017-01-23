@@ -219,6 +219,17 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
     $active_tab = $form_state['values']['additional_settings__active_tab'];
   }
 
+  $alignment_terms = explode(':', $form_state['values']['alignment_term_values']);
+  $target_terms = explode(':', $form_state['values']['target_term_values']);
+  $form_state['values']['field_alignment_term'][LANGUAGE_NONE] = array();
+  $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array();
+  foreach ($alignment_terms as $at) {
+    $form_state['values']['field_alignment_term'][LANGUAGE_NONE][] = array('tid' => $at);
+  }
+  foreach ($target_terms as $tt) {
+    $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array('tid' => $tt);
+  }
+
   // If the save button was clicked via the modal, do the following.
   if ($active_tab == 'edit-group_advanced' &&
     isset($_SESSION['post_resource_clicked'])
@@ -405,6 +416,9 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $form = drupal_rebuild_form('resource_node_form', $form_state);
         return $form;
       }
+    } elseif ($active_tab == 'edit-group_summary') {
+      $form = drupal_rebuild_form('resource_node_form', $form_state);
+      return $form;
     }
     
     $media_items = sbac_media_load_items($form['#node']->nid);
@@ -509,6 +523,17 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       // Set state to Draft.
       $form_state['values']['workbench_moderation_state_new'] = 'draft';
     }
+  }
+
+  $alignment_terms = explode(':', $form_state['values']['alignment_term_values']);
+  $target_terms = explode(':', $form_state['values']['target_term_values']);
+  $form_state['values']['field_alignment_term'][LANGUAGE_NONE] = array();
+  $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array();
+  foreach ($alignment_terms as $at) {
+    $form_state['values']['field_alignment_term'][LANGUAGE_NONE][] = array('tid' => $at);
+  }
+  foreach ($target_terms as $tt) {
+    $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array('tid' => $tt);
   }
 
   $save_all_changes_modal = FALSE;
@@ -1898,7 +1923,7 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
  * @param $form
  * @param $form_state
  */
-function _sbac_resource_form_summary(&$form, $form_state) {
+function _sbac_resource_form_summary(&$form, &$form_state) {
   $form['field_subject']['und']['#title'] = t('Subjects and Domains') . ' ' . theme('form_required_marker');
   if (isset($form['field_subject']['und']['#options']['_none'])) {
     unset($form['field_subject']['und']['#options']['_none']);
@@ -1908,16 +1933,39 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     unset($form['field_grades']['und']['#options']['_none']);
   }
 
-  $terms = [];
+  $alignment_terms = $target_terms = [];
   if (isset($form['#node']->nid)) {
     foreach ($form['#node']->field_alignment_term[LANGUAGE_NONE] as $fat) {
-      $terms[] = $fat['tid'];
+      $alignment_terms[] = $fat['tid'];
     }
     foreach ($form['#node']->field_target_term[LANGUAGE_NONE] as $ftt) {
-      $terms[] = $ftt['tid'];
+      $target_terms[] = $ftt['tid'];
     }
   }
-  $tables = _sbac_alignment_table_builder(array(), $terms, SBAC_ALIGNMENT_VOCAB_NAME);
+
+  if (!count($alignment_terms) && isset($form_state['values']['alignment_term_values']) && $form_state['values']['alignment_term_values']) {
+    $alignment_term_values = $form_state['values']['alignment_term_values'];
+    $alignment_terms = explode(':', $alignment_term_values);
+  } else {
+    $alignment_term_values = implode(':', $alignment_terms);
+  }
+  if (!count($target_terms) && isset($form_state['values']['target_term_values']) && $form_state['values']['target_term_values']) {
+    $target_term_values = $form_state['values']['target_term_values'];
+    $target_terms = explode(':', $target_term_values);
+  } else {
+    $target_term_values = implode(':', $target_terms);
+  }
+
+  $tables = _sbac_alignment_table_builder(array(), array_merge($alignment_terms, $target_terms), SBAC_ALIGNMENT_VOCAB_NAME);
+
+  $form['alignment_term_values'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $alignment_term_values,
+  );
+  $form['target_term_values'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $target_term_values,
+  );
 
   // CC Alignment Container Start
   $form['alignment_tag_container'] = array(
