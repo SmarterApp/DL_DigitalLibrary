@@ -21,7 +21,7 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Email Settings',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'message_subscribe_email',
       1 => 'field_email_preference',
@@ -79,7 +79,7 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Personal Information',
-    'weight' => '0',
+    'weight' => '1',
     'children' => array(
       0 => 'field_alternate_email_address',
       1 => 'field_first_name',

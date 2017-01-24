@@ -98,12 +98,6 @@ function sbac_user_strongarm() {
       'tooltip' => array(
         'custom_settings' => TRUE,
       ),
-      'search_index' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_result' => array(
-        'custom_settings' => FALSE,
-      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -111,22 +105,22 @@ function sbac_user_strongarm() {
           'weight' => '-6',
         ),
         'timezone' => array(
-          'weight' => '6',
+          'weight' => '7',
         ),
         'picture' => array(
           'weight' => '-9',
         ),
         'wysiwyg' => array(
-          'weight' => '5',
+          'weight' => '6',
         ),
         'googleanalytics' => array(
-          'weight' => '3',
+          'weight' => '4',
         ),
         'mimemail' => array(
-          'weight' => '1',
+          'weight' => '0',
         ),
         'redirect' => array(
-          'weight' => '17',
+          'weight' => '26',
         ),
       ),
       'display' => array(
@@ -137,12 +131,6 @@ function sbac_user_strongarm() {
           ),
           'tooltip' => array(
             'weight' => '5',
-            'visible' => TRUE,
-          ),
-        ),
-        'mimemail' => array(
-          'default' => array(
-            'weight' => '0',
             'visible' => TRUE,
           ),
         ),
