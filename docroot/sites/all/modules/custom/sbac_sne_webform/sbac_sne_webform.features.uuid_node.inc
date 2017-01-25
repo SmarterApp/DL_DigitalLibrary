@@ -26,7 +26,7 @@ function sbac_sne_webform_uuid_features_default_content() {
   'tnid' => 0,
   'translate' => 0,
   'uuid' => '243e273a-8fd4-4689-8b3d-bafdea8b9514',
-  'revision_uid' => 1,
+  'revision_uid' => 0,
   'rdf_mapping' => array(
     'rdftype' => array(
       0 => 'sioc:Item',
@@ -87,7 +87,7 @@ function sbac_sne_webform_uuid_features_default_content() {
   ),
   'webform' => array(
     'nid' => '243e273a-8fd4-4689-8b3d-bafdea8b9514',
-    'next_serial' => 1,
+    'next_serial' => 12,
     'confirmation' => '',
     'confirmation_format' => NULL,
     'redirect_url' => '<confirmation>',
@@ -291,7 +291,7 @@ review|I would like to review resources',
   'print_display_urllist' => 0,
   'name' => 'admin',
   'picture' => 159196,
-  'data' => 'a:6:{s:11:"login_count";i:5662;s:11:"first_login";i:1366233712;s:12:"disable_help";i:1;s:13:"session_index";s:42:"s2427580d55477276650d4c39aa54d0f787cbbca01";s:14:"disable_recent";i:1448894379;s:17:"mimemail_textonly";i:0;}',
+  'data' => 'a:6:{s:11:"login_count";i:5683;s:11:"first_login";i:1366233712;s:12:"disable_help";i:1;s:13:"session_index";s:42:"s2427580d55477276650d4c39aa54d0f787cbbca01";s:14:"disable_recent";i:1448894379;s:17:"mimemail_textonly";i:0;}',
   'print_pdf_display' => 0,
   'print_pdf_display_comment' => 0,
   'print_pdf_display_urllist' => 0,

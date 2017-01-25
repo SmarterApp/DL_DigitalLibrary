@@ -134,6 +134,12 @@ function sbac_user_strongarm() {
             'visible' => TRUE,
           ),
         ),
+        'mimemail' => array(
+          'tooltip' => array(
+            'weight' => '0',
+            'visible' => TRUE,
+          ),
+        ),
       ),
     ),
   );

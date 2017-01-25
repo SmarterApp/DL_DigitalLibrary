@@ -36655,19 +36655,19 @@ form#sbac-user-filter-form #edit-email {
 }
 
 /* User Badges CSS */
-
-
-.devtools-tooltip .devtools-tooltip-body {
-  width: 450px;
-}
 .page-user .badge-container {
   position: absolute;
   right: 0px;
 }
 
+.devtools-tooltip .devtools-tooltip-body .user-profile .introduction {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
 .account-tooltip .badge-container {
-  position: absolute;
-  right: 0px;
+  position: relative;
+  float: right;
 }
 
 .page-user .badge-container .user-badge {
@@ -36680,6 +36680,27 @@ form#sbac-user-filter-form #edit-email {
   margin: 0 5px;
 }
 
-#section-account .field-name-field-paid-contributor {
+#section-account .field-name-field-paid-contributor,
+#section-goals .field-name-field-paid-contributor{
   display: none;
+}
+
+/* Forum Mailto links css */
+.mailto-link {
+  background: url('/sites/all/themes/custom/SBAC/images/mailto.png') top center no-repeat;
+  display: inline-block;
+  width: 15px;
+  height: 12px;
+}
+
+.devtools-tooltip-body .profile-email-address .title {
+  color: #04384E;
+  display: inline;
+  font-family: Verdana,Geneva,sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: normal;
+  margin: 0;
+  padding: 0 0 3px;
+  text-transform: uppercase;
 }

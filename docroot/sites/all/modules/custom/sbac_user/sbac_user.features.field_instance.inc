@@ -251,9 +251,8 @@ function sbac_user_field_default_field_instances() {
       ),
       'tooltip' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 11,
       ),
     ),
@@ -876,9 +875,8 @@ function sbac_user_field_default_field_instances() {
       ),
       'tooltip' => array(
         'label' => 'hidden',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_key',
+        'type' => 'hidden',
         'weight' => 13,
       ),
     ),
@@ -1054,9 +1052,8 @@ function sbac_user_field_default_field_instances() {
       ),
       'tooltip' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 12,
       ),
     ),
@@ -1283,9 +1280,8 @@ function sbac_user_field_default_field_instances() {
       ),
       'tooltip' => array(
         'label' => 'inline',
-        'module' => 'taxonomy',
         'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
+        'type' => 'hidden',
         'weight' => 10,
       ),
     ),
