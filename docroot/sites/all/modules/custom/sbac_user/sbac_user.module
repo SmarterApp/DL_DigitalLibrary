@@ -473,7 +473,45 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_privacy']['und']['#description'] = '';
     }
     // Add subscriptions form options
-    $test = '';
+    $user_profile = user_load($user->uid);
+    $state_tid = $user_profile->field_state['und'][0]['tid'];
+    $forums = sbac_user_get_user_forums($user->uid, $state_tid);
+    $my_forums = '<span class="subscription-message">You are not yet a member of any State Forums</span>';
+    $suggested_forums = '<span class="subscription-message">There are not any State Forums available to join for your state.</span>';
+    if ($forums) {
+      if (!empty($forums['my_forums'])) {
+        $my_forums = '<table class="forum-subscriptions">';
+        foreach ($forums['my_forums'] as $my_forum) {
+          $my_forums .= '<tr>
+                          <td class="forum-name">' .
+                            l($my_forum['title'], '/forums/term/' . $my_forum['tid']) . '
+                          </td>
+                          <td class="forum-button">' .
+                            l('Leave Forum', '#', array('attributes' => array('class' => 'button'))) . '
+                          </td>
+                        </tr>';                       
+        }
+        $my_forums .= '</table>';
+      }
+      if (!empty($forums['suggested_forums'])) {
+        $suggested_forums = '<table class="forum-subscriptions">';
+        foreach ($forums['suggested_forums'] as $suggested_forum) {
+          $suggested_forums .= '
+                        <tr>
+                          <td class="forum-name">' .
+                            l($suggested_forum['title'], '/forums/term/' . $suggested_forum['tid']) . '
+                          </td>
+                          <td class="forum-button">' .
+                            l('Join Forum', '#', array('attributes' => array('class' => 'button'))) . '
+                          </td>
+                        </tr>';                       
+        }
+        $suggested_forums .= '</table>';
+      }
+    }
+    $form['field_my_forums']['#suffix'] = $my_forums;
+    $form['field_suggested_forums']['#suffix'] = $suggested_forums;
+
     $form['#validate'][] = 'sbac_user_profile_validate';
   }
 
@@ -1663,13 +1701,12 @@ function sbac_user_disagree_tos_form($form, &$form_state) {
  * and suggested forums to join based on state
  */
 function sbac_user_get_user_forums($uid, $state_tid) {
-  $completed = array();
   $sql = <<<SQL
   SELECT
     entity_id
     FROM {field_data_field_state} fs
         WHERE
-          fs.bundle = forum
+          fs.bundle = 'forum'
           AND fs.field_state_tid = :tid
 SQL;
 
@@ -1681,8 +1718,26 @@ SQL;
   $user_forums['suggested_forums'] = array();
   if (!empty($forums)) {
     foreach ($forums as $forum) {
+      $is_member = FALSE;
       $term = taxonomy_term_load($forum->entity_id);
-
+      // Gather members
+      $members = field_collection_item_load_multiple($term->field_fc_forum_members['und']);
+      $test = '';
+      foreach ($members as $member) {
+        if ($member->field_fc_forum_member['und'][0]['target_id'] == $uid) {
+          $user_forums['my_forums'][] = array(
+            'title' => $term->name,
+            'tid' => $term->tid,
+          );
+          $is_member = TRUE;
+        }
+      }
+      if (!$is_member) {
+        $user_forums['suggested_forums'][] = array(
+          'title' => $term->name,
+          'tid' => $term->tid,
+        );
+      }
     }
   }
   

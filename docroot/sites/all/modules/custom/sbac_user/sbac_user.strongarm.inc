@@ -105,13 +105,13 @@ function sbac_user_strongarm() {
           'weight' => '-6',
         ),
         'timezone' => array(
-          'weight' => '7',
+          'weight' => '8',
         ),
         'picture' => array(
           'weight' => '-9',
         ),
         'wysiwyg' => array(
-          'weight' => '6',
+          'weight' => '7',
         ),
         'googleanalytics' => array(
           'weight' => '4',
@@ -120,7 +120,7 @@ function sbac_user_strongarm() {
           'weight' => '0',
         ),
         'redirect' => array(
-          'weight' => '26',
+          'weight' => '28',
         ),
       ),
       'display' => array(

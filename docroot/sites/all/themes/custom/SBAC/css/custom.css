@@ -36704,3 +36704,40 @@ form#sbac-user-filter-form #edit-email {
   padding: 0 0 3px;
   text-transform: uppercase;
 }
+
+/* Manage Subscriptions CSS */
+#edit-field-my-forums-und-0-value,
+#edit-field-suggested-forums-und-0-value {
+  display: none;
+}
+
+#account #edit-field-my-forums,
+#account #edit-field-suggested-forums {
+  height: 30px;
+  width: 100%;
+}
+
+#account #edit-field-my-forums label,
+#account #edit-field-suggested-forums label{
+  color: #464B54;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.forum-subscriptions {
+  border: 0 none;
+  width: 100%;
+}
+
+table.forum-subscriptions tr {
+  background-color: #FFFFFF;
+}
+
+.forum-subscriptions .forum-name {
+  padding: 15px 0;
+  width: 70%;
+}
+
+.forum-subscriptions .forum-button .button {
+  margin-bottom: 0px;
+}

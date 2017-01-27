@@ -96,7 +96,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 9,
+      'weight' => 10,
     ),
   );
 
@@ -186,7 +186,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 14,
+      'weight' => 16,
     ),
   );
 
@@ -316,7 +316,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'options_onoff',
-      'weight' => 22,
+      'weight' => 24,
     ),
   );
 
@@ -452,7 +452,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'options_onoff',
-      'weight' => 21,
+      'weight' => 23,
     ),
   );
 
@@ -501,8 +501,53 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 15,
+      'weight' => 17,
     ),
+  );
+
+  // Exported field_instance: 'user-user-field_my_forums'.
+  $field_instances['user-user-field_my_forums'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 34,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_my_forums',
+    'label' => 'My Forums',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 8,
+    ),
+    'xss' => 0,
   );
 
   // Exported field_instance: 'user-user-field_paid_contributor'.
@@ -545,7 +590,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'options_onoff',
-      'weight' => 10,
+      'weight' => 12,
     ),
   );
 
@@ -670,7 +715,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 25,
+      'weight' => 27,
     ),
   );
 
@@ -722,7 +767,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 20,
+      'weight' => 22,
     ),
   );
 
@@ -764,7 +809,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 23,
+      'weight' => 25,
     ),
   );
 
@@ -803,7 +848,7 @@ function sbac_user_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 24,
+      'weight' => 26,
     ),
   );
 
@@ -855,7 +900,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 19,
+      'weight' => 21,
     ),
   );
 
@@ -940,7 +985,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 8,
+      'weight' => 9,
     ),
   );
 
@@ -986,7 +1031,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 12,
+      'weight' => 14,
     ),
   );
 
@@ -1032,7 +1077,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 11,
+      'weight' => 13,
     ),
   );
 
@@ -1119,7 +1164,7 @@ function sbac_user_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 17,
+      'weight' => 19,
     ),
     'xss' => 0,
   );
@@ -1164,7 +1209,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 255,
       ),
       'type' => 'text_textfield',
-      'weight' => 16,
+      'weight' => 18,
     ),
     'xss' => 0,
   );
@@ -1217,7 +1262,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 18,
+      'weight' => 20,
     ),
   );
 
@@ -1260,7 +1305,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 13,
+      'weight' => 15,
     ),
   );
 
@@ -1305,6 +1350,51 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_suggested_forums'.
+  $field_instances['user-user-field_suggested_forums'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 35,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_suggested_forums',
+    'label' => 'Suggested Forums',
+    'profanity' => 0,
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'label_help_description' => '',
+        'maxlength_js' => 0,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 9,
+    ),
+    'xss' => 0,
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Alternate email address');
@@ -1315,6 +1405,7 @@ function sbac_user_field_default_field_instances() {
   t('Hide From Leaderboards');
   t('Last name');
   t('Lock Goals');
+  t('My Forums');
   t('Name');
   t('On Contract SNE');
   t('Other Professional Experiences and Accomplishments');
@@ -1336,6 +1427,7 @@ function sbac_user_field_default_field_instances() {
   t('State');
   t('Student Population(s)');
   t('Subject(s)');
+  t('Suggested Forums');
   t('Title');
   t('login count');
 
