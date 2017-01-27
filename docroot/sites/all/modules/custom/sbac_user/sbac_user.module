@@ -472,12 +472,14 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_privacy']['und']['#title'] = '';
       $form['field_privacy']['und']['#description'] = '';
     }
+
     // Add subscriptions form options
     $user_profile = user_load($user->uid);
     $state_tid = $user_profile->field_state['und'][0]['tid'];
     $forums = sbac_user_get_user_forums($user->uid, $state_tid);
-    $my_forums = '<span class="subscription-message">You are not yet a member of any State Forums</span>';
+    $my_forums = '<span class="subscription-message">You are not a member of any State Forums</span>';
     $suggested_forums = '<span class="subscription-message">There are not any State Forums available to join for your state.</span>';
+    // TODO build join and leave functionality
     if ($forums) {
       if (!empty($forums['my_forums'])) {
         $my_forums = '<table class="forum-subscriptions">';
@@ -1700,6 +1702,7 @@ function sbac_user_disagree_tos_form($form, &$form_state) {
  * Helper function to collect forums that a user is a member of
  * and suggested forums to join based on state
  */
+// TODO maybe process join leave stuff here?
 function sbac_user_get_user_forums($uid, $state_tid) {
   $sql = <<<SQL
   SELECT
