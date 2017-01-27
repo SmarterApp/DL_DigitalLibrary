@@ -14,8 +14,7 @@ function sbac_sne_webform_menu() {
   $items['admin/sbac/sne-webform-submissions-page'] = array(
     'title' => 'SNE Request Submissions',
     'page callback' => 'sbac_sne_webform_results_submissions',
-    'access callback' => 'webform_results_access',
-    'access arguments' => array('access sbac configuration menu'),
+    'access arguments' => array('access all webform results'),
     'type' => MENU_LOCAL_TASK,
   );
 
