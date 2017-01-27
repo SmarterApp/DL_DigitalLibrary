@@ -7,6 +7,31 @@
 include_once 'sbac_sne_webform.features.inc';
 
 /**
+ * Implements hook_menu()
+ */
+function sbac_sne_webform_menu() {
+  
+  $items['admin/sbac/sne-webform-submissions-page'] = array(
+    'title' => 'SNE Request Submissions',
+    'page callback' => 'sbac_sne_webform_results_submissions',
+    'access callback' => 'webform_results_access',
+    'access arguments' => array('access sbac configuration menu'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for webform submissions admin menu link
+ */
+function sbac_sne_webform_results_submissions() {
+  $nid = sbac_sne_webform_get_nid('243e273a-8fd4-4689-8b3d-bafdea8b9514');
+
+  drupal_goto('/admin/sbac/sne-webform-submissions/' . $nid->nid);
+}
+
+/**
  * Implements hook_form_alter()
  */
 function sbac_sne_webform_form_alter(&$form, &$form_state) {

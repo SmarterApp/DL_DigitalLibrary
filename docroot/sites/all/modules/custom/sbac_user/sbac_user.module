@@ -472,6 +472,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_privacy']['und']['#title'] = '';
       $form['field_privacy']['und']['#description'] = '';
     }
+    // Add subscriptions form options
+    $test = '';
     $form['#validate'][] = 'sbac_user_profile_validate';
   }
 
@@ -1654,4 +1656,35 @@ function sbac_user_disagree_tos_form($form, &$form_state) {
     '#attributes' => array('class' => array('button', 'small', 'secondary'))
   );
   return $form;
+}
+
+/**
+ * Helper function to collect forums that a user is a member of
+ * and suggested forums to join based on state
+ */
+function sbac_user_get_user_forums($uid, $state_tid) {
+  $completed = array();
+  $sql = <<<SQL
+  SELECT
+    entity_id
+    FROM {field_data_field_state} fs
+        WHERE
+          fs.bundle = forum
+          AND fs.field_state_tid = :tid
+SQL;
+
+  $result = db_query($sql, array(':tid' => $state_tid));
+  foreach ($result as $row) {
+    $forums[] = $row;
+  }
+  $user_forums['my_forums'] = array();
+  $user_forums['suggested_forums'] = array();
+  if (!empty($forums)) {
+    foreach ($forums as $forum) {
+      $term = taxonomy_term_load($forum->entity_id);
+
+    }
+  }
+  
+  return $user_forums;
 }
