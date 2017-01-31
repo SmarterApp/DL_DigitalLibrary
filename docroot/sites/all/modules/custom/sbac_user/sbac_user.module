@@ -314,6 +314,10 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if ($form_id == 'user_profile_form') {
+    // Get rid of unneeded duplicate value. The default should be the regular 'None'.
+    if (isset($form['field_email_preference']['und']['#options']['_none'])) {
+      unset($form['field_email_preference']['und']['#options']['_none']);
+    }
     $user = $form_state['user'];
     if ($user->data['login_count'] == 1 && (empty($user->field_position) || empty($user->field_subject_s_) || empty($user->field_grade_level_s_) || empty($user->field_special_populations))) {
       drupal_add_js(array('sbac_user_required_fields' => 0), 'setting');
@@ -417,15 +421,15 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       );
       unset($form['mimemail']);
       global $user;
-      $form['sbac_user_email_options'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Email Notification Options'),
-        '#collapsible' => TRUE,
-        '#collapsed' => FALSE,
-      );
-      $form['sbac_user_email_options']['sbac_user_email_options_toggle'] = array(
-        '#prefix' => flag_create_link('email', $user->uid),
-      );
+      //$form['sbac_user_email_options'] = array(
+      //  '#type' => 'fieldset',
+      //  '#title' => t('Email Notification Options'),
+      //  '#collapsible' => TRUE,
+      //  '#collapsed' => FALSE,
+      //);
+      //$form['sbac_user_email_options']['sbac_user_email_options_toggle'] = array(
+      //  '#prefix' => flag_create_link('email', $user->uid),
+      //);
       $form['#group_children']['sbac_user_email_options'] = 'group_email_settings';
 
       // form modifications to field_privacy
@@ -991,12 +995,12 @@ function sbac_user_mail($key, &$message, $params) {
  * When a user updates there profile, clear the authpane cached card.
  */
 function sbac_user_user_update(&$edit, $account, $category) {
-  if (strpos($_GET['q'], 'sbac-sso') === FALSE) {
-    $cache = cache_get('authpane_' . $account->uid);
-    if ($cache) {
-      cache_clear_all('authpane_' . $account->uid);
-    }
-  }
+  //if (strpos($_GET['q'], 'sbac-sso') === FALSE) {
+  //  $cache = cache_get('authpane_' . $account->uid);
+  //  if ($cache) {
+  //    cache_clear_all('authpane_' . $account->uid);
+  //  }
+  //}
 }
 
 /**
@@ -1540,12 +1544,7 @@ function sbac_user_user_import_data($settings, $update_setting, $column_settings
  */
 function sbac_user_preprocess_favorites(&$vars, $user) {
   module_load_include('module', 'sbac_favorites');
-  $favorites_count = sbac_favorites_get_count($user->uid);
   $text = t('Favorites');
-  if (!$favorites_count) {
-    $favorites_count = 0;
-  }
-  $text .= ' (<span>' . $favorites_count . '</span>)';
   $link = drupal_get_path_alias('user/' . $user->uid);
   $vars['user']->favorites_link = l($text, $link, array(
     'html' => TRUE,

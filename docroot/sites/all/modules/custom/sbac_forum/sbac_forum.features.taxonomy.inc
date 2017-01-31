@@ -15,7 +15,7 @@ function sbac_forum_taxonomy_default_vocabularies() {
       'description' => 'Handles collaboration functionality',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => 0,
+      'weight' => -4,
       'rdf_mapping' => array(
         'rdftype' => array(
           0 => 'skos:ConceptScheme',

@@ -207,9 +207,8 @@ function sbac_resource_field_group_info() {
       0 => 'field_digital_media_type',
       1 => 'field_educational_use',
       2 => 'field_smarter_balanced_keyword',
-      3 => 'field_geographical_settings',
-      4 => 'field_intended_student',
-      5 => 'field_classroom_technologies',
+      3 => 'field_intended_student',
+      4 => 'field_classroom_technologies',
     ),
     'format_type' => 'tab',
     'format_settings' => array(

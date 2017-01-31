@@ -4,7 +4,7 @@
 
 
 function sbac_forum__api__get_active_subnav() {
-  $active_subnav = SBAC_FORUM_SUBNAV_RESOURCE;
+  $active_subnav = SBAC_FORUM_SUBNAV_TOPIC;
 
   if (isset($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
     if (!empty($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
@@ -245,6 +245,14 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
   $extra_classes = '';
+  // Add edit links for only facilitator role
+  if (in_array('facilitator', $user->roles)) {
+    $is_facilitator = TRUE;
+  }
+  // Remove edit links if a user does not have the facilitator role
+  else {
+    $is_facilitator = FALSE;
+  }
   if (($is_facilitator) || ($user->uid == 1)) { // Edit and delete forum
     $link_ops = array(
       'attributes' => array(
@@ -349,7 +357,8 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
  * @return null|string
  */
 function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
-  $cached_output = cache_get('authpane_' . $user_id);
+//  $cached_output = cache_get('authpane_' . $user_id);
+  $cached_output = FALSE;
   if ($cached_output) {
     return $cached_output->data;
   }
@@ -382,7 +391,7 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
       '!date' => format_date($created, 'simple'),
     ));
 
-    cache_set('authpane_' . $user_id, $output);
+//    cache_set('authpane_' . $user_id, $output);
     return $output;
   }
 }
@@ -474,7 +483,9 @@ function sbac_forum__api__leave_forum($forum_term, $operation = 'leave', $accoun
                 SBAC_FORUM_USER_DATA_REMOVED_LIST_VAR_NAME => $existing_removed_list,
               );
               user_save($this_user, array('data' => $data));
-
+              // Automatically unsubscribe user from forum notifications 
+              $flag = flag_get_flag('subscribe_term');
+              $flag->flag('unflag', $forum_term->tid, $this_user, TRUE); 
             }
             elseif ($operation == 'restore') {
               // UnSet the current removed member flag.

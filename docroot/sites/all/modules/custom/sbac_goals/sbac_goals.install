@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+
+function sbac_goals_uninstall() {
+  variable_del('goals_start_date');
+  variable_del('goals_end_date');
+  variable_del('goals_previous_start_date');
+  variable_del('goals_start_date_timestamp');
+}

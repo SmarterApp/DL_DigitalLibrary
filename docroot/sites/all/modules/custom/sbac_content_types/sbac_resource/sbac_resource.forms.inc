@@ -60,7 +60,6 @@ function _sbac_resource_form_flatten_term_tree(&$form, &$form_state) {
     array('vid' => 'grades', 'field' => 'field_grades', 'wrapper' => ''),
     array('vid' => 'digital_media_type', 'field' => 'field_digital_media_type', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'intended_student_populations', 'field' => 'field_intended_student', 'wrapper' => 'tag_wrapper'),
-    array('vid' => 'geographical_settings', 'field' => 'field_geographical_settings', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'educational_use', 'field' => 'field_educational_use', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'technologies_for_classroom_use', 'field' => 'field_classroom_technologies', 'wrapper' => 'tag_wrapper'),
     array('vid' => 'smarter_balanced_keyword', 'field' => 'field_smarter_balanced_keyword', 'wrapper' => 'tag_wrapper'),
@@ -776,14 +775,14 @@ function sbac_resource_validate_general(&$form, &$form_state) {
       drupal_set_message('general:field_student_agency:group:Remove inappropriate language from student engagement', 'sbac_resource_error');
     }
   }
-  if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
-    $error = 'Please add a connection to the formative assessment process to continue';
-    form_set_error('field_connection_to_fap', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('general:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('general:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
-  }
-  else {
+//  if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+//    $error = 'Please add a connection to the formative assessment process to continue';
+//    form_set_error('field_connection_to_fap', $error);
+//    _sbac_resource_remove_error_message($error);
+//    drupal_set_message('general:field_connection_to_fap:single:' . $error, 'sbac_resource_error');
+//    drupal_set_message('general:field_connection_to_fap:group:Add the connection to a connection to the formative assessment process', 'sbac_resource_error');
+//  }
+  if ($form_state['values']['field_connection_to_fap']['und'][0]['value']) {
     $text = $form_state['values']['field_connection_to_fap']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
     if ($bad_words) {
@@ -835,14 +834,14 @@ function sbac_resource_validate_summary(&$form, &$form_state) {
     drupal_set_message('summary:field_grades:single:' . $error, 'sbac_resource_error');
     drupal_set_message('summary:field_grades:group:Please select a grade tag to continue', 'sbac_resource_error');
   }
-  if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-    $error = 'Add a connection to the Common Core State Standards';
-    form_set_error('field_connection_to_ccss', $error);
-    _sbac_resource_remove_error_message($error);
-    drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
-    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
-  }
-  else {
+//  if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
+//    $error = 'Add a connection to the Common Core State Standards';
+//    form_set_error('field_connection_to_ccss', $error);
+//    _sbac_resource_remove_error_message($error);
+//    drupal_set_message('summary:field_connection_to_ccss:single:' . $error, 'sbac_resource_error');
+//    drupal_set_message('summary:field_connection_to_ccss:group:Add a connection to the Common Core State Standards', 'sbac_resource_error');
+//  }
+  if ($form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
     $text = $form_state['values']['field_connection_to_ccss']['und'][0]['value'];
     $bad_words = profanity_validate_text($text);
     if ($bad_words) {
@@ -1394,6 +1393,33 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                     $recipients[] = entity_load_single('feedback', $feedback->id);
                   }
                 }
+                // email reviewers
+                foreach ($recipients as $recipient) {
+                  $reviewer = user_load($recipient->uid);
+                  $username = sbac_email_user_link($reviewer);
+                  // Add resource link to message
+                  global $base_url;
+                  $values = array(
+                    'arguments' => array(
+                      '!resource-link' => $base_url . '/node/' . $node->nid,
+                      '!user-link' => $username,
+                    ),
+                    'uid' => $reviewer->uid,
+                  );
+                  $email_preference = $reviewer->field_email_preference['und'][0]['value'];
+                  if ($email_preference !== '' || $email_preference !== 'never') {
+                    // create message
+                    $message = message_create('resource_resubmitted', $values);
+                    $wrapper = entity_metadata_wrapper('message', $message);
+                    $wrapper->save();
+                    if ($email_preference == 'immediately') {
+                      // send email
+                      message_notify_send_message($message);
+                      // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+                      message_delete_multiple(array($message->mid));
+                    }
+                  }
+                }       
               }
             }
             else {
@@ -1411,6 +1437,31 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                 $task->addOwningUser($node->uid);
                 $task->addTriggeringUser($user->uid);
                 $task->save();
+              }
+              // Email resource reviewers
+              $reviewers = sbac_resource_get_reviewers_email();
+              foreach ($reviewers as $reviewer) {
+                $user_profile = user_load($reviewer->uid);
+                $username = sbac_email_user_link($user_profile);
+                $values = array(
+                  'arguments' => array(
+                    '!user-link' => $username,
+                  ),
+                  'uid' => $reviewer->uid,
+                );
+                $email_preference = $reviewer->field_email_preference_value;
+                if ($email_preference !== '' || $email_preference !== 'never') {
+                  // create message
+                  $message = message_create('resource_ready_for_review', $values);
+                  $wrapper = entity_metadata_wrapper('message', $message);
+                  $wrapper->save();
+                  if ($email_preference == 'immediately') {
+                    // send email
+                    message_notify_send_message($message);
+                    // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+                    message_delete_multiple(array($message->mid));
+                  }
+                }
               }
             }
             else {
@@ -1832,7 +1883,7 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
   }
 
   // Connection to FAP
-  $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process') . ' ' . theme('form_required_marker');
+  $form['field_connection_to_fap']['und'][0]['value']['#title'] = t('Specific Connection to the Formative Assessment Process'); //. ' ' . theme('form_required_marker');
 
   // Body
   $form['field_alt_body']['und'][0]['value']['#title'] = t('Resource Summary') . ' ' . theme('form_required_marker');
@@ -1895,7 +1946,7 @@ function _sbac_resource_form_summary(&$form, $form_state) {
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
   // Connection to CCSS
-  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards') . ' ' . theme('form_required_marker');
+  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards'); // . ' ' . theme('form_required_marker');
   // Learning Goals
   $form['field_learning_goals']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   // Success Critieria
@@ -2382,9 +2433,6 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   if (isset($form['field_intended_student']['und']['#options']['_none'])) {
     unset($form['field_intended_student']['und']['#options']['_none']);
   }
-  if (isset($form['field_geographical_settings']['und']['#options']['_none'])) {
-    unset($form['field_geographical_settings']['und']['#options']['_none']);
-  }
   if (isset($form['field_smarter_balanced_keyword']['und']['#options']['_none'])) {
     unset($form['field_smarter_balanced_keyword']['und']['#options']['_none']);
   }
@@ -2404,14 +2452,12 @@ function _sbac_resource_form_tags(&$form, &$form_state) {
   $form['field_classroom_technologies']['und']['#title'] = t('Technologies Required for Use in Classroom');
 
   $form['tag_wrapper']['field_intended_student'] = $form['field_intended_student'];
-  $form['tag_wrapper']['field_geographical_settings'] = $form['field_geographical_settings'];
   $form['tag_wrapper']['field_smarter_balanced_keyword'] = $form['field_smarter_balanced_keyword'];
   $form['tag_wrapper']['field_educational_use'] = $form['field_educational_use'];
   $form['tag_wrapper']['field_classroom_technologies'] = $form['field_classroom_technologies'];
   $form['tag_wrapper']['field_digital_media_type'] = $form['field_digital_media_type'];
 
   unset($form['field_intended_student']);
-  unset($form['field_geographical_settings']);
   unset($form['field_smarter_balanced_keyword']);
   unset($form['field_educational_use']);
   unset($form['field_classroom_technologies']);
@@ -2847,9 +2893,9 @@ function sbac_resource_check_general($form, $form_state) {
     if (!$form_state['values']['field_focus']['und'][0]['tid']) {
       $valid = FALSE;
     }
-    if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
-      $valid = FALSE;
-    }
+//    if (!$form_state['values']['field_connection_to_fap']['und'][0]['value']) {
+//      $valid = FALSE;
+//    }
     if (!$form_state['values']['field_alt_body']['und'][0]['value']) {
       $valid = FALSE;
     }
@@ -2873,9 +2919,9 @@ function sbac_resource_check_general($form, $form_state) {
     if (!$form['field_alt_body']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
-    if (!$form['field_connection_to_fap']['und'][0]['value']['#default_value']) {
-      $valid = FALSE;
-    }
+//    if (!$form['field_connection_to_fap']['und'][0]['value']['#default_value']) {
+//      $valid = FALSE;
+//    }
     if (!$form['field_intended_end_user']['und']['#default_value']) {
       $valid = FALSE;
     }
@@ -2902,9 +2948,9 @@ function sbac_resource_check_summary($form, $form_state) {
     if (!$form_state['values']['field_contexts']['und'][0]['value']) {
       $valid = FALSE;
     }
-    if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
-      $valid = FALSE;
-    }
+//    if (!$form_state['values']['field_connection_to_ccss']['und'][0]['value']) {
+//      $valid = FALSE;
+//    }
     if (!$form_state['values']['field_learning_goals']['und'][0]['value']) {
       $valid = FALSE;
     }
@@ -2929,9 +2975,9 @@ function sbac_resource_check_summary($form, $form_state) {
     if (!$form['field_contexts']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
-    if (!$form['field_connection_to_ccss']['und'][0]['value']['#default_value']) {
-      $valid = FALSE;
-    }
+//    if (!$form['field_connection_to_ccss']['und'][0]['value']['#default_value']) {
+//      $valid = FALSE;
+//    }
     if (!$form['field_learning_goals']['und'][0]['value']['#default_value']) {
       $valid = FALSE;
     }
@@ -3587,7 +3633,6 @@ function sbac_resource_smart_search_builder_form($form, &$form_state) {
     'intended_student_populations' => t('Intended Student Populations'),
     'educational_use' => t('Educational Use'),
     'smarter_balanced_keyword' => t('Module Type'),
-    'geographical_settings' => t('Geographic Settings'),
   );
   $form['help_text'] = array(
     '#markup' => '<p>Select filters from the available options to create a url</p>',
@@ -3809,7 +3854,6 @@ function sbac_resource_smart_search_builder_form_submit($form, &$form_state) {
       'intended_student_populations',
       'educational_use',
       'smarter_balanced_keyword',
-      'geographical_settings',
       // 'technologies_for_classroom_use',
       // 'education_alignment',
     );
@@ -3881,6 +3925,35 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
         $post_wrapper->field_contributor_comment->set($feedback['contributor_comment']);
         $post_wrapper->field_contributor_comment_date->set(time());
         $post_wrapper->save();
+      }
+    }
+    // Email last reviewer that a rejected resource is available for review
+    $last_reviewer = $form_state['values']['field_recent_reviewers']['und'][0]['target_id'];
+    // Send email to user
+    // Add resource link to message
+    $node = $form_state['node'];
+    global $base_url;
+    $user_profile = user_load($last_reviewer);
+    $username = sbac_email_user_link($user_profile);
+    $values = array(
+      'arguments' => array(
+        '!resource-link' => $base_url . '/node/' . $node->nid,
+        '!user-link' => $username,
+      ),
+      'uid' => $last_reviewer,
+    );
+    
+    $email_preference = $user_profile->field_email_reference[0]['und']['value'];
+    if ($email_preference !== '' && $email_preference !== 'never') {
+      // Create message
+      $message = message_create('resource_resubmitted', $values);
+      $wrapper = entity_metadata_wrapper('message', $message);
+      $wrapper->save();
+      if ($email_preference == 'immediately') {
+        // Send email
+        message_notify_send_message($message);
+        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+        message_delete_multiple(array($message->mid));
       }
     }
   }
@@ -4068,4 +4141,36 @@ function sbac_resource_update_thumb_form_submit($form, &$form_state) {
     $path = drupal_get_path_alias('node/' . $node->nid);
     drupal_goto($path);
   }
+}
+
+/**
+ * Grabs users for reviewers mass messaging
+ */
+
+function sbac_resource_get_reviewers_email() {
+  $sql = <<<SQL
+
+    SELECT
+      u.uid,
+      ep.field_email_preference_value
+    FROM {users} u
+      LEFT JOIN {field_data_field_email_preference} ep
+        ON u.uid = ep.entity_id
+      INNER JOIN {users_roles} r
+        ON u.uid = r.uid
+    WHERE
+      u.status = :status
+      AND (ep.field_email_preference_value != :preference)
+      AND (r.rid = :role OR r.rid = :role1)
+    GROUP BY
+      u.uid
+SQL;
+
+  $result = db_query($sql, array(':status' => '1', ':preference' => 'never', ':role' => '17', ':role1' => '16'));
+
+  foreach ($result as $row) {
+    $reviewers[] = $row;
+  }
+
+  return $reviewers;
 }

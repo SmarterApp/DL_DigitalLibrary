@@ -349,33 +349,6 @@ function sbac_resource_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
-  // Exported field_base: 'field_geographical_settings'.
-  $field_bases['field_geographical_settings'] = array(
-    'active' => 1,
-    'cardinality' => -1,
-    'deleted' => 0,
-    'entity_types' => array(),
-    'field_name' => 'field_geographical_settings',
-    'indexes' => array(
-      'tid' => array(
-        0 => 'tid',
-      ),
-    ),
-    'locked' => 0,
-    'module' => 'taxonomy',
-    'settings' => array(
-      'allowed_values' => array(
-        0 => array(
-          'vocabulary' => 'geographical_settings',
-          'parent' => 0,
-        ),
-      ),
-      'options_list_callback' => 'title_taxonomy_allowed_values',
-    ),
-    'translatable' => 0,
-    'type' => 'taxonomy_term_reference',
-  );
-
   // Exported field_base: 'field_grades'.
   $field_bases['field_grades'] = array(
     'active' => 1,
@@ -878,7 +851,7 @@ function sbac_resource_field_default_field_bases() {
         'needs_qc_review' => 'Needs QC Review',
         'qc_being_reviewed' => 'QC Being Reviewed',
         'approved' => 'Approved',
-        'needs_post_review' => 'Needs Posting',
+        'needs_post_review' => 'Needs Arbitration',
         'post_being_reviewed' => 'Post Being Reviewed',
       ),
       'allowed_values_function' => '',

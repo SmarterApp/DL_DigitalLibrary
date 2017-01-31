@@ -68,39 +68,58 @@ function sbac_self_registration_form_validate($form, &$form_state) {
  * @param array $form_state All form functions that are contained in self registration form
  */
 function sbac_self_registration_form_submit($form, &$form_state) {
+  // Grab the form fields
   $first_name = $form_state['values']['first_name'];
   $last_name = $form_state['values']['last_name'];
   $email = $form_state['values']['e-mail'];
+  // Create new emailer
   $emailer = new sbacEmails($email);
+  // Check to see if the user's domain is valid
   $domain_valid = _sbac_self_registration_check_domain($email);
-  if (!$domain_valid) {
-    $emailer->send_sr_unauthorized_mail($first_name, $last_name);
-    
-    $email_parts = explode('@', $email);
-    $domain = $email_parts[1];
-    sbac_self_registration_add_unauthorized_domain($domain);
-  } else {
-    $sbac_user = sbac_art_api_get_user($email, FALSE);
-    if (!$sbac_user) {
-      $domain_info = _sbac_self_registration_get_domain_info($email);
-      $user_json = sbac_art_api_user_create_json($first_name, $last_name, $email, $domain_info['state'], $domain_info['district']);
-      sbac_art_api_set_user($user_json);
-    } else {
-      $role_exists = FALSE;
-      foreach ($sbac_user['roleAssociations'] as $key => $association) {
-        if ($association['role'] =='DL_EndUser') {
-          $role_exists = TRUE;
-        }
+  // Check to see if the user exists
+  $sbac_user = sbac_art_api_get_user($email, FALSE);
+  // If they do, check to see if they have the DL role
+  if ($sbac_user) {
+    // Check to see if the user has the DL_EndUser role
+    $role_exists = FALSE;
+    foreach ($sbac_user['roleAssociations'] as $key => $association) {
+      if ($association['role'] =='DL_EndUser') {
+        $role_exists = TRUE;
       }
-      if ($role_exists) {
-        $token = _sbac_self_registration_token_encode($email);
-        $emailer->send_sr_user_exists_mail($first_name, $last_name, url('/verify-email/', array('absolute' => TRUE, 'query' => array('token' => $token))));
-      } else {
+    }
+    // If they have the DL role, send them a password reset email
+    if ($role_exists) {
+      $token = _sbac_self_registration_token_encode($email);
+      $emailer->send_sr_user_exists_mail($first_name, $last_name, url('/verify-email/', array('absolute' => TRUE, 'query' => array('token' => $token))));
+    } else {
+      // If they don't have the DL role, and their domain is valid, add the role
+      if ($domain_valid) {
         $domain_info = _sbac_self_registration_get_domain_info($email);
         $new_user_json = sbac_art_api_user_update_json($sbac_user, $domain_info['state'], $domain_info['district']);
         sbac_art_api_set_user($new_user_json);
         $emailer->send_sr_missing_role_mail($first_name, $last_name);
+      } else {
+        // If their domain isn't valid,  send an email saying they need manual intervention and log the unauthorized domain
+        $emailer->send_sr_unauthorized_mail($first_name, $last_name);
+
+        $email_parts = explode('@', $email);
+        $domain = $email_parts[1];
+        sbac_self_registration_add_unauthorized_domain($domain);
       }
+    }
+  } else {
+    // If they don't exist, and their domain is valid, add them
+    if ($domain_valid) {
+      $domain_info = _sbac_self_registration_get_domain_info($email);
+      $user_json = sbac_art_api_user_create_json($first_name, $last_name, $email, $domain_info['state'], $domain_info['district']);
+      sbac_art_api_set_user($user_json);
+    } else {
+      // If their domain isn't valid,  send an email saying they need manual intervention and log the unauthorized domain
+      $emailer->send_sr_unauthorized_mail($first_name, $last_name);
+
+      $email_parts = explode('@', $email);
+      $domain = $email_parts[1];
+      sbac_self_registration_add_unauthorized_domain($domain);
     }
   }
   drupal_goto('/self-registration-processing');

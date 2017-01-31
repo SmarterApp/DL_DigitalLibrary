@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * Implement hook_menu().
+ */
+function dialog_user_menu() {
+  $items['user/login/%dialog_js'] = array(
+    'page callback' => 'dialog_user_ajax_callback',
+    'page arguments' => array(1, 2),
+    'access callback' => 'user_is_anonymous',
+    'type' => MENU_CALLBACK,
+  );
+  $items['user/register/%dialog_js'] = array(
+    'page callback' => 'dialog_user_ajax_callback',
+    'page arguments' => array(1, 2),
+    'access callback' => 'user_register_access',
+    'type' => MENU_CALLBACK,
+  );
+  $items['user/password/%dialog_js'] = array(
+    'page callback' => 'dialog_user_ajax_callback',
+    'page arguments' => array(1, 2),
+    'access callback' => 'user_is_anonymous',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+* Menu callback for our ajax links.
+*/
+function dialog_user_ajax_callback($type, $js) {
+  switch ($type) {
+    case 'login':
+      $title = t('Login');
+      $form_id = 'user_login';
+      $path = 'user/login';
+      break;
+    case 'register':
+      $title = t('Register');
+      $form_id = 'user_register_form';
+      $path = 'user/register';
+      break;
+    case 'password':
+      // @TODO Why doesn't request new password work?
+      $title = t('Request new password');
+      $form_id = 'user_pass';
+      $path = 'user/pass';
+      break;
+  }
+
+  if ($js) {
+    dialog_display(TRUE);
+    $content = drupal_get_form($form_id);
+    $output[] = dialog_command_display($content, array('title' => $title));
+    ajax_deliver(array('#type' => 'ajax', '#commands' => $output));
+  }
+  else {
+    drupal_goto($path);
+  }
+}
+
+/**
+ * Implement hook_form_alter().
+ */
+function dialog_user_form_alter(&$form, &$form_state, $form_id) {
+  $forms = array('user_register_form', 'user_pass', 'user_login');
+  if (in_array($form_id, $forms)) {
+    if (dialog_display() || isset($form_state['values']['dialog_display'])) {
+      $form['dialog_display'] = array('#type' => 'value', '#value' => TRUE);
+      $form['#prefix'] = '<div id="dialog-form-wrapper">';
+      $form['#suffix'] = '</div>';
+
+      // Make enter press work on textfields.
+      $textfields = array('name', 'pass', 'email');
+      foreach ($textfields as $textfield) {
+        if (isset($form[$textfield])) {
+          $form[$textfield]['#ajax'] = array(
+            'event' => '',
+            'keypress' => TRUE,
+            'callback' => 'drupal_render',
+            'wrapper' => 'dialog-form-wrapper',
+          );
+        }
+        if (isset($form['account'][$textfield])) {
+          $form['account'][$textfield]['#ajax'] = array(
+            'event' => '',
+            'keypress' => TRUE,
+            'callback' => 'drupal_render',
+            'wrapper' => 'dialog-form-wrapper',
+          );
+        }
+      }
+
+      $form['submit']['#ajax'] = array(
+        'callback' => 'drupal_render',
+        'wrapper' => 'dialog-form-wrapper',
+      );
+
+      $form['#submit'][] = 'dialog_user_ajax_form_submit';
+      $form['#process'][] = 'dialog_process_ajax_form';
+    }
+  }
+}
+
+/**
+ * Ajax submit handler for forms inside dialogs.
+ */
+function dialog_user_ajax_form_submit(&$form, &$form_state) {
+  if (isset($form_state['redirect'])) {
+    $commands = array();
+    $commands[] = dialog_command_redirect($form_state['redirect']);
+    ajax_render($commands);
+  }
+}

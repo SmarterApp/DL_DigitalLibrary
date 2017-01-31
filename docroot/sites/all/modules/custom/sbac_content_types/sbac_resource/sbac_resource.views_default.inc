@@ -84,7 +84,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['current']['field'] = 'current';
   $handler->display->display_options['filters']['current']['value'] = '1';
   $handler->display->display_options['filters']['current']['group'] = 1;
-  /* Filter criterion: Field: Grades (field_grades) */
+  /* Filter criterion: Field: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -244,7 +244,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grades */
+  /* Field: Field: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -361,7 +361,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grades */
+  /* Field: Field: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -469,10 +469,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['field_alt_body']['id'] = 'field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['table'] = 'field_data_field_alt_body';
   $handler->display->display_options['fields']['field_alt_body']['field'] = 'field_alt_body';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
@@ -518,7 +514,7 @@ function sbac_resource_views_default_views() {
     26 => 0,
     31 => 0,
   );
-  /* Filter criterion: Field: Grades (field_grades) */
+  /* Filter criterion: Field: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -692,7 +688,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grades */
+  /* Field: Field: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -810,7 +806,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grades */
+  /* Field: Field: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -1007,7 +1003,7 @@ function sbac_resource_views_default_views() {
     'published' => 'published',
   );
   $handler->display->display_options['filters']['state']['group'] = 1;
-  /* Filter criterion: Field: Grades (field_grades) */
+  /* Filter criterion: Field: Grade(s) (field_grades) */
   $handler->display->display_options['filters']['field_grades_tid']['id'] = 'field_grades_tid';
   $handler->display->display_options['filters']['field_grades_tid']['table'] = 'field_data_field_grades';
   $handler->display->display_options['filters']['field_grades_tid']['field'] = 'field_grades_tid';
@@ -1139,39 +1135,6 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['filters']['field_subject_tid']['reduce_duplicates'] = TRUE;
   $handler->display->display_options['filters']['field_subject_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_subject_tid']['vocabulary'] = 'subject';
-  /* Filter criterion: Field: Geographic Settings (field_geographical_settings) */
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['id'] = 'field_geographical_settings_tid';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['table'] = 'field_data_field_geographical_settings';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['field'] = 'field_geographical_settings_tid';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['operator'] = 'and';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['group'] = 1;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['operator_id'] = 'field_geographical_settings_tid_op';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['label'] = 'Geographical Settings';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['operator'] = 'field_geographical_settings_tid_op';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['identifier'] = 'field_geographical_settings_tid';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['multiple'] = TRUE;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['expose']['remember_roles'] = array(
-    2 => '2',
-    1 => 0,
-    3 => 0,
-    25 => 0,
-    24 => 0,
-    15 => 0,
-    17 => 0,
-    16 => 0,
-    11 => 0,
-    13 => 0,
-    7 => 0,
-    22 => 0,
-    8 => 0,
-    23 => 0,
-    26 => 0,
-    31 => 0,
-  );
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['reduce_duplicates'] = TRUE;
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_geographical_settings_tid']['vocabulary'] = 'geographical_settings';
   /* Filter criterion: Field: Educational Use (field_educational_use) */
   $handler->display->display_options['filters']['field_educational_use_tid']['id'] = 'field_educational_use_tid';
   $handler->display->display_options['filters']['field_educational_use_tid']['table'] = 'field_data_field_educational_use';
@@ -1538,7 +1501,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['type'] = 'boolean';
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grades */
+  /* Field: Field: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';
@@ -1651,7 +1614,7 @@ function sbac_resource_views_default_views() {
   $handler->display->display_options['fields']['sticky']['label'] = '';
   $handler->display->display_options['fields']['sticky']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['sticky']['not'] = 0;
-  /* Field: Field: Grades */
+  /* Field: Field: Grade(s) */
   $handler->display->display_options['fields']['field_grades']['id'] = 'field_grades';
   $handler->display->display_options['fields']['field_grades']['table'] = 'field_data_field_grades';
   $handler->display->display_options['fields']['field_grades']['field'] = 'field_grades';

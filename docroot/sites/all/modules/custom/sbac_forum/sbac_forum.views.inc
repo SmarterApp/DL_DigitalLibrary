@@ -42,6 +42,10 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
                     $view_filters['field_intended_student_tid']['value'][] = $tid;
                     $view_filters['field_intended_student_tid']['operator'] = 'and';
                     break;
+                  case 'title':
+                    $view_filters['field_intended_participants_tid']['value'][] = $tid;
+                    $view_filters['field_intended_participants_tid']['operator'] = 'and';
+                    break;
                   case 'subject':
                     $view_filters['field_subject_tid']['value'][] = $tid;
                     $view_filters['field_subject_tid']['operator'] = 'and';
@@ -49,10 +53,6 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
                   case 'intended_end_user':
                     $view_filters['field_intended_end_user_tid']['value'][] = $tid;
                     $view_filters['field_intended_end_user_tid']['operator'] = 'and';
-                    break;
-                  case 'geographical_settings':
-                    $view_filters['field_geographical_settings_tid']['value'][] = $tid;
-                    $view_filters['field_geographical_settings_tid']['operator'] = 'and';
                     break;
                   case 'attributes':
                     $view_filters['field_attributes_tid']['value'][] = $tid;
