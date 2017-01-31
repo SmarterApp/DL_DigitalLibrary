@@ -69,7 +69,7 @@
             currentStandards.push(id);
           });
 
-          // Function for adding the selected items to the page and closing the modal
+          // Function for refreshing the tables
           var updateTables = function (data) {
             $('#sbac-resource-alignment-tag-view').html(data.ccss_html);
             $('#sbac-resource-target-tag-view').html(data.target_html);
@@ -78,7 +78,7 @@
             valueUpdater();
           };
 
-          // Call the helper AJAX function to build the tables of standards
+          // Call the helper AJAX function to rebuild the tables of standards
           $.ajax({
             type: 'POST',
             contentType: 'application/json',

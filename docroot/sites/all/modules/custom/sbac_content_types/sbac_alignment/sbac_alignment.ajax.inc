@@ -159,8 +159,7 @@ function sbac_alignment_ajax_terms_callback() {
   $output = theme('alignment_tags', array('terms' => $terms, 'level_title' => $level_title));
   $output_array['html'] = $output;
 
-  print drupal_json_encode($output_array);
-  exit;
+  drupal_json_output($output_array);
 }
 
 /**
@@ -169,8 +168,7 @@ function sbac_alignment_ajax_terms_callback() {
 function sbac_alignment_ajax_filter_alignment_confirm_remove_callback() {
   $output = theme('alignment_modal_confirm', array('terms' => array()));
   $output_array['html'] = $output;
-  print drupal_json_encode($output_array);
-  exit;
+  drupal_json_output($output_array);
 }
 
 /**
@@ -238,8 +236,7 @@ function sbac_alignment_ajax_filter_alignment_finish_set_callback() {
     'filters' => $filters,
   );
 
-  print drupal_json_encode($data);
-  exit;
+  drupal_json_output($data);
 }
 
 /**
@@ -249,8 +246,7 @@ function sbac_alignment_ajax_filter_alignment_finish_set_callback() {
 function sbac_alignment_ajax_alignment_form_callback() {
   $tid = $_POST['tid'];
   $output['html'] = drupal_render(drupal_get_form('sbac_alignment_alignment_form', $tid));
-  print drupal_json_encode($output);
-  exit;
+  drupal_json_output($output);
 }
 /**
  * AJAX Callback - filter dialog for ccss
@@ -260,8 +256,7 @@ function sbac_alignment_ajax_alignment_form_callback() {
 function sbac_alignment_ajax_filter_alignment_form_callback() {
   $tid = $_POST['tid'];
   $output['html'] = drupal_render(drupal_get_form('sbac_alignment_filter_alignment_form', $tid));
-  print drupal_json_encode($output);
-  exit;
+  print drupal_json_output($output);
 }
 
 
@@ -290,6 +285,5 @@ function sbac_alignment_ajax_alignment_breadcrumbs_callback() {
   }
 
   $output['html'] = theme('alignment_breadcrumbs', array('terms' => array_reverse($parents)));
-  print drupal_json_encode($output);
-  exit;
+  drupal_json_output($output);
 }
