@@ -123,9 +123,10 @@ class Hooks extends \devtools\Hooks {
       'disabled' => FALSE,
       'class' => 'section-goals',
       'weight' => -100,
-      'source' => 'people',
+      'source' => 'people&uid=' . $account->uid,
       'tab' => 'goals',
       'section_loaded' => '',
+      'uid' => $account->uid,
     );
   }
 

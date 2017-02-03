@@ -1,0 +1,17 @@
+name = Views Variable Field
+description = Use system variables as Views fields.
+core = 7.x
+package = Views
+
+dependencies[] = views
+
+files[] = includes/views/views_handler_field_variable.inc
+files[] = includes/views/views_handler_filter_field_variable_compare.inc
+files[] = vvf.test
+
+; Information added by Drupal.org packaging script on 2016-03-21
+version = "7.x-1.2"
+core = "7.x"
+project = "vvf"
+datestamp = "1458579240"
+

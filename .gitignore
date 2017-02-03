@@ -20,9 +20,5 @@ nbproject
 # Build temporary files
 /build
 /*/**/.git
+rsync.pwd
 
-#Composer installed
-/docroot/sites/all/modules/contrib/*
-/docroot/sites/all/themes/contrib/*
-/vendor
-#Composer end

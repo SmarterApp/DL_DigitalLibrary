@@ -30,6 +30,16 @@
         print l(htmlspecialchars_decode($fields['title']->raw), $fields['path']->content);
       ?>
     </h3>
+    <div class='resource-stats'>
+      <?php if (isset($fields['field_alt_body'])): ?>
+        <?php echo $fields['field_alt_body']->content; ?>
+      <?php endif; ?>
+    </div>
+    <div class='resource-type'>
+      <?php if (isset($fields['field_focus'])): ?>
+        <?php echo $fields['field_focus']->content; ?>
+      <?php endif; ?>
+    </div>
     <div class="shield-drop"><?php print $image; ?></div>
 
   <div class="list-view-info">
@@ -72,24 +82,29 @@
 
         <?php endif; ?>
 
-    <?php if (isset($fields['text']) && $fields['text'] != 'approved'): ?>
-      <div class="resource-state-description">
-        <p>
-          <?php print $fields['text'] ?>
-        </p>
-      </div>
-
-    <?php endif; ?>
-
-      <?php
-        if (isset($fields['buttons']) && is_array($fields['buttons'])) {
-          foreach ($fields['buttons'] as $type => $button) {
-            print '<div class="resource-button left">';
-            print $button;
-            print '</div>';
+        <?php if (isset($fields['text']) && $fields['text'] != 'approved'): ?>
+          <div class="resource-state-description">
+            <p>
+              <?php print $fields['text'] ?>
+            </p>
+          </div>
+        <?php endif; ?>
+        <div class="resource-state-icons">
+          <?php
+          foreach ($fields['status_icons'] as $icon) {
+            print '<img src="/' . drupal_get_path('theme', 'SBAC') . '/images/workflow-icons/' . $icon['image'] . '" title="' . $icon['hover'] . '">';
           }
-        }
-      ?>
+          ?>
+        </div>
+        <?php
+          if (isset($fields['buttons']) && is_array($fields['buttons'])) {
+            foreach ($fields['buttons'] as $type => $button) {
+              print '<div class="resource-button left">';
+              print $button;
+              print '</div>';
+            }
+          }
+        ?>
       </div>
     </div>
   </div>

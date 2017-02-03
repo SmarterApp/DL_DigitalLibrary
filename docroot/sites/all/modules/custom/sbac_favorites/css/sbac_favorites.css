@@ -1,0 +1,199 @@
+/* Profile page */
+.section-favorites .sbac-favorites-collection-create-wrapper {
+    text-align: right;
+}
+.section-favorites a.sbac-favorites-collection-create {
+    color: #006298;
+    background-color: #bfd8e5;
+    border-color: #77abc8;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: none;
+}
+
+.section-favorites .favorite-title {
+    padding-left: 25px;
+
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-blue.png) no-repeat 0 2px;
+}
+.section-favorites .collection-favorites .favorite-title {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-favorite-red.png) no-repeat 0 1px;
+}
+
+.section-favorites a.sbac-favorites-delete-favorite {
+    opacity: 100;
+    color: #0583AC;
+}
+
+.section-favorites a.sbac-favorites-links-favorite {
+    opacity: 100;
+    color: #0583AC;
+}
+
+#sbac-favorites-resource-table-drag-drop .collection-favorites .tabledrag-handle {
+    opacity: 0;
+}
+
+#sbac-favorites-resource-table-drag-drop .tabledrag-root .expander {
+    padding-left: 20px;
+    position: relative;
+}
+#sbac-favorites-resource-table-drag-drop .tabledrag-root.expanded .expander {
+    background: url(/sites/all/themes/custom/SBAC/images/icon-arrow-down.png) no-repeat 0 0;
+    top: 6px;
+}
+#sbac-favorites-resource-table-drag-drop .tabledrag-root.collapsed .expander {
+    background: url(/sites/all/themes/custom/SBAC/images/icon-arrow-right.png) no-repeat 0 0;
+    top: 4px;
+    left: 3px;
+}
+
+#sbac-favorites-resource-table-drag-drop .sbac-favorites-links-favorite.ctools-use-modal {
+    margin-left: 5px;
+}
+
+/* Resource pages */
+.f-dropdown.sbac-favorites-collections {
+    top: 75px;
+    right: 25px;
+    text-align: left;
+    max-width: 300px;
+}
+
+.html5-identifier ~ .favorites-link .f-dropdown.sbac-favorites-collections {
+    top: 90px;
+}
+
+.f-dropdown.sbac-favorites-collections .sbac-favorites-collection-list {
+    max-height: 82px;
+    overflow-y: auto;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.sbac-favorites-collections a.sbac-favorites-collection {
+    height: 16px;
+    color: #0583ac;
+    text-decoration: underline;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+.sbac-favorites-collections a.sbac-favorites-collection:hover,
+.sbac-favorites-collections a.sbac-favorites-collection:focus {
+}
+.sbac-favorites-collections a.sbac-favorites-collection-collection.sbac-favorite-no {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-blue.png) no-repeat 0 0;
+}
+.sbac-favorites-collections a.sbac-favorites-collection-collection.sbac-favorite-yes {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-red.png) no-repeat 0 0;
+}
+.sbac-favorites-collections a.sbac-favorites-collection-favorites.sbac-favorite-no {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-favorite-blue.png) no-repeat 0 0;
+}
+.sbac-favorites-collections a.sbac-favorites-collection-favorites.sbac-favorite-yes {
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-favorite-red.png) no-repeat 0 0;
+}
+
+.sbac-favorites-collection-create-wrapper {
+    text-align: center;
+}
+.sbac-favorites-collections .sbac-favorites-collection-create {
+    margin-top: 15px;
+    line-height: 16px;
+    color: #006298;
+    background-color: #bfd8e5;
+    border-color: #77abc8;
+}
+
+.sbac-favorites-collections form {
+    margin: 0;
+}
+
+
+/* popup collection form */
+#modalContent .ui-dialog {
+    width: 100%;
+}
+#modalContent .ui-dialog .ui-dialog-titlebar-close {
+    right: 15px;
+    top: 25px;
+}
+#modalContent .ui-dialog button.ui-dialog-titlebar-close:hover,
+#modalContent .ui-dialog button.ui-dialog-titlebar-close:active {
+    background-color: white;
+}
+#modalContent .ui-dialog .ui-dialog-titlebar-close .ui-button-text {
+    display: none;
+}
+#modalContent .ctools-modal-content #modal-content {
+    padding-top: 30px;
+}
+#modalContent .ctools-modal-content .modal-content .node-collection-form .form-item label {
+    font-weight: bold;
+    color: black;
+    margin-bottom: 15px;
+}
+.node-collection-form .form-item-title input {
+    max-width: 650px;
+}
+#modalContent .form-item-title {
+    position: relative;
+}
+#modalContent #edit-title-counter {
+    position: absolute;
+    text-align: right;
+    top: 0;
+    right: 55px;
+    font-size: smaller;
+    color: #555;
+    margin: 0;
+    padding: 10px 0 0 35px;
+    background-position: 0;
+    border: none;
+    background-color: inherit;
+}
+#modalContent #edit-body {
+    position: relative;
+}
+#modalContent #edit-body textarea {
+    max-width: 650px;
+}
+#modalContent #edit-body-und-0-value-counter {
+    position: absolute;
+    text-align: right;
+    top: 0;
+    right: 55px;
+    font-size: smaller;
+    color: #555;
+    margin: 0;
+    padding: 10px 0 0 35px;
+    background-position: 0;
+    border: none;
+    background-color: inherit;
+}
+.node-collection-form .field-name-field-subject,
+.node-collection-form .field-name-field-grades {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+}
+.node-collection-form .field-name-field-subject {
+    margin-right: 2%;
+}
+.node-collection-form button {
+    margin-left: 5px;
+}
+.node-collection-form button.button.secondary.form-submit {
+    background-color: #2AA549;
+    border: 1px solid #268A16;
+}
+#modalContent .ctools-modal-content .node-collection-form .form-actions {
+    margin: 0;
+}
+#modalContent .node-collection-form button#edit-preview-changes {
+    display: none;
+}
+#modalContent .node-collection-form button#edit-delete {
+    display: none;
+}

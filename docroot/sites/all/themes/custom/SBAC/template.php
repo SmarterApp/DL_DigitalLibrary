@@ -577,57 +577,52 @@ function sbac_preprocess_page(&$variables) {
     $variables['page']['sub-header'] = '';
     
     // Facet blocks DLR search page
-    $block_subjects = module_invoke('facetapi', 'block_view', 'nrsgXavatPXoRE97gHS2r1ESNWswbnCM') ?  module_invoke('facetapi', 'block_view', 'nrsgXavatPXoRE97gHS2r1ESNWswbnCM') : NULL ;
+    $block_subjects = module_invoke('facetapi', 'block_view', 'nrsgXavatPXoRE97gHS2r1ESNWswbnCM');
     if($block_subjects) {
       $variables['blocks']['subjects'] = render($block_subjects['content']);
     }
 
-    $block_resource_type = module_invoke('facetapi', 'block_view', 'fRhMp2aUokH7KlAdfnq3f7c0FVV4fr4Q') ?  module_invoke('facetapi', 'block_view', 'fRhMp2aUokH7KlAdfnq3f7c0FVV4fr4Q') : NULL ;
+    $block_resource_type = module_invoke('facetapi', 'block_view', 'fRhMp2aUokH7KlAdfnq3f7c0FVV4fr4Q');
     if($block_resource_type) {
       $variables['blocks']['resource_type'] = render($block_resource_type['content']);
     }
     
-    $block_module_type = module_invoke('facetapi', 'block_view', 'SV01DFPPCFVbU0JqswlVxgJCJhXbmcOy') ?  module_invoke('facetapi', 'block_view', 'SV01DFPPCFVbU0JqswlVxgJCJhXbmcOy') : NULL ;
+    $block_module_type = module_invoke('facetapi', 'block_view', 'SV01DFPPCFVbU0JqswlVxgJCJhXbmcOy');
     if($block_module_type) {
       $variables['blocks']['module_type'] = render($block_module_type['content']);
     }
     
-    $block_grades = module_invoke('facetapi', 'block_view', 'k204ecdKtRrzpYIMM7Zu0XeKxWWemUh5') ?  module_invoke('facetapi', 'block_view', 'k204ecdKtRrzpYIMM7Zu0XeKxWWemUh5') : NULL ;
+    $block_grades = module_invoke('facetapi', 'block_view', 'k204ecdKtRrzpYIMM7Zu0XeKxWWemUh5');
     if($block_grades) {
       $variables['blocks']['grades'] = render($block_grades['content']);
     }
 
-    $block_intended_end_users = module_invoke('facetapi', 'block_view', 'L6gAFTHWR0vscswQ685yyJJu1FITNoqS') ?  module_invoke('facetapi', 'block_view', 'L6gAFTHWR0vscswQ685yyJJu1FITNoqS') : NULL ;
+    $block_intended_end_users = module_invoke('facetapi', 'block_view', 'L6gAFTHWR0vscswQ685yyJJu1FITNoqS');
     if($block_intended_end_users) {
       $variables['blocks']['intended_end_users'] = render($block_intended_end_users['content']);
     }
 
-    $block_geographic_settings = module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') ?  module_invoke('facetapi', 'block_view', '1R3OMmLo12PjYpsfCD5PMODCA12DF2WR') : NULL ;
-    if($block_geographic_settings) {
-      $variables['blocks']['geographic_settings'] = render($block_geographic_settings['content']);
-    }
-
-    $block_formative_assessment_attributes = module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') ?  module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N') : NULL ;
+    $block_formative_assessment_attributes = module_invoke('facetapi', 'block_view', 'cXOKcVqn9MFTuVzWnt9rC7RLWCWDPQ4N');
     if($block_formative_assessment_attributes) {
       $variables['blocks']['formative_assessment_attributes'] = render($block_formative_assessment_attributes['content']);
     }
 
-    $block_intended_student_populations = module_invoke('facetapi', 'block_view', '00LKPOl8iXFf0Xou1niewt0aXS4fppRM') ?  module_invoke('facetapi', 'block_view', '00LKPOl8iXFf0Xou1niewt0aXS4fppRM') : NULL ;
+    $block_intended_student_populations = module_invoke('facetapi', 'block_view', '00LKPOl8iXFf0Xou1niewt0aXS4fppRM');
     if($block_intended_student_populations) {
       $variables['blocks']['intended_student_populations'] = render($block_intended_student_populations['content']);
     }
 
-    $block_common_core_state_standards = module_invoke('facetapi', 'block_view', 'UPdv5417AehtcIuC8o5n3oR4NI4SXwXG') ?  module_invoke('facetapi', 'block_view', 'UPdv5417AehtcIuC8o5n3oR4NI4SXwXG') : NULL ;
+    $block_common_core_state_standards = module_invoke('facetapi', 'block_view', 'UPdv5417AehtcIuC8o5n3oR4NI4SXwXG');
     if($block_common_core_state_standards) {
       $variables['blocks']['common_core_state_standards'] = render($block_common_core_state_standards['content']);
     }
 
-    $block_media_types = module_invoke('facetapi', 'block_view', 'UrOlQvUwcdlf2A0eLTIoIux0Jkne1XA1') ?  module_invoke('facetapi', 'block_view', 'UrOlQvUwcdlf2A0eLTIoIux0Jkne1XA1') : NULL ;
+    $block_media_types = module_invoke('facetapi', 'block_view', 'UrOlQvUwcdlf2A0eLTIoIux0Jkne1XA1');
     if($block_media_types) {
       $variables['blocks']['media_types'] = render($block_media_types['content']);
     }
 
-    $block_educational_use = module_invoke('facetapi', 'block_view', 'OIPuW0AWUGbaUEzkfMhRrqgVcNchlQfM') ?  module_invoke('facetapi', 'block_view', 'OIPuW0AWUGbaUEzkfMhRrqgVcNchlQfM') : NULL ;
+    $block_educational_use = module_invoke('facetapi', 'block_view', 'OIPuW0AWUGbaUEzkfMhRrqgVcNchlQfM');
     if($block_educational_use) {
       $variables['blocks']['educational_use'] = render($block_educational_use['content']);
     }
@@ -658,11 +653,13 @@ function sbac_preprocess_page(&$variables) {
     if ($goals['starred_goal'] > 0) {
       // If goal completed, set number complete to goal target
       if ($starred_complete[0] >= $goals['starred_goal']) {
-        $starred_complete[0] = $goals['starred_goal'];
         $starred_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources rated is " . $starred_complete[0] . " out of " . $goals['starred_goal'] . "</p>";
       }
-      $starred_perc = sbac_goals_calc_percent($starred_complete[0], $goals['starred_goal']);
       $variables['goals']['star_rating'][] = $starred_complete[0];
+      if ($starred_complete[0] >= $goals['starred_goal']) {
+        $starred_complete[0] = $goals['starred_goal'];
+      }
+      $starred_perc = sbac_goals_calc_percent($starred_complete[0], $goals['starred_goal']);
       $variables['goals']['star_rating'][] = $starred_perc;
       $variables['goals']['star_rating'][] = $starred_tooltip;
     }
@@ -679,11 +676,13 @@ function sbac_preprocess_page(&$variables) {
       $reviewed_tooltip = FALSE;
       // If goal completed, set number complete to goal target
       if ($reviewed_complete[0] >= $goals['reviewed_goal']) {
-        $reviewed_complete[0] = $goals['reviewed_goal'];
         $reviewed_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources reviewed is " . $reviewed_complete[0] . " out of " . $goals['reviewed_goal'] . "</p>";
       }    
-      $reviewed_perc = sbac_goals_calc_percent($reviewed_complete[0], $goals['reviewed_goal']);
       $variables['goals']['resources_reviewed'][] = $reviewed_complete[0];
+      if ($reviewed_complete[0] >= $goals['reviewed_goal']) {
+        $reviewed_complete[0] = $goals['reviewed_goal'];
+      }
+      $reviewed_perc = sbac_goals_calc_percent($reviewed_complete[0], $goals['reviewed_goal']);
       $variables['goals']['resources_reviewed'][] = $reviewed_perc;
       $variables['goals']['resources_reviewed'][] = $reviewed_tooltip;
     }
@@ -699,11 +698,13 @@ function sbac_preprocess_page(&$variables) {
       $posted_tooltip = FALSE;
       // If goal completed, set number complete to goal target
       if ($posted_complete[0] >= $goals['posted_goal']) {
-        $posted_complete[0] = $goals['posted_goal'];
         $posted_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p><p>Current number of resources posted is " . $posted_complete[0] . " out of " . $goals['posted_goal'] . "</p>";
       }
-      $posted_perc = sbac_goals_calc_percent($posted_complete[0], $goals['posted_goal']);
       $variables['goals']['resources_posted'][] = $posted_complete[0];
+      if ($posted_complete[0] >= $goals['posted_goal']) {
+        $posted_complete[0] = $goals['posted_goal'];
+      }
+      $posted_perc = sbac_goals_calc_percent($posted_complete[0], $goals['posted_goal']);
       $variables['goals']['resources_posted'][] = $posted_perc;
       $variables['goals']['resources_posted'][] = $posted_tooltip;
     }
@@ -721,6 +722,14 @@ function sbac_preprocess_views_view(&$variables) {
       'token' => drupal_get_token(),
     );
     drupal_add_js(array('sbac_alert_settings' => $alert_settings), 'setting');
+  }
+  if ($variables['view']->name == 'forum_topic_list') {
+    $view = $variables['view'];
+    $forum_id = array_shift($view->args);
+    if ($forum_id) {
+      module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.api');
+      $variables['join_button'] = sbac_forum__api__create_start_new_topic_link($forum_id);
+    }
   }
   if ($variables['view']->name == 'authorized_domains') {
     drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_reset.js');
@@ -891,6 +900,44 @@ function sbac_preprocess_views_view_fields(&$variables) {
     $variables['fields']['entity_id']->wrapper_suffix = '</div>';
     $variables['fields']['entity_id']->content = $output;
   }
+
+  // Leaderboard preprocessing
+  if ($variables['view']->name == 'rated_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'rated_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
+  if ($variables['view']->name == 'reviewed_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'reviewed_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
+  if ($variables['view']->name == 'contributed_resources_rankings') {
+    foreach ($variables['fields'] as $name => $field) {
+      if ($name == 'uid') {
+        $user_uid = $field->raw;
+        $new_output = '';
+        if (!empty($user_uid)) {
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard');
+        }
+        $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
+      }
+    }
+  }
 }
 
 function sbac_digital_library_resources_applied_filters(){
@@ -1003,3 +1050,64 @@ function sbac_preprocess_lexicon_overview(&$variables) {
     $variables['edit_link'] = l(t('Edit Glossary'), 'admin/structure/taxonomy/glossary_terms', array('absolute' => TRUE));
   }
 }
+
+/**
+ * Returns the rendered tooltip for a user.
+ *
+ * @param $user_id
+ * @param bool $add_comma
+ * @return null|string
+ */
+function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
+  $cached_output = cache_get('authpane_goals' . $user_id);
+  if ($cached_output) {
+    return $cached_output->data;
+  }
+  else {
+    $account = user_load($user_id);
+    $account_renderable = user_view($account, 'tooltip');
+    $account_data = entity_metadata_wrapper('user', $account);
+    $fn = $account_data->field_first_name->value();
+    $ln = ''; // last name hide by default.
+    if (!sbac_user_privacy_check('picture', $account) || !$account->picture) {
+      $filepath = variable_get('user_picture_default', '');
+      $alt = t("@user's picture", array('@user' => format_username($fn)));
+      $user_picture = theme('image', array('path' => '' . $filepath, 'alt' => $alt, 'title' => $alt, 'width' => '30px', 'height' => '30px'));
+    }
+    else {
+      $user_picture = theme('image_style', array(
+        'path' => $account->picture->uri,
+        'style_name' => 'leaderboard_30x33',
+        'attributes' => array(
+          'alt' => t("@user's picture", array('@user' => format_username($fn))),
+          'title' => t("@user's picture", array('@user' => format_username($fn)))
+        )
+      ));
+    } 
+    if (isset($account_data->field_privacy)) { // user is using non-default settings.
+      $privacy_settings = $account_data->field_privacy->value();
+      if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
+        $ln = ' ' . $account_data->field_last_name->value();
+      }
+    }
+    $full_name = substr($fn . $ln, 0, 10) . '...';
+    $tooltip = '
+              <div class="devtools-tooltip account-tooltip">
+                <a href="#" class="devtools-tooltip-trigger" onclick="return false;">' . $full_name . '</a>' . '
+                <div class="devtools-tooltip-body">' . render($account_renderable) . '</div>
+              </div>
+             ';
+
+    $created = isset($account->created) ? $account->created : time();
+    
+    $output = $user_picture;
+    $output .= t('!name', array(
+      '!name' => $tooltip,
+      '!date' => format_date($created, 'simple'),
+    ));
+
+    cache_set('goals_authpane_' . $user_id, $output);
+    return $output;
+  }
+}
+

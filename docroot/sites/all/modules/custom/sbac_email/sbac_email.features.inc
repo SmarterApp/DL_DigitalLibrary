@@ -96,15 +96,15 @@ function sbac_email_flag_default_flags() {
     ),
     'api_version' => 3,
   );
-  // Exported flag: "Forum Subscribe".
+  // Exported flag: "Join Forum".
   $flags['subscribe_term'] = array(
     'entity_type' => 'taxonomy_term',
-    'title' => 'Forum Subscribe',
+    'title' => 'Join Forum',
     'global' => 0,
     'types' => array(
       0 => 'forum',
     ),
-    'flag_short' => 'Subscribe to Forum',
+    'flag_short' => 'Join Group',
     'flag_long' => 'Receive notifications of new discussions in this forum',
     'flag_message' => '',
     'unflag_short' => 'Unsubscribe from Forum',
@@ -139,6 +139,168 @@ function sbac_email_flag_default_flags() {
  */
 function sbac_email_default_message_type() {
   $items = array();
+  $items['contributed_goal_complete'] = entity_import('message_type', '{
+    "name" : "contributed_goal_complete",
+    "description" : "Contributed Goal Complete",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EContributed Resources Goal Complete\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EContributed Resources Goal Complete\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have met your goal for Resources Contributed in the Digital Library.\\u003C\\/p\\u003E\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022!user-link#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have met your goal for Resources Contributed in the Digital Library.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022!user-link#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['contributed_leaderboard'] = entity_import('message_type', '{
+    "name" : "contributed_leaderboard",
+    "description" : "Contributed Leaderboard",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Contributed in the Digital Library.\\u003C\\/p\\u003E\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]#leaderboard-wrapper\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Contributed in the Digital Library.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]#leaderboard-wrapper\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['daily_email'] = entity_import('message_type', '{
+    "name" : "daily_email",
+    "description" : "Daily email",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EYour daily Digital Library email\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EYour daily Digital Library email\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "!message-view",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003E!message-view\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['forum_flagged'] = entity_import('message_type', '{
+    "name" : "forum_flagged",
+    "description" : "Forum Flagged",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA forum you created has been flagged.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA forum you created has been flagged.\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EAn item has been flagged in a forum that you moderate.\\u003C\\/p\\u003E\\u003Cp\\u003EBegin moderation on this flag by clicking \\u003Ca href=\\u0022!forum-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EAn item has been flagged in a forum that you moderate.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EBegin moderation on this flag by clicking \\u003Ca href=\\u0022!forum-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['gatekeeper_reject'] = entity_import('message_type', '{
+    "name" : "gatekeeper_reject",
+    "description" : "Gatekeeper reject",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EThe Resource you submitted requires revision.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EThe Resource you submitted requires revision.\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['new_state_forum'] = entity_import('message_type', '{
+    "name" : "new_state_forum",
+    "description" : "New State Forum",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA State Forum for your state has been created\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA State Forum for your state has been created\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA new forum for your state has been created. \\u003Ca href=\\u0022!forum-link\\u0022\\u003EClick here\\u003C\\/a\\u003E to view.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA new forum for your state has been created. \\u003Ca href=\\u0022!forum-link\\u0022\\u003EClick here\\u003C\\/a\\u003E to view.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
   $items['node_insert'] = entity_import('message_type', '{
     "name" : "node_insert",
     "description" : "Node insert",
@@ -164,8 +326,249 @@ function sbac_email_default_message_type() {
         }
       ]
     },
-    "entity_type" : "message_type",
-    "entity_id" : "308",
+    "rdf_mapping" : []
+  }');
+  $items['post_reject'] = entity_import('message_type', '{
+    "name" : "post_reject",
+    "description" : "Post Reject",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA Resource requires revision\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA Resource requires revision\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA resource you contributed was returned to you for revisions.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this resource and the reviewer\\u2019s feedback in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['rated_leaderboard'] = entity_import('message_type', '{
+    "name" : "rated_leaderboard",
+    "description" : "Rated Leaderboard",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Star Ratings in the Digital Library.\\u003C\\/p\\u003E\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]#leaderboard-wrapper\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Star Ratings in the Digital Library.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]#leaderboard-wrapper\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['rating_goal_complete'] = entity_import('message_type', '{
+    "name" : "rating_goal_complete",
+    "description" : "Star Rating Completed",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EGoal completed\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EGoal completed\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have met your goal for Star Ratings in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022!user-link#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have met your goal for Star Ratings in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022!user-link#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['resource_ready_for_review'] = entity_import('message_type', '{
+    "name" : "resource_ready_for_review",
+    "description" : "Resource Ready for Review",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EResource Ready for Review\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EResource Ready for Review\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EThere are new resources available for review in the Digital Library. View resources matching your expertise that are ready for review by clicking \\u003Ca href=\\u0022[site:url]resource-review\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThere are new resources available for review in the Digital Library. View resources matching your expertise that are ready for review by clicking \\u003Ca href=\\u0022[site:url]resource-review\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['resource_resubmitted'] = entity_import('message_type', '{
+    "name" : "resource_resubmitted",
+    "description" : "Resource Resubmitted",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EA resource that you rejected has been revised\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EA resource that you rejected has been revised\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EA resource you reviewed was re-submitted by the contributor, and is ready for the next round of review.\\u003C\\/p\\u003E\\u003Cp\\u003EView this re-submitted resource in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EA resource you reviewed was re-submitted by the contributor, and is ready for the next round of review.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView this re-submitted resource in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['review_reminder'] = entity_import('message_type', '{
+    "name" : "review_reminder",
+    "description" : "Review Reminder",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EYou have a Review in progress\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EYou have a Review in progress\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EYou have a resource review in process that has not been completed.\\u003C\\/p\\u003E\\u003Cp\\u003EComplete your review in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EYou have a resource review in process that has not been completed.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EComplete your review in the Digital Library by clicking \\u003Ca href=\\u0022!resource-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['review_timeout'] = entity_import('message_type', '{
+    "name" : "review_timeout",
+    "description" : "Review Timeout",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EReview has timed out\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EReview has timed out\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003EIt has been 72 hours since you started a review on !resource-link.\\u003C\\/p\\u003E\\u003Cp\\u003EYour review has been cancelled so another reviewer could review it.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003EIt has been 72 hours since you started a review on !resource-link.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EYour review has been cancelled so another reviewer could review it.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['reviewed_goal_complete'] = entity_import('message_type', '{
+    "name" : "reviewed_goal_complete",
+    "description" : "Reviewed Goal Complete",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EReviewed resources goal complete\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EReviewed resources goal complete\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have met your goal for Resources Reviewed in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022!user-link#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have met your goal for Resources Reviewed in the Digital Library. \\u0026nbsp;\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView or raise your goal(s) by clicking \\u003Ca href=\\u0022!user-link#profile-goals\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
+    "rdf_mapping" : []
+  }');
+  $items['reviewed_leaderboard'] = entity_import('message_type', '{
+    "name" : "reviewed_leaderboard",
+    "description" : "Reviewed Leaderboard",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EMost Active Users\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Reviewed in the Digital Library.\\u003C\\/p\\u003E\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]#leaderboard-wrapper\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EDear Digital Library user:\\u003C\\/p\\u003E\\n\\u003Cp\\u003ECongratulations! You have been featured on the Most Active Members board in the Digital Library for Resources Reviewed in the Digital Library.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EView the Most Active Members board by clicking \\u003Ca href=\\u0022[site:url]#leaderboard-wrapper\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n\\u003Cp\\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \\u0022On.\\u0022 Change your email notification settings by clicking \\u003Ca href=\\u0022!user-link\\u0022\\u003Ehere\\u003C\\/a\\u003E.\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
     "rdf_mapping" : []
   }');
   $items['sbac_email_comment_insert'] = entity_import('message_type', '{
@@ -193,8 +596,33 @@ function sbac_email_default_message_type() {
         }
       ]
     },
-    "entity_type" : "message_type",
-    "entity_id" : "310",
+    "rdf_mapping" : []
+  }');
+  $items['weekly_email'] = entity_import('message_type', '{
+    "name" : "weekly_email",
+    "description" : "Weekly Email",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [
+        {
+          "value" : "\\u003Cp\\u003EYour weekly Digital Library Email\\u003C\\/p\\u003E",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003EYour weekly Digital Library Email\\u003C\\/p\\u003E\\n"
+        },
+        {
+          "value" : "!message-view",
+          "format" : "full_html",
+          "safe_value" : "\\u003Cp\\u003E!message-view\\u003C\\/p\\u003E\\n"
+        }
+      ]
+    },
     "rdf_mapping" : []
   }');
   return $items;

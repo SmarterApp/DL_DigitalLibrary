@@ -75,6 +75,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     }
   } catch (EntityMetadataWrapperException $e) {
   }
+
   if ($can_edit) {
     $edit_link = '<span class="tertiary-edit-link">' . l('Edit Discussion', $node_data->edit_url->value()) . '</span>';
   }
@@ -308,7 +309,6 @@ function sbac_forum_preprocess_node__topic(&$vars) {
     'back' => $back_link,
     'delete' => $delete_link,
     'edit' => $edit_link,
-    'favorite' => sbac_favorites_get_favorite_link($user->uid, $id, $type),
     'flag' => $flag_link,
   );
   $vars['tertiary_nav'] = $tertiary_nav;
@@ -394,7 +394,14 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       $has_links = TRUE;
     }
   }
-  if ($has_links || $has_files) {
+  $has_collection = FALSE;
+  if (isset($comment_data->field_topic_comment_collection)) {
+    $topic_collection = $comment_data->field_topic_comment_collection->value();
+    if (!empty($topic_collection)) {
+      $has_collection = TRUE;
+    }
+  }
+  if ($has_links || $has_files || $has_collection) {
     $has_materials = TRUE;
   }
 
@@ -663,13 +670,6 @@ function sbac_forum_preprocess_views_view_fields__forum_list__block(&$vars) {
   }
 
   $vars['fields']['nothing']->content = $facilitator_text;
-
-  if (!empty($row_data->field_field_forum_resource_ref)) {
-    $favorites = sbac_favorites_get_favorites($user->uid, $row_data->field_field_forum_resource_ref[0]['raw']['target_id']);
-    if ($favorites) {
-      $vars['fields']['nothing_1']->content = '<div class="favorites-link">' . t('FAVORITE') . '</div>';
-    }
-  }
 }
 
 

@@ -1,0 +1,294 @@
+<?php
+
+/**
+ * @file
+ * Replaces words inside posts with filtered versions.
+ */
+
+/**
+ * Implements hook_help().
+ *
+ * @param $section
+ *   string file path
+ *
+ * @return
+ *   string
+ */
+function wordfilter_help($page = 'admin/help#wordfilter', $arg) {
+  switch ($page) {
+    case 'admin/help#wordfilter':
+      return t('<p>The wordfilter module allows you to filter words or phrases in site content and replace the filtered words or phrases with specified replacement words or phrases. The text body of node and comments are filtered and optionally the title of nodes and subject of comments are filtered. The filters are applied on content viewing so the original text of your content is not altered.</p>');
+    case 'admin/setting/wordfilter':
+      return t('In order for filtering to work on the body text of a node or comment, you must activate the wordfilter filter for the input formats you wish to enable filtering for. Check your filter settings at <a href="@filter">Text formats</a>.', array('@filter' => url('admin/config/content/formats')));
+  }
+}
+
+/**
+ * Implements hook_permission().
+ *
+ * @return
+ *   array of permissions
+ */
+function wordfilter_permission() {
+  return array(
+    'administer words filtered' => array(
+      'title' => t('Administer Words Filtered'),
+      'description' => t('Allow adminstrators to configure the list of words which need to be filtered.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @param $may_cache
+ *   boolean indicating whether cacheable menu items should be returned
+ *
+ * @return
+ *   array of menu information
+ */
+function wordfilter_menu() {
+  $items = array();
+
+  $items['admin/config/content/wordfilter'] = array(
+    'title' => 'Word filter',
+    'description' => 'Replaces words or phrases inside posts with filtered versions.',
+    'page callback' => 'wordfilter_admin_list',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer words filtered'),
+    'file' => 'wordfilter.admin.inc',
+  );
+
+  $items['admin/config/content/wordfilter/list'] = array(
+    'title' => 'List filtered words',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'access callback' => 'user_access',
+    'access arguments' => array('administer words filtered'),
+    'weight' => -10,
+  );
+
+  $items['admin/config/content/wordfilter/add'] = array(
+    'title' => 'Add filtered word',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('wordfilter_admin_add_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer words filtered'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'wordfilter.admin.inc',
+  );
+
+  $items['admin/config/content/wordfilter/test'] = array(
+    'title' => 'Test filtered words',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('wordfilter_admin_test_filter_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer words filtered'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'wordfilter.admin.inc',
+  );
+
+  $items['admin/config/content/wordfilter/edit/%'] = array(
+    'title' => 'Edit filtered word',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('wordfilter_admin_edit_form', 5),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer words filtered'),
+    'type' => MENU_CALLBACK | MENU_VISIBLE_IN_BREADCRUMB,
+    'file' => 'wordfilter.admin.inc',
+  );
+
+  $items['admin/config/content/wordfilter/delete/%'] = array(
+    'title' => 'Delete filtered word',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('wordfilter_admin_form_delete_confirm', 5),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer words filtered'),
+    'type' => MENU_CALLBACK | MENU_VISIBLE_IN_BREADCRUMB,
+    'file' => 'wordfilter.admin.inc',
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_node_load().
+ */
+function wordfilter_node_load($nodes, $types) {
+  foreach ($nodes as $nid => $node) {
+    if (variable_get('wordfilter_node_title', TRUE)) {
+      $node->title = wordfilter_filter_process($node->title);
+    }
+  }
+}
+
+/**
+ * Implements hook_comment_load().
+ */
+function wordfilter_comment_load($comments) {
+  foreach ($comments as $cid => $comment) {
+    if (variable_get('wordfilter_comment_title', TRUE)) {
+      $comment->subject = wordfilter_filter_process($comment->subject);
+    }
+  }
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function wordfilter_block_info() {
+  return array(
+    0 => array(
+      'info' => t('Filtered word lists on submission pages')
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function wordfilter_block_view($delta = '') {
+  $block = array();
+
+  $block['subject'] = t('Filtered words');
+  $block['content'] = $GLOBALS['display_wordfilter_block'] ? _wordfilter_table() : '';
+
+  return $block;
+}
+
+/**
+ * Displays a list of words that will be filtered as an HTML table.
+ */
+function _wordfilter_table() {
+  $content .= '<div align="center">';
+  $content .= '<table border="0" cellspacing="1" cellpadding="0">';
+  $list = _wordfilter_list();
+  foreach ($list as $filtered_word) {
+    $alt = implode(' &nbsp; ', explode(' ', check_plain($filtered_word->words)));
+    $content .= '<tr><td align="left">' . check_plain($filtered_word->replacement) . '</td><td align="right">&nbsp;' . $alt . '</td></tr>';
+  }
+  $content .= '</table></div>';
+  return $content;
+}
+
+/**
+ * Implements hook_filter_info().
+ */
+function wordfilter_filter_info() {
+  $filters = array(
+    'wordfilter' => array(
+      'title' => t('Word filter'),
+      'description' => t('Replaces words inside posts with filtered versions.'),
+      'process callback' => 'wordfilter_filter_process',
+      'settings callback' => '_wordfilter_filter_settings',
+      'tips callback' => '_wordfilter_filter_tips',
+    ),
+  );
+  
+  return $filters;
+}
+
+/**
+ * Filter tips callback
+ */
+function _wordfilter_filter_tips($filter, $format, $long = FALSE) {
+  if ($long) {
+    return t('If you include a word in your post that\'s filtered (usually foul language), it will be replaced by the filtered version of the word.') . '<br />';
+  }
+  else {
+    $GLOBALS['display_wordfilter_block'] = TRUE;
+    return t('Filtered words will be replaced with the filtered version of the word.');
+  }
+}
+
+/**
+ * Filter settings form
+ */
+function _wordfilter_filter_settings($form, $form_state, $filter, $format, $defaults) {
+  $settings['word_filter'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Word filter'),
+    '#description' => t('You can define a global list of words or phrases to be filtered on the <a href="!url">wordfilter settings page</a>.', array('!url' => url('admin/config/content/wordfilter'))),
+  );
+  return $settings;
+}
+
+/**
+ * hook_filter process operation callback.
+ */
+function wordfilter_filter_process($text) {
+  $text = ' ' . $text . ' ';
+  $list = _wordfilter_list();
+  $utf8 = variable_get('wordfilter_use_utf8_flag', FALSE);
+  foreach ($list as $word) {
+    // Prevent mysterious empty value from blowing away the node title.
+    if (!empty($word->words)) {
+      $replacement = ($word->replacement) ? $word->replacement : variable_get('wordfilter_default_replacement', '[filtered word]');
+
+      if ($word->standalone) {
+        $pattern = '/(\W)' . preg_quote($word->words, '/') . '(\W)/i';
+      }
+      else {
+        $pattern = '/' . preg_quote($word->words, '/') . '/i';
+      }
+      if ($utf8) {
+        $pattern .= 'u';
+      }
+
+      $split_text = preg_split('/(<[^>]*>)/i', drupal_substr($text, 1, -1), -1, PREG_SPLIT_DELIM_CAPTURE);
+      $split_text = array_values(array_filter($split_text));
+      if (count($split_text) > 1) {
+        $new_string = '';
+        foreach ($split_text as $part) {
+          if (!preg_match('/^</', $part)) {
+            $new_string .= preg_replace($pattern, "\${1}" . $replacement . "\${2}", $part);
+          }
+          else {
+            $new_string .= $part;
+          }
+        }
+        $text = ' ' . $new_string . ' ';
+      }
+      else {
+        $text = preg_replace($pattern, "\${1}" . $replacement . "\${2}", $text);
+      }
+    }
+  }
+  $text = drupal_substr($text, 1, -1);
+
+  return $text;
+}
+
+/**
+ * Query to get the list of words to filter in the
+ * filter processing stage. Does not use a pager.
+ */
+function _wordfilter_list($refresh = FALSE) {
+  static $list = NULL;
+  $cache = cache_get('wordfilter');
+  if (!$cache || $refresh) {
+    $list = db_select('wordfilter', 'w')
+      ->fields('w')
+      ->orderBy('words', 'DESC')
+      ->execute()
+      ->fetchAll();
+    cache_set('wordfilter', $list);
+  }
+  else {
+    $list = $cache->data;
+  }
+  return $list;
+}
+
+/**
+ * Preprocess variables to format forum topic titles
+ * from the Forum module.
+ */
+function wordfilter_preprocess_forum_topic_list(&$variables) {
+  // Only process if the option to filter titles has been enabled.
+  if (variable_get('wordfilter_node_title', TRUE)) {
+    foreach ($variables['topics'] as $i => $topic) {
+      $variables['topics'][$i]->title = wordfilter_filter_process($topic->title);
+    }
+  }
+}

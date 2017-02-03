@@ -13,9 +13,7 @@ function sbac_central_user_default_permissions() {
   // Exported permission: 'administer sbac_central'.
   $permissions['administer sbac_central'] = array(
     'name' => 'administer sbac_central',
-    'roles' => array(
-      'administrator' => 'administrator',
-    ),
+    'roles' => array(),
     'module' => 'sbac_central',
   );
 
