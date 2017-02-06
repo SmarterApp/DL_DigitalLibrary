@@ -1385,7 +1385,7 @@ function sbac_goals_report_form($form, &$form_state, $user) {
   // Check user roles to add link to SNE webform if basic end user
   if (!in_array('resource reviewer', $user->roles) && !in_array('resource contributor', $user->roles) && !in_array('resource publisher', $user->roles)) {
     $form['sne_form_link'] = array(
-      '#markup' => l('Help grow the Digital Library', '/content/help-grow-digital-library', array('attributes' => array('class' => array('button', 'sne-link')))),
+      '#markup' => '<div id="sne-wrapper"><p>I am interested in contributing resources to the Digital Library</p>' . l('Submit', '/sne-signup', array('attributes' => array('class' => array('button', 'sne-link')))) . '</div>',
     );
   }
 

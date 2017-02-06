@@ -22,7 +22,7 @@ function sbac_sne_webform_views_default_views() {
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
-  $handler->display->display_options['title'] = 'Help grow the Digital Library ';
+  $handler->display->display_options['title'] = 'Contribute to the Digital Library by Becoming a State Network Educator';
   $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'role';

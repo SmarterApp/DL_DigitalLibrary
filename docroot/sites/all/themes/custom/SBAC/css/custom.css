@@ -36256,7 +36256,7 @@ form#sbac-user-filter-form #edit-email {
   border: 1px solid #ddd;
   border-radius: 5px;
   float: right;
-  padding: 10px;
+  padding: 10px 10px 0 10px;
   margin-top: 20px;
   display: inline;
 }
@@ -36279,13 +36279,19 @@ form#sbac-user-filter-form #edit-email {
   margin-right: 10px;
 }
 
-#sbac-goals-report-form .sne-link {
-  background-color: #006184;
-  border-color: #006184;
+#sbac-goals-report-form #sne-wrapper {
   position: absolute;
-  top: 204px;
-  width: 258px;
-  right: 0px;
+  right: 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px -1px;
+  text-align: center
+}
+
+#sbac-goals-report-form #sne-wrapper p {
+    text-align: left;
+    margin-bottom: 5px;
 }
 
 /* Admin views */
@@ -36296,6 +36302,29 @@ form#sbac-user-filter-form #edit-email {
 }
 
 /* Leaderboards */
+#sne-signup-spacer {
+    clear: both;
+    display: block;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height: 20px;
+}
+
+#sne-signup {
+    margin: 0 15%;
+    background-color: #D9ECF2;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#sne-signup .sne-link,
+#sne-wrapper .sne-link,
+#sbac-goals-report-form .form-submit {
+    margin-bottom: 0;
+}
+
 #leaderboard-wrapper {
   background-color: #0085ad;
 }
@@ -36319,7 +36348,7 @@ form#sbac-user-filter-form #edit-email {
   background-color: #6cb9d1;
   border-radius: 5px;
   min-height: 445px;
-  padding-right: 0px;
+  padding-right: 0;
 }
 
 .leaderboard {
@@ -36332,7 +36361,7 @@ form#sbac-user-filter-form #edit-email {
 }
 
 .leaderboard-header {
-  border-radius: 5px 5px 0px 0;
+  border-radius: 5px 5px 0 0;
   padding: 10px;
   color: #FFFFFF;
   text-align: left;
