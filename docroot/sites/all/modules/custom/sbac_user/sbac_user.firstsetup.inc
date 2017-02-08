@@ -389,10 +389,6 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     '#markup' => t("Select the personal information and expertise you'd like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown on the next page. Note that no educators can access your full account and no information will be displayed publicly.")
   );
 
-  $form['opt_container_close'] = array(
-    '#markup' => '</div>',
-  );
-
   $form['req_container'] = array(
     '#markup' => '<div class="sbac-setup-pg3-container">',
   );
@@ -460,6 +456,10 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
       'special-populations' => 'Student Populations',
     ),
     '#default_value' => $visibility_dv,
+  );
+
+  $form['opt_container_close'] = array(
+    '#markup' => '</div>',
   );
 
   $form['previous'] = array(
