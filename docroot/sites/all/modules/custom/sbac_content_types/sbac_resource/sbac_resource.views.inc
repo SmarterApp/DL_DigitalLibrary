@@ -1034,7 +1034,11 @@ function _sbac_resource_resource_review_apply_stock_rr_role(&$view) {
     ->where("sbac_node_resource_state.state = 'qc_needs_review' AND 1 > (SELECT count(*) FROM field_data_field_recent_reviewers reviewer left join sbac_node_resource_state state on reviewer.entity_id = state.nid where reviewer.entity_id = node.nid and state.state = 'qc_reviewed' and reviewer.field_recent_reviewers_target_id <> state.uid)")
     // or FEEDBACK_RESUBMISSION_TIMEOUT have elapsed since the resource was resubmitted
     ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
-  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE')
+  $all_condition = db_and()
+    ->condition('sbac_node_resource_state.state', $all_states, 'IN')
+    ->condition('sbac_node_resource_state.uid', 0)
+    ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . ':%', 'NOT LIKE')
+    ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like), 'NOT LIKE')
     ->condition($reviewer_condition);
   $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
   $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
@@ -1065,11 +1069,17 @@ function _sbac_resource_resource_review_apply_stock_both_role(&$view) {
     ->where("sbac_node_resource_state.state = 'qc_needs_review' AND (SELECT count(user.uid) FROM field_data_field_recent_reviewers reviewer LEFT JOIN users user ON reviewer.field_recent_reviewers_target_id = user.uid WHERE reviewer.entity_id = node.nid and user.status = 1) < :max", array(':max' => FEEDBACK_MAX_REVIEW))
     // or FEEDBACK_RESUBMISSION_TIMEOUT have elapsed since the resource was resubmitted
     ->condition('workbench_moderation_node_history.stamp', time() - FEEDBACK_RESUBMISSION_TIMEOUT, '<');
-  $all_condition = db_and()->condition('sbac_node_resource_state.state', $all_states, 'IN')->condition('sbac_node_resource_state.uid', 0)->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . '%', 'NOT LIKE')
+  $all_condition = db_and()
+    ->condition('sbac_node_resource_state.state', $all_states, 'IN')
+    ->condition('sbac_node_resource_state.uid', 0)
+    ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like) . ':%', 'NOT LIKE')
+    ->condition('sbac_node_resource_state.flag', '%' . db_like($not_like), 'NOT LIKE')
     ->condition($dual_role_condition);
 
   $user_states = array('gk_being_reviewed', 'qc_being_reviewed', 'gk_view_rejected', 'post_being_reviewed', 'post_view_rejected');
-  $user_condition = db_and()->condition('sbac_node_resource_state.state', $user_states, 'IN')->condition('sbac_node_resource_state.uid', $user->uid);
+  $user_condition = db_and()
+    ->condition('sbac_node_resource_state.state', $user_states, 'IN')
+    ->condition('sbac_node_resource_state.uid', $user->uid);
 
   $view->query->add_where('AND', db_or()->condition($all_condition)->condition($user_condition));
 }
