@@ -150,12 +150,14 @@ class feedbackStatus
       foreach ($entities as $entity) {
         switch ($entity->type) {
           case 'gate_keeper':
-            // It's active, so it's started.
-            $this->gatekeeper_started = 1;
-            // Copy the finished state.
-            $this->gatekeeper_finished = $entity->completed;
-            // Copy the approval state.
-            $this->gatekeeper_approved = $entity->met_criteria;
+            if (!$this->gatekeeper_finished == 1) {
+              // It's active, so it's started.
+              $this->gatekeeper_started = 1;
+              // Copy the finished state.
+              $this->gatekeeper_finished = $entity->completed;
+              // Copy the approval state.
+              $this->gatekeeper_approved = $entity->met_criteria;
+            }
             break;
           case 'qc':
             $current = count($this->qc_status);
