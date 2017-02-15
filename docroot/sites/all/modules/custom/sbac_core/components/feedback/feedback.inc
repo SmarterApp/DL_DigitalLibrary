@@ -115,6 +115,7 @@ class feedbackStatus
   public $gatekeeper_started = 0; // If the Gate Keeper review has started.
   public $gatekeeper_finished = 0; // If the Gate Keeper review is finished.
   public $gatekeeper_approved = 0; // If the Gate Keeper review was passed.
+  public $qc_num_started = 0; // The number of started QCs.
   public $qc_num_finished = 0; // The number of finished QCs.
   public $qc_status = array(); // An array of the QCs and their status ('started' and 'finished').
   public $post_started = 0; // Whether the Post review has started.
@@ -162,6 +163,7 @@ class feedbackStatus
           case 'qc':
             $current = count($this->qc_status);
             // It's active, so it's started.
+              $this->qc_num_started++;
             $this->qc_status[$current]['started'] = 1;
             // Copy the finished state.
             $this->qc_status[$current]['finished'] = $entity->completed;
