@@ -790,13 +790,13 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   else {
     if (in_array('resource reviewer', $user->roles)) {
       $roles['rr'] = TRUE;
-      unset($query->where[1]['conditions'][3]['value'][2]);
+      // unset($query->where[1]['conditions'][3]['value'][2]);
     }
 
     if (in_array('resource publisher', $user->roles)) {
       $roles['rp'] = TRUE;
-      unset($query->where[1]['conditions'][3]['value'][0]);
-      unset($query->where[1]['conditions'][3]['value'][1]);
+      // unset($query->where[1]['conditions'][3]['value'][0]);
+      // unset($query->where[1]['conditions'][3]['value'][1]);
     }
   }
 
