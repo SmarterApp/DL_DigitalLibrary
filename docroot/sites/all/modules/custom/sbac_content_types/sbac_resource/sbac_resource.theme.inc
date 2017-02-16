@@ -1325,7 +1325,7 @@ function _sbac_resource_resource_review_links($fields, $row) {
       $variables['links'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title'], 'link');
       // If this was a resubmitted resource, change the wording.
       if ($feedback->post_resubmission) {
-        $variables['text'] = t('Resubmitted');
+        $variables['text'] = t('Resubmitted Arbitration');
       } else {
         $variables['text'] = t('Needs Arbitration');
       }
