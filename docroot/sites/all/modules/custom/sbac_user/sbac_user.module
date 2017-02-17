@@ -477,8 +477,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     $user_profile = user_load($user->uid);
     $state_tid = $user_profile->field_state['und'][0]['tid'];
     $forums = sbac_user_get_user_forums($user->uid, $state_tid);
-    $my_forums = '<span class="subscription-message">You are not a member of any State Forums</span>';
-    $suggested_forums = '<span class="subscription-message">There are not any State Forums available to join for your state.</span>';
+    $my_forums = '<div class="subscription-message">You are not a member of any State Forums</div>';
+    $suggested_forums = '<div class="subscription-message">There are not any State Forums available to join for your state.</div>';
     // TODO build join and leave functionality
     if ($forums) {
       if (!empty($forums['my_forums'])) {
