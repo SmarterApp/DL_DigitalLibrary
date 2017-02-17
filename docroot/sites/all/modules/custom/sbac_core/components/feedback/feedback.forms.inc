@@ -522,7 +522,7 @@ function feedback_eck_post_form_submit($form, &$form_state) {
 
   $entity = $form_state['values']['entity'];
   $node = node_load($entity->node_id);
-  drupal_set_message(t('@title - Posting Review has been saved', array('@title' => $node->title)));
+  drupal_set_message(t('@title - Arbitration Review has been saved', array('@title' => $node->title)));
 
   global $user;
 
