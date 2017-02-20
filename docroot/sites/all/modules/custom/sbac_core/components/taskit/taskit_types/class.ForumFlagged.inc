@@ -10,13 +10,21 @@ class ForumFlagged extends \taskit\sbac_core\BaseTask {
 
     if ($node && $account) {
       $this->setTaskUrl('node/' . $node->nid);
+      if (!empty($entities['comment'])) {
+        $comment = comment_load(current($entities['comment']));
+        $this->setTaskUrl('node/' . $node->nid . '#comment-' . $comment->cid);
+      }
 
       $forum = entity_load_single('taxonomy_term', $node->field_topic_forum_parent[LANGUAGE_NONE][0]['tid']);
 
+      $triggering_users = $this->getTriggeringUsers();
+      $flagger = user_load(current($triggering_users));
+
       $output = array();
-      $output[] = t('A post in discussion topic !title in Forum !forum was flagged and needs moderation.', array(
+      $output[] = t('!flagger has flagged a forum discussion !title', array(
         '!title' => '<span class="taskit-title">' . $node->title . '</span>',
         '!forum' => '<span class="taskit-title">' . $forum->name . '</span>',
+        '!flagger' => '<span class="taskit-title">' . $flagger->name . '</span>',
       ));
 
 //      $flag = sbac_flag_get_user_flag($node->nid, $account->uid);
