@@ -151,6 +151,12 @@ function sbac_forum_menu() {
     'access arguments' => array('access content'),
   );
 
+  $items['sbac-forum/%ctools_js/forum-leave/%taxonomy_term/%'] = array(
+    'page callback' => 'sbac_forum__ajax__leave_forum_modal_callback',
+    'page arguments' => array(1, 3, 4),
+    'access arguments' => array('access content'),
+  );
+
   $items['sbac-forum/%ctools_js/%taxonomy_term/members-edit/%/remove'] = array(
     'page callback' => 'sbac_forum__ajax__remove_member_modal_callback',
     'page arguments' => array(1, 2, 4),
