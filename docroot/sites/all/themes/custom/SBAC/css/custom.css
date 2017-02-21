@@ -36606,3 +36606,19 @@ form#sbac-user-filter-form #edit-email {
 .state-image-hidden .field-name-field-state-or-district-image {
   display: none;
 }
+
+.page-forums-term .sbac-forum-vp-controls-wrapper {
+  display: block;
+  float: right;
+  height: 80px;
+  bottom: 35px;
+  padding-top: 50px;
+  position: relative;
+  right: 0;
+  width: 135px;
+  z-index: 999;
+}
+
+.page-forums-term .sbac-alert-box {
+  margin-bottom: 35px;
+}

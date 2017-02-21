@@ -1184,10 +1184,10 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
           $type = 'Quality Criteria';
           break;
         case 'gate_keeper':
-          $type = 'Gate Keeping';
+          $type = 'Gatekeeping';
           break;
         case 'post':
-          $type = 'Post';
+          $type = 'Arbitration';
           break;
       }
       $completed = date('m/d/Y', $reviewed->changed);

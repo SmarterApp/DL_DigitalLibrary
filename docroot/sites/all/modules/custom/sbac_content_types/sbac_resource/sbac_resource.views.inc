@@ -906,7 +906,7 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
 
             if (isset($roles['rp'])) {
               switch ($term->name) {
-                case 'Needs Posting':
+                case 'Needs Arbitration':
                   if (!in_array('post_needs_review', $values)) {
                     $not_like = "qc_reviewed::" . $user->uid;
                     $values[] = 'post_needs_review';
@@ -972,7 +972,7 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $view->query->add_where('AND', $user_condition);
                   }
                   break;
-                case 'Needs Posting':
+                case 'Needs Arbitration':
                   if (!in_array('post_needs_review', $values)) {
                     $not_like = "qc_reviewed::" . $user->uid;
                     $values[] = 'post_needs_review';
