@@ -52,6 +52,33 @@ function sbac_user_field_default_field_bases() {
     'type' => 'text',
   );
 
+  // Exported field_base: 'field_email_preference'.
+  $field_bases['field_email_preference'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_email_preference',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        'never' => 'None',
+        'immediately' => 'Real Time',
+        'daily' => 'Daily',
+        'weekly' => 'Weekly',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_text',
+  );
+
   // Exported field_base: 'field_feedback_flag'.
   $field_bases['field_feedback_flag'] = array(
     'active' => 1,
@@ -125,6 +152,31 @@ function sbac_user_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
+  // Exported field_base: 'field_hide_from_leaderboards'.
+  $field_bases['field_hide_from_leaderboards'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_hide_from_leaderboards',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => '',
+        1 => 'Hide me from Most Active Members Board',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
+  );
+
   // Exported field_base: 'field_introduction'.
   $field_bases['field_introduction'] = array(
     'active' => 1,
@@ -163,6 +215,31 @@ function sbac_user_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_lock_goals'.
+  $field_bases['field_lock_goals'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_lock_goals',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => 'Unlock Goals',
+        1 => 'Lock Goals',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
   );
 
   // Exported field_base: 'field_login_count'.
@@ -242,6 +319,21 @@ function sbac_user_field_default_field_bases() {
     'type' => 'list_text',
   );
 
+  // Exported field_base: 'field_resources_contributed'.
+  $field_bases['field_resources_contributed'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_resources_contributed',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_resources_posted_goal'.
   $field_bases['field_resources_posted_goal'] = array(
     'active' => 1,
@@ -249,6 +341,36 @@ function sbac_user_field_default_field_bases() {
     'deleted' => 0,
     'entity_types' => array(),
     'field_name' => 'field_resources_posted_goal',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_resources_rated'.
+  $field_bases['field_resources_rated'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_resources_rated',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
+  // Exported field_base: 'field_resources_reviewed'.
+  $field_bases['field_resources_reviewed'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_resources_reviewed',
     'indexes' => array(),
     'locked' => 0,
     'module' => 'number',

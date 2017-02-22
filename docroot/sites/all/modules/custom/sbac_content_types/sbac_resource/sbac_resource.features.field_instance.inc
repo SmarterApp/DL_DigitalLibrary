@@ -878,64 +878,6 @@ function sbac_resource_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-resource-field_geographical_settings'.
-  $field_instances['node-resource-field_geographical_settings'] = array(
-    'bundle' => 'resource',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => 'Setting(s) for which this resource is appropriate. Select all that apply.',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 28,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'module' => 'ds',
-        'settings' => array(
-          'taxonomy_term_reference_view_mode' => 'full',
-          'use_content_language' => TRUE,
-        ),
-        'type' => 'ds_taxonomy_view_mode',
-        'weight' => 34,
-      ),
-      'secondary_teaser' => array(
-        'label' => 'above',
-        'module' => 'taxonomy',
-        'settings' => array(),
-        'type' => 'taxonomy_term_reference_plain',
-        'weight' => 11,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_geographical_settings',
-    'label' => 'Geographical Setting(s)',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'options',
-      'settings' => array(
-        'apply_chosen' => 1,
-        'label_help_description' => 'Setting(s) for which this resource is appropriate. Select all that apply.',
-        'maxlength_js_label' => '',
-      ),
-      'type' => 'options_select',
-      'weight' => 28,
-    ),
-  );
-
   // Exported field_instance: 'node-resource-field_grades'.
   $field_instances['node-resource-field_grades'] = array(
     'bundle' => 'resource',
@@ -3041,7 +2983,6 @@ function sbac_resource_field_default_field_instances() {
   t('Educational Use');
   t('Enter a descriptive summary of the resource that includes the topics covered by the resource and how the resource should be used (e.g., PLCs, individual, ongoing learning, etc.).');
   t('From the list, select the one choice that most closely describes the type of resource.');
-  t('Geographical Setting(s)');
   t('Grade(s)');
   t('HTML5');
   t('Identify how this includes, reflects, and addresses the formative assessment process.');

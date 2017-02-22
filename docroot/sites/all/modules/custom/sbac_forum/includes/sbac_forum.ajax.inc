@@ -74,6 +74,10 @@ function sbac_forum__ajax__join_button_form_execute($form, $form_state) {
   $forum_term_data->save(TRUE);
   taxonomy_term_save($forum_term);
 
+  // Automatically subscribe user to forum notifications:  
+  $flag = flag_get_flag('subscribe_term');
+  $flag->flag('flag', $forum_id, $user_obj, TRUE);  
+
   $forum_controls = sbac_forum__api__create_forum_controls($is_facilitator, $forum_id);
   if (!empty($forum_controls['markup'])) {
     $controls_selector = '.sbac-forum-vp-controls-wrapper';

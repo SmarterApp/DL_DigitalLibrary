@@ -12,25 +12,5 @@ function sbac_email_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
-  $export['views-sbac_email_message-block_1'] = array(
-    'cache' => -1,
-    'custom' => 0,
-    'delta' => 'sbac_email_message-block_1',
-    'module' => 'views',
-    'node_types' => array(),
-    'pages' => '',
-    'roles' => array(),
-    'themes' => array(
-      'SBAC' => array(
-        'region' => '',
-        'status' => 0,
-        'theme' => 'SBAC',
-        'weight' => 0,
-      ),
-    ),
-    'title' => '',
-    'visibility' => 0,
-  );
-
   return $export;
 }

@@ -9,22 +9,22 @@
   Drupal.behaviors.sbac_forum_forum_form = {
     attach: function (context, settings) {
 
-      var elem = 'input#edit-field-forum-access-states-und-0';
-      if ($( elem ).prop( "checked" )) {
-        $('p.forum-state-warning-message').show();
-      } else {
-        $('p.forum-state-warning-message').hide();
-      };
+      //var elem = 'input#edit-field-forum-access-states-und-0';
+      //if ($( elem ).prop( "checked" )) {
+      //  $('p.forum-state-warning-message').show();
+      //} else {
+      //  $('p.forum-state-warning-message').hide();
+      //};
 
 
       // animate the warning message for state access restriction
-      $('.field-name-field-forum-access-states input.form-radio').change(function() {
-        if ($( '#edit-field-forum-access-states-und-0' ).prop( "checked" )) {
-          $('p.forum-state-warning-message').slideDown('fast');
-        } else {
-          $('p.forum-state-warning-message').slideUp('fast');
-        };
-      });
+      //$('.field-name-field-forum-access-states input.form-radio').change(function() {
+      //  if ($( '#edit-field-forum-access-states-und-0' ).prop( "checked" )) {
+      //    $('p.forum-state-warning-message').slideDown('fast');
+      //  } else {
+      //    $('p.forum-state-warning-message').slideUp('fast');
+      //  };
+      //});
 
 
       var elem2 = 'input#edit-field-forum-access-user-roles-und-0';

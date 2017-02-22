@@ -2614,7 +2614,7 @@ View Topic Page, Comment Page
 	    padding-top: 50px;
 	    position: relative;
 	    right: 0;
-	    width: 130px;
+	    width: 135px;
 	    z-index: 999;
 
 		 .sbac-forum-topic-node-view-controls:before {
@@ -2746,7 +2746,7 @@ View Topic Page, Comment Page
 			.action {
 				clear: both;
 				display: block;
-				padding-top: 10px;
+				padding-top: 30px;
 			}
 
 			.tertiary-edit-link a:before {
@@ -3090,6 +3090,12 @@ View Topic Page, Comment Page
 		width: 100%;
 	}
 
+    .group-topic-collection {
+        .fieldset-wrapper {
+            overflow: visible !important;
+        }
+    }
+
 	#comment_comment_node_topic_form_group_topic_comments_materials,
 	#comment_comment_node_topic_form_group_topic_comments_links {
 
@@ -3372,8 +3378,24 @@ h2.title {
 			}
 		}
 
+        .field-name-field-topic-comment-collection.field-wrapper {
+            .node-collection {
+                clear:both;
+                background-color: inherit;
+            }
+
+            h2 {
+                font-weight: normal;
+            }
+
+            ul.links {
+                display: none;
+            }
+        }
+
 		.field-name-field-topic-comment-files .file,
-		.field-name-field-topic-comment-links.field-wrapper {
+		.field-name-field-topic-comment-links.field-wrapper,
+        .field-name-field-topic-comment-collection.field-wrapper {
 			img {display: none;}
 
 			 a {
@@ -3399,6 +3421,27 @@ h2.title {
 		    position: relative;
 			}
 		}
+
+        .field-name-field-topic-comment-collection.field-wrapper {
+            a {
+              background: url(/sites/all/themes/custom/SBAC/images/icons/icon-folder-blue.png) no-repeat 0 0;
+              line-height: 16px;
+              margin-left: -6px;
+            }
+
+            a:hover {
+              text-decoration: underline;
+            }
+
+            a:before {
+                background-color: inherit;
+                width: 16px;
+            }
+
+            .contextual-links-wrapper {
+                display: none;
+            }
+        }
 
 		.field-name-field-topic-comment-files .file-widget form-managed-file .file:before {
 	    content: "" !important;
@@ -4505,4 +4548,55 @@ a.sbac-favorites-link {
     font-weight: bold;
     color: #5a5a5a;
   }
+}
+
+
+#edit-topic-forums {
+  float: left;
+}
+
+#edit-field-add-to-leaderboard {
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  width: 420px;
+}
+
+#edit-field-state-or-district-image {
+  position: absolute;
+  top: 100px;
+  right: 0px;
+  width: 420px;
+  float: left;
+}
+
+#edit-field-state-or-district-image .image-widget-data {
+  margin: 20px 0;
+  max-width: 300px;
+
+  a {
+    overflow-wrap: break-word;
+  }
+}
+
+#edit-field-state-or-district-image-und-0-upload {
+  width: 263px;
+  float: left;
+}
+
+#edit-field-state-or-district-image-und-0-upload-button {
+  float: left;
+}
+
+#edit-field-state-or-district-image-und-0-remove-button {
+    float: right;
+    margin: 10px;
+}
+
+#edit-field-state {
+  display: block;
+}
+
+.forum-add-access-right {
+  display: none;
 }

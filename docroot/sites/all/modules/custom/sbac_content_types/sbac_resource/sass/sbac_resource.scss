@@ -1577,6 +1577,12 @@ html.js .category-hide {
     position: relative;
     top: -2px;
 	}
+
+  .page-favorites & {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
 }
 
 .preview{
@@ -3231,7 +3237,7 @@ div[id*="edit-field-copyright-clearace-forms"] {
 .favorites-link {
 
 	a {
-		background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
+        background: url(../../../../../themes/custom/SBAC/images/icons/icon-folder-heart.png) no-repeat 0 0;
 		display: block;
 		padding-left: 20px;
 		vertical-align: middle;
@@ -3242,22 +3248,18 @@ div[id*="edit-field-copyright-clearace-forms"] {
 		/*text-transform:uppercase;*/
 
 		&.sbac-favorites-link-yes {
-			background: url(../images/icons/icon-favorite.png) no-repeat 0 0;
 			color: #62676e;
 		}
 
 		&.sbac-favorites-link-yes:hover {
-			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			color: #0c84ad;
 		}
 
 		&.sbac-favorites-link-no {
-			background: url(../images/icons/icon-favorite-default.png) no-repeat 0 0;
 			color: #62676e;
 		}
 
 		&.sbac-favorites-link-no:hover {
-			background: url(../images/icons/icon-favorite-off.png) no-repeat 0 0;
 			color: #0c84ad;
 		}
 	}
@@ -3648,3 +3650,90 @@ form[id*="sbac-resource-submit-resource-form"] {
 .playlist-template {
   display: none;
 }
+
+/* Viewing Collection */
+.item-list-field-pane {
+  padding-bottom: 20px;
+
+  .pane-title {
+    display:block;
+    margin:0;
+    padding:5px 0 3px 0;
+    border-radius:0;
+    font-family:Verdana, Geneva, sans-serif;
+    font-size:12px;
+    line-height:normal;
+    background:transparent;
+    color:#04384e;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    border-bottom:1px solid #CECECE;
+  }
+
+  .item-list {
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  ul {
+    margin: 0;
+
+    li {
+      background-color: #F2F2F2;
+      border-radius: 2px;
+      display: inline-block;
+      font-size: 12px;
+      line-height: 24px;
+      margin: 7px 4px 0 0;
+      padding: 0 7px;
+    }
+  }
+}
+
+.node-type-collection-view {
+  #main .button-group {
+    display: none;
+  }
+
+  h1.title {
+    border-bottom: 1px solid #62676E;
+    color: #04384E;
+    display: block;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 25px 5px 25px;
+    padding: 20px 0 0;
+
+    .title-by {
+      font-size: smaller;
+      font-weight: normal;
+    }
+  }
+
+  .pane-node-body {
+    padding: 15px 25px;
+
+    .field {
+      font-size: inherit;
+    }
+  }
+
+  .pane-node-field-subject {
+    padding-left: 25px;
+  }
+
+  .pane-node-field-grade {
+    padding-right: 25px;
+  }
+
+  .view-id-collection {
+    .resource-card {
+      background-color: rgba(6,132,173,0.15);
+
+      .column.large-4 {
+          display: none;
+      }
+    }
+  }
+}
+

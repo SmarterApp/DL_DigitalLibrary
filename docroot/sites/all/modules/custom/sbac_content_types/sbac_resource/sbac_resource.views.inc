@@ -231,10 +231,6 @@ function sbac_resource_digital_library_apply_filters(&$view) {
                   $view_filters['field_subject_tid']['value'][] = $tid;
                   $view_filters['field_subject_tid']['operator'] = 'and';
                   break;
-                case 'geographical_settings':
-                  $view_filters['field_geographical_settings_tid']['value'][] = $tid;
-                  $view_filters['field_geographical_settings_tid']['operator'] = 'and';
-                  break;
                 case 'educational_use':
                   $view_filters['field_educational_use_tid']['value'][] = $tid;
                   $view_filters['field_educational_use_tid']['operator'] = 'and';
@@ -763,7 +759,7 @@ function _sbac_resource_my_resources_view_query_alter(&$view, &$query) {
  * @param $view
  */
 function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
-    global $user;
+  global $user;
   // Remove playlists for non-SLTs
   $is_slt = sbac_report_is_slt($user);
 
@@ -828,6 +824,62 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
     $query->add_where(count($query->where), db_or()->condition('field_data_field_recent_reviewers.field_recent_reviewers_target_id', $user->uid)
       ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid));
   }
+
+  // Create a sub query to get a count of the number of reviews that have been completed for the item.
+  $count_sub_query = db_select('eck_feedback', 'eck_feedback_reviews');
+  $count_sub_query->addField('eck_feedback_reviews', 'node_id');
+  $count_sub_query->addExpression('COUNT(*)', 'reviews');
+  $count_sub_query->condition('current', 1, '=');
+  $count_sub_query->condition('status', 1, '=');
+  $count_sub_query->condition('completed', 1, '=');
+  $count_sub_query->groupBy('node_id');
+
+  // Create a sub query to get determine if this item is currently being reviewed.
+  $in_process_sub_query = db_select('eck_feedback', 'eck_feedback_reviewing');
+  $in_process_sub_query->addField('eck_feedback_reviewing', 'node_id');
+  $in_process_sub_query->addExpression('TRUE', 'reviewing');
+  $in_process_sub_query->condition('status', 1, '=');
+  $in_process_sub_query->condition('completed', 0, '=');
+
+  // Create the join between the sub query with the count of reviews and the main query.
+  $count_join = new views_join();
+  $count_join->definition = array('table formula' => $count_sub_query, 'left_field' => 'nid', 'field' => 'node_id', 'left_table' => 'node');
+  $count_join->field = 'node_id';
+  $count_join->left_table = 'node';
+  $count_join->left_field = 'nid';
+  $count_join->type = 'LEFT';
+
+  // Create the join between the sub query with the review state and the main query.
+  $in_process_join = new views_join();
+  $in_process_join->definition = array('table formula' => $in_process_sub_query, 'left_field' => 'nid', 'field' => 'node_id', 'left_table' => 'node');
+  $in_process_join->field = 'node_id';
+  $in_process_join->left_table = 'node';
+  $in_process_join->left_field = 'nid';
+  $in_process_join->type = 'LEFT';
+
+  // Add the review count join.
+  $view->query->table_queue['eck_feedback_reviews'] = array(
+    'alias' => 'count_join',
+    'table' => $count_sub_query,
+    'join' => $count_join,
+    'relationship' => 'node'
+  );
+
+  // Add the review state join
+  $view->query->table_queue['eck_feedback_reviewing'] = array(
+    'alias' => 'in_process_join',
+    'table' => $in_process_sub_query,
+    'join' => $in_process_join,
+    'relationship' => 'node'
+  );
+
+  // Add the review count and review state to the view row.
+  $view->query->add_field('count_join', 'reviews', 'eck_feedback_reviews');
+  $view->query->add_field('in_process_join', 'reviewing', 'eck_feedback_reviewing');
+
+  // Order the items by the review state (items being reviewed at top) and then by number of reviews (most at top).
+  $view->query->add_orderby('in_process_join', 'reviewing', 'DESC');
+  $view->query->add_orderby('count_join', 'reviews', 'DESC');
 }
 
 /**
@@ -854,7 +906,7 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
 
             if (isset($roles['rp'])) {
               switch ($term->name) {
-                case 'Needs Posting':
+                case 'Needs Arbitration':
                   if (!in_array('post_needs_review', $values)) {
                     $not_like = "qc_reviewed::" . $user->uid;
                     $values[] = 'post_needs_review';
@@ -920,7 +972,7 @@ function _sbac_resource_resource_review_apply_state_filter(&$view, $current_filt
                     $view->query->add_where('AND', $user_condition);
                   }
                   break;
-                case 'Needs Posting':
+                case 'Needs Arbitration':
                   if (!in_array('post_needs_review', $values)) {
                     $not_like = "qc_reviewed::" . $user->uid;
                     $values[] = 'post_needs_review';

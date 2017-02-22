@@ -746,6 +746,8 @@ class Task extends \taskit\Base implements iTask {
     $pattern = '#(<a\s*href\s*=\s*[\'"])(/[^"]*)#';
     $replacement = '${1}/taskit/view/' . $this->getTaskId() . '/' . $uid . '${2}';
 
+    // allow '#' for user profile tabs
+    $output = str_replace('%23', '#', $output);
     $output = preg_replace($pattern, $replacement, $output);
 
     return $output;

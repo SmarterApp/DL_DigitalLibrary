@@ -51,7 +51,7 @@ function sbac_resource_taxonomy_resource_states_uuid_features_default_terms() {
     'vocabulary_machine_name' => 'resource_states',
   );
   $terms[] = array(
-    'name' => 'Needs Posting',
+    'name' => 'Needs Arbitration',
     'description' => NULL,
     'format' => NULL,
     'weight' => 0,

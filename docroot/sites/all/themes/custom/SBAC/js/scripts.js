@@ -1,6 +1,17 @@
 (function($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
+  Drupal.behaviors.forumSelect = {
+    attach: function(context, settings) {
+      $(function() {
+        $('.forum-goal-select').change(function () {
+          $('.regional .view').hide();
+          $('.'+$(this).val()).show();
+        });
+      });
+    }
+  };
+
   Drupal.behaviors.accountDropdown = {
     attach: function(context, settings) {
       $('.user-info').click(function() {
@@ -49,7 +60,9 @@
         }
 
         // Controls the search box and plugs in a clear all x.
-        $('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear"></div>');
+        if (0 == $('#search-x-clear').length) {
+          $('.form-item-sbac-digital-library-resources-text').append('<div id="search-x-clear"></div>');
+        }
         if ($('#edit-sbac-digital-library-resources-text').length) {
           if ($('#edit-sbac-digital-library-resources-text').val().length) {
             $('#search-x-clear').text('x');

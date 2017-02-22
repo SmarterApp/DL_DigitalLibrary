@@ -21,8 +21,11 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Email Settings',
-    'weight' => '3',
-    'children' => array(),
+    'weight' => '4',
+    'children' => array(
+      0 => 'message_subscribe_email',
+      1 => 'field_email_preference',
+    ),
     'format_type' => 'tab',
     'format_settings' => array(
       'formatter' => 'closed',
@@ -46,7 +49,7 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Expertise',
-    'weight' => '1',
+    'weight' => '2',
     'children' => array(
       0 => 'field_introduction',
       1 => 'field_special_populations',
@@ -109,7 +112,7 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Privacy',
-    'weight' => '2',
+    'weight' => '3',
     'children' => array(
       0 => 'field_privacy',
     ),

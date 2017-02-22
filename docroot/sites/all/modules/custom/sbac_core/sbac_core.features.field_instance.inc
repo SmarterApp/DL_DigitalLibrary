@@ -1066,7 +1066,7 @@ function sbac_core_field_default_field_instances() {
     ),
     'entity_type' => 'review',
     'field_name' => 'field_details',
-    'label' => 'Add some details',
+    'label' => 'Comment',
     'profanity' => 1,
     'required' => FALSE,
     'settings' => array(
@@ -1077,7 +1077,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => '',
+        'label_help_description' => 'Please comment on this resource, and focus on implementation notes and ideas on improving the resources.',
         'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: <strong>@remaining</strong>',

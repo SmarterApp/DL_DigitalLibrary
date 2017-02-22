@@ -4,7 +4,6 @@
   Drupal.behaviors.sbac_forum_js_topic_node_view_page = {
     attach: function (context, settings) {
 
-
       $('.sbac-forum-topic-node-view-controls').mouseenter(function () {
         $('.sbac-forum-topic-node-view-controls-popup').show('fast');
       });

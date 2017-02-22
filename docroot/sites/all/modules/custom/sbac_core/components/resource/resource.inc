@@ -5,7 +5,7 @@ define('FEEDBACK_REVIEW_TIMEOUT', 72); // value in hours;
 define('FEEDBACK_REVIEW_REMINDER', 24); // value in hours
 define('FEEDBACK_RESUBMISSION_TIMEOUT', 432000); // 5 days in seconds
 define('FEEDBACK_MAX_REVIEW', 3); // number of reviews before publishing
-define('FEEDBACK_REVIEW_NOTIFICATION', 48); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user with 24 hours left;
+define('FEEDBACK_REVIEW_NOTIFICATION', 24); // FEEDBACK_REVIEW_TIMEOUT - FEEDBACK_REVIEW_REMINDER); // we notify the user within 24 hours after review started;
 define('FEEDBACK_REVIEWER_RID', 17); // id of the 'resource reviewer' role;
 define('FEEDBACK_PUBLISHER_RID', 16); // id of the 'resource publisher' role;
 define('FEEDBACK_AUTHENTICATED_RID', 2); // id of the 'authenticated' role;
@@ -73,7 +73,8 @@ function resource_access($op, $node, $account = NULL) {
           $perm = _resource_access_node_has_state($node, array('published'));
           break;
         case 'view collaboration':
-          $perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && sbac_forum_get_resource_forum_id($node->nid);
+          $perm = FALSE;
+          //$perm = _resource_access_node_has_state($node, array('published')) && !sbac_central_user_has_role(array('guest'), $account) && sbac_forum_get_resource_forum_id($node->nid);
           break;
         case 'access gk review comments':
           $perm = _resource_access_gk_review_comment($node, $account);

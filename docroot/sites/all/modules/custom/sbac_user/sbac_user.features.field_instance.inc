@@ -22,7 +22,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 2,
+        'weight' => 3,
       ),
       'tooltip' => array(
         'label' => 'inline',
@@ -96,6 +96,50 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
+      'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_email_preference'.
+  $field_instances['user-user-field_email_preference'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 'never',
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 30,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_email_preference',
+    'label' => 'Email Preference',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => 1,
+        'label_help_description' => '',
+      ),
+      'type' => 'options_select',
       'weight' => 11,
     ),
   );
@@ -116,7 +160,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 29,
+        'weight' => 17,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -142,7 +186,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 28,
+      'weight' => 13,
     ),
   );
 
@@ -158,7 +202,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 0,
+        'weight' => 1,
       ),
       'tooltip' => array(
         'label' => 'hidden',
@@ -203,7 +247,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 11,
+        'weight' => 9,
       ),
       'tooltip' => array(
         'label' => 'inline',
@@ -230,6 +274,50 @@ function sbac_user_field_default_field_instances() {
       ),
       'type' => 'options_select',
       'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_hide_from_leaderboards'.
+  $field_instances['user-user-field_hide_from_leaderboards'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 25,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_hide_from_leaderboards',
+    'label' => 'Hide From Leaderboards',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+        'label_help_description' => '',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 22,
     ),
   );
 
@@ -292,7 +380,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_plain',
-        'weight' => 1,
+        'weight' => 2,
       ),
       'tooltip' => array(
         'label' => 'hidden',
@@ -325,6 +413,50 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_lock_goals'.
+  $field_instances['user-user-field_lock_goals'] = array(
+    'bundle' => 'user',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 24,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_lock_goals',
+    'label' => 'Lock Goals',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 0,
+        'label_help_description' => '',
+      ),
+      'type' => 'options_onoff',
+      'weight' => 21,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_login_count'.
   $field_instances['user-user-field_login_count'] = array(
     'bundle' => 'user',
@@ -342,7 +474,7 @@ function sbac_user_field_default_field_instances() {
           'thousand_separator' => ' ',
         ),
         'type' => 'number_integer',
-        'weight' => 30,
+        'weight' => 18,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -370,7 +502,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'number',
-      'weight' => 29,
+      'weight' => 14,
     ),
   );
 
@@ -386,7 +518,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 14,
+        'weight' => 12,
       ),
       'tooltip' => array(
         'label' => 'hidden',
@@ -428,7 +560,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 19,
+        'weight' => 15,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -457,6 +589,48 @@ function sbac_user_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_resources_contributed'.
+  $field_instances['user-user-field_resources_contributed'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 29,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_resources_contributed',
+    'label' => 'Resources Contributed',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+      ),
+      'type' => 'number',
+      'weight' => 25,
+    ),
+  );
+
   // Exported field_instance: 'user-user-field_resources_posted_goal'.
   $field_instances['user-user-field_resources_posted_goal'] = array(
     'bundle' => 'user',
@@ -469,7 +643,7 @@ function sbac_user_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'number',
         'settings' => array(
           'decimal_separator' => '.',
@@ -478,7 +652,7 @@ function sbac_user_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_integer',
-        'weight' => 35,
+        'weight' => 23,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -505,7 +679,88 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 33,
+      'weight' => 20,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_resources_rated'.
+  $field_instances['user-user-field_resources_rated'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 27,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_resources_rated',
+    'label' => 'Resources Rated',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(
+        'label_help_description' => '',
+      ),
+      'type' => 'number',
+      'weight' => 23,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_resources_reviewed'.
+  $field_instances['user-user-field_resources_reviewed'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 28,
+      ),
+      'tooltip' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_resources_reviewed',
+    'label' => 'Resources Reviewed',
+    'required' => FALSE,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 24,
     ),
   );
 
@@ -521,7 +776,7 @@ function sbac_user_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'number',
         'settings' => array(
           'decimal_separator' => '.',
@@ -530,7 +785,7 @@ function sbac_user_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_integer',
-        'weight' => 34,
+        'weight' => 22,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -557,7 +812,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 32,
+      'weight' => 19,
     ),
   );
 
@@ -573,7 +828,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_key',
-        'weight' => 13,
+        'weight' => 11,
       ),
       'tooltip' => array(
         'label' => 'hidden',
@@ -643,7 +898,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 10,
+      'weight' => 7,
     ),
   );
 
@@ -663,7 +918,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 18,
+        'weight' => 14,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -689,7 +944,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 23,
+      'weight' => 10,
     ),
   );
 
@@ -709,7 +964,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'list',
         'settings' => array(),
         'type' => 'list_default',
-        'weight' => 16,
+        'weight' => 13,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -735,7 +990,7 @@ function sbac_user_field_default_field_instances() {
         'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
       ),
       'type' => 'options_onoff',
-      'weight' => 22,
+      'weight' => 9,
     ),
   );
 
@@ -751,7 +1006,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 12,
+        'weight' => 10,
       ),
       'tooltip' => array(
         'label' => 'inline',
@@ -793,7 +1048,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 31,
+        'weight' => 20,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -823,7 +1078,7 @@ function sbac_user_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 30,
+      'weight' => 16,
     ),
     'xss' => 0,
   );
@@ -840,7 +1095,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'text',
         'settings' => array(),
         'type' => 'text_default',
-        'weight' => 30,
+        'weight' => 19,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -868,7 +1123,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 255,
       ),
       'type' => 'text_textfield',
-      'weight' => 29,
+      'weight' => 15,
     ),
     'xss' => 0,
   );
@@ -885,7 +1140,7 @@ function sbac_user_field_default_field_instances() {
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'above',
+        'label' => 'inline',
         'module' => 'number',
         'settings' => array(
           'decimal_separator' => '.',
@@ -894,7 +1149,7 @@ function sbac_user_field_default_field_instances() {
           'thousand_separator' => '',
         ),
         'type' => 'number_integer',
-        'weight' => 33,
+        'weight' => 21,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -921,7 +1176,7 @@ function sbac_user_field_default_field_instances() {
         'label_help_description' => '',
       ),
       'type' => 'number',
-      'weight' => 31,
+      'weight' => 18,
     ),
   );
 
@@ -937,7 +1192,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
-        'weight' => 20,
+        'weight' => 16,
       ),
       'tooltip' => array(
         'label' => 'above',
@@ -964,7 +1219,7 @@ function sbac_user_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'taxonomy_autocomplete',
-      'weight' => 24,
+      'weight' => 12,
     ),
   );
 
@@ -980,7 +1235,7 @@ function sbac_user_field_default_field_instances() {
         'module' => 'taxonomy',
         'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 10,
+        'weight' => 8,
       ),
       'tooltip' => array(
         'label' => 'inline',
@@ -1014,14 +1269,20 @@ function sbac_user_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Alternate email address');
   t('District Name');
+  t('Email Preference');
   t('Feedback flag');
   t('Grade(s)');
+  t('Hide From Leaderboards');
   t('Last name');
+  t('Lock Goals');
   t('Name');
   t('Other Professional Experiences and Accomplishments');
   t('Privacy');
   t('Records the number of successful logins for the user.');
+  t('Resources Contributed');
   t('Resources Posted Goal');
+  t('Resources Rated');
+  t('Resources Reviewed');
   t('Resources Reviewed Goal');
   t('Retired');
   t('SLT Member');

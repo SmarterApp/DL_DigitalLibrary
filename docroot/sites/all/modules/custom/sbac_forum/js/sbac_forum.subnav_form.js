@@ -16,6 +16,11 @@
         });
       });
 
+      // Forum Modal
+      $('.new-forum-link').click(function() {
+        $('#forum-modal-container').foundation('reveal', 'open');
+        $('.reveal-modal-bg').show();       
+      });
     }
   };
 
