@@ -311,9 +311,15 @@ a.sbac-grid-layout {
 .page-resource-review #page-title {
   display: none;
 }
+
+.page-taxonomy-term #page-title {
+  color: #fff;
+}
+
 /* line 295, ../sass/sbac_resource.scss */
 .page-digital-library-resources .main-container,
 .page-my-resources .main-container,
+.page-taxonomy-term .main-container,
 .page-resource-review .main-container {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -327,12 +333,14 @@ a.sbac-grid-layout {
 /* line 302, ../sass/sbac_resource.scss */
 .page-digital-library-resources table,
 .page-my-resources table,
+.page-taxonomy-term table,
 .page-resource-review table {
   border: none;
 }
 /* line 304, ../sass/sbac_resource.scss */
 .page-digital-library-resources table tr,
 .page-my-resources table tr,
+.page-taxonomy-term table tr,
 .page-resource-review table tr {
   background-color: transparent;
   vertical-align: top;
@@ -397,7 +405,9 @@ a.sbac-grid-layout {
   min-height: 280px;
 }
 /* line 366, ../sass/sbac_resource.scss */
-.digital-library .resource-card .resoruce-bottom, .page-digital-library-resources .resource-card .resoruce-bottom, .node-resource .resource-card .resoruce-bottom {
+.digital-library .resource-card .resoruce-bottom,
+.page-digital-library-resources .resource-card .resoruce-bottom,
+.node-resource .resource-card .resoruce-bottom {
   -moz-border-radius: 0 0 6px 6px;
   -webkit-border-radius: 0;
   border-radius: 0 0 6px 6px;
@@ -407,6 +417,9 @@ a.sbac-grid-layout {
   color: #246a34;
   font-size: 12px;
   border-top: 1px #b7bfc4 solid;
+}
+.page-taxonomy-term .digital-library .resource-card .resoruce-bottom {
+  padding: 10px 15px 46px 15px;
 }
 /* line 375, ../sass/sbac_resource.scss */
 .digital-library .resource-card .resoruce-bottom.rejected, .page-digital-library-resources .resource-card .resoruce-bottom.rejected, .node-resource .resource-card .resoruce-bottom.rejected {

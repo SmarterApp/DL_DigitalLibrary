@@ -1387,7 +1387,7 @@ function sbac_resource_preprocess_page(&$vars) {
  * @param $vars
  */
 function sbac_resource_preprocess_html(&$vars) {
-  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources' || arg(0) == 'resource-review') {
+  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources' || arg(0) == 'resource-review' || (arg(0) == 'taxonomy' && arg(1) == 'term')) {
     $display = sbac_resource_determine_grid_or_list();
     if ($display == 'grid_view') {
       $vars['classes_array'][] = 'grid-view';
