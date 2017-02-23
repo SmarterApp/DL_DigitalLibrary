@@ -17,23 +17,23 @@ function sbac_resource_taxonomy_get_taxonomy_terms($field, $ccss = FALSE) {
   foreach ($field['und'] as $key => $term) {
     if ($ccss) {
       if (isset($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'])){
-        $terms[] = l($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'], '/taxonomy/term/' . $term['tid']);
+        $terms[] = l($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'], 'taxonomy/term/' . $term['tid']);
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
         if ($temp_term) {
-          $terms[] = l($temp_term->field_alignment_shortname['und'][0]['value'], '/taxonomy/term/' . $term['tid']);
+          $terms[] = l($temp_term->field_alignment_shortname['und'][0]['value'], 'taxonomy/term/' . $term['tid']);
         }
       }
     }
     else {
       if (isset($term['taxonomy_term']->name)) {
-        $terms[] = l($term['taxonomy_term']->name, '/taxonomy/term/' . $term['tid']);
+        $terms[] = l($term['taxonomy_term']->name, 'taxonomy/term/' . $term['tid']);
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
         if ($temp_term) {
-          $terms[] = l($temp_term->name, '/taxonomy/term/' . $term['tid']);
+          $terms[] = l($temp_term->name, 'taxonomy/term/' . $term['tid']);
         }
       }
     }
