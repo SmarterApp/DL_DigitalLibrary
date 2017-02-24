@@ -151,7 +151,7 @@ class feedbackStatus
 
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'feedback')
-      ->entityCondition('type', 'gate_keeper')
+      ->entityCondition('bundle', 'gate_keeper')
       ->propertyCondition('completed', 1)
       ->propertyCondition('node_id', $nid)
       ->propertyOrderBy('id', 'DESC')
@@ -178,6 +178,7 @@ class feedbackStatus
       // Get the last qc_count archived QC reviews.
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'feedback')
+        ->entityCondition('bundle', 'qc')
         ->propertyCondition('node_id', $nid)
         ->propertyCondition('current', 0)
         ->propertyCondition('status', 0)
