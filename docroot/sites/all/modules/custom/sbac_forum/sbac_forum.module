@@ -842,11 +842,16 @@ function sbac_forum_preprocess_node(&$vars) {
 function sbac_forum_node_access($node, $op, $account) {
   if (isset($node->type)) {
     if ($node->type == 'topic') {
+      if ($node->status == NODE_NOT_PUBLISHED) {
+        return NODE_ACCESS_DENY;
+      }
+
       switch ($op) {
         case 'view':
           if (sbac_central_user_has_role(array(SBAC_RESOURCE_ADMINISTRATOR_ROLE, SBAC_RESOURCE_FACILITATOR_ROLE))) {
             return NODE_ACCESS_ALLOW;
           }
+
           // Check if the parent forum has access restrictions. (role or state)
           $node_data = entity_metadata_wrapper('node', $node);
           if (isset($node_data->field_topic_forum_parent)) {
@@ -2706,3 +2711,4 @@ function sbac_forum_set_default_image(&$field, $filename, $source, $destination)
     $field['field_config']['settings']['default_image'] = (string) $fid;
   }
 }
+
