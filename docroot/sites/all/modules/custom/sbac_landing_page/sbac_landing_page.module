@@ -57,7 +57,7 @@ function lp_help_topics(){
   $variables = array();
   if(module_exists('sbac_help')){
     if(node_access('update','help_topic')){
-      $variables['edit_help'] = l('Edit Help','/sort-content/welcome-topics');
+      $variables['edit_help'] = l('Edit Help','/sort-content/help-topics');
     }
     $variables['topics'] = sbac_help_topic_ctas('3');
     return  theme('sbac_help_topics', $variables);

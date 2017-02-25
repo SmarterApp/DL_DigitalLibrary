@@ -19,8 +19,8 @@ dependencies[] = number
 dependencies[] = options
 dependencies[] = print
 dependencies[] = redirect
-; Add back after UUIDs are imported from prod
-; dependencies[] = sbac_core_taxonomy_applied_category
+dependencies[] = sbac_core
+dependencies[] = sbac_core_taxonomy_applied_category
 dependencies[] = strongarm
 dependencies[] = taskit
 dependencies[] = taxonomy

@@ -265,6 +265,14 @@ function feedback_admin_review_fields($prefix, $form_state) {
         form once the review has been started.'),
     );
 
+  // hide criteria for non superadmins
+    global $user;
+    if ($user->uid !== '1') {
+      $form['hide_criteria'] = array(
+        '#markup' => '<div class="hide-criteria">',
+      );
+    }
+
   // number of criteria sets
     $num_sets = variable_get($prefix . 'criteria_num', FEEDBACK_DEFAULT_SET_COUNT);
     $options = range(1, 100);
@@ -359,6 +367,11 @@ function feedback_admin_review_fields($prefix, $form_state) {
       );
     }
 
+    if ($user->uid !== '1') {
+      $form['hide_criteria_close'] = array(
+        '#markup' => '</div >',
+      );
+    }
   return $form;
 }
 

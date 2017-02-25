@@ -1068,7 +1068,7 @@ function sbac_core_field_default_field_instances() {
     'field_name' => 'field_details',
     'label' => 'Comment',
     'profanity' => 1,
-    'required' => FALSE,
+    'required' => 0,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -1077,7 +1077,7 @@ function sbac_core_field_default_field_instances() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'label_help_description' => 'Please comment on this resource, and focus on implementation notes and ideas on improving the resources.',
+        'label_help_description' => 'Please comment on this resource, and focus on implementation notes and ideas  on improving the resource.',
         'maxlength_js' => 1000,
         'maxlength_js_enforce' => 0,
         'maxlength_js_label' => 'Character count: <strong>@remaining</strong>',
@@ -1251,9 +1251,9 @@ function sbac_core_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Add some details');
   t('Appropriate For');
   t('Avg Rating');
+  t('Comment');
   t('Comments');
   t('Contributor\'s comment');
   t('Contributor\'s comment date');
