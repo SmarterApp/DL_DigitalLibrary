@@ -159,7 +159,7 @@
           if (event.target === this) {
             $('*').removeClass('activated');
 
-            $('.item-list').css({
+            $('.facet-block .item-list').css({
               'height': '0',
             });
           }
