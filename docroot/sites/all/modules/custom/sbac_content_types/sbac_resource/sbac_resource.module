@@ -179,6 +179,16 @@ function sbac_resource_menu() {
     'file' => 'sbac_resource.admin.inc',
   );
 
+  $items['admin/sbac/feedback/resource'] = array(
+    'title' => 'Resource Help Text',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_form_messages'),
+    'access arguments' => array('resource'),
+    'access callback' => array('sbac_resource_form_messages_access'),
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+    'file' => 'sbac_resource.admin.inc',
+  );
+
   $items['sbac-resource/url-exists'] = array(
     'title' => 'URL Exists',
     'page callback' => 'sbac_resource_url_exists_ajax',
@@ -680,7 +690,13 @@ function sbac_resource_resource_review_access_callback() {
  * @return bool
  */
 function sbac_resource_form_messages_access($node_type) {
-  if ($node_type->type == 'resource') {
+  if (is_object($node_type)) {
+    if ($node_type->type == 'resource') {
+      return user_access('administer site configuration');
+    }
+  return FALSE;
+  }
+  if ($node_type == 'resource') {
     return user_access('administer site configuration');
   }
   return FALSE;
@@ -768,7 +784,7 @@ function sbac_resource_preprocess_node(&$vars) {
       $materials = _sbac_resource_preview_materials($vars);
       $result = sbac_resource_determine_download_ability($vars);
       if ($result['primary'] || $result['secondary']) {
-        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download Zip File', 'class' => 'button small right')));
+        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download Zip File', 'class' => 'button small right download-modal')));
         if ($result['primary'] == FALSE || $result['secondary'] == FALSE) {
           $vars['download_partial'] = TRUE;
         }
@@ -778,7 +794,19 @@ function sbac_resource_preprocess_node(&$vars) {
       $vars['materials'] = $materials;
     }
 
+    if ($_GET['rating-goal'] == 'in-process') {
+      drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource_guidance.js');
+      $user_profile = user_load($user-uid);
+      $vars['goal_link_ip'] = sbac_email_user_link($user_profile) . '#profile-goals';
+    }
+    if ($_GET['rating-goal'] == 'complete') {
+      drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource_guidance.js');
+      $vars['goal_link_complete'] = '#'; //TODO populate with correct link after SNE form is built
+    }
+
     $vars['favorites_link'] = sbac_favorites_get_favorite_link($user->uid, $vars['nid'], 'node');
+    
+    return $vars;
   }
 }
 
@@ -3843,7 +3871,8 @@ function _sbac_resource_is_recent_reviewers($resource_node, $account_uid) {
       $result[$resource_node->nid][$account_uid] = !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
     }
   }
-  return $result[$resource_node->nid][$account_uid];
+return TRUE;
+//  return $result[$resource_node->nid][$account_uid];
 }
 
 /**
