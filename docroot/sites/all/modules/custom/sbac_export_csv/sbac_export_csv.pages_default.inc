@@ -81,7 +81,7 @@ function sbac_export_csv_default_page_manager_pages() {
   $pane->configuration = array(
     'admin_title' => 'SBAC Exports List',
     'title' => '',
-    'body' => '<table><tbody><tr><td><a href="./ccss-export.csv">Common Core Standards</a></td></tr></tbody></table>',
+    'body' => '<table><tbody><tr><td><a href="./ccss-export.csv">Common Core Standards</a></td></tr><tr><td><a href="./ccss-export-full.csv">Common Core Standards with extra fields</a></td></tr></tbody></table>',
     'format' => 'full_html',
     'substitute' => TRUE,
   );
