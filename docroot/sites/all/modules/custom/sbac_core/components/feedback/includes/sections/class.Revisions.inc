@@ -15,20 +15,40 @@ class Revisions extends Base {
 
     // Find out at what stage was the resource returned.
     // Get the last feedback
-    $results = $this->getFeedbacks(1);
+    $results = $this->getFeedbacks('all');
     if (!empty($results)) {
-      $feedback = current($results);
-      switch ($feedback->type) {
-        case 'qc':
-          // The resource was returned at the 3RR level
-          $html = $this->getReviewerContent();
-          break;
-        case 'gate_keeper':
-          $html = $this->getGateKeeperContent($feedback);
-          break;
-        case 'post':
-          $html = $this->getReviewerContent($this->getPostContent($feedback));
-          break;
+      $html = '';
+//      $feedback = current($results);
+      $qc_reviews = array();
+      // count and collect quality criteria reviews for display
+      $qc_count = 0;
+      foreach ($results as $result) {
+        if ($result->type == 'qc') {
+          if ($qc_count == 0 || ($qc_count % 3 == 0)) {
+            $qc_reviews[$result->id] = $qc_count;
+          }
+          $qc_count++;
+        }
+      }
+      foreach ($results as $feedback) {
+        switch ($feedback->type) {
+          case 'post':
+            $html .= $this->getReviewerContent($this->getPostContent($feedback));
+  //          break;
+          case 'qc':
+            // The resource was returned at the 3RR level
+            // Check to see if review is in qc array to group by 3s
+            if (array_key_exists($feedback->id, $qc_reviews)) {
+              $html .= $this->getReviewerContent('', $num = array($qc_reviews[$feedback->id], $qc_reviews[$feedback->id] + 3));
+            }
+            else {
+              break;
+            }
+  //          break;
+          case 'gate_keeper':
+            $html .= $this->getGateKeeperContent($feedback);
+  //          break;
+        }
       }
     }
 
@@ -57,14 +77,14 @@ class Revisions extends Base {
         ';
   }
 
-  private function getReviewerContent($publisher_html = '') {
+  private function getReviewerContent($publisher_html = '', $num = array()) {
     if (!_sbac_resource_is_in_poster_workflow($this->_node->nid)) {
 
       $recommendations_html = '';
       $questions_and_comments_html = '';
       $feedbacks = array();
       // get the last 3 reviews
-      $reviews = $this->getFeedbacks(3, 'qc');
+      $reviews = $this->getFeedbacks($num, 'qc');
       asort($reviews);
       if (!empty($reviews)) {
         foreach ($reviews as $review) {
@@ -226,14 +246,16 @@ class Revisions extends Base {
 
       $i++;
     }
-    return '
-        <div class="feedback-wrap" id="feedback-wrap-gk-comments">
-          <h2 class="main-title">' . t('Gate Keeping Criteria') . '</h2>
-          <div class="feedback-items">
-            ' . $output_gk . '
+    if ($output_gk) {
+      return '
+          <div class="feedback-wrap" id="feedback-wrap-gk-comments">
+            <h2 class="main-title">' . t('Gate Keeping Criteria') . '</h2>
+            <div class="feedback-items">
+              ' . $output_gk . '
+            </div>
           </div>
-        </div>
       ';
+    }
   }
 
   private function getFeedbacks($num = 1, $bundle = '') {
@@ -242,14 +264,35 @@ class Revisions extends Base {
     if ($bundle != '') {
       $query->entityCondition('bundle', $bundle);
     }
-    $results = $query->propertyCondition('completed', 1)
-      ->propertyCondition('met_criteria', 0)
-      ->propertyCondition('current', 0)
-      ->propertyCondition('archived', 1)
-      ->propertyCondition('node_id', $this->_node->nid)
-      ->propertyOrderBy('created', 'DESC')
-      ->range(0, $num)
-      ->execute();
+    if ($num == 'all') {
+      $results = $query->propertyCondition('completed', 1)
+        ->propertyCondition('met_criteria', 0)
+        ->propertyCondition('current', 0)
+        ->propertyCondition('archived', 1)
+        ->propertyCondition('node_id', $this->_node->nid)
+        ->propertyOrderBy('created', 'DESC')
+        ->execute();
+    }
+    elseif (is_array($num)) {
+      $results = $query->propertyCondition('completed', 1)
+        ->propertyCondition('met_criteria', 0)
+        ->propertyCondition('current', 0)
+        ->propertyCondition('archived', 1)
+        ->propertyCondition('node_id', $this->_node->nid)
+        ->propertyOrderBy('created', 'DESC')
+        ->range($num[0], $num[1])
+        ->execute();
+    }
+    else {
+      $results = $query->propertyCondition('completed', 1)
+        ->propertyCondition('met_criteria', 0)
+        ->propertyCondition('current', 0)
+        ->propertyCondition('archived', 1)
+        ->propertyCondition('node_id', $this->_node->nid)
+        ->propertyOrderBy('created', 'DESC')
+        ->range(0, $num)
+        ->execute();
+    }
     return $results['feedback'];
   }
 }

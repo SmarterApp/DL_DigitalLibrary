@@ -33,7 +33,9 @@ function sbac_core_user_default_permissions() {
   // Exported permission: 'configure sbac'.
   $permissions['configure sbac'] = array(
     'name' => 'configure sbac',
-    'roles' => array(),
+    'roles' => array(
+      'administrator' => 'administrator',
+    ),
     'module' => 'sbac_core',
   );
 

@@ -25,7 +25,7 @@ class ReviewCompleted extends \taskit\sbac_core\BaseTask {
             $review_type = 'Quality Criteria Review';
             break;
           case 'post':
-            $review_type = 'Posting Review';
+            $review_type = 'Arbitration Review';
             break;
         }
         global $user;

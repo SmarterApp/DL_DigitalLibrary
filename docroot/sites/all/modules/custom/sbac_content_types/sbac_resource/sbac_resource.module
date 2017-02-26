@@ -179,6 +179,16 @@ function sbac_resource_menu() {
     'file' => 'sbac_resource.admin.inc',
   );
 
+  $items['admin/sbac/feedback/resource'] = array(
+    'title' => 'Resource Help Text',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('sbac_resource_form_messages'),
+    'access arguments' => array('resource'),
+    'access callback' => array('sbac_resource_form_messages_access'),
+    'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
+    'file' => 'sbac_resource.admin.inc',
+  );
+
   $items['sbac-resource/url-exists'] = array(
     'title' => 'URL Exists',
     'page callback' => 'sbac_resource_url_exists_ajax',
@@ -387,12 +397,6 @@ function sbac_resource_get_related_resources($baseline_node) {
       $baseline_grades[] = $term['tid'];
     }
   }
-  $baseline_attributes = array();
-  if (isset($baseline_node->field_attributes['und'][0]['tid'])) {
-    foreach ($baseline_node->field_attributes['und'] as $key => $term) {
-      $baseline_attributes[] = $term['tid'];
-    }
-  }
 
   /**
    *  Baseline Resource:  Subjects A, B, C; Grades 1, 2; Formative Assessment X, Y
@@ -454,84 +458,59 @@ function sbac_resource_get_related_resources($baseline_node) {
 
         // Compare baseline attributes against all other resource nodes that had the same baseline grades and subjects.
         if ($grade_nids) {
-          $baseline_attributes_string = implode(',', $baseline_attributes);
-          if ($baseline_attributes) {
-            $grade_nids = implode(',', $grade_nids);
-            $query = "
-              SELECT
-                n.nid,
-                a.field_attributes_tid AS subject
-              FROM {node} n
-              JOIN {workbench_moderation_node_history} w ON n.nid = w.nid AND n.vid = w.vid
-              JOIN {field_data_field_attributes} a ON n.nid = a.entity_id AND n.vid = a.revision_id
-              WHERE n.type = 'resource'
-              AND w.state = 'published'
-              AND w.current = 1
-              AND n.nid IN (" . $grade_nids . ")
-              AND a.field_attributes_tid IN (" . $baseline_attributes_string . ")
-              AND n.nid <> " . $baseline_node->nid;
-            $result = db_query($query);
-            $attributes_nids = array();
-            foreach ($result as $row) {
-              $attributes_nids[$row->nid] = $row->nid;
+          /**
+            * Use the first four metadata elements strictly as filters to create the pool of n resources
+            * (meaning that all are equally valid and the only rule is that a related resource has at least one
+            * match on each of the three attributes), then sort that pool by ratings to get an overall order
+            * In this scenario, the ultimate display order is R5, R1 and no other resources
+            * Reasoning: both R1 and R5 have at least one match in each category, and R5 has a higher total
+            * ratings than R1 since R1 has no reviews.
+            */
+          // This is the resource pool of nodes.
+          $count = 0;
+          foreach ($grade_nids as $nid) {
+            if ($count >= 8) {
+              break;
             }
 
-            /**
-             * Use the first four metadata elements strictly as filters to create the pool of n resources
-             * (meaning that all are equally valid and the only rule is that a related resource has at least one
-             * match on each of the three attributes), then sort that pool by ratings to get an overall order
-             * In this scenario, the ultimate display order is R5, R1 and no other resources
-             * Reasoning: both R1 and R5 have at least one match in each category, and R5 has a higher total
-             * ratings than R1 since R1 has no reviews.
-             */
-            // This is the resource pool of nodes.
-            if ($attributes_nids) {
-              $count = 0;
-              foreach ($attributes_nids as $nid) {
-                if ($count >= 8) {
-                  break;
-                }
-
-                $related_views = TRUE;
-                $query = "SELECT v.field_unique_views_value AS views
-                          FROM {field_data_field_unique_views} v
-                          WHERE v.entity_id = " . $nid;
-                $result = db_query($query)->fetchObject();
-                if ($result !== FALSE) {
-                  if ($result->views == 0) {
-                    $related_views = FALSE;
-                  }
-                  else {
-                    $related_resources[$nid] = $result->views;
-                  }
-                }
-                else {
-                  $related_views = FALSE;
-                }
-
-                if (!$related_views) {
-                  $query = "SELECT sl.field_student_learning_rating AS learning,
-                            pd.field_pro_dev_rating AS pro_dev,
-                            eu.field_ease_use_rating AS ease_use
-                            FROM {eck_review} r
-                            JOIN {field_data_field_student_learning} sl ON r.id = sl.entity_id
-                            JOIN {field_data_field_pro_dev} pd ON r.id = pd.entity_id
-                            JOIN {field_data_field_ease_use} eu ON r.id = eu.entity_id
-                            WHERE r.node_id = " . $nid;
-                  $result = db_query($query);
-                  if ($result->rowCount()) {
-                    foreach ($result as $row) {
-                      $total = $row->learning + $row->pro_dev + $row->ease_use;
-                      $related_resources[$nid] += $total;
-                    }
-                  }
-                  else {
-                    $related_resources[$nid] = 0;
-                  }
-                }
-                $count++;
+            $related_views = TRUE;
+            $query = "SELECT v.field_unique_views_value AS views
+                      FROM {field_data_field_unique_views} v
+                      WHERE v.entity_id = " . $nid;
+            $result = db_query($query)->fetchObject();
+            if ($result !== FALSE) {
+              if ($result->views == 0) {
+                $related_views = FALSE;
+              }
+              else {
+                $related_resources[$nid] = $result->views;
               }
             }
+            else {
+              $related_views = FALSE;
+            }
+
+            if (!$related_views) {
+              $query = "SELECT sl.field_student_learning_rating AS learning,
+                        pd.field_pro_dev_rating AS pro_dev,
+                        eu.field_ease_use_rating AS ease_use
+                        FROM {eck_review} r
+                        JOIN {field_data_field_student_learning} sl ON r.id = sl.entity_id
+                        JOIN {field_data_field_pro_dev} pd ON r.id = pd.entity_id
+                        JOIN {field_data_field_ease_use} eu ON r.id = eu.entity_id
+                        WHERE r.node_id = " . $nid;
+              $result = db_query($query);
+              if ($result->rowCount()) {
+                foreach ($result as $row) {
+                  $total = $row->learning + $row->pro_dev + $row->ease_use;
+                  $related_resources[$nid] += $total;
+                }
+              }
+              else {
+                $related_resources[$nid] = 0;
+              }
+            }
+            $count++;
           }
         }
       }
@@ -680,7 +659,13 @@ function sbac_resource_resource_review_access_callback() {
  * @return bool
  */
 function sbac_resource_form_messages_access($node_type) {
-  if ($node_type->type == 'resource') {
+  if (is_object($node_type)) {
+    if ($node_type->type == 'resource') {
+      return user_access('administer site configuration');
+    }
+  return FALSE;
+  }
+  if ($node_type == 'resource') {
     return user_access('administer site configuration');
   }
   return FALSE;
@@ -768,7 +753,7 @@ function sbac_resource_preprocess_node(&$vars) {
       $materials = _sbac_resource_preview_materials($vars);
       $result = sbac_resource_determine_download_ability($vars);
       if ($result['primary'] || $result['secondary']) {
-        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download Zip File', 'class' => 'button small right')));
+        $vars['download'] = l('Download', 'sbac-media/download/' . $vars['nid'], array('attributes' => array('title' => 'Download Zip File', 'class' => 'button small right download-modal')));
         if ($result['primary'] == FALSE || $result['secondary'] == FALSE) {
           $vars['download_partial'] = TRUE;
         }
@@ -778,7 +763,19 @@ function sbac_resource_preprocess_node(&$vars) {
       $vars['materials'] = $materials;
     }
 
+    if ($_GET['rating-goal'] == 'in-process') {
+      drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource_guidance.js');
+      $user_profile = user_load($user-uid);
+      $vars['goal_link_ip'] = sbac_email_user_link($user_profile) . '#profile-goals';
+    }
+    if ($_GET['rating-goal'] == 'complete') {
+      drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource_guidance.js');
+      $vars['goal_link_complete'] = '#'; //TODO populate with correct link after SNE form is built
+    }
+
     $vars['favorites_link'] = sbac_favorites_get_favorite_link($user->uid, $vars['nid'], 'node');
+    
+    return $vars;
   }
 }
 
@@ -1387,7 +1384,7 @@ function sbac_resource_preprocess_page(&$vars) {
  * @param $vars
  */
 function sbac_resource_preprocess_html(&$vars) {
-  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources' || arg(0) == 'resource-review') {
+  if (arg(0) == 'digital-library-resources' || arg(0) == 'my-resources' || arg(0) == 'resource-review' || (arg(0) == 'taxonomy' && arg(1) == 'term')) {
     $display = sbac_resource_determine_grid_or_list();
     if ($display == 'grid_view') {
       $vars['classes_array'][] = 'grid-view';
@@ -3368,20 +3365,17 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
  * Given the node and account, see if the user has access
  * to view given the state of the node.
  *
- * @param $node
+ * @param $nid
  * @param $account
- * @param $op
  * @return bool
  */
 function _sbac_resource_determine_state_access_via_sql($nid, $account) {
   $all_states = array();
   $access = FALSE;
-  $sql = "SELECT * FROM {field_data_field_view_permissions} p ";
-  $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+  $sql = "SELECT * FROM {field_data_field_view_permissions} p WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
   $state_permission = db_query($sql, array(':nid' => $nid))->fetchObject();
   if ($state_permission->field_view_permissions_value == 1) {
-    $sql = "SELECT * FROM {field_data_field_view_permissions_per_state} p ";
-    $sql .= "WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
+    $sql = "SELECT * FROM {field_data_field_view_permissions_per_state} p WHERE entity_id = :nid AND deleted = 0 AND bundle = 'resource'";
     $result = db_query($sql, array(':nid' => $nid));
     foreach ($result as $row) {
       $all_states[] = $row->field_view_permission_per_state_tid;
@@ -3843,7 +3837,8 @@ function _sbac_resource_is_recent_reviewers($resource_node, $account_uid) {
       $result[$resource_node->nid][$account_uid] = !empty($original_reviewers) && in_array($account_uid, $original_reviewers);
     }
   }
-  return $result[$resource_node->nid][$account_uid];
+return TRUE;
+//  return $result[$resource_node->nid][$account_uid];
 }
 
 /**

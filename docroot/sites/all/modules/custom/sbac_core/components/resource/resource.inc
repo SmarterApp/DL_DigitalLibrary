@@ -417,10 +417,12 @@ function _resource_access_access_quality_criteria_revisions($node, $account) {
     }
     else {
       // There are no in progress reviews
-      $access = _resource_access_node_has_state($node, array('needs_review', 'being_reviewed', 'approved'))
-        && sbac_central_user_has_role(array('resource reviewer', 'resource publisher'), $account)
-        && $node->uid != $account->uid
-        && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
+      // Add published state so revision log is still visible after publication to select roles
+      // Removed timeout restrictions since you can't actually edit anything by viewing revisions
+      $access = _resource_access_node_has_state($node, array('needs_review', 'being_reviewed', 'approved', 'published'))
+        && sbac_central_user_has_role(array('administrator', 'resource contributor', 'resource reviewer', 'resource publisher'), $account)
+        && $node->uid != $account->uid;
+//        && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
     }
   }
   return $access;

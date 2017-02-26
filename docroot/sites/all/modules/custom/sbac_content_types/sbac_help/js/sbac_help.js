@@ -16,6 +16,18 @@
       });
     }
   };
+  
+  Drupal.behaviors.sbac_help_feature = {
+    attach: function (context, settings) {
+      $('.flag-action').click(function (e) {
+        var featured = $('.unflag-action').length;
+        if (featured >= 3) {
+          e.preventDefault();
+          $('#help-topics-modal-container').foundation('reveal', 'open');
+        }
+      });
+    }
+  };
 
   Drupal.behaviors.sbac_help_modal = {
     attach: function (context, settings) {

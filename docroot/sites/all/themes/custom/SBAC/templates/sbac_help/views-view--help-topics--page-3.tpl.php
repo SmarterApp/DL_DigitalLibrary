@@ -30,7 +30,7 @@
 <?php
 global $user;
 if ($user->uid == 1 || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles)) {
-  print "<a class='help-topic-link' href='/admin/help-topics'>Edit Help Topics</a>";
+  print "<a class='help-topic-link' href='/sort-content/help-topics'>Edit Help Topics</a>";
 }
 ?>
 <div class="<?php print $classes; ?>">

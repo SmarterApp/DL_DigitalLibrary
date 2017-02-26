@@ -49,6 +49,26 @@ function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
     }
     return $options;
   }
+  return array();
+}
+
+/**
+ * Returns an associated array of tid => name of just parent items.
+ * @param string $vocab_name
+ * @return array
+ */
+function sbac_user_form_setup_parent_taxonomy_options($vocab_name) {
+  if ($vocab = taxonomy_vocabulary_machine_name_load($vocab_name)) {
+    $terms = taxonomy_get_tree($vocab->vid);
+    $options = array();
+    foreach ($terms as $term) {
+      if ($term->depth == 0) {
+        $options[$term->tid] = $term->name;
+      }
+    }
+    return $options;
+  }
+  return array();
 }
 
 /**
@@ -248,7 +268,7 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $subject_options = sbac_user_form_setup_select_taxonomy_options('subject');
+  $subject_options = sbac_user_form_setup_parent_taxonomy_options('subject');
 
   $form['subject_options'] = array(
     '#type' => 'select',
@@ -302,7 +322,7 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
         'chosen-widget',
       ),
     ),
-    '#required' => TRUE,
+    '#required' => FALSE,
     '#options' => $student_population_options,
     '#default_value' => isset($_SESSION['user_setup']['student_population_options']) ? array_values($_SESSION['user_setup']['student_population_options']) : '',
   );
@@ -369,42 +389,8 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     '#markup' => t("Select the personal information and expertise you'd like to make visible to other educators in the Digital Library. Anything you choose to make visible will be displayed as shown on the next page. Note that no educators can access your full account and no information will be displayed publicly.")
   );
 
-  $form['opt_container'] = array(
-    '#markup' => '<div class="sbac-setup-pg3-container">',
-  );
-
-  $form['visibility_opt_title'] = array(
-    '#type' => 'item',
-    '#title' => t('Visibility Optional'),
-    '#description' => t('Select the personal information you would like visible to other Digital Library users.'),
-  );
-
-  $visibility_dv = array();
-  if (isset($_SESSION['user_setup']['visibility_opt'])) {
-    foreach ($_SESSION['user_setup']['visibility_opt'] AS $idx => $val) {
-      $visibility_dv[] = $val['value'];
-    }
-  }
-
-  $form['visibility_opt'] = array(
-    '#type' => 'checkboxes',
-    '#options' => array(
-      'picture' => 'Photo',
-      'field_last_name' => 'Last Name',
-      'mail' => 'Email Address',
-      'field_school_name' => 'School(s)',
-      'field_district_name' => 'District(s)',
-      'field_introduction' => 'Other Professional Experiences and Accomplishments',
-    ),
-    '#default_value' => $visibility_dv,
-  );
-
-  $form['opt_container_close'] = array(
-    '#markup' => '</div>',
-  );
-
   $form['req_container'] = array(
-    '#markup' => '<div class="sbac-setup-pg3-container last">',
+    '#markup' => '<div class="sbac-setup-pg3-container">',
   );
 
   $form['visibility_req_title'] = array(
@@ -419,7 +405,6 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
     'State(s)',
     'Grade(s)',
     'Subject(s)',
-    'Student Populations',
   );
 
   $form['visibility_req'] = array(
@@ -430,6 +415,50 @@ function sbac_user_setup_privacy_form($form, &$form_state) {
   );
 
   $form['req_container_close'] = array(
+    '#markup' => '</div>',
+  );
+
+  $form['opt_container'] = array(
+    '#markup' => '<div class="sbac-setup-pg3-container last">',
+  );
+
+  $form['visibility_opt_title'] = array(
+    '#type' => 'item',
+    '#title' => t('Visibility Optional'),
+    '#description' => t('Select the personal information you would like visible to other Digital Library users.'),
+  );
+
+  $visibility_dv = array(
+    'picture',
+    'field_last_name',
+    'mail',
+    'field_school_name',
+    'field_district_name',
+    'field_introduction',
+    'special-populations',
+  );
+  if (isset($_SESSION['user_setup']['visibility_opt'])) {
+    $visibility_dv = array();
+    foreach ($_SESSION['user_setup']['visibility_opt'] AS $idx => $val) {
+      $visibility_dv[] = $val['value'];
+    }
+  }
+
+  $form['visibility_opt'] = array(
+    '#type' => 'checkboxes',
+    '#options' => array(
+      'picture' => 'Photo',
+      'field_last_name' => 'Last Name',
+      'mail' => 'Email Address',
+      'field_school_name' => 'School(s)',
+      'field_district_name' => 'District(s)',
+      'field_introduction' => 'Other Professional Experiences and Accomplishments',
+      'special-populations' => 'Student Populations',
+    ),
+    '#default_value' => $visibility_dv,
+  );
+
+  $form['opt_container_close'] = array(
     '#markup' => '</div>',
   );
 
@@ -557,7 +586,6 @@ function sbac_user_widget_save_media(&$form, &$form_state) {
  * [sbac_user_setup_pi_form_submit description]
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
- * @return [type]             [description]
  */
 function sbac_user_setup_pi_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Next') {
@@ -575,7 +603,6 @@ function sbac_user_setup_pi_form_submit($form, &$form_state) {
  * Bypasses required fields to return to previous page.
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
- * @return [type]             [description]
  */
 function sbac_user_setup_expertise_form_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Previous') {
@@ -588,7 +615,6 @@ function sbac_user_setup_expertise_form_validate($form, &$form_state) {
  * Progresses setup form to next page.
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
- * @return [type]             [description]
  */
 function sbac_user_setup_expertise_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Next') {
@@ -605,7 +631,6 @@ function sbac_user_setup_expertise_form_submit($form, &$form_state) {
  * Bypasses required fields to return to previous page.
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
- * @return [type]             [description]
  */
 function sbac_user_setup_privacy_form_validate($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Previous') {
@@ -618,7 +643,6 @@ function sbac_user_setup_privacy_form_validate($form, &$form_state) {
  * Progresses setup form to next page.
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
- * @return [type]             [description]
  */
 function sbac_user_setup_privacy_form_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == 'Preview') {
@@ -634,7 +658,6 @@ function sbac_user_setup_privacy_form_submit($form, &$form_state) {
       'field-state' => 'State(s)',
       'field-grade-level-s-' => 'Grade(s)',
       'field-subject-s-' => 'Subject(s)',
-      'special-populations' => 'Student Populations',
     );
     foreach ($visibility_options AS $idx => $name) {
       $_SESSION['user_setup']['visibility_opt'][] = array('value' => $idx);
@@ -644,11 +667,27 @@ function sbac_user_setup_privacy_form_submit($form, &$form_state) {
 }
 
 /**
+ * Sets up the tid values array for subjects, including all children.
+ * @param  array  $options [description]
+ * @return array           [description]
+ */
+function sbac_user_setup_subject_builder($options) {
+  $values = array();
+  foreach ($options AS $idx => $tid) {
+    $children = taxonomy_get_children($tid);
+    $values[] = array('tid' => $tid);
+    foreach ($children as $term) {
+      $values[] = array('tid' => $term->tid);
+    }
+  }
+  return $values;
+}
+
+/**
  * Implements hook_form_submit().
  * Submit handler for the profile setup preview form.
  * @param  [type] $form       [description]
  * @param  [type] $form_state [description]
- * @return [type]             [description]
  */
 function sbac_user_setup_preview_form_submit($form, &$form_state) {
   /**
@@ -680,7 +719,7 @@ function sbac_user_setup_preview_form_submit($form, &$form_state) {
     if ($_SESSION['user_setup']['user_retired']) {
       $updates['field_retired']['und'][0]['value'] = 'I am currently retired';
     }
-    $updates['field_subject_s_']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['subject_options']);
+    $updates['field_subject_s_']['und'] = sbac_user_setup_subject_builder($_SESSION['user_setup']['subject_options']);
     $updates['field_grade_level_s_']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['grade_options']);
     $updates['field_special_populations']['und'] = sbac_user_setup_set_options($_SESSION['user_setup']['student_population_options']);
     $updates['field_introduction']['und'][0]['value'] = $_SESSION['user_setup']['about_me'];
