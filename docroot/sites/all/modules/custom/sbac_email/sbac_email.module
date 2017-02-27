@@ -270,3 +270,14 @@ SQL;
 
   return $reviewers;
 }
+
+/**
+ * Returns a correctly formatted link to a users profile given a user object
+ */
+function sbac_email_user_link($user_object) {
+  global $base_url;
+  $user_name = str_replace(' ', '-', strtolower(sbac_user_format_username($user_object)));
+  $user_name_clean = str_replace('.', '', $user_name);
+
+  return $base_url . '/users/' . $user_name_clean;
+}

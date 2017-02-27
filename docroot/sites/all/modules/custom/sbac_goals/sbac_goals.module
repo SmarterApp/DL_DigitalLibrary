@@ -445,8 +445,15 @@ SQL;
           }
           // Send email to user
           if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+            $username = sbac_email_user_link($user_profile);
+            $values = array(
+              'arguments' => array(
+                '!user-link' => $username,
+              ),
+              'uid' => $user_profile->uid,
+            );
             // Create message
-            $message = message_create('rating_goal_complete', array('uid' => $user_profile->uid));
+            $message = message_create('rating_goal_complete', $values);
             $wrapper = entity_metadata_wrapper('message', $message);
             $wrapper->save();
             if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
@@ -454,36 +461,6 @@ SQL;
               message_notify_send_message($message);
               // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
               message_delete_multiple(array($message->mid));
-            }
-          }
-        }
-        // Check to see if user is on Most Active Member board
-        $most_active_rated = views_get_view('rated_resources_rankings', TRUE);
-        $most_active_rated->preview();
-        $rated_results_arr = $most_active_rated->result;
-
-        // iterate through view to see if $user_profile-> uid is in it
-        foreach ($rated_results_arr as $rated_result) {
-          if ($rated_result->uid == $user_profile->uid) {
-            // Notify user if on Most Active Member Board
-            if ($task = taskit_get_object('most_active_members_rated')) {
-              $task->addVisibility($task::VISIBILITY_USER);
-              $task->addOwningUser($user_profile->uid);
-              $task->addTriggeringUser($user_profile->uid);
-              $task->save();
-            }
-            // Send email to user
-            if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
-              // Create message
-              $message = message_create('rated_leaderboard', array('uid' => $user_profile->uid));      
-              $wrapper = entity_metadata_wrapper('message', $message);
-              $wrapper->save();
-              if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {          
-                // send email
-                message_notify_send_message($message);
-                // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-                message_delete_multiple(array($message->mid));
-              }
             }
           }
         }
@@ -536,7 +513,14 @@ SQL;
             // Send email to user
             if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
               // create message
-              $message = message_create('reviewed_goal_complete', array('uid' => $user_profile->uid));          
+              $username = sbac_email_user_link($user_profile);
+              $values = array(
+                'arguments' => array(
+                  '!user-link' => $username,
+                ),
+                'uid' => $user_profile->uid,
+              );
+              $message = message_create('reviewed_goal_complete', $values);          
               $wrapper = entity_metadata_wrapper('message', $message);
               $wrapper->save();
               if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
@@ -546,37 +530,6 @@ SQL;
                 message_delete_multiple(array($message->mid));
               }
             }
-          }
-
-          // Check to see if user is on Most Active Member board
-          $most_active_reviewed = views_get_view('reviewed_resources_rankings', TRUE);
-          $most_active_reviewed->preview();
-          $reviewed_results_arr = $most_active_reviewed->result;
-  
-          // iterate through view to see if $user_profile-> uid is in it
-          foreach ($reviewed_results_arr as $reviewed_result) {
-            if ($reviewed_result->uid == $user_profile->uid) {
-              // Notify user if on Most Active Member Board
-              if ($task = taskit_get_object('most_active_members_reviewed')) {
-                $task->addVisibility($task::VISIBILITY_USER);
-                $task->addOwningUser($user_profile->uid);
-                $task->addTriggeringUser($user_profile->uid);
-                $task->save();
-              }
-              // Send email to user
-              if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
-                // Create message
-                $message = message_create('reviewed_leaderboard', array('uid' => $user_profile->uid));          
-                $wrapper = entity_metadata_wrapper('message', $message);
-                $wrapper->save();
-                if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
-                  // send email
-                  message_notify_send_message($message);
-                  // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-                  message_delete_multiple(array($message->mid));
-                }
-              }
-            }  
           }
 
           // update user's resources reviewed field
@@ -637,7 +590,14 @@ SQL;
             // Send email to user
             if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
               // Create message
-              $message = message_create('contributed_goal_complete', array('uid' => $user_profile->uid));          
+              $username = sbac_email_user_link($user_profile);
+              $values = array(
+                'arguments' => array(
+                  '!user-link' => $username,
+                ),
+                'uid' => $user_profile->uid,
+              );
+              $message = message_create('contributed_goal_complete', $values);          
               $wrapper = entity_metadata_wrapper('message', $message);
               $wrapper->save();
               if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
@@ -647,37 +607,6 @@ SQL;
                 message_delete_multiple(array($message->mid));
               }
             } 
-          }
-
-          // Check to see if user is on Most Active Member board
-          $most_active_contributed = views_get_view('contributed_resources_rankings', TRUE);
-          $most_active_contributed->preview();
-          $contributed_results = $most_active_contributed->result;
-  
-          // iterate through view to see if $user_profile-> uid is in it
-          foreach ($contributed_results as $contributed_result) {
-            if ($contributed_result->uid == $user_profile->uid) {
-              // Notify user if on Most Active Member Board
-              if ($task = taskit_get_object('most_active_members_contributed')) {
-                $task->addVisibility($task::VISIBILITY_USER);
-                $task->addOwningUser($user_profile->uid);
-                $task->addTriggeringUser($user_profile->uid);
-                $task->save();
-              }
-              // Send email to user
-              if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
-                // Create message
-                $message = message_create('contributed_leaderboard', array('uid' => $user_profile->uid));          
-                $wrapper = entity_metadata_wrapper('message', $message);
-                $wrapper->save();
-                if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
-                  // send email
-                  message_notify_send_message($message);
-                  // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-                  message_delete_multiple(array($message->mid));             
-                }          
-              }
-            }
           }
 
           // update user's resources contributed field
@@ -763,25 +692,19 @@ function sbac_goals_get_current_completed_reviews($uid, $date_range) {
   $completed = array();
 
   $sql = <<<SQL
-
 SELECT
   f.uid,
   f.node_id,
   f.changed,
   type
 FROM {eck_feedback} f
-  LEFT JOIN {workbench_moderation_node_history} h
-    ON f.node_id = h.nid
 WHERE
   f.uid = :uid
-  AND (type = :type OR type = :type1 OR type = :type2)
-  AND f.status = :status
+  AND (type = :qc OR type = :gk)
   AND f.completed = :completed
   AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL f.created SECOND) + INTERVAL -25200 SECOND), '%Y%m%d') BETWEEN :from_date AND :to_date
-  AND h.current = 1
 ORDER BY
   f.changed
-
 SQL;
 
   $dates = explode('--', $date_range);
@@ -789,7 +712,7 @@ SQL;
   $to_date = $dates[1];
 
   // anything with status = 1 and completed = 1 is completed.
-  $result = db_query($sql, array(':type' => 'qc', ':type1' => 'gate_keeper', ':type2' => 'post', ':uid' => $uid, ':status' => 1, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
+  $result = db_query($sql, array(':qc' => 'qc', ':gk' => 'gate_keeper', ':uid' => $uid, ':completed' => 1, ':from_date' => $from_date, ':to_date' => $to_date));
   foreach ($result as $row) {
     $completed[] = $row;
   }
@@ -1205,7 +1128,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   $rated_goal = $user->field_star_rating_goal['und'][0]['value'];
   $resources_rated_perc = $resources_rated;
   if ($resources_rated > $rated_goal) {
-    $resoures_rated_perc = $rated_goal;
+    $resources_rated_perc = $rated_goal;
   }
   $rated_perc = sbac_goals_calc_percent($resources_rated_perc, $rated_goal);
   // Process rated data into table for report
@@ -1255,10 +1178,10 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
           $type = 'Quality Criteria';
           break;
         case 'gate_keeper':
-          $type = 'Gate Keeping';
+          $type = 'Gatekeeping';
           break;
         case 'post':
-          $type = 'Post';
+          $type = 'Arbitration';
           break;
       }
       $completed = date('m/d/Y', $reviewed->changed);
@@ -1297,8 +1220,10 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $resources_contributed = $user->field_resources_contributed['und'][0]['value'];
     $contributed_goal = $user->field_resources_posted_goal['und'][0]['value'];
     $resources_contributed_perc = $resources_contributed;
-    if ($resources_contributed > $contr)
-    $contributed_perc = sbac_goals_calc_percent($resources_contributed, $contributed_goal);
+    if ($resources_contributed > $contributed_goal) {
+      $resources_contributed_perc = $contributed_goal;
+    }
+    $contributed_perc = sbac_goals_calc_percent($resources_contributed_perc, $contributed_goal);
     $output .= '<div class="resource-contributor-header">Resource Contributor</div>
                 <div class="goal-container">
                   <span class="goal">Goal: ' .
@@ -1553,6 +1478,148 @@ SQL;
   foreach($completed as $forum) {
     sbac_goals_update_forum_goals($forum->tid);
   } 
+}
+
+function sbac_goals_notify_leaderboard() {
+  // Rated Leaderboard notifications
+  // Get previous leaderboard values
+  $past_rated_leaderboard = variable_get('rated_leaderboard', array());
+
+  // Check for new members on Most Active Rated Member board
+  $most_active_rated = views_get_view('rated_resources_rankings', TRUE);
+  $most_active_rated->preview();
+  $rated_results_arr = $most_active_rated->result;
+  
+  // iterate through view to see if $user_profile-> uid is in it
+  foreach ($rated_results_arr as $rated_result) {
+    if (!in_array($rated_result->uid, $past_rated_leaderboard)) {
+      $user_profile = user_load($rated_result->uid);
+      // Notify user if on Most Active Member Board
+      if ($task = taskit_get_object('most_active_members_rated')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addOwningUser($user_profile->uid);
+        $task->addTriggeringUser($user_profile->uid);
+        $task->save();
+      }
+      // Send email to user
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
+        // Create message
+        $username = sbac_email_user_link($user_profile);
+        $values = array(
+          'arguments' => array(
+            '!user-link' => $username,
+          ),
+          'uid' => $user_profile->uid,
+        );
+        $message = message_create('rated_leaderboard', $values);      
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {          
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));
+        }
+      }
+    }
+    $new_rated_leaderboard[] = $rated_result->uid;
+  }
+  // Stash new leaderboard values in db
+  variable_set('rated_leaderboard', $new_rated_leaderboard);
+
+  // Reviewed Leaderboard Notfications
+  // Get past leaderboard values
+  $past_reviewed_leaderboard = variable_get('reviewed_leaderboard', array());
+  $new_reviewed_leaderboard = array();
+
+  // Get current leaderboard values
+  $most_active_reviewed = views_get_view('reviewed_resources_rankings', TRUE);
+  $most_active_reviewed->preview();
+  $reviewed_results_arr = $most_active_reviewed->result;
+
+  // iterate through view to see if user is in previous leaderboard
+  foreach ($reviewed_results_arr as $reviewed_result) {
+    if (!in_array($reviewed_result->uid, $past_reviewed_leaderboard)) {
+      $user_profile = user_load($reviewed_result->uid);
+
+      // Notify user if new to Most Active Member Board
+      if ($task = taskit_get_object('most_active_members_reviewed')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addOwningUser($user_profile->uid);
+        $task->addTriggeringUser($user_profile->uid);
+        $task->save();
+      }
+      // Send email to user
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
+        // Create message
+        $username = sbac_email_user_link($user_profile);
+        $values = array(
+          'arguments' => array(
+            '!user-link' => $username,
+          ),
+          'uid' => $user_profile->uid,
+        );
+        $message = message_create('reviewed_leaderboard', $values);          
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));
+        }
+      }
+    }
+    $new_reviewed_leaderboard[] = $reviewed_result->uid;
+  }
+  // Stash Current Reviewed Leaderboard in db
+  variable_set('reviewed_leaderboard', $new_reviewed_leaderboard);
+
+
+  // Posted Leaderboard Notfications
+  $past_posted_leaderboard = variable_get('posted_leaderboard', array());
+  $new_posted_leaderboard = array();
+  // Get current Most Active Member Contributed board
+  $most_active_contributed = views_get_view('contributed_resources_rankings', TRUE);
+  $most_active_contributed->preview();
+  $contributed_results = $most_active_contributed->result;
+
+  // iterate through view to see if there are new leaderboard members
+  foreach ($contributed_results as $contributed_result) {
+    if (!in_array($contributed_result->uid, $past_posted_leaderboard)) {
+      $user_profile = user_load($contributed_result->uid);
+      // Notify user if on Most Active Member Board
+      if ($task = taskit_get_object('most_active_members_contributed')) {
+        $task->addVisibility($task::VISIBILITY_USER);
+        $task->addOwningUser($user_profile->uid);
+        $task->addTriggeringUser($user_profile->uid);
+        $task->save();
+      }
+      // Send email to user
+      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
+        // Create message
+        $username = sbac_email_user_link($user_profile);
+        $values = array(
+          'arguments' => array(
+            '!user-link' => $username,
+          ),
+          'uid' => $user_profile->uid,
+        );
+        $message = message_create('contributed_leaderboard', $values);          
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->save();
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+          // send email
+          message_notify_send_message($message);
+          // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+          message_delete_multiple(array($message->mid));             
+        }          
+      }
+    }
+    $new_posted_leaderboard[] = $contributed_result->uid;
+  }
+  // Stash new posted leaderboard values in db
+  variable_set('posted_leaderboard', $new_posted_leaderboard);
 }
 
 /**

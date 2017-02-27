@@ -33,6 +33,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
     $form['state_start']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
     );
 
@@ -158,6 +159,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
  */
 function feedback_post_form_submit($form, &$form_state) {
   $node = $form_state['build_info']['args'][0];
+  $feedback = new feedbackStatus($node);
 
   $state = $form_state['dialog_settings']['current_state'];
 
@@ -165,29 +167,33 @@ function feedback_post_form_submit($form, &$form_state) {
     // the initial "start" state; upon submission the modal reloads the page, so the new
     // entity is displayed in its form
     case 'start':
-      global $user;
+      // We only want to start a new review if there isn't already a post review on progress
+      if ($feedback->post_started) {
+        drupal_set_message(t('This resource is already being reviewed for publication.'), 'error');
+      } else {
+        global $user;
 
-      if (resource_access('view post', $node, $user)) {
-        $entity = new stdClass;
-        $entity->title = $node->title .' - Post - ' . $user->uid;
-        $entity->type = 'post';
-        $entity->uid = $user->uid;
-        $entity->created = REQUEST_TIME;
-        $entity->changed = REQUEST_TIME;
-        $entity->language = LANGUAGE_NONE;
-        $entity->status = 1;
-        $entity->completed = 0;
-        $entity->current = 1;
-        $entity->node_id = $node->nid;
+        if (resource_access('view post', $node, $user)) {
+          $entity = new stdClass;
+          $entity->title = $node->title . ' - Post - ' . $user->uid;
+          $entity->type = 'post';
+          $entity->uid = $user->uid;
+          $entity->created = REQUEST_TIME;
+          $entity->changed = REQUEST_TIME;
+          $entity->language = LANGUAGE_NONE;
+          $entity->status = 1;
+          $entity->completed = 0;
+          $entity->current = 1;
+          $entity->node_id = $node->nid;
 
-        drupal_set_message(t('Post review process started.'));
+          drupal_set_message(t('Post review process started.'));
 
-        entity_save('feedback', $entity);
+          entity_save('feedback', $entity);
+        } else {
+          drupal_set_message(t('Post review process could not be started because another user is currently reviewing the resource.'), 'error');
+        }
+        sbac_resource_save_current_state($node);
       }
-      else {
-        drupal_set_message(t('Post review process could not be started because another user is currently reviewing the resource.'), 'error');
-      }
-      sbac_resource_save_current_state($node);
 
       break;
 

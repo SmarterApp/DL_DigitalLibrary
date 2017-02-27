@@ -1354,7 +1354,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
             $recipients = array();
             $query = new EntityFieldQuery();
             $submitted = (bool) $query->entityCondition('entity_type', 'feedback')
-              ->entityCondition('type', 'gate_keeper')
+              ->entityCondition('bundle', 'gate_keeper')
               ->propertyCondition('completed', 1)
               ->propertyCondition('node_id', $node->nid)
               ->count()
@@ -1393,6 +1393,33 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                     $recipients[] = entity_load_single('feedback', $feedback->id);
                   }
                 }
+                // email reviewers
+                foreach ($recipients as $recipient) {
+                  $reviewer = user_load($recipient->uid);
+                  $username = sbac_email_user_link($reviewer);
+                  // Add resource link to message
+                  global $base_url;
+                  $values = array(
+                    'arguments' => array(
+                      '!resource-link' => $base_url . '/node/' . $node->nid,
+                      '!user-link' => $username,
+                    ),
+                    'uid' => $reviewer->uid,
+                  );
+                  $email_preference = $reviewer->field_email_preference['und'][0]['value'];
+                  if ($email_preference !== '' || $email_preference !== 'never') {
+                    // create message
+                    $message = message_create('resource_resubmitted', $values);
+                    $wrapper = entity_metadata_wrapper('message', $message);
+                    $wrapper->save();
+                    if ($email_preference == 'immediately') {
+                      // send email
+                      message_notify_send_message($message);
+                      // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+                      message_delete_multiple(array($message->mid));
+                    }
+                  }
+                }       
               }
             }
             else {
@@ -1414,10 +1441,18 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
               // Email resource reviewers
               $reviewers = sbac_resource_get_reviewers_email();
               foreach ($reviewers as $reviewer) {
+                $user_profile = user_load($reviewer->uid);
+                $username = sbac_email_user_link($user_profile);
+                $values = array(
+                  'arguments' => array(
+                    '!user-link' => $username,
+                  ),
+                  'uid' => $reviewer->uid,
+                );
                 $email_preference = $reviewer->field_email_preference_value;
                 if ($email_preference !== '' || $email_preference !== 'never') {
                   // create message
-                  $message = message_create('resource_ready_for_review', array('uid' => $reviewer->uid));
+                  $message = message_create('resource_ready_for_review', $values);
                   $wrapper = entity_metadata_wrapper('message', $message);
                   $wrapper->save();
                   if ($email_preference == 'immediately') {
@@ -1619,6 +1654,11 @@ function _sbac_resource_create_open_container(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_create_resource_title(&$form, &$form_state) {
+  global $user;
+  $admin_link = '';
+  if (in_array('administrator', $user->roles)) {
+    $admin_link = '<a class="help-topic-link" href="/admin/sbac/feedback/resource">Edit Help Text</a>';
+  }
   $default_value = "Untitled Resource";
   if ($form['title']['#default_value']) {
     $default_value = $form['title']['#default_value'];
@@ -1630,35 +1670,35 @@ function _sbac_resource_create_resource_title(&$form, &$form_state) {
   $form['title_of_resource_basic'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_basic'] = "group_basic";
 
   $form['title_of_resource_summary'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_summary'] = "group_summary";
 
   $form['title_of_resource_materials'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_materials'] = "group_materials";
 
   $form['title_of_resource_tags'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_tags'] = "group_tags";
 
   $form['title_of_resource_advanced'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_advanced'] = "group_advanced";
 }
@@ -3896,15 +3936,18 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
     $last_reviewer = $form_state['values']['field_recent_reviewers']['und'][0]['target_id'];
     // Send email to user
     // Add resource link to message
+    $node = $form_state['node'];
     global $base_url;
+    $user_profile = user_load($last_reviewer);
+    $username = sbac_email_user_link($user_profile);
     $values = array(
       'arguments' => array(
         '!resource-link' => $base_url . '/node/' . $node->nid,
+        '!user-link' => $username,
       ),
       'uid' => $last_reviewer,
     );
-    $user_profile = user_load($last_reviewer);
-
+    
     $email_preference = $user_profile->field_email_reference[0]['und']['value'];
     if ($email_preference !== '' && $email_preference !== 'never') {
       // Create message

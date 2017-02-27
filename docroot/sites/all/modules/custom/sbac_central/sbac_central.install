@@ -1162,11 +1162,32 @@ function sbac_central_update_7095() {
     db_add_index('eck_flag', 'urgent', array('urgent'));
   }
 }
+/**
+ * Enable self-reg modules.
+ */
+function sbac_central_update_7096() {
+    $modules = array(
+        'sbac_authorized_domains',
+        'sbac_art_api',
+        'sbac_self_registration',
+        'sbac_districts_taxonomy',
+    );
+    module_enable($modules);
+}
 
+/**
+ * Enable oauth2 module.
+ */
+function sbac_central_update_7097() {
+    $modules = array(
+        'oauth2_client',
+    );
+    module_enable($modules);
+}
 /**
  * Enable panels modules and sbac_collections
  */
-function sbac_central_update_7096() {
+function sbac_central_update_7098() {
   $modules = array(
     'panels',
     'panels_node',
@@ -1180,7 +1201,7 @@ function sbac_central_update_7096() {
 /**
  * Enable new sbac_export_csv module
  */
-function sbac_central_update_7097() {
+function sbac_central_update_7099() {
   $modules = array(
     'sbac_export_csv',
   );
@@ -1190,7 +1211,7 @@ function sbac_central_update_7097() {
 /**
  * Enable Educational Use and Technologies Required for Classroom use modules
  */
-function sbac_central_update_7098() {
+function sbac_central_update_7100() {
   $modules = array(
     'sbac_resource_taxonomy_educational_use',
     'sbac_resource_taxonomy_technologies_for_classroom_use',
@@ -1198,13 +1219,13 @@ function sbac_central_update_7098() {
   module_enable($modules);
 }
 
-function sbac_central_update_7099() {
+function sbac_central_update_7101() {
   // remove field_geographical_settings field (from resource and forum)
   field_delete_field('field_geographical_settings');
   field_purge_batch(1);
 }
 
-function sbac_central_update_7100() {
+function sbac_central_update_7102() {
   // Delete intended end user field from forums
   // Get the fields' info array for the given content type.
   $field_instance = field_info_instances('taxonomy_term', 'forum');
@@ -1220,7 +1241,7 @@ function sbac_central_update_7100() {
 }
 
 // message_subscribe_email field back to user
-function sbac_central_update_7101() {
+function sbac_central_update_7103() {
  // Add "message subscribe email" field to users.
   $field_name = 'message_subscribe_email';
   if (!field_info_field($field_name)) {
@@ -1261,11 +1282,19 @@ function sbac_central_update_7101() {
 /**
  * Enable Views Variable Field Module
  */
-function sbac_central_update_7102() {
+function sbac_central_update_7104() {
   $modules = array(
     'vvf',
   );
   module_enable($modules);
+}
+
+function sbac_central_update_7105() {
+  $terms = taxonomy_get_term_by_name('Needs Posting', 'resource_states');
+  $term = reset($terms);
+  $term->name = 'Needs Arbitration';
+  taxonomy_term_save($term);
+  return t('"Needs Posting" updated to "Needs Arbitration"');
 }
 
 /**
@@ -1299,3 +1328,4 @@ function sbac_central_uninstall() {
   variable_del('feedback_block_body');
   variable_del('enable_feedback');
 }
+

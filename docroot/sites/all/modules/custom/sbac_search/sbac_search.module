@@ -664,7 +664,7 @@ function sbac_search_my_resources_categories() {
   $allowed_states = array(
     'draft' => 'Draft',
     'submitted' => 'Submitted',
-    'gk' => 'Gate-Keeping Review',
+    'gk' => 'Gatekeeping Review',
     'qc' => 'Quality Criteria Review',
     'artbitration' => 'Arbitration Review',
     'returned' => 'Returned',
@@ -762,9 +762,9 @@ function sbac_search_resource_review_categories() {
 
   $resource_states = taxonomy_vocabulary_machine_name_load('resource_states');
   $resource_states_terms = taxonomy_get_tree($resource_states->vid);
-  $allowed_both_states = array('Being Reviewed', 'Needs Review', 'Needs Posting');
+  $allowed_both_states = array('Being Reviewed', 'Needs Review', 'Needs Arbitration');
   $allowed_rr_states = array('Being Reviewed', 'Needs Review');
-  $allowed_rp_states = array('Being Reviewed', 'Needs Posting');
+  $allowed_rp_states = array('Being Reviewed', 'Needs Arbitration');
   $categories['resource_states']['display_name'] = 'Resource Status';
   $categories['resource_states']['vocabulary'] = $resource_states;
   $categories['resource_states']['terms'] = $resource_states_terms;

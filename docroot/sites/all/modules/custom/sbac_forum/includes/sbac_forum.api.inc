@@ -4,7 +4,7 @@
 
 
 function sbac_forum__api__get_active_subnav() {
-  $active_subnav = SBAC_FORUM_SUBNAV_RESOURCE;
+  $active_subnav = SBAC_FORUM_SUBNAV_TOPIC;
 
   if (isset($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
     if (!empty($_SESSION[SBAC_FORUM_SUBNAV_ACTIVE])) {
@@ -245,6 +245,14 @@ function sbac_forum__api__create_forum_controls($is_facilitator, $term_id) {
   global $user;
   $forum_control_link_list = '';
   $extra_classes = '';
+  // Add edit links for only facilitator role
+  if (in_array('facilitator', $user->roles)) {
+    $is_facilitator = TRUE;
+  }
+  // Remove edit links if a user does not have the facilitator role
+  else {
+    $is_facilitator = FALSE;
+  }
   if (($is_facilitator) || ($user->uid == 1)) { // Edit and delete forum
     $link_ops = array(
       'attributes' => array(

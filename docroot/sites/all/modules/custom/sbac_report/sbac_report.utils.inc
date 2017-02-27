@@ -370,7 +370,7 @@ function format_metadata_value_field($field, $is_date = FALSE, $field_in_object 
         }
       }
       if ($field == 'Approved') {
-        $field = 'Needs Posting';
+        $field = 'Needs Arbitration';
       }
       $value = $field;
     }

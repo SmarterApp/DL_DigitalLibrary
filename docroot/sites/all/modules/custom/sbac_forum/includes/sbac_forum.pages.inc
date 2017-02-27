@@ -216,7 +216,7 @@ function sbac_forum_keyword_search_redirect($where = FALSE) {
       sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
       break;
     default:
-      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
+      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
       break;
   }
   drupal_goto('forums');
@@ -315,8 +315,8 @@ function sbac_forum_view_forum_page($term) {
 
 
   $end_user_text = '';
-  if (isset($forum_data->field_intended_end_user)) {
-    $end_users = $forum_data->field_intended_end_user->value();
+  if (isset($forum_data->field_intended_participants)) {
+    $end_users = $forum_data->field_intended_participants->value();
     if (!empty($end_users)) {
       $item_list = array();
       foreach ($end_users as $end_user) {
@@ -346,6 +346,23 @@ function sbac_forum_view_forum_page($term) {
         'attributes' => array('class' => 'vp-grades-list'),
       );
       $student_text = theme('item_list', $list_args);
+    }
+  }
+
+  $attributes_text = '';
+  if (isset($forum_data->field_attributes)) {
+    $attributes = $forum_data->field_attributes->value();
+    if (!empty($attributes)) {
+      $item_list = array();
+      foreach ($attributes as $attribute) {
+        $item_list[] = $attribute->name;
+      }
+      $list_args = array(
+        'type' => 'ul',
+        'items' => $item_list,
+        'attributes' => array('class' => 'vp-attributes-list'),
+      );
+      $attributes_text = theme('item_list', $list_args);
     }
   }
 
@@ -526,7 +543,7 @@ function sbac_forum_view_forum_page($term) {
     }
     $contributor_perc = sbac_goals_calc_percent($contributor_complete_perc, $contributor_goal);
     $member_count = count($term->field_fc_forum_members['und']);
-
+    $member_count > 1 ? $member_desc = ' Members' : $member_desc = ' Member';
     $goals = '<a class="goals-toggle">Show Member Goals</a>
               <div class="forum-goal-container">
                 <div class="goal-container">
@@ -536,7 +553,7 @@ function sbac_forum_view_forum_page($term) {
                   <div class="goal-body">
                     <div class="members">
                       <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
-                      <span class="member-count">' . $member_count . ' Members</span>
+                      <span class="member-count">' . $member_count . $member_desc . '</span>
                     </div>
                     <div class="goals">
                       <span class="complete educator">' . $educator_complete . '</span> of ' . $educator_goal . '
@@ -550,7 +567,7 @@ function sbac_forum_view_forum_page($term) {
                   <div class="goal-body">
                     <div class="members">
                       <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
-                      <span class="member-count">' . $member_count . ' Members</span>
+                      <span class="member-count">' . $member_count . $member_desc . '</span>
                     </div>
                     <div class="goals">
                       <span class="complete reviewer">' . $reviewer_complete . '</span> of ' . $reviewer_goal . '
@@ -564,7 +581,7 @@ function sbac_forum_view_forum_page($term) {
                   <div class="goal-body">
                     <div class="members">
                       <img typeof="foaf:Image" src="/sites/all/themes/custom/SBAC/images/user-default-image.png" width="30px" height="30px" alt="Anonymous\'s picture" title="Anonymous\'s picture">
-                      <span class="member-count">' . $member_count . ' Members</span>
+                      <span class="member-count">' . $member_count . $member_desc . '</span>
                     </div>
                     <div class="goals">
                       <span class="complete contributor">' . $contributor_complete . '</span> of ' . $contributor_goal . '
@@ -583,6 +600,7 @@ function sbac_forum_view_forum_page($term) {
     'subjects' => $subject_text,
     'end_users' => $end_user_text,
     'students' => $student_text,
+    'attributes' => $attributes_text,
     'tabs' => $tab_output,
     'resource_link' => $resource_link,
     'forum_image' => $image_tag,

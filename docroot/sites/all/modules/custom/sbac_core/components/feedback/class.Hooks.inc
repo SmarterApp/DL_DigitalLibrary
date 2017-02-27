@@ -124,7 +124,7 @@ class Hooks extends \devtools\Hooks {
     );
 
     $items['admin/sbac/feedback'] = array(
-      'title' => 'Feedback Flow', 
+      'title' => 'Workflow/Resource Help Text', 
       'page callback' => 'sbac_core_index_page',
       'access arguments' => array('configure sbac'), 
     ) + $base;
@@ -135,7 +135,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_gate_keeper_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 0,
+      'weight' => 1,
     ) + $base;
 
     $items['admin/sbac/feedback/quality_review'] = array(
@@ -144,7 +144,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_quality_review_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 1,
+      'weight' => 2,
     ) + $base;
 
     $items['admin/sbac/feedback/post'] = array(
@@ -153,7 +153,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_post_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 2,
+      'weight' => 3,
     ) + $base;
 
     $items['node/%node/feedback'] = array(
@@ -291,7 +291,7 @@ class Hooks extends \devtools\Hooks {
           $full_class_name = 'sbac_core\\components\\feedback\\form_utility\\' . $class_name;
           $form_utility = new $full_class_name($form, $form_state, $this->_info[$bundle]);
 
-          $form_utility->attachHelpfulInfo();
+          $form_utility->attachHelpfulInfo($bundle);
           $form_utility->process();
           $form_utility->postProcess();
         }
@@ -470,9 +470,11 @@ class Hooks extends \devtools\Hooks {
       // Send email notification
       $user_profile = user_load($row->uid);
       global $base_url;
+      $username = sbac_email_user_link($user_profile);
       $values = array(
         'arguments' => array(
           '!resource-link' => $base_url . '/node/' . $row->node_id,
+          '!user-link' => $username,
         ),
         'uid' => $row->uid,
       );
@@ -526,9 +528,11 @@ class Hooks extends \devtools\Hooks {
         // Send email notification
         $user_profile = user_load($row->uid);
         global $base_url;
+        $username = sbac_email_user_link($user_profile);
         $values = array(
           'arguments' => array(
             '!resource-link' => $node->title,
+            '!user-link' => $username,
           ),
           'uid' => $row->uid,
         );
