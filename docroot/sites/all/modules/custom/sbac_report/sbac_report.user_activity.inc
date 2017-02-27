@@ -154,7 +154,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     return; // report did not contain any data.
   }
 
-  $users = get_users_for_user_groups($state_tid, $user_groups);
+  $users = get_users_for_user_groups($state_tid, $user_groups, $date_range);
   // Override user groups if specific user is selected
   if (isset($individual)) {
     $users = array();

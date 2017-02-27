@@ -36607,6 +36607,223 @@ form#sbac-user-filter-form #edit-email {
   display: none;
 }
 
+/* Help/Guidance css */
+.page-sort-content-help-topics .sbac-alert-box {
+    margin-bottom: 80px;
+}
+
+.view-display-id-sort_help_topics .views-field-title {
+    width: 76%;
+}
+
+.sbac-resource-container .help-topic-link {
+    top: 70px;
+}
+
+#glossary_terms {
+    margin-top: 140px;
+}
+
+.help-tabs {
+    width: 960px;
+    position: absolute;
+    top: 82px;
+    padding-left: 40px;
+    left: 2px;
+}
+.help-tabs:before {
+    background: none repeat scroll 0 0 #FFFFFF;
+    top: 45px;
+    box-shadow: 0 1px 6px 0 rgba(0,95,130,0.75);
+    content: " ";
+    display: block;
+    height: 10px;
+    width: 100%;
+    left: -2px;
+    position: absolute;
+    width: 100%;
+    width: 960px;
+    z-index: 1;
+}
+
+.help-tabs:after {
+    background: none repeat scroll 0 0 #FFFFFF;
+    top: 55px;
+    content: " ";
+    display: block;
+    height: 10px;
+    width: 100%;
+    left: -2px;
+    position: absolute;
+    width: 100%;
+    width: 960px;
+    z-index: 2;
+}
+
+.help-topic-link {
+    position: absolute;
+    top: 210px;
+    right: 40px;
+}
+
+.sbac-resource-container .help-topic-link,
+.helpful-info .help-topic-link {
+    top: 70px;
+    padding: 5px 5px 5px 27px;
+    background: url(/sites/all/themes/custom/SBAC/images/icons/icon-edit.png) no-repeat left center;
+    font-size: 14px;
+    font-weight: normal;
+    color: #0085ad;
+    border-radius: 0.25rem;
+    border: 0 none;
+    background-color: transparent;
+}
+
+.sbac-resource-container .help-topic-link:hover,
+.helpful-info .help-topic-link:hover {
+    text-shadow: 0 0 0 rgba(0,0,0,0.5);
+}
+
+.helpful-info .help-topic-link {
+    top: 105px;
+    right: 60px;
+}
+
+.help-tabs a {
+    padding: 12px 28px;
+    font-family: "Open Sans",sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    color: #0583AC;
+    height: 48px;
+    line-height: 45px;
+    background: none repeat scroll 0 0 #FAFAFA;
+    border-left: 1px solid #CECECE;
+    border-right: 1px solid #CECECE;
+    border-top: 1px solid #CECECE;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.help-tabs .glossary {
+    margin-left: -5px;
+}
+
+.lexicon-overview .edit a {
+    position: relative;
+    top: -74px;
+    z-index: 3;
+}
+
+.help-tabs .active {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-left: 1px solid #CECECE;
+    box-shadow: 0 1px 5px 0 rgba(0,95,130,0.75);
+    color: #464B54;
+    height: 43px;
+    position: relative;
+    z-index: 9;
+}
+
+.help-tabs .active:after {
+    background: none repeat scroll 0 0 #FFFFFF;
+    bottom: -6px;
+    content: " ";
+    display: block;
+    height: 10px;
+    left: 0px;
+    padding: 0 20px;
+    position: absolute;
+    width: 100%;
+    z-index: 9;
+}
+
+body.page-help-topics h1 {
+    margin-bottom: 120px;
+    margin-top: 20px;
+}
+
+.view-display-id-page_1 .views-field-title {
+    color: #3b953f;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.view-display-id-page_1 p {
+    font-size: 16px;
+}
+
+.page-help-topics #main.columns .view-help-topics h3 {
+    font-size: 24px;
+}
+
+.page-help-topics #main.columns .view-help-topics .views-field-field-pdf-or-word-doc {
+    margin-bottom: 20px;
+}
+
+.page-help-topics #main.columns .view-help-topics li {
+    margin-left: 0;
+    font-size: 15px;
+    list-style: none;
+    padding-left: 30px;
+}
+
+.page-glossary #page-title {
+    display: block;
+}
+
+.view-display-id-sort_help_topics  caption {
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.view-display-id-sort_help_topics .views-table {
+    width: 100%;
+}
+
+.view-display-id-sort_help_topics .help-topic-link {
+    position: relative;
+    top: 5px;
+    right: 0px;
+}
+
+.view-display-id-sort_help_topics .help-topic-link1 {
+    right: 238px;
+}
+
+#help-topics-modal-continue,
+#playlist-modal-continue  {
+    color: #FFFFFF;
+    font-size: 16px;
+}
+
+.page-forums-term .sbac-forum-vp-controls-wrapper {
+    display: block;
+    float: right;
+    height: 80px;
+    bottom: 35px;
+    padding-top: 50px;
+    position: relative;
+    right: 0;
+    width: 135px;
+    z-index: 999;
+}
+
+.page-forums-term .sbac-alert-box {
+    margin-bottom: 35px;
+}
+
+/* Help Text edit form */
+.hide-criteria {
+    display: none;
+}
+
+#feedback-gate-keeper-admin-form #edit-submit {
+    margin-top: 20px;
+}
+
 /* Reports css */
 .report-form-container .form-item-user {
     width: 30%;
@@ -36617,33 +36834,33 @@ form#sbac-user-filter-form #edit-email {
 }
 
 .page-reports #resource_states .results-summary {
-  width: 100%;
+    width: 100%;
 }
 
 .page-reports #resource_states .results-summary tr th {
-  background-color: #F2F2F2;
-  font-size: 13px;
-  padding: 10px;
-  color: #464B54;
-  line-height: 1.5;
-  width: 50%;
+    background-color: #F2F2F2;
+    font-size: 13px;
+    padding: 10px;
+    color: #464B54;
+    line-height: 1.5;
+    width: 50%;
 }
 
 .page-reports #resource_states .results-summary tr td {
-  background-color: #FFFFFF;
-  background-image: none;
-  border: 1px solid #ccc;
-  text-align: center;
-  width: 50%;
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #ccc;
+    text-align: center;
+    width: 50%;
 }
 
 .page-reports #resource_states .results-summary .attribute {
-  background-color: #F2F2F2;
-  border-radius: 2px;
-  display: inline-block;
-  font-size: 12px;
-  line-height: 22px;
-  margin-right: 7px;
-  margin-top: 7px;
-  padding: 0 5px;
+    background-color: #F2F2F2;
+    border-radius: 2px;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 22px;
+    margin-right: 7px;
+    margin-top: 7px;
+    padding: 0 5px;
 }
