@@ -565,6 +565,28 @@ function sbac_preprocess_rate_template_yesno(&$variables) {
  * Preprocess function for page template.
  */
 function sbac_preprocess_page(&$variables) {
+  // kill rating cookie value so guidance popups can be created on new page load
+  if (isset($_COOKIE['rating'])) {
+    unset($_COOKIE['rating']);
+    // unset FF cookie since path is different than Chrome
+    setcookie('rating', NULL, time() - 3600, '/content/'); // empty value and old timestamp
+    // unset Chrome cookie
+    setcookie('rating', NULL, time() - 3600, '/content'); // empty value and old timestamp
+  }
+  if (strpos($_GET['q'], 'glossary') !== FALSE) {
+    $variables['help_tabs'] =
+    '<div class="help-tabs">
+      <a href="/help-topics">Help Topics/FAQ</a>
+      <a class="active glossary">Glossary</a>
+    </div>';
+  }
+  if ($_GET['q'] == 'help-topics') {
+    $variables['help_tabs'] =
+    '<div class="help-tabs">
+      <a class="active" href="/help-topics">Help Topics/FAQ</a>
+      <a class="glossary" href="glossary">Glossary</a>
+    </div>';
+  }
   if (arg(0) == 'digital-library-resources') {
     $errors = drupal_get_messages('error');
     foreach($errors['error'] as $error) {

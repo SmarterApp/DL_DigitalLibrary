@@ -174,8 +174,6 @@
     "drupal/mailsystem": "7.2.34",
     "drupal/maxlength": "7.3.2",
     "drupal/media": "7.2.0-beta2",
-    "drupal/media_vimeo": "7.1.0-beta5",
-    "drupal/media_youtube": "7.2.0-rc3",
     "drupal/memcache": "7.1.5",
     "drupal/message": "7.1.11",
     "drupal/message_notify": "7.2.5",

@@ -148,9 +148,15 @@
         <?php if ($html5) : ?>
           <div class="html5-identifier clearfix" id="html5-identifier-node"><p class="html5-content right"><span><i class="general foundicon-website"></i> Content Module</span></p></div>
         <?php endif; ?>
-        <?php print render($title_prefix); ?>
-        <h1 id="page-title" class="title"><?php print $title; ?></h1>
-        <?php print render($title_suffix); ?>
+        <?php if(strpos($_GET['q'], 'glossary') !== FALSE): ?>
+          <?php print render($title_prefix); ?>
+          <h1 id="page-title" class="title">Glossary</h1>
+          <?php print render($title_suffix); ?>
+        <?php else: ?>
+         <?php print render($title_prefix); ?>
+         <h1 id="page-title" class="title"><?php print $title; ?></h1>
+         <?php print render($title_suffix); ?>
+        <?php endif; ?>
         <?php if (isset($flag)): ?>
           <div class="resource-preview">
             <?php echo $flag['button']; ?>
@@ -172,7 +178,9 @@
           <?php print render($action_links); ?>
         </ul>
       <?php endif; ?>
-
+      <?php if ($help_tabs): ?>
+         <?php print $help_tabs; ?>
+      <?php endif; ?>
       <?php print render($page['content']); ?>
     </div>
     <?php if ($user->uid && !empty($page['sidebar_first'])): ?>
@@ -232,12 +240,7 @@
           <li>
             <?php if (user_is_logged_in() && !in_array('guest', $user->roles)) : ?>
               <div class="footer-help">
-                <a title="Help Menu" class="help help-dropdown-footer" data-dropdown="drop2" href="#"><span class="sbac-question"></span> Help</a>
-                <ul id="drop2" class="f-dropdown" data-dropdown-content>
-                  <li><a title="Welcome Tutorial" href="/welcome-tutorial/nojs" class="ctools-use-ajax use-ajax ctools-modal-sbac-help-welcome-tutorial">Welcome Tutorial</a></li>
-                  <li><?php print l(t('Glossary'), 'glossary', array('absolute' => TRUE, 'attributes' => array('title' => 'Glossary'))); ?></li>
-                  <li><a title='Help Topics' href="/help-topics">Help Topics</a></li>
-                </ul>
+                <a title="Help Menu" class="help" href="/help-topics"><span class="sbac-question"></span> Help</a>
               </div>
             <?php endif; ?>
           </li>
