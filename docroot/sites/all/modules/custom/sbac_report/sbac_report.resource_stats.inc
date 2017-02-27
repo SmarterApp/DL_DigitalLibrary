@@ -75,7 +75,7 @@ function sbac_csv_report_resource_stats_form($form, &$form_state) {
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Export'),
+    '#value' => t('Submit'),
     '#submit' => array('sbac_csv_report_resource_stats_export_form_submit'),
 //    '#attributes' => array('OnSubmit' => 'closeSecondaryAlert();'),
   );
@@ -214,6 +214,8 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
 
   if (!isset($context['results']['count'])) {
     $context['results']['count'] = 0;
+    // Reset $_SESSION if new batch
+    $_SESSION['sbac_report']['resource_output']['output'] = array();
   }
 
   // Loop until we hit the batch limit.
@@ -280,6 +282,34 @@ function sbac_report_resource_statistics_batch($resources, $resource_filters, &$
             unset($value);
           }
           unset($field_key);
+
+          // Stash output in session for summary report
+          if ($context['results']['count'] <= 10) {
+            $output = array();
+            $output['title']['url'] = $row[0];
+            $output['title']['title'] = $row[1];
+            $output['title']['creation_date'] = $row[2];
+            $output['title']['status'] = $row[3];
+            $output['contributor']['name'] = $row[4];
+            $output['contributor']['email'] = $row[5];
+            $output['contributor']['title'] = $row[6];
+            $output['contributor']['state'] = $row[7];
+            $output['contributor']['district'] = $row[8];
+            $output['contributor']['grades'] = $row[9];
+            $output['contributor']['subjects'] = $row[10];
+            $output['contributor']['populations'] = $row[11];
+            $output['contributor']['roles'] = $row[12];
+            $output['stats']['views'] = $row[76];
+            $output['stats']['unique_views'] = $row[77];
+            $output['stats']['downloads'] = $row[78];
+            $output['stats']['unique_downloads'] = $row[79];
+            $output['stats']['sl_rating'] = $row[86];
+            $output['stats']['pd_rating'] = $row[87];
+            $output['stats']['eou_rating'] = $row[88];
+            $output['stats']['top_three_rating'] = $row[89];
+            $output['stats']['total_rating'] = $row[90];
+            $_SESSION['sbac_report']['resource_output']['output'][] = $output;
+          }
 
           fputcsv($handle, $row);
           unset($row);

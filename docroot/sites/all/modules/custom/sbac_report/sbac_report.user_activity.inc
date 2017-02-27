@@ -3,6 +3,8 @@
  * CSV Report filter form.
  */
 function sbac_csv_report_user_activity_form($form, &$form_state) {
+  global $user;
+  $account = user_load($user->uid);
   $form = array();
 
   // Make sure to load this after autocomplete.js
@@ -26,7 +28,7 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     ),
     '#required' => TRUE,
   );
-
+  
   /* if (sbac_central_user_has_role(array('reports administrator'))) {
     $form['state'] = array_merge($form['state'], array(
       '#multiple' => FALSE,
@@ -56,6 +58,29 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_usergroup(),
     '#required' => TRUE,
+  );
+
+  $see_others = sbac_report_select_other_users($account);
+  $name_value = sbac_user_format_username($user);
+  $form['user'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Choose a Contributor or Reviewer'),
+    '#autocomplete_path' => 'sne/autocomplete',
+    '#size' => 30,
+    '#disabled' => !$see_others,
+    '#default_value' => $see_others ? sbac_report_get_session_value('user', 'name') : $name_value,
+  );
+
+  // Hidden field to store the selected uid.
+  // When the autocomplete suggetion is selected,
+  // the uid value will be set here.
+  // @see sbac_report.js
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $see_others ? sbac_report_get_session_value('user', 'uid') : $user->uid,
+    '#attributes' => array(
+      'id' => 'uid-field',
+    ),
   );
 
   $date_options = sbac_report_date_range_options();
@@ -115,10 +140,13 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     $_SESSION['sbac_report']['state']['tid'] = $form_state['values']['state'];
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
+    $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
+    $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
   }
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range1', 'range');
   $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
+  $individual = sbac_report_get_session_value('sne', 'uid');
 
   if (count($user_groups) == 0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
@@ -127,7 +155,17 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   }
 
   $users = get_users_for_user_groups($state_tid, $user_groups, $date_range);
-
+  // Override user groups if specific user is selected
+  if (isset($individual)) {
+    $users = array();
+    $user_obj = user_load($individual);
+    $dates = explode('--', $date_range);
+    $from_date = strtotime($dates[0]);
+    // Only process user if last login is after date range "from date"
+    if ($user_obj->login > $from_date) {
+      $users[$user_obj->uid] = $user_obj;
+    }
+  }
   if ($users) {
     batch_set(array(
         'title' => t('User Activity Report'),
@@ -202,7 +240,6 @@ function sbac_report_user_activity_batch($users, $date_range, &$context) {
     if ($context['sandbox']['users']) {
       $user = array_shift($context['sandbox']['users']);
       $user_activity = get_user_activity($user, $context['sandbox']['date_range']);
-
       $row = create_user_activity_from_data($user, $user_activity);
       sbac_report_user_activity_organize_columns($row, $context['sandbox']['report_configuration']);
       fputcsv($handle, $row);
@@ -339,7 +376,7 @@ function sbac_csv_report_prettify(&$user_group_options) {
  * properly with Drupals perpared statement support.
  *
  */
-function get_users_for_user_groups($state_tid, &$user_groups_ids, $date_range) {
+function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   // look for the aggregated admins option "admins"
   if (array_key_exists(1, $user_groups_ids)) {
     // get the admins:
@@ -377,7 +414,7 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids, $date_range) {
   }
 
   $query = db_select('users', 'u');
-  $query->fields('u', array('uid', 'login'));
+  $query->fields('u', array('uid'));
   if ($user_groups_ids) {
     $query->join('users_roles', 'ur', 'u.uid = ur.uid');
     $query->condition('ur.rid', $user_groups_ids, 'IN');
@@ -395,12 +432,6 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids, $date_range) {
   else if ($slt_filter) {
     $query->join('field_data_field_slt_member', 'slt', 'u.uid = slt.entity_id');
     $query->condition('slt.field_slt_member_value', 1);
-  }
-  // Only grab users who have logged in since the date range "from date"
-  if ($date_range) {
-    $dates = explode('--', $date_range);
-    $from_date = strtotime($dates[0]);
-    $query->condition('u.login', $from_date, '>');
   }
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
@@ -430,7 +461,6 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids, $date_range) {
 function count_with_users_query($sql_template, $user, $from_date = NULL, $to_date = NULL, $special_case = NULL) {
   // done this way because the prepared statement didn't work passing array or comma separated string.
   // TODO: make prepared statement work here, or escape string???
-
   if ($from_date && $to_date) {
     $sql = sprintf($sql_template, $user->uid, '%Y%m%d', $from_date, $to_date);
   }
@@ -505,19 +535,19 @@ function get_user_activity($user, $date_range) {
   $user_activity['forum_views'] = count_with_users_query($sql, $user);
 
   # resource forum participated
-  $sql = "select count(distinct s.resource_id) as count, s.uid from
-	(select r.field_forum_resource_ref_target_id as resource_id, n.uid, n.created from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id  where n.type = 'topic' and r.field_forum_resource_ref_target_id is not null
-UNION
-select r.field_forum_resource_ref_target_id as resource_id, c.uid, c.created from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where r.field_forum_resource_ref_target_id is not null) s
-where s.uid in (%s) and DATE_FORMAT((DATE_ADD('19700101', INTERVAL s.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
-group by s.uid";
-  $user_activity['resource_forum_participated'] = count_with_users_query($sql, $user, $from_date, $to_date);
+//  $sql = "select count(distinct s.resource_id) as count, s.uid from
+//	(select r.field_forum_resource_ref_target_id as resource_id, n.uid, n.created from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id  where n.type = 'topic' and r.field_forum_resource_ref_target_id is not null
+//UNION
+//select r.field_forum_resource_ref_target_id as resource_id, c.uid, c.created from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where r.field_forum_resource_ref_target_id is not null) s
+//where s.uid in (%s) and DATE_FORMAT((DATE_ADD('19700101', INTERVAL s.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+//group by s.uid";
+//  $user_activity['resource_forum_participated'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # resource forum posts created
-  $sql = "select count(c.cid) as count, c.uid from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id
-left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where c.uid in (%s) and r.field_forum_resource_ref_target_id
- is not null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL c.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by c.uid";
-  $user_activity['resource_forum_posts_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
+//  $sql = "select count(c.cid) as count, c.uid from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id
+//left join field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where c.uid in (%s) and r.field_forum_resource_ref_target_id
+// is not null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL c.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s group by c.uid";
+//  $user_activity['resource_forum_posts_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # topic forum posts created
   $sql = "select count(c.cid) as count, c.uid from comment c left join node n on c.nid = n.nid left join field_data_field_topic_forum_parent p on n.nid = p.entity_id
@@ -647,18 +677,18 @@ GROUP BY l.uid";
   $user_activity['topic_discussions_deleted_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # resource discussion deleted by user
-  $sql = "
-SELECT
-	count(l.entity_id) AS count,
-	l.uid              AS uid
-FROM sbac_forum_deleted_log l
-WHERE
-	l.uid IN (%s)
-	AND l.entity_type = 'node'
-	AND l.forum_type = 'resource'
-	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL l.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
-GROUP BY l.uid";
-  $user_activity['resource_discussions_deleted_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
+//  $sql = "
+//SELECT
+//	count(l.entity_id) AS count,
+//	l.uid              AS uid
+//FROM sbac_forum_deleted_log l
+//WHERE
+//	l.uid IN (%s)
+//	AND l.entity_type = 'node'
+//	AND l.forum_type = 'resource'
+//	AND DATE_FORMAT((DATE_ADD('19700101', INTERVAL l.created SECOND) + INTERVAL -25200 SECOND), '%s') BETWEEN %s AND %s
+//GROUP BY l.uid";
+//  $user_activity['resource_discussions_deleted_by_user'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # flagged reviews
   $sql = "select count(distinct r.id) as count, r.uid from eck_review r left join eck_flag f on f.target_id = r.id and f.target_type = 'review' where r.uid in (%s) and f
@@ -759,11 +789,11 @@ GROUP BY s.uid;
   $user_activity['topic_forum_participated'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # resource forum discussion created
-  $sql = "select count(distinct n.nid) as count, n.uid from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join
-field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where n.uid in (%s) and  n.type = 'topic' and r
-.field_forum_resource_ref_target_id is not null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND),
-'%s') BETWEEN %s AND %s group by n.uid";
-  $user_activity['resource_forum_discussion_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
+//  $sql = "select count(distinct n.nid) as count, n.uid from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join
+//field_data_field_forum_resource_ref r on p.field_topic_forum_parent_tid = r.entity_id where n.uid in (%s) and  n.type = 'topic' and r
+//.field_forum_resource_ref_target_id is not null and DATE_FORMAT((DATE_ADD('19700101', INTERVAL n.created SECOND) + INTERVAL -25200 SECOND),
+//'%s') BETWEEN %s AND %s group by n.uid";
+//  $user_activity['resource_forum_discussion_created'] = count_with_users_query($sql, $user, $from_date, $to_date);
 
   # topic forum discussion created
   $sql = "select count(distinct n.nid) as count, n.uid from node n left join field_data_field_topic_forum_parent p on n.nid = p.entity_id left join
@@ -1042,11 +1072,11 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
   array_push($uidcountkeys, array('resources_helpful', '# of User\'s Ratings Marked Helpful by Others'));
   array_push($uidcountkeys, array('resources_contributed', '# of Resources Contributed by User'));
   array_push($uidcountkeys, array('forum_views', '# of Topic Forums Viewed by User'));
-  array_push($uidcountkeys, array('resource_forum_participated', '# of Resource Forums Participated by User'));
+//  array_push($uidcountkeys, array('resource_forum_participated', '# of Resource Forums Participated by User'));
   array_push($uidcountkeys, array('topic_forum_participated', '# of Topic Forums Participated by User'));
-  array_push($uidcountkeys, array('resource_forum_discussion_created', '# of Resource Forum Discussions Created by User'));
+//  array_push($uidcountkeys, array('resource_forum_discussion_created', '# of Resource Forum Discussions Created by User'));
   array_push($uidcountkeys, array('topic_forum_discussion_created', '# of Topic Forum Discussions Created by User'));
-  array_push($uidcountkeys, array('resource_forum_posts_created', '# of Resource Forum Posts Created by User'));
+//  array_push($uidcountkeys, array('resource_forum_posts_created', '# of Resource Forum Posts Created by User'));
   array_push($uidcountkeys, array('topic_forum_posts_created', '# of Topic Forum Posts Created by User'));
   array_push($uidcountkeys, array('posts_recommended_by_others', '# of User\'s Forum Posts Recommended by Others'));
   array_push($uidcountkeys, array('posts_recommended_by_user', '# of Others\' Forum Posts Recommended by User'));
@@ -1068,7 +1098,7 @@ function validate_and_fill_out_user_activity($user, &$user_activity, &$fieldkeys
   array_push($uidcountkeys, array('resources_flagged_by_others', '# of  Resources Contributed by User that were Flagged'));
   array_push($uidcountkeys, array('topic_forums_created', '# of Topic Forums Created by User'));
   array_push($uidcountkeys, array('topic_discussions_deleted_by_user', '# of Topic Forum Discussions Deleted by User'));
-  array_push($uidcountkeys, array('resource_discussions_deleted_by_user', '# of Resource Forum Discussions Deleted by User'));
+//  array_push($uidcountkeys, array('resource_discussions_deleted_by_user', '# of Resource Forum Discussions Deleted by User'));
 
   array_push($toskeys, array('tos_accepted', 'Date of Terms of Service', 'date'));
   array_push($toskeys, array('tos_version', 'Version of Terms of Service Accepted'));
@@ -1211,14 +1241,14 @@ function set_user_activity_report_columns() {
     "# of Resources Rated by User",
     '# of User\'s Ratings Marked Helpful by Others',
     '# of Topic Forums Viewed by User',
-    '# of Resource Forums Participated by User',
+//    '# of Resource Forums Participated by User',
     '# of Topic Forums Participated by User',
-    '# of Resource Forum Discussions Created by User',
+//    '# of Resource Forum Discussions Created by User',
     '# of Topic Forum Discussions Created by User',
-    '# of Resource Forum Posts Created by User',
+//    '# of Resource Forum Posts Created by User',
     '# of Topic Forum Posts Created by User',
     '# of Topic Forum Discussions Deleted by User',
-    '# of Resource Forum Discussions Deleted by User',
+//    '# of Resource Forum Discussions Deleted by User',
     '# of User\'s Forum Posts Recommended by Others',
     '# of Others\' Forum Posts Recommended by User',
     '# of Temporary Public Links Generated by User',

@@ -18,6 +18,7 @@ function sbac_report_individual() {
   $uid = sbac_report_get_session_value('sne', 'uid');
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range', 'range');
+  $resource_output = sbac_report_get_session_value('resource_output', 'output');
 
   $error_message = '';
   if (isset($_SESSION['sbac_report']['error_message'])) {
@@ -95,9 +96,13 @@ function sbac_report_individual() {
     )
   );
 
+  if ($resource_output) {
+    $resource_summaries = theme('sbac_report_resource_summaries', array('resource_output' => $resource_output));
+  }
   $csv_form2 = drupal_get_form('sbac_csv_report_resource_stats_form');
   $csv_resource_stats_tab = theme('sbac_csv_report_resource_stats', array(
       'form' => $csv_form2,
+      'resource_summaries' => $resource_summaries,
     )
   );
 
@@ -752,7 +757,22 @@ function sbac_report_sne_autocomplete($string = '') {
     // Do nothing
   }
   elseif (!empty($state_tid)) {
-    $query->condition('s.field_state_tid', $state_tid);
+    // Add array support for user activity report form
+    if (is_array($state_tid)) {
+      if (count($state_tid > 1)) {
+        $or = db_or();
+        foreach ($state_tid as $tid) {
+          $or->condition('s.field_state_tid', $tid);
+        }
+        $query->condition($or);
+      }
+      else {
+        $query->condition('s.field_state_tid', $tid);
+      }
+    }
+    else {
+      $query->condition('s.field_state_tid', $state_tid);
+    }
   }
   else {
     $matches['none'] = t('Please select a state');

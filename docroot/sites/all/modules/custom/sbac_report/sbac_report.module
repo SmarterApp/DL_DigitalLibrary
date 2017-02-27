@@ -212,6 +212,7 @@ function sbac_report_select_other_users($account) {
 function sbac_report_theme($existing, $type, $theme, $path) {
   $themes = array();
   $module_path = drupal_get_path('module', 'sbac_report');
+  $theme_path = drupal_get_path('theme', 'SBAC');
 
   $themes['sbac_report_individual'] = array(
     'template' => 'templates/sbac-report-individual',
@@ -280,6 +281,17 @@ function sbac_report_theme($existing, $type, $theme, $path) {
   $themes['sbac_csv_report_resource_stats'] = array(
     'template' => 'templates/sbac-csv-report-resource-stats',
     'path' => $module_path,
+    'preprocess functions' => array(
+      'template_preprocess',
+    ),
+  );
+
+  $themes['sbac_report_resource_summaries'] = array(
+    'template' => 'templates/sbac_report/sbac-report-resource-summaries',
+    'path' => $theme_path,
+    'variables' => array(
+      'rows' => NULL,
+    ),
     'preprocess functions' => array(
       'template_preprocess',
     ),
