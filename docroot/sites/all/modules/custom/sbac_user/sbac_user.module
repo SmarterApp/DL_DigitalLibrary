@@ -472,6 +472,55 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       $form['field_privacy']['und']['#title'] = '';
       $form['field_privacy']['und']['#description'] = '';
     }
+
+    // Add subscriptions form options
+    $user_profile = user_load($user->uid);
+    $state_tid = $user_profile->field_state['und'][0]['tid'];
+    $forums = sbac_user_get_user_forums($user->uid, $state_tid);
+    $my_forums = '<div class="subscription-message">You are not a member of any State Forums</div>';
+    $suggested_forums = '<div class="subscription-message">There are not any State Forums available to join for your state.</div>';
+    // TODO build join and leave functionality
+    if ($forums) {
+      if (!empty($forums['my_forums'])) {
+        ctools_include('modal');
+        ctools_modal_add_js();
+
+        $my_forums = '<table class="forum-subscriptions">';
+        foreach ($forums['my_forums'] as $my_forum) {
+          $my_forums .= '<tr>
+                          <td class="forum-name">' .
+                            l($my_forum['title'], '/forums/term/' . $my_forum['tid']) . '
+                          </td>
+                          <td class="forum-button">' .
+            l('Leave Forum', 'sbac-forum/nojs/forum-leave/' . $my_forum['tid'] . '/' . $user->uid, array(
+              'attributes' => array('class' => 'ctools-use-modal button', 'id' => array('sbac-forum-leave-forum-link')))) . '
+                          </td>
+                        </tr>';                       
+        }
+        $my_forums .= '</table>';
+      }
+      if (!empty($forums['suggested_forums'])) {
+        module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+        module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.ajax');
+        $suggested_forums = '<table class="forum-subscriptions">';
+        foreach ($forums['suggested_forums'] as $suggested_forum) {
+          $join_button = render(drupal_get_form('sbac_forum_join_button_form', $suggested_forum['tid'], $user->uid));
+          $suggested_forums .= '
+                        <tr>
+                          <td class="forum-name">' .
+                            l($suggested_forum['title'], '/forums/term/' . $suggested_forum['tid']) . '
+                          </td>
+                          <td class="forum-button">' .
+                            $join_button . '
+                          </td>
+                        </tr>';                       
+        }
+        $suggested_forums .= '</table>';
+      }
+    }
+    $form['field_my_forums']['#suffix'] = $my_forums;
+    $form['field_suggested_forums']['#suffix'] = $suggested_forums;
+
     $form['#validate'][] = 'sbac_user_profile_validate';
   }
 
@@ -1654,4 +1703,53 @@ function sbac_user_disagree_tos_form($form, &$form_state) {
     '#attributes' => array('class' => array('button', 'small', 'secondary'))
   );
   return $form;
+}
+
+/**
+ * Helper function to collect forums that a user is a member of
+ * and suggested forums to join based on state
+ */
+// TODO maybe process join leave stuff here?
+function sbac_user_get_user_forums($uid, $state_tid) {
+  $sql = <<<SQL
+  SELECT
+    entity_id
+    FROM {field_data_field_state} fs
+        WHERE
+          fs.bundle = 'forum'
+          AND fs.field_state_tid = :tid
+SQL;
+
+  $result = db_query($sql, array(':tid' => $state_tid));
+  foreach ($result as $row) {
+    $forums[] = $row;
+  }
+  $user_forums['my_forums'] = array();
+  $user_forums['suggested_forums'] = array();
+  if (!empty($forums)) {
+    foreach ($forums as $forum) {
+      $is_member = FALSE;
+      $term = taxonomy_term_load($forum->entity_id);
+      // Gather members
+      $members = field_collection_item_load_multiple($term->field_fc_forum_members['und']);
+      $test = '';
+      foreach ($members as $member) {
+        if ($member->field_fc_forum_member['und'][0]['target_id'] == $uid) {
+          $user_forums['my_forums'][] = array(
+            'title' => $term->name,
+            'tid' => $term->tid,
+          );
+          $is_member = TRUE;
+        }
+      }
+      if (!$is_member) {
+        $user_forums['suggested_forums'][] = array(
+          'title' => $term->name,
+          'tid' => $term->tid,
+        );
+      }
+    }
+  }
+  
+  return $user_forums;
 }

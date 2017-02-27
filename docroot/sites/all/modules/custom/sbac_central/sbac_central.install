@@ -1298,6 +1298,18 @@ function sbac_central_update_7105() {
 }
 
 /**
+ * Enable Webform, Webform UUID, and sbac sne webform feature
+ */
+function sbac_central_update_7106() {
+  $modules = array(
+    'webform',
+    'webform_uuid',
+    'sbac_sne_webform'
+  );
+  module_enable($modules);
+}
+
+/**
  * Impliments hook_uninstall().
  */
 

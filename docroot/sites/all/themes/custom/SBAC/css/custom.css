@@ -36252,10 +36252,11 @@ form#sbac-user-filter-form #edit-email {
 
 #sbac-goals-report-form {
   width: 26%;
+  position: relative;
   border: 1px solid #ddd;
   border-radius: 5px;
   float: right;
-  padding: 10px;
+  padding: 10px 10px 0 10px;
   margin-top: 20px;
   display: inline;
 }
@@ -36278,6 +36279,21 @@ form#sbac-user-filter-form #edit-email {
   margin-right: 10px;
 }
 
+#sbac-goals-report-form #sne-wrapper {
+  position: absolute;
+  right: 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px -1px;
+  text-align: center
+}
+
+#sbac-goals-report-form #sne-wrapper p {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
 /* Admin views */
 .view-admin-views-user .views-exposed-widget,
 .view-id-admin_views_node .views-exposed-widget {
@@ -36286,6 +36302,29 @@ form#sbac-user-filter-form #edit-email {
 }
 
 /* Leaderboards */
+#sne-signup-spacer {
+    clear: both;
+    display: block;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height: 20px;
+}
+
+#sne-signup {
+    margin: 0 15%;
+    background-color: #D9ECF2;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#sne-signup .sne-link,
+#sne-wrapper .sne-link,
+#sbac-goals-report-form .form-submit {
+    margin-bottom: 0;
+}
+
 #leaderboard-wrapper {
   background-color: #0085ad;
 }
@@ -36309,7 +36348,7 @@ form#sbac-user-filter-form #edit-email {
   background-color: #6cb9d1;
   border-radius: 5px;
   min-height: 445px;
-  padding-right: 0px;
+  padding-right: 0;
 }
 
 .leaderboard {
@@ -36322,7 +36361,7 @@ form#sbac-user-filter-form #edit-email {
 }
 
 .leaderboard-header {
-  border-radius: 5px 5px 0px 0;
+  border-radius: 5px 5px 0 0;
   padding: 10px;
   color: #FFFFFF;
   text-align: left;
@@ -36607,6 +36646,130 @@ form#sbac-user-filter-form #edit-email {
   display: none;
 }
 
+.page-forums-term .sbac-forum-vp-controls-wrapper {
+  display: block;
+  float: right;
+  height: 80px;
+  bottom: 35px;
+  padding-top: 50px;
+  position: relative;
+  right: 0;
+  width: 135px;
+  z-index: 999;
+}
+
+.page-forums-term .sbac-alert-box {
+  margin-bottom: 35px;
+}
+
+/* Role edit CSS */
+#edit-roles .form-item-roles-22,
+#edit-roles .form-item-roles-26,
+#edit-roles .form-item-roles-31 {
+  display: none;
+}
+
+/* SNE Webform CSS */
+.node-type-webform .block-sbac-resource-sbac-resource-back-button {
+  display: none;
+}
+
+.node-type-webform .sne-container {
+  border: 1px solid #ddd;
+  padding: 0 20px;
+}
+
+.node-type-webform h1 {
+  margin-left: 20px;
+}
+
+/* User Badges CSS */
+.page-user .badge-container {
+  position: absolute;
+  right: 0px;
+}
+
+.devtools-tooltip .devtools-tooltip-body .user-profile .introduction {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.account-tooltip .badge-container {
+  position: relative;
+  float: right;
+}
+
+.page-user .badge-container .user-badge {
+  width: 100px;
+  margin: 0 10px;
+}
+
+.account-tooltip .badge-container .user-badge {
+  width: 50px;
+  margin: 0 5px;
+}
+
+#section-account .field-name-field-paid-contributor,
+#section-goals .field-name-field-paid-contributor{
+  display: none;
+}
+
+/* Forum Mailto links css */
+.mailto-link {
+  background: url('/sites/all/themes/custom/SBAC/images/mailto.png') top center no-repeat;
+  display: inline-block;
+  width: 15px;
+  height: 12px;
+}
+
+.devtools-tooltip-body .profile-email-address .title {
+  color: #04384E;
+  display: inline;
+  font-family: Verdana,Geneva,sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: normal;
+  margin: 0;
+  padding: 0 0 3px;
+  text-transform: uppercase;
+}
+
+/* Manage Subscriptions CSS */
+#edit-field-my-forums-und-0-value,
+#edit-field-suggested-forums-und-0-value {
+  display: none;
+}
+
+#account #edit-field-my-forums,
+#account #edit-field-suggested-forums {
+  height: 30px;
+  width: 100%;
+}
+
+#account #edit-field-my-forums label,
+#account #edit-field-suggested-forums label{
+  color: #464B54;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.forum-subscriptions {
+  border: 0 none;
+  width: 100%;
+}
+
+table.forum-subscriptions tr {
+  background-color: #FFFFFF;
+}
+
+.forum-subscriptions .forum-name {
+  padding: 15px 0;
+  width: 70%;
+}
+
+.forum-subscriptions .forum-button .button {
+  margin-bottom: 0px;
+}
 /* Help/Guidance css */
 .page-sort-content-help-topics .sbac-alert-box {
     margin-bottom: 80px;

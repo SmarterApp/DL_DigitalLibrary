@@ -533,6 +533,7 @@ function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
   $form['join_forum'] = array(
     '#type' => 'submit',
     '#value' => t('Join Forum'),
+    '#attributes' => array('class' => array('disabler')),
     '#prefix' => '<div id="join-forum-button-wrapper">',
     '#suffix' => '</div>',
     '#executes_submit_callback' => TRUE,

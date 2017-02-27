@@ -130,6 +130,7 @@ function sbac_user_user_default_permissions() {
   $permissions['access user profiles'] = array(
     'name' => 'access user profiles',
     'roles' => array(
+      'DLRB member' => 'DLRB member',
       'administrator' => 'administrator',
       'digital library administrator' => 'digital library administrator',
       'system administrator' => 'system administrator',

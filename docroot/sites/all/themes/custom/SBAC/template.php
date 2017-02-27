@@ -731,6 +731,12 @@ function sbac_preprocess_page(&$variables) {
       $variables['goals']['resources_posted'][] = $posted_tooltip;
     }
   }
+  // Kill Search block for webform pages
+  if (isset($variables['node'])) {
+    if (isset($variables['page']['search']) && $variables['node']->type == 'webform') {
+      unset($variables['page']['search']);
+    }
+  }
 }
 /**
  * Preprocess function for views view
@@ -930,7 +936,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $user_uid = $field->raw;
         $new_output = '';
         if (!empty($user_uid)) {
-          $new_output = sbac_goals_authpane_hoverover($user_uid, 'rated_leaderboard');
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'rated_leaderboard', TRUE);
         }
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
       }
@@ -942,7 +948,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $user_uid = $field->raw;
         $new_output = '';
         if (!empty($user_uid)) {
-          $new_output = sbac_goals_authpane_hoverover($user_uid, 'reviewed_leaderboard');
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'reviewed_leaderboard', TRUE);
         }
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
       }
@@ -954,7 +960,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $user_uid = $field->raw;
         $new_output = '';
         if (!empty($user_uid)) {
-          $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard');
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard', TRUE);
         }
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
       }
@@ -1080,7 +1086,7 @@ function sbac_preprocess_lexicon_overview(&$variables) {
  * @param bool $add_comma
  * @return null|string
  */
-function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
+function sbac_goals_authpane_hoverover($user_id, $leaderboard = '', $mail_to = FALSE) {
   $cached_output = cache_get('authpane_goals' . $user_id);
   if ($cached_output) {
     return $cached_output->data;
@@ -1105,11 +1111,16 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
           'title' => t("@user's picture", array('@user' => format_username($fn)))
         )
       ));
-    } 
+    }
+    $mail_privacy = FALSE;
     if (isset($account_data->field_privacy)) { // user is using non-default settings.
       $privacy_settings = $account_data->field_privacy->value();
       if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
         $ln = ' ' . $account_data->field_last_name->value();
+      }
+      // Check privacy settings for mailto link
+      if (in_array('mail', $privacy_settings)) {
+        $mail_privacy = TRUE;
       }
     }
     $full_name = substr($fn . $ln, 0, 10) . '...';
@@ -1127,6 +1138,12 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
       '!name' => $tooltip,
       '!date' => format_date($created, 'simple'),
     ));
+
+    // Add mailto link if required
+    if ($mail_to && $mail_privacy) {
+      $email_link = l('', 'mailto:' . $account->mail, array('attributes' => array('class' => array('mailto-link'))));
+      $output = $output . $email_link;
+    }
 
     cache_set('goals_authpane_' . $user_id, $output);
     return $output;
