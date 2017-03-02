@@ -114,16 +114,64 @@ function resource_feedback_page($node) {
 
 /**
  * AJAX callback for /node/###/feedback/*
- * @param  [type] $node           [description]
- * @param  [type] $state          [description]
- * @param  [type] $trigger_id     [description]
- * @param  [type] $entity_id      [description]
- * @return [type]                 [description]
+ * @param $bundle
+ * @param $op
+ * @param $nid
+ * @param $state
+ * @param $trigger_id
+ * @param null $entity_id
  */
-function resource_feedback_ajax_page($bundle, $node, $state, $trigger_id, $entity_id = NULL) {
-  $commands = dialog_show_form('feedback_' . $bundle . '_form', $node, $state, $trigger_id, $entity_id);
+function resource_feedback_ajax_page($bundle, $op, $nid, $state, $trigger_id, $entity_id = NULL) {
+  if (!resource_access($op, $nid)) {
+    $commands = dialog_show_form('resource_feedback_closed_form');
+  } else {
+    $node = node_load($nid);
+    $commands = dialog_show_form('feedback_' . $bundle . '_form', $node, $state, $trigger_id, $entity_id);
+  }
 
   ajax_deliver(array('#type' => 'ajax', '#commands' => $commands));
+}
+
+/**
+ * Creates an error dialog so that we don't get the faulty Loading... dialogs.
+ * @param $form
+ * @param $form_state
+ * @param $nid
+ * @return array
+ */
+function resource_feedback_closed_form($form, &$form_state) {
+  $form = array();
+
+  $form['state_closed']['intro'] = array(
+    '#markup' => '
+                    <div class="gate-keeper-modal-intro">
+                      ' . t('This resource is already being reviewed by another user or users. Please refresh the page to see the most up-to-date status.') . '
+                    </div>
+                   ',
+  );
+
+  $form_state['dialog_settings'] = array(
+    'current_state' => 'closed',
+    'states' => array(
+      'closed' => array(
+        'dialog' => array(
+          'title' => t('This resource is already being reviewed'),
+          'width' => '700px',
+          'position' => 'center',
+        ),
+        'close_link' => TRUE,
+        'close_link_text' => t('Cancel'),
+        'close_link_class' => array(
+          'button',
+          'radius',
+        ),
+      ),
+    ),
+  );
+
+  dialog_form_prepare($form, $form_state);
+
+  return $form;
 }
 
 /**
