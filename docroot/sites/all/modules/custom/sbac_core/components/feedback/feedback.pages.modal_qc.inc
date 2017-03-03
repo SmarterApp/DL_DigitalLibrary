@@ -49,6 +49,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
     $form['state_cancel']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Cancel Review (!hours hrs)', array('!hours' => $hours_left)),
     );
 
@@ -58,6 +59,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
     $reco_submit = array('submit' => array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Complete Review'),
     ));
 

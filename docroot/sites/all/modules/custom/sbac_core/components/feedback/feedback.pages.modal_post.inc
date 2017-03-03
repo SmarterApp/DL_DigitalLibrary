@@ -48,6 +48,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
     $form['state_cancel']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Cancel Review (!hours hrs)', array('!hours' => $hours_left)),
     );
 
@@ -58,6 +59,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
     $form['state_reject']['submit'] =  array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Return Resource'),
     );
 
@@ -68,6 +70,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
     $form['state_post']['submit'] =  array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Post Resource'),
     );
 
@@ -78,6 +81,7 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
 
     $form['state_post_distinction']['submit'] =  array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Post Resource'),
     );
 

@@ -35,7 +35,7 @@
         e.preventDefault();
         // Hide this button and add another in its place that is disabled to prevent the button being re-enabled.
         var button = $(this)[0].outerHTML;
-        button = $(button).prop('disabled', true);
+        button = $(button).prop('disabled', true).attr('id', '').removeClass('progress-disabled');
         $(this).hide();
         $(this).after(button);
         $(this).remove();
