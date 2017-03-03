@@ -1281,13 +1281,18 @@ function _sbac_resource_resource_review_links($fields, $row) {
       $variables['text'] = t('Gatekeeping Review In Process');
     }
   } elseif ($feedback->gatekeeper_finished) {
-    $user_reviewing = FALSE;
+    $user_reviewing = $user_reviewed = FALSE;
     $variables['status_icons'][0] =  array('image' => 'green-g.png', 'hover' => 'Gatekeeping Passed');
     for ($x = 0; $x < $feedback->qc_count; $x++) {
       // Iterate through the QC reviews.
-      if ($feedback->qc_status[$x]['uid'] == $user->uid && !$feedback->qc_status[$x]['finished']) {
-        // If the viewer is already reviewing the resource, make note.
-        $user_reviewing = $x;
+      if ($feedback->qc_status[$x]['uid'] == $user->uid) {
+        if (!$feedback->qc_status[$x]['finished']) {
+          // If the viewer is already reviewing the resource, make note of which review it was.
+          $user_reviewing = $x;
+        } else {
+          // If the viewer has already reviewed it, make note.
+          $user_reviewed = TRUE;
+        }
       }
       if ($feedback->qc_status[$x]['started'] && !$feedback->qc_status[$x]['finished']) {
         // QC review is in process.
@@ -1317,17 +1322,23 @@ function _sbac_resource_resource_review_links($fields, $row) {
       $variables['links'][] = l('Continue Review', $url);
       $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$user_reviewing]));
     } elseif ($feedback->qc_count > $feedback->qc_num_started) {
-      // QC reviews aren't full yet, and this viewer isn't yet reviewing it.
-      $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title']);
+      // QC reviews aren't full yet.
       $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-      $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title'], 'link');
       $variables['text'] = t('Needs @pos Quality Review', array('@pos' => $positionals[$feedback->qc_num_started]));
+      if ($user_reviewed) {
+        // The viewer has already reviewed it.
+        $url = url('node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'))));
+      } else {
+        $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title']);
+        $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title'], 'link');
+      }
     } elseif ($feedback->qc_count == $feedback->qc_num_started && $feedback->qc_count > $feedback->qc_num_finished) {
-      // If the viewer isn't already reviewing it and there aren't any open slots.
+      // If there aren't any open slots, bu the reviewing isn't finished.
       $url = url('node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
       $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'))));
       $variables['links'][] = l('View Details', $url);
-      $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$x]));
+      $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$feedback->qc_count - 1]));
     }
   }
   if ($feedback->qc_count == $feedback->qc_num_finished) {
