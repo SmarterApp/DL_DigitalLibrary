@@ -1333,7 +1333,7 @@ function _sbac_resource_resource_review_links($fields, $row) {
       // Iterate through the QC reviews.
       if ($feedback->qc_status[$x]['uid'] == $user->uid && !$feedback->qc_status[$x]['finished']) {
         // If the viewer is already reviewing the resource, make note.
-        $user_reviewing = TRUE;
+        $user_reviewing = $x;
       }
       if ($feedback->qc_status[$x]['started'] && !$feedback->qc_status[$x]['finished']) {
         // QC review is in process.
@@ -1355,13 +1355,13 @@ function _sbac_resource_resource_review_links($fields, $row) {
         }
       }
     }
-    if ($user_reviewing) {
+    if ($user_reviewing !== FALSE) {
       // If the viewer is already reviewing this resource.
       $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
       $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'))));
       $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
       $variables['links'][] = l('Continue Review', $url);
-      $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$x]));
+      $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$user_reviewing]));
     } elseif ($feedback->qc_count > $feedback->qc_num_started) {
       // QC reviews aren't full yet, and this viewer isn't yet reviewing it.
       $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title']);

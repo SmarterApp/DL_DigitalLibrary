@@ -12,8 +12,19 @@ define('FEEDBACK_AUTHENTICATED_RID', 2); // id of the 'authenticated' role;
 
 /**
  * Access callback for custom Resource operations.
+ * @param $op
+ * @param $node
+ * @param null $account
+ * @return
  */
 function resource_access($op, $node, $account = NULL) {
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
+  if (!$node) {
+    return FALSE;
+  }
+
   if (is_null($account)) {
     global $user;
     $account = $user;

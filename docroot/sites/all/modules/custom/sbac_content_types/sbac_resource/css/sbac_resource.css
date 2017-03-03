@@ -3684,7 +3684,8 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 /* line 3550, ../sass/sbac_resource.scss */
 .dialog_feedback_gate_keeper_form .ui-dialog-title,
 .dialog_feedback_qc_form .ui-dialog-title,
-.dialog_feedback_post_form .ui-dialog-title {
+.dialog_feedback_post_form .ui-dialog-title,
+.dialog_resource_feedback_closed_form .ui-dialog-title {
   font-size: 18px;
   line-height: 1.2;
   padding-right: 10px;
@@ -3693,7 +3694,8 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 /* line 3557, ../sass/sbac_resource.scss */
 .dialog_feedback_gate_keeper_form .gate-keeper-modal-intro,
 .dialog_feedback_qc_form .gate-keeper-modal-intro,
-.dialog_feedback_post_form .gate-keeper-modal-intro {
+.dialog_feedback_post_form .gate-keeper-modal-intro,
+.dialog_resource_feedback_closed_form .gate-keeper-modal-intro {
   font-size: 16px !important;
   line-height: 1.6;
 }
@@ -3706,7 +3708,8 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .dialog_feedback_qc_form form[id*="feedback-post-form"],
 .dialog_feedback_post_form form[id*="feedback-gate-keeper-form"],
 .dialog_feedback_post_form form[id*="feedback-qc-form"],
-.dialog_feedback_post_form form[id*="feedback-post-form"] {
+.dialog_feedback_post_form form[id*="feedback-post-form"],
+.dialog_resource_feedback_closed_form form[id*="feedback-closed-form"] {
   padding: 0 10px;
 }
 /* line 3567, ../sass/sbac_resource.scss */
@@ -3718,7 +3721,8 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .dialog_feedback_qc_form form[id*="feedback-post-form"] button,
 .dialog_feedback_post_form form[id*="feedback-gate-keeper-form"] button,
 .dialog_feedback_post_form form[id*="feedback-qc-form"] button,
-.dialog_feedback_post_form form[id*="feedback-post-form"] button {
+.dialog_feedback_post_form form[id*="feedback-post-form"] button,
+.dialog_resource_feedback_closed_form form[id*="feedback-closed-form"] button {
   margin-left: 30px;
   margin-bottom: 10px;
   float: right;
@@ -3732,7 +3736,8 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .dialog_feedback_qc_form form[id*="feedback-post-form"] .close-dialog,
 .dialog_feedback_post_form form[id*="feedback-gate-keeper-form"] .close-dialog,
 .dialog_feedback_post_form form[id*="feedback-qc-form"] .close-dialog,
-.dialog_feedback_post_form form[id*="feedback-post-form"] .close-dialog {
+.dialog_feedback_post_form form[id*="feedback-post-form"] .close-dialog,
+.dialog_resource_feedback_closed_form form[id*="feedback-closed-form"] .close-dialog {
   display: block;
   float: right;
 }
@@ -3745,7 +3750,8 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .dialog_feedback_qc_form form[id*="feedback-post-form"] .close-dialog a.devtools-dialog-close,
 .dialog_feedback_post_form form[id*="feedback-gate-keeper-form"] .close-dialog a.devtools-dialog-close,
 .dialog_feedback_post_form form[id*="feedback-qc-form"] .close-dialog a.devtools-dialog-close,
-.dialog_feedback_post_form form[id*="feedback-post-form"] .close-dialog a.devtools-dialog-close {
+.dialog_feedback_post_form form[id*="feedback-post-form"] .close-dialog a.devtools-dialog-close,
+.dialog_resource_feedback_closed_form form[id*="feedback-closed-form"] .close-dialog a.devtools-dialog-close {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
@@ -3762,7 +3768,8 @@ div[id*="edit-field-copyright-clearace-forms"] button[id*="remove-button"]:after
 .dialog_feedback_qc_form form[id*="feedback-post-form"] .close-dialog a.devtools-dialog-close:before,
 .dialog_feedback_post_form form[id*="feedback-gate-keeper-form"] .close-dialog a.devtools-dialog-close:before,
 .dialog_feedback_post_form form[id*="feedback-qc-form"] .close-dialog a.devtools-dialog-close:before,
-.dialog_feedback_post_form form[id*="feedback-post-form"] .close-dialog a.devtools-dialog-close:before {
+.dialog_feedback_post_form form[id*="feedback-post-form"] .close-dialog a.devtools-dialog-close:before,
+.dialog_resource_feedback_closed_form form[id*="feedback-closed-form"] .close-dialog a.devtools-dialog-close:before {
   content: url("../images/icon-buttonCancel.png");
   left: 15px;
   position: absolute;
