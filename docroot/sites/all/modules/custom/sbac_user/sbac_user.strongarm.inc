@@ -28,7 +28,7 @@ function sbac_user_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'autologout_max_timeout';
-  $strongarm->value = '1800';
+  $strongarm->value = '7200';
   $export['autologout_max_timeout'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -70,7 +70,7 @@ function sbac_user_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'autologout_timeout';
-  $strongarm->value = '1800';
+  $strongarm->value = '7200';
   $export['autologout_timeout'] = $strongarm;
 
   $strongarm = new stdClass();
