@@ -97,6 +97,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
         'button',
         'radius',
       ),
+      'submit_autoclose' => TRUE,
     );
 
     $state_redirect_options = array(
