@@ -772,7 +772,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
   if ($variables['view']->name == 'digital_library_resources') {
    
     $node = node_load($variables['fields']['entity_id']->raw);
-    if ($node->field_posting_options[LANGUAGE_NONE][0]['value'] == 1) {
+    if ($node->sticky == 1) {
       $distinction = 'posted-with-distinction';
     }
     else {
