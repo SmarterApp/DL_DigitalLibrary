@@ -99,10 +99,10 @@ function feedback_post_form($form, &$form_state, $node, $state, $trigger_id, $id
         'button',
         'radius',
       ),
+      'submit_autoclose' => TRUE,
     );
 
     $state_redirect_options = array(
-      'submit_autoclose' => TRUE,
       'submit_redirect' => url('node/' . $node->nid, array('absolute' => TRUE)),
     );
 
