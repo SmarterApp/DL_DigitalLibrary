@@ -49,6 +49,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_cancel']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Cancel Review (!hours hrs)', array('!hours' => $hours_left)),
     );
 
@@ -63,6 +64,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_not_meet']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Does Not Meet All Criteria'),
     );
 
@@ -77,6 +79,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_meet']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Meets all Criteria'),
     );
 
@@ -94,10 +97,10 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
         'button',
         'radius',
       ),
+      'submit_autoclose' => TRUE,
     );
 
     $state_redirect_options = array(
-      'submit_autoclose' => TRUE,
       'submit_redirect' => url('node/' . $node->nid, array('absolute' => TRUE)),
     );
 
