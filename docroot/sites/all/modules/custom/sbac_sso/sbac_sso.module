@@ -938,7 +938,7 @@ function sbac_sso_determine_user($response, $multiple = FALSE) {
     $user->field_first_name['und'][0]['value'] = $response['given_name'];
     $user->field_last_name['und'][0]['value'] = $response['sn'];
     $user->mail = $response['email'];
-    $user->field_sso_uuid['und'][0]['value'] = $user_attributes['role_id'];
+    $user->field_sso_uuid['und'][0]['value'] = $response['entry_uuid'];
     $user->data['session_index'] = $response['session_index'];
     $user = user_save($user);
     if (!$user) {
