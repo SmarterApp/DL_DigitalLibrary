@@ -209,6 +209,30 @@ class feedbackStatus
           $x--;
         }
       }
+      // Set the post status if there is any.
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'feedback')
+        ->entityCondition('bundle', 'post')
+        ->propertyCondition('current', 1)
+        ->propertyCondition('status', 1)
+        ->propertyCondition('node_id', $nid)
+        ->propertyOrderBy('id', 'DESC')
+        ->range(0, 1);
+      $results = $query->execute();
+      // If there is a current post feedback entity.
+      if (isset($results['feedback']) && count($results['feedback']) == 1) {
+        $entity_ids = array_keys($results['feedback']);
+        $entity = entity_load_single('feedback', $entity_ids[0]);
+        // Set the values from the entity.
+        $this->post_uid = $entity->uid;
+        $this->post_started = 1;
+        $this->post_finished = $entity->completed;
+        if ((int)$entity->field_post_options[LANGUAGE_NONE][0]['value'] > 0) {
+          $this->post_approved = 1;
+        } else {
+          $this->post_approved = 0;
+        }
+      }
     } else {
       // Get all of the feedback for this node that is current and active.
       $query = new EntityFieldQuery();
