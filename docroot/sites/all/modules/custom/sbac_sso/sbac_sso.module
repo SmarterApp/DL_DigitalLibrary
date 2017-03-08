@@ -436,8 +436,8 @@ function sbac_sso_parse_saml_assertion($saml_token) {
       $attribute = '<saml:Attribute Name="sn"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'sn');
     }
-    if (strpos($row, '<saml:Attribute Name="entryuuid">') !== FALSE) {
-      $attribute = '<saml:Attribute Name="entryuuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
+    if (strpos($row, '<saml:Attribute Name="entry_uuid">') !== FALSE) {
+      $attribute = '<saml:Attribute Name="entry_uuid"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">';
       sbac_sso_parse_saml_assertion_row($response, $row, $attribute, '</saml:AttributeValue', 'entry_uuid');
     }
     if (strpos($row, '<saml:Attribute Name="mail">') !== FALSE) {
