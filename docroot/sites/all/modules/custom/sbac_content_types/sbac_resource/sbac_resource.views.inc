@@ -882,6 +882,7 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   // Order the items by the review state (items being reviewed at top) and then by number of reviews (most at top).
   $view->query->add_orderby('in_process_join', 'reviewing', 'DESC');
   $view->query->add_orderby('count_join', 'reviews', 'DESC');
+  $view->query->add_orderby('node', 'nid');
 }
 
 /**
