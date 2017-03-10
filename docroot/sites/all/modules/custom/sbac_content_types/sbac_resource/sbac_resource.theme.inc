@@ -1358,10 +1358,14 @@ function _sbac_resource_resource_review_links($fields, $row) {
       }
     } elseif ($feedback->post_started && !$feedback->post_finished) {
       // If the post review is in process.
-      $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
-      $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
       $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-      $variables['links'][] = l('Continue Review', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
+      if ($feedback->post_uid == $user->uid) {
+        $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
+        $variables['links'][] = l('Continue Review', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
+        $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      } else {
+        $variables['buttons'][] = l('View', 'node/' . $nid, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      }
       $variables['text'] = t('Arbitration In Process');
     }
   }
