@@ -36416,7 +36416,7 @@ form#sbac-user-filter-form #edit-email {
 
 .leaderboard-body .views-field-uid a {
   color: #515152;
-  margin-right: 20px;
+  /*margin-right: 20px;*/
 }
 
 .leaderboard-body .views-field-field-resources-rated {
@@ -36720,6 +36720,9 @@ form#sbac-user-filter-form #edit-email {
   display: inline-block;
   width: 15px;
   height: 12px;
+  float: right;
+  margin-right: 4px;
+  margin-top: 10px;
 }
 
 .devtools-tooltip-body .profile-email-address .title {
