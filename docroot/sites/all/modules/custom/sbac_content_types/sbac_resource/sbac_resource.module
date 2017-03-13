@@ -3270,17 +3270,10 @@ function _sbac_resource_determine_workflow_access($node, $account, $op) {
         break;
       case 'approved':
         // author has view
-        // resource publisher has view/edit
+        // resource publishers have view/edit
         // reports admin can view
-        $all_condition = db_and()->condition('s.state', 'post_needs_review')->condition('s.uid', 0);
-        $user_condition = db_and()->condition('s.state', 'post_being_reviewed')->condition('s.uid', $account->uid);
-        $query->condition(db_or()->condition($all_condition)->condition($user_condition));
-        $result = $query->execute();
-        $count = $result->rowCount();
-        if ($count) {
-          if (in_array('resource publisher', $account->roles) && ($op == 'view' || $op == 'update')) {
-            $access = TRUE;
-          }
+        if (in_array('resource publisher', $account->roles) && ($op == 'view' || $op == 'update')) {
+          $access = TRUE;
         }
         if ($account->uid == $node->uid && $op == 'view') {
           $access = TRUE;
