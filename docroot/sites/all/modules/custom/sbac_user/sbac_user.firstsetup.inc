@@ -201,7 +201,7 @@ function sbac_user_setup_pi_form($form, &$form_state) {
   $form['user_title_desc'] = array(
     '#type' => 'item',
     '#title' => t('Title'),
-    '#description' => t('Select your current or former title.'),
+    '#description' => t('What is your primary function.'),
     '#required' => TRUE,
   );
 
