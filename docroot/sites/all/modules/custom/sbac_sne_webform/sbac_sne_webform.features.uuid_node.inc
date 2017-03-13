@@ -26,7 +26,6 @@ function sbac_sne_webform_uuid_features_default_content() {
   'tnid' => 0,
   'translate' => 0,
   'uuid' => '243e273a-8fd4-4689-8b3d-bafdea8b9514',
-  'revision_uid' => 0,
   'rdf_mapping' => array(
     'rdftype' => array(
       0 => 'sioc:Item',
@@ -88,10 +87,9 @@ function sbac_sne_webform_uuid_features_default_content() {
   ),
   'webform' => array(
     'nid' => '243e273a-8fd4-4689-8b3d-bafdea8b9514',
-    'next_serial' => 13,
     'confirmation' => '<p>Thank you for submitting your information!</p>',
     'confirmation_format' => 'full_html',
-    'redirect_url' => '<confirmation>',
+    'redirect_url' => '[site:url]',
     'status' => 1,
     'block' => 0,
     'allow_draft' => 0,
@@ -99,7 +97,7 @@ function sbac_sne_webform_uuid_features_default_content() {
     'submit_notice' => 1,
     'confidential' => 0,
     'submit_text' => '',
-    'submit_limit' => -1,
+    'submit_limit' => 1,
     'submit_interval' => -1,
     'total_submit_limit' => -1,
     'total_submit_interval' => -1,
@@ -115,7 +113,7 @@ function sbac_sne_webform_uuid_features_default_content() {
     'preview_prev_button_label' => '',
     'preview_title' => '',
     'preview_message' => '',
-    'preview_message_format' => NULL,
+    'preview_message_format' => 'full_html',
     'preview_excluded_components' => array(),
     'record_exists' => TRUE,
     'roles' => array(
@@ -169,7 +167,7 @@ function sbac_sne_webform_uuid_features_default_content() {
         'form_key' => 'first_name',
         'name' => 'First Name',
         'type' => 'textfield',
-        'value' => '',
+        'value' => '[current-user:field_first_name]',
         'extra' => array(
           'title_display' => 'before',
           'description_above' => 0,
@@ -198,7 +196,7 @@ function sbac_sne_webform_uuid_features_default_content() {
         'form_key' => 'last_name',
         'name' => 'Last Name',
         'type' => 'textfield',
-        'value' => '',
+        'value' => '[current-user:field_last_name]',
         'extra' => array(
           'title_display' => 'before',
           'description_above' => 0,
@@ -227,7 +225,7 @@ function sbac_sne_webform_uuid_features_default_content() {
         'form_key' => 'email_address',
         'name' => 'Email Address',
         'type' => 'textfield',
-        'value' => '',
+        'value' => '[current-user:mail]',
         'extra' => array(
           'title_display' => 'before',
           'description_above' => 0,
@@ -261,7 +259,6 @@ function sbac_sne_webform_uuid_features_default_content() {
   'print_display_urllist' => 0,
   'name' => 'admin',
   'picture' => 159196,
-  'data' => 'a:6:{s:11:"login_count";i:5691;s:11:"first_login";i:1366233712;s:12:"disable_help";i:1;s:13:"session_index";s:42:"s2427580d55477276650d4c39aa54d0f787cbbca01";s:14:"disable_recent";i:1448894379;s:17:"mimemail_textonly";i:0;}',
   'print_pdf_display' => 0,
   'print_pdf_display_comment' => 0,
   'print_pdf_display_urllist' => 0,
