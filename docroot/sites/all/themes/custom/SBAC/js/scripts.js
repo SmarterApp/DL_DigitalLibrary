@@ -28,7 +28,7 @@
     attach: function(context, settings) {
       $(function() {
       // Rename user role selections
-      $(".form-item-roles-7 label").text("lead SLTs");
+      $(".form-item-roles-7 label").text("lead SLT");
       $(".form-item-roles-13 label").text("resource moderator");
       });
     }
