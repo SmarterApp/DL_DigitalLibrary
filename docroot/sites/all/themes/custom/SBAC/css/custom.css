@@ -36664,6 +36664,7 @@ form#sbac-user-filter-form #edit-email {
 
 /* Role edit CSS */
 #edit-roles .form-item-roles-22,
+#edit-roles .form-item-roles-24,
 #edit-roles .form-item-roles-26,
 #edit-roles .form-item-roles-31 {
   display: none;
