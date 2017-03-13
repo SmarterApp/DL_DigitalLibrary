@@ -309,7 +309,7 @@ function sbac_user_setup_expertise_form($form, &$form_state) {
     '#type' => 'item',
     '#title' => t('Student Population(s)'),
     '#description' => t('Indicate the student population(s) in which you have expertise.'),
-    '#required' => TRUE,
+    '#required' => FALSE,
   );
 
   $student_population_options = sbac_user_form_setup_select_taxonomy_options('intended_student_populations');

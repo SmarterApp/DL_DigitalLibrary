@@ -1105,7 +1105,7 @@ function sbac_user_field_default_field_instances() {
     'entity_type' => 'user',
     'field_name' => 'field_special_populations',
     'label' => 'Student Population(s)',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => 1,
     ),
