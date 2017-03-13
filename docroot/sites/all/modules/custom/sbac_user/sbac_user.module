@@ -319,6 +319,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
       unset($form['field_email_preference']['und']['#options']['_none']);
     }
     $user = $form_state['user'];
+    module_load_include('inc', 'sbac_user', 'sbac_user.firstsetup');
+    $form['field_subject_s_'][LANGUAGE_NONE]['#options'] = sbac_user_form_setup_parent_taxonomy_options('subject');
     if ($user->data['login_count'] == 1 && (empty($user->field_position) || empty($user->field_subject_s_) || empty($user->field_grade_level_s_) || empty($user->field_special_populations))) {
       drupal_add_js(array('sbac_user_required_fields' => 0), 'setting');
     }
@@ -479,7 +481,6 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     $forums = sbac_user_get_user_forums($user->uid, $state_tid);
     $my_forums = '<div class="subscription-message">You are not a member of any forums</div>';
     $suggested_forums = '<div class="subscription-message">There are no current forums available for your state. Browse <a href="/forums">forums</a> .</div>';
-    // TODO build join and leave functionality
     if ($forums) {
       if (!empty($forums['my_forums'])) {
         ctools_include('modal');
@@ -1321,6 +1322,12 @@ function sbac_user_profile_validate(&$form, &$form_state) {
     // now all of that was just to override this error message
     form_set_error('legal_accept', 'The Terms of Service have changed. Please log out and log in again to continue making edits to your account profile.');
   }
+  module_load_include('inc', 'sbac_user', 'sbac_user.firstsetup');
+  $options = array();
+  foreach ($form_state['values']['field_subject_s_'][LANGUAGE_NONE] as $term) {
+    $options[] = $term['tid'];
+  }
+  $form_state['values']['field_subject_s_'][LANGUAGE_NONE] = sbac_user_setup_subject_builder($options);
 }
 
 /**
