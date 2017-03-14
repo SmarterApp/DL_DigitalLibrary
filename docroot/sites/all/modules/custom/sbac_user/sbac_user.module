@@ -1718,43 +1718,58 @@ function sbac_user_disagree_tos_form($form, &$form_state) {
  */
 // TODO maybe process join leave stuff here?
 function sbac_user_get_user_forums($uid, $state_tid) {
-  $sql = <<<SQL
-  SELECT
-    entity_id
-    FROM {field_data_field_state} fs
-        WHERE
-          fs.bundle = 'forum'
-          AND fs.field_state_tid = :tid
-SQL;
-
-  $result = db_query($sql, array(':tid' => $state_tid));
-  foreach ($result as $row) {
-    $forums[] = $row;
-  }
+  $user_forums = $memberships = $membership_forums = array();
   $user_forums['my_forums'] = array();
   $user_forums['suggested_forums'] = array();
-  if (!empty($forums)) {
-    foreach ($forums as $forum) {
-      $is_member = FALSE;
-      $term = taxonomy_term_load($forum->entity_id);
-      // Gather members
-      $members = field_collection_item_load_multiple($term->field_fc_forum_members['und']);
-      $test = '';
-      foreach ($members as $member) {
-        if ($member->field_fc_forum_member['und'][0]['target_id'] == $uid) {
-          $user_forums['my_forums'][] = array(
-            'title' => $term->name,
-            'tid' => $term->tid,
-          );
-          $is_member = TRUE;
-        }
-      }
-      if (!$is_member) {
-        $user_forums['suggested_forums'][] = array(
-          'title' => $term->name,
-          'tid' => $term->tid,
-        );
-      }
+  $forum_vocab = taxonomy_vocabulary_machine_name_load('forum');
+
+  // Query for memberships themselves.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'field_collection_item')
+    ->entityCondition('bundle', 'field_fc_forum_members')
+    ->fieldCondition('field_fc_forum_member', 'target_id', $uid, '=');
+  $result = $query->execute();
+  if (isset($result['field_collection_item']) && count($result['field_collection_item']) > 0) {
+    $entity_ids = array_keys($result['field_collection_item']);
+    $entities = entity_load('field_collection_item', $entity_ids);
+    foreach ($entities as $entity) {
+      $memberships[] = $entity->entity_id;
+    }
+  }
+
+  // Query for the forums to which the memberships refer.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->propertyCondition('vid', $forum_vocab->vid, '=')
+    ->fieldCondition('field_fc_forum_members', 'value', $memberships, 'IN');
+  $result = $query->execute();
+  if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) > 0) {
+    $entity_ids = array_keys($result['taxonomy_term']);
+    $entities = entity_load('taxonomy_term', $entity_ids);
+    foreach ($entities as $entity) {
+      $membership_forums[] = $entity->tid;
+      $user_forums['my_forums'][] = array(
+        'title' => $entity->name,
+        'tid' => $entity->tid,
+      );
+    }
+  }
+
+  // Query for any state forums for this user's state that they don't already belong to.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->propertyCondition('vid', $forum_vocab->vid, '=')
+    ->propertyCondition('tid', $membership_forums, 'NOT IN')
+    ->fieldCondition('field_state', 'tid', $state_tid, '=');
+  $result = $query->execute();
+  if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) > 0) {
+    $entity_ids = array_keys($result['taxonomy_term']);
+    $entities = entity_load('taxonomy_term', $entity_ids);
+    foreach ($entities as $entity) {
+      $user_forums['suggested_forums'][] = array(
+        'title' => $entity->name,
+        'tid' => $entity->tid,
+      );
     }
   }
   
