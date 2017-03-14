@@ -469,7 +469,7 @@ function sbac_resource_get_related_resources($baseline_node) {
           // This is the resource pool of nodes.
           $count = 0;
           foreach ($grade_nids as $nid) {
-            if ($count >= 8) {
+            if ($count == 9) {
               break;
             }
 
