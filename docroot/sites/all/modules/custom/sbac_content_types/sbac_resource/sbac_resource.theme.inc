@@ -622,6 +622,7 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
  * @param $variables
  */
 function sbac_resource_views_view_fields__taxonomy_term_override__page__preprocess(&$variables) {
+  // Do the same setup for the taxonomy term pages needed for the cards elsewhere.
   $image = _sbac_resource_grid_image($variables['fields']);
   $variables['fields']['image'] = $image['image'];
   $variables['fields']['file-type-icon'] = $image['file-type-icon'];
@@ -635,6 +636,15 @@ function sbac_resource_views_view_fields__taxonomy_term_override__page__preproce
  * @param $variables
  */
 function sbac_resource_views_view__taxonomy_term_override__page__preprocess(&$variables) {
+  // Replace the title with the more descriptive shortname if it has one.
+  $tid = $variables['view']->args[0];
+  $term = taxonomy_term_load($tid);
+  if (property_exists($term, 'field_alignment_shortname') &&
+      isset($term->field_alignment_shortname[LANGUAGE_NONE][0]['safe_value']) &&
+      $term->field_alignment_shortname[LANGUAGE_NONE][0]['safe_value'] != '') {
+    $variables['view']->build_info['title'] = $term->field_alignment_shortname[LANGUAGE_NONE][0]['safe_value'];
+  }
+  // Add the CSS that has all of the needed styling for the cards.
   drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
