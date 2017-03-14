@@ -34,7 +34,7 @@ function sbac_sne_webform_results_submissions() {
  * Implements hook_form_alter()
  */
 function sbac_sne_webform_form_alter(&$form, &$form_state) {
-  if (isset($form['#node']) && ($form['#node']->title == 'Help grow the Digital Library ')) {
+  if (isset($form['#node']) && ($form['#node']->title == 'Contribute to the Digital Library by Becoming a State Network Educator')) {
     $form['#submit'][] = sbac_sne_webform_submit;
   }
 }
