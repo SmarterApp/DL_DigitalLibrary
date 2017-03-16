@@ -30502,23 +30502,18 @@ body.page-help-topics .help-topics-wrapper .help-topic-wrapper .help-topic-body 
 /* line 24, ../sass/components/_help-topics-page.scss */
 .help-topic-link,
 .welcome-tutorial-topic-link {
-  /*  background: none repeat scroll 0 0 #DDDDDD;
-    border: 1px solid;
-    border-radius: 5px 5px 5px 5px;
-    display: block;
-    padding: 8px 20px;*/
-  background: none repeat scroll 0 0 #BFD8E5;
-  border: 1px solid rgba(0, 98, 152, 0.5);
-  border-radius: 6px 6px 6px 6px;
-  color: #006298;
-  display: inline-block;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 8px 18px;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  margin-top: -62px;
-  float: right;
+    background: #bfd8e5 none repeat scroll 0 0;
+    border-radius: 6px;
+    bottom: 81px;
+    color: #006298;
+    display: inline-block;
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 18px;
+    position: relative;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 /* line 45, ../sass/components/_help-topics-page.scss */
@@ -32201,10 +32196,10 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select {
   padding-left: 22px;
 }
 /* line 4234, ../sass/custom.scss */
-@-moz-document url-prefix() {
-  .user-nav .sbac-favorites-menu a {
-    background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 0;
-  }
+/*@-moz-document url-prefix() {*/
+  /*.user-nav .sbac-favorites-menu a {*/
+    /*background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 4px;*/
+  /*}*/
 }
 /* line 678, ../sass/custom.scss */
 .user-nav .sbac-favorites-menu .sbac-favorites-menu-tooltip {
@@ -36839,11 +36834,11 @@ table.forum-subscriptions tr {
     z-index: 2;
 }
 
-.help-topic-link {
-    position: absolute;
-    top: 210px;
-    right: 40px;
-}
+/*.help-topic-link {*/
+    /*position: absolute;*/
+    /*top: 210px;*/
+    /*right: 40px;*/
+/*}*/
 
 .sbac-resource-container .help-topic-link,
 .helpful-info .help-topic-link {
@@ -36962,15 +36957,15 @@ body.page-help-topics h1 {
     width: 100%;
 }
 
-.view-display-id-sort_help_topics .help-topic-link {
-    position: relative;
-    top: 5px;
-    right: 0px;
-}
+/*.view-display-id-sort_help_topics .help-topic-link {*/
+    /*position: relative;*/
+    /*top: 5px;*/
+    /*right: 0px;*/
+/*}*/
 
-.view-display-id-sort_help_topics .help-topic-link1 {
-    right: 238px;
-}
+/*.view-display-id-sort_help_topics .help-topic-link1 {*/
+    /*right: 238px;*/
+/*}*/
 
 #help-topics-modal-continue,
 #playlist-modal-continue  {
@@ -37042,4 +37037,14 @@ body.page-help-topics h1 {
     margin-right: 7px;
     margin-top: 7px;
     padding: 0 5px;
+}
+.page-admin-structure-taxonomy-glossary-terms #page-title{
+    color: #fff;
+}
+.view-display-id-sort_help_topics {
+    position: relative;
+    top: 145px;
+}
+.page-edit-help-topics .large-12{
+    margin-bottom: 111px;
 }
