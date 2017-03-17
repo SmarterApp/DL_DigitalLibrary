@@ -36864,7 +36864,7 @@ table.forum-subscriptions tr {
 }
 
 .helpful-info .help-topic-link {
-    top: 105px;
+    /*top: 105px;*/
     right: 60px;
 }
 

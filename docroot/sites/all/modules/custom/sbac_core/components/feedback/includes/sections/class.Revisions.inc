@@ -249,7 +249,7 @@ class Revisions extends Base {
     if ($output_gk) {
       return '
           <div class="feedback-wrap" id="feedback-wrap-gk-comments">
-            <h2 class="main-title">' . t('Gate Keeping Criteria') . '</h2>
+            <h2 class="main-title">' . t('Gatekeeping Criteria') . '</h2>
             <div class="feedback-items">
               ' . $output_gk . '
             </div>

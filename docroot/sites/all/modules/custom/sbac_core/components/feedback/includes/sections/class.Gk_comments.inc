@@ -61,7 +61,7 @@ class Gk_Comments extends Base {
     // finalize output
     $output = '
         <div class="feedback-wrap" id="feedback-wrap-gk-comments">
-          <h2 class="main-title">' . t('Gate Keeping Criteria') . '</h2>
+          <h2 class="main-title">' . t('Gatekeeping Criteria') . '</h2>
 
           <div class="feedback-items">
             ' . $output_gk . '

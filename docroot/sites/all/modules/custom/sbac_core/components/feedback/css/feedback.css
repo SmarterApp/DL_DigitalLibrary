@@ -89,6 +89,7 @@
   border: 1px #ccc solid;
   margin: 10px 0;
   padding: 1em 2em 0;
+  position: relative;
 }
 /* line 88, ../sass/feedback.scss */
 .feedback-wrap .helpful-info .helpful-info-title {
@@ -688,4 +689,31 @@
     margin: 0 auto;
     width: 250px;
   }
+}
+.feedback-section-title,
+.feedback-section-title:hover,
+.feedback-section-title:focus,
+.feedback-section-title:visited {
+  color: #0085ad !important;
+}
+.feedback-section-title.more:after {
+  content: "\e610";
+  display: inline-block;
+  font-family: 'sbac';
+  font-size: 24px;
+  font-weight: normal;
+  position: relative;
+  top: 4px;
+}
+.feedback-section-title.less:after {
+  content: "\e611";
+  display: inline-block;
+  font-family: 'sbac';
+  font-size: 24px;
+  font-weight: normal;
+  position: relative;
+  top: 4px;
+}
+.feedback-section-drop {
+  display: none;
 }

@@ -325,7 +325,7 @@ class Base {
    * @param  [type] $set_count [description]
    * @return [type]            [description]
    */
-  public function getSetDescription($set_count) {
+  public function getSetDescription($set_count, $length = 300, $expand_override = FALSE) {
     $form = array();
 
     if ($desc = $this->getVar('criteria_' . $set_count . '_description', '')) {
@@ -334,11 +334,14 @@ class Base {
       if ($this->getVar('criteria_' . $set_count . '_desc_state', 'collapsed', FALSE) == 'expanded') {
         $desc_state_expanded = TRUE;
       }
+      if ($expand_override) {
+        $desc_state_expanded = $desc_state_expanded ? FALSE : TRUE;
+      }
 
       $form['set_desc'] = array(
         '#prefix' => '<div class="criteria-set-comments-text">',
         '#suffix' => '</div>',
-        '#markup' => more_less_text($desc, 300, $desc_state_expanded),
+        '#markup' => more_less_text($desc, $length, $desc_state_expanded),
       );
     }
 

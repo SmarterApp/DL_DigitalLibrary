@@ -6,8 +6,6 @@ class Tags extends Base {
   const title = 'Edit Resource Tags';
   const permission = 'view tags';
 
-  protected $_show_disabled = TRUE;
-
   /**
    * Builds and returns the content for current section.
    * @return [type] [description]

@@ -217,6 +217,13 @@ Drupal.behaviors.feedback = {
         });
       }
     });
+
+    $('.feedback-section-title').click(function (e) {
+      e.preventDefault();
+      $(this).toggleClass('more');
+      $(this).toggleClass('less');
+      $(this).parent().siblings('.feedback-section-drop').slideToggle();
+    });
   },
 
   /**

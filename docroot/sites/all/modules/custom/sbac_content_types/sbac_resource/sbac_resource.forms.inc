@@ -2305,7 +2305,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
           }
           break;
         case 'gate_keeper':
-          // Get the last gatekepper comment
+          // Get the last gatekeeper comment
           $gk_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'gate_keeper' AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
           // check for gk feedback
           $gk = entity_load('feedback', $gk_id);
@@ -2320,7 +2320,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               )
             );
             $form['sbac_revisions']['header'] = array(
-              '#markup' => t('Gate Keeping Criteria'),
+              '#markup' => t('Gatekeeping Criteria'),
               '#prefix' => '<h2>',
               '#suffix' => '</h2>'
             );
