@@ -397,35 +397,11 @@ function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FA
  */
 function _resource_access_access_quality_criteria_revisions($node, $account) {
   $access = FALSE;
-  $resubmit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
-  if ($resubmit_timestamp) {
-    // Check for in progress reviews
-    $in_progress_reviewers = db_select('eck_feedback', 'f')
-      ->condition('f.status', 1)
-      ->condition('f.completed', 0)
-      ->condition('f.current', 1)
-      ->condition('f.node_id', $node->nid)
-      ->fields('f', array('uid'))
-      ->execute()
-      ->fetchCol();
-    if (in_array($account->uid, $in_progress_reviewers)) {
-      // I have an in progress review
-      $access = TRUE;
-    }
-    elseif (!empty($in_progress_reviewers)) {
-      // Someone else has an in progress review
-      $access = FALSE;
-    }
-    else {
-      // There are no in progress reviews
-      // Add published state so revision log is still visible after publication to select roles
-      // Removed timeout restrictions since you can't actually edit anything by viewing revisions
-      $access = _resource_access_node_has_state($node, array('needs_review', 'being_reviewed', 'approved', 'published'))
-        && sbac_central_user_has_role(array('administrator', 'resource contributor', 'resource reviewer', 'resource publisher'), $account)
-        && $node->uid != $account->uid;
-//        && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
-    }
+
+  if (in_array('administrator', $account->roles) || in_array('DLRB member', $account->roles)) {
+    $access = TRUE;
   }
+
   return $access;
 }
 
