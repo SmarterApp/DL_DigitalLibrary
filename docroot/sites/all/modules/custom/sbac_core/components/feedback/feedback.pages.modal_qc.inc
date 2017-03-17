@@ -34,6 +34,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
     $form['state_start']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
     );
 
@@ -48,6 +49,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
     $form['state_cancel']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Cancel Review (!hours hrs)', array('!hours' => $hours_left)),
     );
 
@@ -57,6 +59,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
 
     $reco_submit = array('submit' => array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Complete Review'),
     ));
 
@@ -172,6 +175,7 @@ function feedback_qc_form($form, &$form_state, $node, $state, $trigger_id, $id) 
  */
 function feedback_qc_form_submit($form, &$form_state) {
   $node = $form_state['build_info']['args'][0];
+  $feedback = new feedbackStatus($node);
 
   $state = $form_state['dialog_settings']['current_state'];
 
@@ -179,23 +183,28 @@ function feedback_qc_form_submit($form, &$form_state) {
     // the initial "start" state; upon submission the modal reloads the page, so the new
     // gate keeper entity is displayed in its form
     case 'start':
-      global $user;
+      // We only want to start a new review if we aren't already at capacity.
+      if ($feedback->qc_count == $feedback->qc_num_started) {
+        drupal_set_message(t('There are already @num Quality Criteria reviews in progress.', array('@num' => $feedback->qc_count)), 'error');
+      } else {
+        global $user;
 
-      $entity = new stdClass;
-      $entity->title = $node->title .' - Review - ' . $user->uid;
-      $entity->type = 'qc';
-      $entity->uid = $user->uid;
-      $entity->created = REQUEST_TIME;
-      $entity->changed = REQUEST_TIME;
-      $entity->language = LANGUAGE_NONE;
-      $entity->status = 1;
-      $entity->completed = 0;
-      $entity->current = 1;
-      $entity->node_id = $node->nid;
+        $entity = new stdClass;
+        $entity->title = $node->title . ' - Review - ' . $user->uid;
+        $entity->type = 'qc';
+        $entity->uid = $user->uid;
+        $entity->created = REQUEST_TIME;
+        $entity->changed = REQUEST_TIME;
+        $entity->language = LANGUAGE_NONE;
+        $entity->status = 1;
+        $entity->completed = 0;
+        $entity->current = 1;
+        $entity->node_id = $node->nid;
 
-      drupal_set_message(t('Quality criteria review process started.'));
-      entity_save('feedback', $entity);
-      sbac_resource_save_current_state($node);
+        drupal_set_message(t('Quality criteria review process started.'));
+        entity_save('feedback', $entity);
+        sbac_resource_save_current_state($node);
+      }
 
       break;
 

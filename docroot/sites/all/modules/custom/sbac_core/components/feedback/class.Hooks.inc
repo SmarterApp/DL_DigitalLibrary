@@ -167,34 +167,31 @@ class Hooks extends \devtools\Hooks {
       'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     ) + $base;
 
-    $items['node/%node/feedback/gate-keeper'] = array(
+    $items['node/%/feedback/gate-keeper'] = array(
       'title' => 'Gate Keeper',
       'page callback' => 'resource_feedback_ajax_page',
-      'page arguments' => array('gate_keeper', 1),
-      'access callback' => 'resource_access',
-      'access arguments' => array('edit gate keeper', 1),
+      'page arguments' => array('gate_keeper', 'edit gate keeper', 1),
+      'access callback' => TRUE,
       'weight' => 2,
       'type' => MENU_LOCAL_TASK,
       'context' => MENU_CALLBACK,
     ) + $base;
     
-    $items['node/%node/feedback/qc'] = array(
+    $items['node/%/feedback/qc'] = array(
       'title' => 'Quality Criteria Review',
       'page callback' => 'resource_feedback_ajax_page',
-      'page arguments' => array('qc', 1),
-      'access callback' => 'resource_access',
-      'access arguments' => array('edit quality criteria', 1),
+      'page arguments' => array('qc', 'edit quality criteria', 1),
+      'access callback' => TRUE,
       'weight' => 2,
       'type' => MENU_LOCAL_TASK,
       'context' => MENU_CALLBACK,
     ) + $base;
 
-    $items['node/%node/feedback/post'] = array(
+    $items['node/%/feedback/post'] = array(
       'title' => 'Post',
       'page callback' => 'resource_feedback_ajax_page',
-      'page arguments' => array('post', 1),
-      'access callback' => 'resource_access',
-      'access arguments' => array('edit post', 1),
+      'page arguments' => array('post', 'edit post', 1),
+      'access callback' => TRUE,
       'weight' => 3,
       'type' => MENU_LOCAL_TASK,
       'context' => MENU_CALLBACK,
