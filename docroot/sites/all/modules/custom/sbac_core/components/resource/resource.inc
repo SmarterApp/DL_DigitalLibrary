@@ -12,8 +12,19 @@ define('FEEDBACK_AUTHENTICATED_RID', 2); // id of the 'authenticated' role;
 
 /**
  * Access callback for custom Resource operations.
+ * @param $op
+ * @param $node
+ * @param null $account
+ * @return
  */
 function resource_access($op, $node, $account = NULL) {
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
+  if (!$node) {
+    return FALSE;
+  }
+
   if (is_null($account)) {
     global $user;
     $account = $user;
@@ -119,20 +130,16 @@ function _resource_access_view_gate_keeper($node, $account) {
   else {
     // Make sure we are still in GK and have the right role.
     if (_sbac_resource_is_in_gate_keeping($node) && sbac_central_user_has_role(array('resource reviewer'), $account)) {
-      $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
-      // if this is a new submission, or if it is a resubmission and the user has access
-      if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_reviewer_access($node, $account, $submit_timestamp))) {
-        // if the user has an active GK (we don't care if it's completed or not), then allow
-        $user_active_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, 1);
-        if ($user_active_gk) {
+      // if the user has an active GK (we don't care if it's completed or not), then allow
+      $user_active_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', $account->uid, 1);
+      if ($user_active_gk) {
+        $access = TRUE;
+      }
+      else {
+        // if there are no other active GK (by anybody), then allow
+        $other_active_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', FALSE, 1);
+        if (!$other_active_gk) {
           $access = TRUE;
-        }
-        else {
-          // if there are no other active GK (by anybody), then allow
-          $other_active_gk = _resource_access_count_feedback($node->nid, 'gate_keeper', FALSE, 1);
-          if (!$other_active_gk) {
-            $access = TRUE;
-          }
         }
       }
     }
@@ -177,40 +184,37 @@ function _resource_access_view_quality_criteria($node, $account) {
   $access = FALSE;
   if (_sbac_resource_is_in_quality_review($node) && sbac_central_user_has_role(array('resource reviewer'), $account)) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
-    // if this is a new submission, or if it is a resubmission and the user has access
-    if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_reviewer_access($node, $account, $submit_timestamp))) {
-      // If the user has a review in progress, allow
-      $user_qc_in_progress = _resource_access_count_feedback($node->nid, 'qc', $account->uid, 1, 0);
-      if ($user_qc_in_progress) {
+    // If the user has a review in progress, allow
+    $user_qc_in_progress = _resource_access_count_feedback($node->nid, 'qc', $account->uid, 1, 0);
+    if ($user_qc_in_progress) {
+      $access = TRUE;
+    }
+    else {
+      $completed_reviews = _resource_access_count_feedback($node->nid, 'qc', FALSE, FALSE, 1);
+      $in_progress_reviews = db_select('eck_feedback', 'f')
+        ->condition('f.node_id', $node->nid)
+        ->condition('f.type', 'qc')
+        ->condition('f.current', 1)
+        ->condition('f.completed', 0)
+        ->condition('f.status', 1)
+        ->condition('f.created', $submit_timestamp, '>')
+        ->condition('f.uid', db_select('eck_feedback', 'f2')
+          ->condition('f2.node_id', $node->nid)
+          ->condition('f2.status', 1)
+          ->condition('f2.completed', 1)
+          ->condition('f2.current', 1)
+          ->condition('f2.type', 'qc')
+          ->condition('f2.created', $submit_timestamp, '>')
+          ->fields('f2', array('uid'))->distinct(), 'NOT IN')
+        ->fields('f', array('uid'))->distinct()->countQuery()->execute()->fetchField();
+      if (0 == $completed_reviews && $in_progress_reviews < 3) {
         $access = TRUE;
       }
-      else {
-        $completed_reviews = _resource_access_count_feedback($node->nid, 'qc', FALSE, FALSE, 1);
-        $in_progress_reviews = db_select('eck_feedback', 'f')
-          ->condition('f.node_id', $node->nid)
-          ->condition('f.type', 'qc')
-          ->condition('f.current', 1)
-          ->condition('f.completed', 0)
-          ->condition('f.status', 1)
-          ->condition('f.created', $submit_timestamp, '>')
-          ->condition('f.uid', db_select('eck_feedback', 'f2')
-            ->condition('f2.node_id', $node->nid)
-            ->condition('f2.status', 1)
-            ->condition('f2.completed', 1)
-            ->condition('f2.current', 1)
-            ->condition('f2.type', 'qc')
-            ->condition('f2.created', $submit_timestamp, '>')
-            ->fields('f2', array('uid'))->distinct(), 'NOT IN')
-          ->fields('f', array('uid'))->distinct()->countQuery()->execute()->fetchField();
-        if (0 == $completed_reviews && $in_progress_reviews < 3) {
-          $access = TRUE;
-        }
-        elseif (1 == $completed_reviews && $in_progress_reviews < 2) {
-          $access = TRUE;
-        }
-        elseif (2 == $completed_reviews && 0 == $in_progress_reviews) {
-          $access = TRUE;
-        }
+      elseif (1 == $completed_reviews && $in_progress_reviews < 2) {
+        $access = TRUE;
+      }
+      elseif (2 == $completed_reviews && 0 == $in_progress_reviews) {
+        $access = TRUE;
       }
     }
   }
@@ -237,18 +241,15 @@ function _resource_access_view_post($node, $account) {
   $access = FALSE;
   if (_resource_access_node_has_state($node, array('approved')) && sbac_central_user_has_role(array('resource publisher'), $account)) {
     $submit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
-    // if this is a new submission, or if it is a resubmission and the user has access
-    if (!$submit_timestamp || ($submit_timestamp && _resource_access_resubmission_publisher_access($node, $account, $submit_timestamp))) {
-      // check for active reviews by others
-      $other_reviews = db_select('eck_feedback', 'f')
-        ->condition('f.type', 'post')
-        ->condition('f.node_id', $node->nid)
-        ->condition('f.status', 1)
-        ->condition('f.uid', $account->uid, '<>')
-        ->condition('f.created', $submit_timestamp, '>')
-        ->fields('f', array('id'))->countQuery()->execute()->fetchField();
-      $access = !$other_reviews;
-    }
+    // check for active reviews by others
+    $other_reviews = db_select('eck_feedback', 'f')
+      ->condition('f.type', 'post')
+      ->condition('f.node_id', $node->nid)
+      ->condition('f.status', 1)
+      ->condition('f.uid', $account->uid, '<>')
+      ->condition('f.created', $submit_timestamp, '>')
+      ->fields('f', array('id'))->countQuery()->execute()->fetchField();
+    $access = !$other_reviews;
   }
   return $access;
 }
