@@ -72,14 +72,16 @@ function sbac_flag_start_moderation($js = FALSE) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
 
-    $title = 'You are about to start resource moderation';
-    if (isset($_GET['eck_review'])) {
-      $title = 'You are about to start resource review moderation';
-    }
-    elseif (isset($_GET['forum_type'])) {
+//    $title = 'You are about to start resource moderation';
+//    if (isset($_GET['eck_review'])) {
+//      $title = 'You are about to start resource review moderation';
+//    }
+    if (isset($_GET['forum'])) {
       $title = 'You are about to start forum moderation.';
     }
-
+    elseif (isset($_GET['eck_review'])) {
+      $title = 'You are about to start resource review moderation';
+    }
     $form_state = array(
       'title' => $title,
       'ajax' => TRUE,

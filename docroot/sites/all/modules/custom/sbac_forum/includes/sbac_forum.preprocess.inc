@@ -550,6 +550,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
             'forum_type' => 'topic',
             'nid' => $comment_entity->nid,
             'cid' => $comment_entity->cid,
+            'forum' => 'forum',
           ),
         ));
         $js_settings['sbac-flag-start-moderation'] = array(
@@ -558,6 +559,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
             'width' => 600,
             'height' => 230,
           ),
+            'modalClass' => array('forum'),
         );
         $moderation_post_content .= $moderation_button;
       } elseif ($moderation_type === 'resolve-topic-flags') {

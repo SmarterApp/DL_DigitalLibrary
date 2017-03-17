@@ -576,17 +576,32 @@ function sbac_preprocess_page(&$variables) {
   if (strpos($_GET['q'], 'glossary') !== FALSE) {
     $variables['help_tabs'] =
     '<div class="help-tabs">
-      <a href="/help-topics">Help Topics/FAQ</a>
+      <a href="/help-topics">Help Topics</a>
       <a class="active glossary">Glossary</a>
     </div>';
   }
+    if (strpos($_GET['q'], '/admin/structure/taxonomy/glossary_terms') !== FALSE) {
+        $variables['help_tabs'] =
+     '<div class="help-tabs">
+      <a href="/edit/help-topics">Help Topics</a>
+      <a class="active glossary">Glossary</a>
+    </div>';
+    }
   if ($_GET['q'] == 'help-topics') {
     $variables['help_tabs'] =
     '<div class="help-tabs">
-      <a class="active" href="/help-topics">Help Topics/FAQ</a>
+      <a class="active" href="/help-topics">Help Topics</a>
       <a class="glossary" href="glossary">Glossary</a>
     </div>';
   }
+    if ($_GET['q'] == 'edit/help-topics') {
+        $variables['help_tabs'] =
+            '<div class="help-tabs">
+      <a class="active" href="/edit/help-topics">Help Topics</a>
+      <a class="glossary" href="/admin/structure/taxonomy/glossary_terms">Glossary</a>
+    </div>';
+    }
+
   if (arg(0) == 'digital-library-resources') {
     $errors = drupal_get_messages('error');
     foreach($errors['error'] as $error) {
