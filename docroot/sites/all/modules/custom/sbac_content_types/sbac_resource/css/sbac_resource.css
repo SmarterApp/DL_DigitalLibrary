@@ -3917,3 +3917,28 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
 .node-type-collection-view .pane-node-field-grade {
   padding-right: 25px;
 }
+
+.clear {
+  clear: both;
+  height: 1px;
+  margin-top: -1px;
+}
+#sbac-revisions-tab .author, #sbac-revisions-tab .headline {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: .5em 0;
+}
+#sbac-revisions-tab .created {
+  font-style: italic;
+}
+#sbac-revisions-tab .feedback-review {
+  float: left;
+  font-size: 80%;
+  margin-right: 1.5%;
+  padding-right: 1.5%;
+  width: 31%;
+  border-right: 1px solid #ccc;
+}
+#sbac-revisions-tab h2 {
+  margin-top: 1em;
+}

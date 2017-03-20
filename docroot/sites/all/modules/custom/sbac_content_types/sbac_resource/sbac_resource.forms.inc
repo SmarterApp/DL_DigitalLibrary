@@ -2145,7 +2145,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               if ($post_comment != '') {
                 $form['sbac_revisions']['post_comment'] = array(
                   '#markup' => $post_comment,
-                  '#prefix' => '<h2>Posting comments</h2><p>',
+                  '#prefix' => '<h2>Arbitration Comments</h2><p>',
                   '#suffix' => '</p>'
                 );
               }
@@ -2171,7 +2171,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 'comments' => more_less_text($comments, 140),
               ));
               $form['sbac_revisions']['recommendations'] = array(
-                '#markup' => $recommendations,
+                '#markup' => $recommendations . '<div class="clear"></div>',
               );
               $i++;
             }
@@ -2208,7 +2208,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 '#type' => 'fieldset',
               );
               $form['sbac_revisions']['feedback_' . $i]['label'] = array(
-                '#markup' => $i + 1 . '. ' . strip_tags($question_title),
+                '#prefix' => '<h3>',
+                '#markup' =>  ($i + 1) . '. ' . strip_tags($question_title),
+                '#suffix' => '</h3>',
               );
               $form['sbac_revisions']['feedback_' . $i]['description'] = array(
                 '#markup' => $question_desc,
@@ -2231,9 +2233,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                   '#type' => 'container',
                   '#attributes' => array(
                     'class' => array(
-                      'col'
+                      'feedback-review'
                     )
-                  )
+                  ),
                 );
                 $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['author'] = array(
                   '#markup' => t('Reviewer !j', array('!j' => $j)),
@@ -2258,6 +2260,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 $question_ids[] = $questions[$i]->item_id;
                 $j++;
               }
+              $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['clear'] = array(
+                '#markup' => '<div class="clear"></div>',
+              );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
@@ -2342,8 +2347,8 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               );
               $form['sbac_revisions']['feedback_' . $i]['question'] = array(
                 '#markup' => $i . '. ' . strip_tags($question_title),
-                '#prefix' => '<h5>',
-                '#suffix' => '</h5>'
+                '#prefix' => '<h3>',
+                '#suffix' => '</h3>'
               );
               $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
                 '#type' => 'hidden',
@@ -2353,14 +2358,12 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 '#markup' => $question_desc
               );
               $form['sbac_revisions']['feedback_' . $i]['gk_info'] = array(
-                '#type' => 'item',
-                '#title' => t('Reviewer 1'),
-                '#markup' => format_date($feedback->created, 'full')
-              );
-              $form['sbac_revisions']['feedback_' . $i]['gk_comment'] = array(
-                '#type' => 'item',
-                '#title' => t('Quality Criteria Level: !level', array('!level' => $level)),
-                '#markup' => more_less_text(filter_xss(field_entity_value($question, 'field_comments')))
+                '#prefix' => '<div class="feedback-review">',
+                '#markup' => '<div class="author">' . t('Reviewer 1') . '</div>
+                  <div class="created">' . format_date($feedback->created, 'full') . '</div>
+                  <div class="headline">' . t('Meets Criteria: !level', array('!level' => $level)) . '</div>
+                  <div class="comments">' . more_less_text(filter_xss(field_entity_value($question, 'field_comments'))) . '</div>',
+                '#suffix' => '</div><div class="clear"></div>'
               );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
