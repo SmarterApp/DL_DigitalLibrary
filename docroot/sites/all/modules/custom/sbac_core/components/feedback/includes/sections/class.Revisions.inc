@@ -72,12 +72,45 @@ class Revisions extends Base {
               <div class="contributor-comment-comment">'.field_entity_value($publisher_feedback, 'field_contributor_comment').'</div>
             </div>';
     }
+
+    $comments = array();
+    if ($to_contributor = field_entity_value($publisher_feedback, 'field_to_contributor')) {
+      $comments[0] = more_less_text($to_contributor, 140);
+    }
+    if ($to_reviewer = field_entity_value($publisher_feedback, 'field_to_reviewer_1')) {
+      $comments[1] = more_less_text($to_reviewer, 140);
+    }
+    if ($to_reviewer = field_entity_value($publisher_feedback, 'field_to_reviewer_2')) {
+      $comments[2] = more_less_text($to_reviewer, 140);
+    }
+    if ($to_reviewer = field_entity_value($publisher_feedback, 'field_to_reviewer_3')) {
+      $comments[3] = more_less_text($to_reviewer, 140);
+    }
+
+    $question_html = '<div class="feedback-item-triplet">';
+
+    foreach ($comments as $key => $value) {
+      if ($key == 0) {
+        $author = t('To Contributor');
+      } else {
+        $author = t('To Reviewer @num', array('@num' => $key));
+      }
+
+      $question_html .= '
+          <div class="feedback-comment">
+            <div class="headline">' . $author . '</div>
+            <div class="comments-content">' . $value . '</div>
+          </div>
+        ';
+    }
+    $question_html .= '</div>';
+
     $this->output .= '
           <div class="feedback-wrap" id="feedback-wrap-post-comments">
             <h2><a href="#" class="feedback-section-title more">' . t('Posting Comments @count', array('@count' => $this->post_count)) . '</a></h2>
             <div class="feedback-items feedback-section-drop">
               <div class="feedback-item">
-                <div class="comments">' . field_entity_value($publisher_feedback, 'field_to_contributor') . '</div>
+                ' . $question_html . '<div class="clear"></div>
                 '.$comment.'
               </div>
             </div>

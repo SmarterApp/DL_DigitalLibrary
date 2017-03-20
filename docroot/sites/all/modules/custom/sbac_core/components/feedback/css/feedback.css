@@ -392,6 +392,14 @@
   border-right: 1px solid #ccc;
   /* ie fix */
 }
+.feedback-wrap .feedback-items .feedback-item .feedback-comment {
+  float: left;
+  margin-right: 1.5%;
+  padding-right: 1.5%;
+  width: 23%;
+  border-right: 1px solid #ccc;
+  /* ie fix */
+}
 /* line 390, ../sass/feedback.scss */
 .feedback-wrap .feedback-items .feedback-item .feedback-review:last-child, .feedback-wrap .feedback-items .feedback-item .feedback-review.feedback-review-3 {
   margin-right: 0;
