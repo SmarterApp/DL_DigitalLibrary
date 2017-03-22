@@ -32195,12 +32195,6 @@ input[type="file"], input[type="checkbox"], input[type="radio"], select {
   background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 4px;
   padding-left: 22px;
 }
-/* line 4234, ../sass/custom.scss */
-/*@-moz-document url-prefix() {*/
-  /*.user-nav .sbac-favorites-menu a {*/
-    /*background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 4px;*/
-  /*}*/
-}
 /* line 678, ../sass/custom.scss */
 .user-nav .sbac-favorites-menu .sbac-favorites-menu-tooltip {
   width: 142px;
