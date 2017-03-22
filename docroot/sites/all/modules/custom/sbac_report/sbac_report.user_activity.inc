@@ -48,7 +48,8 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
 
   $form['active_user'] = array(
     '#type' => 'textfield',
-    '#title' => t('Choose a Contributor or Reviewer'),
+    '#title' => t('Choose Users to Export'),
+    '#description' => t('Type user emails, separated by commas, to select what users to show (emails will autocomplete).'),
     '#autocomplete_path' => 'reports/user/autocomplete',
     '#size' => 60,
     '#multiple' => TRUE,
@@ -118,7 +119,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
   $user_emails = drupal_explode_tags(sbac_report_get_session_value('users', 'emails'));
 
-  if (count($user_groups) == 0 || count($user_emails) == 0) {
+  if (count($user_groups) == 0 && count($user_emails) == 0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['active_tab'] = 1;
     return; // report did not contain any data.
