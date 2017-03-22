@@ -20,34 +20,17 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Choose a state'),
     '#options' => sbac_report_state_options(),
-    '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_state_tid(),
-    '#attributes' => array('class' => array('chosen-widget')),
     '#ajax' => array(
       'callback' => 'sbac_report_state_ajax',
     ),
     '#required' => TRUE,
   );
-  
-  /* if (sbac_central_user_has_role(array('reports administrator'))) {
-    $form['state'] = array_merge($form['state'], array(
-      '#multiple' => FALSE,
-      '#attributes' => array('class' => array()),
-      '#disabled' => TRUE,
-    ));
-  }
-  */
+
   $user_group_options = sbac_report_user_group_options();
   array_push($user_group_options, 'SNE Members');
   array_push($user_group_options, 'SLT Members');
-  /* if (sbac_central_user_has_role(array('reports administrator'))) {
-    foreach($user_group_options as $index => $option){
-      if(!in_array($option, array('resource contributor', 'resource reviewer', 'all'))){
-        unset($user_group_options[$index]);
-      }
-    }
-  }
-  */
+
   sbac_csv_report_prettify($user_group_options);
 
   $form['user_group_dropdown'] = array(
@@ -58,29 +41,18 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#multiple' => TRUE,
     '#default_value' => sbac_report_get_default_usergroup(),
     '#required' => TRUE,
+    '#ajax' => array(
+      'callback' => 'sbac_report_group_ajax',
+    ),
   );
 
-  $see_others = sbac_report_select_other_users($account);
-  $name_value = sbac_user_format_username($user);
-  $form['user'] = array(
+  $form['active_user'] = array(
     '#type' => 'textfield',
     '#title' => t('Choose a Contributor or Reviewer'),
-    '#autocomplete_path' => 'sne/autocomplete',
-    '#size' => 30,
-    '#disabled' => !$see_others,
-    '#default_value' => $see_others ? sbac_report_get_session_value('user', 'name') : $name_value,
-  );
-
-  // Hidden field to store the selected uid.
-  // When the autocomplete suggetion is selected,
-  // the uid value will be set here.
-  // @see sbac_report.js
-  $form['uid'] = array(
-    '#type' => 'hidden',
-    '#default_value' => $see_others ? sbac_report_get_session_value('user', 'uid') : $user->uid,
-    '#attributes' => array(
-      'id' => 'uid-field',
-    ),
+    '#autocomplete_path' => 'reports/user/autocomplete',
+    '#size' => 60,
+    '#multiple' => TRUE,
+    '#default_value' => sbac_report_get_session_value('users', 'emails'),
   );
 
   $date_options = sbac_report_date_range_options();
@@ -107,7 +79,6 @@ function sbac_csv_report_user_activity_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Export'),
     '#submit' => array('sbac_csv_report_user_activity_export_form_submit'),
-//    '#attributes' => array('OnSubmit' => 'closeSecondaryAlert();'),
   );
 
   $form['#validate'][] = 'sbac_csv_report_user_activity_form_validate';
@@ -140,32 +111,29 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
     $_SESSION['sbac_report']['state']['tid'] = $form_state['values']['state'];
     $_SESSION['sbac_report']['date_range1']['range'] = $form_state['values']['date_range1'];
     $_SESSION['sbac_report']['usergroups']['user_ids'] = $form_state['values']['user_group_dropdown'];
-    $_SESSION['sbac_report']['sne']['uid'] = $form_state['values']['uid'];
-    $_SESSION['sbac_report']['sne']['name'] = $form_state['values']['sne'];
+    $_SESSION['sbac_report']['users']['emails'] = $form_state['values']['active_user'];
   }
   $state_tid = sbac_report_get_session_value('state', 'tid');
   $date_range = sbac_report_get_session_value('date_range1', 'range');
   $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
-  $individual = sbac_report_get_session_value('sne', 'uid');
+  $user_emails = drupal_explode_tags(sbac_report_get_session_value('users', 'emails'));
 
-  if (count($user_groups) == 0) {
+  if (count($user_groups) == 0 || count($user_emails) == 0) {
     $_SESSION['sbac_report']['error_message'] = SBAC_REPORT_FILTER_ERROR;
     $_SESSION['sbac_report']['active_tab'] = 1;
     return; // report did not contain any data.
   }
 
-  $users = get_users_for_user_groups($state_tid, $user_groups, $date_range);
-  // Override user groups if specific user is selected
-  if (isset($individual)) {
+  if (count($user_emails) == 0) {
+    $users = get_users_for_user_groups($state_tid, $user_groups);
+  } else {
     $users = array();
-    $user_obj = user_load($individual);
-    $dates = explode('--', $date_range);
-    $from_date = strtotime($dates[0]);
-    // Only process user if last login is after date range "from date"
-    if ($user_obj->login > $from_date) {
+    foreach ($user_emails as $email) {
+      $user_obj = user_load_by_mail($email);
       $users[$user_obj->uid] = $user_obj;
     }
   }
+
   if ($users) {
     batch_set(array(
         'title' => t('User Activity Report'),

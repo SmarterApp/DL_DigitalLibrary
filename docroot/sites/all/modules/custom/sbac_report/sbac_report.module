@@ -66,6 +66,14 @@ function sbac_report_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['reports/user/autocomplete'] = array(
+    'title' => 'Autocomplete User Names',
+    'file' => 'sbac_report.pages.inc',
+    'page callback' => 'sbac_report_user_autocomplete',
+    'access callback' => 'sbac_report_user_access',
+    'type' => MENU_CALLBACK,
+  );
+
   $items['reports/info/%ctools_js/%node/%user'] = array(
     'title' => 'Resource Report Information',
     'file' => 'sbac_report.pages.inc',
@@ -726,6 +734,21 @@ function sbac_report_state_ajax($form, &$form_state) {
       $state_options = $form['state']['#options'];
       $_SESSION['sbac_report']['state']['name'] = $state_options[$state_tid];
     }
+  }
+  return $form;
+}
+
+/**
+ * Ajax callback for the groups field.
+ * Store the selected groups in SESSION
+ * so the autocomplete for user text field is filtered based on the groups.
+ */
+function sbac_report_group_ajax($form, &$form_state) {
+  $_SESSION['sbac_report']['active_tab'] = SBAC_REPORT_TAB_INDIVIDUAL;
+
+  if (isset($form_state['values']['user_group_dropdown'])) {
+    $groups = $form_state['values']['user_group_dropdown'];
+    $_SESSION['sbac_report']['usergroups']['user_ids'] = $groups;
   }
   return $form;
 }

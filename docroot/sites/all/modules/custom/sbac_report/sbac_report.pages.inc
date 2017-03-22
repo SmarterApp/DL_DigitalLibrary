@@ -730,7 +730,7 @@ function sbac_report_sne_autocomplete($string = '') {
   // user can see more users or not.
   $see_others = sbac_report_select_other_users($user);
   if (!$see_others) {
-    print drupal_json_encode(array());
+    drupal_json_output(array());
     exit;
   }
 
@@ -776,7 +776,7 @@ function sbac_report_sne_autocomplete($string = '') {
   }
   else {
     $matches['none'] = t('Please select a state');
-    print drupal_json_encode($matches);
+    drupal_json_output($matches);
     exit;
   }
 
@@ -803,9 +803,56 @@ function sbac_report_sne_autocomplete($string = '') {
       $matches[$full_name . $user_name] = '<span class="autocomplete-suggestion" data-uid="' . $uid . '">' . check_plain($full_name) . $user_name . '</span>';
     }
   }
-  print drupal_json_encode($matches);
+  drupal_json_output($matches);
 }
 
+/**
+ * Autocomplete for the user field in the User Activity tab
+ * @param string $string
+ */
+function sbac_report_user_autocomplete($string = '') {
+  $matches = array();
+
+  if ($string) {
+    $state_tid = sbac_report_get_session_value('state', 'tid');
+    $user_groups = sbac_report_get_session_value('usergroups', 'user_ids');
+
+    $items = drupal_explode_tags($string);
+    $last_item = array_pop($items);
+
+    $query = db_select('users', 'u');
+    if (is_array($user_groups)) {
+      if (isset($user_groups[0])) {
+        unset($user_groups[0]);
+      }
+      if (count($user_groups)) {
+        $query->leftJoin('users_roles', 'ur', 'ur.uid = u.uid');
+        $query->condition('ur.rid', $user_groups, 'IN');
+      }
+    }
+    if ($state_tid != 'all') {
+      $query->innerJoin('field_data_field_state', 's', "u.uid = s.entity_id AND s.entity_type = 'user' AND s.deleted = 0");
+      $query->condition('s.field_state_tid', $state_tid);
+    }
+    $query->fields('u', array('mail'));
+    $query->condition('u.mail', '%' . db_like($last_item) . '%', 'LIKE');
+    $query->range(0, 10);
+    $results = $query->execute();
+    while ($user = $results->fetchField()) {
+      if (!in_array($user, $items)) {
+        $items_out = $items;
+        $items_out[] = $user;
+        $value = drupal_implode_tags($items_out);
+        $matches[$value] = check_plain($value);
+      }
+    }
+    if (!count($matches)) {
+      $matches['error'] = 'No more results';
+    }
+  }
+
+  drupal_json_output($matches);
+}
 
 /**
  * Helper function to build the Gate Keeping Reviews table.
