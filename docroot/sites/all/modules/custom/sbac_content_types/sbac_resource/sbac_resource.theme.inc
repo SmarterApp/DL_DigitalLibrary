@@ -1267,67 +1267,105 @@ function _sbac_resource_resource_review_links($fields, $row) {
     $variables['text'] = t('Needs Gatekeeping Review');
   } elseif ($feedback->gatekeeper_started && !$feedback->gatekeeper_finished) {
     // Gatekeeper review in process.
-    $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-gk', 'query' => array('destination' => arg(0))));
-    $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
-    $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-    $variables['links'][] = l('Continue', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
-    $variables['text'] = t('Gatekeeping Review In Process');
     $variables['status_icons'][0] =  array('image' => 'yellow-pencil.png', 'hover' => 'In Gatekeeping Review');
+    if ($feedback->gatekeeper_uid == $user->uid) {
+      $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-gk', 'query' => array('destination' => arg(0))));
+      $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+      $variables['links'][] = l('Continue', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
+      $variables['text'] = t('Gatekeeping Review In Process');
+    } else {
+      $url = url('node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+      $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      $variables['links'][] = l('View Details', $url);
+      $variables['text'] = t('Gatekeeping Review In Process');
+    }
   } elseif ($feedback->gatekeeper_finished) {
+    // Gatekeeper is passed.
+    $user_reviewing = $user_reviewed = FALSE;
     $variables['status_icons'][0] =  array('image' => 'green-g.png', 'hover' => 'Gatekeeping Passed');
-    $been_set = false;
     for ($x = 0; $x < $feedback->qc_count; $x++) {
       // Iterate through the QC reviews.
-      if (!$feedback->qc_status[$x]['started']) {
-        // QC review isn't started yet.
-        if (!$been_set) {
-          $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title']);
-          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title'], 'link');
-          $variables['text'] = t('Needs @pos Quality Review', array('@pos' => $positionals[$x]));
-          $been_set = true;
+      if ($feedback->qc_status[$x]['uid'] == $user->uid) {
+        if (!$feedback->qc_status[$x]['finished']) {
+          // If the viewer is already reviewing the resource, make note of which review it was.
+          $user_reviewing = $x;
+        } else {
+          // If the viewer has already reviewed it, make note.
+          $user_reviewed = TRUE;
         }
-      } elseif ($feedback->qc_status[$x]['started'] && !$feedback->qc_status[$x]['finished']) {
+      }
+      $y = $x + 1;
+      if ($feedback->qc_status[$x]['started'] && !$feedback->qc_status[$x]['finished']) {
         // QC review is in process.
-        $variables['status_icons'][$x+1] =  array('image' => 'yellow-pencil-2.png', 'hover' => 'In Quality Review');
-        if (!$been_set) {
-          $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
-          $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'))));
-          $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-          $variables['links'][] = l('Continue Review', $url);
-          $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$x]));
-          $been_set = true;
-        }
+        $variables['status_icons'][$y] = array('image' => 'yellow-pencil-2.png', 'hover' => 'In Quality Review');
       } elseif ($feedback->qc_status[$x]['finished']) {
         // QC review is finished.
-        $y = $x + 1;
-        // If all of the reviews are finished, and the current user is a resource publisher...
+        // If all of the reviews are finished, and the current viewer is a resource publisher...
         if ($feedback->qc_count == $feedback->qc_num_finished && in_array('resource publisher', $user->roles)) {
           // Show the approval status by showing the green check or red x and set the hover accordingly.
           if ($feedback->qc_status[$x]['approved']) {
-            $variables['status_icons'][$y] =  array('image' => 'green-check.png', 'hover' => 'Quality Review ' . $y . ' Passed');
+            $variables['status_icons'][$y] = array('image' => 'green-check.png', 'hover' => 'Quality Review ' . $y . ' Passed');
           } else {
-            $variables['status_icons'][$y] =  array('image' => 'red-x.png', 'hover' => 'Quality Review ' . $y . ' Failed');
+            $variables['status_icons'][$y] = array('image' => 'red-x.png', 'hover' => 'Quality Review ' . $y . ' Failed');
           }
         // Otherwise we just want to stick with green checks and complete messages so reviewers don't know how others reviewed it.
         } else {
-          $variables['status_icons'][$y] =  array('image' => 'green-check.png', 'hover' => 'Quality Review ' . $y . ' Complete');
+          $variables['status_icons'][$y] = array('image' => 'green-check.png', 'hover' => 'Quality Review ' . $y . ' Complete');
         }
       }
+    }
+    if ($user_reviewing !== FALSE) {
+      // If the viewer is already reviewing this resource.
+      $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-qc'));
+      $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'))));
+      $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+      $variables['links'][] = l('Continue Review', $url);
+      $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$user_reviewing]));
+    } elseif ($feedback->qc_count > $feedback->qc_num_started) {
+      // QC reviews aren't full yet.
+      $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+      $variables['text'] = t('Needs @pos Quality Review', array('@pos' => $positionals[$feedback->qc_num_started]));
+      if ($user_reviewed) {
+        // The viewer has already reviewed it.
+        $url = url('node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+        $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'))));
+      } else {
+        // The viewer is allowed to review this resource.
+        $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title']);
+        $variables['links'][] = _sbac_resource_start_review_link($nid, 'qc', $fields['title'], 'link');
+      }
+    } elseif ($feedback->qc_count == $feedback->qc_num_started && $feedback->qc_count > $feedback->qc_num_finished) {
+      // If there aren't any open slots, but the reviewing isn't finished.
+      $url = url('node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
+      $variables['buttons'][] = l('View', $url, array('attributes' => array('class' => array('medium', 'button'))));
+      $variables['links'][] = l('View Details', $url);
+      $variables['text'] = t('@pos Quality Review In Process', array('@pos' => $positionals[$feedback->qc_count - 1]));
     }
   }
   if ($feedback->qc_count == $feedback->qc_num_finished) {
     // All the QC reviews are done, so on to Post review.
     if (!$feedback->post_started) {
+      // If the post review hasn't been started.
       $variables['buttons'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title']);
       $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
       $variables['links'][] = _sbac_resource_start_review_link($nid, 'post', $fields['title'], 'link');
-      $variables['text'] = t('Needs Arbitration');
+      // If this was a resubmitted resource, change the wording.
+      if ($feedback->post_resubmission) {
+        $variables['text'] = t('Resubmitted Arbitration');
+      } else {
+        $variables['text'] = t('Needs Arbitration');
+      }
     } elseif ($feedback->post_started && !$feedback->post_finished) {
-      $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
-      $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      // If the post review is in process.
       $variables['links'][] = l('View Details', 'node/' . $nid, array('absolute' => TRUE, 'query' => array('destination' => arg(0))));
-      $variables['links'][] = l('Continue Review', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
+      if ($feedback->post_uid == $user->uid) {
+        $url = url('node/' . $nid, array('absolute' => TRUE, 'fragment' => 'review-post', 'query' => array('destination' => arg(0))));
+        $variables['links'][] = l('Continue Review', $url, array('attributes' => array('query' => array('destination' => arg(0)))));
+        $variables['buttons'][] = l('Continue', $url, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      } else {
+        $variables['buttons'][] = l('View', 'node/' . $nid, array('attributes' => array('class' => array('medium', 'button'), 'query' => array('destination' => arg(0)))));
+      }
       $variables['text'] = t('Arbitration In Process');
     }
   }

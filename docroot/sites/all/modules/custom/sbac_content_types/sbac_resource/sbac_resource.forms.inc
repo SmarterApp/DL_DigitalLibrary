@@ -1354,7 +1354,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
             $recipients = array();
             $query = new EntityFieldQuery();
             $submitted = (bool) $query->entityCondition('entity_type', 'feedback')
-              ->entityCondition('type', 'gate_keeper')
+              ->entityCondition('bundle', 'gate_keeper')
               ->propertyCondition('completed', 1)
               ->propertyCondition('node_id', $node->nid)
               ->count()
