@@ -1738,20 +1738,22 @@ function sbac_user_get_user_forums($uid, $state_tid) {
   }
 
   // Query for the forums to which the memberships refer.
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'taxonomy_term')
-    ->propertyCondition('vid', $forum_vocab->vid, '=')
-    ->fieldCondition('field_fc_forum_members', 'value', $memberships, 'IN');
-  $result = $query->execute();
-  if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) > 0) {
-    $entity_ids = array_keys($result['taxonomy_term']);
-    $entities = entity_load('taxonomy_term', $entity_ids);
-    foreach ($entities as $entity) {
-      $membership_forums[] = $entity->tid;
-      $user_forums['my_forums'][] = array(
-        'title' => $entity->name,
-        'tid' => $entity->tid,
-      );
+  if (0 < count($memberships)) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term')
+      ->propertyCondition('vid', $forum_vocab->vid, '=')
+      ->fieldCondition('field_fc_forum_members', 'value', $memberships, 'IN');
+    $result = $query->execute();
+    if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) > 0) {
+      $entity_ids = array_keys($result['taxonomy_term']);
+      $entities = entity_load('taxonomy_term', $entity_ids);
+      foreach ($entities as $entity) {
+        $membership_forums[] = $entity->tid;
+        $user_forums['my_forums'][] = array(
+          'title' => $entity->name,
+          'tid' => $entity->tid,
+        );
+      }
     }
   }
 
@@ -1759,8 +1761,11 @@ function sbac_user_get_user_forums($uid, $state_tid) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'taxonomy_term')
     ->propertyCondition('vid', $forum_vocab->vid, '=')
-    ->propertyCondition('tid', $membership_forums, 'NOT IN')
-    ->fieldCondition('field_state', 'tid', $state_tid, '=');
+  ;
+  if (0 < count($membership_forums)) {
+    $query->propertyCondition('tid', $membership_forums, 'NOT IN');
+  }
+  $query->fieldCondition('field_state', 'tid', $state_tid, '=');
   $result = $query->execute();
   if (isset($result['taxonomy_term']) && count($result['taxonomy_term']) > 0) {
     $entity_ids = array_keys($result['taxonomy_term']);
