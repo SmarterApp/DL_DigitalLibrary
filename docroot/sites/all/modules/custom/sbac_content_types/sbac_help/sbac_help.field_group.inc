@@ -26,9 +26,11 @@ function sbac_help_field_group_info() {
       0 => 'field_help_icon',
       1 => 'field_summary',
       2 => 'body',
-      3 => 'title',
-      4 => 'path',
-      5 => 'group_help_container',
+      3 => 'field_pdf_or_word_doc',
+      4 => 'field_help_topic_category',
+      5 => 'title',
+      6 => 'path',
+      7 => 'group_help_container',
     ),
     'format_type' => 'tab',
     'format_settings' => array(
@@ -53,7 +55,7 @@ function sbac_help_field_group_info() {
   $field_group->parent_name = 'group_general';
   $field_group->data = array(
     'label' => 'Help Container',
-    'weight' => '7',
+    'weight' => '9',
     'children' => array(
       0 => 'group_help_left',
       1 => 'group_help_right',

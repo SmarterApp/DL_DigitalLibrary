@@ -72,14 +72,16 @@ function sbac_flag_start_moderation($js = FALSE) {
     ctools_add_js('ajax-responder');
     ctools_modal_add_js();
 
-    $title = 'You are about to start resource moderation';
-    if (isset($_GET['eck_review'])) {
-      $title = 'You are about to start resource review moderation';
-    }
-    elseif (isset($_GET['forum_type'])) {
+//    $title = 'You are about to start resource moderation';
+//    if (isset($_GET['eck_review'])) {
+//      $title = 'You are about to start resource review moderation';
+//    }
+    if (isset($_GET['forum'])) {
       $title = 'You are about to start forum moderation.';
     }
-
+    elseif (isset($_GET['eck_review'])) {
+      $title = 'You are about to start resource review moderation';
+    }
     $form_state = array(
       'title' => $title,
       'ajax' => TRUE,
@@ -578,16 +580,18 @@ function sbac_flag_start_moderation_form($form, &$form_state) {
     When you are ready to resolve all the flags, you can start moderation.</p>"
   );
 
-	$form['submit'] = array(
+  $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Start Moderation',
   );
 
-  $form['review_flags'] = array(
-    '#type' => 'submit',
-    '#value' => 'Review Flags',
-    '#attributes' => array('class' => array('button', 'blue'))
-  );
+  if (empty($form_state['forum_type'])) {
+      $form['review_flags'] = array(
+          '#type' => 'submit',
+          '#value' => 'Review Flags',
+          '#attributes' => array('class' => array('button', 'blue'))
+      );
+  }
 
   $form['cancel'] = array(
     '#type' => 'submit',
@@ -1190,77 +1194,70 @@ function sbac_flag_collaboration_form_validate(&$form, &$form_state) {
 
 /**
  * Submission handler for sbac_flag_collaboration_form.
- * @param  [type] $form       [description]
- * @param  [type] $form_state [description]
- * @return [type]             [description]
+ * @param  array $form       [description]
+ * @param  array $form_state [description]
+ * @return array             [description]
  */
 function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
-  if ($form_state['triggering_element']['#value'] == 'Flag') {
+  if ($form_state['triggering_element']['#value'] === 'Flag') {
     $flag_tid = $form_state['input']['flag_options'];
     $flag_txt = $form_state['input']['comment'];
     $flag_nid = $form_state['info']['nid'];
     $flag_cid = $form_state['info']['cid'];
-    $node = node_load($flag_nid);
 
+    sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
+
+    $node = node_load($flag_nid);
     $forum = taxonomy_term_load($node->field_topic_forum_parent['und'][0]['tid']);
     $forum_author = $forum->field_forum_facilitators['und'][0]['target_id'];
-    $user_profile = user_load($node->uid);
 
-    // Notify topic creator
+    $notifyUserList = array($forum_author);
+    $moderators = sbac_flag_get_forum_moderators();
+    foreach ($moderators as $moderator) {
+      $notifyUserList[] = $moderator->uid;
+    }
+    $notifyUserList = array_unique($notifyUserList);
+
+    // Notify the forum moderators
+    global $user;
+    // Add notification
     if ($task = taskit_get_object('forum_flagged')) {
-      $task->addVisibility($task::VISIBILITY_USER);
+      $task->addVisibility(1 /* \taskit\Task::VISIBILITY_USER */);
       $task->addEntity('node', $node->nid);
-      $task->addOwningUser($user_profile->uid);
-      $task->addTriggeringUser($user_profile->uid);
+      if ($flag_cid) {
+        $task->addEntity('comment', $flag_cid);
+      }
+      $task->addTriggeringUser($user->uid);
+    }
+
+    foreach ($notifyUserList as $moderatorUid) {
+      if ($task) {
+        $task->addOwningUser($moderatorUid);
+      }
+    }
+
+    if ($task) {
       $task->save();
     }
-    // Notify forum creator if different user
-    if ($node->uid !== $forum_author) {
-      if ($task = taskit_get_object('forum_flagged')) {
-        $task->addVisibility($task::VISIBILITY_USER);
-        $task->addEntity('node', $node->nid);
-        $task->addOwningUser($forum_author);
-        $task->addTriggeringUser($forum_author);
-        $task->save();
-      }
-    }
-    // Send email to topic creator
-    global $base_url;
-    $username = sbac_email_user_link($user_profile);
-    $values = array(
-      'arguments' => array(
-        '!forum-link' => $base_url . '/node/' . $node->nid,
-        '!user-link' => $username,
-      ),
-      'uid' => $node->uid,
-    );
-    if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
-      // Create message
-      $message = message_create('forum_flagged', $values);
-      $wrapper = entity_metadata_wrapper('message', $message);
-      $wrapper->save();
-      if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
-        // send email
-        message_notify_send_message($message);
-        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-        message_delete_multiple(array($message->mid));
-      }
-    }
-    // Send email to forum creator if different user
-    if ($node->uid !== $forum_author) {
-      $user_profile = user_load($forum_author);
-      $values = array(
-        'arguments' => array(
-          '!forum-link' => $base_url . '/content/' . $node->nid,
-        ),
-        'uid' => $user_profile->uid,
-      );
-      if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
-        // Create message
+
+    // Send emails if desired
+    $url = url('node/' . $node->nid, array('absolute' => true));
+    foreach ($notifyUserList as $moderatorUid) {
+      $user_profile = user_load($moderatorUid);
+      if ($user_profile->field_email_preference['und'][0]['value'] !== 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
+        $username = sbac_email_user_link($user_profile);
+        $values = array(
+          'arguments' => array(
+            '!forum-link' => $url,
+            '!user-link' => $username,
+          ),
+          'uid' => $node->uid,
+        );
+
         $message = message_create('forum_flagged', $values);
         $wrapper = entity_metadata_wrapper('message', $message);
         $wrapper->save();
-        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
+        if ($user_profile->field_email_preference['und'][0]['value'] === 'immediately') {
           // send email
           message_notify_send_message($message);
           // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
@@ -1268,14 +1265,17 @@ function sbac_flag_collaboration_form_submit(&$form, &$form_state) {
         }
       }
     }
-    sbac_flag_save_flag($flag_tid, $flag_txt, $flag_nid, $flag_cid);
-    
   }
 }
 
 function sbac_flag_collaboration_resolve_callback($js = FALSE, $type, $nid, $cid) {
   if (!$js) {
     return;
+  }
+
+  if (!sbac_flag_forum_moderation_access($nid)) {
+      drupal_access_denied();
+      return;
   }
 
   ctools_add_css('sbac_flag.css', 'sbac_flag');
@@ -1298,9 +1298,41 @@ function sbac_flag_collaboration_resolve_callback($js = FALSE, $type, $nid, $cid
 
   if (!empty($form_state['executed'])) {
 
-    if ($form_state['triggering_element']['#value'] == 'Resolve Flags') {
-//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+    if ($form_state['triggering_element']['#value'] === 'Resolve Flags') {
       sbac_flag_collaboration_resolve_forum($nid, $cid);
+
+      if (!empty($cid)) {
+        $entity_type = 'comment';
+        $entity_id = $cid;
+      } else {
+        $entity_type = 'node';
+        $entity_id = $nid;
+      }
+
+      // Mark taskit entries as completed
+      $query = <<<xENDx
+SELECT DISTINCT t.task_id
+  FROM {taskit} t
+ INNER JOIN {taskit_entity} te ON te.task_id = t.task_id
+ WHERE te.entity_type = :type
+   AND te.entity_id = :id
+   AND t.type = 'forum_flagged'
+xENDx;
+      $results = db_query($query, array(':id' => $entity_id, ':type' => $entity_type));
+      $taskitIds = array();
+      foreach ($results as $result) {
+        $taskitIds[] = $result->task_id;
+      }
+
+      db_update('taskit')
+        ->fields(array(
+          'state' => 1, // \taskit\Task::STATE_COMPLETED
+        ))
+        ->condition('type', 'forum_flagged', '=')
+        ->condition('task_id', $taskitIds, 'IN')
+        ->execute()
+      ;
+
       $url = drupal_get_path_alias('node/' . $nid);
       $output[] = ctools_ajax_command_redirect($url);
     }
@@ -1395,6 +1427,11 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
     return;
   }
 
+  if (!sbac_flag_forum_moderation_access($nid)) {
+      drupal_access_denied();
+      return;
+  }
+
   global $user;
 
   ctools_add_css('sbac_flag.css', 'sbac_flag');
@@ -1403,7 +1440,7 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
   ctools_add_js('ajax-responder');
   ctools_modal_add_js();
 
-  $title = 'You are about to remove this ' . ($type == 'topic' ? 'topic' : 'post');
+  $title = 'You are about to remove this ' . ($type === 'topic' ? 'topic' : 'post');
 
   $form_state = array(
     'title' => $title,
@@ -1418,25 +1455,19 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
   $output = ctools_modal_form_wrapper('sbac_flag_collaboration_remove_form', $form_state);
 
   if (!empty($form_state['executed'])) {
-    if ($form_state['triggering_element']['#value'] == 'Remove Topic') {
-//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+    if ($form_state['triggering_element']['#value'] === 'Remove Topic') {
       sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
 
-      // Notify poster
       $node = entity_metadata_wrapper('node', $nid);
-      $forum_poster = $node->author->uid->value();
 
-
-      if ($task = taskit_get_object('topic_removed_creator')) {
-        $task->addVisibility($task::VISIBILITY_USER);
-        $task->addEntity('node', $nid);
-        $task->addOwningUser($forum_poster);
-        $task->addTriggeringUser($user->uid);
-        $task->save();
-      }
+      //  Unpublish Topic
+      $topicNode = node_load($nid);
+      $topicNode->status = NODE_NOT_PUBLISHED;
+      node_save($topicNode);
 
       //  Notify participants
-      $recipients = array();
+      $forum_poster = $node->author->uid->value();
+      $recipients = array($forum_poster);
 
       $query = db_select('comment', 'c');
       $query->fields('c', array('uid'));
@@ -1445,30 +1476,57 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
       $result = $query->execute();
 
       while ($poster = $result->fetchAssoc()) {
-        $recipients[] = $poster;
+        $recipients[] = $poster['uid'];
       }
+      $recipients = array_unique($recipients);
 
       foreach ($recipients as $recipient) {
-        if ($recipient['uid'] != $forum_poster && $task = taskit_get_object('topic_removed')) {
+        if ($task = taskit_get_object('topic_removed' . ($recipient === $forum_poster ? '_creator' : ''))) {
           $task->addVisibility($task::VISIBILITY_USER);
           $task->addEntity('node', $nid);
-          $task->addOwningUser($recipient['uid']);
+          $task->addOwningUser($recipient);
           $task->addTriggeringUser($user->uid);
           $task->save();
         }
       }
 
-      //  Delete Topic
-      node_delete($nid);
+      // Mark taskit entries as completed
+      $query = <<<xENDx
+SELECT DISTINCT t.task_id
+  FROM {taskit} t
+ INNER JOIN {taskit_entity} te ON te.task_id = t.task_id
+ WHERE te.entity_type = 'node'
+   AND te.entity_id = :nid
+   AND t.type = 'forum_flagged'
+xENDx;
+      $results = db_query($query, array(':nid' => $nid));
+      $taskitIds = array();
+      foreach ($results as $result) {
+        $taskitIds[] = $result->task_id;
+      }
+      
+      db_update('taskit')
+        ->fields(array(
+          'state' => 1, // \taskit\Task::STATE_COMPLETED
+        ))
+        ->condition('type', 'forum_flagged', '=')
+        ->condition('task_id', $taskitIds, 'IN')
+        ->execute()
+      ;
 
-      //  Redirect
-      $output[] = ctools_ajax_command_redirect('moderation');
-    }
-    elseif ($form_state['triggering_element']['#value'] == 'Remove Post') {
-//      sbac_flag_collaboration_unset_being_moderated($nid, $cid);
+      // Redirect
+      $forum_wrapper = $node->field_topic_forum_parent;
+      $url = drupal_get_path_alias('forums/term/' . $forum_wrapper->tid->value());
+      $output[] = ctools_ajax_command_redirect($url);
+    } elseif ($form_state['triggering_element']['#value'] === 'Remove Post') {
       sbac_flag_collaboration_remove_forum($nid, $cid, $form_state['values']['message']);
       $comment = entity_metadata_wrapper('comment', $cid);
       $forum_poster = $comment->author->uid->value();
+
+      // Unpublish the comment
+      $commentNode = comment_load($cid);
+      $commentNode->status = COMMENT_NOT_PUBLISHED;
+      comment_save($commentNode);
 
       if ($task = taskit_get_object('post_removed_creator')) {
         $task->addVisibility($task::VISIBILITY_USER);
@@ -1479,16 +1537,33 @@ function sbac_flag_collaboration_remove_callback($js = FALSE, $type, $nid, $cid)
         $task->save();
       }
 
-      // Check to see if it has children
-      $comment_query = db_select('comment', 'c');
-      $comment_query->fields('c');
-      $comment_query->condition('pid', $cid, '=');
-      $comment_results = $comment_query->execute();
-      if (!($result = $comment_results->fetchAssoc())) {
-        comment_delete($cid);
+      // Mark taskit entries as completed
+      $query = <<<xENDx
+SELECT DISTINCT t.task_id
+  FROM {taskit} t
+ INNER JOIN {taskit_entity} te ON te.task_id = t.task_id
+ WHERE te.entity_type = 'comment'
+   AND te.entity_id = :cid
+   AND t.type = 'forum_flagged'
+xENDx;
+      $results = db_query($query, array(':cid' => $cid));
+      $taskitIds = array();
+      foreach ($results as $result) {
+        $taskitIds[] = $result->task_id;
       }
 
-      $output[] = ctools_ajax_command_redirect('moderation');
+      db_update('taskit')
+        ->fields(array(
+          'state' => 1, // \taskit\Task::STATE_COMPLETED
+        ))
+        ->condition('type', 'forum_flagged', '=')
+        ->condition('task_id', $taskitIds, 'IN')
+        ->execute()
+      ;
+
+      // Redirect
+      $url = drupal_get_path_alias('node/' . $nid);
+      $output[] = ctools_ajax_command_redirect($url);
     }
     $output[] = ctools_modal_command_dismiss();
   }

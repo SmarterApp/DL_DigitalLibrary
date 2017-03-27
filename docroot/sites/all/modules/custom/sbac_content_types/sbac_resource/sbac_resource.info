@@ -199,6 +199,7 @@ features[variable][] = save_continue_resource
 features[views_view][] = my_resources
 features[views_view][] = resource_review
 features[views_view][] = resources
+features[views_view][] = taxonomy_term_override
 features_exclude[dependencies][sbac_help] = sbac_help
 features_exclude[field][node-resource-field_document_id] = node-resource-field_document_id
 features_exclude[field][node-resource-field_file] = node-resource-field_file

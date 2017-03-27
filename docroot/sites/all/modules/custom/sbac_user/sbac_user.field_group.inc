@@ -21,7 +21,7 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Email Settings',
-    'weight' => '4',
+    'weight' => '5',
     'children' => array(
       0 => 'message_subscribe_email',
       1 => 'field_email_preference',
@@ -71,6 +71,35 @@ function sbac_user_field_group_info() {
   $field_group = new stdClass();
   $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
   $field_group->api_version = 1;
+  $field_group->identifier = 'group_manage_subscriptions|user|user|form';
+  $field_group->group_name = 'group_manage_subscriptions';
+  $field_group->entity_type = 'user';
+  $field_group->bundle = 'user';
+  $field_group->mode = 'form';
+  $field_group->parent_name = '';
+  $field_group->data = array(
+    'label' => 'Manage Subscriptions',
+    'weight' => '6',
+    'children' => array(
+      0 => 'field_my_forums',
+      1 => 'field_suggested_forums',
+    ),
+    'format_type' => 'tab',
+    'format_settings' => array(
+      'label' => 'Manage Subscriptions',
+      'instance_settings' => array(
+        'required_fields' => 1,
+        'classes' => '',
+        'description' => '',
+      ),
+      'formatter' => 'closed',
+    ),
+  );
+  $field_groups['group_manage_subscriptions|user|user|form'] = $field_group;
+
+  $field_group = new stdClass();
+  $field_group->disabled = FALSE; /* Edit this to true to make a default field_group disabled initially */
+  $field_group->api_version = 1;
   $field_group->identifier = 'group_personal_information|user|user|form';
   $field_group->group_name = 'group_personal_information';
   $field_group->entity_type = 'user';
@@ -79,7 +108,7 @@ function sbac_user_field_group_info() {
   $field_group->parent_name = '';
   $field_group->data = array(
     'label' => 'Personal Information',
-    'weight' => '0',
+    'weight' => '1',
     'children' => array(
       0 => 'field_alternate_email_address',
       1 => 'field_first_name',
@@ -132,6 +161,7 @@ function sbac_user_field_group_info() {
   // Included for use with string extractors like potx.
   t('Email Settings');
   t('Expertise');
+  t('Manage Subscriptions');
   t('Personal Information');
   t('Privacy');
 

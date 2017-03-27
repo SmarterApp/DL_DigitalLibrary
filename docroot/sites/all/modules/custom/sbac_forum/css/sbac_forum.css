@@ -5163,3 +5163,6 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
 .forum-add-access-right {
   display: none;
 }
+.modal-forum .modal-content {
+  margin: 20px;
+}

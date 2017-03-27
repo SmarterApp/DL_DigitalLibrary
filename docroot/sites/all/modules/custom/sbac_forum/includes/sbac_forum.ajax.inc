@@ -181,7 +181,7 @@ function sbac_forum__ajax__delete_forum_modal_callback($js = FALSE, $term) {
 }
 
 
-function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
+function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term, $uid = FALSE) {
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
   if ($js) {
     ctools_include('ajax');
@@ -211,7 +211,11 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term) {
       $output[] = ctools_modal_command_dismiss();
       if ($form_state['triggering_element']['#value'] != 'Cancel') {
         sbac_forum__api__leave_forum($term);
-        $url = 'forums';
+        if ($uid) {
+          $url = url('user/' . $uid);
+        } else {
+          $url = 'forums';
+        }
         $output[] = ctools_ajax_command_redirect($url);
       }
     }

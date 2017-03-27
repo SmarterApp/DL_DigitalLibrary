@@ -29,7 +29,11 @@
       <h1>MOST ACTIVE MEMBERS</h1>    
     </div>
     <div id="leaderboards">
-      <?php print $leaderboards; ?>    
+      <?php print $leaderboards; ?>
+      <?php if (!in_array('resource reviewer', $user->roles) && !in_array('resource contributor', $user->roles) && !in_array('resource publisher', $user->roles)): ?>
+        <div id="sne-signup-spacer"></div>
+        <div id="sne-signup">I am interested in contributing resources to the Digital Library <?php print l('Submit', '/sne-signup', array('attributes' => array('class' => array('button', 'sne-link')))); ?></div>
+      <?php endif; ?>
     </div>
   </div>
 <?php endif; ?>

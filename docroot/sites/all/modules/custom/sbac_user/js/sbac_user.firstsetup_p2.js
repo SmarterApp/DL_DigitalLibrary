@@ -8,7 +8,7 @@
        * SBAC User Setup - Page 2
        */
       function sbac_user_check_fields() {
-        if ($('#edit_subject_options_chzn .search-choice').length == 0 || $('#edit_grade_options_chzn .search-choice').length == 0 || $('#edit_student_population_options_chzn .search-choice').length == 0) {
+        if ($('#edit_subject_options_chzn .search-choice').length == 0 || $('#edit_grade_options_chzn .search-choice').length == 0) {
           $('#edit-next').prop('disabled', true);
           $('#sbac-setup-hover-expertise').css('z-index', 9999);
         } else {

@@ -147,76 +147,83 @@ Feedback.utilities = {
 Drupal.behaviors.feedback = {
   attach: function (context, settings) {
     // catch the submit button's submit behaviour and assign form error-watching functionality
-      $(Feedback.wrapper + ' ' + Feedback.submit_button).once('mousedown-trigger').mousedown(function(e, modal_anchor) {
-        // this is the default flag value, prior to form submission
-        var default_value = -1;
-        
-        // this will get called (recursively) to check the current value of the flag, as
-        // well as re-set it to the default value after the change_callback has been called
-        var value_callback = function (value) {
-          if (typeof value !== 'undefined') {
-            Drupal.settings.feedback.form_error = value;
+    $(Feedback.wrapper + ' ' + Feedback.submit_button).once('mousedown-trigger').mousedown(function(e, modal_anchor) {
+      // this is the default flag value, prior to form submission
+      var default_value = -1;
+
+      // this will get called (recursively) to check the current value of the flag, as
+      // well as re-set it to the default value after the change_callback has been called
+      var value_callback = function (value) {
+        if (typeof value !== 'undefined') {
+          Drupal.settings.feedback.form_error = value;
+        }
+
+        return Drupal.settings.feedback.form_error;
+      };
+
+      // this will get called when the value has changed (ie. been updated by the form),
+      // and error_status will contain the new flag value
+      var change_callback = function (error_status) {
+        Feedback.utilities.move_messages();
+
+        // now that the form submission is complete, we set the action back to default
+        // state; this must happen in the change callback!!
+        Feedback.utilities.set_action('save_close');
+
+        // proceed only if there are no form errors
+        if (!error_status) {
+          // if we got here via a modal button, we should now open the modal
+          if (modal_anchor) {
+            $(modal_anchor).trigger('click');
           }
+          // otherwise we got here via the Save & Close button, so let's "close" this tab
+          // by switching to the About tab
+          else {
+            // switch to the new tab
+            Drupal.behaviors.sections.switch_tab('#review-about');
 
-          return Drupal.settings.feedback.form_error;
-        };
+            // we might as well scroll the user to the top of the page to show any
+            // confirmation/status messages
+            Feedback.utilities.scroll_to_top();
 
-        // this will get called when the value has changed (ie. been updated by the form), 
-        // and error_status will contain the new flag value
-        var change_callback = function (error_status) {
-          Feedback.utilities.move_messages();
-
-          // now that the form submission is complete, we set the action back to default
-          // state; this must happen in the change callback!!
-          Feedback.utilities.set_action('save_close');
-
-          // proceed only if there are no form errors
-          if (!error_status) {
-            // if we got here via a modal button, we should now open the modal
-            if (modal_anchor) {
-              $(modal_anchor).trigger('click');
-            }
-            // othewise we got here via the Save & Close button, so let's "close" this tab
-            // by switching to the About tab
-            else {
-              // switch to the new tab
-              Drupal.behaviors.sections.switch_tab('#review-about');
-
-              // we might as well scroll the user to the top of the page to show any
-              // confirmation/status messages
-              Feedback.utilities.scroll_to_top();
-
-              Feedback.about.init_flexslider();
-            }
+            Feedback.about.init_flexslider();
           }
-        };
+        }
+      };
 
-        // The form itself will return JS which will set a flag to either 1 or 0, and
-        // this function will recursively check for that flag value every 200ms.
-        Drupal.behaviors.js_watch_value.watch_value(default_value, value_callback, change_callback);
-      });
+      // The form itself will return JS which will set a flag to either 1 or 0, and
+      // this function will recursively check for that flag value every 200ms.
+      Drupal.behaviors.js_watch_value.watch_value(default_value, value_callback, change_callback);
+    });
 
     // propagate click events on our form buttons to the anchors which will trigger the
     // appropriate modals
-      $.each(['gk', 'qc', 'post'], function (key, name) {
-        if (Feedback[name] && Feedback[name].buttons) {
-          $.each(Feedback[name].buttons, function(button_key, data) {
-            $(Feedback[name].form + ' ' + data.button).once('mousedown-event').click(function(e) {
-              e.preventDefault();
-              
-              // update action
-              Feedback.utilities.set_action('validate', name);
-              
-              // a modal-triggering button has been clicked, so the first thing we need to do
-              // is ajax-submit the form to validate it, and we do this by clicking the Save &
-              // Close button
-              $(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button).trigger('mousedown', data.anchor);
-              
-              return false;
-            });
+    $.each(['gk', 'qc', 'post'], function (key, name) {
+      if (Feedback[name] && Feedback[name].buttons) {
+        $.each(Feedback[name].buttons, function(button_key, data) {
+          $(Feedback[name].form + ' ' + data.button).once('mousedown-event').click(function(e) {
+            e.preventDefault();
+
+            // update action
+            Feedback.utilities.set_action('validate', name);
+
+            // a modal-triggering button has been clicked, so the first thing we need to do
+            // is ajax-submit the form to validate it, and we do this by clicking the Save &
+            // Close button
+            $(Feedback.wrapper + ' ' + Feedback[name].form + ' ' + Feedback.submit_button).trigger('mousedown', data.anchor);
+
+            return false;
           });
-        }
-      });
+        });
+      }
+    });
+
+    $('.feedback-section-title').click(function (e) {
+      e.preventDefault();
+      $(this).toggleClass('more');
+      $(this).toggleClass('less');
+      $(this).parent().siblings('.feedback-section-drop').slideToggle();
+    });
   },
 
   /**

@@ -24,6 +24,16 @@
     }
   };
 
+  Drupal.behaviors.rolesAdmin = {
+    attach: function(context, settings) {
+      $(function() {
+      // Rename user role selections
+      $(".form-item-roles-7 label").text("lead SLT");
+      $(".form-item-roles-13 label").text("resource moderator");
+      });
+    }
+  };
+
   Drupal.behaviors.helpTextify = {
     attach: function(context, settings) {
       $(function() {
@@ -159,7 +169,7 @@
           if (event.target === this) {
             $('*').removeClass('activated');
 
-            $('.item-list').css({
+            $('.facet-block .item-list').css({
               'height': '0',
             });
           }

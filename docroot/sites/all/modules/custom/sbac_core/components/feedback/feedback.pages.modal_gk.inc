@@ -34,6 +34,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_start']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Start Review (!hours hrs)', array('!hours' => FEEDBACK_REVIEW_TIMEOUT)),
     );
 
@@ -48,6 +49,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_cancel']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Cancel Review (!hours hrs)', array('!hours' => $hours_left)),
     );
 
@@ -62,6 +64,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_not_meet']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Does Not Meet All Criteria'),
     );
 
@@ -76,6 +79,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
 
     $form['state_meet']['submit'] = array(
       '#type' => 'submit',
+      '#attributes' => array('class' => array('disabler')),
       '#value' => t('Meets all Criteria'),
     );
 
@@ -93,10 +97,10 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
         'button',
         'radius',
       ),
+      'submit_autoclose' => TRUE,
     );
 
     $state_redirect_options = array(
-      'submit_autoclose' => TRUE,
       'submit_redirect' => url('node/' . $node->nid, array('absolute' => TRUE)),
     );
 
@@ -148,6 +152,7 @@ function feedback_gate_keeper_form($form, &$form_state, $node, $state, $trigger_
  */
 function feedback_gate_keeper_form_submit($form, &$form_state) {
   $node = $form_state['build_info']['args'][0];
+  $feedback = new feedbackStatus($node);
 
   $state = $form_state['dialog_settings']['current_state'];
 
@@ -155,26 +160,31 @@ function feedback_gate_keeper_form_submit($form, &$form_state) {
     // the initial "start" state; upon submission the modal reloads the page, so the new
     // gate keeper entity is displayed in its form
     case 'start':
-      global $user;
+      // We only want to start a new gatekeeping review if there isn't one in progress already.
+      if ($feedback->gatekeeper_started) {
+        drupal_set_message(t('This resource is already in Gatekeeping review.'), 'error');
+      } else {
+        global $user;
 
-      $entity = new stdClass;
-      $entity->title = $node->title .' - Gate Keeper - ' . $user->uid;
-      $entity->type = 'gate_keeper';
-      $entity->uid = $user->uid;
-      $entity->created = REQUEST_TIME;
-      $entity->changed = REQUEST_TIME;
-      $entity->language = LANGUAGE_NONE;
-      $entity->status = 1;
-      $entity->completed = 0;
-      $entity->current = 1;
-      $entity->node_id = $node->nid;
+        $entity = new stdClass;
+        $entity->title = $node->title . ' - Gate Keeper - ' . $user->uid;
+        $entity->type = 'gate_keeper';
+        $entity->uid = $user->uid;
+        $entity->created = REQUEST_TIME;
+        $entity->changed = REQUEST_TIME;
+        $entity->language = LANGUAGE_NONE;
+        $entity->status = 1;
+        $entity->completed = 0;
+        $entity->current = 1;
+        $entity->node_id = $node->nid;
 
-      drupal_set_message(t('Gate Keeping review process started.'));
+        drupal_set_message(t('Gatekeeping review process started.'));
 
-      entity_save('feedback', $entity);
+        entity_save('feedback', $entity);
 
-      if ($node->workbench_moderation['current']->state == 'being_reviewed') {
-        sbac_resource_save_current_state($node);
+        if ($node->workbench_moderation['current']->state == 'being_reviewed') {
+          sbac_resource_save_current_state($node);
+        }
       }
 
       break;

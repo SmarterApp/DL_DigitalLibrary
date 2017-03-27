@@ -189,13 +189,37 @@ class Base {
    * Attaches helpful info.
    * @return [type] [description]
    */
-  public function attachHelpfulInfo() {
+  public function attachHelpfulInfo($bundle) {
+    global $user;
+    // determine which review this attachment is for
+    switch ($bundle) {
+      case 'gate_keeper':
+        $edit_link = '/admin/sbac/feedback/gate_keeper';
+        break;
+
+      case 'qc':
+        $edit_link = '/admin/sbac/feedback/quality_review';
+        break;
+
+      case 'post':
+        $edit_link = '/admin/sbac/feedback/post';
+        break;
+    }
     // attach helpful info
     if ($helpful_info = $this->getVar('help')) {
-      $output = theme('feedback_helpful_info', array(
-        'helpful_info' => more_less_text($helpful_info),
-      ));
-
+      // add edit link for appropriate roles
+      if (in_array('administrator', $user->roles) || in_array('moderator', $user->roles) || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+        $output = theme('feedback_helpful_info', array(
+          'helpful_info' => more_less_text($helpful_info),
+          'edit_link' => '<a href="' . $edit_link . '" class="help-topic-link">Edit Help Text</a>',
+        ));
+      }
+      else {
+        $output = theme('feedback_helpful_info', array(
+          'helpful_info' => more_less_text($helpful_info),
+          'edit_link' => '',
+        ));
+      }
       $this->_form['helpful_info'] = array(
         '#markup' => $output,
       );
@@ -301,7 +325,7 @@ class Base {
    * @param  [type] $set_count [description]
    * @return [type]            [description]
    */
-  public function getSetDescription($set_count) {
+  public function getSetDescription($set_count, $length = 300, $expand_override = FALSE) {
     $form = array();
 
     if ($desc = $this->getVar('criteria_' . $set_count . '_description', '')) {
@@ -310,11 +334,14 @@ class Base {
       if ($this->getVar('criteria_' . $set_count . '_desc_state', 'collapsed', FALSE) == 'expanded') {
         $desc_state_expanded = TRUE;
       }
+      if ($expand_override) {
+        $desc_state_expanded = $desc_state_expanded ? FALSE : TRUE;
+      }
 
       $form['set_desc'] = array(
         '#prefix' => '<div class="criteria-set-comments-text">',
         '#suffix' => '</div>',
-        '#markup' => more_less_text($desc, 300, $desc_state_expanded),
+        '#markup' => more_less_text($desc, $length, $desc_state_expanded),
       );
     }
 

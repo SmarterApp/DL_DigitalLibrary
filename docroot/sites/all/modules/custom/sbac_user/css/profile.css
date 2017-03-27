@@ -1255,3 +1255,42 @@ div[id*="edit-tab-container-forum-tab-buttons"] #sbac-favorites-resource-cancel:
 .page-sbac-user-setup .sbac-user-setup-preview .profile-details {
   clear: both;
 }
+
+#edit-group_manage_subscriptions #join-forum-button-wrapper #edit-join-forum {
+  margin: 0;
+}
+#edit-group_manage_subscriptions button {
+  margin: 0;
+}
+#edit-group_manage_subscriptions form {
+  margin: 0;
+}
+#sbac-forum-leave-forum-confirm #edit-cancel {
+  background-color: #6E7379;
+  border: 1px solid #4D5457;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+  padding-left: 40px;
+}
+#sbac-forum-leave-forum-confirm button {
+  float: right;
+  margin-left: 30px;
+}
+#sbac-forum-leave-forum-confirm button.gray.cancel:before {
+  content: url("../images/icon-buttonCancel.png");
+  left: 15px;
+  position: absolute;
+  top: 4px;
+}
+#sbac-forum-leave-forum-confirm #edit-submit--2 {
+  background-color: #2AA549;
+  border: 1px solid #268A16;
+}
+#sbac-forum-leave-forum-confirm h2 {
+  color: #000000;
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  padding: 12px 0;
+  text-transform: capitalize;
+}

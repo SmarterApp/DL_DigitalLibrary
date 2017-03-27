@@ -5,6 +5,61 @@
 	if ($user_profile['user_picture']['#markup']) {
 		$cols = 10;
 	}
+	// User badges
+	// SLT Badge
+	$slt_badge = FALSE;
+	$sne_badge = FALSE;
+	if (isset($user_profile['field_slt_member'])) {
+		if ($user_profile['field_slt_member']['#items'][0]['value'] == '1') {
+			$variables = array(
+				'path' => path_to_theme() . '/images/' . 'sltbadge.png', 
+				'alt' => 'SLT Badge',
+				'title' => 'SLT Badge',
+				'attributes' => array('class' => 'user-badge'),
+			);
+			$user_badge = theme('image', $variables);
+			$slt_badge = TRUE;
+		}
+	}
+	// Paid Contributor badge
+	if (isset($user_profile['field_paid_contributor'])) {
+		if (isset($user_profile['field_sne_member'])) {
+			// Paid SNE badge
+			if ($user_profile['field_paid_contributor']['#items'][0]['value'] == '1' && $user_profile['field_sne_member']['#items'][0]['value'] == '1') {
+				$variables = array(
+					'path' => path_to_theme() . '/images/' . 'snebadgepaid.png', 
+					'alt' => 'SNE Paid Badge',
+					'title' => 'SNE Paid Badge',
+					'attributes' => array('class' => 'user-badge'),
+				);
+				$user_badge = theme('image', $variables);
+				$sne_badge = TRUE;
+			}
+		}
+	}
+	// SNE Badge
+	if (isset($user_profile['field_sne_member'])) {
+		if ($user_profile['field_sne_member']['#items'][0]['value'] == '1' && $sne_badge == FALSE) {
+			$variables = array(
+				'path' => path_to_theme() . '/images/' . 'snebadge.png', 
+				'alt' => 'SNE Badge',
+				'title' => 'SNE Badge',
+				'attributes' => array('class' => 'user-badge'),
+			);
+			$user_badge =  theme('image', $variables);
+			$sne_badge = TRUE;
+		}
+	}
+	// Educator Badge
+	if (!$slt_badge && !$sne_badge) {
+		$variables = array(
+			'path' => path_to_theme() . '/images/' . 'educatorbadge.png', 
+			'alt' => 'Educator Badge',
+			'title' => 'Educator Badge',
+			'attributes' => array('class' => 'user-badge'),
+		);
+		$user_badge = theme('image', $variables);						
+	}
 ?>
 <div class="row first">
 	<?php if ($user_profile['user_picture']['#markup']): ?>
@@ -25,6 +80,11 @@
 	<?php endif; ?>
 
 	<div class="column large-9 user-profile">
+		<?php if ($user_profile['view_mode'] !== 'tooltip' && $user_badge): ?>
+			<div class="badge-container">
+				<?php	print $user_badge; ?>
+			</div>
+		<?php endif; ?>
 		<div class="name clearfix">
 			<?php echo drupal_render($user_profile['field_first_name']) . ' '; ?>
       <?php echo drupal_render($user_profile['field_last_name']); ?>
@@ -77,13 +137,13 @@
       <?php
         if (isset($user_profile['account_info'])) {
           if (sbac_user_privacy_check('mail', $user_profile['account_info'])) {
-            echo "<a href=\"mailto:" . $user_profile['account_info']->mail . "\">" . $user_profile['account_info']->mail . "</a>";
+            echo '<div><span class="title">Email: </span><a href="mailto:' . $user_profile['account_info']->mail .'">' . $user_profile['account_info']->mail . '</a></div>';
           }
         }
       ?>
     </div>
 
-  <?php if($user_profile['view_mode'] == 'tooltip'): ?>
+  <?php if ($user_profile['view_mode'] == 'tooltip'): ?>
 	</div> <!-- END column 9-->
   <div class="column hoverover-span2cols user-profile">
   <?php endif;?>
@@ -114,10 +174,18 @@
             }
             $sp = implode(', ', $sps);
           }
-
-          echo '<div><span class="title">Grades: </span>'. $grade .'</div>';
-          echo '<div><span class="title">Subjects: </span>'. $subject .'</div>';
-          echo '<div><span class="title">Student Populations: </span>'. $sp .'</div>';
+          if ($grade) {
+	          echo '<div><span class="title">Grades: </span>'. $grade .'</div>';
+					}
+					if ($subject) {
+						echo '<div><span class="title">Subjects: </span>'. $subject .'</div>';
+					}
+					if ($sp) {
+						echo '<div><span class="title">Student Populations: </span>'. $sp .'</div>';
+					}
+					if ($user_profile['view_mode'] == 'tooltip') {
+						print '<div class="badge-container">' . $user_badge . '</div>';
+					}
         ?>
       </div>
 

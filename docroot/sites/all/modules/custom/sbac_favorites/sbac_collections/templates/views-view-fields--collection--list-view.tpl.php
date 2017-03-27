@@ -26,7 +26,7 @@
           </ul>';
       }
       ?>
-      <h3 class='resource-name <?php print $class; ?>'>
+      <h3 class='resource-name column large-8 <?php print $class; ?>'>
         <?php
           print l(htmlspecialchars_decode($fields['title']->raw), $fields['path']->content);
         ?>

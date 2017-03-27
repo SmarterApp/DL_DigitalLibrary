@@ -851,7 +851,7 @@ function sbac_resource_field_default_field_bases() {
         'needs_qc_review' => 'Needs QC Review',
         'qc_being_reviewed' => 'QC Being Reviewed',
         'approved' => 'Approved',
-        'needs_post_review' => 'Needs Posting',
+        'needs_post_review' => 'Needs Arbitration',
         'post_being_reviewed' => 'Post Being Reviewed',
       ),
       'allowed_values_function' => '',

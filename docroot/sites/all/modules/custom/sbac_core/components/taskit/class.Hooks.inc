@@ -171,7 +171,13 @@ class Hooks extends \devtools\Hooks {
         'name' => 'new_forum',
         'description' => t('New Forum'),
         'class' => 'NewForum',
-      ), 
+      ),
+      // new Sne request form submission
+      array(
+        'name' => 'new_sne_request',
+        'description' => t('New SNE Request Submission'),
+        'class' => 'NewSneRequest',
+      ),
       // new state forum created
       array(
         'name' => 'new_state_forum',

@@ -124,7 +124,7 @@ class Hooks extends \devtools\Hooks {
     );
 
     $items['admin/sbac/feedback'] = array(
-      'title' => 'Feedback Flow', 
+      'title' => 'Workflow/Resource Help Text', 
       'page callback' => 'sbac_core_index_page',
       'access arguments' => array('configure sbac'), 
     ) + $base;
@@ -135,7 +135,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_gate_keeper_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 0,
+      'weight' => 1,
     ) + $base;
 
     $items['admin/sbac/feedback/quality_review'] = array(
@@ -144,7 +144,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_quality_review_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 1,
+      'weight' => 2,
     ) + $base;
 
     $items['admin/sbac/feedback/post'] = array(
@@ -153,7 +153,7 @@ class Hooks extends \devtools\Hooks {
       'page arguments' => array('feedback_post_admin_form'),
       'access arguments' => array('configure sbac'), 
       'file' => 'feedback.admin.inc',
-      'weight' => 2,
+      'weight' => 3,
     ) + $base;
 
     $items['node/%node/feedback'] = array(
@@ -167,34 +167,31 @@ class Hooks extends \devtools\Hooks {
       'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     ) + $base;
 
-    $items['node/%node/feedback/gate-keeper'] = array(
+    $items['node/%/feedback/gate-keeper'] = array(
       'title' => 'Gate Keeper',
       'page callback' => 'resource_feedback_ajax_page',
-      'page arguments' => array('gate_keeper', 1),
-      'access callback' => 'resource_access',
-      'access arguments' => array('edit gate keeper', 1),
+      'page arguments' => array('gate_keeper', 'edit gate keeper', 1),
+      'access callback' => TRUE,
       'weight' => 2,
       'type' => MENU_LOCAL_TASK,
       'context' => MENU_CALLBACK,
     ) + $base;
     
-    $items['node/%node/feedback/qc'] = array(
+    $items['node/%/feedback/qc'] = array(
       'title' => 'Quality Criteria Review',
       'page callback' => 'resource_feedback_ajax_page',
-      'page arguments' => array('qc', 1),
-      'access callback' => 'resource_access',
-      'access arguments' => array('edit quality criteria', 1),
+      'page arguments' => array('qc', 'edit quality criteria', 1),
+      'access callback' => TRUE,
       'weight' => 2,
       'type' => MENU_LOCAL_TASK,
       'context' => MENU_CALLBACK,
     ) + $base;
 
-    $items['node/%node/feedback/post'] = array(
+    $items['node/%/feedback/post'] = array(
       'title' => 'Post',
       'page callback' => 'resource_feedback_ajax_page',
-      'page arguments' => array('post', 1),
-      'access callback' => 'resource_access',
-      'access arguments' => array('edit post', 1),
+      'page arguments' => array('post', 'edit post', 1),
+      'access callback' => TRUE,
       'weight' => 3,
       'type' => MENU_LOCAL_TASK,
       'context' => MENU_CALLBACK,
@@ -291,7 +288,7 @@ class Hooks extends \devtools\Hooks {
           $full_class_name = 'sbac_core\\components\\feedback\\form_utility\\' . $class_name;
           $form_utility = new $full_class_name($form, $form_state, $this->_info[$bundle]);
 
-          $form_utility->attachHelpfulInfo();
+          $form_utility->attachHelpfulInfo($bundle);
           $form_utility->process();
           $form_utility->postProcess();
         }
