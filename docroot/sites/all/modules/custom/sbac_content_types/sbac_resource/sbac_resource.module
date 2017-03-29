@@ -284,6 +284,12 @@ function sbac_resource_profile_fields(&$node) {
     $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_alignment_term, TRUE);
   }
 
+  // Target Tags
+  if (isset($resource_node->field_target_term['und']['0'])) {
+    $resource_node->resource_profile_left['targets']['title'] = 'Assessment Targets';
+    $resource_node->resource_profile_left['targets']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_target_term);
+  }
+
   // Grades
   if (isset($resource_node->field_grades['und']['0'])) {
     $resource_node->resource_profile_left['grades']['title'] = 'Grades';

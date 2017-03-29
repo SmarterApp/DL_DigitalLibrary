@@ -221,8 +221,11 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
 
   $alignment_terms = explode(':', $form_state['values']['alignment_term_values']);
   $target_terms = explode(':', $form_state['values']['target_term_values']);
+  $alignment_terms = array_unique($alignment_terms);
+  $target_terms = array_unique($target_terms);
+
   $form_state['values']['field_alignment_term'][LANGUAGE_NONE] = array();
-  $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array();
+  $form_state['values']['field_target_term'][LANGUAGE_NONE] = array();
   foreach ($alignment_terms as $at) {
     $form_state['values']['field_alignment_term'][LANGUAGE_NONE][] = array('tid' => $at);
   }

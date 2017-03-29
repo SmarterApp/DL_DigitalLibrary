@@ -106,6 +106,14 @@
         $('#modalBackdrop').remove();
       }
 
+      function jsonChecker(data) {
+        if (typeof data === 'string') {
+          return jQuery.parseJSON(data);
+        } else {
+          return data;
+        }
+      }
+
       // Move and resize the modalBackdrop and modalContent on resize of the window
       // var modalContentResize = function(){
       //   // Get our heights
@@ -135,7 +143,7 @@
         // Function to add the terms at the selected level to the form
         var update_data = function (data) {
           // Parse the returned data
-          var obj = jQuery.parseJSON(data);
+          var obj = jsonChecker(data);
 
           // If this is the bottom level (i.e. - the selectable standards)
           if (obj.depth > 2) {
@@ -147,7 +155,7 @@
             // Function for creating the bottom level form
             var update_form = function (data) {
               // Pare the JSON representation of the standards
-              var obj = jQuery.parseJSON(data);
+              var obj = jsonChecker(data);
 
               // Add the HTML of the form to the page
               $('.alignment-form').html(obj.html);
@@ -258,7 +266,7 @@
 
         // Function for updating the breadcrumbs in the form
         var update_breadcrumb = function (data) {
-          var obj = jQuery.parseJSON(data);
+          var obj = jsonChecker(data);
           $('.alignment-breadcrumb').html(obj.html);
 
           Drupal.attachBehaviors('.sbac-custom-term-remove');
