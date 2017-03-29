@@ -136,9 +136,56 @@
         }
       }
     }
+
+  .taskit-interval-group {
+     border: 1px solid;
+     border-radius: 5px;
+     padding: 0;
+
+     h3 {
+       background-color: #e6f2f7;
+       border-radius: 5px 5px 0 0;
+       color: #006184;
+       margin: 0;
+       padding: 12px;
+       font-size: 1em;
+
+       .taskit-group-expander {
+         float: right;
+
+         i.material-icons::before {
+           content: 'remove_circle';
+         }
+       }
+     }
+
+     &.taskit-group-collapsed h3 {
+       border-radius: 5px;
+
+       .taskit-group-expander i.material-icons::before {
+         content: 'add_circle';
+       }
+     }
+
+     .taskit-interval-content {
+       padding: 0 7px;
+     }
+
+     &.taskit-group-collapsed .taskit-interval-content {
+       display: none;
+     }
+
+     .taskit-row.taskit-new {
+         background-color: #fff;
+     }
+
+     .taskit-row:last-child {
+       border-bottom: none;
+     }
   }
 }
 
+.taskit-interval,
 .taskit-interval.interval-today,
 .taskit-interval.interval-yesterday,
 .taskit-interval.interval-older,

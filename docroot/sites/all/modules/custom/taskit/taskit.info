@@ -1,5 +1,5 @@
 name = Taskit (Task Kit)
 description = A framework for providing role-specific task notifications.
 core = 7.x
-version = "7.x-1.0"
+version = "7.x-1.1"
 package = Custom
