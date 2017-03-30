@@ -786,7 +786,7 @@ function sbac_forum_preprocess_views_view_field__forum_topic_list__block__uid(&$
   $user_uid = $vars['output'];
   $new_output = '';
   if (!empty($user_uid)) {
-    $author_name = sbac_forum__api__get_authpane_hoverover($user_uid);
+    $author_name = sbac_forum__api__get_authpane_hoverover($user_uid, FALSE, TRUE);
     $new_output = 'Started by: ' . $author_name . ' <span class="topic-listing-field-divider"></span> ';
   }
 
