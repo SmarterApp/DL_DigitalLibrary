@@ -37054,9 +37054,18 @@ body.page-help-topics h1 {
 }
 
 .page-node-add-resource .sbac-resource-container a.create-resource-help-topic-link {
-    top: inherit;
+  top: inherit;
 }
 
 .page-admin-sbac-feedback-resource .form-type-textarea .wysiwyg-toggle-wrapper {
-    top: -3px;
+  top: -3px;
+}
+
+.node-type-resource .section-quality-criteria-review .helpful-info > a.help-topic-link {
+  top: -34px;
+  right: 0;
+}
+
+.page-admin-sbac-feedback-quality-review .wysiwyg-toggle-wrapper {
+  top: -3px;
 }
