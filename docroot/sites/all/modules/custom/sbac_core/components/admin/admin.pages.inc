@@ -280,7 +280,7 @@ function sbac_user_admin_account() {
     // Note: These role names are to be displayed differently than the actual role names
     switch ($role) {
       case 'DLRB member':
-        $role = 'Lead SLT';
+        $role = 'lead SLT';
         break;
 
       case 'moderator':
@@ -456,7 +456,7 @@ function sbac_user_combined_filters() {
     // Note: These role names are to be displayed differently than the actual role names
     switch ($role) {
       case 'DLRB member':
-        $filters['role']['options'][$key] = 'Lead SLT';
+        $filters['role']['options'][$key] = 'lead SLT';
         break;
 
       case 'moderator':
