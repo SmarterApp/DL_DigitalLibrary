@@ -135,6 +135,40 @@
       //   modalContent.css('top', mdcTop + 'px').css('left', mdcLeft + 'px').show();
       // };
 
+      // Remove callback.
+      $('.sbac-custom-term-remove').click(function () {
+        var parentTerm = $(this);
+        var parentId = $(this).attr("tid");
+        var update_data = function (data) {
+          var obj = jsonChecker(data);
+          if (obj.depth <= 2) {
+            $('.alignment-form').hide();
+            $('.alignment-buttons').show();
+          }
+
+          $('.alignment-filter').html(obj.html);
+          var attr = parentTerm.parent('li').attr('id');
+          $("#" + attr + " ~ li").remove();
+          parentTerm.parent('li').remove();
+
+          //reattached the behaviors
+          Drupal.attachBehaviors('.sbac-custom-term-remove');
+          $('.disabled').click(function (e) {
+            e.preventDefault();
+            //do other stuff when a click happens
+          });
+        };
+
+        $.ajax({
+          type: "POST",
+          url: "/ajax-terms",
+          success: update_data,
+          data: 'parent=' + parentId + '&remove=true'
+        });
+
+        return false;
+      });
+
       // Clicking on the term name.
       $('.sbac-custom-term').click(function () {
         // Get the tid for the clicked term

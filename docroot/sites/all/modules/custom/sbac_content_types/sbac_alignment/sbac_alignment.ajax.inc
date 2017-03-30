@@ -148,7 +148,7 @@ function sbac_alignment_ajax_terms_callback() {
         'id' => 'term-' . $term->tid,
         'class' => 'sbac-custom-term button',
         'tid' => $term->tid,
-        'title' => $term->name,
+        'title' => isset($term->field_alignment_shortname[LANGUAGE_NONE][0]['value']) ? $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'] : $term->name,
       ),
       'html' => TRUE,
     );
