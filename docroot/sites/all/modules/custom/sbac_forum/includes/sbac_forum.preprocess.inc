@@ -480,30 +480,32 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
       $flag_link = 'sbac-forum/flag/nojs/' . $comment_entity->nid . '/' . $comment_entity->cid;
       $vars['flag_link'] = l(t('Flag'), $flag_link, array('attributes' => $link_ops));
     }
+  }
 
 
-    $flags_out = array();
-    $moderator = sbac_flag_forum_moderation_access($vars['node']->nid);
-    $moderation_type = false;
-    if ($moderator) {
-      $moderation_type = isset($_GET['flag']) ? $_GET['flag'] : 'view-topic-flags';
-      $flags = sbac_flag_get_forum_flags($comment_entity->nid, $comment_entity->cid);
-      while ($flag = $flags->fetchAssoc()) {
-        $flags_out[$flag['flag_selected']][] = $flag;
-      }
+  $flags_out = array();
+  $moderator = sbac_flag_forum_moderation_access($vars['node']->nid);
+  $moderation_type = false;
+  if ($moderator) {
+    $moderation_type = isset($_GET['flag']) ? $_GET['flag'] : 'view-topic-flags';
+    $flags = sbac_flag_get_forum_flags($comment_entity->nid, $comment_entity->cid);
+    while ($flag = $flags->fetchAssoc()) {
+      $flags_out[$flag['flag_selected']][] = $flag;
     }
+  }
 
-    if (count($flags_out)) {
-      unset($vars['content']['links']['comment']['#links']['flag_post']);
-      unset($vars['flag_link'], $vars['recommend_link'], $vars['reply_link']);
+  if (count($flags_out)) {
+    unset($vars['content']['links']['comment']['#links']['flag_post']);
+    unset($vars['flag_link'], $vars['recommend_link'], $vars['reply_link']);
 
-      $moderation_post_header = '<div class="sbac-flag-section">';
-      $moderation_post_header .= '<div class="sbac-forum-flagged-post-header">';
-      $moderation_post_header .= '<span class="sbac-forum-flagged-text">Flagged</span>';
-      $moderation_post_header .= '</div>';
-      $moderation_post_header .= '</div>';
-      $vars['flags']['moderation']['post']['header'] = $moderation_post_header;
+    $moderation_post_header = '<div class="sbac-flag-section">';
+    $moderation_post_header .= '<div class="sbac-forum-flagged-post-header">';
+    $moderation_post_header .= '<span class="sbac-forum-flagged-text">Flagged</span>';
+    $moderation_post_header .= '</div>';
+    $moderation_post_header .= '</div>';
+    $vars['flags']['moderation']['post']['header'] = $moderation_post_header;
 
+    if (!$is_comment_author) {
       $moderation_post_content = '<div class="sbac-forum-flagged-post-container">';
 
       foreach ($flags_out as $tid => $flag_reports) {
@@ -524,7 +526,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
           $moderation_post_content .= '<div class="sbac-forum-report-details">';
           $moderation_post_content .= 'By <span class="sbac-forum-report-author">' . $flag_auth->field_first_name->value() . ' ' . $flag_auth->field_last_name->value() . '</span>';
           if ($auth_email) {
-            $moderation_post_content .= ' <span class="sbac-forum-author-email"><a href = "mailto:' . $auth_email  . '">' . $auth_email . '</a></span>';
+            $moderation_post_content .= ' <span class="sbac-forum-author-email"><a href = "mailto:' . $auth_email . '">' . $auth_email . '</a></span>';
           }
           $moderation_post_content .= ' on ' . date('M d, Y', $flag_report['created']);
           if ($auth_state) {
@@ -559,7 +561,7 @@ function sbac_forum_preprocess_sbac_forum_comment__node_topic(&$vars) {
             'width' => 600,
             'height' => 230,
           ),
-            'modalClass' => array('forum'),
+          'modalClass' => array('forum'),
         );
         $moderation_post_content .= $moderation_button;
       } elseif ($moderation_type === 'resolve-topic-flags') {
