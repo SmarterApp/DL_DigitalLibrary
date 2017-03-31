@@ -367,7 +367,7 @@ function sbac_goals_form_alter(&$form, &$form_state, $form_id) {
 /**
  * SBAC Goals get completed items
  */
-function sbac_goals_get_completed($goal, $uid, $date_range) {
+function sbac_goals_get_completed($goal, $uid, $date_range = FALSE) {
   if ($uid) {
     $user_profile = user_load($uid);
   }
