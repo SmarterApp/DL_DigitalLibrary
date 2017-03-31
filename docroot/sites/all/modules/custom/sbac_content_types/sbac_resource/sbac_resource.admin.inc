@@ -94,4 +94,6 @@ function sbac_resource_form_messages_submit(&$form, &$form_state) {
   variable_set('sbac_resource_tags_guide', $form_state['values']['sbac_resource_tags_guide']['value']);
   variable_set('sbac_resource_advanced_guide', $form_state['values']['sbac_resource_advanced_guide']['value']);
   variable_set('sbac_resource_flag_guide', $form_state['values']['sbac_resource_flag_guide']['value']);
+
+  drupal_set_message(t('The help text has been updated.'));
 }
