@@ -19,7 +19,9 @@
 
       // On page load, if there are no selections, disable the submit button and
       // put hoverover on top.
-      sbac_user_check_fields();
+      $(document).ready(function() {
+        sbac_user_check_fields();
+      });
 
       //  When user hovers over invisible div, toggle the popup to show if the 
       //  submit button is disabled.
@@ -51,11 +53,6 @@
       $('#edit-grade-options').change(function() {
         sbac_user_check_fields();
       });
-
-      $('#edit-student-population-options').change(function() {
-        sbac_user_check_fields();
-      });
-
     }
   }
 }) (jQuery);
