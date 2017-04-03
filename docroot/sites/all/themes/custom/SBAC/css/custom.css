@@ -36094,6 +36094,7 @@ form#sbac-user-filter-form #edit-email {
 #user-profile-form--2 {
   width: 45%;
   display: inline-block;
+  min-height: 300px;
 }
 
 #user-profile-form .field-name-field-lock-goals,
@@ -36241,7 +36242,9 @@ form#sbac-user-filter-form #edit-email {
 
 #sbac-goals-report-form {
   width: 26%;
-  position: relative;
+  position: absolute;
+  top: 50px;
+  right: 53px;
   border: 1px solid #ddd;
   border-radius: 5px;
   float: right;
