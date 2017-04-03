@@ -35,7 +35,7 @@ function sbac_user_admin($callback_arg = '') {
  */
 function sbac_user_filter_form() {
   $session = isset($_SESSION['user_overview_filter']) ? $_SESSION['user_overview_filter'] : array();
-  $filters = user_filters() + sbac_user_filters();
+  $filters = sbac_user_combined_filters();
 
   $i = 0;
   $form['filters'] = array(
@@ -176,7 +176,7 @@ function sbac_user_admin_account() {
   $state_alias = $query->leftJoin('field_data_field_state', 'state', $user_field_join_condition);
   $term_alias  = $query->leftJoin('taxonomy_term_data', 'term', $state_alias . ".field_state_tid = %alias.tid");
 
-  $filters = user_filters() + sbac_user_filters();
+  $filters = sbac_user_combined_filters();
 
   // Extend Query with filter conditions.
   foreach (isset($_SESSION['user_overview_filter']) ? $_SESSION['user_overview_filter'] : array() as $filter) {
@@ -274,7 +274,22 @@ function sbac_user_admin_account() {
   $destination = drupal_get_destination();
 
   $status = array(t('blocked'), t('active'));
-  $roles = array_map('check_plain', user_roles(TRUE));
+  $roles = array_map(function ($role) {
+    $role = check_plain($role);
+
+    // Note: These role names are to be displayed differently than the actual role names
+    switch ($role) {
+      case 'DLRB member':
+        $role = 'lead SLT';
+        break;
+
+      case 'moderator':
+        $role = 'resource moderator';
+        break;
+    }
+
+    return $role;
+  }, user_roles(TRUE));
 
   $accounts = array();
   foreach ($result as $account) {
@@ -337,7 +352,7 @@ function sbac_user_admin_account_submit($form, &$form_state) {
  */
 function sbac_user_filter_form_submit($form, &$form_state) {
   $op = $form_state['values']['op'];
-  $filters = user_filters() + sbac_user_filters();
+  $filters = sbac_user_combined_filters();
 
   switch ($op) {
     case t('Filter'):
@@ -427,6 +442,28 @@ function sbac_user_filters() {
       '#options' => $radio_options,
     ),
   );
+
+  return $filters;
+}
+
+/**
+ * Returns the combined list of filters for the /admin/people page
+ * @return array
+ */
+function sbac_user_combined_filters() {
+  $filters = user_filters() + sbac_user_filters();
+  foreach ($filters['role']['options'] as $key => $role) {
+    // Note: These role names are to be displayed differently than the actual role names
+    switch ($role) {
+      case 'DLRB member':
+        $filters['role']['options'][$key] = 'lead SLT';
+        break;
+
+      case 'moderator':
+        $filters['role']['options'][$key] = 'resource moderator';
+        break;
+    }
+  }
 
   return $filters;
 }
