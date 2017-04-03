@@ -37046,9 +37046,14 @@ body.page-help-topics h1 {
     margin-bottom: 111px;
 }
 
+
 .page-sort-content #main > ul.button-group > li {
   display: none;
 }
 .page-sort-content #main > ul.button-group > li.active {
   display: block;
+}
+
+.page-node-add-resource .sbac-resource-container a.create-resource-help-topic-link {
+    top: inherit;
 }
