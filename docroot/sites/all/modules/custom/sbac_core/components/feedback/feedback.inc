@@ -116,6 +116,7 @@ class feedbackStatus
   public $gatekeeper_finished = 0; // If the Gate Keeper review is finished.
   public $gatekeeper_approved = 0; // If the Gate Keeper review was passed.
   public $gatekeeper_uid = null; // The uid of the user doing the gatekeeping review.
+  public $resubmission = 0; // Whether this is a resubmitted resource.
   public $qc_num_started = 0; // The number of started QCs.
   public $qc_num_finished = 0; // The number of finished QCs.
   public $qc_status = array(); // An array of the QCs and their status ('started' and 'finished').
@@ -153,6 +154,7 @@ class feedbackStatus
     $query->entityCondition('entity_type', 'feedback')
       ->entityCondition('bundle', 'gate_keeper')
       ->propertyCondition('completed', 1)
+      ->propertyCondition('current', 0)
       ->propertyCondition('node_id', $nid)
       ->propertyOrderBy('id', 'DESC')
       ->range(0, 1);
@@ -234,6 +236,11 @@ class feedbackStatus
         }
       }
     } else {
+      // If this has been submitted before, make sure that we mark it as a resubmission.
+      if ($submitted) {
+        $this->resubmission = 1;
+      }
+
       // Get all of the feedback for this node that is current and active.
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'feedback')
