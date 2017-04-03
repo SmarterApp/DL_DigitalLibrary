@@ -4237,3 +4237,11 @@ form#sbac-user-filter-form #edit-email {
     background: url(../images/icons/icon-folder-heart-header.png) no-repeat 0 0;
   }
 }
+
+.page-sort-content #main > ul.button-group > li {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}

@@ -37042,3 +37042,10 @@ body.page-help-topics h1 {
 .page-edit-help-topics .large-12{
     margin-bottom: 111px;
 }
+
+.page-sort-content #main > ul.button-group > li {
+  display: none;
+}
+.page-sort-content #main > ul.button-group > li.active {
+  display: block;
+}
