@@ -37046,7 +37046,6 @@ body.page-help-topics h1 {
     margin-bottom: 111px;
 }
 
-
 .page-sort-content #main > ul.button-group > li {
   display: none;
 }
@@ -37056,4 +37055,8 @@ body.page-help-topics h1 {
 
 .page-node-add-resource .sbac-resource-container a.create-resource-help-topic-link {
     top: inherit;
+}
+
+.page-admin-sbac-feedback-resource .form-type-textarea .wysiwyg-toggle-wrapper {
+    top: -3px;
 }
