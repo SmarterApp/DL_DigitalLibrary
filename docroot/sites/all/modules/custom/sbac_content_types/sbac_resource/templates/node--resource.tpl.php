@@ -114,7 +114,7 @@ drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css
     <div id="resource-download-modal-container" class="reveal-modal">
       <div class="resource-download-modal">
         <h2>Thank you for downloading this Resource Material.</h2>
-        <p>Please be sure and rate this resource after you have used it.  You can learn how <a href="/help-topic/star-rating-placeholder">here</a>.</p> 
+        <p>Please be sure and rate this resource after you have used it.</p>
         <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
       </div>
     </div>

@@ -36094,6 +36094,7 @@ form#sbac-user-filter-form #edit-email {
 #user-profile-form--2 {
   width: 45%;
   display: inline-block;
+  min-height: 300px;
 }
 
 #user-profile-form .field-name-field-lock-goals,
@@ -36241,7 +36242,9 @@ form#sbac-user-filter-form #edit-email {
 
 #sbac-goals-report-form {
   width: 26%;
-  position: relative;
+  position: absolute;
+  top: 50px;
+  right: 53px;
   border: 1px solid #ddd;
   border-radius: 5px;
   float: right;
@@ -37041,4 +37044,28 @@ body.page-help-topics h1 {
 }
 .page-edit-help-topics .large-12{
     margin-bottom: 111px;
+}
+
+.page-sort-content #main > ul.button-group > li {
+  display: none;
+}
+.page-sort-content #main > ul.button-group > li.active {
+  display: block;
+}
+
+.page-node-add-resource .sbac-resource-container a.create-resource-help-topic-link {
+  top: inherit;
+}
+
+.page-admin-sbac-feedback-resource .form-type-textarea .wysiwyg-toggle-wrapper {
+  top: -3px;
+}
+
+.node-type-resource .section-quality-criteria-review .helpful-info > a.help-topic-link {
+  top: -34px;
+  right: 0;
+}
+
+.page-admin-sbac-feedback-quality-review .wysiwyg-toggle-wrapper {
+  top: -3px;
 }

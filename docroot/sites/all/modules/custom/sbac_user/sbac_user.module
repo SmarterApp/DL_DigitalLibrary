@@ -320,7 +320,17 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
     }
     $user = $form_state['user'];
     module_load_include('inc', 'sbac_user', 'sbac_user.firstsetup');
+    // Load only the parent options for normal selection.
     $form['field_subject_s_'][LANGUAGE_NONE]['#options'] = sbac_user_form_setup_parent_taxonomy_options('subject');
+    // If the user already has child items selected, add them to the options.
+    if (isset($user->field_subject_s_[LANGUAGE_NONE]) && count($user->field_subject_s_[LANGUAGE_NONE])) {
+      foreach ($user->field_subject_s_[LANGUAGE_NONE] as $tid) {
+        if (!isset($form['field_subject_s_'][LANGUAGE_NONE]['#options'][$tid['tid']])) {
+          $term = taxonomy_term_load($tid['tid']);
+          $form['field_subject_s_'][LANGUAGE_NONE]['#options'][$term->tid] = $term->name;
+        }
+      }
+    }
     if ($user->data['login_count'] == 1 && (empty($user->field_position) || empty($user->field_subject_s_) || empty($user->field_grade_level_s_) || empty($user->field_special_populations))) {
       drupal_add_js(array('sbac_user_required_fields' => 0), 'setting');
     }
@@ -505,7 +515,8 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
         module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.ajax');
         $suggested_forums = '<table class="forum-subscriptions">';
         foreach ($forums['suggested_forums'] as $suggested_forum) {
-          $join_button = render(drupal_get_form('sbac_forum_join_button_form', $suggested_forum['tid'], $user->uid));
+          $join_form = drupal_get_form('sbac_forum_join_button_form', $suggested_forum['tid'], $user->uid);
+          $join_button = render($join_form);
           $suggested_forums .= '
                         <tr>
                           <td class="forum-name">' .

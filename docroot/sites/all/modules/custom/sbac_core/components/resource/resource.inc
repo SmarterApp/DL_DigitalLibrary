@@ -398,7 +398,21 @@ function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FA
 function _resource_access_access_quality_criteria_revisions($node, $account) {
   $access = FALSE;
 
-  if (in_array('administrator', $account->roles) || in_array('DLRB member', $account->roles)) {
+  // If the current user is reviewing this, and it's a resubmission, mark it as such.
+  $resub_reviewer = FALSE;
+  if ($node->feedback_status->resubmission) {
+    if ($account->uid == $node->feedback_status->gatekeeper_uid && !$node->feedback_status->gatekeeper_finished) {
+      $resub_reviewer = TRUE;
+    }
+    foreach ($node->feedback_status->qc_status as $qc_status) {
+      if ($account->uid == $qc_status['uid'] && !$qc_status['finished']) {
+        $resub_reviewer = TRUE;
+      }
+    }
+  }
+
+  // Allow access to the revisions tab if the user is an admin, DLRB, or if they are reviewing this as a resubmission.
+  if (in_array('administrator', $account->roles) || in_array('DLRB member', $account->roles) || $resub_reviewer) {
     $access = TRUE;
   }
 
