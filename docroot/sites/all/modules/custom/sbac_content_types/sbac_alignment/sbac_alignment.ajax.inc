@@ -12,7 +12,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
 
   $alignment = sbac_alignment_type();
   $vocab = taxonomy_vocabulary_machine_name_load($alignment['type']);
-  $terms = taxonomy_get_tree($vocab->vid, 0, SBAC_ALIGNMENT_MAX_DEPTH);
+  $terms = taxonomy_get_tree($vocab->vid, 0, 1, TRUE);
 
   drupal_add_js(array(
       'sbac_alignment_everything' => array('type' => $alignment['type'], 'container' => $alignment['container'])
@@ -99,21 +99,24 @@ function sbac_alignment_ajax_terms_callback() {
   $alignment = sbac_alignment_type();
   $vocab = taxonomy_vocabulary_machine_name_load($alignment['type']);
   $parent = taxonomy_term_load($_POST['parent']);
+  $treetop = $parent->tid;
   if (isset($_POST['remove'])) {
-    $temp = array_shift(taxonomy_get_parents($parent->tid));
-    if (empty($temp)) {
-      $parent->tid = 0;
+    $parents = taxonomy_get_parents($parent->tid);
+    $temp = array_shift($parents);
+    if (!count($parents)) {
+      $treetop = 0;
     }
     else {
       $parent = $temp;
+      $treetop = $parent->tid;
     }
   }
 
   $output_array['parent'] = $parent;
-  $terms = taxonomy_get_tree($vocab->vid, $parent->tid, SBAC_ALIGNMENT_MAX_DEPTH);
+  $terms = taxonomy_get_tree($vocab->vid, $treetop, 1, TRUE);
   $publication = $parent->field_alignment_publication[LANGUAGE_NONE][0]['value'];
   $output_array['publication'] = (empty($publication)) ? 0 : $publication;
-  $output_array['depth'] = $depth = sbac_alignment_taxonomy_term_depth($parent->tid);
+  $output_array['depth'] = $depth = $treetop == 0 ? 0 : sbac_alignment_taxonomy_term_depth($treetop);
   switch ($publication) {
     case 'CC-MA-v1':
       $level_title = $ma_cc_titles[$depth];
@@ -142,17 +145,6 @@ function sbac_alignment_ajax_terms_callback() {
     $output_array['tids'][] = $term;
     $children = taxonomy_get_children($term->tid);
     $output_array['children'][] = $children;
-
-    $options = array(
-      'attributes' => array(
-        'id' => 'term-' . $term->tid,
-        'class' => 'sbac-custom-term button',
-        'tid' => $term->tid,
-        'title' => isset($term->field_alignment_shortname[LANGUAGE_NONE][0]['value']) ? $term->field_alignment_shortname[LANGUAGE_NONE][0]['value'] : $term->name,
-      ),
-      'html' => TRUE,
-    );
-    $subject_array[] = l($term->name, '#', $options);
   }
 
   $output_array['tids_count'] = count($output_array['tids']);
@@ -180,11 +172,13 @@ function sbac_alignment_ajax_alignment_crud_callback() {
   $json_input = json_decode(file_get_contents('php://input'));
 
   // Output the tables as JSON
-  drupal_json_output(_sbac_alignment_table_builder(
-    $json_input->new_standards,
-    $json_input->current_standards,
-    $json_input->alignment_type
-  ));
+  if (property_exists($json_input, 'first_select')) {
+    $output = _sbac_alignment_table_builder($json_input->new_standards, $json_input->current_standards, $json_input->alignment_type, $json_input->first_select);
+  } else {
+    $output = _sbac_alignment_table_builder($json_input->new_standards, $json_input->current_standards, $json_input->alignment_type);
+  }
+
+  drupal_json_output($output);
 }
 
 /**

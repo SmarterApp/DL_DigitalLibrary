@@ -32983,15 +32983,15 @@ a.tabledrag-handle .handle {
     text-indent: 1em;
 }
 
-#sbac-resource-alignment-tag-view .standard-child,
-#sbac-resource-target-tag-view .standard-child {
+#sbac-resource-alignment-tag-view .standard-child td:first-child,
+#sbac-resource-target-tag-view .standard-child td:first-child {
     background-image: url(../images/tree.png);
     background-repeat: no-repeat;
     background-position: 11px center;
 }
 
-#sbac-resource-alignment-tag-view .standard-child-last,
-#sbac-resource-target-tag-view .standard-child-last {
+#sbac-resource-alignment-tag-view .standard-child-last td:first-child,
+#sbac-resource-target-tag-view .standard-child-last td:first-child {
     background-image: url(../images/tree-bottom.png);
     background-repeat: no-repeat;
     background-position: 11px center;

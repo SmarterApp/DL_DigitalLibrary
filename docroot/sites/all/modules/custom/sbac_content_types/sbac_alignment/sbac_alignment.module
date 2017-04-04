@@ -600,7 +600,7 @@ function _sbac_alignment_build_table_rows($alignment_array) {
   return $rows;
 }
 
-function _sbac_alignment_table_builder($new, $current, $main_alignment, $select_all = FALSE) {
+function _sbac_alignment_table_builder($new, $current, $main_alignment, $first_select = FALSE) {
   $all_terms = array_merge($new, $current);
   if (count($all_terms)) {
     // Make sure we know what the other taxonomy type is
@@ -610,14 +610,14 @@ function _sbac_alignment_table_builder($new, $current, $main_alignment, $select_
     }
     // Load taxonomy terms
     $terms = taxonomy_term_load_multiple($all_terms);
-    // Load the vocabs
+    // Load the main vocab
     $main_alignment_vocab = taxonomy_vocabulary_machine_name_load($main_alignment);
-    // $other_alignment_vocab = taxonomy_vocabulary_machine_name_load($other_alignment);
     // Initialize the array of selected items
     $alignment_selection = array(SBAC_ALIGNMENT_VOCAB_NAME => array(), SBAC_ALIGNMENT_TARGET_VOCAB_NAME => array());
 
     // Build the tables with the current items (if any)
     foreach ($terms as $tid => $term) {
+      // Set the alignment for this term and the other alignment.
       if ($term->vid == $main_alignment_vocab->vid) {
         $current_alignment = $main_alignment;
         $current_other_alignment = $other_alignment;
@@ -630,33 +630,32 @@ function _sbac_alignment_table_builder($new, $current, $main_alignment, $select_
       $alignment_unique = $term->field_alignment_key[LANGUAGE_NONE][0]['value'];
       // Get the tids of the associated tags from the other standard
       $children = _sbac_alignment_child_lookup($current_other_alignment, $alignment_unique);
-      // Go through each tid and add it with the proper selection state
+      // Go through each child tid and add it with the proper selection state
       foreach ($children as $child) {
         // Mark this term as selected on both tables if this child was selected as a parent item, or if the current parent is new (we select by default)
-        if (in_array($child, $all_terms) || ($select_all && in_array($tid, $new))) {
+        if (in_array($child, $all_terms) || ($first_select && in_array($tid, $new))) {
           $alignment_selection[$current_alignment][$tid]['children'][$child]['selected'] = 1;
           $alignment_selection[$current_other_alignment][$child]['selected'] = 1;
+
+          // Load the child term if it isn't already loaded
+          if (!isset($terms[$child])) {
+            $cterm = taxonomy_term_load($child);
+          } else {
+            $cterm = $terms[$child];
+          }
+          // Get the unique value and children tids for this child
+          $other_alignment_unique = $cterm->field_alignment_key[LANGUAGE_NONE][0]['value'];
+          $other_children = _sbac_alignment_child_lookup($current_alignment, $other_alignment_unique);
+          // Mark this child using the same logic as above
+          foreach ($other_children as $other_child) {
+            if (in_array($other_child, $all_terms)) {
+              $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 1;
+            } else {
+              $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 0;
+            }
+          }
         } else {
           $alignment_selection[$current_alignment][$tid]['children'][$child]['selected'] = 0;
-          $alignment_selection[$current_other_alignment][$child]['selected'] = 0;
-        }
-        // Process the children on the other side
-        // Load the term if it isn't already loaded
-        if (!isset($terms[$child])) {
-          $cterm = taxonomy_term_load($child);
-        } else {
-          $cterm = $terms[$child];
-        }
-        // get the unique value and children tids for this child
-        $other_alignment_unique = $cterm->field_alignment_key[LANGUAGE_NONE][0]['value'];
-        $other_children = _sbac_alignment_child_lookup($current_alignment, $other_alignment_unique);
-        // Mark this child using the same logic as above
-        foreach ($other_children as $other_child) {
-          if (in_array($other_child, $all_terms)) {
-            $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 1;
-          } else {
-            $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 0;
-          }
         }
       }
       // Mark this item as selected

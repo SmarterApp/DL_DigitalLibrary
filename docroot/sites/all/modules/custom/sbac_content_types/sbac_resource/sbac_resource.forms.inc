@@ -1219,6 +1219,7 @@ function sbac_resource_modal_callback($alignment_type = FALSE, $js = FALSE) {
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
     $output[] = ctools_modal_command_display('Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
+    $output[] = array('command' => 'modalContentResize');
 
     print ajax_render($output);
     exit();
@@ -1943,11 +1944,15 @@ function _sbac_resource_form_summary(&$form, &$form_state) {
 
   $alignment_terms = $target_terms = [];
   if (isset($form['#node']->nid)) {
-    foreach ($form['#node']->field_alignment_term[LANGUAGE_NONE] as $fat) {
-      $alignment_terms[] = $fat['tid'];
+    if (isset($form['#node']->field_alignment_term[LANGUAGE_NONE])) {
+      foreach ($form['#node']->field_alignment_term[LANGUAGE_NONE] as $fat) {
+        $alignment_terms[] = $fat['tid'];
+      }
     }
-    foreach ($form['#node']->field_target_term[LANGUAGE_NONE] as $ftt) {
-      $target_terms[] = $ftt['tid'];
+    if (isset($form['#node']->field_target_term[LANGUAGE_NONE])) {
+      foreach ($form['#node']->field_target_term[LANGUAGE_NONE] as $ftt) {
+        $target_terms[] = $ftt['tid'];
+      }
     }
   }
 

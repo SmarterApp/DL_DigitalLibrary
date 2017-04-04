@@ -1,9 +1,18 @@
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
+  // Move and resize the modalBackdrop and modalContent on resize of the window
+  Drupal.ajax.prototype.commands.modalContentResize = function(){
+    var modalContent = $('#modalContent');
+    var mdcTop = $(document).scrollTop() + 50;
+
+    // Apply the changes
+    modalContent.css('top', mdcTop + 'px');
+  };
+
   Drupal.behaviors.sbac_alignment_everything = {
     attach: function (context, settings) {
-      read_more_less = function (element) {
+      var read_more_less = function (element) {
         var term_id = $(element).attr('term');
         var container = $(element).parent().parent();
         var less = $(container).children('.checkbox-less-' + term_id);
@@ -38,69 +47,67 @@
       };
 
       // Handler for syncing the checkboxes and adding parents as needed
-      $('.standard-check').click(function (e) {
+      $('.standard-check').change(function (e) {
         // Get the tid so we can check if the parent version of this tid exists
         var tid = $(this).attr('value');
-        // Check to see if the parent exists, and if it does, just sync the checkboxes
-        var parent = $('#standard-parent-' + tid);
-        if (parent.length) {
-          // Get the classes for this checkbox, and then get the one that is standard-TID
-          var classes = $(this).attr('class').split(' ');
-          var checkClass = '';
-          $.each(classes, function (key, value) {
-            if (value.match(/^standard-\d+$/)) {
-              checkClass = '.' + value;
-            }
-          });
-          // Make all of the other checkboxes with this class match the checked status of this one
-          $(checkClass).prop('checked', $(this).prop('checked'));
-          valueUpdater();
-        } else {
-          // Use the parent container to figure out the standard type
-          var alignment = 'education_alignment';
-          if ($(this).parents('#target-tag-container').length) {
-            alignment = 'target_alignment';
+
+        // Get the classes for this checkbox, and then get the one that is standard-TID
+        var classes = $(this).attr('class').split(' ');
+        var checkClass = '';
+        $.each(classes, function (key, value) {
+          if (value.match(/^standard-\d+$/)) {
+            checkClass = '.' + value;
           }
-          // If the parent doesn't already exist, we add it as a new item, and rebuild the tables
-          var currentStandards = [];
-          // For each item already selected on the page, add them to the array
-          $('input:checkbox[id*=standard-parent-]:checked').each(function () {
-            var id = $(this).attr('id').split('-')[2];
-            currentStandards.push(id);
-          });
+        });
+        // Make all of the other checkboxes with this class match the checked status of this one
+        $(checkClass).prop('checked', $(this).prop('checked'));
 
-          // Function for refreshing the tables
-          var updateTables = function (data) {
-            $('#sbac-resource-alignment-tag-view').html(data.ccss_html);
-            $('#sbac-resource-target-tag-view').html(data.target_html);
-
-            Drupal.attachBehaviors('.standard-check');
-            valueUpdater();
-          };
-
-          // Call the helper AJAX function to rebuild the tables of standards
-          $.ajax({
-            type: 'POST',
-            contentType: 'application/json',
-            url: '/ajax-alignment-crud',
-            success: updateTables,
-            data: JSON.stringify({
-              'alignment_type': alignment,
-              'new_standards': [tid],
-              'current_standards': currentStandards,
-              'select_all': false
-            })
-          });
+        // Use the parent container to figure out the standard type
+        var alignment = 'education_alignment';
+        if ($(this).parents('#target-tag-container').length) {
+          alignment = 'target_alignment';
         }
+        // If the parent doesn't already exist, we add it as a new item, and rebuild the tables
+        var currentStandards = [];
+        // For each item already selected on the page, add them to the array
+        $('input:checkbox[id*=standard-parent-]:checked').each(function () {
+          var id = $(this).attr('id').split('-')[2];
+          currentStandards.push(id);
+        });
+
+        // Function for refreshing the tables
+        var updateTables = function (data) {
+          $('#sbac-resource-alignment-tag-view').html(data.ccss_html);
+          $('#sbac-resource-target-tag-view').html(data.target_html);
+
+          Drupal.attachBehaviors('.standard-check');
+          valueUpdater();
+        };
+
+        var new_tids = [];
+        if ($(this).prop('checked')) {
+          new_tids = [tid];
+        }
+
+        // Call the helper AJAX function to rebuild the tables of standards
+        $.ajax({
+          type: 'POST',
+          contentType: 'application/json',
+          url: '/ajax-alignment-crud',
+          success: updateTables,
+          data: JSON.stringify({
+            'alignment_type': alignment,
+            'new_standards': new_tids,
+            'current_standards': currentStandards,
+            'select_all': false
+          })
+        });
       });
 
       $('#modal-content').addClass('alignment-container-no-scroll');
 
       // Close the open modal content and backdrop
       function closeCtoolsModal() {
-        // Unbind the events
-        // $(window).unbind('resize', modalContentResize);
-        
         // Remove the content
         $('#modalContent').remove();
         $('#modalBackdrop').remove();
@@ -113,27 +120,6 @@
           return data;
         }
       }
-
-      // Move and resize the modalBackdrop and modalContent on resize of the window
-      // var modalContentResize = function(){
-      //   // Get our heights
-      //   var docHeight = $(document).height();
-      //   var docWidth = $(document).width();
-      //   var winHeight = $(window).height();
-      //   var winWidth = $(window).width();
-      //   if (docHeight < winHeight) {
-      //     docHeight = winHeight;
-      //   }
-
-      //   // Get where we should move content to
-      //   var modalContent = $('#modalContent');
-      //   var mdcTop = (winHeight / 2) - (modalContent.outerHeight() / 2);
-      //   var mdcLeft = (winWidth / 2) - (modalContent.outerWidth() / 2);
-
-      //   // Apply the changes
-      //   $('#modalBackdrop').css('height', docHeight + 'px').css('width', docWidth + 'px').show();
-      //   modalContent.css('top', mdcTop + 'px').css('left', mdcLeft + 'px').show();
-      // };
 
       // Remove callback.
       $('.sbac-custom-term-remove').click(function () {
@@ -247,7 +233,7 @@
                         'alignment_type': settings.sbac_alignment_everything.type,
                         'new_standards': newStandards,
                         'current_standards': currentStandards,
-                        'select_all': true
+                        'first_select': true
                       })
                     });
                   }
