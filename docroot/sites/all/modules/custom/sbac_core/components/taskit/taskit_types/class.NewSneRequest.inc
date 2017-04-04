@@ -11,7 +11,7 @@ class NewSneRequest extends \taskit\sbac_core\BaseTask {
 
     if ($webform && $account) {
       $sid = sbac_sne_webform_get_submission_id(current($triggering_users));
-      $this->setTaskUrl('node/' . $webform->nid . '/submission/' . $sid->sid);
+      $this->setTaskUrl('admin/sbac/sne-webform-submissions/' . $webform->nid);
 
       $output = array();
       $output[] = t('A new SNE request has been submitted, click !here to review', array(
