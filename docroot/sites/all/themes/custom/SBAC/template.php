@@ -239,6 +239,17 @@ function sbac_js_alter(&$js) {
   unset($js[$dropdown]);
 }
 
+function sbac_html_head_alter(&$head_elements) {
+  $head_elements['material_icons'] = array(
+    '#type' => 'html_tag',
+    '#tag' => 'link',
+    '#attributes' => array(
+      'rel' => 'stylesheet',
+      'href' => 'https://fonts.googleapis.com/icon?family=Material+Icons',
+    ),
+  );
+}
+
 /**
  * Implements hook_preprocess().
  */

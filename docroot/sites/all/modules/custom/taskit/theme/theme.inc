@@ -15,7 +15,7 @@ function theme_taskit_tabs($variables) {
 
 function theme_taskit_interval($variables) {
   $name = $variables['interval']['name'];
-  $class = $name;
+  $class = preg_replace('/[^a-zA-Z0-9]/', '_', strtolower($name));
   if ($name == 'prior') {
     $name = t(strtolower(date('l', $variables['interval']['from'])));
   }
@@ -27,6 +27,30 @@ function theme_taskit_interval($variables) {
       $variables['content'] = '<h3>' . $name . '</h3>' . $variables['content'];
     }
     $output = '<div class="taskit-interval interval-' . $class . '">' . $variables['content'] . '</div>';
+  }
+  return $output;
+}
+
+function theme_taskit_group($variables) {
+  $name = $variables['name'];
+  $class = preg_replace('/[^a-zA-Z0-9]/', '_', strtolower($name));
+  if ($name == 'prior') {
+    $name = t(strtolower(date('l', $variables['interval']['from'])));
+  }
+  if ($variables['js_interval'] != NULL && $variables['js_interval'] == 'interval-' . $class) {
+    $output = $variables['content'];
+  }
+  else {
+    if (!empty($name)) {
+      $variables['content'] = '<h3>' . $name . '<span class="taskit-group-expander"><i class="material-icons"></i></span></h3>'
+        . '<div class="taskit-interval-content">'
+        . $variables['content']
+        . '</div>';
+    }
+    $collapsed = (!empty($variables['collapsed'])) ? 'taskit-group-collapsed' : '';
+    $output = "<div class='taskit-interval taskit-interval-group {$collapsed} interval-{$class}'>"
+      . $variables['content']
+      . '</div>';
   }
   return $output;
 }
