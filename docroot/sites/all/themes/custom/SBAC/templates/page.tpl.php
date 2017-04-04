@@ -173,12 +173,12 @@
         <?php if (!empty($tabs2)): print render($tabs2); endif; ?>
       <?php endif; ?>
 
-      <?php if ($action_links): ?>
+      <?php if (isset($action_links) && $action_links): ?>
         <ul class="action-links">
           <?php print render($action_links); ?>
         </ul>
       <?php endif; ?>
-      <?php if ($help_tabs): ?>
+      <?php if (isset($help_tabs) && $help_tabs): ?>
          <?php print $help_tabs; ?>
       <?php endif; ?>
       <?php print render($page['content']); ?>
