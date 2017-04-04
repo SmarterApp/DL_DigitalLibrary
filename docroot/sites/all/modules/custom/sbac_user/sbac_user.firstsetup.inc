@@ -672,12 +672,19 @@ function sbac_user_setup_privacy_form_submit($form, &$form_state) {
  * @return array           [description]
  */
 function sbac_user_setup_subject_builder($options) {
-  $values = array();
+  $values = array(); // The values that are being returned.
+  $tids = array(); // The tids already in the list (to avoid dupes).
   foreach ($options AS $idx => $tid) {
+    if (!in_array($tid, $tids)) {
+      $tids[] = $tid;
+      $values[] = array('tid' => $tid);
+    }
     $children = taxonomy_get_children($tid);
-    $values[] = array('tid' => $tid);
     foreach ($children as $term) {
-      $values[] = array('tid' => $term->tid);
+      if (!in_array($term->tid, $tids)) {
+        $tids[] = $term->tid;
+        $values[] = array('tid' => $term->tid);
+      }
     }
   }
   return $values;

@@ -441,7 +441,7 @@ function sbac_core_notifications_get_html_content() {
   $notifications_content .= '<h2>' . t('Helpful Information') . '</h2>';
   $notifications_content .= more_less_text(filter_text($help_content));
   $notifications_content .= '</div>';
-  $notifications_content .= taskit_page($account);
+  $notifications_content .= taskit_page_grouped($account);
   $notifications_content .= '</div>';
   taskit_mark_all_read($user);
   return $notifications_content;

@@ -772,7 +772,7 @@ function sbac_resource_preprocess_node(&$vars) {
 
     if ($_GET['rating-goal'] == 'in-process') {
       drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource_guidance.js');
-      $user_profile = user_load($user-uid);
+      $user_profile = user_load($user->uid);
       $vars['goal_link_ip'] = sbac_email_user_link($user_profile) . '#profile-goals';
     }
     if ($_GET['rating-goal'] == 'complete') {
@@ -2461,7 +2461,7 @@ function sbac_resource_node_update($node) {
   global $user;
   if ($node->type == 'resource') {
     if (((in_array('resource contributor', $user->roles) && ($node->workbench_moderation['current']->state == 'needs_review')) ||
-    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles) ||  $user->uid == 1) &&
+    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles) ||  $user->uid == 1 || (in_array('administrator', $user->roles) || (in_array('digital library administrator', $user->roles)) &&
     (($node->workbench_moderation['current']->state == 'published') || ($node->workbench_moderation['current']->state == 'published' && $node->sticky == 1))))) {
       sbac_resource_print_about_this_tab($node);
     }

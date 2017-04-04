@@ -28,8 +28,8 @@
 			if ($user_profile['field_paid_contributor']['#items'][0]['value'] == '1' && $user_profile['field_sne_member']['#items'][0]['value'] == '1') {
 				$variables = array(
 					'path' => path_to_theme() . '/images/' . 'snebadgepaid.png', 
-					'alt' => 'SNE Paid Badge',
-					'title' => 'SNE Paid Badge',
+					'alt' => 'On Contract SNE badge',
+					'title' => 'On Contract SNE badge',
 					'attributes' => array('class' => 'user-badge'),
 				);
 				$user_badge = theme('image', $variables);

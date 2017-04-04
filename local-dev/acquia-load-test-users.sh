@@ -26,5 +26,5 @@ INPUT=config/users.csv
 while IFS=, read email role
 do
   drush @$drush_alias user-create "$email" --mail="$email" </dev/null
-  drush @$drush_alias user-add-role "$role" "$email" </dev/null
+  drush @$drush_alias user-add-role $role "$email" </dev/null
 done < $INPUT

@@ -1688,7 +1688,7 @@ function _sbac_resource_create_resource_title(&$form, &$form_state) {
   global $user;
   $admin_link = '';
   if (in_array('administrator', $user->roles)) {
-    $admin_link = '<a class="help-topic-link" href="/admin/sbac/feedback/resource">Edit Help Text</a>';
+    $admin_link = '<a class="help-topic-link create-resource-help-topic-link" href="/admin/sbac/feedback/resource">Edit Help Text</a>';
   }
   $default_value = "Untitled Resource";
   if ($form['title']['#default_value']) {
