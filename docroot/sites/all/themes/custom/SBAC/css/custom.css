@@ -36463,6 +36463,10 @@ form#sbac-user-filter-form #edit-email {
   color: #FFFFFF;
 }
 
+.page-admin-structure-taxonomy-glossary-terms #taxonomy-overview-terms {
+    padding-top: 20px;
+}
+
 #taxonomy-form-term {
     padding-top: 5px;
 }
