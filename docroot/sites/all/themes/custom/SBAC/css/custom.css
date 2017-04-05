@@ -37070,5 +37070,6 @@ body.page-help-topics h1 {
   top: -3px;
 }
 .alert-box p{
-    font-size: .875em;
+    font-size: 1em;
+    padding-top: 10px;
 }
