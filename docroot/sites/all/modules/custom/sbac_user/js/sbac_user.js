@@ -23,7 +23,7 @@
             var subjects = $('#edit-field-subject-s-und').val();
             var grades = $('#edit-field-grade-level-s-und').val();
             var student_populations = $('#edit-field-special-populations-und').val();
-            if (position == '_none' || subjects == null || grades == null || student_populations == null) {
+            if (position == '_none' || subjects == null || grades == null) {
               event.stopPropagation();
               event.preventDefault();
               clicked = true;
@@ -72,7 +72,6 @@
       $("#edit-field-privacy-und-field-state").prop('disabled', true);
       $("#edit-field-privacy-und-field-grade-level-s-").prop('disabled', true);
       $("#edit-field-privacy-und-field-subject-s-").prop('disabled', true);
-      $("#edit-field-privacy-und-field-special-populations").prop('disabled', true);
 
       var placeholder = ($('#edit-picture').has('div.form-item-picture-delete').length) ? 'Change Picture' : 'Add Picture';
       $('.row #edit-picture-upload').after('<input id="upload-cover" value="' + placeholder + '" type="text">');

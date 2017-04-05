@@ -374,7 +374,7 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
         }
       }
     }
-    if ($user->data['login_count'] == 1 && (empty($user->field_position) || empty($user->field_subject_s_) || empty($user->field_grade_level_s_) || empty($user->field_special_populations))) {
+      if ($user->data['login_count'] == 1 && (empty($user->field_position) || empty($user->field_subject_s_) || empty($user->field_grade_level_s_))) {
       drupal_add_js(array('sbac_user_required_fields' => 0), 'setting');
     }
     elseif ($user->data['login_count'] == 1) {
@@ -494,7 +494,6 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
         'field_state',
         'field_grade_level_s_',
         'field_subject_s_',
-        'field_special_populations',
       );
       $form['field_privacy']['und2'] = array(
         '#prefix' => '<div class="sbac-privacy-container"><div class="sbac-privacy-title">Visibility required</div>
@@ -823,7 +822,7 @@ function sbac_user_privacy_check($field, $entity) {
     'field_introduction',
     // 'field_grade_level_s_',
     // 'field_subject_s_',
-    // 'field_special_populations',
+    'field_special_populations',
   );
   if (in_array($field, $privacy_fields)) {
     return (bool) in_array($field, sbac_user_privacy_fields($entity));
@@ -842,7 +841,6 @@ function sbac_user_privacy_after_build($form, &$form_state) {
   $form['field_state']['#checked'] = TRUE;
   $form['field_grade_level_s_']['#checked'] = TRUE;
   $form['field_subject_s_']['#checked'] = TRUE;
-  $form['field_special_populations']['#checked'] = TRUE;
   return $form;
 }
 
@@ -987,7 +985,6 @@ function sbac_user_entity_presave($entity, $type) {
       $entity->field_privacy['und'][]['value'] = 'field-state';
       $entity->field_privacy['und'][]['value'] = 'field-grade-level-s-';
       $entity->field_privacy['und'][]['value'] = 'field-subject-s-';
-      $entity->field_privacy['und'][]['value'] = 'special-populations';
     }
   }
 }
@@ -1129,7 +1126,7 @@ function sbac_user_block_info_alter(&$blocks, $theme, $code_blocks) {
 function sbac_user_user_login(&$edit, $account) {
   if (!isset($edit['sbac-share'])) {
     // If user has yet to fill in required Title, Subjects, Grades and Student Population fields because they are a new user
-    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+    if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_))) {
       drupal_goto('sbac-user/setup');
     }
   }
@@ -1464,7 +1461,6 @@ function sbac_user_user_profile_add_values_submit($form, &$form_state) {
   $form_state['values']['field_privacy']['und'][]['value'] = 'field-state';
   $form_state['values']['field_privacy']['und'][]['value'] = 'field-grade-level-s-';
   $form_state['values']['field_privacy']['und'][]['value'] = 'field-subject-s-';
-  $form_state['values']['field_privacy']['und'][]['value'] = 'special-populations';
 }
 
 /**
