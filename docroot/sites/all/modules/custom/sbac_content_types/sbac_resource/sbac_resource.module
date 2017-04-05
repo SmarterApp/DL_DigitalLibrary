@@ -2454,7 +2454,7 @@ function sbac_resource_node_update($node) {
   global $user;
   if ($node->type == 'resource') {
     if (((in_array('resource contributor', $user->roles) && ($node->workbench_moderation['current']->state == 'needs_review')) ||
-    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles) ||  $user->uid == 1) &&
+    ((in_array('system administrator', $user->roles)) || (in_array('DLRB member', $user->roles)) ||  $user->uid == 1 || (in_array('administrator', $user->roles)) || (in_array('digital library administrator', $user->roles)) &&
     (($node->workbench_moderation['current']->state == 'published') || ($node->workbench_moderation['current']->state == 'published' && $node->sticky == 1))))) {
       sbac_resource_print_about_this_tab($node);
     }
