@@ -1265,27 +1265,35 @@ div[id*="edit-tab-container-forum-tab-buttons"] #sbac-favorites-resource-cancel:
 #edit-group_manage_subscriptions form {
   margin: 0;
 }
-#sbac-forum-leave-forum-confirm #edit-cancel {
+#sbac-forum-leave-forum-confirm #edit-cancel,
+#sbac-forum-join-button-form #edit-cancel {
   background-color: #6E7379;
   border: 1px solid #4D5457;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
   padding-left: 40px;
 }
-#sbac-forum-leave-forum-confirm button {
+#sbac-forum-leave-forum-confirm button,
+#sbac-forum-join-button-form button {
   float: right;
   margin-left: 30px;
 }
-#sbac-forum-leave-forum-confirm button.gray.cancel:before {
+#sbac-forum-join-button-form #join-forum-button-wrapper #edit-join-forum {
+  margin: 0 0 20px 30px;
+}
+#sbac-forum-leave-forum-confirm button.gray.cancel:before,
+#sbac-forum-join-button-form button.gray.cancel:before {
   content: url("../images/icon-buttonCancel.png");
   left: 15px;
   position: absolute;
   top: 4px;
 }
-#sbac-forum-leave-forum-confirm #edit-submit--2 {
+#sbac-forum-leave-forum-confirm #edit-submit--2,
+#sbac-forum-join-button-form #edit-join-forum{
   background-color: #2AA549;
   border: 1px solid #268A16;
 }
-#sbac-forum-leave-forum-confirm h2 {
+#sbac-forum-leave-forum-confirm h2,
+#sbac-forum-join-button-form h2{
   color: #000000;
   display: block;
   font-size: 18px;
