@@ -30482,6 +30482,7 @@ body.page-help-topics h1 {
 }
 /* line 7, ../sass/components/_help-topics-page.scss */
 body.page-help-topics .help-topics-wrapper {
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 /* line 9, ../sass/components/_help-topics-page.scss */
@@ -36462,6 +36463,10 @@ form#sbac-user-filter-form #edit-email {
   color: #FFFFFF;
 }
 
+#taxonomy-form-term {
+    padding-top: 5px;
+}
+
 #taxonomy-form-term .hidden,
 #taxonomy-form-term #edit-field-educator-goal,
 #taxonomy-form-term #edit-field-educator-goal-complete,
@@ -36780,7 +36785,6 @@ table.forum-subscriptions tr {
 }
 /* Help/Guidance css */
 .page-sort-content-help-topics .sbac-alert-box {
-    margin-bottom: 80px;
 }
 
 .view-display-id-sort_help_topics .views-field-title {
@@ -36792,15 +36796,16 @@ table.forum-subscriptions tr {
 }
 
 #glossary_terms {
-    margin-top: 140px;
+    margin-top: 12px;
+    position: relative;
+    z-index: 5;
 }
 
 .help-tabs {
     width: 960px;
-    position: absolute;
-    top: 82px;
+    position: relative;
     padding-left: 40px;
-    left: 2px;
+    left: -38px;
 }
 .help-tabs:before {
     background: none repeat scroll 0 0 #FFFFFF;
@@ -36910,7 +36915,7 @@ table.forum-subscriptions tr {
 }
 
 body.page-help-topics h1 {
-    margin-bottom: 120px;
+    margin-bottom: 20px;
     margin-top: 20px;
 }
 
@@ -37036,11 +37041,10 @@ body.page-help-topics h1 {
     padding: 0 5px;
 }
 .page-admin-structure-taxonomy-glossary-terms #page-title{
-    color: #fff;
+    display: none;
 }
 .view-display-id-sort_help_topics {
     position: relative;
-    top: 145px;
 }
 .page-edit-help-topics .large-12{
     margin-bottom: 111px;
@@ -37069,7 +37073,17 @@ body.page-help-topics h1 {
 .page-admin-sbac-feedback-quality-review .wysiwyg-toggle-wrapper {
   top: -3px;
 }
+
 .alert-box p{
     font-size: 1em;
     padding-top: 10px;
+}
+
+.page-help-topics .help-topic-link,
+.page-sort-content-help-topics .help-topic-link {
+  bottom: 56px;
+  margin-left: 10px;
+}
+.page-admin-structure-taxonomy-glossary-terms #taxonomy {
+    margin-top: 20px;
 }
