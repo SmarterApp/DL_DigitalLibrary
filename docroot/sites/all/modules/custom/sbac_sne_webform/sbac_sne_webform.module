@@ -35,7 +35,7 @@ function sbac_sne_webform_results_submissions() {
  */
 function sbac_sne_webform_form_alter(&$form, &$form_state) {
   if (isset($form['#node']) && ($form['#node']->title == 'Contribute to the Digital Library by Becoming a State Network Educator')) {
-    $form['#submit'][] = sbac_sne_webform_submit;
+    $form['#submit'][] = 'sbac_sne_webform_submit';
   }
 }
 
@@ -47,13 +47,13 @@ function sbac_sne_webform_submit($form, &$form_state) {
   $submitter_uid = $user->uid;
   $users = sbac_sne_webform_get_lead_slt_users();
   $webform_nid = sbac_sne_webform_get_nid('243e273a-8fd4-4689-8b3d-bafdea8b9514');
-  foreach ($users as $user) {
-    $user_profile = user_load($user->uid);
+  foreach ($users as $user_slt) {
+    $user_profile = user_load($user_slt->uid);
     // Notify each user
     if ($task = taskit_get_object('new_sne_request')) {
       $task->addVisibility($task::VISIBILITY_USER);
       $task->addEntity('node', $webform_nid->nid);
-      $task->addOwningUser($user->uid);
+      $task->addOwningUser($user_slt->uid);
       $task->addTriggeringUser($submitter_uid);
       $task->save();
     }

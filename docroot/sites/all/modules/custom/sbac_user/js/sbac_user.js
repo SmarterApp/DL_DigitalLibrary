@@ -102,9 +102,9 @@
       // Don't show the Submit button on the Manage Subscriptions tab (will only work as long as it is the last tab).
       $("#user-profile-form .vertical-tab-button a").click(function (e) {
         if ($(this).parent().hasClass('last')) {
-          $("#edit-actions--2").hide();
+          $("div[id^='edit-actions--']").hide();
         } else {
-          $("#edit-actions--2").show();
+          $("div[id^='edit-actions--']").show();
         }
       });
     }

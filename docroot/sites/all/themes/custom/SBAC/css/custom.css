@@ -37109,3 +37109,7 @@ body.page-help-topics h1 {
 .page-admin-sbac-feedback-quality-review .wysiwyg-toggle-wrapper {
   top: -3px;
 }
+.alert-box p{
+    font-size: 1em;
+    padding-top: 10px;
+}

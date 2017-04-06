@@ -126,7 +126,7 @@ function sbac_csv_report_user_activity_export_form_submit($form, &$form_state) {
   }
 
   if (count($user_emails) == 0) {
-    $users = get_users_for_user_groups($state_tid, $user_groups);
+    $users = get_users_for_user_groups($state_tid, $user_groups, $date_range);
   } else {
     $users = array();
     foreach ($user_emails as $email) {
@@ -345,7 +345,7 @@ function sbac_csv_report_prettify(&$user_group_options) {
  * properly with Drupals perpared statement support.
  *
  */
-function get_users_for_user_groups($state_tid, &$user_groups_ids) {
+function get_users_for_user_groups($state_tid, &$user_groups_ids, $date_range) {
   // look for the aggregated admins option "admins"
   if (array_key_exists(1, $user_groups_ids)) {
     // get the admins:
@@ -383,7 +383,7 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
   }
 
   $query = db_select('users', 'u');
-  $query->fields('u', array('uid'));
+  $query->fields('u', array('uid', 'login'));
   if ($user_groups_ids) {
     $query->join('users_roles', 'ur', 'u.uid = ur.uid');
     $query->condition('ur.rid', $user_groups_ids, 'IN');
@@ -402,6 +402,12 @@ function get_users_for_user_groups($state_tid, &$user_groups_ids) {
     $query->join('field_data_field_slt_member', 'slt', 'u.uid = slt.entity_id');
     $query->condition('slt.field_slt_member_value', 1);
   }
+    // Only grab users who have logged in since the date range "from date"
+    if ($date_range) {
+        $dates = explode('--', $date_range);
+        $from_date = strtotime($dates[0]);
+        $query->condition('u.login', $from_date, '>');
+        }
   if (in_array('all', $state_tid)) {
     // nothing, they want all users.
   }

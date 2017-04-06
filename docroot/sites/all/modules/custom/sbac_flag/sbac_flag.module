@@ -173,7 +173,14 @@ function sbac_flag_menu() {
  */
 function sbac_flag_moderation_access() {
   global $user;
-  if (in_array('moderator', $user->roles)) {
+  $allowed_roles = array('authenticated user', 'moderator', 'basic end user');
+  $only_allowed = TRUE;
+  foreach ($user->roles as $role) {
+    if (!in_array($role, $allowed_roles)) {
+      $only_allowed = FALSE;
+    }
+  }
+  if ($only_allowed && in_array('moderator', $user->roles)) {
     return TRUE;
   }
   return FALSE;
