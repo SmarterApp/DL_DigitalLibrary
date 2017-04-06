@@ -583,6 +583,7 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last
 
 function _sbac_alignment_build_table_rows($alignment_array) {
   $rows = array();
+  ksort($alignment_array);
   // Go through the selected items and their children and add the rows for these
   foreach ($alignment_array as $tid => $info) {
     $rows[] = _sbac_alignment_build_table_row($tid, $info['selected']);
