@@ -53,25 +53,6 @@ function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
 }
 
 /**
- * Returns an associated array of tid => name of just parent items.
- * @param string $vocab_name
- * @return array
- */
-function sbac_user_form_setup_parent_taxonomy_options($vocab_name) {
-  if ($vocab = taxonomy_vocabulary_machine_name_load($vocab_name)) {
-    $terms = taxonomy_get_tree($vocab->vid);
-    $options = array();
-    foreach ($terms as $term) {
-      if ($term->depth == 0) {
-        $options[$term->tid] = $term->name;
-      }
-    }
-    return $options;
-  }
-  return array();
-}
-
-/**
  * Implements hook_form().
  * Sets up the first page of the user setup form.
  * @param  [type] $form       [description]
@@ -664,30 +645,6 @@ function sbac_user_setup_privacy_form_submit($form, &$form_state) {
     }
     drupal_goto('sbac-user/setup/4');
   }
-}
-
-/**
- * Sets up the tid values array for subjects, including all children.
- * @param  array  $options [description]
- * @return array           [description]
- */
-function sbac_user_setup_subject_builder($options) {
-  $values = array(); // The values that are being returned.
-  $tids = array(); // The tids already in the list (to avoid dupes).
-  foreach ($options AS $idx => $tid) {
-    if (!in_array($tid, $tids)) {
-      $tids[] = $tid;
-      $values[] = array('tid' => $tid);
-    }
-    $children = taxonomy_get_children($tid);
-    foreach ($children as $term) {
-      if (!in_array($term->tid, $tids)) {
-        $tids[] = $term->tid;
-        $values[] = array('tid' => $term->tid);
-      }
-    }
-  }
-  return $values;
 }
 
 /**

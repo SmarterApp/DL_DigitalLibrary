@@ -517,8 +517,17 @@ function sbac_forum_delete_forum_confirm($form, &$form_state) {
  * =============================================================================
  */
 
-function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
+function sbac_forum_join_button_form($form, &$form_state, $forum_id = FALSE, $user_id = FALSE) {
   $form = array();
+
+  if (isset($form_state['ajax']) && $form_state['ajax']) {
+    $forum_id = $form_state['forum_to_join'];
+    $user_id = $form_state['uid'];
+
+    $form['submit_description'] = array(
+      '#markup' => '<h2>' . t('Are you sure you want to join this forum?') . '</h2><p> </p>',
+    );
+  }
 
   // Store these values for the ajax handler.
   $form['forum_id'] = array(
@@ -543,6 +552,15 @@ function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
       'callback' => 'sbac_forum__ajax__join_button_form_execute',
     ),
   );
+
+  if (isset($form_state['ajax']) && $form_state['ajax']) {
+    $form['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => 'Cancel',
+      '#attributes' => array('class' => array('edit-cancel-leave-overlay', 'gray', 'cancel'))
+    );
+  }
+
   return $form;
 }
 

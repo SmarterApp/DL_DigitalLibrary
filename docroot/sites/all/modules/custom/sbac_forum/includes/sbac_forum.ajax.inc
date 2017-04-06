@@ -226,6 +226,39 @@ function sbac_forum__ajax__leave_forum_modal_callback($js = FALSE, $term, $uid =
   }
 }
 
+function sbac_forum__ajax__join_forum_modal_callback($js = FALSE, $term, $uid) {
+module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
+  if ($js) {
+    ctools_include('ajax');
+    ctools_include('modal');
+    ctools_add_js('ajax-responder');
+    ctools_modal_add_js();
+
+    $form_state = array(
+      'ajax' => TRUE,
+      'forum_to_join' => $term->tid,
+      'uid' => $uid,
+    );
+
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('sbac_forum_join_button_form', $form_state);
+
+    // This means the form has been executed
+    if (!empty($form_state['executed'])) {
+      $output = array();
+      $output[] = ctools_modal_command_dismiss();
+      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+        $url = url('user/' . $uid);
+        $output[] = ctools_ajax_command_redirect($url);
+      }
+    }
+    print ajax_render($output);
+    exit();
+  } else {
+    return drupal_get_form('sbac_forum_join_button_form', $term->tid, $uid);
+  }
+}
 
 function sbac_forum__ajax__delete_topic_modal_callback($js = FALSE, $term, $topic) {
   module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
