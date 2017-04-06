@@ -34,7 +34,7 @@ function sbac_user_setup_callback($page = '1') {
 
 /**
  * Returns an associated array of tid => name.
- * @param  array  $vocab_name [description]
+ * @param  string  $vocab_name [description]
  * @return array              [description]
  */
 function sbac_user_form_setup_select_taxonomy_options($vocab_name) {
