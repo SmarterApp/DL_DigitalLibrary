@@ -36770,12 +36770,14 @@ form#sbac-user-filter-form #edit-email {
 
 /* Forum Mailto links css */
 
+.node-type-topic #comments .mailto-link,
 .page-forums .mailto-link {
     background: url('/sites/all/themes/custom/SBAC/images/mailto.png') top center no-repeat;
     display: inline-block;
     width: 15px;
     height: 12px;
     margin-top: 4px;
+    margin-right: 5px;
 }
 
 
