@@ -45,7 +45,7 @@
   };
 
   /**
-   * Adjusts the hieght of the list.
+   * Adjusts the height of the list.
    *
    * @type {{attach: Function}}
    */

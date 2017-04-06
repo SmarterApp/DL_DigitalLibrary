@@ -60,14 +60,15 @@ function sbac_resource_update_projects_alter(&$projects) {
 function sbac_resource_menu() {
   $items = array();
 
-  $items['sbac_resource/%ctools_js/add-alignment'] = array(
+  $items['sbac_resource/%ctools_js/add-alignment/%'] = array(
     'title' => 'Add Alignment',
     'page callback' => 'sbac_resource_modal_callback',
-    'page arguments' => array(1),
+    'page arguments' => array(3, 1),
     'access arguments' => array('access content'),
     'file' => 'sbac_resource.forms.inc',
   );
 
+  // TODO: Delete this when the filter widget is no longer needed.
   $items['sbac_resource/%ctools_js/filter-by-alignment'] = array(
     'title' => 'Filter',
     'page callback' => 'sbac_resource_filter_modal_callback',
@@ -281,6 +282,12 @@ function sbac_resource_profile_fields(&$node) {
   if (isset($resource_node->field_alignment_term['und']['0'])) {
     $resource_node->resource_profile_left['ccss']['title'] = 'Common Core State Standards';
     $resource_node->resource_profile_left['ccss']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_alignment_term, TRUE);
+  }
+
+  // Target Tags
+  if (isset($resource_node->field_target_term['und']['0'])) {
+    $resource_node->resource_profile_left['targets']['title'] = 'Assessment Targets';
+    $resource_node->resource_profile_left['targets']['content'] = sbac_resource_taxonomy_get_taxonomy_terms($resource_node->field_target_term);
   }
 
   // Grades
@@ -1580,26 +1587,26 @@ function sbac_resource_node_load($nodes, $types) {
     //make sure we are looking at a node along the node path and it is published before we start to count views
     if (match_uri('node/[0-9]+') && $node->type == 'resource' && $node->status == '1') {
       // Grab the alignemnt terms.
-      $node->field_alignment_term = array();
-
-      $query = new EntityFieldQuery();
-      $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'alignment')
-        ->entityCondition('deleted', 0)
-        ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
-
-      $result = $query->execute();
-
-      if (isset($result['node'])) {
-        $terms = array();
-        foreach ($result['node'] as $item) {
-          if ($alignment = node_load($item->nid)) {
-            $terms = array_merge_recursive($terms, $alignment->field_education_alignment);
-          }
-        }
-
-        $node->field_alignment_term = $terms;
-      }
+//      $node->field_alignment_term = array();
+//
+//      $query = new EntityFieldQuery();
+//      $query->entityCondition('entity_type', 'node')
+//        ->entityCondition('bundle', 'alignment')
+//        ->entityCondition('deleted', 0)
+//        ->fieldCondition('field_resource_reference', 'target_id', $node->nid);
+//
+//      $result = $query->execute();
+//
+//      if (isset($result['node'])) {
+//        $terms = array();
+//        foreach ($result['node'] as $item) {
+//          if ($alignment = node_load($item->nid)) {
+//            $terms = array_merge_recursive($terms, $alignment->field_education_alignment);
+//          }
+//        }
+//
+//        $node->field_alignment_term = $terms;
+//      }
 
 
       //make sure we are only viewing through the content/* path

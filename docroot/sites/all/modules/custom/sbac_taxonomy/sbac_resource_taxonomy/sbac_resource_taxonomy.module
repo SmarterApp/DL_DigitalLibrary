@@ -86,7 +86,7 @@ function _sbac_resource_taxonomy_get_parents($tid){
  */
 function sbac_resource_taxonomy_taxonomy_term_load($terms) {
   foreach ($terms as $term) {
-    if ($term->vocabulary_machine_name == 'education_alignment') {
+    if ($term->vocabulary_machine_name == 'education_alignment' || $term->vocabulary_machine_name == 'target_alignment') {
       continue;
     }
 
