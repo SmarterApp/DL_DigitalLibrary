@@ -302,18 +302,30 @@ function sbac_user_form_setup_parent_taxonomy_options($vocab_name) {
  */
 function sbac_user_setup_subject_builder($options) {
   $values = array(); // The values that are being returned.
-  $tids = array(); // The tids already in the list (to avoid dupes).
-  foreach ($options AS $idx => $tid) {
-    if (!in_array($tid, $tids)) {
-      $tids[] = $tid;
-      $values[] = array('tid' => $tid);
+  $processed_options = array(); // The list of options after processing for missing parents.
+
+  // Go through the selected options and...
+  foreach ($options as $tid) {
+    $parents = taxonomy_get_parents($tid);
+    // If the term has parents, check to see if the parent is already selected.
+    if (count($parents)) {
+      $parent = reset($parents);
+      // If the parent isn't already selected, select it (this will correct the current users that only have children selected).
+      if (!in_array($parent->tid, $options) && !in_array($parent->tid, $processed_options)) {
+        $processed_options[] = $parent->tid;
+      }
     }
+    // If this *is* a parent, just add it.
+    else {
+      $processed_options[] = $tid;
+    }
+  }
+  // Now we add the parents and children to the values.
+  foreach ($processed_options AS $tid) {
+    $values[] = array('tid' => $tid);
     $children = taxonomy_get_children($tid);
     foreach ($children as $term) {
-      if (!in_array($term->tid, $tids)) {
-        $tids[] = $term->tid;
-        $values[] = array('tid' => $term->tid);
-      }
+      $values[] = array('tid' => $term->tid);
     }
   }
   return $values;
@@ -369,12 +381,21 @@ function sbac_user_form_alter(&$form, &$form_state, $form_id) {
 
       // Load only the parent options for normal subject selection.
       $form['field_subject_s_'][LANGUAGE_NONE]['#options'] = sbac_user_form_setup_parent_taxonomy_options('subject');
-      // If the user already has child items selected, add them to the options.
+      // If the user already has child items selected, add them to the options if they don't have the parents set.
       if (isset($user->field_subject_s_[LANGUAGE_NONE]) && count($user->field_subject_s_[LANGUAGE_NONE])) {
-        foreach ($user->field_subject_s_[LANGUAGE_NONE] as $tid) {
-          if (!isset($form['field_subject_s_'][LANGUAGE_NONE]['#options'][$tid['tid']])) {
-            $term = taxonomy_term_load($tid['tid']);
-            $form['field_subject_s_'][LANGUAGE_NONE]['#options'][$term->tid] = $term->name;
+        foreach ($user->field_subject_s_[LANGUAGE_NONE] as $term) {
+          $parents = taxonomy_get_parents($term['tid']);
+          if (count($parents)) {
+            $parent = reset($parents);
+            $parent_set = FALSE;
+            foreach ($user->field_subject_s_[LANGUAGE_NONE] as $t) {
+              if ($t['tid'] == $parent->tid) {
+                $parent_set = TRUE;
+              }
+            }
+            if (!$parent_set) {
+              $form['field_subject_s_'][LANGUAGE_NONE]['#options'][$term['tid']] = $term['taxonomy_term']->name;
+            }
           }
         }
       }
