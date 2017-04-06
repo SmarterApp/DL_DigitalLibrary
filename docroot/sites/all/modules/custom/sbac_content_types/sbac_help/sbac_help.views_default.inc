@@ -218,7 +218,7 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['field_help_topic_category']['table'] = 'field_data_field_help_topic_category';
   $handler->display->display_options['fields']['field_help_topic_category']['field'] = 'field_help_topic_category';
   $handler->display->display_options['fields']['field_help_topic_category']['label'] = '';
-  $handler->display->display_options['fields']['field_help_topic_category']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_help_topic_category']['exclude'] = FALSE;
   $handler->display->display_options['fields']['field_help_topic_category']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_help_topic_category']['type'] = 'taxonomy_term_reference_plain';
   /* Field: Content: PDF or Word Doc */
@@ -283,6 +283,7 @@ function sbac_help_views_default_views() {
     'edit_node' => 'edit_node',
     'delete_node' => 'delete_node',
     'fields_combine' => 'fields_combine',
+    'field_help_topic_category' => 'field_help_topic_category',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -321,6 +322,13 @@ function sbac_help_views_default_views() {
       'empty_column' => 0,
     ),
     'fields_combine' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_help_topic_category' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,

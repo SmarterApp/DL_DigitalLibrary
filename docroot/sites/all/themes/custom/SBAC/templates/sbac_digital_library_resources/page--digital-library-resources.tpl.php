@@ -106,7 +106,10 @@ drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.
       </div>
    <?php endif; ?>
     <div class="search right">
-      <?php print drupal_render(drupal_get_form('sbac_digital_library_resources_form')); ?>
+      <?php
+      $form = drupal_get_form('sbac_digital_library_resources_form');
+      print drupal_render($form);
+      ?>
     </div>
             </div>
 </div>
@@ -249,7 +252,7 @@ drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.
           <?php print render($action_links); ?>
         </ul>
       <?php endif; ?>
-      <?php print drupal_render(drupal_get_form('views_exposed_form_digital_library_resources_page')); ?>
+      <?php //print drupal_render(drupal_get_form('views_exposed_form_digital_library_resources_page')); ?>
       <?php print render($page['content']); ?>
     </div>
     <?php if ($user->uid && !empty($page['sidebar_first'])): ?>

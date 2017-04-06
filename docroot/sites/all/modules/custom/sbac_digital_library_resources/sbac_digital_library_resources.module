@@ -45,7 +45,7 @@ function sbac_digital_library_resources_form($form, &$form_state) {
   $query = drupal_get_query_parameters();
   $form['sbac_digital_library_resources_text'] = array(
     '#type' => 'textfield',
-    '#default_value' => ($query['keyword'] ? $query['keyword'] : '' ),
+    '#default_value' => (isset($query['keyword']) ? $query['keyword'] : '' ),
   );
   $form['submit'] = array(
      '#type' => 'submit',

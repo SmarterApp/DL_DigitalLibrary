@@ -189,7 +189,7 @@ function sbac_forum_preprocess_node__topic(&$vars) {
   $flag_out = array();
   $moderator = sbac_flag_forum_moderation_access($vars['nid']);
   if ($moderator) {
-    $flags = sbac_flag_get_forum_flags($node_data->nid->value(), $_GET['cid']);
+    $flags = sbac_flag_get_forum_flags($node_data->nid->value(), 0);
 
     while ($flag = $flags->fetchAssoc()) {
       $flag_out[$flag['flag_selected']][] = $flag;
