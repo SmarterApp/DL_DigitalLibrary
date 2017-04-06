@@ -356,7 +356,7 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
  * @param bool $add_comma
  * @return null|string
  */
-function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE, $mail_to = FALSE) {
+function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE, $mail_to = TRUE) {
 //  $cached_output = cache_get('authpane_' . $user_id);
   $cached_output = FALSE;
   if ($cached_output) {
