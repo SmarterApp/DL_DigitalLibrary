@@ -276,8 +276,7 @@ SQL;
  */
 function sbac_email_user_link($user_object) {
   global $base_url;
-  $user_name = str_replace(' ', '-', strtolower(sbac_user_format_username($user_object)));
-  $user_name_clean = str_replace('.', '', $user_name);
+  $url = url('user/' . $user_object->uid);
 
-  return $base_url . '/users/' . $user_name_clean;
+  return $base_url . $url;
 }
