@@ -204,6 +204,7 @@ features[variable][] = autologout_role_logout
 features[variable][] = autologout_timeout
 features[variable][] = autologout_use_watchdog
 features[variable][] = field_bundle_settings_user__user
+features[variable][] = pathauto_user_pattern
 features[variable][] = print_pdf_autoconfig
 features[variable][] = print_pdf_book_link
 features[variable][] = print_pdf_content_disposition
