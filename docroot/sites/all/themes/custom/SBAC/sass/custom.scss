@@ -4267,3 +4267,37 @@ form#sbac-user-filter-form #edit-email {
 .page-admin-structure-taxonomy-glossary-terms #taxonomy-overview-terms {
     padding-top: 20px;
 }
+
+.page-admin-sbac-authorized-domains {
+  #edit-submit-authorized-domains {
+    top:-192px;
+    left:430px;
+    position:relative;
+  }
+
+  #views-exposed-form-authorized-domains-page {
+    width:400px;
+    margin-bottom: -45px;
+
+    .views-submit-button {
+      height: 0;
+    }
+
+    .help-topic-links {
+      position: relative;
+
+      a {
+        float: none;
+      }
+
+      &.download-wrapper {
+        top: -110px;
+        left: 512px;
+      }
+      &.reset-wrapper {
+        top: -142px;
+        left: 634px;
+      }
+    }
+  }
+}

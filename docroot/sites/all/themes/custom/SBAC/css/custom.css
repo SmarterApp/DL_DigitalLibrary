@@ -37092,5 +37092,35 @@ body.page-help-topics h1 {
   margin-left: 10px;
 }
 .page-admin-structure-taxonomy-glossary-terms #taxonomy {
-    margin-top: 20px;
+  margin-top: 20px;
+}
+
+.page-admin-sbac-authorized-domains #edit-submit-authorized-domains {
+  top:-192px;
+  left:430px;
+  position:relative;
+}
+
+.page-admin-sbac-authorized-domains #views-exposed-form-authorized-domains-page {
+  width:400px;
+  margin-bottom: -45px;
+}
+
+.page-admin-sbac-authorized-domains #views-exposed-form-authorized-domains-page .views-submit-button {
+  height: 0;
+}
+
+.page-admin-sbac-authorized-domains .help-topic-links {
+  position: relative;
+}
+.page-admin-sbac-authorized-domains .help-topic-links a {
+  float: none;
+}
+.page-admin-sbac-authorized-domains .download-wrapper {
+  top: -110px;
+  left: 512px;
+}
+.page-admin-sbac-authorized-domains .reset-wrapper {
+  top: -142px;
+  left: 634px;
 }
