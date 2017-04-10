@@ -37124,3 +37124,7 @@ body.page-help-topics h1 {
   top: -142px;
   left: 634px;
 }
+
+.page-node-submission .webform-submission-actions .printpdf {
+    display: none;
+}
