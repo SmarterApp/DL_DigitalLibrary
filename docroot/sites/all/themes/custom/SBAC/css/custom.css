@@ -37072,12 +37072,14 @@ body.page-help-topics h1 {
   top: -3px;
 }
 
-.node-type-resource .section-quality-criteria-review .helpful-info > a.help-topic-link {
+.node-type-resource .section-quality-criteria-review .helpful-info > a.help-topic-link,
+.node-type-resource .section-gate-keeping-criteria-review .helpful-info > a.help-topic-link {
   top: -34px;
   right: 0;
 }
 
-.page-admin-sbac-feedback-quality-review .wysiwyg-toggle-wrapper {
+.page-admin-sbac-feedback-quality-review .wysiwyg-toggle-wrapper,
+.page-admin-sbac-feedback-gate-keeper .wysiwyg-toggle-wrapper {
   top: -3px;
 }
 
