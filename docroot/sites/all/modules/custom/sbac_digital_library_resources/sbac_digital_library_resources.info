@@ -1,3 +1,4 @@
+; REMOVED FROM USE in the initial DL.07 release
 name = SBAC Digital Library Resources
 description = Provides functionality for Digital Library Resources page and search
 core = 7.x

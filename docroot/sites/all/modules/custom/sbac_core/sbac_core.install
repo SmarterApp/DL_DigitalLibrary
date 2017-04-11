@@ -256,6 +256,50 @@ function sbac_core_update_8001() {
   module_enable($modules);
 }
 
+/**
+ * Clean up previously removed modules
+ */
+function sbac_core_update_8002() {
+  $modules = array(
+    'media_youtube',
+    'media_vimeo',
+    'smtp',
+  );
+
+  db_delete('system')
+    ->condition('name', $modules, 'IN')
+    ->condition('type', 'module')
+    ->execute();
+}
+
+/**
+ * Remove modules related to search as they are being replaced
+ */
+function sbac_core_update_8003() {
+  $modules = array(
+    'acquia_connector',
+    'acquia_agent',
+    'acquia_search',
+    'acquia_spi',
+    'acquia_search_multi_subs',
+    'apachesolr',
+    'apachesolr_search',
+    'apachesolr_user',
+    'apachesolr_views',
+    'apachesolr_workbench_moderation',
+    'facetapi',
+    'facetapi_taxonomy_sort',
+    'jqmulti',
+
+    'sbac_forum_search',
+    'sbac_digital_library_resources',
+    'sbac_search',
+  );
+
+  module_disable($modules);
+  drupal_uninstall_modules($modules);
+}
+
 function sbac_core_uninstall(){
   variable_del('taskit_visibility');
 }
