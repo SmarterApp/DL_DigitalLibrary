@@ -3827,6 +3827,17 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
   left: 5px;
 }
 
+/* Resource Review List */
+.list-view .view-resource-review .resource-type {
+  bottom: 0;
+  right: 0.9375em;
+}
+
+.list-view .view-resource-review .resource-resub {
+  bottom: 0;
+  left: 0.9375em;
+}
+
 .view-resource-review .resource-stats {
   margin-bottom: 15px;
 }
