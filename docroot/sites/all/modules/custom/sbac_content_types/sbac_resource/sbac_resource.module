@@ -2788,25 +2788,7 @@ function sbac_resource_block_view($delta = '') {
   $block = array();
   switch ($delta) {
     case 'sbac_resource_results_count':
-      switch (arg(0)) {
-        case 'my-resources':
-          $name = SBAC_SEARCH_MY_RESOURCES_COUNT;
-          break;
-        case 'digital-library-resources':
-          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
-          break;
-        case 'resource-review':
-          $name = SBAC_SEARCH_RESOURCE_REVIEW_COUNT;
-          break;
-        default:
-          $name = SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT;
-          break;
-      }
-
       $count = 0;
-      if (isset($_SESSION[$name])) {
-        $count = $_SESSION[$name];
-      }
       $block['subject'] = NULL;
       $block['content'] = '<h3 class="left"><span>' . $count . '</span>' . t(' Resources:') . '</h3>';
       break;
