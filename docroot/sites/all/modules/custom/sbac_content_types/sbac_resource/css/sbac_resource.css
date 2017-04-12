@@ -3810,6 +3810,31 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
   margin-left: 20px;
 }
 
+/* Reviewer Description */
+.view-resource-review .reviewer-description {
+  position: absolute;
+  left: 0.9375em;
+  top: -2em;
+}
+
+.view-resource-review .reviewer-description div {
+  margin-left: 10px;
+  padding: 5px;
+  background-color: #3799ba;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.view-display-id-list_view.view-resource-review .reviewer-description div {
+  margin-left: 0;
+}
+
+.view-display-id-grid_view.view-resource-review .view-content,
+.view-display-id-list_view.view-resource-review .view-content {
+  margin: 1em 0 0 0;
+}
+
 /* Resource Review */
 .view-resource-review .resource-type {
   position: absolute;    
