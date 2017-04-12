@@ -44,6 +44,11 @@
         <?php echo $fields['field_alt_body']->content; ?>
       <?php endif; ?>
     </div>
+    <?php if (isset($fields['resub'])): ?>
+      <div class='resource-resub'>
+        <?php echo $fields['resub']; ?>
+      </div>
+    <?php endif; ?>
     <div class='resource-type'>
       <?php if (isset($fields['field_focus'])): ?>
         <?php echo $fields['field_focus']->content; ?>

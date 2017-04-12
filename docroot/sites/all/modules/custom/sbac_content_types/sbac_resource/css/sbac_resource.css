@@ -3819,6 +3819,14 @@ form[id*="sbac-resource-submit-resource-form"] #edit-cancel-overlay:before {
   right: 5px;
 }
 
+.view-resource-review .resource-resub {
+  position: absolute;
+  color: #f00;
+  font-size: 14px;
+  bottom: 5px;
+  left: 5px;
+}
+
 .view-resource-review .resource-stats {
   margin-bottom: 15px;
 }
