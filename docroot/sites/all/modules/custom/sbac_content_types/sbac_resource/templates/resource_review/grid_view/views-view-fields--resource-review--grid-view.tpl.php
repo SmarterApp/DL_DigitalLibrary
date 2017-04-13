@@ -51,7 +51,7 @@
     <?php endif; ?>
     <div class='resource-type'>
       <?php if (isset($fields['field_focus'])): ?>
-        <?php echo $fields['field_focus']->content; ?>
+        <?php echo truncate_utf8(strip_tags($fields['field_focus']->content), 27, FALSE, TRUE); ?>
       <?php endif; ?>
     </div>
   </div>
