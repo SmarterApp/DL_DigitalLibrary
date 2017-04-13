@@ -227,21 +227,7 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
   $display = sbac_resource_determine_grid_or_list();
   $view = views_get_view('resource_review');
   $view->set_display($display);
-  // Remove session load more attribute when search is applied.
-  if (isset($_POST['current_filters']) || isset($_POST['search_keywords'])) {
-    unset($_SESSION['load_more'][$view->name]);
-  }
-  // If pager in URL is provided, change pager
-  if ($page) {
-    $view->items_per_page = ($page + 1) * 12;
-    $_SESSION['load_more'][$view->name]['page'] = $page;
-  }
-  // If session is set, change pager.
-  else {
-    if (isset($_SESSION['load_more'][$view->name]['page'])) {
-      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
-    }
-  }
+
   $view->apply_filter = $apply_filter;
   $view->resubmission_only = $resubmission_only;
   if ($apply_filter === TRUE) {
@@ -250,7 +236,7 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
   $total_rows = $view->total_rows;
-//    dpq($view->build_info['query']);
+
   $output = array();
   if ($ajax) {
     // Create the Drupal.settings attribute
