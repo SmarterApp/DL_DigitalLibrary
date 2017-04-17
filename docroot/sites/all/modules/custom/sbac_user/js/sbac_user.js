@@ -56,6 +56,16 @@
         }
       });
 
+      $(document).ready(function () {
+        var hash = window.location.hash.substr(1);
+        if (hash === 'edit-group_expertise') {
+          $("#vertical-tabs-default").val("edit-group_expertise");
+        }
+        if (hash === 'edit-group_privacy') {
+          $("#vertical-tabs-default").val("edit-group_privacy");
+        }
+      });
+
       // set the default vertical tab on user profile form
       $("form#user-profile-form #edit-submit").click(function () {
         if ($('#edit-group_expertise[style*="display: block;"]').length) {
