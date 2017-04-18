@@ -208,7 +208,7 @@ class Base {
     // attach helpful info
     if ($helpful_info = $this->getVar('help')) {
       // add edit link for appropriate roles
-      if (in_array('administrator', $user->roles) || in_array('moderator', $user->roles) || in_array('DLRB member', $user->roles) || in_array('help desk', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
+      if (in_array('administrator', $user->roles) || in_array('moderator', $user->roles) || in_array('help desk', $user->roles) || in_array('digital library administrator', $user->roles) || in_array('system administrator', $user->roles)) {
         $output = theme('feedback_helpful_info', array(
           'helpful_info' => more_less_text($helpful_info),
           'edit_link' => '<a href="' . $edit_link . '" class="help-topic-link">Edit Help Text</a>',
