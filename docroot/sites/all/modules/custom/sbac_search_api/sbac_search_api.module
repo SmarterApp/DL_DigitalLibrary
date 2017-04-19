@@ -1,0 +1,104 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Search API feature.
+ */
+
+include_once 'sbac_search_api.features.inc';
+
+/**
+ * Implements hook_workbench_moderation_transition().
+ *
+ * This will trigger a re-index of this item when it's workbench status changes.
+ */
+function sbac_search_api_workbench_moderation_transition($node, $previous_state, $new_state) {
+  if (module_exists('search_api')) {
+    if ($previous_state != $new_state) {
+      search_api_track_item_change('node', array($node->nid));
+      $combined_id = 'node/' . $node->nid;
+      search_api_track_item_change('multiple', array($combined_id));
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ *
+ * This will add a "Workbench moderation state" field to any moderated entities via a callback.
+ */
+function sbac_search_api_entity_property_info_alter(&$info) {
+  foreach (array_keys($info['node']['bundles']) as $bundle) {
+    if (workbench_moderation_node_type_moderated($bundle)) {
+      $info['node']['bundles'][$bundle]['properties']['workbench_moderation_state'] = array(
+        'type' => 'text',
+        'label' => t('Workbench moderation state'),
+        'getter callback' => 'sbac_search_api_property_workbench_moderation_state_getter_callback',
+        'sanitized' => TRUE,
+      );
+    }
+  }
+}
+
+/**
+ * Getter callback to return current workbench moderation state.
+ */
+function sbac_search_api_property_workbench_moderation_state_getter_callback($node) {
+  $state = workbench_moderation_state_none();
+  if (isset($node->workbench_moderation['current']->state)) {
+    $state = $node->workbench_moderation['current']->state;
+  }
+  elseif ($node->status == NODE_PUBLISHED) {
+    $state = workbench_moderation_state_published();
+  }
+
+  return workbench_moderation_state_label($state);
+}
+
+/**
+ * Implements hook_facetapi_facet_info_alter().
+ *
+ * We're adding our own label mapper here to exclude any deleted taxonomy terms.
+ */
+function sbac_search_api_facetapi_facet_info_alter(array &$facet_info, array $searcher_info) {
+  // Only do this if it is the Search API facets.
+  if ($searcher_info['adapter'] == 'search_api') {
+    // Go through the fields and only do this to the taxonomy terms.
+    foreach ($facet_info as $bundle => $info) {
+      if ($info['field type'] == 'taxonomy_term') {
+        // Store the original mapper so we can use that as a starting point and won't have to rewrite it all.
+        $facet_info[$bundle]['map options']['upstream mapper'] = $facet_info[$bundle]['map callback'];
+        // Replace that mapper with ours.
+        $facet_info[$bundle]['map callback'] = 'sbac_search_api_facetapi_map_callback';
+      }
+    }
+  }
+}
+
+/**
+ * Map Callback to exclude missing taxonomy terms.
+ *
+ * @param $values
+ * @param $options
+ * @return array|mixed
+ */
+function sbac_search_api_facetapi_map_callback($values, $options) {
+  $map = array();
+
+  // Start with the original mapper.
+  if (isset($options['upstream mapper']) && is_callable($options['upstream mapper'])) {
+    $map = call_user_func($options['upstream mapper'], $values, $options);
+  }
+
+  // Make all of the indexed IDs the keys so we can compare them to the already mapped items ($map is id => label).
+  $ids = array_flip($values);
+  // Get the items that have not been mapped, which means a label couldn't be found, which means they don't exist.
+  $diff = array_diff_key($ids, $map);
+  // Set all of those items to NULL, as the facet_api module will interpret this as the item should be excluded.
+  // This requires the dev version of facet_api (see https://www.drupal.org/node/2545130).
+  foreach ($diff as $k => $d) {
+    $diff[$k] = NULL;
+  }
+  // Add the two arrays together and we have our final map.
+  $map = $map + $diff;
+  return $map;
+}
