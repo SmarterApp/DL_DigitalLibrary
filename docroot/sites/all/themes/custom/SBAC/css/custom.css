@@ -33008,6 +33008,18 @@ a.tabledrag-handle .handle {
     width: 49%;
 }
 
+#alignment-tag-container .standard-parent,
+#target-tag-container .standard-child,
+#target-tag-container .standard-child-last {
+    background-color: #b4d6f5;
+}
+
+#target-tag-container .standard-parent,
+#alignment-tag-container .standard-child,
+#alignment-tag-container .standard-child-last {
+    background-color: #b9f3cc;
+}
+
 .clearer {
     height: 1px;
     clear: both;
