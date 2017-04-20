@@ -102,3 +102,93 @@ function sbac_search_api_facetapi_map_callback($values, $options) {
   $map = $map + $diff;
   return $map;
 }
+
+/**
+ * Invalidates the cached search pre-filter URL data.
+ */
+function _sbac_search_api_invalidate_pre_filter_cache() {
+  unset($_SESSION['user_pre_filters']);
+}
+
+/**
+ * Sets the cached search pre-filter URL data.
+ *
+ * @param $value string The URL data to cache
+ */
+function _sbac_search_api_set_pre_filter_cache($value) {
+  $_SESSION['user_pre_filters'] = $value;
+}
+
+/**
+ * Returns the cached search pre-filter URL data.
+ *
+ * @return bool|string The cached search pre-filter URL data if set, false otherwise
+ */
+function _sbac_search_api_get_pre_filter_cache() {
+  if (isset($_SESSION['user_pre_filters'])) {
+    return $_SESSION['user_pre_filters'];
+  }
+  return FALSE;
+}
+
+/**
+ * Checks to see of a tid is set in a taxonomy term reference field.
+ *
+ * @param $entity Entity
+ * @param $field string Name of the field to search
+ * @param $value int TID to search for
+ * @return bool
+ */
+function _sbac_search_api_term_check($entity, $field, $value) {
+  foreach ($entity->{$field}[LANGUAGE_NONE] as $info) {
+    if ($info['tid'] == $value) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Returns a FacetAPI Pretty URL set of filters to default users to the subject(s) and grade(s) in their profile.
+ *
+ * @return bool|string
+ */
+function _sbac_search_api_get_pre_filters() {
+  // Only run through this if the cache isn't valid.
+  if (!$filters = _sbac_search_api_get_pre_filter_cache()) {
+    global $user;
+    $filters = '';
+    // Don't do this for anon users.
+    if (user_is_logged_in()) {
+      // We need this to get the pretty taxonomy names.
+      require_once drupal_get_path('module', 'pathauto') . '/pathauto.inc';
+
+      $account = user_load($user->uid);
+
+      // Get the pretty aliases instead of hard-coding them in here in case they change.
+      $adapter = facetapi_adapter_load('search_api@default_node_index');
+      $processor = new FacetapiUrlProcessorPrettyPaths($adapter);
+      $facets = facetapi_get_facet_info('search_api@default_node_index');
+      $subject_alias = $processor->getFacetPrettyPathsAlias($facets['field_subject']);
+      $grade_alias = $processor->getFacetPrettyPathsAlias($facets['field_grades']);
+
+      // Get the subject and grade TIDs for the user, and process them into the URL.
+      $fields = array('field_subject_s_' => $subject_alias, 'field_grade_level_s_' => $grade_alias);
+      foreach ($fields as $field => $alias) {
+        foreach ($account->{$field}[LANGUAGE_NONE] as $key => $info) {
+          $term = taxonomy_term_load($info['tid']);
+          // Only add the child terms if their parent isn't set.
+          if (!($term->parent && _sbac_search_api_term_check($account, $field, $term->parent))) {
+            // Get the pretty taxonomy name
+            $name = pathauto_cleanstring($term->name);
+            // Put together the URL using the FacetAPI Pretty rule.
+            $filters .= "/$alias/" . "$name-" . $term->tid;
+          }
+        }
+      }
+      // Set the cache.
+      _sbac_search_api_set_pre_filter_cache($filters);
+    }
+  }
+  return $filters;
+}

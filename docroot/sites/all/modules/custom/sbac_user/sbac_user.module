@@ -1163,6 +1163,9 @@ function sbac_user_user_update(&$edit, $account, $category) {
   //    cache_clear_all('authpane_' . $account->uid);
   //  }
   //}
+  if (module_exists('sbac_search_api')) {
+    _sbac_search_api_invalidate_pre_filter_cache();
+  }
 }
 
 /**

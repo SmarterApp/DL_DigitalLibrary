@@ -311,6 +311,12 @@ function sbac_links__system_main_menu($vars) {
   // Get all the main menu links
   $menu_links = menu_tree_output(menu_tree_all_data('main-menu'));
 
+  // Add user specific subject and grade filters based on their profile.
+  $pre_filters = '';
+  if (module_exists('sbac_search_api')) {
+    $pre_filters = _sbac_search_api_get_pre_filters();
+  }
+
   // Initialize some variables to prevent errors
   $output = '';
   $sub_menu = '';
@@ -323,10 +329,13 @@ function sbac_links__system_main_menu($vars) {
 
     // Render top level and make sure we have an actual link
     if (!empty($link['#href'])) {
+      if ($pre_filters && in_array($link['#href'], array('instructional', 'professional-learning', 'playlist'))) {
+        $link['#href'] .= $pre_filters;
+      }
 
       $output .= '<li' . drupal_attributes($link['#attributes']) . '>' . l($link['#title'], $link['#href']);
-// Uncomment if we don't want to repeat the links under the dropdown for large-screen
-//      $small_link['#attributes']['class'][] = 'show-for-small';
+      // Uncomment if we don't want to repeat the links under the dropdown for large-screen
+      //$small_link['#attributes']['class'][] = 'show-for-small';
       $sub_menu = '<li' . drupal_attributes($small_link['#attributes']) . '>' . l($link['#title'], $link['#href']);
       // Get sub navigation links if they exist
       foreach ($link['#below'] as $key => $sub_link) {
