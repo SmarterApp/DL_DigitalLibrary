@@ -20,7 +20,10 @@ function sbac_search_api_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -41,7 +44,10 @@ playlist',    'roles' => array(),
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -62,7 +68,10 @@ playlist',    'roles' => array(),
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -83,7 +92,10 @@ playlist',    'roles' => array(),
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',
+playlist
+instructional/*
+professional-learning/*
+playlist/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -105,7 +117,10 @@ playlist',
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -126,7 +141,10 @@ playlist',    'roles' => array(),
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -147,7 +165,10 @@ playlist',    'roles' => array(),
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -168,7 +189,10 @@ playlist',    'roles' => array(),
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -189,7 +213,10 @@ playlist',    'roles' => array(),
     'node_types' => array(),
     'pages' => 'instructional
 professional-learning
-playlist',    'roles' => array(),
+playlist
+instructional/*
+professional-learning/*
+playlist/*',    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
