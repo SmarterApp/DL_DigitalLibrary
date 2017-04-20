@@ -106,6 +106,8 @@
             </div>
 </div>
 
+    <div class="resource-feature"><?php print render($page['resource_feature']); ?></div>
+
 <?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
             <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>
             <div class="inner-wrap">

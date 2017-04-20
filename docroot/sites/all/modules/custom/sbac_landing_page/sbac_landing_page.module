@@ -29,7 +29,6 @@ function sbac_landing_page(){
   $variables['featured_content'] = lp_featured_content();
   $variables['leaderboards'] = lp_get_leaderboards();
   $variables['help_topics'] = lp_help_topics();
-  $variables['find_resource'] = lp_find_resource();
   return theme('sbac_landing_page',$variables);
 }
 
@@ -75,17 +74,7 @@ function lp_featured_content(){
   }
 }
 
-function lp_find_resource(){
-   if(module_exists('sbac_search')){
-      $resource_filters = drupal_get_form('sbac_search_landing_page_resources_form');
-      return drupal_render($resource_filters);
-    }else{
-      $output = '<div class="resources-wrap"><div class="resources-wrap-inner">';
-      $output .= '<div class="resources-link">' . t('What resources are you looking for?') . '</div>';
-      $output .= '<div class="resources-link-button"><a href="/digital-library-resources">' . t('FIND RESOURCES') . '</a></div></div></div>';
-      return $output;
-    }
-}
+
 
 function lp_get_leaderboards() {
   global $user;
