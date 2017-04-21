@@ -800,6 +800,10 @@ function sbac_preprocess_views_view(&$variables) {
     drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_reset.js');
     drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_css.js');
   }
+  if ($variables['view']->name == 'search_api_resource_views') {
+    drupal_add_css(drupal_get_path('module', 'sbac_search_api') . '/css/sbac_search_api.css');
+    drupal_add_js(drupal_get_path('module', 'sbac_search_api') . '/js/sbac_search_api.js');
+  }
 }
 
 /**
@@ -1187,3 +1191,29 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '', $mail_to = F
   }
 }
 
+function sbac_facetapi_deactivate_widget($variables) {
+  return '';
+}
+
+function sbac_facetapi_link_active($variables) {
+  // Sanitizes the link text if necessary.
+  $sanitize = empty($variables['options']['html']);
+  $link_text = ($sanitize) ? check_plain($variables['text']) : $variables['text'];
+
+  // Theme function variables for accessible markup.
+  // @see http://drupal.org/node/1316580
+  $accessible_vars = array(
+    'text' => $variables['text'],
+    'active' => TRUE,
+  );
+
+  // Builds link, passes through t() which gives us the ability to change the
+  // position of the widget on a per-language basis.
+  $replacements = array(
+    '!facetapi_deactivate_widget' => theme('facetapi_deactivate_widget', $variables),
+    '!facetapi_accessible_markup' => theme('facetapi_accessible_markup', $accessible_vars),
+  );
+  $variables['text'] = t('!facetapi_deactivate_widget!facetapi_accessible_markup', $replacements) . $link_text;
+  $variables['options']['html'] = TRUE;
+  return theme_link($variables);
+}

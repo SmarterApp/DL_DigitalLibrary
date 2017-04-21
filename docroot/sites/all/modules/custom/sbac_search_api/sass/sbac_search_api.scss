@@ -1,0 +1,80 @@
+$block-grey: #ddd;
+
+.page-instructional, .page-professional-learning, .page-playlist {
+  .block-facetapi {
+    box-sizing: border-box;
+    border: $block-grey solid 1px;
+    margin-bottom: 20px;
+
+    h2.block-title {
+      margin: 0;
+      padding: 5px 32px 5px 5px;
+      background: $block-grey url("../images/facet_open.png") 98% 50%/24px 24px no-repeat;
+    }
+
+    p {
+      padding: 5px;
+      margin: 0;
+    }
+
+    .item-list ul {
+      padding: 0;
+      margin: 0;
+    }
+
+    li .item-list ul {
+      padding-left: 10px;
+    }
+
+    li {
+      margin: 0;
+      padding: 5px;
+      list-style: none;
+      background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+      font-size: 13px;
+
+      .facetapi-collapsible-handle {
+        display: inline-block;
+        width: 12px;
+        color: transparent;
+      }
+
+      .facetapi-collapsible-handle.plus-sign {
+        background: transparent url("../images/facet_open.png") center center/12px 12px no-repeat;
+      }
+
+      .facetapi-collapsible-handle.minus-sign {
+        background: transparent url("../images/facet_close.png") center center/12px 12px no-repeat;
+      }
+
+      .element-invisible {
+        display: none;
+      }
+
+      .facetapi-facet .checkbox-spacer {
+        display: inline-block;
+        width: 17px;
+      }
+    }
+
+    li.active {
+      background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
+    }
+  }
+
+  .block-facetapi:nth-child(1), .block-facetapi:nth-child(2) {
+    li {
+      background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
+    }
+
+    li.active {
+      background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+    }
+  }
+
+  .block-facetapi.expanded {
+    h2.block-title {
+      background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
+    }
+  }
+}
