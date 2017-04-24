@@ -1007,6 +1007,73 @@ function sbac_preprocess_views_view_fields(&$variables) {
       }
     }
   }
+
+  if ($variables['view']->name == 'search_api_resource_views') {
+    // Process the content property to remove any tags for the raw property.
+    $raw_process = array('nid', 'title', 'sticky', 'url', 'field_grades', 'field_subject');
+    foreach ($raw_process as $field) {
+      $variables['fields'][$field]->raw = strip_tags($variables['fields'][$field]->content);
+    }
+
+    // Format the grade field.
+    $variables['fields']['field_grades']->raw = preg_replace("/Grade /", '', $variables['fields']['field_grades']->raw);
+
+    // Turn the subjects into icons.
+    $icons = array(
+      'ELA' => 'ela.png',
+      'Math' => 'math.png',
+      'Science' => 'science.png',
+      'History' => 'history.png',
+      'Arts' => 'art.png',
+      'World Languages' => 'languages.png',
+      'Health' => 'health.png',
+      'Physical Education' => 'phys-ed.png',
+      'Career' => 'career.png',
+      'Other' => 'other.png',
+      'Not Subject Specific' => 'nss.png'
+    );
+    $variables['fields']['subject_icons'] = array();
+
+    $subjects = explode(', ', $variables['fields']['field_subject']->raw);
+    foreach ($subjects as $subject) {
+      foreach ($icons as $match => $icon) {
+        if (preg_match("/^$match/", $subject)) {
+          $variables['fields']['subject_icons'][$match]['url'] = base_path() . drupal_get_path('theme', 'SBAC') . "/images/subject-icons/$icon";
+          if (!isset($variables['fields']['subject_icons'][$match]['alt'])) {
+            $variables['fields']['subject_icons'][$match]['alt'] = $subject;
+          } else {
+            $variables['fields']['subject_icons'][$match]['alt'] .= ', ' . $subject;
+          }
+        }
+      }
+    }
+
+    // Get the thumbnail.
+    $image_assets = _sbac_resource_grid_image($variables['fields'], 'list');
+    if ($image_assets) {
+      $variables['fields']['image'] = $image_assets['image'];
+      $variables['fields']['mime-type'] = $image_assets['mime-type'];
+      $variables['fields']['file-type-icon'] = $image_assets['file-type-icon'];
+    }
+
+    // Do some external processing
+    $new_vars = _sbac_resource_digital_library_links($variables['fields']);
+    if (isset($new_vars['views'])) {
+      $variables['fields']['views'] = $new_vars['views'];
+    }
+    if (isset($new_vars['downloads'])) {
+      $variables['fields']['downloads'] = $new_vars['downloads'];
+    }
+    if (isset($new_vars['media_types'])) {
+      $variables['fields']['media_types'] = $new_vars['media_types'];
+    }
+    if (isset($new_vars['rating'])) {
+      $variables['fields']['rating'] = $new_vars['rating'];
+    }
+    if (isset($new_vars['rating_count'])) {
+      $variables['fields']['rating_count'] = $new_vars['rating_count'];
+    }
+  }
 }
 
 function sbac_digital_library_resources_applied_filters(){
