@@ -144,3 +144,18 @@ SQL;
 
   return $sid;
 }
+
+/**
+ * Determines whether the SNE webform buttons should be visible based on it's published state and the user roles.
+ *
+ * @return bool
+ */
+function sbac_sne_webform_check_availability() {
+  global $user;
+  $webform = entity_uuid_load('node', array('243e273a-8fd4-4689-8b3d-bafdea8b9514'));
+  $webform = reset($webform);
+  if ($webform && $webform->status && !in_array('resource reviewer', $user->roles) && !in_array('resource contributor', $user->roles) && !in_array('resource publisher', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
+}
