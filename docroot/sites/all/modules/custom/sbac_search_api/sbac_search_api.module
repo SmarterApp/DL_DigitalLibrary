@@ -167,27 +167,29 @@ function _sbac_search_api_get_pre_filters() {
 
       // Get the pretty aliases instead of hard-coding them in here in case they change.
       $adapter = facetapi_adapter_load('search_api@default_node_index');
-      $processor = new FacetapiUrlProcessorPrettyPaths($adapter);
-      $facets = facetapi_get_facet_info('search_api@default_node_index');
-      $subject_alias = $processor->getFacetPrettyPathsAlias($facets['field_subject']);
-      $grade_alias = $processor->getFacetPrettyPathsAlias($facets['field_grades']);
+      if ($adapter) {
+        $processor = new FacetapiUrlProcessorPrettyPaths($adapter);
+        $facets = facetapi_get_facet_info('search_api@default_node_index');
+        $subject_alias = $processor->getFacetPrettyPathsAlias($facets['field_subject']);
+        $grade_alias = $processor->getFacetPrettyPathsAlias($facets['field_grades']);
 
-      // Get the subject and grade TIDs for the user, and process them into the URL.
-      $fields = array('field_subject_s_' => $subject_alias, 'field_grade_level_s_' => $grade_alias);
-      foreach ($fields as $field => $alias) {
-        foreach ($account->{$field}[LANGUAGE_NONE] as $key => $info) {
-          $term = taxonomy_term_load($info['tid']);
-          // Only add the child terms if their parent isn't set.
-          if (!($term->parent && _sbac_search_api_term_check($account, $field, $term->parent))) {
-            // Get the pretty taxonomy name
-            $name = pathauto_cleanstring($term->name);
-            // Put together the URL using the FacetAPI Pretty rule.
-            $filters .= "/$alias/" . "$name-" . $term->tid;
+        // Get the subject and grade TIDs for the user, and process them into the URL.
+        $fields = array('field_subject_s_' => $subject_alias, 'field_grade_level_s_' => $grade_alias);
+        foreach ($fields as $field => $alias) {
+          foreach ($account->{$field}[LANGUAGE_NONE] as $key => $info) {
+            $term = taxonomy_term_load($info['tid']);
+            // Only add the child terms if their parent isn't set.
+            if (!($term->parent && _sbac_search_api_term_check($account, $field, $term->parent))) {
+              // Get the pretty taxonomy name
+              $name = pathauto_cleanstring($term->name);
+              // Put together the URL using the FacetAPI Pretty rule.
+              $filters .= "/$alias/" . "$name-" . $term->tid;
+            }
           }
         }
+        // Set the cache.
+        _sbac_search_api_set_pre_filter_cache($filters);
       }
-      // Set the cache.
-      _sbac_search_api_set_pre_filter_cache($filters);
     }
   }
   return $filters;

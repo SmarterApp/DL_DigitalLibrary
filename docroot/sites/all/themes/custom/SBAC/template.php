@@ -1284,3 +1284,19 @@ function sbac_facetapi_link_active($variables) {
   $variables['options']['html'] = TRUE;
   return theme_link($variables);
 }
+
+function sbac_search_api_sorts_list(array $variables) {
+  $active_item = 'Default';
+  foreach ($variables['items'] as $key => $item) {
+    if ($item['#active']) {
+      $active_item = $item['#name'];
+      unset($variables['items'][$key]);
+    }
+  }
+  $parent = '<div class="default-sort">Sort: ' . $active_item . '</div>';
+  $items = array_map('render', $variables['items']);
+  $options = $variables['options'];
+  $items = $items ? theme('item_list', array('items' => $items) + $options) : '';
+
+  return '<div class="search-sort-widget">' . $parent . $items . '</div>';
+}

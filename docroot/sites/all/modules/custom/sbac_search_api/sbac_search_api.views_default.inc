@@ -23,21 +23,21 @@ function sbac_search_api_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Instructional Resources';
-  $handler->display->display_options['use_ajax'] = TRUE;
   $handler->display->display_options['use_more_always'] = FALSE;
-  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    2 => '2',
+  );
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Search';
+  $handler->display->display_options['exposed_form']['options']['exposed_sorts_label'] = 'Sort:';
+  $handler->display->display_options['exposed_form']['options']['expose_sort_order'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '12';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Header: Global: Result summary */
-  $handler->display->display_options['header']['result']['id'] = 'result';
-  $handler->display->display_options['header']['result']['table'] = 'views';
-  $handler->display->display_options['header']['result']['field'] = 'result';
-  $handler->display->display_options['header']['result']['content'] = '@total Results';
   /* Field: Indexed Node: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
@@ -135,54 +135,12 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['fields']['url']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['url']['display_as_link'] = FALSE;
   $handler->display->display_options['fields']['url']['link_to_entity'] = 0;
-  /* Sort criterion: Indexed Node: Sticky in lists */
-  $handler->display->display_options['sorts']['sticky']['id'] = 'sticky';
-  $handler->display->display_options['sorts']['sticky']['table'] = 'search_api_index_default_node_index';
-  $handler->display->display_options['sorts']['sticky']['field'] = 'sticky';
-  $handler->display->display_options['sorts']['sticky']['order'] = 'DESC';
-  /* Sort criterion: Indexed Node: Date changed */
-  $handler->display->display_options['sorts']['changed']['id'] = 'changed';
-  $handler->display->display_options['sorts']['changed']['table'] = 'search_api_index_default_node_index';
-  $handler->display->display_options['sorts']['changed']['field'] = 'changed';
-  $handler->display->display_options['sorts']['changed']['order'] = 'DESC';
   /* Filter criterion: Indexed Node: Workbench moderation state */
   $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
   $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
   $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
   $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
-
-  /* Display: Instructional Resources */
-  $handler = $view->new_display('page', 'Instructional Resources', 'instructional');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Instructional';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Indexed Node: Workbench moderation state */
-  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
-  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
-  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
-  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
-  /* Filter criterion: Indexed Node: Resource Type */
-  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
-  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
-  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
-  $handler->display->display_options['filters']['field_focus']['value'] = array(
-    84 => '84',
-    86 => '86',
-  );
-  $handler->display->display_options['path'] = 'instructional';
-
-  /* Display: Professional Learning Resources */
-  $handler = $view->new_display('page', 'Professional Learning Resources', 'professional_learning');
-  $handler->display->display_options['defaults']['title'] = FALSE;
-  $handler->display->display_options['title'] = 'Professional Learning';
-  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
-  $handler->display->display_options['defaults']['filters'] = FALSE;
-  /* Filter criterion: Indexed Node: Workbench moderation state */
-  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
-  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
-  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
-  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  $handler->display->display_options['filters']['workbench_moderation_state']['group'] = 1;
   /* Filter criterion: Indexed Node: Resource Type */
   $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
   $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
@@ -191,12 +149,148 @@ function sbac_search_api_views_default_views() {
     86 => '86',
     85 => '85',
   );
+  $handler->display->display_options['filters']['field_focus']['group'] = 1;
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group'] = 1;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+
+  /* Display: Instructional Resources */
+  $handler = $view->new_display('page', 'Instructional Resources', 'instructional');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Instructional';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  $handler->display->display_options['filters']['workbench_moderation_state']['group'] = 1;
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    84 => '84',
+    86 => '86',
+  );
+  $handler->display->display_options['filters']['field_focus']['group'] = 1;
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group'] = 1;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  $handler->display->display_options['path'] = 'instructional';
+
+  /* Display: Professional Learning Resources */
+  $handler = $view->new_display('page', 'Professional Learning Resources', 'professional_learning');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Professional Learning';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  $handler->display->display_options['filters']['workbench_moderation_state']['group'] = 1;
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    86 => '86',
+    85 => '85',
+  );
+  $handler->display->display_options['filters']['field_focus']['group'] = 1;
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group'] = 1;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
   $handler->display->display_options['path'] = 'professional-learning';
 
   /* Display: Playlist Resources */
   $handler = $view->new_display('page', 'Playlist Resources', 'playlist');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Playlist';
+  $handler->display->display_options['exposed_block'] = TRUE;
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Indexed Node: Workbench moderation state */
@@ -210,6 +304,34 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
   $handler->display->display_options['filters']['field_focus']['value'] = array(
     78306 => '78306',
+  );
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
   );
   $handler->display->display_options['path'] = 'playlist';
   $export['search_api_resource_views'] = $view;

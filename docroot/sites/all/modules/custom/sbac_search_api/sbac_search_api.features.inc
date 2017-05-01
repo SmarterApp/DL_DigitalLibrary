@@ -11,6 +11,9 @@ function sbac_search_api_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "facetapi" && $api == "facetapi_defaults") {
     return array("version" => "1");
   }
+  if ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => "1");
+  }
 }
 
 /**
@@ -167,10 +170,10 @@ function sbac_search_api_default_search_api_index() {
         "author" : { "type" : "integer", "entity_type" : "user" },
         "body:value" : { "type" : "text" },
         "changed" : { "type" : "date" },
-        "comment_count" : { "type" : "integer" },
         "created" : { "type" : "date" },
         "field_alignment_term" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_alt_body" : { "type" : "text" },
+        "field_asset_downloads" : { "type" : "integer" },
         "field_attributes" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_author" : { "type" : "text" },
         "field_digital_media_type" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
@@ -178,10 +181,12 @@ function sbac_search_api_default_search_api_index() {
         "field_focus" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "field_grades" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_intended_student" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_node_avg_rating" : { "type" : "decimal" },
         "field_smarter_balanced_keyword" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_subject" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_summary" : { "type" : "text" },
         "field_target_term" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_unique_views" : { "type" : "integer" },
         "search_api_access_node" : { "type" : "list\\u003Cstring\\u003E" },
         "search_api_language" : { "type" : "string" },
         "search_api_url" : { "type" : "uri" },
@@ -189,8 +194,7 @@ function sbac_search_api_default_search_api_index() {
         "sticky" : { "type" : "boolean" },
         "title" : { "type" : "text", "boost" : "5.0" },
         "workbench_moderation_state" : { "type" : "string" }
-      },
-      "additional fields" : { "field_grades" : "field_grades" }
+      }
     },
     "enabled" : "1",
     "read_only" : "0",
@@ -200,35 +204,73 @@ function sbac_search_api_default_search_api_index() {
 }
 
 /**
- * Implements hook_default_search_api_server().
+ * Implements hook_default_search_api_sort().
  */
-function sbac_search_api_default_search_api_server() {
+function sbac_search_api_default_search_api_sort() {
   $items = array();
-  $items['local_solr'] = entity_import('search_api_server', '{
-    "name" : "local solr",
-    "machine_name" : "local_solr",
-    "description" : "",
-    "class" : "search_api_solr_service",
-    "options" : {
-      "clean_ids" : true,
-      "site_hash" : true,
-      "scheme" : "http",
-      "host" : "solr",
-      "port" : "8983",
-      "path" : "\\/solr",
-      "http_user" : "",
-      "http_pass" : "",
-      "excerpt" : 0,
-      "retrieve_data" : 0,
-      "highlight_data" : 0,
-      "skip_schema_check" : 0,
-      "solr_version" : "",
-      "http_method" : "AUTO",
-      "log_query" : 0,
-      "log_response" : 0,
-      "commits_disabled" : 0
-    },
+  $items['default_node_index__created'] = entity_import('search_api_sort', '{
+    "index_id" : "default_node_index",
+    "field" : "created",
+    "name" : "Newest",
     "enabled" : "1",
+    "weight" : "-99",
+    "identifier" : "default_node_index__created",
+    "default_sort" : "0",
+    "default_sort_no_terms" : "0",
+    "default_order" : "desc",
+    "options" : { "field_name" : "Date created" },
+    "rdf_mapping" : []
+  }');
+  $items['default_node_index__field_asset_downloads'] = entity_import('search_api_sort', '{
+    "index_id" : "default_node_index",
+    "field" : "field_asset_downloads",
+    "name" : "Most Downloaded",
+    "enabled" : "1",
+    "weight" : "-97",
+    "identifier" : "default_node_index__field_asset_downloads",
+    "default_sort" : "0",
+    "default_sort_no_terms" : "0",
+    "default_order" : "desc",
+    "options" : { "field_name" : "Asset Downloads" },
+    "rdf_mapping" : []
+  }');
+  $items['default_node_index__field_node_avg_rating'] = entity_import('search_api_sort', '{
+    "index_id" : "default_node_index",
+    "field" : "field_node_avg_rating",
+    "name" : "Highest Rated",
+    "enabled" : "1",
+    "weight" : "-96",
+    "identifier" : "default_node_index__field_node_avg_rating",
+    "default_sort" : "0",
+    "default_sort_no_terms" : "0",
+    "default_order" : "desc",
+    "options" : { "field_name" : "Node Avg Rating" },
+    "rdf_mapping" : []
+  }');
+  $items['default_node_index__field_unique_views'] = entity_import('search_api_sort', '{
+    "index_id" : "default_node_index",
+    "field" : "field_unique_views",
+    "name" : "Most Viewed",
+    "enabled" : "1",
+    "weight" : "-98",
+    "identifier" : "default_node_index__field_unique_views",
+    "default_sort" : "0",
+    "default_sort_no_terms" : "0",
+    "default_order" : "desc",
+    "options" : { "field_name" : "Unique Views" },
+    "rdf_mapping" : []
+  }');
+  $items['default_node_index__sticky'] = entity_import('search_api_sort', '{
+    "index_id" : "default_node_index",
+    "field" : "sticky",
+    "name" : "Default",
+    "enabled" : "1",
+    "weight" : "-100",
+    "identifier" : "default_node_index__sticky",
+    "default_sort" : "1",
+    "default_sort_no_terms" : "1",
+    "default_order" : "desc",
+    "options" : { "field_name" : "Sticky in lists" },
     "rdf_mapping" : []
   }');
   return $items;

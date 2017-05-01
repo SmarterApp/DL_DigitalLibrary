@@ -1,6 +1,15 @@
 $block-grey: #ddd;
+$block-blue: #0e729d;
 
 .page-instructional, .page-professional-learning, .page-playlist {
+  #page-title {
+    display: none;
+  }
+
+  .row {
+    max-width: 1280px;
+  }
+
   .block-facetapi {
     box-sizing: border-box;
     border: $block-grey solid 1px;
@@ -60,21 +69,248 @@ $block-grey: #ddd;
     li.active {
       background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
     }
-  }
 
-  .block-facetapi:nth-child(1), .block-facetapi:nth-child(2) {
-    li {
-      background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
+    &:nth-child(1),
+    &:nth-child(2) {
+      li {
+        background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
+      }
+
+      li.active {
+        background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+      }
     }
 
-    li.active {
-      background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+    &.expanded {
+      h2.block-title {
+        background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
+      }
     }
   }
 
-  .block-facetapi.expanded {
-    h2.block-title {
-      background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
+  #main {
+    &>.block {
+      float: left;
+      background-color: $block-grey;
+      height: 40px;
+    }
+
+    &>.block-current-search {
+      width: 155px;
+      margin-left: -15px;
+      padding: 10px;
+    }
+
+    &>.block-views {
+      width: 564px;
+      padding: 4px 15px 0 0;
+
+      .form-item {
+        margin: 0;
+      }
+
+      label {
+        display: none;
+      }
+
+      button {
+        position: absolute;
+        top: 8px;
+        right: 18px;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 5px;
+        background: transparent url('/sites/all/themes/custom/SBAC/images/search.png') 5px 5px no-repeat;
+        width: 26px;
+        height: 26px;
+        border: none;
+        text-shadow: none;
+        color: transparent;
+      }
+    }
+
+    &>.block-search-api-sorts {
+      width: 226px;
+      padding: 5px;
+
+      .default-sort {
+        background: $block-blue url('/sites/all/themes/custom/SBAC/images/icon-arrow-down-white.png') 195px 12px no-repeat;
+        color: #fff;
+        padding: 7px 20px 0 7px;
+        height: 30px;
+
+        &.active {
+          background: $block-blue url('/sites/all/themes/custom/SBAC/images/icon-arrow-up-white.png') 195px 12px no-repeat;
+        }
+      }
+
+      .search-api-sorts {
+        display: none;
+        position: absolute;
+        width: 190px;
+        border: 1px solid #fff;
+        background-color: $block-blue;
+        z-index: 9999;
+
+        li {
+          list-style: none;
+          padding: 5px 10px;
+          margin: 0;
+
+          a {
+            color: #fff;
+
+            &:hover {
+              color: $block-grey;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .view {
+    clear: both;
+    padding-top: 20px;
+  }
+
+  .view-content {
+    margin-bottom: 20px;
+  }
+
+  .view-id-search_api_resource_views {
+    .row {
+      width: auto;
+      border: 1px solid $block-blue;
+      margin-right: 0;
+      margin-bottom: -1px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+
+      .resource-main {
+        float: left;
+        width: 80%;
+        position: relative;
+
+        .list-image {
+          width: 200px;
+          float: left;
+          margin: 10px;
+          border: 1px solid $block-blue;
+        }
+
+        .resource-summary {
+          margin: 10px 10px 10px 0;
+
+          .resource-tags {
+            font-size: 90%;
+            margin-bottom: 5px;
+
+            .subject-icon {
+              height: 18px;
+            }
+          }
+
+          .resource-about {
+            font-size: 90%;
+            line-height: 120%;
+          }
+        }
+      }
+
+      .shield-drop {
+        position: absolute;
+        top: 0;
+        right: 16.66667%;
+      }
+
+      .resource-stats {
+        float: right;
+        width: 16.66667%;
+        background-color: $block-grey;
+        border-left: 1px solid $block-blue;
+        padding: 20px 20px 100px 0;
+        margin-bottom: -100px;
+        text-align: right;
+
+        .stat-views,
+        .stat-downloads {
+          margin-bottom: 10px;
+        }
+
+        .rating {
+          margin-bottom: 10px;
+
+          .rating-stars {
+            float: right;
+
+            .form-item {
+              margin: 0;
+            }
+
+            .off,
+            .on {
+              color: transparent;
+            }
+          }
+
+          .rating-count {
+            float: right;
+          }
+        }
+      }
+
+      .sbac-hover {
+        position: relative;
+        z-index: 2;
+        cursor: pointer;
+
+        &:before,
+        &:after {
+          visibility: hidden;
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        &:before {
+          position: absolute;
+          bottom: 150%;
+          left: -40px;
+          margin-bottom: 5px;
+          padding: 10px 5px;
+          width: 120px;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+          box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+          background-color: #fff;
+          color: #5a5a5a;
+          content: attr(data-tooltipp);
+          text-align: center;
+          font-size: 16px;
+          line-height: 1.2;
+        }
+
+        &:after {
+          position: absolute;
+          bottom: 150%;
+          left: 15px;
+          width: 0;
+          border-top: 5px solid #fff;
+          border-right: 5px solid transparent;
+          border-left: 5px solid transparent;
+          content: " ";
+          font-size: 0;
+          line-height: 0;
+        }
+
+        &:hover:before,
+        &:hover:after {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
     }
   }
 }

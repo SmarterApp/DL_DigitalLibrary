@@ -34,5 +34,10 @@
       var href = $(this).children('a.facetapi-active, a.facetapi-inactive').attr('href');
       $(this).prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
     });
+
+    $('.default-sort').click(function (e) {
+      $(this).toggleClass('active');
+      $('.search-api-sorts').toggle();
+    })
   });
 })(jQuery);

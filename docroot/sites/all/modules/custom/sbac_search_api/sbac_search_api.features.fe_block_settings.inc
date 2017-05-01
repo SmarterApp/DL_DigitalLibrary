@@ -12,6 +12,31 @@ function sbac_search_api_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
+  $export['current_search-standard'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'standard',
+    'module' => 'current_search',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -43,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 1,
+  );
+
   $export['facetapi-7ERviPJtMLm6XXzQWWpYSLto72jI1HhP'] = array(
     'cache' => -1,
     'custom' => 0,
@@ -23,7 +48,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -47,7 +73,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -71,7 +98,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -120,7 +148,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -144,7 +173,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -168,7 +198,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -192,7 +223,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -216,7 +248,8 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',    'roles' => array(),
+playlist/*',
+    'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
@@ -226,6 +259,94 @@ playlist/*',    'roles' => array(),
       ),
     ),
     'title' => 'Common Core State Standard',
+    'visibility' => 1,
+  );
+
+  $export['search_api_sorts-search-sorts'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'search-sorts',
+    'module' => 'search_api_sorts',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -39,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 1,
+  );
+
+  $export['views-1c6be29a0a3259ae3fecbb8a244460d3'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => '1c6be29a0a3259ae3fecbb8a244460d3',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => 'playlist
+playlist/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -40,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 1,
+  );
+
+  $export['views-5ec5640b3bdae5495e8c1150e2ed9abc'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => '5ec5640b3bdae5495e8c1150e2ed9abc',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => 'instructional
+instructional/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -42,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 1,
+  );
+
+  $export['views-93f31ff576fc1070e47dee2149aae935'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => '93f31ff576fc1070e47dee2149aae935',
+    'module' => 'views',
+    'node_types' => array(),
+    'pages' => 'professional-learning
+professional-learning/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -41,
+      ),
+    ),
+    'title' => '<none>',
     'visibility' => 1,
   );
 

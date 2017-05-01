@@ -826,7 +826,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
       $image_url = $url;
       $image_mimetype = 'image/png';
     }
-    $image_tag = '<img class="' . $class . '" typeof="foaf:Image" src="' . $image_url . '" width="268" height="138" alt="Resource thumbnail image" />';
+    $image_tag = '<img class="' . $class . '" typeof="foaf:Image" src="' . $image_url . '" alt="Resource thumbnail image" />';
     $variables['image'] = $image_tag;
     $variables['mime-type'] = $image_mimetype;
 
