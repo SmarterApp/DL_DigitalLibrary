@@ -12,10 +12,31 @@ function sbac_search_api_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
-  $export['current_search-standard'] = array(
+  $export['current_search-main_search'] = array(
     'cache' => -1,
     'custom' => 0,
-    'delta' => 'standard',
+    'delta' => 'main_search',
+    'module' => 'current_search',
+    'node_types' => array(),
+    'pages' => 'search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -43,
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => 1,
+  );
+
+  $export['current_search-search_sections'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'search_sections',
     'module' => 'current_search',
     'node_types' => array(),
     'pages' => 'instructional
@@ -30,7 +51,7 @@ playlist/*',
         'region' => 'content',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -43,
+        'weight' => -44,
       ),
     ),
     'title' => '<none>',
@@ -48,7 +69,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -73,7 +96,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -98,7 +123,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -123,7 +150,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -148,7 +177,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -173,7 +204,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -198,7 +231,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -223,7 +258,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -248,7 +285,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -273,7 +312,9 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+search-resources
+search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(

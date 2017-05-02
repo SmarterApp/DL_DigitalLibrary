@@ -1,7 +1,10 @@
 $block-grey: #ddd;
 $block-blue: #0e729d;
 
-.page-instructional, .page-professional-learning, .page-playlist {
+.page-instructional,
+.page-professional-learning,
+.page-playlist,
+.page-search-resources {
   #page-title {
     display: none;
   }
@@ -95,15 +98,25 @@ $block-blue: #0e729d;
       height: 40px;
     }
 
-    &>.block-current-search {
-      width: 155px;
-      margin-left: -15px;
+    &>.block-current-search-search-sections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 170px;
       padding: 10px;
+      z-index: 9999;
+    }
+
+    &>.block-current-search.block-current-search-main-search {
+      width: 100%;
+      margin-left: -15px;
+      padding: 10px 241px 10px 10px;
     }
 
     &>.block-views {
-      width: 564px;
-      padding: 4px 15px 0 0;
+      position: relative;
+      width: 100%;
+      padding: 4px 241px 0 155px;
 
       .form-item {
         margin: 0;
@@ -116,7 +129,7 @@ $block-blue: #0e729d;
       button {
         position: absolute;
         top: 8px;
-        right: 18px;
+        right: 245px;
         box-shadow: none;
         border-radius: 0;
         padding: 5px;
@@ -130,6 +143,9 @@ $block-blue: #0e729d;
     }
 
     &>.block-search-api-sorts {
+      position: absolute;
+      top: 0;
+      right: 15px;
       width: 226px;
       padding: 5px;
 
