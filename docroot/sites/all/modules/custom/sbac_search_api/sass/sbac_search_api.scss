@@ -277,56 +277,56 @@ $block-blue: #0e729d;
         }
       }
 
-      .sbac-hover {
-        position: relative;
-        z-index: 2;
-        cursor: pointer;
-
-        &:before,
-        &:after {
-          visibility: hidden;
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        &:before {
-          position: absolute;
-          bottom: 150%;
-          left: -40px;
-          margin-bottom: 5px;
-          padding: 10px 5px;
-          width: 120px;
-          -webkit-border-radius: 5px;
-          -moz-border-radius: 5px;
-          border-radius: 5px;
-          box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-          background-color: #fff;
-          color: #5a5a5a;
-          content: attr(data-tooltipp);
-          text-align: center;
-          font-size: 16px;
-          line-height: 1.2;
-        }
-
-        &:after {
-          position: absolute;
-          bottom: 150%;
-          left: 15px;
-          width: 0;
-          border-top: 5px solid #fff;
-          border-right: 5px solid transparent;
-          border-left: 5px solid transparent;
-          content: " ";
-          font-size: 0;
-          line-height: 0;
-        }
-
-        &:hover:before,
-        &:hover:after {
-          visibility: visible;
-          opacity: 1;
-        }
-      }
+      //.sbac-hover {
+      //  position: relative;
+      //  z-index: 2;
+      //  cursor: pointer;
+      //
+      //  &:before,
+      //  &:after {
+      //    visibility: hidden;
+      //    opacity: 0;
+      //    pointer-events: none;
+      //  }
+      //
+      //  &:before {
+      //    position: absolute;
+      //    bottom: 150%;
+      //    left: -40px;
+      //    margin-bottom: 5px;
+      //    padding: 10px 5px;
+      //    width: 120px;
+      //    -webkit-border-radius: 5px;
+      //    -moz-border-radius: 5px;
+      //    border-radius: 5px;
+      //    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+      //    background-color: #fff;
+      //    color: #5a5a5a;
+      //    content: attr(data-tooltipp);
+      //    text-align: center;
+      //    font-size: 16px;
+      //    line-height: 1.2;
+      //  }
+      //
+      //  &:after {
+      //    position: absolute;
+      //    bottom: 150%;
+      //    left: 15px;
+      //    width: 0;
+      //    border-top: 5px solid #fff;
+      //    border-right: 5px solid transparent;
+      //    border-left: 5px solid transparent;
+      //    content: " ";
+      //    font-size: 0;
+      //    line-height: 0;
+      //  }
+      //
+      //  &:hover:before,
+      //  &:hover:after {
+      //    visibility: visible;
+      //    opacity: 1;
+      //  }
+      //}
     }
   }
 }
