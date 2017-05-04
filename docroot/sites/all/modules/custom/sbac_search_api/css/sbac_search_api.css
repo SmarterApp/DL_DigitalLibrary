@@ -419,3 +419,8 @@
 .page-search-resources .view-id-search_api_resource_views .row .resource-stats .rating .rating-count {
   float: right;
 }
+
+/* line 334, ../sass/sbac_search_api.scss */
+.category-filter-list {
+  display: none;
+}

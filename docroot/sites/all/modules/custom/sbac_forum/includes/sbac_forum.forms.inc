@@ -94,13 +94,11 @@ function _sbac_forum_filter_categories() {
     sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
 
-  /*
-  _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
-  _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
-  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
-  _sbac_search_create_taxonomy_filter($categories, 'title', 'Intended Participants');
-  _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
-  */
+  _sbac_search_api_create_taxonomy_filter($categories, 'subject', 'Subjects');
+  _sbac_search_api_create_taxonomy_filter($categories, 'grades', 'Grades');
+  _sbac_search_api_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
+  _sbac_search_api_create_taxonomy_filter($categories, 'title', 'Intended Participants');
+  _sbac_search_api_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
 
   $cf_value = NULL;
   $cf_html = array();

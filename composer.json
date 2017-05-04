@@ -157,6 +157,7 @@
     "drupal/imce": "1.10.*",
     "drupal/imce_wysiwyg": "1.0.*",
     "drupal/joyride": "1.0.0-alpha3",
+    "drupal/jqmulti": "1.0.*",
     "drupal/jquery_update": "2.7.*",
     "drupal/label_help": "1.2.*",
     "drupal/legal": "1.5.*",
@@ -230,7 +231,6 @@
 
     "drupal/acquia_connector": "2.17.*",
     "drupal/acquia_search_multi_subs": "1.4.*",
-    "drupal/jqmulti": "1.0.*",
 
 
     "jquery/autopager": "1.0.0",
