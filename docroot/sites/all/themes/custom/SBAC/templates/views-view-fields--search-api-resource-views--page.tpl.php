@@ -35,6 +35,9 @@
             </div>
             <div class="resource-about">
               <?php if (isset($fields['field_alt_body'])): ?>
+                <?php if (isset($fields['created'])): ?>
+                  <?php echo $fields['created']->content . ' &mdash; '; ?>
+                <?php endif; ?>
                 <?php echo truncate_utf8($fields['field_alt_body']->content, 150, TRUE, TRUE); ?>
               <?php endif; ?>
             </div>

@@ -135,6 +135,20 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['fields']['url']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['url']['display_as_link'] = FALSE;
   $handler->display->display_options['fields']['url']['link_to_entity'] = 0;
+  /* Field: Indexed Node: Date created */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['label'] = '';
+  $handler->display->display_options['fields']['created']['element_type'] = 'span';
+  $handler->display->display_options['fields']['created']['element_class'] = 'resource-date';
+  $handler->display->display_options['fields']['created']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['created']['element_wrapper_type'] = '0';
+  $handler->display->display_options['fields']['created']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['created']['date_format'] = 'custom';
+  $handler->display->display_options['fields']['created']['custom_date_format'] = 'M j, Y';
+  $handler->display->display_options['fields']['created']['second_date_format'] = 'forum_listing';
+  $handler->display->display_options['fields']['created']['link_to_entity'] = 0;
   /* Filter criterion: Indexed Node: Workbench moderation state */
   $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
   $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';

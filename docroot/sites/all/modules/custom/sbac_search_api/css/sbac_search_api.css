@@ -340,6 +340,13 @@
   height: 18px;
 }
 /* line 231, ../sass/sbac_search_api.scss */
+.page-instructional .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date,
+.page-professional-learning .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date,
+.page-playlist .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date,
+.page-search-resources .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date {
+  font-style: italic;
+}
+/* line 235, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-about,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-about,
 .page-playlist .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-about,
@@ -347,7 +354,7 @@
   font-size: 90%;
   line-height: 120%;
 }
-/* line 238, ../sass/sbac_search_api.scss */
+/* line 242, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .shield-drop,
 .page-professional-learning .view-id-search_api_resource_views .row .shield-drop,
 .page-playlist .view-id-search_api_resource_views .row .shield-drop,
@@ -356,7 +363,7 @@
   top: 0;
   right: 16.66667%;
 }
-/* line 244, ../sass/sbac_search_api.scss */
+/* line 248, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-stats,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-stats,
 .page-playlist .view-id-search_api_resource_views .row .resource-stats,
@@ -369,7 +376,7 @@
   margin-bottom: -100px;
   text-align: right;
 }
-/* line 253, ../sass/sbac_search_api.scss */
+/* line 257, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .stat-views,
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .stat-downloads,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-stats .stat-views,
@@ -380,28 +387,28 @@
 .page-search-resources .view-id-search_api_resource_views .row .resource-stats .stat-downloads {
   margin-bottom: 10px;
 }
-/* line 258, ../sass/sbac_search_api.scss */
+/* line 262, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .rating,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-stats .rating,
 .page-playlist .view-id-search_api_resource_views .row .resource-stats .rating,
 .page-search-resources .view-id-search_api_resource_views .row .resource-stats .rating {
   margin-bottom: 10px;
 }
-/* line 261, ../sass/sbac_search_api.scss */
+/* line 265, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars,
 .page-playlist .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars,
 .page-search-resources .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars {
   float: right;
 }
-/* line 264, ../sass/sbac_search_api.scss */
+/* line 268, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item,
 .page-playlist .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item,
 .page-search-resources .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item {
   margin: 0;
 }
-/* line 268, ../sass/sbac_search_api.scss */
+/* line 272, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .off,
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .on,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .off,
@@ -412,7 +419,7 @@
 .page-search-resources .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .on {
   color: transparent;
 }
-/* line 274, ../sass/sbac_search_api.scss */
+/* line 278, ../sass/sbac_search_api.scss */
 .page-instructional .view-id-search_api_resource_views .row .resource-stats .rating .rating-count,
 .page-professional-learning .view-id-search_api_resource_views .row .resource-stats .rating .rating-count,
 .page-playlist .view-id-search_api_resource_views .row .resource-stats .rating .rating-count,
@@ -420,7 +427,7 @@
   float: right;
 }
 
-/* line 334, ../sass/sbac_search_api.scss */
+/* line 338, ../sass/sbac_search_api.scss */
 .category-filter-list {
   display: none;
 }
