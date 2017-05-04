@@ -538,13 +538,10 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   else {
     if (in_array('resource reviewer', $user->roles)) {
       $roles['rr'] = TRUE;
-      // unset($query->where[1]['conditions'][3]['value'][2]);
     }
 
     if (in_array('resource publisher', $user->roles)) {
       $roles['rp'] = TRUE;
-      // unset($query->where[1]['conditions'][3]['value'][0]);
-      // unset($query->where[1]['conditions'][3]['value'][1]);
     }
   }
 
@@ -564,9 +561,19 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
     }
   }
   if (isset($view->resubmission_only) && $view->resubmission_only === TRUE) {
-    $query->add_where_expression(count($query->where), "(SELECT max(h2.stamp) FROM workbench_moderation_node_history h2 WHERE h2.nid = node.nid AND h2.from_state = 'draft' and h2.state = 'needs_review' AND h2.stamp > (SELECT max(h3.stamp) FROM workbench_moderation_node_history h3 WHERE h3.nid = node.nid AND h3.state = 'rejected')) IS NOT NULL");
-    $query->add_where(count($query->where), db_or()->condition('field_data_field_recent_reviewers.field_recent_reviewers_target_id', $user->uid)
-      ->condition('field_data_field_recent_publishers.field_recent_publishers_target_id', $user->uid));
+    // If this is the resubmission tab, show all of the resubmitted resources (anything that has a completed but not current GK review).
+    $query->add_where_expression(count($query->where), "(SELECT COUNT(*) FROM `eck_feedback` f WHERE `type` = 'gate_keeper' AND `completed` = 1 AND `current` = 0 AND `node_id` = node.nid) > 0");
+  } else {
+    // If this is the main tab, show non-resubmissions, unless they are resources that the current user is currently reviewing.
+    $query->add_where_expression(count($query->where), "
+      (
+        (SELECT COUNT(*) FROM `eck_feedback` WHERE `type` = 'gate_keeper' AND `completed` = 1 AND `current` = 0 AND `node_id` = node.nid) = 0 OR
+        (
+          (SELECT COUNT(*) FROM `eck_feedback` WHERE `type` = 'gate_keeper' AND `completed` = 1 AND `current` = 0 AND `node_id` = node.nid) > 0 AND
+          (SELECT COUNT(*) FROM `eck_feedback` WHERE `current` = 1 AND `completed` = 0 AND `uid` = " . $user->uid . " AND `node_id` = node.nid) > 0
+        )
+      )
+      ");
   }
 
   // Create a sub query to get a count of the number of reviews that have been completed for the item.

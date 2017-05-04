@@ -720,6 +720,9 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  if (isset($variables['resub'])) {
+    $vars['fields']['resub'] = $variables['resub'];
+  }
   global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
@@ -769,6 +772,9 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
   }
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
+  }
+  if (isset($variables['resub'])) {
+    $vars['fields']['resub'] = $variables['resub'];
   }
   global $base_url;
   $path = $vars['fields']['path']->content;
@@ -1311,6 +1317,10 @@ function _sbac_resource_resource_review_links($fields, $row) {
   $positionals = array('1st', '2nd', '3rd');
   if ($feedback->qc_count == 3) {
     $variables['status_icons'][3] =  array('image' => 'grey-2.png', 'hover' => 'Needs Review');
+  }
+
+  if ($feedback->resubmission || $feedback->post_resubmission) {
+    $variables['resub'] = t('Resubmission');
   }
 
   if (!$feedback->gatekeeper_started) {

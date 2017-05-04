@@ -773,7 +773,7 @@ function sbac_email_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'reroute_email_address';
-  $strongarm->value = 'elevinson@pcgus.com';
+  $strongarm->value = 'dlmailtest@gedu-demo-pcg.com';
   $export['reroute_email_address'] = $strongarm;
 
   $strongarm = new stdClass();

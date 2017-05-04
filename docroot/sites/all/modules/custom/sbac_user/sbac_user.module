@@ -1532,10 +1532,10 @@ function sbac_user_user_profile_add_values_submit($form, &$form_state) {
  * Submit handler for user profile form to set default tab state
  */
 function sbac_user_user_profile_default_tab_submit($form, &$form_state) {
-  $user = $form['#user'];
+  $account = $form['#user'];
   if ($form_state['values']['vertical_tabs_default']) {
     $form_state['redirect'] = array(
-      url('user/' . $user->uid),
+      url('user/' . $account->uid),
       array('fragment' => $form_state['values']['vertical_tabs_default']),
     );
   }
