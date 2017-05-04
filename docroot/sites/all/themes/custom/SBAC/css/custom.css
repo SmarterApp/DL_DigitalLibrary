@@ -36599,16 +36599,29 @@ form#sbac-user-filter-form #edit-email {
   display: none;
 }
 
-#sbac-forum-sub-nav-form .forum-subnav-sort-wrapper, #sbac-forum-sub-nav-form .forum-subnav-keyword-wrapper {
+#sbac-forum-sub-nav-form .forum-subnav-sort-wrapper, #sbac-forum-sub-nav-form .forum-subnav-start-link-wrapper {
   float: left;
   border-left: 0 none;
   border-right: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 1px 0px 0px 0px #006082;
+  box-shadow: 1px 0 0 0 #006082;
   display: block;
-  float: left;
   height: 34px;
   margin: 0 0 0 20px;
   padding: 0 30px 0 20px;
+}
+
+#sbac-forum-sub-nav-form .forum-subnav-joined-wrapper {
+    float: left;
+    padding: 5px 0 0 15px;
+    color: rgb(255, 255, 255);
+}
+
+#sbac-forum-sub-nav-form .forum-subnav-joined-wrapper .form-item {
+    margin: 0;
+}
+
+#sbac-forum-sub-nav-form .forum-subnav-joined-wrapper label {
+    color: #fff;
 }
 
 #sbac-forum-sub-nav-form .forum-subnav-sort-wrapper {

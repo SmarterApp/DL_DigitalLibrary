@@ -43,7 +43,11 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
       }
       break;
     case SBAC_FORUM_SUBNAV_TOPIC:
-      $active_display = 'block_3';
+      if (isset($_GET['only-joined']) && $_GET['only-joined'] == 1) {
+        $active_display = 'block_1';
+      } else {
+        $active_display = 'block_3';
+      }
       $passive_display = 'block_2';
       if (isset($_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS])) {
         $current_filters = $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS];
