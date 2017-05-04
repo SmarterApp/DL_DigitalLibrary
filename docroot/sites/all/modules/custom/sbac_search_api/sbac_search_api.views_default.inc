@@ -211,7 +211,7 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
-  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -264,7 +264,7 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
-  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -313,7 +313,7 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
-  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,
@@ -357,7 +357,7 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
-  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
   $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
     2 => '2',
     1 => 0,

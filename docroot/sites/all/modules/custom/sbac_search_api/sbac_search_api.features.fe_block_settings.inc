@@ -301,6 +301,27 @@ search-resources/*',
     'visibility' => 1,
   );
 
+  $export['search-form'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'form',
+    'module' => 'search',
+    'node_types' => array(),
+    'pages' => 'digital-library-resources*
+content*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => '',
+        'status' => 0,
+        'theme' => 'SBAC',
+        'weight' => 2,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
   $export['search_api_sorts-search-sorts'] = array(
     'cache' => -1,
     'custom' => 0,
