@@ -50,6 +50,14 @@
           <?php print $help_dropdown; ?>
         <?php endif; ?>
       </li>
+      <?php if (isset($page['search']) && $page['search']): ?>
+          <li>
+              <div class="search">
+                  <span class="sbac-search-toggle"><span class="sbac-search"></span> Search</span>
+                <?php print render($page['search']); ?>
+              </div>
+          </li>
+      <?php endif; ?>
     </ul>
   <?php endif; ?>
   <?php if ($user->uid && in_array('guest', $user->roles)): ?>
@@ -98,11 +106,6 @@
       <?php endif; ?>
       </div>
    <?php endif; ?>
-  <?php if (isset($page['search']) && $page['search']): ?>
-    <div class="search right">
-      <?php print render($page['search']); ?>
-    </div>
-<?php endif; ?>
             </div>
 </div>
 
