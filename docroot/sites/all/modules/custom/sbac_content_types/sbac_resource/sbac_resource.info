@@ -21,6 +21,7 @@ dependencies[] = number
 dependencies[] = options
 dependencies[] = sbac_alignment
 dependencies[] = sbac_resource_taxonomy
+dependencies[] = sbac_search_api
 ; Add back after UUIDs are imported from prod
 ; dependencies[] = sbac_resource_taxonomy_age_range
 ; dependencies[] = sbac_resource_taxonomy_educational_use

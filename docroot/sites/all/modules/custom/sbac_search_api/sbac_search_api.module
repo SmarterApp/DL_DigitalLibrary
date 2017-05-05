@@ -1,0 +1,792 @@
+<?php
+/**
+ * @file
+ * Code for the SBAC Search API feature.
+ */
+
+include_once 'sbac_search_api.features.inc';
+
+define('SBAC_SEARCH_API_MY_RESOURCES_FILTERS', 'sbac-my-resources-filters');
+define('SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS', 'sbac-resource-review-filters');
+
+/**
+ *  Implements hook_libraries_info().
+ */
+function sbac_search_api_libraries_info() {
+  $libraries['jstree'] = array(
+    'name' => 'jsTree',
+    'vendor url' => 'http://www.jstree.com//',
+    'download url' => 'https://github.com/vakata/jstree/zipball/3.0.8',
+    'version' => '3.0.8',
+    'files' => array(
+      'js' => array(
+        'dist/jstree.js',
+      ),
+      'css' => array(
+        'dist/themes/default/style.css',
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+function sbac_search_api_theme($existing, $type, $theme, $path) {
+  $items = array();
+
+  $items['sbac_my_resources_categories'] = array(
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_search',
+    'template' => 'my-resources-categories',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+
+  $items['sbac_resource_review_categories'] = array(
+    'path' => drupal_get_path('theme', 'SBAC') . '/templates/sbac_search',
+    'template' => 'resource-review-categories',
+    'variables' => array(
+      'categories' => NULL,
+      'cf_value' => NULL,
+      'cf_html' => NULL,
+    ),
+  );
+
+  $items['sbac_filter_item_list'] = array(
+    'variables' => array(
+      'items' => array(),
+      'title' => NULL,
+      'type' => 'ul',
+      'attributes' => array()
+    ),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ * @return mixed
+ */
+function sbac_search_api_block_info() {
+  $blocks['sbac_search_categories'] = array(
+    'info' => t('Categories'),
+    'region' => 'filter',
+    'pages' => "my-resources*\nresource-review*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 1,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+
+  $blocks['sbac_search_categories_button'] = array(
+    'info' => t('Categories'),
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'status' => 0,
+    'cache' => DRUPAL_NO_CACHE,
+    'weight' => 1,
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_info_alter().
+ *
+ * @param $blocks
+ * @param $theme
+ * @param $code_blocks
+ */
+function sbac_search_api_block_info_alter(&$blocks, $theme, $code_blocks) {
+  if (isset($blocks['sbac_search_api']['sbac_search_categories']) && $theme == 'SBAC') {
+    $blocks['sbac_search_api']['sbac_search_categories']['pages'] = "my-resources*\nresource-review*";
+  }
+  if (isset($blocks['sbac_search_api']['sbac_search_categories_button']) && $theme = 'SBAC') {
+    $blocks['sbac_search_api']['sbac_search_categories_button']['pages'] = "my-resources*\nresource-review*";
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @param string $delta
+ *
+ * @return array
+ */
+function sbac_search_api_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'sbac_search_categories':
+      $block['subject'] = t('');
+      switch (arg(0)) {
+        case 'my-resources':
+          $block['content'] = drupal_get_form('sbac_search_api_my_resources_form');
+          break;
+        case 'resource-review':
+          $block['content'] = drupal_get_form('sbac_search_api_resource_review_form');
+          break;
+      }
+      break;
+    case 'sbac_search_categories_button':
+      $block['subject'] = t('');
+      $content = '<a href="#" data-tooltip title="Categories allow you to filter results using specific attributes. Click to see the available options." id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
+      $block['content'] = $content;
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_workbench_moderation_transition().
+ *
+ * This will trigger a re-index of this item when it's workbench status changes.
+ */
+function sbac_search_api_workbench_moderation_transition($node, $previous_state, $new_state) {
+  if (module_exists('search_api')) {
+    if ($previous_state != $new_state) {
+      search_api_track_item_change('node', array($node->nid));
+      $combined_id = 'node/' . $node->nid;
+      search_api_track_item_change('multiple', array($combined_id));
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ *
+ * This will add a "Workbench moderation state" field to any moderated entities via a callback.
+ */
+function sbac_search_api_entity_property_info_alter(&$info) {
+  foreach (array_keys($info['node']['bundles']) as $bundle) {
+    if (workbench_moderation_node_type_moderated($bundle)) {
+      $info['node']['bundles'][$bundle]['properties']['workbench_moderation_state'] = array(
+        'type' => 'text',
+        'label' => t('Workbench moderation state'),
+        'getter callback' => 'sbac_search_api_property_workbench_moderation_state_getter_callback',
+        'sanitized' => TRUE,
+      );
+    }
+  }
+}
+
+/**
+ * Getter callback to return current workbench moderation state.
+ */
+function sbac_search_api_property_workbench_moderation_state_getter_callback($node) {
+  $state = workbench_moderation_state_none();
+  if (isset($node->workbench_moderation['current']->state)) {
+    $state = $node->workbench_moderation['current']->state;
+  }
+  elseif ($node->status == NODE_PUBLISHED) {
+    $state = workbench_moderation_state_published();
+  }
+
+  return workbench_moderation_state_label($state);
+}
+
+/**
+ * Implements hook_facetapi_facet_info_alter().
+ *
+ * We're adding our own label mapper here to exclude any deleted taxonomy terms.
+ */
+function sbac_search_api_facetapi_facet_info_alter(array &$facet_info, array $searcher_info) {
+  // Only do this if it is the Search API facets.
+  if ($searcher_info['adapter'] == 'search_api') {
+    // Go through the fields and only do this to the taxonomy terms.
+    foreach ($facet_info as $bundle => $info) {
+      if ($info['field type'] == 'taxonomy_term') {
+        // Store the original mapper so we can use that as a starting point and won't have to rewrite it all.
+        $facet_info[$bundle]['map options']['upstream mapper'] = $facet_info[$bundle]['map callback'];
+        // Replace that mapper with ours.
+        $facet_info[$bundle]['map callback'] = 'sbac_search_api_facetapi_map_callback';
+      }
+    }
+  }
+}
+
+/**
+ * Map Callback to exclude missing taxonomy terms.
+ *
+ * @param $values
+ * @param $options
+ * @return array|mixed
+ */
+function sbac_search_api_facetapi_map_callback($values, $options) {
+  $map = array();
+
+  // Start with the original mapper.
+  if (isset($options['upstream mapper']) && is_callable($options['upstream mapper'])) {
+    $map = call_user_func($options['upstream mapper'], $values, $options);
+  }
+
+  // Make all of the indexed IDs the keys so we can compare them to the already mapped items ($map is id => label).
+  $ids = array_flip($values);
+  // Get the items that have not been mapped, which means a label couldn't be found, which means they don't exist.
+  $diff = array_diff_key($ids, $map);
+  // Set all of those items to NULL, as the facet_api module will interpret this as the item should be excluded.
+  // This requires the dev version of facet_api (see https://www.drupal.org/node/2545130).
+  foreach ($diff as $k => $d) {
+    $diff[$k] = NULL;
+  }
+  // Add the two arrays together and we have our final map.
+  $map = $map + $diff;
+  return $map;
+}
+
+/**
+ * Invalidates the cached search pre-filter URL data.
+ */
+function _sbac_search_api_invalidate_pre_filter_cache() {
+  unset($_SESSION['user_pre_filters']);
+}
+
+/**
+ * Sets the cached search pre-filter URL data.
+ *
+ * @param $value string The URL data to cache
+ */
+function _sbac_search_api_set_pre_filter_cache($value) {
+  $_SESSION['user_pre_filters'] = $value;
+}
+
+/**
+ * Returns the cached search pre-filter URL data.
+ *
+ * @return bool|string The cached search pre-filter URL data if set, false otherwise
+ */
+function _sbac_search_api_get_pre_filter_cache() {
+  if (isset($_SESSION['user_pre_filters'])) {
+    return $_SESSION['user_pre_filters'];
+  }
+  return FALSE;
+}
+
+/**
+ * Checks to see of a tid is set in a taxonomy term reference field.
+ *
+ * @param $entity Entity
+ * @param $field string Name of the field to search
+ * @param $value int TID to search for
+ * @return bool
+ */
+function _sbac_search_api_term_check($entity, $field, $value) {
+  foreach ($entity->{$field}[LANGUAGE_NONE] as $info) {
+    if ($info['tid'] == $value) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Returns a FacetAPI Pretty URL set of filters to default users to the subject(s) and grade(s) in their profile.
+ *
+ * @return bool|string
+ */
+function _sbac_search_api_get_pre_filters() {
+  // Only run through this if the cache isn't valid.
+  if (!$filters = _sbac_search_api_get_pre_filter_cache()) {
+    global $user;
+    $filters = '';
+    // Don't do this for anon users.
+    if (user_is_logged_in()) {
+      // We need this to get the pretty taxonomy names.
+      require_once drupal_get_path('module', 'pathauto') . '/pathauto.inc';
+
+      $account = user_load($user->uid);
+
+      // Get the pretty aliases instead of hard-coding them in here in case they change.
+      $adapter = facetapi_adapter_load('search_api@default_node_index');
+      if ($adapter) {
+        $processor = new FacetapiUrlProcessorPrettyPaths($adapter);
+        $facets = facetapi_get_facet_info('search_api@default_node_index');
+        $subject_alias = $processor->getFacetPrettyPathsAlias($facets['field_subject']);
+        $grade_alias = $processor->getFacetPrettyPathsAlias($facets['field_grades']);
+
+        // Get the subject and grade TIDs for the user, and process them into the URL.
+        $fields = array('field_subject_s_' => $subject_alias, 'field_grade_level_s_' => $grade_alias);
+        foreach ($fields as $field => $alias) {
+          foreach ($account->{$field}[LANGUAGE_NONE] as $key => $info) {
+            $term = taxonomy_term_load($info['tid']);
+            // Only add the child terms if their parent isn't set.
+            if (!($term->parent && _sbac_search_api_term_check($account, $field, $term->parent))) {
+              // Get the pretty taxonomy name
+              $name = pathauto_cleanstring($term->name);
+              // Put together the URL using the FacetAPI Pretty rule.
+              $filters .= "/$alias/" . "$name-" . $term->tid;
+            }
+          }
+        }
+        // Set the cache.
+        _sbac_search_api_set_pre_filter_cache($filters);
+      }
+    }
+  }
+  return $filters;
+}
+
+/**
+ * Creates the taxonomy filters for the My Resources, Resource Review, Forums, etc.
+ *
+ * @param $categories
+ * @param $vocab_name
+ * @param $display_name
+ * @param null $facet
+ */
+function _sbac_search_api_create_taxonomy_filter(&$categories, $vocab_name, $display_name, $facet = NULL) {
+  $vocab = taxonomy_vocabulary_machine_name_load($vocab_name);
+  $categories[$vocab_name]['display_name'] = $display_name;
+  $categories[$vocab_name]['vocabulary'] = $vocab;
+  $categories[$vocab_name]['terms'] = taxonomy_get_tree($vocab->vid);
+
+  $tree = _sbac_search_api_taxonomy_get_nested_tree($vocab->vid);
+  $categories[$vocab_name]['tree'] = _sbac_search_api_taxonomy_nested_tree_render($tree, $facet);
+}
+
+/**
+ * Helper for _sbac_search_api_create_taxonomy_filter.
+ *
+ * @param array $vid_or_terms
+ * @param null $max_depth
+ * @param int $parent
+ * @param array $parents_index
+ * @param int $depth
+ * @return mixed
+ */
+function _sbac_search_api_taxonomy_get_nested_tree($vid_or_terms = array(), $max_depth = NULL, $parent = 0, $parents_index = array(), $depth = 0) {
+  $return = array();
+
+  if (!is_array($vid_or_terms)) {
+    $vid_or_terms = taxonomy_get_tree($vid_or_terms);
+  }
+  foreach ($vid_or_terms as $term) {
+    foreach ($term->parents as $term_parent) {
+      if ($term_parent == $parent) {
+        $return[$term->tid] = $term;
+      }
+      else {
+        $parents_index[$term_parent][$term->tid] = $term;
+      }
+    }
+  }
+  foreach ($return as &$term) {
+    if (isset($parents_index[$term->tid]) && (is_null($max_depth) || $depth < $max_depth)) {
+      $term->children = _sbac_search_api_taxonomy_get_nested_tree($parents_index[$term->tid], $max_depth, $term->tid, $parents_index, $depth + 1);
+    }
+  }
+  return $return;
+}
+
+/**
+ * Helper for _sbac_search_api_create_taxonomy_filter.
+ *
+ * @param $tree
+ * @param bool $facet
+ * @param bool $recurring
+ * @return array
+ */
+function _sbac_search_api_taxonomy_nested_tree_render($tree, $facet = FALSE, $recurring = FALSE) {
+  $items = array();
+  if (count($tree)) {
+    foreach ($tree as $term) {
+      $item = array('data' => $term->name);
+      if (isset($term->children)) {
+        $item["children"] = _sbac_search_api_taxonomy_nested_tree_render($term->children, $facet, TRUE);
+      }
+      $item['term'] = $term;
+      $item['facet'] = $facet;
+      $items[] = $item;
+    }
+  }
+
+  if ($recurring) {
+    return $items;
+  }
+
+  return array(
+    '#theme' => 'sbac_filter_item_list',
+    '#items' => $items,
+  );
+}
+
+/**
+ * Returns the category filters.
+ *
+ * @return null
+ */
+function sbac_search_api_my_resources_categories() {
+  $categories = array();
+  drupal_add_css(drupal_get_path('module', 'sbac_search_api') . '/css/sbac_search_api.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_search_api') . '/js/sbac_search_api.my_resources.categories.js');
+  libraries_load('jstree');
+
+  $allowed_states = array(
+    'draft' => 'Draft',
+    'submitted' => 'Submitted',
+    'gk' => 'Gatekeeping Review',
+    'qc' => 'Quality Criteria Review',
+    'artbitration' => 'Arbitration Review',
+    'returned' => 'Returned',
+    'posted' => 'Posted',
+    'removed' => 'Removed'
+  );
+
+  // Our custom filters
+  $categories['resource_states']['display_name'] = 'Resource Status';
+  $categories['resource_states']['vocabulary'] = (object) array(
+    'vid' => 'resource-status',
+  );
+  foreach ($allowed_states as $tid => $display_name) {
+    $categories['resource_states']['terms'][] = (object) array(
+      'tid' => $tid,
+      'name' => $display_name,
+    );
+    $item = array(
+      'data' => $display_name,
+      'term' => (object) array(
+        'tid' => $tid,
+        'vid' => 'resource-status',
+        'name' => $display_name,
+      )
+    );
+    $categories['resource_states']['tree']['#items'][] = $item;
+  }
+  $categories['resource_states']['tree']['#theme'] = 'sbac_filter_item_list';
+
+  _sbac_search_api_create_taxonomy_filter($categories, 'subject', 'Subjects');
+  _sbac_search_api_create_taxonomy_filter($categories, 'grades', 'Grades');
+  _sbac_search_api_create_taxonomy_filter($categories, 'focus', 'Resource Type');
+
+  $cf_value = NULL;
+  $cf_html = array();
+  if (isset($_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS])) {
+    $cf_value = $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS];
+    if ($cf_value) {
+      $filters = explode('::', $cf_value);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              if ($vid == 'resource-status') {
+                $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $allowed_states[$tid] . '</div>';
+              }
+              else {
+                $term = taxonomy_term_load($tid);
+                if ($term) {
+                  $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $term->name . '</div>';
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $output = NULL;
+  if ($categories) {
+    $output = theme('sbac_my_resources_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
+  }
+  return $output;
+}
+
+/**
+ * Form for submitting the category filters.
+ *
+ * @return array
+ */
+function sbac_search_api_my_resources_form() {
+  $form = array();
+
+  $hide_categories_text = t('Filters');
+  $hide_categories_class = 'active';
+
+  $current_filters = NULL;
+  if (!empty($_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS])) {
+    $current_filters = $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS];
+    $hide_categories_class = '';
+  }
+
+  $form['current_filters'] = array(
+    '#prefix' => '<div class="category-hide-container"><a class="category-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a></div>',
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-current-filters'),
+  );
+
+  $form['search_categories'] = array(
+    '#markup' => sbac_search_api_my_resources_categories(),
+  );
+
+  $form['filter'] = array(
+    '#type' => 'submit',
+    '#value' => t('Apply Filters'),
+    '#attributes' => array(
+      'id' => 'sbac-search-filter-button',
+      'class' => array('js-hide'),
+    ),
+    '#prefix' => '<div class="category-buttons">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for categories.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_search_api_my_resources_form_submit(&$form, &$form_state) {
+  $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS] = $form_state['input']['current_filters'];
+}
+
+/**
+ * Returns the category filters.
+ *
+ * @return null
+ */
+function sbac_search_api_resource_review_categories() {
+  global $user;
+  $categories = array();
+  drupal_add_css(drupal_get_path('module', 'sbac_search_api') . '/css/sbac_search_api.css');
+  drupal_add_js(drupal_get_path('module', 'sbac_search_api') . '/js/sbac_search_api.resource_review.categories.js');
+  libraries_load('jstree');
+
+
+  $both_roles = $rr = $rp = FALSE;
+  if (in_array('resource reviewer', $user->roles) && in_array('resource publisher', $user->roles)) {
+    $both_roles = TRUE;
+  }
+  else {
+    if (in_array('resource reviewer', $user->roles)) {
+      $rr = TRUE;
+    }
+    if (in_array('resource publisher', $user->roles)) {
+      $rp = TRUE;
+    }
+  }
+
+  $resource_states = taxonomy_vocabulary_machine_name_load('resource_states');
+  $resource_states_terms = taxonomy_get_tree($resource_states->vid);
+  $allowed_both_states = array('Being Reviewed', 'Needs Review', 'Needs Arbitration');
+  $allowed_rr_states = array('Being Reviewed', 'Needs Review');
+  $allowed_rp_states = array('Being Reviewed', 'Needs Arbitration');
+  $categories['resource_states']['display_name'] = 'Resource Status';
+  $categories['resource_states']['vocabulary'] = $resource_states;
+  $categories['resource_states']['terms'] = $resource_states_terms;
+  $tree = _sbac_search_api_taxonomy_get_nested_tree($resource_states->vid);
+  $categories['resource_states']['tree'] = _sbac_search_api_taxonomy_nested_tree_render($tree);
+  foreach($categories['resource_states']['tree']['#items'] as $index => $item){
+    if ($both_roles) {
+      if (!in_array($item['data'], $allowed_both_states)) {
+        unset($categories['resource_states']['tree']['#items'][$index]);
+      }
+    }
+    else {
+      if ($rr) {
+        if (!in_array($item['data'], $allowed_rr_states)) {
+          unset($categories['resource_states']['tree']['#items'][$index]);
+        }
+      }
+      else {
+        if ($rp) {
+          if (!in_array($item['data'], $allowed_rp_states)) {
+            unset($categories['resource_states']['tree']['#items'][$index]);
+          }
+        }
+      }
+    }
+  }
+
+  _sbac_search_api_create_taxonomy_filter($categories, 'subject', 'Subjects');
+  _sbac_search_api_create_taxonomy_filter($categories, 'grades', 'Grades');
+  _sbac_search_api_create_taxonomy_filter($categories, 'focus', 'Resource Type');
+
+
+  $cf_value = NULL;
+  $cf_html = array();
+  if (isset($_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS])) {
+    $cf_value = $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS];
+    if ($cf_value) {
+      $filters = explode('::', $cf_value);
+      if ($filters) {
+        foreach ($filters as $filter) {
+          $filter_info = explode(':', $filter);
+          if ($filter_info && sizeof($filter_info) == 2) {
+            $vid = $filter_info[0];
+            $tid = $filter_info[1];
+            if ($vid && $tid) {
+              $term = taxonomy_term_load($tid);
+              if ($term) {
+                $cf_html[] = '<div class="current-filter" vid="' . $vid . '" tid="' . $tid . '">' . $term->name . '</div>';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $output = NULL;
+  if ($categories) {
+    $output = theme('sbac_resource_review_categories', array('categories' => $categories, 'cf_value' => $cf_value, 'cf_html' => $cf_html));
+  }
+  return $output;
+}
+
+/**
+ * Form for submitting the category filters.
+ *
+ * @return array
+ */
+function sbac_search_api_resource_review_form() {
+  $form = array();
+
+  $hide_categories_text = t('Filters');
+  $hide_categories_class = 'active';
+
+  $current_filters = NULL;
+  if (!empty($_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS])) {
+    $current_filters = $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS];
+    $hide_categories_class = '';
+  }
+
+  $form['current_filters'] = array(
+    '#prefix' => '<div class="category-hide-container"><a class="category-hide ' . $hide_categories_class . '" href="#">' . $hide_categories_text . '</a></div>',
+    '#type' => 'hidden',
+    '#value' => $current_filters,
+    '#attributes' => array('id' => 'sbac-search-current-filters'),
+  );
+
+  $form['search_categories'] = array(
+    '#markup' => sbac_search_api_resource_review_categories(),
+  );
+
+  $form['filter'] = array(
+    '#type' => 'submit',
+    '#value' => t('Apply Filters'),
+    '#attributes' => array(
+      'id' => 'sbac-search-filter-button',
+      'class' => array('js-hide'),
+    ),
+    '#prefix' => '<div class="category-buttons">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'wrapper' => '',
+      'method' => 'replace',
+      'effect' => 'fade'
+    ),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for categories.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function sbac_search_api_resource_review_form_submit(&$form, &$form_state) {
+  $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS] = $form_state['input']['current_filters'];
+}
+
+/**
+ * Default theme implementation for sbac_filter_item_list
+ *
+ * Borrowed from theme_item_list() but we don't want the wrapping div around the ul element.
+ * We also add in our custom classes so our Javascript can target them.
+ */
+function theme_sbac_filter_item_list($variables) {
+  $items = $variables['items'];
+  $title = $variables['title'];
+  $type = $variables['type'];
+  $attributes = $variables['attributes'];
+
+  // Only output the list container and title, if there are any list items.
+  // Check to see whether the block title exists before adding a header.
+  // Empty headers are not semantic and present accessibility challenges.
+  $output = '';
+  if (isset($title) && $title !== '') {
+    $output .= '<h3>' . $title . '</h3>';
+  }
+
+  if (!empty($items)) {
+    $output .= "<$type" . drupal_attributes($attributes) . '>';
+    $num_items = count($items);
+    $i = 0;
+    foreach ($items as $item) {
+      // Set ID unique if landing page
+      if(drupal_is_front_page() == 'sbac'){
+        $attributes = array(
+          'class' => array(
+            'category-filter',
+            'category-filter-' . $item['term']->vid . '-' . $item['term']->tid
+          ),
+          'vid' => $item['term']->vid,
+          'tid' => $item['term']->tid,
+          'term' => $item['term']->name,
+          'id' => $item['facet'] . ':' . $item['term']->tid,
+        );
+      }
+      else{
+        $attributes = array(
+          'class' => array(
+            'category-filter',
+            'category-filter-' . $item['term']->vid . '-' . $item['term']->tid
+          ),
+          'vid' => $item['term']->vid,
+          'tid' => $item['term']->tid,
+          'term' => $item['term']->name,
+          'id' => $item['term']->vid . ':' . $item['term']->tid,
+        );
+      }
+      unset($item['term']);
+      $children = array();
+      $data = '';
+      $i++;
+      if (is_array($item)) {
+        foreach ($item as $key => $value) {
+          if ($key == 'data') {
+            $data = '<span class="filter-name">' . $value . '</span>';
+          }
+          elseif ($key == 'children') {
+            $children = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $data = $item;
+      }
+      if (count($children) > 0) {
+        $attributes['class'][] = 'has-children';
+        // Render nested list.
+        $data .= theme_sbac_filter_item_list(array('items' => $children, 'title' => NULL, 'type' => $type, 'attributes' => $attributes));
+      }
+      if ($i == 1) {
+        $attributes['class'][] = 'first';
+      }
+      if ($i == $num_items) {
+        $attributes['class'][] = 'last';
+      }
+      $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";
+    }
+    $output .= "</$type>";
+  }
+  return $output;
+}

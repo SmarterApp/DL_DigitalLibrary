@@ -148,7 +148,7 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   $current_filters = '';
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.my_resources.categories.js');
+  // drupal_add_js(drupal_get_path('module', 'sbac_search_api') . '/js/sbac_search_api.my_resources.categories.js');
 
   // Load up the view.
   $view = views_get_view('my_resources');

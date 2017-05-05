@@ -117,52 +117,52 @@
         });
 
         // This is where we create the plus and minus signs for item list expansion.
-        $('.expanded, .collapsed').each(function() {
-          if ($(this).children('.facetapi-checkbox').hasClass('facetapi-inactive')) {
-            $(this).removeClass('minus-sign');
-            $(this).addClass('plus-sign');
-          } else {
-            $(this).removeClass('plus-sign');
-            $(this).addClass('minus-sign');
-          }
-        })
+        // $('.expanded, .collapsed').each(function() {
+        //   if ($(this).children('.facetapi-checkbox').hasClass('facetapi-inactive')) {
+        //     $(this).removeClass('minus-sign');
+        //     $(this).addClass('plus-sign');
+        //   } else {
+        //     $(this).removeClass('plus-sign');
+        //     $(this).addClass('minus-sign');
+        //   }
+        // })
 
-        $('.expanded, .collapsed').each(function() {
-          $(this).addClass('plus-sign');
-          $(this).removeClass('minus-sign');
-          $(this).click(function(event) {
-            $(this).children('.item-list').toggleClass('item-list-size');
-
-            if ($(this).hasClass('plus-sign')) {
-              $(this).not($(this).parents().parents()).addClass('minus-sign');
-              $(this).not($(this).parents().parents()).removeClass('plus-sign');
-            } else {
-              $(this).not($(this).parents().parents()).addClass('plus-sign');
-              $(this).not($(this).parents().parents()).removeClass('minus-sign');
-            }
-            event.stopPropagation();
-          })
-        })
+        // $('.expanded, .collapsed').each(function() {
+        //   $(this).addClass('plus-sign');
+        //   $(this).removeClass('minus-sign');
+        //   $(this).click(function(event) {
+        //     $(this).children('.item-list').toggleClass('item-list-size');
+        //
+        //     if ($(this).hasClass('plus-sign')) {
+        //       $(this).not($(this).parents().parents()).addClass('minus-sign');
+        //       $(this).not($(this).parents().parents()).removeClass('plus-sign');
+        //     } else {
+        //       $(this).not($(this).parents().parents()).addClass('plus-sign');
+        //       $(this).not($(this).parents().parents()).removeClass('minus-sign');
+        //     }
+        //     event.stopPropagation();
+        //   })
+        // })
 
         // Tracks the last active facet block to display open on page load.
         //$('#' + sessionStorage.getItem('lastClicked') + ' .facet-label a.category-hide').addClass('activated');
-        $('#' + sessionStorage.getItem('lastClicked') + ' .item-list').css({
+        // $('#' + sessionStorage.getItem('lastClicked') + ' .item-list').css({
           //'height': '300px',
-        });
+        // });
 
-        $('a.facetapi-checkbox').each(function() {
-          $(this).text().replace('/(-)/', '');
-        })
-
-        $('.facetapi-checkbox').each(function() {
-          $(this).click(function() {
-            var theId = $(this).closest('.facet-block').attr('id');
-            sessionStorage.setItem('lastClicked', theId);
-            $('#spinner-load').css({
-              'display': 'block'
-            })
-          })
-        })
+        // $('a.facetapi-checkbox').each(function() {
+        //   $(this).text().replace('/(-)/', '');
+        // })
+        //
+        // $('.facetapi-checkbox').each(function() {
+        //   $(this).click(function() {
+        //     var theId = $(this).closest('.facet-block').attr('id');
+        //     sessionStorage.setItem('lastClicked', theId);
+        //     $('#spinner-load').css({
+        //       'display': 'block'
+        //     })
+        //   })
+        // })
 
         // When user clicks outside of facets, close facet blocks.
         $('.filters, .top-bar, .page-wrap').click(function(event) {

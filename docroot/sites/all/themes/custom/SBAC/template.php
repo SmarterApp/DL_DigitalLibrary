@@ -311,6 +311,12 @@ function sbac_links__system_main_menu($vars) {
   // Get all the main menu links
   $menu_links = menu_tree_output(menu_tree_all_data('main-menu'));
 
+  // Add user specific subject and grade filters based on their profile.
+  $pre_filters = '';
+  if (module_exists('sbac_search_api')) {
+    $pre_filters = _sbac_search_api_get_pre_filters();
+  }
+
   // Initialize some variables to prevent errors
   $output = '';
   $sub_menu = '';
@@ -323,10 +329,13 @@ function sbac_links__system_main_menu($vars) {
 
     // Render top level and make sure we have an actual link
     if (!empty($link['#href'])) {
+      if ($pre_filters && in_array($link['#href'], array('instructional', 'professional-learning', 'playlist'))) {
+        $link['#href'] .= $pre_filters;
+      }
 
       $output .= '<li' . drupal_attributes($link['#attributes']) . '>' . l($link['#title'], $link['#href']);
-// Uncomment if we don't want to repeat the links under the dropdown for large-screen
-//      $small_link['#attributes']['class'][] = 'show-for-small';
+      // Uncomment if we don't want to repeat the links under the dropdown for large-screen
+      //$small_link['#attributes']['class'][] = 'show-for-small';
       $sub_menu = '<li' . drupal_attributes($small_link['#attributes']) . '>' . l($link['#title'], $link['#href']);
       // Get sub navigation links if they exist
       foreach ($link['#below'] as $key => $sub_link) {
@@ -791,6 +800,10 @@ function sbac_preprocess_views_view(&$variables) {
     drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_reset.js');
     drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_css.js');
   }
+  if ($variables['view']->name == 'search_api_resource_views') {
+    drupal_add_css(drupal_get_path('module', 'sbac_search_api') . '/css/sbac_search_api.css');
+    drupal_add_js(drupal_get_path('module', 'sbac_search_api') . '/js/sbac_search_api.js');
+  }
 }
 
 /**
@@ -994,6 +1007,73 @@ function sbac_preprocess_views_view_fields(&$variables) {
       }
     }
   }
+
+  if ($variables['view']->name == 'search_api_resource_views') {
+    // Process the content property to remove any tags for the raw property.
+    $raw_process = array('nid', 'title', 'sticky', 'url', 'field_grades', 'field_subject');
+    foreach ($raw_process as $field) {
+      $variables['fields'][$field]->raw = strip_tags($variables['fields'][$field]->content);
+    }
+
+    // Format the grade field.
+    $variables['fields']['field_grades']->raw = preg_replace("/Grade /", '', $variables['fields']['field_grades']->raw);
+
+    // Turn the subjects into icons.
+    $icons = array(
+      'ELA' => 'ela.png',
+      'Math' => 'math.png',
+      'Science' => 'science.png',
+      'History' => 'history.png',
+      'Arts' => 'art.png',
+      'World Languages' => 'languages.png',
+      'Health' => 'health.png',
+      'Physical Education' => 'phys-ed.png',
+      'Career' => 'career.png',
+      'Other' => 'other.png',
+      'Not Subject Specific' => 'nss.png'
+    );
+    $variables['fields']['subject_icons'] = array();
+
+    $subjects = explode(', ', $variables['fields']['field_subject']->raw);
+    foreach ($subjects as $subject) {
+      foreach ($icons as $match => $icon) {
+        if (preg_match("/^$match/", $subject)) {
+          $variables['fields']['subject_icons'][$match]['url'] = base_path() . drupal_get_path('theme', 'SBAC') . "/images/subject-icons/$icon";
+          if (!isset($variables['fields']['subject_icons'][$match]['alt'])) {
+            $variables['fields']['subject_icons'][$match]['alt'] = $subject;
+          } else {
+            $variables['fields']['subject_icons'][$match]['alt'] .= ', ' . $subject;
+          }
+        }
+      }
+    }
+
+    // Get the thumbnail.
+    $image_assets = _sbac_resource_grid_image($variables['fields'], 'list');
+    if ($image_assets) {
+      $variables['fields']['image'] = $image_assets['image'];
+      $variables['fields']['mime-type'] = $image_assets['mime-type'];
+      $variables['fields']['file-type-icon'] = $image_assets['file-type-icon'];
+    }
+
+    // Do some external processing
+    $new_vars = _sbac_resource_digital_library_links($variables['fields']);
+    if (isset($new_vars['views'])) {
+      $variables['fields']['views'] = $new_vars['views'];
+    }
+    if (isset($new_vars['downloads'])) {
+      $variables['fields']['downloads'] = $new_vars['downloads'];
+    }
+    if (isset($new_vars['media_types'])) {
+      $variables['fields']['media_types'] = $new_vars['media_types'];
+    }
+    if (isset($new_vars['rating'])) {
+      $variables['fields']['rating'] = $new_vars['rating'];
+    }
+    if (isset($new_vars['rating_count'])) {
+      $variables['fields']['rating_count'] = $new_vars['rating_count'];
+    }
+  }
 }
 
 function sbac_digital_library_resources_applied_filters(){
@@ -1178,3 +1258,45 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '', $mail_to = F
   }
 }
 
+function sbac_facetapi_deactivate_widget($variables) {
+  return '';
+}
+
+function sbac_facetapi_link_active($variables) {
+  // Sanitizes the link text if necessary.
+  $sanitize = empty($variables['options']['html']);
+  $link_text = ($sanitize) ? check_plain($variables['text']) : $variables['text'];
+
+  // Theme function variables for accessible markup.
+  // @see http://drupal.org/node/1316580
+  $accessible_vars = array(
+    'text' => $variables['text'],
+    'active' => TRUE,
+  );
+
+  // Builds link, passes through t() which gives us the ability to change the
+  // position of the widget on a per-language basis.
+  $replacements = array(
+    '!facetapi_deactivate_widget' => theme('facetapi_deactivate_widget', $variables),
+    '!facetapi_accessible_markup' => theme('facetapi_accessible_markup', $accessible_vars),
+  );
+  $variables['text'] = t('!facetapi_deactivate_widget!facetapi_accessible_markup', $replacements) . $link_text;
+  $variables['options']['html'] = TRUE;
+  return theme_link($variables);
+}
+
+function sbac_search_api_sorts_list(array $variables) {
+  $active_item = 'Default';
+  foreach ($variables['items'] as $key => $item) {
+    if ($item['#active']) {
+      $active_item = $item['#name'];
+      unset($variables['items'][$key]);
+    }
+  }
+  $parent = '<div class="default-sort">Sort: ' . $active_item . '</div>';
+  $items = array_map('render', $variables['items']);
+  $options = $variables['options'];
+  $items = $items ? theme('item_list', array('items' => $items) + $options) : '';
+
+  return '<div class="search-sort-widget">' . $parent . $items . '</div>';
+}
