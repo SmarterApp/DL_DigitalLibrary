@@ -37238,17 +37238,33 @@ body.page-help-topics h1 {
     display: none;
 }
 .resource-feature {
-    margin-right: auto;
-    margin-left: auto;
+    margin: 20px auto;
     width: 1000px;
+}
+.resource-feature:after {
+    clear: both;
+    display: block;
+    height: 1px;
+    margin-top: -1px;
+    content: ' ';
 }
 .resource-feature .block {
     float: left;
-    width: 33%;
+    width: 303px;
+    padding: 0 15px;
+    border-left: 1px solid #aaa;
+}
+.resource-feature .block:first-child {
+    border: none;
 }
 .resource-feature h2 {
     color: #444444;
 }
 .resource-feature p {
     color: #000000;
+}
+.resource-feature img {
+    float: right;
+    margin: 0 0 10px 10px;
+    width: 100px;
 }

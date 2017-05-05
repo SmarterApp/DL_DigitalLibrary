@@ -13,6 +13,46 @@ $block-blue: #0e729d;
     max-width: 1280px;
   }
 
+  .resource-feature {
+    margin: 0 15px 15px 15px;
+    width: auto;
+    position: relative;
+    padding: 0 240px 0 0;
+    min-height: 150px;
+
+    &:after {
+      clear: both;
+      display: block;
+      height: 1px;
+      margin-top: -1px;
+      content: ' ';
+    }
+
+    .block {
+      width: auto;
+      padding: 0 15px;
+    }
+
+    h2 {
+      color: #444444;
+      font-size: 150%;
+    }
+
+    p {
+      color: #000000;
+      font-size: 120%;
+      margin: 0;
+    }
+
+    img {
+      position:absolute;
+      top: 0;
+      right: -240px;
+      height: 150px;
+      width: 225px;
+    }
+  }
+
   .block-facetapi {
     box-sizing: border-box;
     border: $block-grey solid 1px;

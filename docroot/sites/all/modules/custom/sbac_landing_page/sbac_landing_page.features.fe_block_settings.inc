@@ -18,18 +18,20 @@ function sbac_landing_page_default_fe_block_settings() {
     'machine_name' => 'instructional_resource',
     'module' => 'block',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => '<front>
+instructional
+instructional/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'resource_feature',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => 0,
+        'weight' => -47,
       ),
     ),
     'title' => 'Instructional Resources',
-    'visibility' => 0,
+    'visibility' => 1,
   );
 
   $export['block-playlist_resource'] = array(
@@ -38,18 +40,20 @@ function sbac_landing_page_default_fe_block_settings() {
     'machine_name' => 'playlist_resource',
     'module' => 'block',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => '<front>
+playlist
+playlist/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'resource_feature',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => 0,
+        'weight' => -45,
       ),
     ),
     'title' => 'Playlist Resource',
-    'visibility' => 0,
+    'visibility' => 1,
   );
 
   $export['block-professionial_resource'] = array(
@@ -58,18 +62,20 @@ function sbac_landing_page_default_fe_block_settings() {
     'machine_name' => 'professionial_resource',
     'module' => 'block',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => '<front>
+professional-learning
+professional-learning/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'resource_feature',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => 0,
+        'weight' => -46,
       ),
     ),
     'title' => 'Professional Learning Resources',
-    'visibility' => 0,
+    'visibility' => 1,
   );
 
   return $export;
