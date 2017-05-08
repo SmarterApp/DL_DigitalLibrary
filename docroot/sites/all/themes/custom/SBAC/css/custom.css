@@ -21998,6 +21998,10 @@ a.th {
     margin: 0;
 }
 
+.top-bar .user-nav .search .block-views input {
+    width: 200px;
+}
+
 .top-bar .user-nav .search .block-views label {
     display: none;
 }

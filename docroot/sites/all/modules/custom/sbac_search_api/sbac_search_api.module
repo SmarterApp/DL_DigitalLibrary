@@ -236,6 +236,38 @@ function sbac_search_api_facetapi_map_callback($values, $options) {
 }
 
 /**
+ * Implements hook_facet_items_alter(). Needed to add icons to the subject facet.
+ *
+ * @param $build
+ * @param $settings
+ */
+function sbac_search_api_facet_items_alter(&$build, &$settings) {
+  if ($settings->facet == "field_subject") {
+    $icons = array(
+      'ELA' => 'ela.png',
+      'Math' => 'math.png',
+      'Science and Technical' => 'science.png',
+      'History/Social Studies' => 'history.png',
+      'Arts' => 'art.png',
+      'World Languages' => 'languages.png',
+      'Health' => 'health.png',
+      'Physical Education' => 'phys-ed.png',
+      'Career/Vocational' => 'career.png',
+      'Other' => 'other.png',
+      'Not Subject Specific' => 'nss.png'
+    );
+
+    foreach($build as $key => $item) {
+      if (isset($icons[$item['#markup']])) {
+        $image = '<img class="subject-icon" src="' . base_path() . drupal_get_path('theme', 'SBAC') . '/images/subject-icons/' . $icons[$item['#markup']] . '" alt="' . $item['#markup'] . '" />';
+        $build[$key]["#markup"] = $image . ' ' . $item['#markup'];
+        $build[$key]['#html'] = TRUE;
+      }
+    }
+  }
+}
+
+/**
  * Invalidates the cached search pre-filter URL data.
  */
 function _sbac_search_api_invalidate_pre_filter_cache() {
@@ -292,9 +324,6 @@ function _sbac_search_api_get_pre_filters() {
     $filters = '';
     // Don't do this for anon users.
     if (user_is_logged_in()) {
-      // We need this to get the pretty taxonomy names.
-      require_once drupal_get_path('module', 'pathauto') . '/pathauto.inc';
-
       $account = user_load($user->uid);
 
       // Get the pretty aliases instead of hard-coding them in here in case they change.
@@ -313,9 +342,8 @@ function _sbac_search_api_get_pre_filters() {
             // Only add the child terms if their parent isn't set.
             if (!($term->parent && _sbac_search_api_term_check($account, $field, $term->parent))) {
               // Get the pretty taxonomy name
-              $name = pathauto_cleanstring($term->name);
               // Put together the URL using the FacetAPI Pretty rule.
-              $filters .= "/$alias/" . "$name-" . $term->tid;
+              $filters .= "/$alias/" . $term->tid;
             }
           }
         }
@@ -789,4 +817,11 @@ function theme_sbac_filter_item_list($variables) {
     $output .= "</$type>";
   }
   return $output;
+}
+
+/**
+ * Implements hook_facetapi_pretty_paths_coders_alter().
+ */
+function sbac_search_api_facetapi_pretty_paths_coders_alter(&$coders) {
+  $coders['taxonomy']['handler']['class'] = 'SBACFacetApiPrettyPathsCoderTaxonomy';
 }

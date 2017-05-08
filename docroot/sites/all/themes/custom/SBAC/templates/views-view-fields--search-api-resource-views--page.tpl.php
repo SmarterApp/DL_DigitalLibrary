@@ -2,8 +2,16 @@
     <div class="resource-main">
       <?php if (isset($fields['image'])): ?>
           <a href="<?php print $fields['url']->raw; ?>">
+            <div class="resource-image">
             <?php print $fields['image']; ?>
-            <?php print '<span class="' . $fields['file-type-icon'] . '"></span>'; ?>
+            <?php print $fields['field_digital_media_type']->wrapper_prefix; ?>
+            <?php if (preg_match("/,/", $fields['field_digital_media_type']->raw)): ?>
+              Multiple Media
+            <?php else: ?>
+              <?php print $fields['field_digital_media_type']->raw; ?>
+            <?php endif; ?>
+            <?php print $fields['field_digital_media_type']->wrapper_suffix; ?>
+            </div>
           </a>
       <?php endif; ?>
       <?php
