@@ -146,6 +146,12 @@ $block-blue-lighter: #18a5d1;
         background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
       }
     }
+
+    &.expanded.active {
+      h2.block-title {
+        background: $block-grey none;
+      }
+    }
   }
 
   // Styling for the content area.
@@ -273,6 +279,8 @@ $block-blue-lighter: #18a5d1;
           .resource-image {
             position: relative;
             width: 202px;
+            height: 105px;
+            overflow: hidden;
             float: left;
             margin: 10px;
             border: 1px solid $block-blue;
