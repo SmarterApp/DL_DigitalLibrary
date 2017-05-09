@@ -1,18 +1,24 @@
+// A couple of base colors.
 $block-grey: #ddd;
 $block-blue: #0e729d;
+$block-blue-lighter: #18a5d1;
 
+// Only apply these to the search pages.
 .page-instructional,
 .page-professional-learning,
 .page-playlist,
 .page-search-resources {
+  // Hide the title.
   #page-title {
     display: none;
   }
 
+  // Set the max-width so the page can contract for smaller screens.
   .row {
     max-width: 1280px;
   }
 
+  // Styling for the section info at the top of the page.
   .resource-feature {
     margin: 0 15px 15px 15px;
     width: auto;
@@ -31,21 +37,22 @@ $block-blue: #0e729d;
     .block {
       width: auto;
       padding: 0 15px;
+      position: relative;
     }
 
     h2 {
-      color: #444444;
+      color: #444;
       font-size: 150%;
     }
 
     p {
-      color: #000000;
+      color: #000;
       font-size: 120%;
       margin: 0;
     }
 
     img {
-      position:absolute;
+      position: absolute;
       top: 0;
       right: -240px;
       height: 150px;
@@ -53,6 +60,7 @@ $block-blue: #0e729d;
     }
   }
 
+  // Styling for the facet blocks.
   .block-facetapi {
     box-sizing: border-box;
     border: $block-grey solid 1px;
@@ -82,8 +90,28 @@ $block-blue: #0e729d;
       margin: 0;
       padding: 5px;
       list-style: none;
-      background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+      background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
       font-size: 13px;
+
+      a {
+        color: #000;
+
+        &:hover {
+          color: #000;
+        }
+
+        &:visited {
+          color: #000;
+        }
+
+        &:active {
+          color: #000;
+        }
+      }
+
+      .subject-icon {
+        height: 18px;
+      }
 
       .facetapi-collapsible-handle {
         display: inline-block;
@@ -110,18 +138,7 @@ $block-blue: #0e729d;
     }
 
     li.active {
-      background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
-    }
-
-    &:nth-child(1),
-    &:nth-child(2) {
-      li {
-        background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
-      }
-
-      li.active {
-        background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
-      }
+      background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
     }
 
     &.expanded {
@@ -131,14 +148,16 @@ $block-blue: #0e729d;
     }
   }
 
+  // Styling for the content area.
   #main {
-    &>.block {
+    // Styling for the blocks at the top (number of result, keyword search, sorts).
+    & > .block {
       float: left;
       background-color: $block-grey;
       height: 40px;
     }
 
-    &>.block-current-search-search-sections {
+    & > .block-current-search-search-sections {
       position: absolute;
       top: 0;
       left: 0;
@@ -147,13 +166,13 @@ $block-blue: #0e729d;
       z-index: 9999;
     }
 
-    &>.block-current-search.block-current-search-main-search {
+    & > .block-current-search.block-current-search-main-search {
       width: 100%;
       margin-left: -15px;
       padding: 10px 241px 10px 10px;
     }
 
-    &>.block-views {
+    & > .block-views {
       position: relative;
       width: 100%;
       padding: 4px 241px 0 155px;
@@ -182,7 +201,7 @@ $block-blue: #0e729d;
       }
     }
 
-    &>.block-search-api-sorts {
+    & > .block-search-api-sorts {
       position: absolute;
       top: 0;
       right: 15px;
@@ -223,158 +242,173 @@ $block-blue: #0e729d;
         }
       }
     }
-  }
 
-  .view {
-    clear: both;
-    padding-top: 20px;
-  }
+    // Put some space and clear the floats before the view data itself.
+    .view {
+      clear: both;
+      padding-top: 20px;
+    }
 
-  .view-content {
-    margin-bottom: 20px;
-  }
+    // Put some space between the content and the bottom pager.
+    .view-content {
+      margin-bottom: 20px;
+    }
 
-  .view-id-search_api_resource_views {
-    .row {
-      width: auto;
-      border: 1px solid $block-blue;
-      margin-right: 0;
-      margin-bottom: -1px;
-      box-sizing: border-box;
-      position: relative;
-      overflow: hidden;
-
-      .resource-main {
-        float: left;
-        width: 80%;
+    // Styling for the search results.
+    .view-id-search_api_resource_views {
+      .row {
+        width: auto;
+        border: 1px solid $block-blue;
+        margin-right: 0;
+        margin-bottom: -1px;
+        box-sizing: border-box;
         position: relative;
+        overflow: hidden;
 
-        .list-image {
-          width: 200px;
+        .resource-main {
           float: left;
-          margin: 10px;
-          border: 1px solid $block-blue;
-        }
+          width: 80%;
+          position: relative;
 
-        .resource-summary {
-          margin: 10px 10px 10px 0;
+          .resource-image {
+            position: relative;
+            width: 202px;
+            float: left;
+            margin: 10px;
+            border: 1px solid $block-blue;
+          }
 
-          .resource-tags {
-            font-size: 90%;
-            margin-bottom: 5px;
+          .list-image {
+            width: 200px;
+          }
 
-            .subject-icon {
-              height: 18px;
+          .views-field-field-digital-media-type {
+            width: 200px;
+            position: absolute;
+            bottom: 0;
+            color: #fff;
+            background-color: $block-blue;
+            background-color: rgba(14, 114, 157, 0.80);
+            text-align: center;
+            font-size: 80%;
+            padding: 3px 0;
+          }
+
+          .resource-summary {
+            margin: 10px 10px 10px 0;
+
+            a {
+              color: $block-blue;
+
+              &:hover {
+                color: $block-blue-lighter;
+              }
+
+              &:visited {
+                color: $block-blue;
+              }
+
+              &:active {
+                color: $block-blue-lighter;
+              }
+            }
+
+            .resource-tags {
+              font-size: 90%;
+              margin-bottom: 5px;
+
+              .subject-icon {
+                height: 18px;
+              }
+            }
+
+            .resource-date {
+              font-style: italic;
+            }
+
+            .resource-about {
+              font-size: 90%;
+              line-height: 120%;
             }
           }
+        }
 
-          .resource-date {
-            font-style: italic;
+        .shield-drop {
+          position: absolute;
+          top: 0;
+          right: 16.66667%;
+        }
+
+        .resource-stats {
+          float: right;
+          width: 16.66667%;
+          background-color: $block-grey;
+          border-left: 1px solid $block-blue;
+          padding: 20px 20px 100px 0;
+          margin-bottom: -100px;
+          text-align: right;
+
+          .stat-views,
+          .stat-downloads {
+            margin-bottom: 10px;
           }
 
-          .resource-about {
-            font-size: 90%;
-            line-height: 120%;
+          .rating {
+            margin-bottom: 10px;
+
+            .rating-stars {
+              float: right;
+
+              .form-item {
+                margin: 0;
+              }
+
+              .off,
+              .on {
+                color: transparent;
+              }
+            }
+
+            .rating-count {
+              float: right;
+            }
           }
         }
       }
+    }
+    .pager {
+      li {
+        &.pager-item,
+        &.pager-next,
+        &.pager-last,
+        &.pager-first,
+        &.pager-previous {
+          a {
+            color: #000;
 
-      .shield-drop {
-        position: absolute;
-        top: 0;
-        right: 16.66667%;
-      }
-
-      .resource-stats {
-        float: right;
-        width: 16.66667%;
-        background-color: $block-grey;
-        border-left: 1px solid $block-blue;
-        padding: 20px 20px 100px 0;
-        margin-bottom: -100px;
-        text-align: right;
-
-        .stat-views,
-        .stat-downloads {
-          margin-bottom: 10px;
-        }
-
-        .rating {
-          margin-bottom: 10px;
-
-          .rating-stars {
-            float: right;
-
-            .form-item {
-              margin: 0;
+            &:hover {
+              color: $block-blue;
             }
 
-            .off,
-            .on {
-              color: transparent;
+            &:visited {
+              color: #000;
+            }
+
+            &:active {
+              color: #000;
             }
           }
+        }
 
-          .rating-count {
-            float: right;
-          }
+        &.pager-current {
+          background-color: $block-blue;
+          color: #fff;
         }
       }
-
-      //.sbac-hover {
-      //  position: relative;
-      //  z-index: 2;
-      //  cursor: pointer;
-      //
-      //  &:before,
-      //  &:after {
-      //    visibility: hidden;
-      //    opacity: 0;
-      //    pointer-events: none;
-      //  }
-      //
-      //  &:before {
-      //    position: absolute;
-      //    bottom: 150%;
-      //    left: -40px;
-      //    margin-bottom: 5px;
-      //    padding: 10px 5px;
-      //    width: 120px;
-      //    -webkit-border-radius: 5px;
-      //    -moz-border-radius: 5px;
-      //    border-radius: 5px;
-      //    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-      //    background-color: #fff;
-      //    color: #5a5a5a;
-      //    content: attr(data-tooltipp);
-      //    text-align: center;
-      //    font-size: 16px;
-      //    line-height: 1.2;
-      //  }
-      //
-      //  &:after {
-      //    position: absolute;
-      //    bottom: 150%;
-      //    left: 15px;
-      //    width: 0;
-      //    border-top: 5px solid #fff;
-      //    border-right: 5px solid transparent;
-      //    border-left: 5px solid transparent;
-      //    content: " ";
-      //    font-size: 0;
-      //    line-height: 0;
-      //  }
-      //
-      //  &:hover:before,
-      //  &:hover:after {
-      //    visibility: visible;
-      //    opacity: 1;
-      //  }
-      //}
     }
   }
 }
 
 .category-filter-list {
-  display:none;
+  display: none;
 }
