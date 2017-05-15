@@ -93,8 +93,13 @@ $block-blue-lighter: #18a5d1;
       background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
       font-size: 13px;
 
+      &.active {
+        background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+      }
+
       a {
         color: #000;
+        outline: none;
 
         &:hover {
           color: #000;
@@ -135,10 +140,6 @@ $block-blue-lighter: #18a5d1;
         display: inline-block;
         width: 17px;
       }
-    }
-
-    li.active {
-      background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
     }
 
     &.expanded {
