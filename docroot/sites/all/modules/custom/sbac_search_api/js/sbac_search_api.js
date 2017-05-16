@@ -24,28 +24,37 @@
     });
   }
 
-  $(document).ready(function () {
-    // Set the initial toggle state of the plus/minus icons.
-    plusMinusToggler('a .facetapi-collapsible-handle');
+  Drupal.behaviors = Drupal.behaviors || {};
 
-    // Set the plus/minus state when you click.
-    $('a .facetapi-collapsible-handle').click(function (event) {
-      plusMinusToggler(this);
-    });
+  /**
+   * Click functionality and expansion for facets.
+   *
+   * @type {{attach: Function}}
+   */
+  Drupal.behaviors.sbac_search_api_facets = {
+    attach: function (context, settings) {
+      // Set the initial toggle state of the plus/minus icons.
+      plusMinusToggler('a .facetapi-collapsible-handle');
 
-    // Add a click area to the fake checkboxes.
-    $('.facetapi-facet').each(function() {
-      var href = $(this).children('a.facetapi-active, a.facetapi-inactive').attr('href');
-      $(this).prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
-    });
+      // Set the plus/minus state when you click.
+      $('a .facetapi-collapsible-handle').once().click(function (event) {
+        plusMinusToggler(this);
+      });
 
-    // Show/hide the sorts on click.
-    $('.default-sort').click(function (e) {
-      $(this).toggleClass('active');
-      $('.search-api-sorts').toggle();
-    });
+      // Add a click area to the fake checkboxes.
+      $('.facetapi-facet').each(function () {
+        var href = $(this).children('a.facetapi-active, a.facetapi-inactive').attr('href');
+        $(this).prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
+      });
 
-    // Set the placeholder in the search box.
-    $('#views-exposed-form-search-api-resource-views-instructional #edit-search-api-views-fulltext').attr('placeholder', 'search within results');
-  });
+      // Show/hide the sorts on click.
+      $('.default-sort').once().click(function (e) {
+        $(this).toggleClass('active');
+        $('.search-api-sorts').toggle();
+      });
+
+      // Set the placeholder in the search box.
+      $('#views-exposed-form-search-api-resource-views-instructional #edit-search').attr('placeholder', 'search within results');
+    }
+  };
 })(jQuery);

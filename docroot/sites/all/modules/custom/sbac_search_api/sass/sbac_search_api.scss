@@ -93,8 +93,13 @@ $block-blue-lighter: #18a5d1;
       background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
       font-size: 13px;
 
+      &.active {
+        background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+      }
+
       a {
         color: #000;
+        outline: none;
 
         &:hover {
           color: #000;
@@ -137,13 +142,15 @@ $block-blue-lighter: #18a5d1;
       }
     }
 
-    li.active {
-      background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
-    }
-
     &.expanded {
       h2.block-title {
         background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
+      }
+    }
+
+    &.expanded.active {
+      h2.block-title {
+        background: $block-grey none;
       }
     }
   }
@@ -273,6 +280,8 @@ $block-blue-lighter: #18a5d1;
           .resource-image {
             position: relative;
             width: 202px;
+            height: 105px;
+            overflow: hidden;
             float: left;
             margin: 10px;
             border: 1px solid $block-blue;
