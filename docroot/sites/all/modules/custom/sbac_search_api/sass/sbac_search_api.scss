@@ -259,6 +259,15 @@ $block-blue-lighter: #18a5d1;
     // Put some space between the content and the bottom pager.
     .view-content {
       margin-bottom: 20px;
+      position: relative;
+
+      #search-loading {
+        position: absolute;
+        top: 0;
+        left: -15px;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+      }
     }
 
     // Styling for the search results.
