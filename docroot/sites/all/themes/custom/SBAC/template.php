@@ -1012,7 +1012,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
     // Process the content property to remove any tags for the raw property.
     $raw_process = array('nid', 'title', 'sticky', 'url', 'field_grades', 'field_subject', 'field_digital_media_type');
     foreach ($raw_process as $field) {
-      $variables['fields'][$field]->raw = strip_tags($variables['fields'][$field]->content);
+      $variables['fields'][$field]->raw = decode_entities(strip_tags($variables['fields'][$field]->content));
     }
 
     // Format the grade field.
