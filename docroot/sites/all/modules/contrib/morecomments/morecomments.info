@@ -1,0 +1,13 @@
+name = More Comments
+description = Replace comment pager with a more comment pager like twitter or facebook does
+package = Other
+core = 7.x
+dependencies[] = comment
+files[] = morecomments.module
+
+; Information added by drupal.org packaging script on 2011-03-09
+version = "7.x-1.0-beta3"
+core = "7.x"
+project = "morecomments"
+datestamp = "1299686469"
+

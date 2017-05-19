@@ -1,0 +1,6 @@
+name = Dialog Example
+description = Example implementations of using the Dialog API. 
+core = 7.x
+package = User interface
+files[] = dialog_example.module
+dependencies[] = dialog

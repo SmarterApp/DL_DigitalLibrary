@@ -1,0 +1,9 @@
+name = Mailgun
+description = "Provides integration with Mailgun's email sending API."
+core = 7.x
+package = Mailgun
+
+dependencies[] = libraries
+dependencies[] = mailsystem
+
+files[] = mailgun.mail.inc

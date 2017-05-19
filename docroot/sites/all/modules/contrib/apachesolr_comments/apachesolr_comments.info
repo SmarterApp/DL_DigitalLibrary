@@ -1,0 +1,6 @@
+name = Apachesolr Comments
+description = Seperates comments from nodes to allows direct searching and linking to comments.
+core = 7.x 
+dependencies[] = node
+dependencies[] = apachesolr
+package = "Search Toolkit"
