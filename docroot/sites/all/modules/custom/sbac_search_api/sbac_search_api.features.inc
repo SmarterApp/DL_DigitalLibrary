@@ -35,7 +35,7 @@ function sbac_search_api_default_search_api_index() {
     "name" : "Default node index",
     "machine_name" : "default_node_index",
     "description" : "An automatically created search index for indexing node data. Might be configured to specific needs.",
-    "server" : "local_solr",
+    "server" : "solr",
     "item_type" : "node",
     "options" : {
       "datasource" : { "bundles" : [ "resource" ] },
@@ -207,6 +207,43 @@ function sbac_search_api_default_search_api_index() {
     },
     "enabled" : "1",
     "read_only" : "0",
+    "rdf_mapping" : []
+  }');
+  return $items;
+}
+
+/**
+ * Implements hook_default_search_api_server().
+ */
+function sbac_search_api_default_search_api_server() {
+  $items = array();
+  $items['solr'] = entity_import('search_api_server', '{
+    "name" : "Acquia SOLR",
+    "machine_name" : "solr",
+    "description" : "",
+    "class" : "acquia_search_service",
+    "options" : {
+      "clean_ids" : true,
+      "site_hash" : true,
+      "scheme" : "http",
+      "host" : "search.acquia.com",
+      "port" : "80",
+      "path" : "\\/solr\\/BVWZ-37038",
+      "edismax" : 0,
+      "modify_acquia_connection" : 0,
+      "http_user" : "",
+      "http_pass" : "",
+      "excerpt" : 0,
+      "retrieve_data" : 0,
+      "highlight_data" : 0,
+      "skip_schema_check" : 0,
+      "solr_version" : "",
+      "http_method" : "AUTO",
+      "log_query" : 0,
+      "log_response" : 0,
+      "commits_disabled" : 0
+    },
+    "enabled" : "1",
     "rdf_mapping" : []
   }');
   return $items;
