@@ -67,7 +67,9 @@
       plusMinusToggler('a .facetapi-collapsible-handle');
 
       // Set the plus/minus state when you click.
-      $('a .facetapi-collapsible-handle').once('plusMinus').click(function (event) {
+      $('a .facetapi-collapsible-handle').once('plusMinus').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         plusMinusToggler(this);
       });
 
@@ -285,7 +287,7 @@
                       }
                       // Otherwise, we'll build the URL from the current URL, the clicked data, and the item data, to preserve order.
                       else {
-                        new_query = current_url + clicked_query_data + item_query_data;
+                        new_query = current.query + clicked_query_data + item_query_data;
                       }
                     }
                     // If the clicked URL was removing data, remove it from the item.

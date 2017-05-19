@@ -219,15 +219,42 @@
   background: #ddd none;
 }
 /* line 161, ../sass/sbac_search_api.scss */
+.page-instructional #main.messagebox,
+.page-professional-learning #main.messagebox,
+.page-playlist #main.messagebox,
+.page-search-resources #main.messagebox {
+  padding-top: 55px;
+}
+/* line 164, ../sass/sbac_search_api.scss */
+.page-instructional #main.messagebox #sidebar-left,
+.page-professional-learning #main.messagebox #sidebar-left,
+.page-playlist #main.messagebox #sidebar-left,
+.page-search-resources #main.messagebox #sidebar-left {
+  margin-top: -55px;
+}
+/* line 168, ../sass/sbac_search_api.scss */
+.page-instructional #main.messagebox .alert-box,
+.page-professional-learning #main.messagebox .alert-box,
+.page-playlist #main.messagebox .alert-box,
+.page-search-resources #main.messagebox .alert-box {
+  margin-right: 15px;
+}
+/* line 172, ../sass/sbac_search_api.scss */
+.page-instructional #main.messagebox .view,
+.page-professional-learning #main.messagebox .view,
+.page-playlist #main.messagebox .view,
+.page-search-resources #main.messagebox .view {
+  padding-top: 20px;
+}
+/* line 178, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block,
 .page-professional-learning #main > .block,
 .page-playlist #main > .block,
 .page-search-resources #main > .block {
-  float: left;
   background-color: #ddd;
   height: 40px;
 }
-/* line 167, ../sass/sbac_search_api.scss */
+/* line 183, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-current-search-search-sections,
 .page-professional-learning #main > .block-current-search-search-sections,
 .page-playlist #main > .block-current-search-search-sections,
@@ -237,48 +264,52 @@
   left: 0;
   width: 170px;
   padding: 10px;
-  z-index: 9999;
+  z-index: 500;
 }
-/* line 176, ../sass/sbac_search_api.scss */
+/* line 192, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-current-search.block-current-search-main-search,
 .page-professional-learning #main > .block-current-search.block-current-search-main-search,
 .page-playlist #main > .block-current-search.block-current-search-main-search,
 .page-search-resources #main > .block-current-search.block-current-search-main-search {
-  width: 100%;
-  margin-left: -15px;
-  padding: 10px 241px 10px 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 90%;
+  padding: 10px;
 }
-/* line 182, ../sass/sbac_search_api.scss */
+/* line 200, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-views,
 .page-professional-learning #main > .block-views,
 .page-playlist #main > .block-views,
 .page-search-resources #main > .block-views {
-  position: relative;
-  width: 100%;
-  padding: 4px 241px 0 155px;
+  position: absolute;
+  width: 80%;
+  padding: 4px 141px 0 155px;
+  top: 0;
+  left: 15px;
 }
-/* line 187, ../sass/sbac_search_api.scss */
+/* line 207, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-views .form-item,
 .page-professional-learning #main > .block-views .form-item,
 .page-playlist #main > .block-views .form-item,
 .page-search-resources #main > .block-views .form-item {
   margin: 0;
 }
-/* line 191, ../sass/sbac_search_api.scss */
+/* line 211, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-views label,
 .page-professional-learning #main > .block-views label,
 .page-playlist #main > .block-views label,
 .page-search-resources #main > .block-views label {
   display: none;
 }
-/* line 195, ../sass/sbac_search_api.scss */
+/* line 215, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-views button,
 .page-professional-learning #main > .block-views button,
 .page-playlist #main > .block-views button,
 .page-search-resources #main > .block-views button {
   position: absolute;
   top: 8px;
-  right: 245px;
+  right: 145px;
   box-shadow: none;
   border-radius: 0;
   padding: 5px;
@@ -289,7 +320,7 @@
   text-shadow: none;
   color: transparent;
 }
-/* line 211, ../sass/sbac_search_api.scss */
+/* line 231, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-search-api-sorts,
 .page-professional-learning #main > .block-search-api-sorts,
 .page-playlist #main > .block-search-api-sorts,
@@ -300,7 +331,7 @@
   width: 226px;
   padding: 5px;
 }
-/* line 218, ../sass/sbac_search_api.scss */
+/* line 238, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-search-api-sorts .default-sort,
 .page-professional-learning #main > .block-search-api-sorts .default-sort,
 .page-playlist #main > .block-search-api-sorts .default-sort,
@@ -310,14 +341,14 @@
   padding: 7px 20px 0 7px;
   height: 30px;
 }
-/* line 224, ../sass/sbac_search_api.scss */
+/* line 244, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-search-api-sorts .default-sort.active,
 .page-professional-learning #main > .block-search-api-sorts .default-sort.active,
 .page-playlist #main > .block-search-api-sorts .default-sort.active,
 .page-search-resources #main > .block-search-api-sorts .default-sort.active {
   background: #0e729d url("/sites/all/themes/custom/SBAC/images/icon-arrow-up-white.png") 195px 12px no-repeat;
 }
-/* line 229, ../sass/sbac_search_api.scss */
+/* line 249, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-search-api-sorts .search-api-sorts,
 .page-professional-learning #main > .block-search-api-sorts .search-api-sorts,
 .page-playlist #main > .block-search-api-sorts .search-api-sorts,
@@ -329,7 +360,7 @@
   background-color: #0e729d;
   z-index: 9999;
 }
-/* line 237, ../sass/sbac_search_api.scss */
+/* line 257, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-search-api-sorts .search-api-sorts li,
 .page-professional-learning #main > .block-search-api-sorts .search-api-sorts li,
 .page-playlist #main > .block-search-api-sorts .search-api-sorts li,
@@ -338,29 +369,29 @@
   padding: 5px 10px;
   margin: 0;
 }
-/* line 242, ../sass/sbac_search_api.scss */
+/* line 262, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-search-api-sorts .search-api-sorts li a,
 .page-professional-learning #main > .block-search-api-sorts .search-api-sorts li a,
 .page-playlist #main > .block-search-api-sorts .search-api-sorts li a,
 .page-search-resources #main > .block-search-api-sorts .search-api-sorts li a {
   color: #fff;
 }
-/* line 245, ../sass/sbac_search_api.scss */
+/* line 265, ../sass/sbac_search_api.scss */
 .page-instructional #main > .block-search-api-sorts .search-api-sorts li a:hover,
 .page-professional-learning #main > .block-search-api-sorts .search-api-sorts li a:hover,
 .page-playlist #main > .block-search-api-sorts .search-api-sorts li a:hover,
 .page-search-resources #main > .block-search-api-sorts .search-api-sorts li a:hover {
   color: #ddd;
 }
-/* line 254, ../sass/sbac_search_api.scss */
+/* line 274, ../sass/sbac_search_api.scss */
 .page-instructional #main .view,
 .page-professional-learning #main .view,
 .page-playlist #main .view,
 .page-search-resources #main .view {
   clear: both;
-  padding-top: 20px;
+  padding-top: 55px;
 }
-/* line 260, ../sass/sbac_search_api.scss */
+/* line 280, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-content,
 .page-professional-learning #main .view-content,
 .page-playlist #main .view-content,
@@ -368,7 +399,7 @@
   margin-bottom: 20px;
   position: relative;
 }
-/* line 264, ../sass/sbac_search_api.scss */
+/* line 284, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-content #search-loading,
 .page-professional-learning #main .view-content #search-loading,
 .page-playlist #main .view-content #search-loading,
@@ -379,7 +410,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   display: none;
 }
-/* line 275, ../sass/sbac_search_api.scss */
+/* line 295, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row,
 .page-professional-learning #main .view-id-search_api_resource_views .row,
 .page-playlist #main .view-id-search_api_resource_views .row,
@@ -392,7 +423,7 @@
   position: relative;
   overflow: hidden;
 }
-/* line 284, ../sass/sbac_search_api.scss */
+/* line 304, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main,
@@ -401,7 +432,7 @@
   width: 80%;
   position: relative;
 }
-/* line 289, ../sass/sbac_search_api.scss */
+/* line 309, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-image,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-image,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-image,
@@ -414,14 +445,14 @@
   margin: 10px;
   border: 1px solid #0e729d;
 }
-/* line 299, ../sass/sbac_search_api.scss */
+/* line 319, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .list-image,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .list-image,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .list-image,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .list-image {
   width: 200px;
 }
-/* line 303, ../sass/sbac_search_api.scss */
+/* line 323, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .views-field-field-digital-media-type,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .views-field-field-digital-media-type,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .views-field-field-digital-media-type,
@@ -436,42 +467,42 @@
   font-size: 80%;
   padding: 3px 0;
 }
-/* line 315, ../sass/sbac_search_api.scss */
+/* line 335, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .resource-summary {
   margin: 10px 10px 10px 0;
 }
-/* line 318, ../sass/sbac_search_api.scss */
+/* line 338, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary a,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary a,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary a,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .resource-summary a {
   color: #0e729d;
 }
-/* line 321, ../sass/sbac_search_api.scss */
+/* line 341, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:hover,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:hover,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:hover,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:hover {
   color: #18a5d1;
 }
-/* line 325, ../sass/sbac_search_api.scss */
+/* line 345, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:visited,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:visited,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:visited,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:visited {
   color: #0e729d;
 }
-/* line 329, ../sass/sbac_search_api.scss */
+/* line 349, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:active,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:active,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:active,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .resource-summary a:active {
   color: #18a5d1;
 }
-/* line 334, ../sass/sbac_search_api.scss */
+/* line 354, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-tags,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-tags,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-tags,
@@ -479,21 +510,21 @@
   font-size: 90%;
   margin-bottom: 5px;
 }
-/* line 338, ../sass/sbac_search_api.scss */
+/* line 358, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-tags .subject-icon,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-tags .subject-icon,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-tags .subject-icon,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-tags .subject-icon {
   height: 18px;
 }
-/* line 343, ../sass/sbac_search_api.scss */
+/* line 363, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-date {
   font-style: italic;
 }
-/* line 347, ../sass/sbac_search_api.scss */
+/* line 367, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-about,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-about,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-main .resource-summary .resource-about,
@@ -501,7 +532,7 @@
   font-size: 90%;
   line-height: 120%;
 }
-/* line 354, ../sass/sbac_search_api.scss */
+/* line 374, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .shield-drop,
 .page-professional-learning #main .view-id-search_api_resource_views .row .shield-drop,
 .page-playlist #main .view-id-search_api_resource_views .row .shield-drop,
@@ -510,7 +541,7 @@
   top: 0;
   right: 16.66667%;
 }
-/* line 360, ../sass/sbac_search_api.scss */
+/* line 380, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-stats,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-stats,
@@ -523,7 +554,7 @@
   margin-bottom: -100px;
   text-align: right;
 }
-/* line 369, ../sass/sbac_search_api.scss */
+/* line 389, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .stat-views,
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .stat-downloads,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-stats .stat-views,
@@ -534,28 +565,28 @@
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-stats .stat-downloads {
   margin-bottom: 10px;
 }
-/* line 374, ../sass/sbac_search_api.scss */
+/* line 394, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .rating,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-stats .rating,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-stats .rating,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-stats .rating {
   margin-bottom: 10px;
 }
-/* line 377, ../sass/sbac_search_api.scss */
+/* line 397, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars {
   float: right;
 }
-/* line 380, ../sass/sbac_search_api.scss */
+/* line 400, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .form-item {
   margin: 0;
 }
-/* line 384, ../sass/sbac_search_api.scss */
+/* line 404, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .off,
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .on,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .off,
@@ -566,14 +597,14 @@
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-stars .on {
   color: transparent;
 }
-/* line 390, ../sass/sbac_search_api.scss */
+/* line 410, ../sass/sbac_search_api.scss */
 .page-instructional #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-count,
 .page-professional-learning #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-count,
 .page-playlist #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-count,
 .page-search-resources #main .view-id-search_api_resource_views .row .resource-stats .rating .rating-count {
   float: right;
 }
-/* line 404, ../sass/sbac_search_api.scss */
+/* line 424, ../sass/sbac_search_api.scss */
 .page-instructional #main .pager li.pager-item a, .page-instructional #main .pager li.pager-next a, .page-instructional #main .pager li.pager-last a, .page-instructional #main .pager li.pager-first a, .page-instructional #main .pager li.pager-previous a,
 .page-professional-learning #main .pager li.pager-item a,
 .page-professional-learning #main .pager li.pager-next a,
@@ -592,7 +623,7 @@
 .page-search-resources #main .pager li.pager-previous a {
   color: #000;
 }
-/* line 407, ../sass/sbac_search_api.scss */
+/* line 427, ../sass/sbac_search_api.scss */
 .page-instructional #main .pager li.pager-item a:hover, .page-instructional #main .pager li.pager-next a:hover, .page-instructional #main .pager li.pager-last a:hover, .page-instructional #main .pager li.pager-first a:hover, .page-instructional #main .pager li.pager-previous a:hover,
 .page-professional-learning #main .pager li.pager-item a:hover,
 .page-professional-learning #main .pager li.pager-next a:hover,
@@ -611,7 +642,7 @@
 .page-search-resources #main .pager li.pager-previous a:hover {
   color: #0e729d;
 }
-/* line 411, ../sass/sbac_search_api.scss */
+/* line 431, ../sass/sbac_search_api.scss */
 .page-instructional #main .pager li.pager-item a:visited, .page-instructional #main .pager li.pager-next a:visited, .page-instructional #main .pager li.pager-last a:visited, .page-instructional #main .pager li.pager-first a:visited, .page-instructional #main .pager li.pager-previous a:visited,
 .page-professional-learning #main .pager li.pager-item a:visited,
 .page-professional-learning #main .pager li.pager-next a:visited,
@@ -630,7 +661,7 @@
 .page-search-resources #main .pager li.pager-previous a:visited {
   color: #000;
 }
-/* line 415, ../sass/sbac_search_api.scss */
+/* line 435, ../sass/sbac_search_api.scss */
 .page-instructional #main .pager li.pager-item a:active, .page-instructional #main .pager li.pager-next a:active, .page-instructional #main .pager li.pager-last a:active, .page-instructional #main .pager li.pager-first a:active, .page-instructional #main .pager li.pager-previous a:active,
 .page-professional-learning #main .pager li.pager-item a:active,
 .page-professional-learning #main .pager li.pager-next a:active,
@@ -649,7 +680,7 @@
 .page-search-resources #main .pager li.pager-previous a:active {
   color: #000;
 }
-/* line 421, ../sass/sbac_search_api.scss */
+/* line 441, ../sass/sbac_search_api.scss */
 .page-instructional #main .pager li.pager-current,
 .page-professional-learning #main .pager li.pager-current,
 .page-playlist #main .pager li.pager-current,
@@ -658,7 +689,7 @@
   color: #fff;
 }
 
-/* line 430, ../sass/sbac_search_api.scss */
+/* line 450, ../sass/sbac_search_api.scss */
 .category-filter-list {
   display: none;
 }

@@ -135,8 +135,10 @@
 
     <div class="row main-row">
         <div class="main-container clearfix">
-            <div class="resource-feature"><?php print render($page['resource_feature']); ?></div>
-            <div id="main" class="<?php print $main_grid; ?> columns">
+            <?php if (isset($page['resource_feature']) && $page['resource_feature']): ?>
+                <div class="resource-feature"><?php print render($page['resource_feature']); ?></div>
+            <?php endif; ?>
+            <div id="main" class="<?php print $main_grid; ?> columns <?php if ($messages): print 'messagebox'; endif; ?>">
               <?php if ($messages): print $messages; endif; ?>
               <?php if (!empty($page['help'])): print render($page['help']); endif; ?>
               <?php if (!empty($page['highlighted'])): ?>
