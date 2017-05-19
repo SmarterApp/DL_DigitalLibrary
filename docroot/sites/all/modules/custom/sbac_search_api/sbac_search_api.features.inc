@@ -122,8 +122,8 @@ function sbac_search_api_default_search_api_index() {
               "field_author" : true,
               "body:value" : true
             },
-            "spaces" : "[^\\\\p{L}\\\\p{N}]",
-            "ignorable" : "[-]"
+            "spaces" : "[^\\\\p{L}\\\\p{N}-]",
+            "ignorable" : ""
           }
         },
         "search_api_stopwords" : {
