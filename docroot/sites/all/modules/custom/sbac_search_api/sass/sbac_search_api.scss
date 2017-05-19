@@ -157,9 +157,25 @@ $block-blue-lighter: #18a5d1;
 
   // Styling for the content area.
   #main {
+    // Styling for when the message box is on the page.
+    &.messagebox {
+      padding-top: 55px;
+
+      #sidebar-left {
+        margin-top: -55px;
+      }
+
+      .alert-box {
+        margin-right: 15px;
+      }
+
+      .view {
+        padding-top: 20px;
+      }
+    }
+
     // Styling for the blocks at the top (number of result, keyword search, sorts).
     & > .block {
-      float: left;
       background-color: $block-grey;
       height: 40px;
     }
@@ -170,19 +186,23 @@ $block-blue-lighter: #18a5d1;
       left: 0;
       width: 170px;
       padding: 10px;
-      z-index: 9999;
+      z-index: 500;
     }
 
     & > .block-current-search.block-current-search-main-search {
-      width: 100%;
-      margin-left: -15px;
-      padding: 10px 241px 10px 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 90%;
+      padding: 10px;
     }
 
     & > .block-views {
-      position: relative;
-      width: 100%;
-      padding: 4px 241px 0 155px;
+      position: absolute;
+      width: 80%;
+      padding: 4px 141px 0 155px;
+      top: 0;
+      left: 15px;
 
       .form-item {
         margin: 0;
@@ -195,7 +215,7 @@ $block-blue-lighter: #18a5d1;
       button {
         position: absolute;
         top: 8px;
-        right: 245px;
+        right: 145px;
         box-shadow: none;
         border-radius: 0;
         padding: 5px;
@@ -253,7 +273,7 @@ $block-blue-lighter: #18a5d1;
     // Put some space and clear the floats before the view data itself.
     .view {
       clear: both;
-      padding-top: 20px;
+      padding-top: 55px;
     }
 
     // Put some space between the content and the bottom pager.
