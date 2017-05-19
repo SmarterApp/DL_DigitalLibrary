@@ -23,7 +23,7 @@
             var subjects = $('#edit-field-subject-s-und').val();
             var grades = $('#edit-field-grade-level-s-und').val();
             var student_populations = $('#edit-field-special-populations-und').val();
-            if (position == '_none' || subjects == null || grades == null || student_populations == null) {
+            if (position == '_none' || subjects == null || grades == null) {
               event.stopPropagation();
               event.preventDefault();
               clicked = true;
@@ -56,6 +56,16 @@
         }
       });
 
+      $(document).ready(function () {
+        var hash = window.location.hash.substr(1);
+        if (hash === 'edit-group_expertise') {
+          $("#vertical-tabs-default").val("edit-group_expertise");
+        }
+        if (hash === 'edit-group_privacy') {
+          $("#vertical-tabs-default").val("edit-group_privacy");
+        }
+      });
+
       // set the default vertical tab on user profile form
       $("form#user-profile-form #edit-submit").click(function () {
         if ($('#edit-group_expertise[style*="display: block;"]').length) {
@@ -72,7 +82,6 @@
       $("#edit-field-privacy-und-field-state").prop('disabled', true);
       $("#edit-field-privacy-und-field-grade-level-s-").prop('disabled', true);
       $("#edit-field-privacy-und-field-subject-s-").prop('disabled', true);
-      $("#edit-field-privacy-und-field-special-populations").prop('disabled', true);
 
       var placeholder = ($('#edit-picture').has('div.form-item-picture-delete').length) ? 'Change Picture' : 'Add Picture';
       $('.row #edit-picture-upload').after('<input id="upload-cover" value="' + placeholder + '" type="text">');
@@ -97,6 +106,15 @@
       // $(".row.second button:submit:not(#sbac-favorites-resource-submit, #sbac-favorites-resource-cancel, #sbac-favorites-forum-submit, #sbac-favorites-forum-cancel)").attr("disabled", true);
       $("input, textarea, select").live('keydown change', function () {
         $(".row.second button:submit").removeAttr("disabled");
+      });
+
+      // Don't show the Submit button on the Manage Subscriptions tab (will only work as long as it is the last tab).
+      $("#user-profile-form .vertical-tab-button a").click(function (e) {
+        if ($(this).parent().hasClass('last')) {
+          $("div[id^='edit-actions--']").hide();
+        } else {
+          $("div[id^='edit-actions--']").show();
+        }
       });
     }
   };

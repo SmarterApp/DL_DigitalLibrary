@@ -161,30 +161,56 @@ class Qc extends Base {
     parent::postProcess();
   }
 
+  public function getBacklog() {
+    $results = $result_sub = array();
+    $query = db_select('eck_feedback', 'f')
+      ->fields('f', array('id', 'type'))
+      ->condition('node_id', $this->_resource->nid)
+      ->condition('completed', 1)
+      ->orderBy('id', 'DESC');
+
+    $result = $query->execute();
+    while ($row = $result->fetchAssoc()) {
+      if ($row['type'] == 'qc') {
+        $result_sub[$row['id']] = 'qc';
+        $oid = $row['id'];
+      } elseif ($row['type'] == 'gate_keeper' && count($result_sub)) {
+        $results[$oid] = $result_sub;
+        $result_sub = array();
+      }
+    }
+    return $results;
+  }
+
   /**
    * Returns FAPI element for Set's Feedback content.
-   * @param  [type] $content_callback [description]
-   * @return [type]                   [description]
+   * @param $content_callback
+   * @param bool $ids
+   * @return array [type]                   [description]
    */
-  public function getReviewTeaser($content_callback) {
+  public function getReviewTeaser($content_callback, $ids = FALSE) {
     $form = array();
+    if ($ids === FALSE) {
+      $query = db_select('eck_feedback', 'f')
+        ->fields('f', array('id'))
+        ->condition('node_id', $this->_resource->nid)
+        ->condition('created', _sbac_resource_resubmit_timestamp($this->_resource->nid), '>')
+        ->condition('completed', 1)
+        ->condition('type', 'qc')
+        ->orderBy('id', 'ASC');
+    } else {
+      $query = db_select('eck_feedback', 'f')
+        ->fields('f', array('id'))
+        ->condition('id', $ids, 'IN')
+        ->orderBy('id', 'ASC');
+    }
 
-    $query = "
-SELECT
-	f.id
-FROM {eck_feedback} f
-WHERE f.node_id = :node_id
-      AND f.created > :time_stamp
-      AND f.completed = 1
-      AND f.type = 'qc'
-    ORDER BY f.created ASC";
-
-    $result = db_query($query, array(':node_id' => $this->_resource->nid, ':time_stamp' => _sbac_resource_resubmit_timestamp($this->_resource->nid)));
+    $result = $query->execute();
 
     $i = 0;
     $counter = 1;
-    foreach ($result as $row) {
-      $entity = entity_load_single('feedback', $row->id);
+    while ($row = $result->fetchField()) {
+      $entity = entity_load_single('feedback', $row);
 
       // No longer need the username of the user.
       // $author = theme('username', array(

@@ -77,6 +77,26 @@
 
 drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css');
 ?>
+<?php  if (isset($goal_link_ip)): ?>
+  <div id="star-rating-modal-container" class="reveal-modal">
+    <div class="star-rating-modal">
+      <h2>Congratulations! You have completed a Star Rating.</h2>
+      <p>You are one step closer to reaching your goal of completed star ratings. You can update your goal <a href="<?php print $goal_link_ip; ?>">here</a>.</p>
+      <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
+    </div>
+  </div>
+<?php endif; ?>
+<?php  if (isset($goal_link_complete)): ?>
+  <div id="star-rating-modal-container" class="reveal-modal">
+    <div class="star-rating-modal">
+      <h2>Congratulations! You have completed your goal for Star Ratings.</h2>
+      <?php if (sbac_sne_webform_check_availability()): ?>
+        <p>Click <a href="<?php print $goal_link_complete; ?>">here</a> if you are interested in contributing resources to the Digital Library.</p>
+      <?php endif; ?>
+      <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
+    </div>
+  </div>
+<?php endif; ?>
 <?php if (isset($resource_type) && $resource_type): ?>
   <span class="resource-type"><?php echo $resource_type; ?></span>
 <?php endif; ?>
@@ -92,6 +112,15 @@ drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css
   </div>
 <?php endif; ?>
   <article id="node-<?php echo $node->nid; ?>" class="<?php echo $classes; ?>"<?php echo $attributes; ?>>
+  <?php if (isset($download)): ?>
+    <div id="resource-download-modal-container" class="reveal-modal">
+      <div class="resource-download-modal">
+        <h2>Thank you for downloading this Resource Material.</h2>
+        <p>Please be sure and rate this resource after you have used it.</p>
+        <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
+      </div>
+    </div>
+  <?php endif; ?>
   <div class="resource-attributes">
     <?php if (isset($author) && $author): ?>
       <p><span class="author">Author: </span class="publisher"><?php echo $author; ?> | Owner: <?php print $owner; ?></p>
@@ -131,7 +160,8 @@ endif;
             echo "<p>This is a <span id='sbac-partial-download'>partial download</span></p>";
           }
           if (isset($download)) {
-            echo $download;
+            // TODO fill in with correct link when built
+            print $download; 
           }
         ?>
       </div>

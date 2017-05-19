@@ -98,12 +98,6 @@ function sbac_user_strongarm() {
       'tooltip' => array(
         'custom_settings' => TRUE,
       ),
-      'search_index' => array(
-        'custom_settings' => FALSE,
-      ),
-      'search_result' => array(
-        'custom_settings' => FALSE,
-      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -111,22 +105,22 @@ function sbac_user_strongarm() {
           'weight' => '-6',
         ),
         'timezone' => array(
-          'weight' => '6',
+          'weight' => '8',
         ),
         'picture' => array(
           'weight' => '-9',
         ),
         'wysiwyg' => array(
-          'weight' => '5',
+          'weight' => '7',
         ),
         'googleanalytics' => array(
-          'weight' => '3',
+          'weight' => '4',
         ),
         'mimemail' => array(
-          'weight' => '1',
+          'weight' => '0',
         ),
         'redirect' => array(
-          'weight' => '17',
+          'weight' => '28',
         ),
       ),
       'display' => array(
@@ -141,7 +135,7 @@ function sbac_user_strongarm() {
           ),
         ),
         'mimemail' => array(
-          'default' => array(
+          'tooltip' => array(
             'weight' => '0',
             'visible' => TRUE,
           ),
@@ -150,6 +144,20 @@ function sbac_user_strongarm() {
     ),
   );
   $export['field_bundle_settings_user__user'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_user_pattern';
+  $strongarm->value = 'users/[user:mail]';
+  $export['pathauto_user_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'print_css';
+  $strongarm->value = '%t/css/print.css';
+  $export['print_css'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

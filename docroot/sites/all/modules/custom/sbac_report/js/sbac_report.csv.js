@@ -23,6 +23,24 @@
         // Add aria-required attribute to required fields.
         $(v + ' input[type=text').attr('aria-required', 'true');
       });
+
+      // Autocomplete functionality for User Activity Report
+      var uidField = $('#uid-field');
+  
+      // User Activity Report: Get the id from the autocomplete suggestion.
+      $(document).on('click', '.form-item-user #autocomplete li', function () {
+        var uid = $(this).find('.autocomplete-suggestion').data('uid');
+        uidField.text(uid);
+        uidField.val(uid);
+      });
+
+      // Individual Report: clear the id on event "input".
+      $('#edit-user').bind('input', function (e) {
+        if (uidField.val() != '') {
+          uidField.text('');
+          uidField.val('');
+        }
+      });
     },
     updateLabel: function (label_for, textfield_id) {
       var label = $('label[for=' + label_for + ']');

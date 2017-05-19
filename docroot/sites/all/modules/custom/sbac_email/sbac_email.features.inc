@@ -274,6 +274,35 @@ function sbac_email_default_message_type() {
     },
     "rdf_mapping" : []
   }');
+    $items['new_sne_request'] = entity_import('message_type', '{
+        "name" : "new_sne_request",
+  "description" : "New SNE Request",
+  "argument_keys" : [],
+  "argument" : [],
+  "category" : "message_type",
+  "data" : {
+        "token options" : { "clear" : 0 },
+    "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+  },
+  "language" : "",
+  "arguments" : null,
+  "message_text" : { "und" : [
+      {
+          "value" : "\u003Cp\u003ENew SNE Request Submission\u003C\/p\u003E",
+        "format" : "full_html",
+        "safe_value" : "\u003Cp\u003ENew SNE Request Submission\u003C\/p\u003E\n"
+      },
+      {
+          "value" : "\u003Cp style=\u0022font-family: \u0027Open Sans\u0027, sans-serif; font-size: 16px;\u0022\u003EDear Digital Library user:\u003C\/p\u003E\u003Cp style=\u0022font-family: \u0027Open Sans\u0027, sans-serif; font-size: 16px;\u0022\u003EA new SNE request has been submitted, click\u0026nbsp;\u003Ca href=\u0022\/admin\/sbac\/sne-webform-submissions-page\u0022\u003Ehere\u003C\/a\u003E\u0026nbsp;to review\u003C\/p\u003E\u003Cp style=\u0022font-family: \u0027Open Sans\u0027, sans-serif; font-size: 16px;\u0022\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \u0022On.\u0022 Change your email notification settings by clicking\u0026nbsp;\u003Ca href=\u0022!user-link\u0022\u003Ehere\u003C\/a\u003E\u003C\/p\u003E",
+        "format" : "full_html",
+        "safe_value" : "\u003Cp style=\u0022font-family: \u0027Open Sans\u0027, sans-serif; font-size: 16px;\u0022\u003EDear Digital Library user:\u003C\/p\u003E\n\u003Cp style=\u0022font-family: \u0027Open Sans\u0027, sans-serif; font-size: 16px;\u0022\u003EA new SNE request has been submitted, click\u0026nbsp;\u003Ca href=\u0022\/admin\/sbac\/sne-webform-submissions-page\u0022\u003Ehere\u003C\/a\u003E\u0026nbsp;to review\u003C\/p\u003E\n\u003Cp style=\u0022font-family: \u0027Open Sans\u0027, sans-serif; font-size: 16px;\u0022\u003EThis email was intended for [message:user:mail]. You are receiving this email because your email notification setting is \u0022On.\u0022 Change your email notification settings by clicking\u0026nbsp;\u003Ca href=\u0022!user-link\u0022\u003Ehere\u003C\/a\u003E\u003C\/p\u003E\n"
+      }
+    ]
+  },
+  "entity_type" : "message_type",
+  "entity_id" : "10256",
+  "rdf_mapping" : []
+}');
   $items['new_state_forum'] = entity_import('message_type', '{
     "name" : "new_state_forum",
     "description" : "New State Forum",

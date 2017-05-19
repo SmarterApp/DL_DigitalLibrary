@@ -4,7 +4,7 @@ use Dompdf\Dompdf;
  *
  * Implements hook_menu()
  *
-*/
+ */
 function sbac_goals_menu() {
   $items = array();
 
@@ -72,7 +72,7 @@ function sbac_goals_get_html_content($user_uid) {
       $title = check_plain($node->title);
 
       //Stash in array for completed tooltip
-      $starred_nodes[] = '<p>New rating given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $star_rated[1]) . '</p>'; 
+      $starred_nodes[] = '<p>New rating given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $star_rated[1]) . '</p>';
     }
     $starred_tooltip = "<p class='congratulations'>Congratulations <strong>GOAL COMPLETE</strong></p>";
     foreach ($starred_nodes as $entry) {
@@ -112,17 +112,17 @@ function sbac_goals_get_html_content($user_uid) {
           <span class="progress-info ' . $completed . '"><strong>' . $star_ratings . '</strong> out of ' . $star_goal . ' completed ' . $completed_icon .  '</span>
         </div>
       </div>';
-      if ($complete) {
-        $user_form['field_star_rating_goal']['#suffix'] .= '
+  if ($complete) {
+    $user_form['field_star_rating_goal']['#suffix'] .= '
         <div class="completed-message"><strong>Goal Achieved!</strong></div>
       </div>
     </div>';
-      }
-      else {
-        $user_form['field_star_rating_goal']['#suffix'] .= '
+  }
+  else {
+    $user_form['field_star_rating_goal']['#suffix'] .= '
       </div>
     </div>';
-      }
+  }
 
   // Add Resource Reviewer Goals in for a resource reviewer or resource publisher
   if (in_array('resource reviewer', $user->roles) ||  in_array('resource publisher', $user->roles)) {
@@ -163,7 +163,7 @@ function sbac_goals_get_html_content($user_uid) {
         // Grab titles for rated nodes
         $node = node_load($reviewed[0]);
         $title = check_plain($node->title);
-  
+
         //Stash in array for completed tooltip
         $reviewed_nodes[] = '<p>New review given on ' . $title . ' on ' . date('n/j/Y \a\t g:i A', $reviewed[1]) . '</p>';
         $counter++;
@@ -188,7 +188,7 @@ function sbac_goals_get_html_content($user_uid) {
       $user_form['field_resources_reviewed_goal']['#prefix'] .= '
         <div class="completed-prompt ' . $reviewed_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
     }
-  
+
     $user_form['field_resources_reviewed_goal']['#suffix'] = '
         <div class="progress-container ' . $reviewed_goal_zero . '">
           <div class="goal-status">Current Status</div>';
@@ -205,18 +205,18 @@ function sbac_goals_get_html_content($user_uid) {
             <div class="progress-bar" style="width: ' . $reviewed_perc . '%;"> </div>
             <span class="progress-info ' . $completed . '"><strong>' . $resources_reviewed . '</strong> out of ' . $review_goal . ' completed ' . $completed_icon .  '</span>
           </div>';
-        // Add completed prompt if goal completed
-        if ($complete) {
-          $user_form['field_resources_reviewed_goal']['#suffix'] .= '
+    // Add completed prompt if goal completed
+    if ($complete) {
+      $user_form['field_resources_reviewed_goal']['#suffix'] .= '
           <div class="completed-message"><strong>Goal Achieved!</strong></div>
         </div>
       </div>';
-        }
-        else {
-          $user_form['field_resources_reviewed_goal']['#suffix'] .= '
+    }
+    else {
+      $user_form['field_resources_reviewed_goal']['#suffix'] .= '
         </div>
       </div>';
-        }
+    }
   }
   else {
     // Remove from goals form
@@ -260,7 +260,7 @@ function sbac_goals_get_html_content($user_uid) {
         }
         // Grab title for posted node
         $title = check_plain($posted[0]);
-  
+
         //Stash in array for completed tooltip
         $posted_nodes[] = '<p>New resource ' . $title . ' posted on ' . date('n/j/Y \a\t g:i A', $posted[1]) . '</p>';
         $counter++;
@@ -285,7 +285,7 @@ function sbac_goals_get_html_content($user_uid) {
     if ($complete) {
       $user_form['field_resources_posted_goal']['#prefix'] .= '
         <div class="completed-prompt ' . $posted_goal_zero . '">Now that you have reached your goal, set it higher and see what you can achieve.</div>';
-    }  
+    }
     $user_form['field_resources_posted_goal']['#suffix'] = '
         <div class="progress-container ' . $posted_goal_zero . '">
           <div class="goal-status">Current Status</div>';
@@ -298,25 +298,25 @@ function sbac_goals_get_html_content($user_uid) {
       $user_form['field_resources_posted_goal']['#suffix'] .= '
           <div class="progress-bar-container">';
     }
-        $user_form['field_resources_posted_goal']['#suffix'] .= '
+    $user_form['field_resources_posted_goal']['#suffix'] .= '
             <div class="progress-bar" style="width:' . $posted_perc . '%;"> </div>
             <span class="progress-info ' . $completed . '"><strong>' . $resources_posted . '</strong> out of ' . $posted_goal . ' completed ' . $completed_icon .  '</span>
           </div>';
-        if ($complete) {
-          $user_form['field_resources_posted_goal']['#suffix'] .= '
+    if ($complete) {
+      $user_form['field_resources_posted_goal']['#suffix'] .= '
           <div class="completed-message ' . $posted_goal_zero . '"><strong>Goal Achieved!</strong></div>
         </div>
       </div>';
-        }
-        else {
-          $user_form['field_resources_posted_goal']['#suffix'] .= '
+    }
+    else {
+      $user_form['field_resources_posted_goal']['#suffix'] .= '
         </div>
       </div>';
-        }
+    }
   }
   else {
     $user_form['field_resources_posted_goal']['#access'] = FALSE;
- }
+  }
 
   //
   $user_path = 	drupal_get_path_alias('user/' . $user->uid);
@@ -357,7 +357,7 @@ function sbac_goals_form_alter(&$form, &$form_state, $form_id) {
       $form['field_resources_posted_goal']['#disabled'] = FALSE;
     }
     // Hide goals lock for non-admins
-     if (!in_array('administrator', $user->roles)) {
+    if (!in_array('administrator', $user->roles)) {
       $form['field_lock_goals']['#attributes']['class'][] = 'hidden';
       $form['field_lock_goals']['#disabled'] = TRUE;
     }
@@ -367,7 +367,7 @@ function sbac_goals_form_alter(&$form, &$form_state, $form_id) {
 /**
  * SBAC Goals get completed items
  */
-function sbac_goals_get_completed($goal, $uid, $date_range) {
+function sbac_goals_get_completed($goal, $uid, $date_range = FALSE) {
   if ($uid) {
     $user_profile = user_load($uid);
   }
@@ -403,11 +403,11 @@ function sbac_goals_get_completed($goal, $uid, $date_range) {
         AND r.status = 1
       
 SQL;
-    
+
       $dates = explode('--', $date_range);
       $from_date = $dates[0];
       $to_date = $dates[1];
-    
+
       $result = db_query($sql, array(':uid' => $user_profile->uid, ':from_date' => $from_date, ':to_date' => $to_date));
       $star_count = $result->rowCount();
       $nids = array();
@@ -444,7 +444,7 @@ SQL;
             $task->save();
           }
           // Send email to user
-          if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {  
+          if ($user_profile->field_email_preference['und'][0]['value'] != 'never' && $user_profile->field_email_preference['und'][0]['value'] != '') {
             $username = sbac_email_user_link($user_profile);
             $values = array(
               'arguments' => array(
@@ -474,7 +474,7 @@ SQL;
 
       return $star_ratings;
       break;
-  
+
     case "resources_reviewed":
       // Check for resources reviewed goal
       // Set to default if empty
@@ -492,7 +492,7 @@ SQL;
         $reviewed_count = count($reviewed);
         $reviewed_info = array();
         foreach ($reviewed as $review) {
-          $reviewed_info[] = array($review->node_id, $review->changed);  
+          $reviewed_info[] = array($review->node_id, $review->changed);
         }
         $reviewed_results = array($reviewed_count, $reviewed_info);
 
@@ -520,7 +520,7 @@ SQL;
                 ),
                 'uid' => $user_profile->uid,
               );
-              $message = message_create('reviewed_goal_complete', $values);          
+              $message = message_create('reviewed_goal_complete', $values);
               $wrapper = entity_metadata_wrapper('message', $message);
               $wrapper->save();
               if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
@@ -542,16 +542,16 @@ SQL;
         return $reviewed_results;
       }
       else {
-          $edit['field_resources_reviewed']['und'][0]['value'] = '0';
-          // update user's resources reviewed field
-          user_save(
-            $user_profile,
-            $edit
-          );
+        $edit['field_resources_reviewed']['und'][0]['value'] = '0';
+        // update user's resources reviewed field
+        user_save(
+          $user_profile,
+          $edit
+        );
         return FALSE;
-      }     
-    break;
-  
+      }
+      break;
+
     case "resources_posted":
       // Check posted goal value
       // Set to default if empty
@@ -564,13 +564,13 @@ SQL;
           $edit
         );
       }
-      $posted = sbac_goals_get_contributed_resources($user_profile->uid, $date_range); 
+      $posted = sbac_goals_get_contributed_resources($user_profile->uid, $date_range);
 
       if ($posted) {
         $posted_count = count($posted);
         $posted_info = array();
         foreach ($posted as $post) {
-          $posted_info[] = array($post->title, $post->created);  
+          $posted_info[] = array($post->title, $post->created);
         }
         $posted_results = array($posted_count, $posted_info);
 
@@ -597,7 +597,7 @@ SQL;
                 ),
                 'uid' => $user_profile->uid,
               );
-              $message = message_create('contributed_goal_complete', $values);          
+              $message = message_create('contributed_goal_complete', $values);
               $wrapper = entity_metadata_wrapper('message', $message);
               $wrapper->save();
               if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
@@ -606,7 +606,7 @@ SQL;
                 // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
                 message_delete_multiple(array($message->mid));
               }
-            } 
+            }
           }
 
           // update user's resources contributed field
@@ -628,8 +628,8 @@ SQL;
           $edit
         );
         return FALSE;
-      }  
-    break;
+      }
+      break;
   }
 }
 
@@ -664,7 +664,7 @@ function sbac_goals_get_goals() {
       $goals['reviewed_goal'] = 9;
     }
   }
-  
+
   // Add Resource Contributor Goals for a resource contributor
   if (in_array('resource contributor', $user->roles)) {
     $goals['posted_goal'] = $user_obj->field_resources_posted_goal[LANGUAGE_NONE][0]['value'];
@@ -842,7 +842,7 @@ function sbac_goals_get_rank($uid, $category) {
         ORDER BY
           r.field_resources_rated_value DESC
 SQL;
-    
+
       $result = db_query($sql, array(':status' => '1', ':hidden' => '0'));
       $counter = 0;
       foreach ($result as $row) {
@@ -854,9 +854,9 @@ SQL;
         }
       }
       $total = $result->rowCount();
-      
-      return $rank = array($rank, $total);  
-    break;
+
+      return $rank = array($rank, $total);
+      break;
     case 'reviewed':
       $completed = array();
       $sql = <<<SQL
@@ -884,7 +884,7 @@ SQL;
         ORDER BY
           r.field_resources_reviewed_value DESC
 SQL;
-  
+
       $result = db_query($sql, array(':status' => '1', ':hidden' => '0', ':role' => '17', ':role1' => '16', ':goal' => '0'));
       $counter = 0;
       foreach ($result as $row) {
@@ -896,9 +896,9 @@ SQL;
         }
       }
       $total = $result->rowCount();
-      
-      return $rank = array($rank, $total);  
-    break;
+
+      return $rank = array($rank, $total);
+      break;
     case 'contributed':
       $completed = array();
       $sql = <<<SQL
@@ -926,7 +926,7 @@ SQL;
         ORDER BY
           r.field_resources_contributed_value DESC
 SQL;
-  
+
       $result = db_query($sql, array(':status' => '1', ':hidden' => '0', ':role' => '15', ':goal' => '0'));
       $counter = 0;
       foreach ($result as $row) {
@@ -938,15 +938,15 @@ SQL;
         }
       }
       $total = $result->rowCount();
-      
-      return $rank = array($rank, $total);  
-    break;
+
+      return $rank = array($rank, $total);
+      break;
   }
 }
 
 /**
  * Function to create a pdf
-*/
+ */
 function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificate) {
   $output = '';
   // Styling
@@ -1086,7 +1086,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
                     color: #FFFFFF;
                     background-color: #515152;
                   }
-                </style></head>'; 
+                </style></head>';
   // Page Header
   if ($certificate == TRUE) {
     $output .= '<body><div class="pdf-header">
@@ -1135,14 +1135,14 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
   $output .= '<div class="educator-header">Educator</div>
               <div class="goal-container">
                 <span class="goal">Goal: ' .
-                  $rated_goal .
-                '</span>
+    $rated_goal .
+    '</span>
                 <span>Completed: ' .
-                  $resources_rated . ' (' . $rated_perc . '%)
+    $resources_rated . ' (' . $rated_perc . '%)
                 </span>
               </div>';
   $rated_header = array('Resource Title', 'Star Rating', 'Date Rated');
-  if (!empty($rated_table_vals)) { 
+  if (!empty($rated_table_vals)) {
     $output .= theme('table', array('header' => $rated_header, 'rows' => $rated_table_vals));
   }
   else {
@@ -1163,12 +1163,12 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $output .= '<div class="resource-reviewer-header">Resource Reviewer</div>
                 <div class="goal-container">
                   <span class="goal">Goal: ' .
-                    $reviewed_goal .
-                  '</span>
+      $reviewed_goal .
+      '</span>
                   <span>Completed: ' .
-                    $resources_reviewed . ' (' . $reviewed_perc . '%)
+      $resources_reviewed . ' (' . $reviewed_perc . '%)
                   </span>
-                </div>';  
+                </div>';
     // Process Reviewed data into table for report
     foreach ($reviewed_raw as $reviewed) {
       $node = node_load($reviewed->node_id);
@@ -1227,16 +1227,16 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     $output .= '<div class="resource-contributor-header">Resource Contributor</div>
                 <div class="goal-container">
                   <span class="goal">Goal: ' .
-                    $contributed_goal .
-                  '</span>
+      $contributed_goal .
+      '</span>
                   <span>Completed: ' .
-                    $resources_contributed . ' (' . $contributed_perc . '%)
+      $resources_contributed . ' (' . $contributed_perc . '%)
                   </span>
-                </div>'; 
+                </div>';
     $contributed_header = array('Resource Title', 'Resource Type', 'Total Views', 'Star Ratings', 'Total Downloads', 'Status', 'Date Created');
     // Title, type of resource, views, star_rating average , downloads, Status, Date created
     // Process Contributed data into table for report
-    if (!empty($contributed_table_vals)) {  
+    if (!empty($contributed_table_vals)) {
       $output .= theme('table', array('header' => $contributed_header, 'rows' => $contributed_table_vals));
     }
     else {
@@ -1257,7 +1257,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
     //  Checks whether there is an output folder inside sites/default/files
     if (!is_dir('public://user_certificates')) {
       mkdir("public://user_certificates", 0777);
-    } 
+    }
     if (!is_dir('public://user_certificates/' . $user->uid)) {
       mkdir("public://user_certificates/" . $user->uid, 0777);
     }
@@ -1345,7 +1345,7 @@ function sbac_goals_report_form($form, &$form_state, $user) {
   $counter = 0;
   foreach ($options_raw as $option) {
     if (strpos($option, $user->uid) !== FALSE) {
-      $option_name = substr($option, 0, -4); 
+      $option_name = substr($option, 0, -4);
       $pieces = explode('-', $option_name);
       $entry = 'SY ' . substr($pieces[0], -2) . '-' . substr($pieces[2], -2);
       if (in_array($entry, $options)) {
@@ -1355,7 +1355,7 @@ function sbac_goals_report_form($form, &$form_state, $user) {
       }
       else {
         $counter = 0;
-      } 
+      }
       $options[$option] = $entry;
     }
   }
@@ -1375,6 +1375,13 @@ function sbac_goals_report_form($form, &$form_state, $user) {
     '#type' => 'submit',
     '#value' => 'Export',
   );
+
+  // Check user roles to add link to SNE webform if basic end user
+  if (sbac_sne_webform_check_availability()) {
+    $form['sne_form_link'] = array(
+      '#markup' => '<div id="sne-wrapper"><p>I am interested in contributing resources to the Digital Library</p>' . l('Submit', '/sne-signup', array('attributes' => array('class' => array('button', 'sne-link')))) . '</div>',
+    );
+  }
 
   return $form;
 }
@@ -1398,7 +1405,7 @@ function sbac_goals_report_form_submit($form, &$form_state, $user) {
   }
   else {
     $pdfurl = "/sites/default/files/user_certificates/" . $user->uid . '/' . $form_state['values']['pdf_select'];
-    drupal_goto($pdfurl); 
+    drupal_goto($pdfurl);
   }
 }
 
@@ -1477,7 +1484,7 @@ SQL;
   // Update forum goal values
   foreach($completed as $forum) {
     sbac_goals_update_forum_goals($forum->tid);
-  } 
+  }
 }
 
 function sbac_goals_notify_leaderboard() {
@@ -1489,7 +1496,7 @@ function sbac_goals_notify_leaderboard() {
   $most_active_rated = views_get_view('rated_resources_rankings', TRUE);
   $most_active_rated->preview();
   $rated_results_arr = $most_active_rated->result;
-  
+
   // iterate through view to see if $user_profile-> uid is in it
   foreach ($rated_results_arr as $rated_result) {
     if (!in_array($rated_result->uid, $past_rated_leaderboard)) {
@@ -1511,10 +1518,10 @@ function sbac_goals_notify_leaderboard() {
           ),
           'uid' => $user_profile->uid,
         );
-        $message = message_create('rated_leaderboard', $values);      
+        $message = message_create('rated_leaderboard', $values);
         $wrapper = entity_metadata_wrapper('message', $message);
         $wrapper->save();
-        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {          
+        if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
           // send email
           message_notify_send_message($message);
           // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
@@ -1559,7 +1566,7 @@ function sbac_goals_notify_leaderboard() {
           ),
           'uid' => $user_profile->uid,
         );
-        $message = message_create('reviewed_leaderboard', $values);          
+        $message = message_create('reviewed_leaderboard', $values);
         $wrapper = entity_metadata_wrapper('message', $message);
         $wrapper->save();
         if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
@@ -1605,15 +1612,15 @@ function sbac_goals_notify_leaderboard() {
           ),
           'uid' => $user_profile->uid,
         );
-        $message = message_create('contributed_leaderboard', $values);          
+        $message = message_create('contributed_leaderboard', $values);
         $wrapper = entity_metadata_wrapper('message', $message);
         $wrapper->save();
         if ($user_profile->field_email_preference['und'][0]['value'] == 'immediately') {
           // send email
           message_notify_send_message($message);
           // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-          message_delete_multiple(array($message->mid));             
-        }          
+          message_delete_multiple(array($message->mid));
+        }
       }
     }
     $new_posted_leaderboard[] = $contributed_result->uid;
@@ -1623,8 +1630,8 @@ function sbac_goals_notify_leaderboard() {
 }
 
 /**
-  * Implements hook_user_login() to check if goals reset is required(new goals time period)
-  */
+ * Implements hook_user_login() to check if goals reset is required(new goals time period)
+ */
 function sbac_goals_user_login(&$edit, $account) {
   if ($account) {
     $user = user_load($account->uid);

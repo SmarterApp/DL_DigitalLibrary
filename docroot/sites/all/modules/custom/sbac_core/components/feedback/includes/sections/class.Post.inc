@@ -3,7 +3,7 @@ namespace sbac_core\components\feedback\sections;
 
 class Post extends Base {
   const name = 'post';
-  const title = 'Quality Criteria Review';
+  const title = 'Arbitration Review';
   const permission = 'view post';
 
   /**

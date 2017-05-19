@@ -265,6 +265,30 @@ function sbac_resource_theme($existing, $type, $theme, $path) {
     'path' => drupal_get_path('module', 'sbac_resource')
   );
 
+  // Taxonomy Terms - Grid View
+  $items['views_view_fields__taxonomy_term_override__page'] = array(
+    'template' => 'templates/taxonomy_term/views-view-fields--taxonomy-term-override--page',
+    'original hook' => 'views_view_fields',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view_fields',
+      'sbac_resource_views_view_fields__taxonomy_term_override__page__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
+  // Taxonomy Terms - Grid View
+  $items['views_view__taxonomy_term_override__page'] = array(
+    'template' => 'templates/taxonomy_term/views-view--taxonomy-term-override--page',
+    'original hook' => 'views_view',
+    'preprocess functions' => array(
+      'template_preprocess',
+      'template_preprocess_views_view',
+      'sbac_resource_views_view__taxonomy_term_override__page__preprocess',
+    ),
+    'path' => drupal_get_path('module', 'sbac_resource')
+  );
+
   return $items;
 }
 
@@ -590,6 +614,38 @@ function sbac_resource_views_view_fields__my_resources__list_view__preprocess(&$
   $path = str_replace('<span class="field-content">', '', $path);
   $path = str_replace('</span>', '', $path);
   $vars['fields']['path']->content = $base_url . $path;
+}
+
+/**
+ * Preprocessor for the taxonomy term override view fields.
+ *
+ * @param $variables
+ */
+function sbac_resource_views_view_fields__taxonomy_term_override__page__preprocess(&$variables) {
+  // Do the same setup for the taxonomy term pages needed for the cards elsewhere.
+  $image = _sbac_resource_grid_image($variables['fields']);
+  $variables['fields']['image'] = $image['image'];
+  $variables['fields']['file-type-icon'] = $image['file-type-icon'];
+  $variables['fields']['rating'] = sbac_resource_display_fivestar_rating(sbac_resource_get_rating_average($variables['fields']['nid']->raw));
+  $variables['fields']['rating_count'] = sbac_resource_get_rating_count($variables['fields']['nid']->raw);
+}
+
+/**
+ * Preprocessor for the taxonomy term override view page.
+ *
+ * @param $variables
+ */
+function sbac_resource_views_view__taxonomy_term_override__page__preprocess(&$variables) {
+  // Replace the title with the more descriptive shortname if it has one.
+  $tid = $variables['view']->args[0];
+  $term = taxonomy_term_load($tid);
+  if (property_exists($term, 'field_alignment_shortname') &&
+      isset($term->field_alignment_shortname[LANGUAGE_NONE][0]['safe_value']) &&
+      $term->field_alignment_shortname[LANGUAGE_NONE][0]['safe_value'] != '') {
+    $variables['view']->build_info['title'] = $term->field_alignment_shortname[LANGUAGE_NONE][0]['safe_value'];
+  }
+  // Add the CSS that has all of the needed styling for the cards.
+  drupal_add_css(drupal_get_path('module', 'sbac_resource') . '/css/sbac_resource.css');
 }
 
 /**

@@ -29,7 +29,11 @@
       <h1>MOST ACTIVE MEMBERS</h1>    
     </div>
     <div id="leaderboards">
-      <?php print $leaderboards; ?>    
+      <?php print $leaderboards; ?>
+      <?php if (sbac_sne_webform_check_availability()): ?>
+        <div id="sne-signup-spacer"></div>
+        <div id="sne-signup">I am interested in contributing resources to the Digital Library <?php print l('Submit', '/sne-signup', array('attributes' => array('class' => array('button', 'sne-link')))); ?></div>
+      <?php endif; ?>
     </div>
   </div>
 <?php endif; ?>

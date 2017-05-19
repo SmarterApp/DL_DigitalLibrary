@@ -4092,9 +4092,9 @@ h2.title {
 /* line 3531, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom a.comment-edit {
   color: #0583AC;
-  position: absolute;
-  top: 9px;
-  right: 0;
+  display: inline-block;
+  float: right;
+  margin-top: 9px;
 }
 /* line 3538, ../sass/sbac_forum.scss */
 .comment .topic-node-comment-region-right .topic-node-comment-region-right-bottom a.comment-edit:hover {
@@ -5162,4 +5162,7 @@ a.sbac-favorites-link.sbac-favorites-link-no:hover {
 
 .forum-add-access-right {
   display: none;
+}
+.modal-forum .modal-content {
+  margin: 20px;
 }

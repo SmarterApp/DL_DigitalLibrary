@@ -1289,11 +1289,12 @@ function sbac_sso_conflicting_profile_form_submit($form, &$form_state) {
   }
   // Determine if they need to go to user-setup page.
   $user_setup = FALSE;
-  if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_) || empty($account->field_special_populations))) {
+  if (!isset($account->data['login']) && (empty($account->field_position) || empty($account->field_subject_s_) || empty($account->field_grade_level_s_))) {
     $user_setup = TRUE;
   }
   if (!$user_setup) {
     // If they are not going to user-setup, then update login information.
+    $edit = array();
     sbac_user_update_data($account, $edit);
   }
   // Save the updates.

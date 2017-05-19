@@ -565,11 +565,50 @@ function sbac_preprocess_rate_template_yesno(&$variables) {
  * Preprocess function for page template.
  */
 function sbac_preprocess_page(&$variables) {
+  // kill rating cookie value so guidance popups can be created on new page load
+  if (isset($_COOKIE['rating'])) {
+    unset($_COOKIE['rating']);
+    // unset FF cookie since path is different than Chrome
+    setcookie('rating', NULL, time() - 3600, '/content/'); // empty value and old timestamp
+    // unset Chrome cookie
+    setcookie('rating', NULL, time() - 3600, '/content'); // empty value and old timestamp
+  }
+  if (strpos($_GET['q'], 'glossary') !== FALSE) {
+    $variables['help_tabs'] =
+    '<div class="help-tabs">
+      <a href="/help-topics">Help Topics</a>
+      <a class="active glossary">Glossary</a>
+    </div>';
+  }
+    if (strpos($_GET['q'], '/admin/structure/taxonomy/glossary_terms') !== FALSE) {
+        $variables['help_tabs'] =
+     '<div class="help-tabs">
+      <a href="/edit/help-topics">Help Topics</a>
+      <a class="active glossary">Glossary</a>
+    </div>';
+    }
+  if ($_GET['q'] == 'help-topics') {
+    $variables['help_tabs'] =
+    '<div class="help-tabs">
+      <a class="active" href="/help-topics">Help Topics</a>
+      <a class="glossary" href="glossary">Glossary</a>
+    </div>';
+  }
+    if ($_GET['q'] == 'edit/help-topics') {
+        $variables['help_tabs'] =
+            '<div class="help-tabs">
+      <a class="active" href="/edit/help-topics">Help Topics</a>
+      <a class="glossary" href="/admin/structure/taxonomy/glossary_terms">Glossary</a>
+    </div>';
+    }
+
   if (arg(0) == 'digital-library-resources') {
     $errors = drupal_get_messages('error');
-    foreach($errors['error'] as $error) {
-      if (!preg_match("/.*An illegal choice has been detected.+/", $error)) {
-        drupal_set_message($error, 'error');
+    if (isset($errors['error'])) {
+      foreach ($errors['error'] as $error) {
+        if (!preg_match("/.*An illegal choice has been detected.+/", $error)) {
+          drupal_set_message($error, 'error');
+        }
       }
     }
     $variables['page']['search'] = '';
@@ -707,6 +746,12 @@ function sbac_preprocess_page(&$variables) {
       $posted_perc = sbac_goals_calc_percent($posted_complete[0], $goals['posted_goal']);
       $variables['goals']['resources_posted'][] = $posted_perc;
       $variables['goals']['resources_posted'][] = $posted_tooltip;
+    }
+  }
+  // Kill Search block for webform pages
+  if (isset($variables['node'])) {
+    if (isset($variables['page']['search']) && $variables['node']->type == 'webform') {
+      unset($variables['page']['search']);
     }
   }
 }
@@ -908,7 +953,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $user_uid = $field->raw;
         $new_output = '';
         if (!empty($user_uid)) {
-          $new_output = sbac_goals_authpane_hoverover($user_uid, 'rated_leaderboard');
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'rated_leaderboard', TRUE);
         }
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
       }
@@ -920,7 +965,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $user_uid = $field->raw;
         $new_output = '';
         if (!empty($user_uid)) {
-          $new_output = sbac_goals_authpane_hoverover($user_uid, 'reviewed_leaderboard');
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'reviewed_leaderboard', TRUE);
         }
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
       }
@@ -932,7 +977,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
         $user_uid = $field->raw;
         $new_output = '';
         if (!empty($user_uid)) {
-          $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard');
+          $new_output = sbac_goals_authpane_hoverover($user_uid, 'contributed_leaderboard', TRUE);
         }
         $variables['fields'][$name]->content = '<div class="field-content">'  . $new_output . '</div>';
       }
@@ -943,19 +988,19 @@ function sbac_preprocess_views_view_fields(&$variables) {
 function sbac_digital_library_resources_applied_filters(){
   $output = '';
   $query = drupal_get_query_parameters();
-  if($query['author']){
+  if (isset($query['author'])) {
     $output.= 'Showing resources authored by: '
       . '<span>' . $query['author'] . '</span>';
     unset($query['author']);
     $output .= l('x','digital-library-resources',array('query'=>array($query)));
   }
-  if($query['owner']){
+  if (isset($query['owner'])) {
     $output.= 'Showing resources owned by: '
       . '<span>' . $query['owner'] . '</span>';
     unset($query['owner']);
     $output .= l('x','digital-library-resources',array('query'=>array($query)));
   }
-  if($query['contributor_uid']){
+  if (isset($query['contributor_uid'])) {
     $output.= 'Showing resources contributed by: '
       . '<span>' . sbac_central_get_user_first_last_name($query['contributor_uid']) . '</span>';
     unset($query['contributor_uid']);
@@ -1058,7 +1103,7 @@ function sbac_preprocess_lexicon_overview(&$variables) {
  * @param bool $add_comma
  * @return null|string
  */
-function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
+function sbac_goals_authpane_hoverover($user_id, $leaderboard = '', $mail_to = FALSE) {
   $cached_output = cache_get('authpane_goals' . $user_id);
   if ($cached_output) {
     return $cached_output->data;
@@ -1083,11 +1128,16 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
           'title' => t("@user's picture", array('@user' => format_username($fn)))
         )
       ));
-    } 
+    }
+    $mail_privacy = FALSE;
     if (isset($account_data->field_privacy)) { // user is using non-default settings.
       $privacy_settings = $account_data->field_privacy->value();
       if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
         $ln = ' ' . $account_data->field_last_name->value();
+      }
+      // Check privacy settings for mailto link
+      if (in_array('mail', $privacy_settings)) {
+        $mail_privacy = TRUE;
       }
     }
     $full_name = substr($fn . $ln, 0, 10) . '...';
@@ -1105,6 +1155,12 @@ function sbac_goals_authpane_hoverover($user_id, $leaderboard = '') {
       '!name' => $tooltip,
       '!date' => format_date($created, 'simple'),
     ));
+
+    // Add mailto link if required
+    if ($mail_to && $mail_privacy) {
+      $email_link = l('', 'mailto:' . $account->mail, array('attributes' => array('class' => array('mailto-link'))));
+      $output = $output . $email_link;
+    }
 
     cache_set('goals_authpane_' . $user_id, $output);
     return $output;

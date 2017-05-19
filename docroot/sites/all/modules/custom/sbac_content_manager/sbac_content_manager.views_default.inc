@@ -32,15 +32,38 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '1';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'field_help_topic_category',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+  );
   $handler->display->display_options['style_options']['columns'] = array(
     'title' => 'title',
+    'ops' => 'ops',
+    'status' => 'status',
     'edit_node' => 'edit_node',
     'delete_node' => 'delete_node',
-    'status' => 'status',
+    'fields_combine' => 'fields_combine',
+    'draggableviews' => 'draggableviews',
+    'field_help_topic_category' => 'field_help_topic_category',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
     'title' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'ops' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'status' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -57,7 +80,17 @@ function sbac_content_manager_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'status' => array(
+    'fields_combine' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'draggableviews' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_help_topic_category' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -269,7 +302,7 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<a href="/node/add/help-page?destination=/sort-content/help-topics" class="help-topic-link help-topic-link1">Add New Help Topic</a> Reorder items in the order you would like them to appear in the help topics section of the site';
+  $handler->display->display_options['header']['area']['content'] = '<a href="/node/add/help-page?destination=/sort-content/help-topics" class="help-topic-link help-topic-link1">Add Help Topic</a><a href="/admin/structure/taxonomy/help_topic_category/add?destination=/sort-content/help-topics" class="help-topic-link help-topic-add-category">Add Category</a> Reorder items in the order you would like them to appear in the help topics section of the site<script>jQuery(".button-group").append(\'<li style="display:block;"><a href="/glossary">Glossary</a></li>\');</script>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: Flags: welcome_help_topic */
@@ -347,6 +380,13 @@ function sbac_content_manager_views_default_views() {
   $handler->display->display_options['fields']['draggableviews']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['hide_alter_empty'] = FALSE;
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 1;
+  /* Field: Content: Help Topic Category */
+  $handler->display->display_options['fields']['field_help_topic_category']['id'] = 'field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['table'] = 'field_data_field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['field'] = 'field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_help_topic_category']['empty'] = 'Uncategorized';
+  $handler->display->display_options['fields']['field_help_topic_category']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */

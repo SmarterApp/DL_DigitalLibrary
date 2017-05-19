@@ -60,6 +60,14 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '3';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['style_plugin'] = 'list';
+  $handler->display->display_options['style_options']['grouping'] = array(
+    0 => array(
+      'field' => 'field_help_topic_category',
+      'rendered' => 1,
+      'rendered_strip' => 0,
+    ),
+  );
+  $handler->display->display_options['style_options']['row_class_special'] = FALSE;
   $handler->display->display_options['row_plugin'] = 'fields';
   /* Header: Global: Text area */
   $handler->display->display_options['header']['area']['id'] = 'area';
@@ -205,13 +213,31 @@ function sbac_help_views_default_views() {
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
+  /* Field: Content: Help Topic Category */
+  $handler->display->display_options['fields']['field_help_topic_category']['id'] = 'field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['table'] = 'field_data_field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['field'] = 'field_help_topic_category';
+  $handler->display->display_options['fields']['field_help_topic_category']['label'] = '';
+  $handler->display->display_options['fields']['field_help_topic_category']['exclude'] = FALSE;
+  $handler->display->display_options['fields']['field_help_topic_category']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_help_topic_category']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: PDF or Word Doc */
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['id'] = 'field_pdf_or_word_doc';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['table'] = 'field_data_field_pdf_or_word_doc';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['field'] = 'field_pdf_or_word_doc';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['label'] = '';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['type'] = 'file_download_link';
+  $handler->display->display_options['fields']['field_pdf_or_word_doc']['settings'] = array(
+    'text' => 'Download [file:name]',
+  );
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Sort criterion: Draggableviews: Weight */
-  $handler->display->display_options['sorts']['weight']['id'] = 'weight';
-  $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
-  $handler->display->display_options['sorts']['weight']['field'] = 'weight';
-  $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'help_topics:page_2';
-  $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
+  /* Sort criterion: Content: Help Topic Category (field_help_topic_category) */
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['id'] = 'field_help_topic_category_tid';
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['table'] = 'field_data_field_help_topic_category';
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['field'] = 'field_help_topic_category_tid';
+  $handler->display->display_options['sorts']['field_help_topic_category_tid']['order'] = 'DESC';
   /* Sort criterion: Content: Title */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
@@ -257,6 +283,7 @@ function sbac_help_views_default_views() {
     'edit_node' => 'edit_node',
     'delete_node' => 'delete_node',
     'fields_combine' => 'fields_combine',
+    'field_help_topic_category' => 'field_help_topic_category',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -295,6 +322,13 @@ function sbac_help_views_default_views() {
       'empty_column' => 0,
     ),
     'fields_combine' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_help_topic_category' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,

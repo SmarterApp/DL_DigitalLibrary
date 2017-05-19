@@ -1654,6 +1654,11 @@ function _sbac_resource_create_open_container(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_create_resource_title(&$form, &$form_state) {
+  global $user;
+  $admin_link = '';
+  if (in_array('administrator', $user->roles)) {
+    $admin_link = '<a class="help-topic-link create-resource-help-topic-link" href="/admin/sbac/feedback/resource">Edit Help Text</a>';
+  }
   $default_value = "Untitled Resource";
   if ($form['title']['#default_value']) {
     $default_value = $form['title']['#default_value'];
@@ -1665,35 +1670,35 @@ function _sbac_resource_create_resource_title(&$form, &$form_state) {
   $form['title_of_resource_basic'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_basic'] = "group_basic";
 
   $form['title_of_resource_summary'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_summary'] = "group_summary";
 
   $form['title_of_resource_materials'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_materials'] = "group_materials";
 
   $form['title_of_resource_tags'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_tags'] = "group_tags";
 
   $form['title_of_resource_advanced'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_advanced'] = "group_advanced";
 }
@@ -2140,7 +2145,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               if ($post_comment != '') {
                 $form['sbac_revisions']['post_comment'] = array(
                   '#markup' => $post_comment,
-                  '#prefix' => '<h2>Posting comments</h2><p>',
+                  '#prefix' => '<h2>Arbitration Comments</h2><p>',
                   '#suffix' => '</p>'
                 );
               }
@@ -2166,7 +2171,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 'comments' => more_less_text($comments, 140),
               ));
               $form['sbac_revisions']['recommendations'] = array(
-                '#markup' => $recommendations,
+                '#markup' => $recommendations . '<div class="clear"></div>',
               );
               $i++;
             }
@@ -2203,7 +2208,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 '#type' => 'fieldset',
               );
               $form['sbac_revisions']['feedback_' . $i]['label'] = array(
-                '#markup' => $i + 1 . '. ' . strip_tags($question_title),
+                '#prefix' => '<h3>',
+                '#markup' =>  ($i + 1) . '. ' . strip_tags($question_title),
+                '#suffix' => '</h3>',
               );
               $form['sbac_revisions']['feedback_' . $i]['description'] = array(
                 '#markup' => $question_desc,
@@ -2226,9 +2233,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                   '#type' => 'container',
                   '#attributes' => array(
                     'class' => array(
-                      'col'
+                      'feedback-review'
                     )
-                  )
+                  ),
                 );
                 $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['author'] = array(
                   '#markup' => t('Reviewer !j', array('!j' => $j)),
@@ -2253,6 +2260,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 $question_ids[] = $questions[$i]->item_id;
                 $j++;
               }
+              $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['clear'] = array(
+                '#markup' => '<div class="clear"></div>',
+              );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
@@ -2300,7 +2310,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
           }
           break;
         case 'gate_keeper':
-          // Get the last gatekepper comment
+          // Get the last gatekeeper comment
           $gk_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'gate_keeper' AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
           // check for gk feedback
           $gk = entity_load('feedback', $gk_id);
@@ -2315,7 +2325,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               )
             );
             $form['sbac_revisions']['header'] = array(
-              '#markup' => t('Gate Keeping Criteria'),
+              '#markup' => t('Gatekeeping Criteria'),
               '#prefix' => '<h2>',
               '#suffix' => '</h2>'
             );
@@ -2337,8 +2347,8 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               );
               $form['sbac_revisions']['feedback_' . $i]['question'] = array(
                 '#markup' => $i . '. ' . strip_tags($question_title),
-                '#prefix' => '<h5>',
-                '#suffix' => '</h5>'
+                '#prefix' => '<h3>',
+                '#suffix' => '</h3>'
               );
               $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
                 '#type' => 'hidden',
@@ -2348,14 +2358,12 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 '#markup' => $question_desc
               );
               $form['sbac_revisions']['feedback_' . $i]['gk_info'] = array(
-                '#type' => 'item',
-                '#title' => t('Reviewer 1'),
-                '#markup' => format_date($feedback->created, 'full')
-              );
-              $form['sbac_revisions']['feedback_' . $i]['gk_comment'] = array(
-                '#type' => 'item',
-                '#title' => t('Quality Criteria Level: !level', array('!level' => $level)),
-                '#markup' => more_less_text(filter_xss(field_entity_value($question, 'field_comments')))
+                '#prefix' => '<div class="feedback-review">',
+                '#markup' => '<div class="author">' . t('Reviewer 1') . '</div>
+                  <div class="created">' . format_date($feedback->created, 'full') . '</div>
+                  <div class="headline">' . t('Meets Criteria: !level', array('!level' => $level)) . '</div>
+                  <div class="comments">' . more_less_text(filter_xss(field_entity_value($question, 'field_comments'))) . '</div>',
+                '#suffix' => '</div><div class="clear"></div>'
               );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',

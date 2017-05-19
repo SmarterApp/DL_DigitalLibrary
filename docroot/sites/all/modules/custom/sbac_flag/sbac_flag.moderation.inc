@@ -119,8 +119,11 @@ function sbac_flag_moderation_output($result, &$count, &$offset = NULL, $load_mo
     }
     else if ($row->type == 'topic') {
       // topic or comment flag
+      continue;
+      /*
       $node = node_load($row->nid);
       $row->type = $row->target_type;
+      */
     }
     else if ($row->type == 'review_end_use') {
       // review flag

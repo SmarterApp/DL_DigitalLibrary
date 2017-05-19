@@ -397,33 +397,25 @@ function _resource_access_count_feedback($nid, $type, $uid = FALSE, $status = FA
  */
 function _resource_access_access_quality_criteria_revisions($node, $account) {
   $access = FALSE;
-  $resubmit_timestamp = _sbac_resource_resubmit_timestamp($node->nid);
-  if ($resubmit_timestamp) {
-    // Check for in progress reviews
-    $in_progress_reviewers = db_select('eck_feedback', 'f')
-      ->condition('f.status', 1)
-      ->condition('f.completed', 0)
-      ->condition('f.current', 1)
-      ->condition('f.node_id', $node->nid)
-      ->fields('f', array('uid'))
-      ->execute()
-      ->fetchCol();
-    if (in_array($account->uid, $in_progress_reviewers)) {
-      // I have an in progress review
-      $access = TRUE;
+
+  // If the current user is reviewing this, and it's a resubmission, mark it as such.
+  $resub_reviewer = FALSE;
+  if ($node->feedback_status->resubmission) {
+    if ($account->uid == $node->feedback_status->gatekeeper_uid && !$node->feedback_status->gatekeeper_finished) {
+      $resub_reviewer = TRUE;
     }
-    elseif (!empty($in_progress_reviewers)) {
-      // Someone else has an in progress review
-      $access = FALSE;
-    }
-    else {
-      // There are no in progress reviews
-      $access = _resource_access_node_has_state($node, array('needs_review', 'being_reviewed', 'approved'))
-        && sbac_central_user_has_role(array('resource reviewer', 'resource publisher'), $account)
-        && $node->uid != $account->uid
-        && (_resource_access_resubmission_reviewer_access($node, $account, $resubmit_timestamp) || _resource_access_resubmission_publisher_access($node, $account, $resubmit_timestamp));
+    foreach ($node->feedback_status->qc_status as $qc_status) {
+      if ($account->uid == $qc_status['uid'] && !$qc_status['finished']) {
+        $resub_reviewer = TRUE;
+      }
     }
   }
+
+  // Allow access to the revisions tab if the user is an admin, DLRB, or if they are reviewing this as a resubmission.
+  if (in_array('administrator', $account->roles) || in_array('DLRB member', $account->roles) || $resub_reviewer) {
+    $access = TRUE;
+  }
+
   return $access;
 }
 

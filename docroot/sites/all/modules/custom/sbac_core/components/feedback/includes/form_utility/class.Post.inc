@@ -66,65 +66,109 @@ class Post extends Base {
     unset($this->_form['field_post_options'][$this->_lang]['#options']['_none']);
     $this->_form['field_post_options'][$this->_lang]['#title'] .= $this->_required_marker;
 
-    // prep review sets
+    // prep GK and QC review sets
+    module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.GateKeeper');
+    $reviewUtilGK = new GateKeeper($this->_form, $this->_form_state, $this->_bundle_info);
     module_load_include('inc', 'sbac_core', 'components/feedback/includes/form_utility/class.Qc');
+    $reviewUtilQC = new Qc($this->_form, $this->_form_state, $this->_bundle_info);
 
-    $reviewUtil = new Qc($this->_form, $this->_form_state, $this->_bundle_info);
-    if ($focus = field_entity_value($this->_resource, 'field_focus')) {
-      $reviewUtil->setPrefix('qc_' . $focus->tid . '_');
-      $total = $reviewUtil->getSetTotal();
+    $gk_items = $reviewUtilGK->getBacklog();
+    $qc_items = $reviewUtilQC->getBacklog();
+    $total_items = $gk_items + $qc_items;
+    krsort($total_items);
 
-      $items = array();
-      for ($i = 1; $i <= $total; $i++) {
-        $item = array();
-        $item += $reviewUtil->getSetTitle($i);
-        $item += $reviewUtil->getSetDescription($i);
-        if (!$poster_rejected) {
-          $item += $this->getReviewersCommentsTitle();
+    $gk_count = count($gk_items);
+    $qc_count = count($qc_items);
 
-          $item += $reviewUtil->getReviewTeaser(function ($entity) use ($i) {
-            $reviews = field_entity_value($entity, 'field_review_set');
-            $review = $reviews[$i - 1];
+    $x = 0;
+    foreach ($total_items as $id => $review_values) {
+      if ($review_values == 'gk') {
+        $reviewUtil = $reviewUtilGK;
+        $ids = $id;
+        $section_title = t("Gatekeeping Review @count", array('@count' => $gk_count));
+        $gk_count--;
+      } else {
+        $reviewUtil = $reviewUtilQC;
+        $ids = array_keys($review_values);
+        $section_title = t("Quality Criteria Review @count", array('@count' => $qc_count));
+        $qc_count--;
+      }
+      if ($focus = field_entity_value($this->_resource, 'field_focus')) {
+        //$reviewUtil->setPrefix('qc_' . $focus->tid . '_');
+        $total = $reviewUtil->getSetTotal();
 
-            $headline = t('Quality Criterion Level: !level', array(
-              '!level' => field_entity_value($review, 'field_level'),
-            ));
+        $items = array();
+        for ($i = 1; $i <= $total; $i++) {
+          if ($review_values == 'gk') {
+            $teaser_func = function ($entity) use ($i) {
+              $reviews = field_entity_value($entity, 'field_quality_set');
+              $review = $reviews[$i - 1];
 
-            $comments = field_entity_value($review, 'field_comments');
+              $headline = t('Meets Criterion: @answer', array(
+                '@answer' => field_entity_value($review, 'field_meets_criterion') ? 'Yes' : 'No',
+              ));
 
-            return array($headline, $comments);
-          });
+              $comments = field_entity_value($review, 'field_comments');
+
+              return array($headline, $comments);
+            };
+          } else {
+            $teaser_func = function ($entity) use ($i) {
+              $reviews = field_entity_value($entity, 'field_review_set');
+              $review = $reviews[$i - 1];
+
+              $headline = t('Quality Criterion Level: !level', array(
+                '!level' => field_entity_value($review, 'field_level'),
+              ));
+
+              $comments = field_entity_value($review, 'field_comments');
+
+              return array($headline, $comments);
+            };
+          }
+
+          $item = array();
+          $item += $reviewUtil->getSetTitle($i);
+          $item += $reviewUtil->getSetDescription($i, 0, TRUE);
+          if (!$poster_rejected) {
+            $item += $this->getReviewersCommentsTitle();
+
+            $item += $reviewUtil->getReviewTeaser($teaser_func, $ids);
+          }
+
+          $this->wrapFapi($item, 'feedback-item feedback-item-' . $i);
+          $this->setWeight($item);
+
+          $items['set_' . $i] = $item;
         }
 
-        $this->wrapFapi($item, 'feedback-item feedback-item-' . $i);
-        $this->setWeight($item);
+        if (!$poster_rejected && $review_values != 'gk') {
 
-        $items['set_' . $i] = $item;
+          // add reviewers' recommendation options
+          $item = array(
+            '#prefix' => '<div class="criteria-set-title"><p>' . t('Reviewers Resource Recommendation') . '</p></div>',
+          );
+          $item += $reviewUtil->getReviewTeaser(function ($entity) {
+            $options = field_allowed_values('field_rec_options');
+
+            $headline = $options[field_entity_value($entity, 'field_rec_options')];
+            $comments = field_entity_value($entity, 'field_rec_rationale');
+
+            return array($headline, $comments);
+          }, $ids);
+
+          $this->setWeight($item);
+          $this->wrapFapi($item, 'feedback-item feedback-item-rec');
+          $items['rec_details'] = $item;
+        }
+
+        $this->wrapFapi($items, 'feedback-items');
+        $items['#prefix'] .= '<h2><a href="#" class="feedback-section-title more">' . $section_title . '</a></h2><div class="feedback-section-drop">';
+        $items['#suffix'] = '</div>' . $items['#suffix'];
+        $this->setWeight($items);
+        $this->_form['feedback_items']["qc_sets_$x"] = $items;
       }
-
-      if (!$poster_rejected) {
-
-        // add reviewers' recommendation options
-        $item = array(
-          '#prefix' => '<div class="criteria-set-title"><p>' . t('Reviewers Resource Recommendation') . '</p></div>',
-        );
-        $item += $reviewUtil->getReviewTeaser(function ($entity) {
-          $options = field_allowed_values('field_rec_options');
-
-          $headline = $options[field_entity_value($entity, 'field_rec_options')];
-          $comments = field_entity_value($entity, 'field_rec_rationale');
-
-          return array($headline, $comments);
-        });
-
-        $this->setWeight($item);
-        $this->wrapFapi($item, 'feedback-item feedback-item-rec');
-        $items['rec_details'] = $item;
-      }
-
-      $this->wrapFapi($items, 'feedback-items');
-      $this->setWeight($items);
-      $this->_form['feedback_items'] = $items;
+      $x++;
     }
 
     $comments_title = array(

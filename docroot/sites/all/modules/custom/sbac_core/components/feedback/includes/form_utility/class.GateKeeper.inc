@@ -11,6 +11,21 @@ class GateKeeper extends Base {
   protected $_edit_permission = 'edit gate keeper';
 
   /**
+   * Constructor.
+   * @param [type] $form        [description]
+   * @param [type] $form_state  [description]
+   * @param [type] $bundle_info [description]
+   */
+  public function __construct(&$form, &$form_state, $bundle_info) {
+    parent::__construct($form, $form_state, $bundle_info);
+
+    if ($focus = field_entity_value($this->_resource, 'field_focus')) {
+      // total number of sets
+      $this->_set_total = $this->getVar('criteria_num', FEEDBACK_DEFAULT_SET_COUNT, FALSE);
+    }
+  }
+
+  /**
    * Loops through sets and creates data structure.
    * @return [type] [description]
    */
@@ -84,5 +99,76 @@ class GateKeeper extends Base {
       }
     }
     parent::postProcess();
+  }
+
+  public function getBacklog() {
+    $results = array();
+    $query = db_select('eck_feedback', 'f')
+      ->fields('f', array('id'))
+      ->condition('node_id', $this->_resource->nid)
+      ->condition('completed', 1)
+      ->condition('type', 'gate_keeper')
+      ->orderBy('id', 'DESC');
+
+    $result = $query->execute();
+    while ($id = $result->fetchField()) {
+      $results[$id] = 'gk';
+    }
+    return $results;
+  }
+
+  /**
+   * Returns FAPI element for Set's Feedback content.
+   * @param $content_callback
+   * @param bool $id
+   * @return array [type]                   [description]
+   */
+  public function getReviewTeaser($content_callback, $id = FALSE) {
+    $form = array();
+    if ($id === FALSE) {
+      $query = db_select('eck_feedback', 'f')
+        ->fields('f', array('id'))
+        ->condition('node_id', $this->_resource->nid)
+        ->condition('created', _sbac_resource_resubmit_timestamp($this->_resource->nid), '>')
+        ->condition('completed', 1)
+        ->condition('type', 'gate_keeper')
+        ->orderBy('id', 'ASC');
+    } else {
+      $query = db_select('eck_feedback', 'f')
+        ->fields('f', array('id'))
+        ->condition('id', $id);
+    }
+
+    $result = $query->execute();
+
+    $i = 0;
+    $counter = 1;
+    while ($row = $result->fetchField()) {
+      $entity = entity_load_single('feedback', $row);
+
+      // No longer need the username of the user.
+      // $author = theme('username', array(
+      //   'account' => user_load($entity->uid)
+      // ));
+
+      $created = format_date($entity->created, 'full');
+
+      list($headline, $comments) = $content_callback($entity);
+
+      $form['feedback_' . $entity->id]['#markup'] = theme('qc_teaser', array(
+        'id'          => $entity->id,
+        'author'      => 'Reviewer '. $counter,//$author,
+        'created'     => $created,
+        'headline'    => $headline,
+        'comments'    => more_less_text($comments, 140),
+      ));
+
+      $counter++;
+      if (++$i == 1) { // 3 = total number of reviews
+        $this->clearFapi($form['feedback_' . $entity->id]);
+      }
+    }
+
+    return $form;
   }
 }
