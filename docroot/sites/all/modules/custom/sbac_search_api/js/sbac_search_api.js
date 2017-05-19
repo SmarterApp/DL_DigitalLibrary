@@ -67,7 +67,9 @@
       plusMinusToggler('a .facetapi-collapsible-handle');
 
       // Set the plus/minus state when you click.
-      $('a .facetapi-collapsible-handle').once('plusMinus').click(function (event) {
+      $('a .facetapi-collapsible-handle').once('plusMinus').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         plusMinusToggler(this);
       });
 
