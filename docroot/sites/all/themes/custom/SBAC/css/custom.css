@@ -37243,7 +37243,7 @@ body.page-help-topics h1 {
 }
 .resource-feature {
     margin: 20px auto;
-    width: 1000px;
+    width: 1200px;
 }
 .resource-feature:after {
     clear: both;
@@ -37254,7 +37254,7 @@ body.page-help-topics h1 {
 }
 .resource-feature .block {
     float: left;
-    width: 303px;
+    width: 33%;
     padding: 0 15px;
     border-left: 1px solid #aaa;
 }
