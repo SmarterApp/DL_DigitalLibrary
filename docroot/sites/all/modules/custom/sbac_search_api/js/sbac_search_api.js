@@ -45,6 +45,15 @@
     return pairs;
   }
 
+  function searchConcat(variables) {
+    var new_search = '';
+    $.each(variables, function (i, v) {
+      new_search += '&' + i + '=' + v;
+    });
+    new_search = new_search.substr(1);
+    return new_search;
+  }
+
   function searchLoading() {
     $('#main .view-content').append('<div id="search-loading"></div>');
     var height = $('#main .view-content').innerHeight();
@@ -79,34 +88,47 @@
         $(this).once('checkBoxSpacer').prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
       });
 
+      // Get the current URL and parse it.
       var current = urlParse(false);
       var current_url = current.query;
       current_url += current.search ? '?' : '';
       current_url += current.search;
 
+      // Set up a variable to hold the current AJAX request so we can abort it as needed.
       var currentAJAX = {};
 
+      // Handle the browser back button.
       window.onpopstate = function (e) {
         // Stop any existing unfinished AJAX requests.
         if (currentAJAX.hasOwnProperty('abort')) {
           currentAJAX.abort();
         }
+
+        // Get the URL and parse it.
         var back = urlParse(false);
 
+        // Put up the dimmer while the AJAX request happens.
         searchLoading();
+        // Do the AJAX request with the URL from the history.
         currentAJAX = $.get(back.query, back.search, function (data) {
+          // Load the data returned by the request as context for the selectors below.
           var context = $(data);
+          // Load the sidebar state, since it's easier than parsing the URL and trying to figure out how to mark everything manually.
           $('#sidebar-first').html($('#sidebar-first', context).html());
+          // Load the results, pager, and search blocks in the main area.
           $('#main').html($('#main', context).html());
+          // Re-attach behaviors.
           Drupal.attachBehaviors('.main-row');
         });
       };
 
+      // The selectors for the facet-related links.
       var facet_selectors = [
         'a.facetapi-inactive',
         'a.facetapi-active',
         'a.checkbox-spacer'
       ];
+      // The selectors for the pager-related links.
       var pager_selectors = [
         '.pager-item a',
         '.pager-next a',
@@ -114,25 +136,37 @@
         '.pager-previous a',
         '.pager-first a'
       ];
+      // Selectors for the sort-related links.
       var sort_selectors = ['a.sort-item'];
+      // Put all the selectors together.
       var selectors = facet_selectors.concat(pager_selectors, sort_selectors);
 
+      // The available variables that can be in the search section of the URL (except page, as we want that to reset).
+      var search_vars = [
+        'search',
+        'sort',
+        'order'
+      ];
+
+      // The selectors for the search form on the 3 pages.
       var search_forms = '#views-exposed-form-search-api-resource-views-instructional, #views-exposed-form-search-api-resource-views-professional-learning, #views-exposed-form-search-api-resource-views-playlist';
+      // Set up the AJAX request for when the keyword search is used.
       $(search_forms).submit(function (e) {
         e.preventDefault();
+        // Get the value to search for.
         var search = $('#edit-search', $(this)).val();
+        // Go through all of the links and update them with the keyword search.
         $.each(selectors, function (key, selector) {
           $(selector).each(function (k, s) {
+            // Get the URL for the link and parse it.
             var item_url = $(this).attr('href');
             var item = urlParse(item_url);
+            // Split the search variables up.
             var item_search_pairs = searchSplit(item.search);
+            // Add/update the search value.
             item_search_pairs['search'] = search;
-            var new_search = '';
-            $.each(item_search_pairs, function (i, v) {
-              new_search += '&' + i + '=' + v;
-            });
-            new_search = new_search.substr(1);
-
+            // Put the search variables back together.
+            var new_search = searchConcat(item_search_pairs);
             // Build the new URL.
             var new_url = item.query + '?' + new_search;
             // Update the link with the new URL.
@@ -145,42 +179,54 @@
           currentAJAX.abort();
         }
 
+        // Split the current search variables up.
         var current_search_pairs = searchSplit(current.search);
+        // Update the search to the new keywords.
         current_search_pairs['search'] = search;
-        current_search_pairs['page'] = '';
-        var new_search = '';
-        $.each(current_search_pairs, function (i, v) {
-          new_search += '&' + i + '=' + v;
-        });
-        new_search = new_search.substr(1);
+        // Put the search variables back together.
+        var new_search = searchConcat(current_search_pairs);
 
+        // Update the history.
         history.pushState(null, null, current.query + '?' + new_search);
 
+        // Put up the dimmer while the AJAX request happens.
         searchLoading();
         currentAJAX = $.get(current.query, new_search, function (data) {
+          // Load the data returned by the request as context for the selectors below.
           var context = $(data);
+          // Update the current search count.
           $('.current-search-item').html($('.current-search-item', context).html());
+          // Update the search results.
           $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
+          // Re-attach the behaviors.
           Drupal.attachBehaviors('.view-search-api-resource-views');
         });
       });
 
-      // Attach the click event to all of the items.
+      // Attach the click event to all of the links.
       $.each(selectors, function (key, selector) {
         $(selector).each(function (k, s) {
+          // Add the data-query and data-search values to links (if they don't already have them) so rebuilding them is easier.
           if (!$(this)[0].hasAttribute('data-query')) {
             var query_data = '';
+            // Set up the base query regex so we can handle the easy ones (where something is just added to the base).
             var base_query = new RegExp('^' + current.query);
             // Get the URL of the current item.
             var item_url = $(this).attr('href');
             // Parse the item URL.
             var item = urlParse(item_url);
+            // If the link is just adding to the base URL, the part that's being added is the query data.
             if (item.query.match(base_query)) {
               query_data = item.query.replace(base_query, '');
-            } else {
+            }
+            // Otherwise, we need to figure out what is being taken away, as this must be active already.
+            else {
+              // Remove the first part of the URL (instructional, playlist, etc.) from the current and item URLs.
               var base = new RegExp('^/.+?/');
               var current_query_only = current.query.replace(base, '').split('/');
               var item_query_only = item.query.replace(base, '').split('/');
+
+              // Split the query parts up into pairs (i.e. - s/123).
               var current_pairs = [];
               var item_pairs = [];
               for (var x = 0; x < current_query_only.length; x += 2) {
@@ -189,31 +235,33 @@
               for (x = 0; x < item_query_only.length; x += 2) {
                 item_pairs.push(item_query_only[x] + '/' + item_query_only[x + 1]);
               }
+
+              // Get the pair from the current URL that isn't in the item URL.
               query_data = $(current_pairs).not(item_pairs).get();
+              // Standardize with the slash in front.
               query_data = '/' + query_data[0];
             }
+            // Add the data-query value from above to the item.
             $(this).attr('data-query', query_data);
 
-            // console.log(query_data);
-            var search_vars = [
-              'search',
-              'sort',
-              'order',
-              'page'
-            ];
+            // Split up the current and item URL search variables.
             var current_search_pairs = searchSplit(current.search);
             var item_search_pairs = searchSplit(item.search);
             var search_data = [];
+            // Go through the available search variables to find out their status and determine what this URL changes.
             $.each(search_vars, function (i, v) {
+              // If both URLs have the variable set, and they aren't equal, or only the item URL has is set, that variable changes here.
               if ((item_search_pairs.hasOwnProperty(v) && current_search_pairs.hasOwnProperty(v) && item_search_pairs[v] !== current_search_pairs[v]) ||
                 (item_search_pairs.hasOwnProperty(v) && !current_search_pairs.hasOwnProperty(v))) {
                 search_data.push(v + '=' + item_search_pairs[v]);
               }
             });
+            // Set the data-search with the value(s) from above.
             $(this).attr('data-search', search_data.join('&'));
           }
         });
 
+        // Add the click event to each link to update the other links.
         $(selector).once('ajaxSearchClick').click(function (e) {
           // Don't do the normal click.
           e.preventDefault();
@@ -227,9 +275,12 @@
           var clicked_url = $(this).attr('href');
           // Get the clicked URL and parse it into query and search parts.
           var clicked = urlParse(clicked_url);
+          // Get the data that the clicked link changes in the URL.
           var clicked_query_data = $(this).attr('data-query');
           var clicked_search_data = $(this).attr('data-search');
+          // Split up the search variables for the clicked link.
           var clicked_search_pairs = searchSplit(clicked.search);
+          // Determine if the link changes anything in the query and search parts of the URL.
           var clicked_query_change = false;
           if (clicked_query_data) {
             if (clicked_url.match(new RegExp(clicked_query_data))) {
@@ -246,13 +297,17 @@
           // Update the history.
           history.pushState(null, null, clicked_url);
 
+          // If this is a facet item, we need to do some class updates an update the URL correctly.
           if ($.inArray(selector, facet_selectors) >= 0) {
             var $parent = $(this).parent();
+            // Toggle the link and the parent between active and inactive to be consistent with the normal facet handling.
             $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active');
             $parent.children('a[class^=facetapi-]').toggleClass('facetapi-inactive');
             $parent.toggleClass('facetapi-active');
             $parent.toggleClass('facetapi-inactive');
+            // Toggle the LI active class so the checkmarks are set correctly.
             $parent.parent().toggleClass('active');
+            // Update the clicked URL for both the clicked link and the text part.
             if (clicked_query_change === 'add') {
               $parent.children('a').attr('href', clicked_url.replace(new RegExp(clicked_query_data), ''));
             } else if (clicked_query_change === 'remove') {
@@ -298,28 +353,25 @@
 
                   // Only change the search if it actually changed.
                   if (clicked_search_change) {
-                    var search_vars = [
-                      'search',
-                      'sort',
-                      'order',
-                      'page'
-                    ];
+                    // Split up the item's search variables.
                     var item_search_pairs = searchSplit(item.search);
+                    // For each variable type, check to see what changes and update appropriately.
                     $.each(search_vars, function (i, v) {
+                      // If the variable is set in both and they are different values.
                       if (item_search_pairs.hasOwnProperty(v) && clicked_search_pairs.hasOwnProperty(v) && item_search_pairs[v] !== clicked_search_pairs[v]) {
                         item_search_pairs[v] = clicked_search_pairs[v];
-                      } else if (!item_search_pairs.hasOwnProperty(v) && clicked_search_pairs.hasOwnProperty(v)){
+                      }
+                      // If it's set in the clicked URL and not the item one.
+                      else if (!item_search_pairs.hasOwnProperty(v) && clicked_search_pairs.hasOwnProperty(v)){
                         item_search_pairs[v] = clicked_search_pairs[v];
-                      } else if (item_search_pairs.hasOwnProperty(v) && !clicked_search_pairs.hasOwnProperty(v)){
+                      }
+                      // If it's set in the item URL but not the clicked one.
+                      else if (item_search_pairs.hasOwnProperty(v) && !clicked_search_pairs.hasOwnProperty(v)){
                         item_search_pairs[v] = '';
                       }
                     });
 
-                    new_search = '';
-                    $.each(item_search_pairs, function (i, v) {
-                      new_search += '&' + i + '=' + v;
-                    });
-                    new_search = new_search.substr(1);
+                    new_search = searchConcat(item_search_pairs);
                   }
 
                   // Build the new URL.
@@ -339,13 +391,19 @@
           current_url += current.search ? '?' : '';
           current_url += current.search;
 
-          // Do the AJAX call to get the new results.
+          // Put up the dimmer while the AJAX request happens.
           searchLoading();
+          // Do the AJAX call to get the new results.
           currentAJAX = $.get(clicked.query, clicked.search, function (data) {
+            // Load the data returned by the request as context for the selectors below.
             var context = $(data);
+            // Replace the current search results number.
             $('.current-search-item').html($('.current-search-item', context).html());
+            // Replace the sort widget, as immediate updating isn't necessary here, and this is easier than doing it in JS.
             $('.search-sort-widget').html($('.search-sort-widget', context).html());
+            // Replace the search results and pager.
             $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
+            // Re-attach behaviors.
             Drupal.attachBehaviors('#main');
           });
         });
