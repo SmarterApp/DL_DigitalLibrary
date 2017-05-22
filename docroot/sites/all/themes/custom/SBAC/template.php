@@ -1263,9 +1263,8 @@ function sbac_facetapi_deactivate_widget($variables) {
 }
 
 function sbac_facetapi_link_active($variables) {
-  // Sanitizes the link text if necessary.
-  $sanitize = empty($variables['options']['html']);
-  $link_text = ($sanitize) ? check_plain($variables['text']) : $variables['text'];
+  // Took out sanitization as there seems to be a bug for facets with no results which causes them to be escaped regardless of the build setting.
+  $link_text = $variables['text'];
 
   // Theme function variables for accessible markup.
   // @see http://drupal.org/node/1316580
@@ -1281,6 +1280,27 @@ function sbac_facetapi_link_active($variables) {
     '!facetapi_accessible_markup' => theme('facetapi_accessible_markup', $accessible_vars),
   );
   $variables['text'] = t('!facetapi_deactivate_widget!facetapi_accessible_markup', $replacements) . $link_text;
+  $variables['options']['html'] = TRUE;
+  return theme_link($variables);
+}
+
+function sbac_facetapi_link_inactive($variables) {
+  // Took out sanitization as there seems to be a bug for facets with no results which causes them to be escaped regardless of the build setting.
+  $link_text = $variables['text'];
+
+  // Theme function variables for accessible markup.
+  // @see http://drupal.org/node/1316580
+  $accessible_vars = array(
+    'text' => $variables['text'],
+    'active' => TRUE,
+  );
+
+  // Builds link, passes through t() which gives us the ability to change the
+  // position of the widget on a per-language basis.
+  $replacements = array(
+    '!facetapi_accessible_markup' => theme('facetapi_accessible_markup', $accessible_vars),
+  );
+  $variables['text'] = t('!facetapi_accessible_markup', $replacements) . $link_text;
   $variables['options']['html'] = TRUE;
   return theme_link($variables);
 }
