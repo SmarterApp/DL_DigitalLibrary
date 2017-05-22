@@ -39,6 +39,15 @@ function sbac_search_api_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = '12';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['label'] = 'No Results Text';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = '<h2>No Results for this Query</h2>
+<p>You can try another keyword, or expand your search using the categories on the left.</p>';
+  $handler->display->display_options['empty']['area']['format'] = 'full_html';
   /* Field: Indexed Node: Node ID */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'search_api_index_default_node_index';
