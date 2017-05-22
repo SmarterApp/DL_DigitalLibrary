@@ -1010,7 +1010,7 @@ function sbac_preprocess_views_view_fields(&$variables) {
 
   if ($variables['view']->name == 'search_api_resource_views') {
     // Process the content property to remove any tags for the raw property.
-    $raw_process = array('nid', 'title', 'sticky', 'url', 'field_grades', 'field_subject', 'field_digital_media_type');
+    $raw_process = array('nid', 'title', 'sticky', 'url', 'field_grades', 'field_subject', 'field_digital_media_type', 'field_alt_body');
     foreach ($raw_process as $field) {
       $variables['fields'][$field]->raw = decode_entities(strip_tags($variables['fields'][$field]->content));
     }

@@ -46,7 +46,7 @@
                 <?php if (isset($fields['created'])): ?>
                   <?php echo $fields['created']->content . ' &mdash; '; ?>
                 <?php endif; ?>
-                <?php echo truncate_utf8($fields['field_alt_body']->content, 150, TRUE, TRUE); ?>
+                <?php echo truncate_utf8($fields['field_alt_body']->raw, 150, TRUE, TRUE); ?>
               <?php endif; ?>
             </div>
         </div>
