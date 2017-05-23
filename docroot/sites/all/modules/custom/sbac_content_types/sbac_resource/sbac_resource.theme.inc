@@ -825,7 +825,6 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     if (!$use_default) {
       $image_url = file_create_url($uri);
       $image_mimetype = file_get_mimetype($url);
-      $variables['file-type-icon'] = 'document';
     } else {
       $image_url = $url;
       $image_mimetype = 'image/png';
@@ -833,6 +832,7 @@ function _sbac_resource_grid_image($fields, $view_display = 'grid') {
     $image_tag = '<img class="' . $class . '" typeof="foaf:Image" src="' . $image_url . '" alt="Resource thumbnail image" />';
     $variables['image'] = $image_tag;
     $variables['mime-type'] = $image_mimetype;
+    $variables['file-type-icon'] = 'document';
 
     return $variables;
   } else {
