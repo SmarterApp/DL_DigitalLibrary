@@ -402,6 +402,316 @@ function sbac_search_api_views_default_views() {
     36 => 0,
   );
   $handler->display->display_options['path'] = 'search-resources';
+
+  /* Display: Instructional Resources AJAX */
+  $handler = $view->new_display('page', 'Instructional Resources AJAX', 'ajax_instructional');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Instructional';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  $handler->display->display_options['filters']['workbench_moderation_state']['group'] = 1;
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    84 => '84',
+    86 => '86',
+  );
+  $handler->display->display_options['filters']['field_focus']['group'] = 1;
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group'] = 1;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  $handler->display->display_options['path'] = 'ajax/instructional';
+
+  /* Display: Instructional Resources CC/Target */
+  $handler = $view->new_display('page', 'Instructional Resources CC/Target', 'cct_instructional');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Instructional';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  $handler->display->display_options['filters']['workbench_moderation_state']['group'] = 1;
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    84 => '84',
+    86 => '86',
+  );
+  $handler->display->display_options['filters']['field_focus']['group'] = 1;
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group'] = 1;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  $handler->display->display_options['path'] = 'cct/instructional';
+
+  /* Display: Professional Learning Resources AJAX */
+  $handler = $view->new_display('page', 'Professional Learning Resources AJAX', 'ajax_professional_learning');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Professional Learning';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  $handler->display->display_options['filters']['workbench_moderation_state']['group'] = 1;
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    86 => '86',
+    85 => '85',
+  );
+  $handler->display->display_options['filters']['field_focus']['group'] = 1;
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group'] = 1;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  $handler->display->display_options['path'] = 'ajax/professional-learning';
+
+  /* Display: Professional Learning Resources CC/Target */
+  $handler = $view->new_display('page', 'Professional Learning Resources CC/Target', 'cct_professional_learning');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Professional Learning';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  $handler->display->display_options['filters']['workbench_moderation_state']['group'] = 1;
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    86 => '86',
+    85 => '85',
+  );
+  $handler->display->display_options['filters']['field_focus']['group'] = 1;
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['group'] = 1;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  $handler->display->display_options['path'] = 'cct/professional-learning';
+
+  /* Display: Playlist Resources AJAX */
+  $handler = $view->new_display('page', 'Playlist Resources AJAX', 'ajax_playlist');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Playlist';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    78306 => '78306',
+  );
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  $handler->display->display_options['path'] = 'ajax/playlist';
+
+  /* Display: Playlist Resources CC/Target */
+  $handler = $view->new_display('page', 'Playlist Resources CC/Target', 'cct_playlist');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Playlist';
+  $handler->display->display_options['exposed_block'] = TRUE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Indexed Node: Workbench moderation state */
+  $handler->display->display_options['filters']['workbench_moderation_state']['id'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['workbench_moderation_state']['field'] = 'workbench_moderation_state';
+  $handler->display->display_options['filters']['workbench_moderation_state']['value'] = 'Published';
+  /* Filter criterion: Indexed Node: Resource Type */
+  $handler->display->display_options['filters']['field_focus']['id'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['field_focus']['field'] = 'field_focus';
+  $handler->display->display_options['filters']['field_focus']['value'] = array(
+    78306 => '78306',
+  );
+  /* Filter criterion: Search: Fulltext search */
+  $handler->display->display_options['filters']['search_api_views_fulltext']['id'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['field'] = 'search_api_views_fulltext';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator_id'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['label'] = 'search within results';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['operator'] = 'search_api_views_fulltext_op';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['identifier'] = 'search';
+  $handler->display->display_options['filters']['search_api_views_fulltext']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+    25 => 0,
+    24 => 0,
+    15 => 0,
+    17 => 0,
+    16 => 0,
+    11 => 0,
+    13 => 0,
+    7 => 0,
+    22 => 0,
+    8 => 0,
+    23 => 0,
+    26 => 0,
+    31 => 0,
+    36 => 0,
+  );
+  $handler->display->display_options['path'] = 'cct/playlist';
   $export['search_api_resource_views'] = $view;
 
   return $export;
