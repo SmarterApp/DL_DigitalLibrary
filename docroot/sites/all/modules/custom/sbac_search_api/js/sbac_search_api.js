@@ -63,6 +63,32 @@
     $('#search-loading').fadeIn();
   }
 
+  function cctLoad(query, search) {
+    $.get('/cct' + query, search, function (data) {
+      // Load the data returned by the request as context for the selectors below.
+      var context = $(data);
+      // Load the Target Alignment facet block.
+      $('#sidebar-first .block-block').eq(0).html($('.block-facetapi', context).eq(0).html());
+      // Load the Common Core facet block.
+      $('#sidebar-first .block-block').eq(1).html($('.block-facetapi', context).eq(1).html());
+      // Add the facetapi class.
+      $('#sidebar-first .block-block').addClass('block-facetapi facetapi-collapsible');
+      // Remove the unused 2nd and third terms in the CC block.
+      $('.facetapi-facet-field-alignment-term > li').eq(3).remove();
+      $('.facetapi-facet-field-alignment-term > li').eq(2).remove();
+      $('.facetapi-facet-field-alignment-term > li').eq(1).addClass('last');
+      // Remove the '/cct' from these links.
+      $('#sidebar-first .block-block a').each(function () {
+        $(this).attr('href', $(this).attr('href').substr(4));
+      });
+      // Need to add these to the collapsible facet settings.
+      Drupal.settings.facetapi_collapsible['field_alignment_term'] = {'collapsible_children': 1, 'expand': 0, 'keep_open': 1};
+      Drupal.settings.facetapi_collapsible['field_target_term'] = {'collapsible_children': 1, 'expand': 0, 'keep_open': 1};
+      // Re-attach behaviors.
+      Drupal.attachBehaviors('#sidebar-first');
+    });
+  }
+
   Drupal.behaviors = Drupal.behaviors || {};
 
   /**
@@ -119,6 +145,7 @@
           $('#main').html($('#main', context).html());
           // Re-attach behaviors.
           Drupal.attachBehaviors('.main-row');
+          cctLoad(back.query, back.search);
         });
       };
 
@@ -191,13 +218,20 @@
 
         // Put up the dimmer while the AJAX request happens.
         searchLoading();
-        currentAJAX = $.get(current.query, new_search, function (data) {
+        currentAJAX = $.get('/ajax' + current.query, new_search, function (data) {
           // Load the data returned by the request as context for the selectors below.
           var context = $(data);
           // Update the current search count.
           $('.current-search-item').html($('.current-search-item', context).html());
           // Update the search results.
           $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
+          // Remove the '/ajax' from the pager and sort links.
+          $(pager_selectors).each(function () {
+            $(this).attr('href', $(this).attr('href').substr(5));
+          });
+          $(sort_selectors).each(function () {
+            $(this).attr('href', $(this).attr('href').substr(5));
+          });
           // Re-attach the behaviors.
           Drupal.attachBehaviors('.view-search-api-resource-views');
         });
@@ -394,7 +428,7 @@
           // Put up the dimmer while the AJAX request happens.
           searchLoading();
           // Do the AJAX call to get the new results.
-          currentAJAX = $.get(clicked.query, clicked.search, function (data) {
+          currentAJAX = $.get('/ajax' + clicked.query, clicked.search, function (data) {
             // Load the data returned by the request as context for the selectors below.
             var context = $(data);
             // Replace the current search results number.
@@ -403,6 +437,13 @@
             $('.search-sort-widget').html($('.search-sort-widget', context).html());
             // Replace the search results and pager.
             $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
+            // Remove the '/ajax' from the pager and sort links.
+            $(pager_selectors).each(function () {
+              $(this).attr('href', $(this).attr('href').substr(5));
+            });
+            $(sort_selectors).each(function () {
+              $(this).attr('href', $(this).attr('href').substr(5));
+            });
             // Re-attach behaviors.
             Drupal.attachBehaviors('#main');
           });
@@ -421,4 +462,12 @@
       $('#views-exposed-form-search-api-resource-views-playlist #edit-search').attr('placeholder', 'search within results');
     }
   };
+
+  $(document).ready(function () {
+    // Get the current URL and parse it.
+    var current = urlParse(false);
+
+    // Load the CC and Target facets.
+    cctLoad(current.query, current.search);
+  });
 })(jQuery);

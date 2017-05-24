@@ -61,97 +61,100 @@ $block-blue-lighter: #18a5d1;
   }
 
   // Styling for the facet blocks.
-  .block-facetapi {
-    box-sizing: border-box;
-    border: $block-grey solid 1px;
-    margin-bottom: 20px;
+  #sidebar-first {
+    .block-facetapi,
+    .block-block {
+      box-sizing: border-box;
+      border: $block-grey solid 1px;
+      margin-bottom: 20px;
 
-    h2.block-title {
-      margin: 0;
-      padding: 5px 32px 5px 5px;
-      background: $block-grey url("../images/facet_open.png") 98% 50%/24px 24px no-repeat;
-      font-size: .9em;
-    }
-
-    p {
-      padding: 5px;
-      margin: 0;
-    }
-
-    .item-list ul {
-      padding: 0;
-      margin: 0;
-    }
-
-    li .item-list ul {
-      padding-left: 10px;
-    }
-
-    li {
-      margin: 0;
-      padding: 5px;
-      list-style: none;
-      background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
-      font-size: 13px;
-
-      &.active {
-        background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
-      }
-
-      a {
-        color: #000;
-        outline: none;
-
-        &:hover {
-          color: #000;
-        }
-
-        &:visited {
-          color: #000;
-        }
-
-        &:active {
-          color: #000;
-        }
-      }
-
-      .subject-icon {
-        height: 18px;
-      }
-
-      .facetapi-collapsible-handle {
-        display: inline-block;
-        width: 12px;
-        color: transparent;
-      }
-
-      .facetapi-collapsible-handle.plus-sign {
-        background: transparent url("../images/facet_open.png") center center/12px 12px no-repeat;
-      }
-
-      .facetapi-collapsible-handle.minus-sign {
-        background: transparent url("../images/facet_close.png") center center/12px 12px no-repeat;
-      }
-
-      .element-invisible {
-        display: none;
-      }
-
-      .facetapi-facet .checkbox-spacer {
-        display: inline-block;
-        width: 17px;
-      }
-    }
-
-    &.expanded {
       h2.block-title {
-        background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
+        margin: 0;
+        padding: 5px 32px 5px 5px;
+        background: $block-grey url("../images/facet_open.png") 98% 50%/24px 24px no-repeat;
+        font-size: .9em;
       }
-    }
 
-    &.expanded.active {
-      h2.block-title {
-        background: $block-grey none;
+      p {
+        padding: 5px;
+        margin: 0;
+      }
+
+      .item-list ul {
+        padding: 0;
+        margin: 0;
+      }
+
+      li .item-list ul {
+        padding-left: 10px;
+      }
+
+      li {
+        margin: 0;
+        padding: 5px;
+        list-style: none;
+        background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
+        font-size: 13px;
+
+        &.active {
+          background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+        }
+
+        a {
+          color: #000;
+          outline: none;
+
+          &:hover {
+            color: #000;
+          }
+
+          &:visited {
+            color: #000;
+          }
+
+          &:active {
+            color: #000;
+          }
+        }
+
+        .subject-icon {
+          height: 18px;
+        }
+
+        .facetapi-collapsible-handle {
+          display: inline-block;
+          width: 12px;
+          color: transparent;
+        }
+
+        .facetapi-collapsible-handle.plus-sign {
+          background: transparent url("../images/facet_open.png") center center/12px 12px no-repeat;
+        }
+
+        .facetapi-collapsible-handle.minus-sign {
+          background: transparent url("../images/facet_close.png") center center/12px 12px no-repeat;
+        }
+
+        .element-invisible {
+          display: none;
+        }
+
+        .facetapi-facet .checkbox-spacer {
+          display: inline-block;
+          width: 17px;
+        }
+      }
+
+      &.expanded {
+        h2.block-title {
+          background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
+        }
+      }
+
+      &.expanded.active {
+        h2.block-title {
+          background: $block-grey none;
+        }
       }
     }
   }

@@ -12,6 +12,60 @@ function sbac_search_api_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
+  $export['block-cc_placeholder'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'machine_name' => 'cc_placeholder',
+    'module' => 'block',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -46,
+      ),
+    ),
+    'title' => 'Common Core State Standard',
+    'visibility' => 1,
+  );
+
+  $export['block-target_placeholder'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'machine_name' => 'target_placeholder',
+    'module' => 'block',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -48,
+      ),
+    ),
+    'title' => 'Target Alignment',
+    'visibility' => 1,
+  );
+
   $export['current_search-main_search'] = array(
     'cache' => -1,
     'custom' => 0,
@@ -19,7 +73,9 @@ function sbac_search_api_default_fe_block_settings() {
     'module' => 'current_search',
     'node_types' => array(),
     'pages' => 'search-resources
-search-resources/*',
+search-resources/*
+ajax/search-resources
+ajax/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -44,7 +100,13 @@ professional-learning
 playlist
 instructional/*
 professional-learning/*
-playlist/*',
+playlist/*
+ajax/instructional
+ajax/professional-learning
+ajax/playlist
+ajax/instructional/*
+ajax/professional-learning/*
+ajax/playlist/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -78,7 +140,7 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -40,
+        'weight' => -50,
       ),
     ),
     'title' => 'Grade',
@@ -105,7 +167,7 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -36,
+        'weight' => -44,
       ),
     ),
     'title' => 'Educational Use',
@@ -118,21 +180,21 @@ search-resources/*',
     'delta' => 'CAR5oQ63BgUNqWF0g1XH5K6fcI7P504o',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -39,
+        'weight' => -49,
       ),
     ),
     'title' => 'Target Alignment',
@@ -159,7 +221,7 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -41,
+        'weight' => -51,
       ),
     ),
     'title' => 'Subject',
@@ -186,7 +248,7 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -34,
+        'weight' => -42,
       ),
     ),
     'title' => 'Module Type',
@@ -213,7 +275,7 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -33,
+        'weight' => -41,
       ),
     ),
     'title' => 'Formative Assessment Attributes',
@@ -240,7 +302,7 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -35,
+        'weight' => -43,
       ),
     ),
     'title' => 'Intended Student Population',
@@ -267,7 +329,7 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -37,
+        'weight' => -45,
       ),
     ),
     'title' => 'Media Type',
@@ -280,21 +342,21 @@ search-resources/*',
     'delta' => 'yNElAjJhESbU04dGEzguUfiDWud0Zqlh',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -38,
+        'weight' => -47,
       ),
     ),
     'title' => 'Common Core State Standard',
@@ -335,7 +397,15 @@ instructional/*
 professional-learning/*
 playlist/*
 search-resources
-search-resources/*',
+search-resources/*
+ajax/instructional
+ajax/professional-learning
+ajax/playlist
+ajax/instructional/*
+ajax/professional-learning/*
+ajax/playlist/*
+ajax/search-resources
+ajax/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -356,7 +426,9 @@ search-resources/*',
     'module' => 'views',
     'node_types' => array(),
     'pages' => 'playlist
-playlist/*',
+playlist/*
+ajax/playlist
+ajax/playlist/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -377,7 +449,9 @@ playlist/*',
     'module' => 'views',
     'node_types' => array(),
     'pages' => 'instructional
-instructional/*',
+instructional/*
+ajax/instructional
+ajax/instructional/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -398,7 +472,9 @@ instructional/*',
     'module' => 'views',
     'node_types' => array(),
     'pages' => 'professional-learning
-professional-learning/*',
+professional-learning/*
+ajax/professional-learning
+ajax/professional-learning/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
