@@ -114,6 +114,21 @@
         $(this).once('checkBoxSpacer').prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
       });
 
+      // Change all the parent items in CC an Target to just open, rather than select.
+      $('.block-block a').each(function () {
+        var $parent = $(this).parent();
+        if ($parent.siblings('.item-list').length) {
+          $parent.parent().css('background', 'none');
+          $(this).siblings('.checkbox-spacer').hide();
+          $(this).off('click');
+          $(this).removeClass('facetapi-inactive facetapi-active');
+          $(this).click(function (e) {
+            e.preventDefault();
+            $('.facetapi-collapsible-handle', this).click();
+          });
+        }
+      });
+
       // Get the current URL and parse it.
       var current = urlParse(false);
       var current_url = current.query;

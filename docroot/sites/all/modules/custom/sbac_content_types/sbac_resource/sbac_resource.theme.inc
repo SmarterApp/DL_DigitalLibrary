@@ -789,7 +789,7 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
  * @param $fields
  * @param $view_display
  *
- * @return string
+ * @return array|null
  */
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
