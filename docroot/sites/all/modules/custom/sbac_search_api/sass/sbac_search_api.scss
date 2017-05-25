@@ -103,6 +103,7 @@ $block-blue-lighter: #18a5d1;
         a {
           color: #000;
           outline: none;
+          position: relative;
 
           &:hover {
             color: #000;
@@ -114,6 +115,16 @@ $block-blue-lighter: #18a5d1;
 
           &:active {
             color: #000;
+          }
+
+          .facet-hover {
+            display: block;
+            position: absolute;
+            top: -3px;
+            left: -2px;
+            padding: 2px;
+            background-color: #fff4c8;
+            white-space: nowrap;
           }
         }
 

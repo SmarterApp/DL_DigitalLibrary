@@ -89,6 +89,13 @@
     });
   }
 
+  function facetSwap($item) {
+    var full_name = $item.attr('data-full-name');
+    var trunc_name = $item.html();
+    $item.attr('data-full-name', trunc_name);
+    $item.html(full_name)
+  }
+
   Drupal.behaviors = Drupal.behaviors || {};
 
   /**
@@ -101,6 +108,12 @@
       // Set the initial toggle state of the plus/minus icons.
       plusMinusToggler('a .facetapi-collapsible-handle');
 
+      // Add hovers to truncated items.
+      $('.facet-truncate').once('facetHover').hover(function () {
+        $(this).toggleClass('facet-hover');
+        facetSwap($(this));
+      });
+
       // Set the plus/minus state when you click.
       $('a .facetapi-collapsible-handle').once('plusMinus').click(function (e) {
         e.preventDefault();
@@ -112,6 +125,21 @@
       $('.facetapi-facet').each(function () {
         var href = $(this).children('a.facetapi-active, a.facetapi-inactive').attr('href');
         $(this).once('checkBoxSpacer').prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
+      });
+
+      // Change all the parent items in the facets to just open, rather than select.
+      $('a[class^=facetapi-]').each(function () {
+        var $parent = $(this).parent();
+        if ($parent.siblings('.item-list').length) {
+          $parent.parent().css('background', 'none');
+          $(this).siblings('.checkbox-spacer').hide();
+          $(this).off('click');
+          $(this).removeClass('facetapi-inactive facetapi-active');
+          $(this).click(function (e) {
+            e.preventDefault();
+            $('.facetapi-collapsible-handle', this).click();
+          });
+        }
       });
 
       // Get the current URL and parse it.
