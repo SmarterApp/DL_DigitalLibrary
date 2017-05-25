@@ -334,18 +334,45 @@ function _sbac_search_api_get_pre_filters() {
         $subject_alias = $processor->getFacetPrettyPathsAlias($facets['field_subject']);
         $grade_alias = $processor->getFacetPrettyPathsAlias($facets['field_grades']);
 
+        $subject_vocab = taxonomy_vocabulary_machine_name_load('subject');
+        $grade_vocab = taxonomy_vocabulary_machine_name_load('grades');
+
+        $filter_array = array();
+        $parents_processed = array();
         // Get the subject and grade TIDs for the user, and process them into the URL.
         $fields = array('field_subject_s_' => $subject_alias, 'field_grade_level_s_' => $grade_alias);
         foreach ($fields as $field => $alias) {
           foreach ($account->{$field}[LANGUAGE_NONE] as $key => $info) {
-            $term = taxonomy_term_load($info['tid']);
-            // Only add the child terms if their parent isn't set.
-            if (!($term->parent && _sbac_search_api_term_check($account, $field, $term->parent))) {
-              // Get the pretty taxonomy name
-              // Put together the URL using the FacetAPI Pretty rule.
-              $filters .= "/$alias/" . $term->tid;
+            $parents = taxonomy_get_parents($info['tid']);
+            // Only add child items or items without children.
+            if ($parents) {
+              // Add the URL using the FacetAPI Pretty rule.
+              $filter_array[$info['tid']] = "/$alias/" . $info['tid'];
+              // Load the tree for this item's parent.
+              $parent = reset($parents);
+              if (!in_array($parent->tid, $parents_processed)) {
+                $vid = $field == 'field_subject_s_' ? $subject_vocab->vid : $grade_vocab->vid;
+                $tree = taxonomy_get_tree($vid, $parent->tid);
+                foreach ($tree as $term) {
+                  // Add the URL using the FacetAPI Pretty rule.
+                  $filter_array[$term->tid] = "/$alias/" . $term->tid;
+                }
+                $parents_processed[] = $parent->tid;
+              }
+            } else {
+              // Load the tree for this parent.
+              $vid = $field == 'field_subject_s_' ? $subject_vocab->vid : $grade_vocab->vid;
+              $tree = taxonomy_get_tree($vid, $info['tid']);
+              if (!$tree) {
+                // Add the URL using the FacetAPI Pretty rule.
+                $filter_array[$info['tid']] = "/$alias/" . $info['tid'];
+              }
+            }
             }
           }
+        // Put together the URL from the array of values.
+        foreach ($filter_array as $part) {
+          $filters .= $part;
         }
         // Set the cache.
         _sbac_search_api_set_pre_filter_cache($filters);
