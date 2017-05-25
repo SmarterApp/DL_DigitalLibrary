@@ -114,8 +114,8 @@
         $(this).once('checkBoxSpacer').prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
       });
 
-      // Change all the parent items in CC an Target to just open, rather than select.
-      $('.block-block a').each(function () {
+      // Change all the parent items in the facets to just open, rather than select.
+      $('a[class^=facetapi-]').each(function () {
         var $parent = $(this).parent();
         if ($parent.siblings('.item-list').length) {
           $parent.parent().css('background', 'none');
