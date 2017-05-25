@@ -89,6 +89,13 @@
     });
   }
 
+  function facetSwap($item) {
+    var full_name = $item.attr('data-full-name');
+    var trunc_name = $item.html();
+    $item.attr('data-full-name', trunc_name);
+    $item.html(full_name)
+  }
+
   Drupal.behaviors = Drupal.behaviors || {};
 
   /**
@@ -100,6 +107,12 @@
     attach: function (context, settings) {
       // Set the initial toggle state of the plus/minus icons.
       plusMinusToggler('a .facetapi-collapsible-handle');
+
+      // Add hovers to truncated items.
+      $('.facet-truncate').once('facetHover').hover(function () {
+        $(this).toggleClass('facet-hover');
+        facetSwap($(this));
+      });
 
       // Set the plus/minus state when you click.
       $('a .facetapi-collapsible-handle').once('plusMinus').click(function (e) {

@@ -258,6 +258,33 @@ function sbac_search_api_facet_items_alter(&$build, &$settings) {
     );
 
     foreach($build as $key => $item) {
+      switch ($item['#markup']) {
+        // Remove the parent name from the front of these facets, since it's redundant.
+        case 'ELA':
+        case 'Science and Technical':
+        case 'History/Social Studies':
+          $string_length = strlen($item['#markup']) + 3;
+          foreach ($item['#item_children'] as $ckey => $child) {
+            $build[$key]['#item_children'][$ckey]['#markup'] = substr($child['#markup'], $string_length);
+          }
+          break;
+        // Remove the parent name, truncate the text to fit on one line, and add some markup to allow the full text to show on hover.
+        case 'Math':
+          foreach ($item['#item_children'] as $ckey => $child) {
+            $without_prefix = substr($child['#markup'], 7);
+            $truncated = truncate_utf8($without_prefix, 38, FALSE, TRUE);
+            if ($without_prefix !== $truncated) {
+              $new_markup = '<span class="facet-truncate" data-full-name="' . $without_prefix . '">' . $truncated . '</span>';
+              $build[$key]['#item_children'][$ckey]['#markup'] = $new_markup;
+              $build[$key]['#item_children'][$ckey]['#html'] = TRUE;
+            } else {
+              $build[$key]['#item_children'][$ckey]['#markup'] = $without_prefix;
+            }
+          }
+          break;
+      }
+
+      // Add the images to the items.
       if (isset($icons[$item['#markup']])) {
         $image = '<img class="subject-icon" src="' . base_path() . drupal_get_path('theme', 'SBAC') . '/images/subject-icons/' . $icons[$item['#markup']] . '" alt="' . $item['#markup'] . '" />';
         $build[$key]["#markup"] = $image . ' ' . $item['#markup'];
@@ -368,8 +395,8 @@ function _sbac_search_api_get_pre_filters() {
                 $filter_array[$info['tid']] = "/$alias/" . $info['tid'];
               }
             }
-            }
           }
+        }
         // Put together the URL from the array of values.
         foreach ($filter_array as $part) {
           $filters .= $part;
