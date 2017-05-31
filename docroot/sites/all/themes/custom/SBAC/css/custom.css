@@ -21854,10 +21854,11 @@ a.th {
 /* line 10, ../sass/components/_top-bar.scss */
 .top-bar.main-top {
   background-color: #f2f2f2;
-  border-top: 5px solid #0980a8;
-  border-bottom: 1px solid #cfcece;
-  height: auto;
+  /*border-top: 5px solid #0980a8;*/
+  /*border-bottom: 1px solid #cfcece;*/
+  height: 90px;
   padding-right: 15px;
+  padding-top: 13px;
 }
 /* line 18, ../sass/components/_top-bar.scss */
 .top-bar.sub-top {
@@ -21916,6 +21917,7 @@ a.th {
   font-size: 1em;
   color: #333;
   line-height: 45px;
+  padding: 8px;  
 }
 /* line 75, ../sass/components/_top-bar.scss */
 .top-bar .user-nav li {

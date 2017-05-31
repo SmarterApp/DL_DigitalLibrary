@@ -11,7 +11,6 @@
       </h1></li>
     <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
-  <h1 class="title left">Digital Library</h1>
   <?php if ($user->uid && !in_array('guest', $user->roles) && !$conflicting_profile): ?>
     <ul class="inline-list right user-nav">
       <li class="user-info">

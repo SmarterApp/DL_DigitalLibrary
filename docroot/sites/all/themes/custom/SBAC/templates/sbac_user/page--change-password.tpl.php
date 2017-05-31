@@ -6,7 +6,6 @@
     <li class="name"><h1><img src="<?php echo $logo; ?>" /></h1></li>
     <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
-   <h1 class="title left">Digital Library</h1>
    <div class="inner-wrap">
 </nav>
 <?php if ($site_slogan): ?>
