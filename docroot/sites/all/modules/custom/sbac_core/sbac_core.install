@@ -277,8 +277,6 @@ function sbac_core_update_8002() {
  */
 function sbac_core_update_8003() {
   $modules = array(
-    'acquia_connector',
-    'acquia_agent',
     'acquia_search',
     'acquia_spi',
     'acquia_search_multi_subs',
@@ -287,9 +285,6 @@ function sbac_core_update_8003() {
     'apachesolr_user',
     'apachesolr_views',
     'apachesolr_workbench_moderation',
-    'facetapi',
-    'facetapi_taxonomy_sort',
-    'jqmulti',
 
     'sbac_forum_search',
     'sbac_digital_library_resources',
