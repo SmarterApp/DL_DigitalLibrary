@@ -211,7 +211,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
       'bundle' => 'none',
       'bundle_selected' => array(),
     ),
-    'facet_mincount' => '1',
+    'facet_mincount' => '0',
     'facet_missing' => '0',
     'flatten' => '0',
     'individual_parent' => '0',
