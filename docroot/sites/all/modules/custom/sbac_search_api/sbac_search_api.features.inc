@@ -186,6 +186,7 @@ function sbac_search_api_default_search_api_index() {
         "field_educational_use" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_focus" : { "type" : "integer", "entity_type" : "taxonomy_term" },
         "field_grades" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
+        "field_intended_end_user" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_intended_student" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
         "field_node_avg_rating" : { "type" : "decimal" },
         "field_smarter_balanced_keyword" : { "type" : "list\\u003Cinteger\\u003E", "entity_type" : "taxonomy_term" },
