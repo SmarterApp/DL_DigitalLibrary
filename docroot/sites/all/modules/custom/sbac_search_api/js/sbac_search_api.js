@@ -30,7 +30,15 @@
     }
     var parser = document.createElement('a');
     parser.href = url;
-    return {'query': parser.pathname, 'search': parser.search.substr(1)};
+    var query = parser.pathname;
+    if (query.indexOf('/') !== 0) {
+      query = '/' + query;
+    }
+    var search = parser.search;
+    if (search.indexOf('?') === 0){
+      search = search.substr(1);
+    }
+    return {'query': query, 'search': search};
   }
 
   function searchSplit(search) {
