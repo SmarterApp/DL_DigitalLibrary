@@ -1785,9 +1785,7 @@ function sbac_forum_taxonomy_term_presave($term) {
         $cids = array_keys($result['comment']);
       }
       if (!empty($cids)) {
-        foreach ($cids as $cid) {
-          apachesolr_mark_entity('comment', $cid);
-        }
+        search_api_track_item_change('comment', $cids);
       }
     }
 
