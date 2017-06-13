@@ -193,6 +193,42 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index::field_intended_end_user';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = '';
+  $facet->facet = 'field_intended_end_user';
+  $facet->enabled = FALSE;
+  $facet->hash = '0RZiKvJqaIo3F6uuNSNnTo5ClRDt6g64';
+  $facet->settings = array(
+    'operator' => 'or',
+    'hard_limit' => '-1',
+    'dependencies' => array(
+      'facets' => array(),
+      'reverse_dependency' => FALSE,
+      'force_deactivation' => TRUE,
+      'regex' => FALSE,
+      'roles' => array(),
+      'bundle' => 'none',
+      'bundle_selected' => array(),
+    ),
+    'facet_mincount' => '0',
+    'facet_missing' => '0',
+    'flatten' => '0',
+    'individual_parent' => '0',
+    'query_type' => 'term',
+    'limit_active_items' => 0,
+    'default_true' => '1',
+    'facet_search_ids' => array(),
+    'exclude' => 0,
+    'pretty_paths_alias' => 'iu',
+    'pretty_paths_taxonomy_pathauto' => 0,
+    'pretty_paths_taxonomy_pathauto_vocabulary' => 'intended_end_user',
+  );
+  $export['search_api@default_node_index::field_intended_end_user'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index::field_intended_student';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = '';
@@ -373,6 +409,126 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'title' => 'Author',
   );
   $export['search_api@default_node_index:block:author'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:author:field_first_name';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'author:field_first_name';
+  $facet->enabled = FALSE;
+  $facet->hash = 'Aq77gYJqR8cvAYbm57o05atzw1oQ3UZh';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => TRUE,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Author » Name',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:author:field_first_name'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:author:field_last_name';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'author:field_last_name';
+  $facet->enabled = FALSE;
+  $facet->hash = 'xLtTGh1wsOII0vjJxbkrYkUbvCd1bSRX';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => TRUE,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Author » Last name',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:author:field_last_name'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:author:name';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'author:name';
+  $facet->enabled = FALSE;
+  $facet->hash = 'JiYP0bRI7jdy4pIVGdi2dz3NVBokAMyv';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => TRUE,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Author » Name',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:author:name'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -571,7 +727,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
       'natural' => '4',
       'indexed' => '4',
     ),
-    'empty_behavior' => 'none',
+    'empty_behavior' => 'text',
     'facet_more_text' => 'Show more',
     'facet_fewer_text' => 'Show fewer',
     'soft_limit' => '0',
@@ -581,7 +737,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'expand' => 0,
     'collapsible_children' => 1,
     'empty_text' => array(
-      'value' => '<p>You must select at least one Subject and Grade from above to filter by Common Core Standard.</p>',
+      'value' => '<p>No Common Core Terms Loaded</p>',
       'format' => 'full_html',
     ),
     'display_count' => 0,
@@ -977,6 +1133,62 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_intended_end_user';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_intended_end_user';
+  $facet->enabled = TRUE;
+  $facet->hash = 'covvO8Y5vniTt3pqlpKW11qLdeZ3fwyE';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'collapsible',
+    'filters' => array(),
+    'active_sorts' => array(
+      'taxonomy_weight' => 'taxonomy_weight',
+      'active' => 0,
+      'count' => 0,
+      'display' => 0,
+      'natural' => 0,
+      'indexed' => 0,
+    ),
+    'sort_weight' => array(
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'taxonomy_weight' => '0',
+      'natural' => '0',
+      'indexed' => '0',
+    ),
+    'sort_order' => array(
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'taxonomy_weight' => '4',
+      'natural' => '4',
+      'indexed' => '4',
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => 0,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Intended End User(s)',
+    'soft_limit' => '0',
+    'nofollow' => 1,
+    'show_expanded' => 1,
+    'keep_open' => 1,
+    'expand' => 0,
+    'collapsible_children' => 1,
+    'empty_text' => array(
+      'value' => '',
+      'format' => 'full_html',
+    ),
+  );
+  $export['search_api@default_node_index:block:field_intended_end_user'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:field_intended_student';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -1298,7 +1510,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
       'natural' => '4',
       'indexed' => '4',
     ),
-    'empty_behavior' => 'none',
+    'empty_behavior' => 'text',
     'facet_more_text' => 'Show more',
     'facet_fewer_text' => 'Show fewer',
     'soft_limit' => '0',
@@ -1308,7 +1520,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'expand' => 0,
     'collapsible_children' => 1,
     'empty_text' => array(
-      'value' => '<p>You must select at least one Subject and Grade from above to filter by Target Term.</p>',
+      'value' => '<p>No Target Alignment Terms Loaded</p>',
       'format' => 'full_html',
     ),
     'display_count' => 0,
@@ -1316,6 +1528,126 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'title' => 'Target Tagging Standard(s)',
   );
   $export['search_api@default_node_index:block:field_target_term'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_topic_files:file:field_file_image_alt_text';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_topic_files:file:field_file_image_alt_text';
+  $facet->enabled = FALSE;
+  $facet->hash = 'Ndcxz2mewAshHom6neB7OgLFDw9lPwJ0';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => TRUE,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Files » The file. » Alt Text',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_topic_files:file:field_file_image_alt_text'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_topic_files:file:field_file_image_title_text';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_topic_files:file:field_file_image_title_text';
+  $facet->enabled = FALSE;
+  $facet->hash = 'P0n2CtJqPcHt4umA3wHJwO0iAgAURwAl';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => TRUE,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Files » The file. » Title Text',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_topic_files:file:field_file_image_title_text'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_topic_files:file:name';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_topic_files:file:name';
+  $facet->enabled = FALSE;
+  $facet->hash = 'jQXRHhSJZiA4V396Tdtt62XYTlzx1Mqv';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => TRUE,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Files » The file. » File name',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_topic_files:file:name'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
@@ -1356,6 +1688,46 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'show_expanded' => 0,
   );
   $export['search_api@default_node_index:block:field_total_views'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index:block:field_unique_views';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = 'block';
+  $facet->facet = 'field_unique_views';
+  $facet->enabled = FALSE;
+  $facet->hash = 'Z0lCR0dDcBdjsQkWxspve0Lp1KmhcOy7';
+  $facet->settings = array(
+    'weight' => 0,
+    'widget' => 'facetapi_links',
+    'filters' => array(),
+    'active_sorts' => array(
+      'active' => 'active',
+      'count' => 'count',
+      'display' => 'display',
+    ),
+    'sort_weight' => array(
+      'active' => -50,
+      'count' => -49,
+      'display' => -48,
+    ),
+    'sort_order' => array(
+      'active' => 3,
+      'count' => 3,
+      'display' => 4,
+    ),
+    'empty_behavior' => 'none',
+    'display_count' => TRUE,
+    'facet_more_text' => 'Show more',
+    'facet_fewer_text' => 'Show fewer',
+    'title_override' => 0,
+    'title' => 'Unique Views',
+    'soft_limit' => 20,
+    'nofollow' => 1,
+    'show_expanded' => 0,
+  );
+  $export['search_api@default_node_index:block:field_unique_views'] = $facet;
 
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
