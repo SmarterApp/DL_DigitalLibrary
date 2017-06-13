@@ -277,12 +277,13 @@
           $('.current-search-item').html($('.current-search-item', context).html());
           // Update the search results.
           $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
-          // Remove the '/ajax' from the pager and sort links.
-          $(pager_selectors).each(function () {
-            $(this).attr('href', $(this).attr('href').substr(5));
-          });
-          $(sort_selectors).each(function () {
-            $(this).attr('href', $(this).attr('href').substr(5));
+          // Remove the '/ajax' from the pager links.
+          $(pager_selectors).each(function (i, v) {
+            if ($(v).length) {
+              $(v).each(function () {
+                $(this).attr('href', $(this).attr('href').substr(5));
+              });
+            }
           });
           // Re-attach the behaviors.
           Drupal.attachBehaviors('.view-search-api-resource-views');
