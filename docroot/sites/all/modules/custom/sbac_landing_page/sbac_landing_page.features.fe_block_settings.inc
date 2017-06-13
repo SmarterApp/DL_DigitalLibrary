@@ -52,7 +52,7 @@ playlist/*',
         'weight' => -45,
       ),
     ),
-    'title' => 'Playlist Resource',
+    'title' => 'Playlist Resources',
     'visibility' => 1,
   );
 
