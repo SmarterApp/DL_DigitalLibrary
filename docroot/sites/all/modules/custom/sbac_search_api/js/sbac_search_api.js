@@ -63,12 +63,17 @@
   }
 
   function searchLoading() {
-    $('#main .view-content').append('<div id="search-loading"></div>');
-    var height = $('#main .view-content').innerHeight();
-    var width = $('#main .view-content').innerWidth();
-    $('#search-loading').height(height);
-    $('#search-loading').width(width + 15);
-    $('#search-loading').fadeIn();
+    var $content_area = $('#main .view-content');
+    if (!$content_area.length){
+      $content_area = $('#main .view-empty')
+    }
+    $content_area.append('<div id="search-loading"></div>');
+    var $loading = $('#search-loading');
+    var height = $content_area.innerHeight();
+    var width = $content_area.innerWidth();
+    $loading.height(height);
+    $loading.width(width + 15);
+    $loading.fadeIn();
   }
 
   function cctLoad(query, search) {
