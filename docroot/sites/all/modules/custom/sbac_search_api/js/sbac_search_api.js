@@ -72,19 +72,30 @@
   }
 
   function cctLoad(query, search) {
+    var $block_facetapi = $('#sidebar-first .block-facetapi');
+    var $block_block = $('#sidebar-first .block-block');
+    var $cc_items = $('.facetapi-facet-field-alignment-term > li');
+    $block_facetapi.hide();
+    $block_block.eq(1).hide();
+    $block_block.eq(2).hide();
+    $block_block.eq(0).show();
     $.get('/cct' + query, search, function (data) {
+      $block_facetapi.show();
+      $block_block.eq(1).show();
+      $block_block.eq(2).show();
+      $block_block.eq(0).hide();
       // Load the data returned by the request as context for the selectors below.
       var context = $(data);
       // Load the Target Alignment facet block.
-      $('#sidebar-first .block-block').eq(0).html($('.block-facetapi', context).eq(0).html());
+      $block_block.eq(1).html($('.block-facetapi', context).eq(0).html());
       // Load the Common Core facet block.
-      $('#sidebar-first .block-block').eq(1).html($('.block-facetapi', context).eq(1).html());
+      $block_block.eq(2).html($('.block-facetapi', context).eq(1).html());
       // Add the facetapi class.
-      $('#sidebar-first .block-block').addClass('block-facetapi facetapi-collapsible');
+      $block_block.addClass('block-facetapi facetapi-collapsible');
       // Remove the unused 2nd and third terms in the CC block.
-      $('.facetapi-facet-field-alignment-term > li').eq(3).remove();
-      $('.facetapi-facet-field-alignment-term > li').eq(2).remove();
-      $('.facetapi-facet-field-alignment-term > li').eq(1).addClass('last');
+      $cc_items.eq(3).remove();
+      $cc_items.eq(2).remove();
+      $cc_items.eq(1).addClass('last');
       // Remove the '/cct' from these links.
       $('#sidebar-first .block-block a').each(function () {
         $(this).attr('href', $(this).attr('href').substr(4));
