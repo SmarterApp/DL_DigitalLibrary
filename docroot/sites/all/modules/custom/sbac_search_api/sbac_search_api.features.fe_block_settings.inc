@@ -39,6 +39,33 @@ search-resources/*',
     'visibility' => 1,
   );
 
+  $export['block-filters_loading'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'machine_name' => 'filters_loading',
+    'module' => 'block',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -53,
+      ),
+    ),
+    'title' => 'Filters',
+    'visibility' => 1,
+  );
+
   $export['block-target_placeholder'] = array(
     'cache' => -1,
     'custom' => 0,

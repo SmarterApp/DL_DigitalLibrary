@@ -24,6 +24,7 @@
     });
   }
 
+  // Parse URLs into the query and search. If url is false, it will use the current page URL.
   function urlParse(url) {
     if (!url) {
       url = window.location;
@@ -31,16 +32,19 @@
     var parser = document.createElement('a');
     parser.href = url;
     var query = parser.pathname;
+    // IE seems to exclude the leading '/', so we need to check for it.
     if (query.indexOf('/') !== 0) {
       query = '/' + query;
     }
     var search = parser.search;
+    // Remove the leading '?' if it's there.
     if (search.indexOf('?') === 0){
       search = search.substr(1);
     }
     return {'query': query, 'search': search};
   }
 
+  // Split the search portion of a URL into key/value pairs.
   function searchSplit(search) {
     var pairs = {};
     if (search) {
@@ -53,6 +57,7 @@
     return pairs;
   }
 
+  // Put key/value pairs back together into a search string.
   function searchConcat(variables) {
     var new_search = '';
     $.each(variables, function (i, v) {
@@ -62,6 +67,7 @@
     return new_search;
   }
 
+  // Dim the results area of the search page while they are loading via AJAX.
   function searchLoading() {
     var $content_area = $('#main .view-content');
     if (!$content_area.length){
@@ -76,15 +82,20 @@
     $loading.fadeIn();
   }
 
+  // Load the CC and Target tags from another URL so they don't block loading of the search page.
   function cctLoad(query, search) {
     var $block_facetapi = $('#sidebar-first .block-facetapi');
     var $block_block = $('#sidebar-first .block-block');
     var $cc_items = $('.facetapi-facet-field-alignment-term > li');
+
+    // Hide the other facets so they can't be clicked and cause the CC/T links to get out of sync.
     $block_facetapi.hide();
     $block_block.eq(1).hide();
     $block_block.eq(2).hide();
+    // Show the facet placeholder.
     $block_block.eq(0).show();
     $.get('/cct' + query, search, function (data) {
+      // SHow the other facets and hide the placeholder.
       $block_facetapi.show();
       $block_block.eq(1).show();
       $block_block.eq(2).show();
@@ -113,6 +124,7 @@
     });
   }
 
+  // Shows the full facet name for truncated items.
   function facetSwap($item) {
     var full_name = $item.attr('data-full-name');
     var trunc_name = $item.html();
