@@ -367,14 +367,12 @@
           // Update the history.
           history.pushState(null, null, clicked_url);
 
-          // If this is a facet item, we need to do some class updates an update the URL correctly.
+          // If this is a facet item, we need to do some class updates and update the URL correctly.
           if ($.inArray(selector, facet_selectors) >= 0) {
             var $parent = $(this).parent();
             // Toggle the link and the parent between active and inactive to be consistent with the normal facet handling.
-            $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active');
-            $parent.children('a[class^=facetapi-]').toggleClass('facetapi-inactive');
-            $parent.toggleClass('facetapi-active');
-            $parent.toggleClass('facetapi-inactive');
+            $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active facetapi-inactive');
+            $parent.toggleClass('facetapi-active facetapi-inactive');
             // Toggle the LI active class so the checkmarks are set correctly.
             $parent.parent().toggleClass('active');
             // Update the clicked URL for both the clicked link and the text part.
