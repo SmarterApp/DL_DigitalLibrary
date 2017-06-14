@@ -332,6 +332,9 @@
       },
       "drupal/webform_uuid": {
         "Fix an overzealous hook_form_alter": "patches/webform_uuid.patch"
+      },
+      "drupal/apachesolr_attachments": {
+	"Patch to keep deadlock from UX": "patches/apachesolr_attachments-cleanup_efficiency_and_deadlock_chance_reduction-1854088-16.patch"
       }
     }
   }
