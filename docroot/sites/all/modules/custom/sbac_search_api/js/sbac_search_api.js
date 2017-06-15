@@ -24,6 +24,7 @@
     });
   }
 
+  // Parse URLs into the query and search. If url is false, it will use the current page URL.
   function urlParse(url) {
     if (!url) {
       url = window.location;
@@ -31,16 +32,19 @@
     var parser = document.createElement('a');
     parser.href = url;
     var query = parser.pathname;
+    // IE seems to exclude the leading '/', so we need to check for it.
     if (query.indexOf('/') !== 0) {
       query = '/' + query;
     }
     var search = parser.search;
+    // Remove the leading '?' if it's there.
     if (search.indexOf('?') === 0){
       search = search.substr(1);
     }
     return {'query': query, 'search': search};
   }
 
+  // Split the search portion of a URL into key/value pairs.
   function searchSplit(search) {
     var pairs = {};
     if (search) {
@@ -53,6 +57,7 @@
     return pairs;
   }
 
+  // Put key/value pairs back together into a search string.
   function searchConcat(variables) {
     var new_search = '';
     $.each(variables, function (i, v) {
@@ -62,29 +67,51 @@
     return new_search;
   }
 
+  // Dim the results area of the search page while they are loading via AJAX.
   function searchLoading() {
-    $('#main .view-content').append('<div id="search-loading"></div>');
-    var height = $('#main .view-content').innerHeight();
-    var width = $('#main .view-content').innerWidth();
-    $('#search-loading').height(height);
-    $('#search-loading').width(width + 15);
-    $('#search-loading').fadeIn();
+    var $content_area = $('#main .view-content');
+    if (!$content_area.length){
+      $content_area = $('#main .view-empty')
+    }
+    $content_area.append('<div id="search-loading"></div>');
+    var $loading = $('#search-loading');
+    var height = $content_area.innerHeight();
+    var width = $content_area.innerWidth();
+    $loading.height(height);
+    $loading.width(width + 15);
+    $loading.fadeIn();
   }
 
+  // Load the CC and Target tags from another URL so they don't block loading of the search page.
   function cctLoad(query, search) {
+    var $block_facetapi = $('#sidebar-first .block-facetapi');
+    var $block_block = $('#sidebar-first .block-block');
+    var $cc_items = $('.facetapi-facet-field-alignment-term > li');
+
+    // Hide the other facets so they can't be clicked and cause the CC/T links to get out of sync.
+    $block_facetapi.hide();
+    $block_block.eq(1).hide();
+    $block_block.eq(2).hide();
+    // Show the facet placeholder.
+    $block_block.eq(0).show();
     $.get('/cct' + query, search, function (data) {
+      // SHow the other facets and hide the placeholder.
+      $block_facetapi.show();
+      $block_block.eq(1).show();
+      $block_block.eq(2).show();
+      $block_block.eq(0).hide();
       // Load the data returned by the request as context for the selectors below.
       var context = $(data);
       // Load the Target Alignment facet block.
-      $('#sidebar-first .block-block').eq(0).html($('.block-facetapi', context).eq(0).html());
+      $block_block.eq(1).html($('.block-facetapi', context).eq(0).html());
       // Load the Common Core facet block.
-      $('#sidebar-first .block-block').eq(1).html($('.block-facetapi', context).eq(1).html());
+      $block_block.eq(2).html($('.block-facetapi', context).eq(1).html());
       // Add the facetapi class.
-      $('#sidebar-first .block-block').addClass('block-facetapi facetapi-collapsible');
+      $block_block.addClass('block-facetapi facetapi-collapsible');
       // Remove the unused 2nd and third terms in the CC block.
-      $('.facetapi-facet-field-alignment-term > li').eq(3).remove();
-      $('.facetapi-facet-field-alignment-term > li').eq(2).remove();
-      $('.facetapi-facet-field-alignment-term > li').eq(1).addClass('last');
+      $cc_items.eq(3).remove();
+      $cc_items.eq(2).remove();
+      $cc_items.eq(1).addClass('last');
       // Remove the '/cct' from these links.
       $('#sidebar-first .block-block a').each(function () {
         $(this).attr('href', $(this).attr('href').substr(4));
@@ -97,6 +124,7 @@
     });
   }
 
+  // Shows the full facet name for truncated items.
   function facetSwap($item) {
     var full_name = $item.attr('data-full-name');
     var trunc_name = $item.html();
@@ -261,12 +289,13 @@
           $('.current-search-item').html($('.current-search-item', context).html());
           // Update the search results.
           $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
-          // Remove the '/ajax' from the pager and sort links.
-          $(pager_selectors).each(function () {
-            $(this).attr('href', $(this).attr('href').substr(5));
-          });
-          $(sort_selectors).each(function () {
-            $(this).attr('href', $(this).attr('href').substr(5));
+          // Remove the '/ajax' from the pager links.
+          $(pager_selectors).each(function (i, v) {
+            if ($(v).length) {
+              $(v).each(function () {
+                $(this).attr('href', $(this).attr('href').substr(5));
+              });
+            }
           });
           // Re-attach the behaviors.
           Drupal.attachBehaviors('.view-search-api-resource-views');
@@ -367,14 +396,12 @@
           // Update the history.
           history.pushState(null, null, clicked_url);
 
-          // If this is a facet item, we need to do some class updates an update the URL correctly.
+          // If this is a facet item, we need to do some class updates and update the URL correctly.
           if ($.inArray(selector, facet_selectors) >= 0) {
             var $parent = $(this).parent();
             // Toggle the link and the parent between active and inactive to be consistent with the normal facet handling.
-            $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active');
-            $parent.children('a[class^=facetapi-]').toggleClass('facetapi-inactive');
-            $parent.toggleClass('facetapi-active');
-            $parent.toggleClass('facetapi-inactive');
+            $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active facetapi-inactive');
+            $parent.toggleClass('facetapi-active facetapi-inactive');
             // Toggle the LI active class so the checkmarks are set correctly.
             $parent.parent().toggleClass('active');
             // Update the clicked URL for both the clicked link and the text part.

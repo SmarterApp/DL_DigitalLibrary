@@ -296,7 +296,8 @@ $block-blue-lighter: #18a5d1;
     }
 
     // Put some space between the content and the bottom pager.
-    .view-content {
+    .view-content,
+    .view-empty {
       margin-bottom: 20px;
       position: relative;
 

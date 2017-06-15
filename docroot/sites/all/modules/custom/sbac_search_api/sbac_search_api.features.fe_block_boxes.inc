@@ -19,6 +19,14 @@ function sbac_search_api_default_fe_block_boxes() {
   $export['cc_placeholder'] = $fe_block_boxes;
 
   $fe_block_boxes = new stdClass();
+  $fe_block_boxes->info = 'Placeholder while CCT blocks are loading.';
+  $fe_block_boxes->format = 'full_html';
+  $fe_block_boxes->machine_name = 'filters_loading';
+  $fe_block_boxes->body = '<p>Loading <img src="/misc/throbber-active.gif" alt="Loading animation" width="15" height="13" /></p>';
+
+  $export['filters_loading'] = $fe_block_boxes;
+
+  $fe_block_boxes = new stdClass();
   $fe_block_boxes->info = 'Placeholder for the Target Facet';
   $fe_block_boxes->format = 'full_html';
   $fe_block_boxes->machine_name = 'target_placeholder';
