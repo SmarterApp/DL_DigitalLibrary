@@ -95,6 +95,13 @@ function sbac_forum_menu() {
     'weight' => -10,
   );
 
+  $items['sbac-forum/clear-filters'] = array(
+    'title' => 'Forums',
+    'page callback' => 'sbac_forum_clear_search',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   // Create own menu callback for adding a term. Dont need to mess with menu_alter.
   $items['forums/%taxonomy_vocabulary_machine_name/add'] = array(
     'title' => 'Start A Forum',
@@ -2724,3 +2731,9 @@ function sbac_forum_set_default_image(&$field, $filename, $source, $destination)
   }
 }
 
+function sbac_forum_clear_search()
+{
+  $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
+  $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
+  drupal_goto('forums');
+}
