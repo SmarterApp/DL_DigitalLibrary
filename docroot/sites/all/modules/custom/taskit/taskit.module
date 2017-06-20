@@ -440,9 +440,9 @@ function taskit_page_grouped($account) {
           $group_name = 'Forums';
           break;
 
-        case 'goal_completed_contributed':
-        case 'goal_completed_rating':
-        case 'goal_completed_reviewed':
+        case 'goal_complete_contributed':
+        case 'goal_complete_rating':
+        case 'goal_complete_reviewed':
         case 'most_active_members_contributed':
         case 'most_active_members_rated':
         case 'most_active_members_reviewed':
