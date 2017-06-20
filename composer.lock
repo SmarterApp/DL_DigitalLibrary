@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2014e971d30ef9bfecb0abc4e75034d7",
+    "content-hash": "7d791fe986d13d1f7d50f09a9748fc9f",
     "packages": [
         {
             "name": "components/jquery",
@@ -2237,7 +2237,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/facetapi_collapsible-7.x-1.1.zip",
-                "reference": "7.x-1.1",
+                "reference": null,
                 "shasum": "3f00c4abc2a2e3fef20ee173f84f2f5980477078"
             },
             "require": {
@@ -2252,6 +2252,9 @@
                 "drupal": {
                     "version": "7.x-1.1",
                     "datestamp": "1366997117"
+                },
+                "patches_applied": {
+                    "Make active facets collapsible": "patches/2887858-active-collapsible-config.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/7/downloads",
@@ -5803,7 +5806,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/search_api_acquia-7.x-2.3.zip",
-                "reference": null,
+                "reference": "7.x-2.3",
                 "shasum": "ae54aa734e99144ab5e2a11c4b8b39516b150e19"
             },
             "require": {

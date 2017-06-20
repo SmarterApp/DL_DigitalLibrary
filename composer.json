@@ -295,6 +295,9 @@
       },
       "google/apiclient": {
         "Ensure we only define the autoloader once": "patches/sbac-googleapi.patch"
+      },
+      "drupal/facetapi_collapsible": {
+        "Make active facets collapsible": "patches/2887858-active-collapsible-config.patch"
       }
     }
   }
