@@ -82,43 +82,46 @@
     $loading.fadeIn();
   }
 
-  // Load the CC and Target tags from another URL so they don't block loading of the search page.
+  // Load the facets from another URL so they don't block loading of the search page.
   function cctLoad(query, search) {
     var $block_facetapi = $('#sidebar-first .block-facetapi');
     var $block_block = $('#sidebar-first .block-block');
-    var $cc_items = $('.facetapi-facet-field-alignment-term > li');
 
-    // Hide the other facets so they can't be clicked and cause the CC/T links to get out of sync.
-    $block_facetapi.hide();
-    $block_block.eq(1).hide();
-    $block_block.eq(2).hide();
+    // Remove any existing blocks to replace them.
+    $block_facetapi.remove();
+    // $block_block.not(':eq(0)').remove();
     // Show the facet placeholder.
     $block_block.eq(0).show();
     $.get('/cct' + query, search, function (data) {
-      // SHow the other facets and hide the placeholder.
-      $block_facetapi.show();
-      $block_block.eq(1).show();
-      $block_block.eq(2).show();
+      // Show the other facets and hide the placeholder.
       $block_block.eq(0).hide();
       // Load the data returned by the request as context for the selectors below.
       var context = $(data);
-      // Load the Target Alignment facet block.
-      $block_block.eq(1).html($('.block-facetapi', context).eq(0).html());
-      // Load the Common Core facet block.
-      $block_block.eq(2).html($('.block-facetapi', context).eq(1).html());
+      // Load the facet blocks.
+      $block_block.eq(0).after($('#sidebar-first', context).html());
       // Add the facetapi class.
       $block_block.addClass('block-facetapi facetapi-collapsible');
-      // Remove the unused 2nd and third terms in the CC block.
-      $cc_items.eq(3).remove();
-      $cc_items.eq(2).remove();
-      $cc_items.eq(1).addClass('last');
       // Remove the '/cct' from these links.
       $('#sidebar-first .block-block a').each(function () {
         $(this).attr('href', $(this).attr('href').substr(4));
       });
       // Need to add these to the collapsible facet settings.
-      Drupal.settings.facetapi_collapsible['field_alignment_term'] = {'collapsible_children': 1, 'expand': 0, 'keep_open': 1};
-      Drupal.settings.facetapi_collapsible['field_target_term'] = {'collapsible_children': 1, 'expand': 0, 'keep_open': 1};
+      var facets = [
+        'field_digital_media_type',
+        'field_educational_use',
+        'field_intended_end_user',
+        'field_smarter_balanced_keyword',
+        'field_subject',
+        'field_attributes',
+        'field_grades',
+        'field_intended_student',
+        'field_alignment_term',
+        'field_target_term'
+      ];
+      Drupal.settings.facetapi_collapsible = Drupal.settings.facetapi_collapsible || {};
+      $.each(facets, function (key, value) {
+        Drupal.settings.facetapi_collapsible[value] = {'collapsible_children': 1, 'expand': 0, 'keep_open': 1, 'active_collapsible': 1};
+      });
       // Re-attach behaviors.
       Drupal.attachBehaviors('#sidebar-first');
     });
@@ -143,6 +146,13 @@
     attach: function (context, settings) {
       // Set the initial toggle state of the plus/minus icons.
       plusMinusToggler('a .facetapi-collapsible-handle');
+
+      // Remove the unused 2nd and third terms in the CC block.
+      var $cc_items = $('.facetapi-facet-field-alignment-term > li');
+      console.log($cc_items);
+      $cc_items.eq(3).remove();
+      $cc_items.eq(2).remove();
+      $cc_items.eq(1).addClass('last');
 
       // Add hovers to truncated items.
       $('.facet-truncate').once('facetHover').hover(function () {

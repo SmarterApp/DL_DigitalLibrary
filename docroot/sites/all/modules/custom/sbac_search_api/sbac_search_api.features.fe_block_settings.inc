@@ -29,8 +29,8 @@ search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -47,
       ),
@@ -83,8 +83,8 @@ search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -49,
       ),
@@ -153,14 +153,14 @@ ajax/playlist/*',
     'delta' => '7ERviPJtMLm6XXzQWWpYSLto72jI1HhP',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -180,14 +180,14 @@ search-resources/*',
     'delta' => '9IXECKP1g9XgZkpivQrvFAjmjoVe947l',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -234,14 +234,14 @@ cct/search-resources/*',
     'delta' => 'HqaeQBI5mLDpJpXNDoVO6Qz1I014gYWt',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -261,14 +261,14 @@ search-resources/*',
     'delta' => 'NtPguqUCF0EUTwpi0v0Mnz1KbNyj9UNx',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -288,14 +288,14 @@ search-resources/*',
     'delta' => 'P8B9X4Dq1ud5HdIIwhUGtI1AmWVE0QXu',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -315,14 +315,14 @@ search-resources/*',
     'delta' => 'SRzTQ59mFwugFsX5pvlijAz0PEacAZ6N',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -342,14 +342,14 @@ search-resources/*',
     'delta' => 'X36xv2RuY1Ot0DpUulF6YvxmwbYZqp5f',
     'module' => 'facetapi',
     'node_types' => array(),
-    'pages' => 'instructional
-professional-learning
-playlist
-instructional/*
-professional-learning/*
-playlist/*
-search-resources
-search-resources/*',
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
@@ -369,6 +369,33 @@ search-resources/*',
     'delta' => 'covvO8Y5vniTt3pqlpKW11qLdeZ3fwyE',
     'module' => 'facetapi',
     'node_types' => array(),
+    'pages' => 'cct/instructional
+cct/professional-learning
+cct/playlist
+cct/instructional/*
+cct/professional-learning/*
+cct/playlist/*
+cct/search-resources
+cct/search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => -44,
+      ),
+    ),
+    'title' => 'Intended End User',
+    'visibility' => 1,
+  );
+
+  $export['facetapi-pgz5u51jQRXW3ctNMkTXIAFqugHgiXFl'] = array(
+    'cache' => -1,
+    'custom' => 0,
+    'delta' => 'pgz5u51jQRXW3ctNMkTXIAFqugHgiXFl',
+    'module' => 'facetapi',
+    'node_types' => array(),
     'pages' => 'instructional
 professional-learning
 playlist
@@ -383,10 +410,10 @@ search-resources/*',
         'region' => 'sidebar_first',
         'status' => 1,
         'theme' => 'SBAC',
-        'weight' => -44,
+        'weight' => 0,
       ),
     ),
-    'title' => 'Intended End User',
+    'title' => '',
     'visibility' => 1,
   );
 
