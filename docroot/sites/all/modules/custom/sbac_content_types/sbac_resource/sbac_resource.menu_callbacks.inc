@@ -248,6 +248,8 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
  * Menu callback
  */
 function sbac_resource_resource_review_page_reset() {
+  $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS] = '';
+  unset($_SESSION['load_more']['resource_review']['page']);
   drupal_goto('resource-review');
 }
 

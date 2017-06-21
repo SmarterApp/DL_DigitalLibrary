@@ -7,7 +7,9 @@
 include_once 'sbac_search_api.features.inc';
 
 define('SBAC_SEARCH_API_MY_RESOURCES_FILTERS', 'sbac-my-resources-filters');
+define('SBAC_SEARCH_API_MY_RESOURCES_SORTS', 'sbac-my-resources-sorts');
 define('SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS', 'sbac-resource-review-filters');
+define('SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS', 'sbac-resource-review-sorts');
 
 /**
  * Implements hook_menu().
@@ -905,28 +907,15 @@ function sbac_search_api_clear_library_page() {
   if (isset($_GET['location'])) {
     $location = $_GET['location'];
     switch ($location) {
-      case 'digital-library-resources':
-        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
-        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = '';
-        unset($_SESSION['load_more']['resources']['page']);
-        drupal_goto($location);
-        break;
       case 'my-resources':
-        $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
-        $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = '';
+        $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS] = '';
+        $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS] = '';
         unset($_SESSION['load_more']['my_resources']['page']);
         drupal_goto($location);
         break;
       case 'resource-review':
-        $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
-        $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = '';
+        $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS] = '';
         unset($_SESSION['load_more']['resource_review']['page']);
-        drupal_goto($location);
-        break;
-      case 'forums':
-        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
-        $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
         drupal_goto($location);
         break;
     }
