@@ -133,7 +133,7 @@ function sbac_alignment_menu() {
 /**
  * Stores the alignment type in the session so it doesn't need to be passed around everywhere, and returns it on request.
  * @param bool $alignment_type If this is a ccss or target tag selector.
- * @return bool|string
+ * @return array Array of pertinent values for this type of alignment.
  */
 function sbac_alignment_type($alignment_type = FALSE) {
   static $storage;
@@ -160,6 +160,30 @@ function sbac_alignment_type($alignment_type = FALSE) {
     $storage['alignment_container'] = $_SESSION['lists']['alignment_container'];
   }
   return array('type' => $storage['alignment_type'], 'container' => $storage['alignment_container']);
+}
+
+function sbac_alignment_type_button_name() {
+  $type = sbac_alignment_type();
+
+  switch ($type) {
+    case 'ccss':
+      return t('Add Standard(s) to Resource');
+    case 'target':
+      return t('Add Target(s) to Resource');
+  }
+  return FALSE;
+}
+
+function sbac_alignment_type_description() {
+  $type = sbac_alignment_type();
+
+  switch ($type) {
+    case 'ccss':
+      return t('Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)');
+    case 'target':
+      return t('Choose Your Target Alignment ELA or Math Standard(s)');
+  }
+  return FALSE;
 }
 
 /**
@@ -192,6 +216,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   $alignment = sbac_alignment_type();
   $vocab = taxonomy_vocabulary_machine_name_load($alignment['type']);
   $terms = taxonomy_get_tree($vocab->vid, $tid, SBAC_ALIGNMENT_MAX_DEPTH);
+  $button = sbac_alignment_type_button_name();
 
   if (!empty($terms)) {
     foreach ($terms as $term) {
@@ -220,7 +245,7 @@ function sbac_alignment_alignment_form($form, $form_state, $tid = 0) {
   //);
 
   $form['ccss-submit'] = array(
-    '#markup' => l(t('Add Standard(s) to Resource'), '#',
+    '#markup' => l($button, '#',
       array(
         'attributes' => array(
           'title' => 'Add Standard(s)',
