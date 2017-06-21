@@ -90,7 +90,9 @@ drupal_add_css(drupal_get_path('module','sbac_resource').'/css/sbac_resource.css
   <div id="star-rating-modal-container" class="reveal-modal">
     <div class="star-rating-modal">
       <h2>Congratulations! You have completed your goal for Star Ratings.</h2>
-      <p>Click <a href="<?php print $goal_link_complete; ?>">here</a> if you are interested in contributing resources to the Digital Library.</p>
+      <?php if (sbac_sne_webform_check_availability()): ?>
+        <p>Click <a href="<?php print $goal_link_complete; ?>">here</a> if you are interested in contributing resources to the Digital Library.</p>
+      <?php endif; ?>
       <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button>   
     </div>
   </div>
