@@ -98,6 +98,47 @@ function sbac_resource_views_default_views_alter(&$views) {
  */
 function sbac_resource_my_resource_apply_filters(&$view) {
   $view_filters = $view->display_handler->get_option('filters');
+
+  // Current filter session - create the args where needed.
+  if (isset($_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS]) && $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS] !== '') {
+    $current_filters = $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_FILTERS];
+    $filters = explode('::', $current_filters);
+    if ($filters) {
+      foreach ($filters as $filter) {
+        $filter_info = explode(':', $filter);
+        if ($filter_info && sizeof($filter_info) == 2) {
+          $vid = $filter_info[0];
+          $tid = $filter_info[1];
+          if ($vid && $tid) {
+            if ($vid === 'resource-status') {
+              $view->custom_filters[$vid][] = $tid;
+            }
+            else {
+              $vocabulary = taxonomy_vocabulary_load($vid);
+              $term = taxonomy_term_load($tid);
+              if ($vocabulary && $term) {
+                switch ($vocabulary->machine_name) {
+                  case 'focus':
+                    $view_filters['field_focus_tid']['value'][] = $tid;
+                    $view_filters['field_focus_tid']['operator'] = 'and';
+                    break;
+                  case 'grades':
+                    $view_filters['field_grades_tid']['value'][] = $tid;
+                    $view_filters['field_grades_tid']['operator'] = 'and';
+                    break;
+                  case 'subject':
+                    $view_filters['field_subject_tid']['value'][] = $tid;
+                    $view_filters['field_subject_tid']['operator'] = 'and';
+                    break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    $view->display_handler->set_option('filters', $view_filters);
+  }
 }
 
 /**
@@ -109,6 +150,34 @@ function sbac_resource_my_resource_apply_filters(&$view) {
  */
 function sbac_resource_my_resource_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
+
+  if (isset($_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS]) &&
+    $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS] !== ''
+  ) {
+    $current_sorting = $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS];
+    $sort_field_key = 'created';
+    switch ($current_sorting) {
+      case 'mr-newest':
+        $sort_field_key = 'created';
+        break;
+      case 'mr-oldest':
+        $sort_field_key = 'created_1';
+        break;
+      case 'mr-alpha':
+        $sort_field_key = 'title';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key == $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
+    }
+  }
 }
 
 /**
@@ -165,9 +234,47 @@ function sbac_resource_digital_library_pwd_reel(&$view) {
  *   The view object.
  */
 function sbac_resource_resource_review_apply_filters(&$view) {
-  global $user;
-  if (array_key_exists(FEEDBACK_REVIEWER_RID, $user->roles)) {
-    sbac_resource_filter_user_tags($view, $user);
+  if (isset($_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS] !== '') {
+    $view_filters = $view->display_handler->get_option('filters');
+    $current_filters = $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS];
+    $filters = explode('::', $current_filters);
+    if ($filters) {
+      foreach ($filters as $filter) {
+        $filter_info = explode(':', $filter);
+        if ($filter_info && count($filter_info) === 2) {
+          $vid = $filter_info[0];
+          $tid = $filter_info[1];
+          if ($vid && $tid) {
+            $vocabulary = taxonomy_vocabulary_load($vid);
+            $term = taxonomy_term_load($tid);
+            if ($vocabulary && $term) {
+              switch ($vocabulary->machine_name) {
+                case 'focus':
+                  $view_filters['field_focus_tid']['value'][] = $tid;
+                  $view_filters['field_focus_tid']['operator'] = 'and';
+                  break;
+                case 'grades':
+                  $view_filters['field_grades_tid']['value'][] = $tid;
+                  $view_filters['field_grades_tid']['operator'] = 'and';
+                  break;
+                case 'subject':
+                  $view_filters['field_subject_tid']['value'][] = $tid;
+                  $view_filters['field_subject_tid']['operator'] = 'and';
+                  break;
+              }
+            }
+          }
+        }
+      }
+    }
+    $view->display_handler->set_option('filters', $view_filters);
+  }
+  // Not searching/filtering, so we default to the user's profile data for filtering
+  else {
+    global $user;
+    if (array_key_exists(FEEDBACK_REVIEWER_RID, $user->roles)) {
+      sbac_resource_filter_user_tags($view, $user);
+    }
   }
 }
 
@@ -180,6 +287,31 @@ function sbac_resource_resource_review_apply_filters(&$view) {
  */
 function sbac_resource_resource_review_apply_sorts(&$view) {
   $view_sorts = $view->display_handler->get_option('sorts');
+
+  if (isset($_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS]) &&
+    $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS] !== ''
+  ) {
+    $current_sorting = $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS];
+    $sort_field_key = 'stamp';
+    switch ($current_sorting) {
+      case 'rr-oldest':
+        $sort_field_key = 'stamp';
+        break;
+      case 'rr-newest':
+        $sort_field_key = 'stamp_1';
+        break;
+    }
+
+    $new_sorts = array();
+    foreach ($view_sorts as $key => $value) {
+      if ($key === $sort_field_key) {
+        $new_sorts[$key] = $value;
+      }
+    }
+    if (!empty($new_sorts)) {
+      $view->display_handler->set_option('sorts', $new_sorts);
+    }
+  }
 }
 
 /**
@@ -546,6 +678,10 @@ function _sbac_resource_resource_review_view_query_alter(&$view, &$query) {
   }
 
   $current_filters = array();
+  if ((!isset($view->apply_filter) || $view->apply_filter === TRUE) && isset($_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS]) && $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS] != '') {
+    $current_filters = explode('::', $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS]);
+  }
+
   if ($current_filters) {
     _sbac_resource_resource_review_apply_state_filter($view, $current_filters, $roles);
   }
