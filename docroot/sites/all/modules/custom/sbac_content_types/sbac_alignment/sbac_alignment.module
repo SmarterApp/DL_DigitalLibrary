@@ -163,24 +163,24 @@ function sbac_alignment_type($alignment_type = FALSE) {
 }
 
 function sbac_alignment_type_button_name() {
-  $type = sbac_alignment_type();
+  $alignment = sbac_alignment_type();
 
-  switch ($type) {
-    case 'ccss':
+  switch ($alignment['type']) {
+    case 'education_alignment':
       return t('Add Standard(s) to Resource');
-    case 'target':
+    case 'target_alignment':
       return t('Add Target(s) to Resource');
   }
   return FALSE;
 }
 
 function sbac_alignment_type_description() {
-  $type = sbac_alignment_type();
+  $alignment = sbac_alignment_type();
 
-  switch ($type) {
-    case 'ccss':
+  switch ($alignment['type']) {
+    case 'education_alignment':
       return t('Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)');
-    case 'target':
+    case 'target_alignment':
       return t('Choose Your Target Alignment ELA or Math Standard(s)');
   }
   return FALSE;

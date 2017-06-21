@@ -12,7 +12,7 @@
 <!--<div id="alignment-node-form">-->
   <!-- other stuff -->
   <div class="standards-browser select">
-    <h2><?php sbac_alignment_type_description(); ?></h2>
+    <h2><?php print sbac_alignment_type_description(); ?></h2>
       <!-- print out the checkboxes -->
       <?php foreach($terms as $checkbox): ?>
           <?php if($count % 2 == 0): ?><div class="row"><?php endif; ?>
