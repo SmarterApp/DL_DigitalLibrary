@@ -357,6 +357,11 @@
             });
             // Set the data-search with the value(s) from above.
             $(this).attr('data-search', search_data.join('&'));
+
+            // Add the search items if they're missing.
+            if (current.search && ! item.search) {
+              $(this).attr('href', item_url + '?' + current.search);
+            }
           }
         });
 

@@ -2077,6 +2077,11 @@ function _sbac_resource_form_summary(&$form, &$form_state) {
     '#weight' => 23.5,
   );
   $form['#group_children']['target_tag_container_end'] = "group_summary";
+  $form['tagging_summary'] = array(
+    '#markup' => '<p><strong>Standard and Assessment Target tags must be used accurately in order to help users find content. Please choose only the one or two target(s) and associated standard(s) that apply to the main purpose of your resource to avoid overtagging.</strong></p>',
+    '#weight' => 24,
+  );
+  $form['#group_children']['tagging_summary'] = "group_summary";
 
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');

@@ -651,11 +651,12 @@ function _sbac_alignment_table_builder($new, $current, $main_alignment, $first_s
           foreach ($other_children as $other_child) {
             if (in_array($other_child, $all_terms)) {
               $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 1;
-            } else {
+            } elseif (!isset($alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected']) ||
+              $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] != 1) {
               $alignment_selection[$current_other_alignment][$child]['children'][$other_child]['selected'] = 0;
             }
           }
-        } else {
+        } elseif (!isset($alignment_selection[$current_alignment][$tid]['children'][$child]['selected'])) {
           $alignment_selection[$current_alignment][$tid]['children'][$child]['selected'] = 0;
         }
       }
