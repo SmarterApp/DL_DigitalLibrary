@@ -10,6 +10,24 @@ define('SBAC_SEARCH_API_MY_RESOURCES_FILTERS', 'sbac-my-resources-filters');
 define('SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS', 'sbac-resource-review-filters');
 
 /**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
+function sbac_search_api_menu() {
+  $items = array();
+
+  $items['sbac-search/clear-all'] = array(
+    'title' => 'Digital Library Resources',
+    'page callback' => 'sbac_search_api_clear_library_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
  *  Implements hook_libraries_info().
  */
 function sbac_search_api_libraries_info() {
@@ -878,4 +896,43 @@ function theme_sbac_filter_item_list($variables) {
  */
 function sbac_search_api_facetapi_pretty_paths_coders_alter(&$coders) {
   $coders['taxonomy']['handler']['class'] = 'SBACFacetApiPrettyPathsCoderTaxonomy';
+}
+
+/**
+ * Clears the search filters and redirects.
+ */
+function sbac_search_api_clear_library_page() {
+  if (isset($_GET['location'])) {
+    $location = $_GET['location'];
+    switch ($location) {
+      case 'digital-library-resources':
+        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
+        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
+        $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = '';
+        unset($_SESSION['load_more']['resources']['page']);
+        drupal_goto($location);
+        break;
+      case 'my-resources':
+        $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
+        $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = '';
+        unset($_SESSION['load_more']['my_resources']['page']);
+        drupal_goto($location);
+        break;
+      case 'resource-review':
+        $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+        $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = '';
+        unset($_SESSION['load_more']['resource_review']['page']);
+        drupal_goto($location);
+        break;
+      case 'forums':
+        $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
+        $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
+        drupal_goto($location);
+        break;
+    }
+  }
+
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
+  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
+  drupal_goto('digital-library-resources');
 }
