@@ -732,7 +732,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet->hash = '0';
   $facet->settings = array(
     'weight' => 0,
-    'widget' => 'collapsible',
+    'widget' => 'facetapi_links',
     'filters' => array(),
     'active_sorts' => array(
       'taxonomy_weight' => 'taxonomy_weight',
@@ -763,7 +763,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'facet_fewer_text' => 'Show fewer',
     'soft_limit' => '0',
     'nofollow' => 1,
-    'show_expanded' => 1,
+    'show_expanded' => 0,
     'keep_open' => 1,
     'expand' => 0,
     'collapsible_children' => 1,
@@ -1524,7 +1524,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet->hash = '0';
   $facet->settings = array(
     'weight' => 0,
-    'widget' => 'collapsible',
+    'widget' => 'facetapi_links',
     'filters' => array(),
     'active_sorts' => array(
       'taxonomy_weight' => 'taxonomy_weight',
@@ -1555,7 +1555,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'facet_fewer_text' => 'Show fewer',
     'soft_limit' => '0',
     'nofollow' => 1,
-    'show_expanded' => 1,
+    'show_expanded' => 0,
     'keep_open' => 1,
     'expand' => 0,
     'collapsible_children' => 1,
@@ -1937,7 +1937,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
   $facet->facet = 'sticky';
-  $facet->enabled = TRUE;
+  $facet->enabled = FALSE;
   $facet->hash = '0';
   $facet->settings = array(
     'weight' => 0,
