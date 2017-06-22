@@ -397,6 +397,7 @@ function taskit_page_grouped($account) {
 
       switch ($task->getType()) {
         case 'removed_resource_review':
+        case 'resolved_all_flags':
         case 'resource_published_reviewer':
         case 'resource_rated':
         case 'resource_rejected_reviewer':
@@ -411,19 +412,19 @@ function taskit_page_grouped($account) {
         case 'resource_demoted':
         case 'resource_flagged':
         case 'resource_promoted':
-        case 'resource_published':
-        case 'resource_rejected':
         case 'resource_reposted':
         case 'resource_submitted':
           $group_name = 'Resource Creation';
           break;
 
+        case 'resource_published':
+        case 'resource_rejected':
         case 'resource_resubmitted':
           $task_output = $task->processDisplay($task->getEntities(), $task->getTriggeringUsers());
-          if (preg_match('/You re-submitted/', $task_output)) {
-            $group_name = 'Resource Creation';
-          } else {
+          if (preg_match('/you reviewed/', $task_output)) {
             $group_name = 'Resource Review';
+          } else {
+            $group_name = 'Resource Creation';
           }
           break;
 
@@ -441,7 +442,6 @@ function taskit_page_grouped($account) {
         case 'post_removed_creator':
         case 'recommended_forum_comment':
         case 'recommended_forum_member':
-        case 'resolved_all_flags':
         case 'restored_forum_member':
         case 'topic_removed':
         case 'topic_removed_creator':
