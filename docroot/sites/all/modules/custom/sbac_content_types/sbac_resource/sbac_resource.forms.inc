@@ -2077,6 +2077,11 @@ function _sbac_resource_form_summary(&$form, &$form_state) {
     '#weight' => 23.5,
   );
   $form['#group_children']['target_tag_container_end'] = "group_summary";
+  $form['tagging_summary'] = array(
+    '#markup' => '<p><strong>Standard and Assessment Target tags must be used accurately in order to help users find content. Please choose only the one or two target(s) and associated standard(s) that apply to the main purpose of your resource to avoid overtagging.</strong></p>',
+    '#weight' => 24,
+  );
+  $form['#group_children']['tagging_summary'] = "group_summary";
 
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
@@ -3512,6 +3517,13 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
   $form = array();
   $default = 'rr-oldest'; // Hardcoded default. Change?
 
+  // If session var is set, make it the default.
+  if (isset($_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS]) &&
+    $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS] != ''
+  ) {
+    $default = $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS];
+  }
+
   $options = array(
     'rr-oldest' => t('Oldest'),
     'rr-newest' => t('Newest'),
@@ -3566,6 +3578,7 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
 function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['rr_sort_order'];
+  $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS] = $new_value_key;
   unset($_SESSION['load_more']['resource_review']['page']);
 
   // Just return the form, dont force page refresh.
@@ -3591,6 +3604,13 @@ function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_sta
 function sbac_resource_my_resources_sort_form($form, $form_state) {
   $form = array();
   $default = 'mr-newest'; // Hardcoded default. Change?
+
+  // If session var is set, make it the default.
+  if (isset($_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS]) &&
+    $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS] != ''
+  ) {
+    $default = $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS];
+  }
 
   $options = array(
     'mr-newest' => t('Newest'),
@@ -3642,6 +3662,7 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
 function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['mr_sort_order'];
+  $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS] = $new_value_key;
   unset($_SESSION['load_more']['my_resources']['page']);
 
   // Just return the form, dont force page refresh.

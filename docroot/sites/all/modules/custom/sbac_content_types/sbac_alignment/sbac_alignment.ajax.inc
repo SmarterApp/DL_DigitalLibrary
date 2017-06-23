@@ -13,6 +13,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
   $alignment = sbac_alignment_type();
   $vocab = taxonomy_vocabulary_machine_name_load($alignment['type']);
   $terms = taxonomy_get_tree($vocab->vid, 0, 1, TRUE);
+  $button = sbac_alignment_type_button_name();
 
   drupal_add_js(array(
       'sbac_alignment_everything' => array('type' => $alignment['type'], 'container' => $alignment['container'])
@@ -26,7 +27,7 @@ function sbac_alignment_ajax_alignment_page($ref_node = NULL) {
   $output .= '<div class="alignment-filter">';
   $output .= theme('alignment_tags', array('terms' => $terms, 'level_title' => 'Choose Your Subject Area'));
   $output .= '</div><div class="alignment-form"></div>';
-  $output .= '<div class="alignment-buttons"><a href="#" title="Add Standards" id="edit-submit" class="button disabled">Add Standard(s) to Resource</a><a href="#" title="Cancel" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
+  $output .= '<div class="alignment-buttons"><a href="#" title="Add Standards" id="edit-submit" class="button disabled">' . $button . '</a><a href="#" title="Cancel" id="ccss-cancel" class="button ctools-close-modal close">Cancel</a></div>';
   $output .= '</div></div>';
 
   return $output;

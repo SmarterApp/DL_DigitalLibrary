@@ -373,6 +373,37 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet = new stdClass();
   $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
   $facet->api_version = 1;
+  $facet->name = 'search_api@default_node_index::sticky';
+  $facet->searcher = 'search_api@default_node_index';
+  $facet->realm = '';
+  $facet->facet = 'sticky';
+  $facet->enabled = FALSE;
+  $facet->hash = 'doYtPhwbMMOL9cTRQzYEVAwFgx5YvnG1';
+  $facet->settings = array(
+    'operator' => 'or',
+    'hard_limit' => '-1',
+    'dependencies' => array(
+      'facets' => array(),
+      'reverse_dependency' => FALSE,
+      'force_deactivation' => TRUE,
+      'regex' => FALSE,
+    ),
+    'facet_mincount' => '1',
+    'facet_missing' => '0',
+    'flatten' => 0,
+    'individual_parent' => 0,
+    'query_type' => 'term',
+    'limit_active_items' => 0,
+    'default_true' => '1',
+    'facet_search_ids' => array(),
+    'exclude' => 0,
+    'pretty_paths_alias' => 'sticky',
+  );
+  $export['search_api@default_node_index::sticky'] = $facet;
+
+  $facet = new stdClass();
+  $facet->disabled = FALSE; /* Edit this to true to make a default facet disabled initially */
+  $facet->api_version = 1;
   $facet->name = 'search_api@default_node_index:block:author';
   $facet->searcher = 'search_api@default_node_index';
   $facet->realm = 'block';
@@ -701,7 +732,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet->hash = '0';
   $facet->settings = array(
     'weight' => 0,
-    'widget' => 'collapsible',
+    'widget' => 'facetapi_links',
     'filters' => array(),
     'active_sorts' => array(
       'taxonomy_weight' => 'taxonomy_weight',
@@ -732,7 +763,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'facet_fewer_text' => 'Show fewer',
     'soft_limit' => '0',
     'nofollow' => 1,
-    'show_expanded' => 1,
+    'show_expanded' => 0,
     'keep_open' => 1,
     'expand' => 0,
     'collapsible_children' => 1,
@@ -743,6 +774,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Common Core Standard(s)',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_alignment_term'] = $facet;
 
@@ -879,6 +911,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Attributes',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_attributes'] = $facet;
 
@@ -975,6 +1008,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Digital Media Type(s)',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_digital_media_type'] = $facet;
 
@@ -1031,6 +1065,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Educational Use',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_educational_use'] = $facet;
 
@@ -1127,6 +1162,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Grade(s)',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_grades'] = $facet;
 
@@ -1183,6 +1219,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
       'value' => '',
       'format' => 'full_html',
     ),
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_intended_end_user'] = $facet;
 
@@ -1239,6 +1276,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Intended Student Population(s)',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_intended_student'] = $facet;
 
@@ -1335,6 +1373,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Module Type',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_smarter_balanced_keyword'] = $facet;
 
@@ -1430,6 +1469,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'show_reset_link' => 0,
     'reset_link_text' => 'Reset filter',
     'ajax_select_default_option_label' => 'Select',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_subject'] = $facet;
 
@@ -1484,7 +1524,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet->hash = '0';
   $facet->settings = array(
     'weight' => 0,
-    'widget' => 'collapsible',
+    'widget' => 'facetapi_links',
     'filters' => array(),
     'active_sorts' => array(
       'taxonomy_weight' => 'taxonomy_weight',
@@ -1515,7 +1555,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'facet_fewer_text' => 'Show fewer',
     'soft_limit' => '0',
     'nofollow' => 1,
-    'show_expanded' => 1,
+    'show_expanded' => 0,
     'keep_open' => 1,
     'expand' => 0,
     'collapsible_children' => 1,
@@ -1526,6 +1566,7 @@ function sbac_search_api_facetapi_default_facet_settings() {
     'display_count' => 0,
     'title_override' => 0,
     'title' => 'Target Tagging Standard(s)',
+    'active_collapsible' => 1,
   );
   $export['search_api@default_node_index:block:field_target_term'] = $facet;
 
@@ -1900,32 +1941,46 @@ function sbac_search_api_facetapi_default_facet_settings() {
   $facet->hash = '0';
   $facet->settings = array(
     'weight' => 0,
-    'widget' => 'facetapi_links',
+    'widget' => 'collapsible',
     'filters' => array(),
     'active_sorts' => array(
-      'active' => 'active',
-      'count' => 'count',
       'display' => 'display',
+      'active' => 0,
+      'count' => 0,
+      'natural' => 0,
+      'indexed' => 0,
     ),
     'sort_weight' => array(
-      'active' => -50,
-      'count' => -49,
-      'display' => -48,
+      'active' => '-50',
+      'count' => '-49',
+      'display' => '-48',
+      'natural' => '0',
+      'indexed' => '0',
     ),
     'sort_order' => array(
-      'active' => 3,
-      'count' => 3,
-      'display' => 4,
+      'active' => '3',
+      'count' => '3',
+      'display' => '4',
+      'natural' => '4',
+      'indexed' => '4',
     ),
     'empty_behavior' => 'none',
     'facet_more_text' => 'Show more',
     'facet_fewer_text' => 'Show fewer',
-    'soft_limit' => 20,
+    'soft_limit' => '0',
     'nofollow' => 1,
     'show_expanded' => 0,
-    'display_count' => TRUE,
+    'display_count' => 1,
     'title_override' => 0,
     'title' => 'Sticky in lists',
+    'keep_open' => 1,
+    'expand' => 0,
+    'collapsible_children' => 1,
+    'active_collapsible' => 1,
+    'empty_text' => array(
+      'value' => '',
+      'format' => 'full_html',
+    ),
   );
   $export['search_api@default_node_index:block:sticky'] = $facet;
 

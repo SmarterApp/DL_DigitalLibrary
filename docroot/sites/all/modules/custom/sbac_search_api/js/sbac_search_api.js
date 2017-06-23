@@ -82,43 +82,27 @@
     $loading.fadeIn();
   }
 
-  // Load the CC and Target tags from another URL so they don't block loading of the search page.
-  function cctLoad(query, search) {
-    var $block_facetapi = $('#sidebar-first .block-facetapi');
-    var $block_block = $('#sidebar-first .block-block');
-    var $cc_items = $('.facetapi-facet-field-alignment-term > li');
+  // Load the facets from another URL so they don't block loading of the search page.
+  function cctLoad(query, search, clicked) {
+    //console.log('CCT!');
+    var parents = $(clicked).parents('.block-facetapi');
+    parents = $(parents[0]).children('.item-list');
+    parents = $(parents[0]).children('ul');
+    var block_id = $(parents[0]).attr('id');
+    var $block = $('#' + block_id);
 
-    // Hide the other facets so they can't be clicked and cause the CC/T links to get out of sync.
-    $block_facetapi.hide();
-    $block_block.eq(1).hide();
-    $block_block.eq(2).hide();
-    // Show the facet placeholder.
-    $block_block.eq(0).show();
+    // Add throbber.
+    $(clicked).append(' <img class="cct-throbber" src="/misc/throbber-active.gif" />');
     $.get('/cct' + query, search, function (data) {
-      // SHow the other facets and hide the placeholder.
-      $block_facetapi.show();
-      $block_block.eq(1).show();
-      $block_block.eq(2).show();
-      $block_block.eq(0).hide();
+      $('.cct-throbber').remove();
       // Load the data returned by the request as context for the selectors below.
       var context = $(data);
-      // Load the Target Alignment facet block.
-      $block_block.eq(1).html($('.block-facetapi', context).eq(0).html());
-      // Load the Common Core facet block.
-      $block_block.eq(2).html($('.block-facetapi', context).eq(1).html());
-      // Add the facetapi class.
-      $block_block.addClass('block-facetapi facetapi-collapsible');
-      // Remove the unused 2nd and third terms in the CC block.
-      $cc_items.eq(3).remove();
-      $cc_items.eq(2).remove();
-      $cc_items.eq(1).addClass('last');
+      // Load the facet blocks.
+      $block.html($('#' + block_id, context).html());
       // Remove the '/cct' from these links.
-      $('#sidebar-first .block-block a').each(function () {
+      $block.find('a').each(function () {
         $(this).attr('href', $(this).attr('href').substr(4));
       });
-      // Need to add these to the collapsible facet settings.
-      Drupal.settings.facetapi_collapsible['field_alignment_term'] = {'collapsible_children': 1, 'expand': 0, 'keep_open': 1};
-      Drupal.settings.facetapi_collapsible['field_target_term'] = {'collapsible_children': 1, 'expand': 0, 'keep_open': 1};
       // Re-attach behaviors.
       Drupal.attachBehaviors('#sidebar-first');
     });
@@ -132,6 +116,21 @@
     $item.html(full_name)
   }
 
+  // Sets up the initial state of the CC and Target tag blocks.
+  function cctState() {
+    var current_url = urlParse(false);
+    if (current_url.query.indexOf('/cc/') !== -1) {
+      $('.block-facetapi-ynelajjhesbu04dgezguufidwud0zqlh').addClass('expanded');
+    } else {
+      $('.block-facetapi-ynelajjhesbu04dgezguufidwud0zqlh').children('.item-list').hide();
+    }
+    if (current_url.query.indexOf('/t/') !== -1) {
+      $('.block-facetapi-car5oq63bgunqwf0g1xh5k6fci7p504o').addClass('expanded');
+    } else {
+      $('.block-facetapi-car5oq63bgunqwf0g1xh5k6fci7p504o').children('.item-list').hide();
+    }
+  }
+
   Drupal.behaviors = Drupal.behaviors || {};
 
   /**
@@ -143,6 +142,21 @@
     attach: function (context, settings) {
       // Set the initial toggle state of the plus/minus icons.
       plusMinusToggler('a .facetapi-collapsible-handle');
+
+      // Set up the show/hide for the CC and Target blocks.
+      $('.block-facetapi-ynelajjhesbu04dgezguufidwud0zqlh, .block-facetapi-car5oq63bgunqwf0g1xh5k6fci7p504o').once('fakeCollapsible').each(function () {
+        var $block = $(this);
+        $(this).children('h2').click(function (e) {
+          $block.children('.item-list').toggle();
+          $block.toggleClass('expanded');
+        })
+      });
+
+      // Remove the unused 2nd and third terms in the CC block.
+      var $cc_items = $('.facetapi-facet-field-alignment-term > li');
+      $cc_items.eq(3).remove();
+      $cc_items.eq(2).remove();
+      $cc_items.eq(1).addClass('last');
 
       // Add hovers to truncated items.
       $('.facet-truncate').once('facetHover').hover(function () {
@@ -165,15 +179,44 @@
 
       // Change all the parent items in the facets to just open, rather than select.
       $('a[class^=facetapi-]').each(function () {
-        var $parent = $(this).parent();
-        if ($parent.siblings('.item-list').length) {
-          $parent.parent().css('background', 'none');
-          $(this).siblings('.checkbox-spacer').hide();
+        if (!$(this).parents('.facetapi-facet-field-alignment-term, .facetapi-facet-field-target-term').length) {
+          var $parent = $(this).parent();
+          if ($parent.siblings('.item-list').length) {
+            $parent.parent().css('background', 'none');
+            $(this).siblings('.checkbox-spacer').hide();
+            $(this).off('click');
+            $(this).removeClass('facetapi-inactive facetapi-active');
+            $(this).click(function (e) {
+              e.preventDefault();
+              $('.facetapi-collapsible-handle', this).click();
+            });
+          }
+        }
+      });
+
+      // Change how the CC and Target tag parents work.
+      $('.facetapi-facet-field-alignment-term a, .facetapi-facet-field-target-term a').once('cctProcess').each(function () {
+        if (!$(this).parents('.leaf').length) {
+          // console.log('Yay, got it!');
+          var $parent = $(this).parent();
+          // $parent.parent().css('background', 'none');
+          // $(this).siblings('.checkbox-spacer').hide();
+          if (!$(this).hasClass('checkbox-spacer')) {
+            if ($parent.hasClass('facetapi-inactive')) {
+              $(this).prepend('<span class="facetapi-collapsible-handle plus-sign">+</span> ');
+            } else {
+              $(this).prepend('<span class="facetapi-collapsible-handle minus-sign">-</span> ');
+            }
+          }
           $(this).off('click');
-          $(this).removeClass('facetapi-inactive facetapi-active');
+          //$(this).removeClass('facetapi-inactive facetapi-active');
           $(this).click(function (e) {
             e.preventDefault();
-            $('.facetapi-collapsible-handle', this).click();
+            // Get the clicked URL and query/search data.
+            var clicked_url = $(this).attr('href');
+            // Get the clicked URL and parse it into query and search parts.
+            var clicked = urlParse(clicked_url);
+            cctLoad(clicked.query, clicked.search, this);
           });
         }
       });
@@ -209,7 +252,7 @@
           $('#main').html($('#main', context).html());
           // Re-attach behaviors.
           Drupal.attachBehaviors('.main-row');
-          cctLoad(back.query, back.search);
+          cctState();
         });
       };
 
@@ -357,6 +400,11 @@
             });
             // Set the data-search with the value(s) from above.
             $(this).attr('data-search', search_data.join('&'));
+
+            // Add the search items if they're missing.
+            if (current.search && ! item.search) {
+              $(this).attr('href', item_url + '?' + current.search);
+            }
           }
         });
 
@@ -528,10 +576,6 @@
   };
 
   $(document).ready(function () {
-    // Get the current URL and parse it.
-    var current = urlParse(false);
-
-    // Load the CC and Target facets.
-    cctLoad(current.query, current.search);
+    cctState();
   });
 })(jQuery);

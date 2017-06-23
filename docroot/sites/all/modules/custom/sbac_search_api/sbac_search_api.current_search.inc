@@ -32,7 +32,7 @@ function sbac_search_api_current_search_default_items() {
       ),
     ),
     'advanced' => array(
-      'empty_searches' => '0',
+      'empty_searches' => '1',
     ),
   );
   $export['main_search'] = $item;

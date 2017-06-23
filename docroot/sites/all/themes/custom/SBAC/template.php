@@ -800,7 +800,8 @@ function sbac_preprocess_views_view(&$variables) {
     drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_reset.js');
     drupal_add_js(drupal_get_path('module', 'sbac_authorized_domains') . '/js/sbac_authorized_domains_css.js');
   }
-  if ($variables['view']->name == 'search_api_resource_views') {
+  $displays = array('instructional', 'professional_learning', 'playlist', 'search_resources');
+  if ($variables['view']->name == 'search_api_resource_views' && in_array($variables['view']->current_display, $displays)) {
     drupal_add_css(drupal_get_path('module', 'sbac_search_api') . '/css/sbac_search_api.css');
     drupal_add_js(drupal_get_path('module', 'sbac_search_api') . '/js/sbac_search_api.js', array('weight' => 50));
   }

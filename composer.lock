@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d6ea0e063c1a89c292f467d3c9017ba",
+    "content-hash": "7d791fe986d13d1f7d50f09a9748fc9f",
     "packages": [
         {
             "name": "components/jquery",
@@ -600,546 +600,6 @@
             "homepage": "https://www.drupal.org/project/advagg",
             "support": {
                 "source": "http://cgit.drupalcode.org/advagg"
-            }
-        },
-        {
-            "name": "drupal/apachesolr",
-            "version": "1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr",
-                "reference": "7.x-1.7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr-7.x-1.7.zip",
-                "reference": null,
-                "shasum": "b6d46bf7cfca6fd8fb74fe1e35e28ac96e61ad8b"
-            },
-            "require": {
-                "drupal/drupal": "~7.0"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.7",
-                    "datestamp": "1449086147"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "JacobSingh",
-                    "homepage": "https://www.drupal.org/user/68912"
-                },
-                {
-                    "name": "Nick_vh",
-                    "homepage": "https://www.drupal.org/user/122682"
-                },
-                {
-                    "name": "cpliakas",
-                    "homepage": "https://www.drupal.org/user/266779"
-                },
-                {
-                    "name": "drunken monkey",
-                    "homepage": "https://www.drupal.org/user/205582"
-                },
-                {
-                    "name": "febbraro",
-                    "homepage": "https://www.drupal.org/user/43670"
-                },
-                {
-                    "name": "janusman",
-                    "homepage": "https://www.drupal.org/user/153120"
-                },
-                {
-                    "name": "jgrubb",
-                    "homepage": "https://www.drupal.org/user/606908"
-                },
-                {
-                    "name": "jpmckinney",
-                    "homepage": "https://www.drupal.org/user/472460"
-                },
-                {
-                    "name": "mkalkbrenner",
-                    "homepage": "https://www.drupal.org/user/124705"
-                },
-                {
-                    "name": "pwolanin",
-                    "homepage": "https://www.drupal.org/user/49851"
-                },
-                {
-                    "name": "robertDouglass",
-                    "homepage": "https://www.drupal.org/user/5449"
-                },
-                {
-                    "name": "wonder95",
-                    "homepage": "https://www.drupal.org/user/87591"
-                }
-            ],
-            "description": "Framework for searching with Solr",
-            "homepage": "https://www.drupal.org/project/apachesolr",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr"
-            }
-        },
-        {
-            "name": "drupal/apachesolr_attachments",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr_attachments",
-                "reference": "7.x-1.4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr_attachments-7.x-1.4.zip",
-                "reference": null,
-                "shasum": "be21e39ec4688570c9046a98b6f2207b73a8bfb0"
-            },
-            "require": {
-                "drupal/apachesolr": "*",
-                "drupal/drupal": "~7.0"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.4",
-                    "datestamp": "1425005881"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "JacobSingh",
-                    "homepage": "https://www.drupal.org/user/68912"
-                },
-                {
-                    "name": "Nick_vh",
-                    "homepage": "https://www.drupal.org/user/122682"
-                },
-                {
-                    "name": "febbraro",
-                    "homepage": "https://www.drupal.org/user/43670"
-                },
-                {
-                    "name": "janusman",
-                    "homepage": "https://www.drupal.org/user/153120"
-                },
-                {
-                    "name": "jpmckinney",
-                    "homepage": "https://www.drupal.org/user/472460"
-                },
-                {
-                    "name": "neclimdul",
-                    "homepage": "https://www.drupal.org/user/48673"
-                },
-                {
-                    "name": "pwolanin",
-                    "homepage": "https://www.drupal.org/user/49851"
-                },
-                {
-                    "name": "robertDouglass",
-                    "homepage": "https://www.drupal.org/user/5449"
-                }
-            ],
-            "description": "Search file attachments with Solr",
-            "homepage": "https://www.drupal.org/project/apachesolr_attachments",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr_attachments"
-            }
-        },
-        {
-            "name": "drupal/apachesolr_comments",
-            "version": "dev-1.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr_comments",
-                "reference": "907651eec64cd95fcac52892ed0ee185a4426384"
-            },
-            "require": {
-                "drupal/apachesolr": "*",
-                "drupal/drupal": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.x-dev",
-                    "datestamp": "1362752535"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "pwaterz",
-                    "homepage": "https://www.drupal.org/user/672996"
-                }
-            ],
-            "description": "Seperates comments from nodes to allows direct searching and linking to comments.",
-            "homepage": "https://www.drupal.org/project/apachesolr_comments",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr_comments"
-            },
-            "time": "2013-03-07 22:07:35"
-        },
-        {
-            "name": "drupal/apachesolr_file",
-            "version": "dev-1.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr_file",
-                "reference": "c7c258736d09e6fe00445c6af9141808e9e8a8a0"
-            },
-            "require": {
-                "drupal/apachesolr_search": "*",
-                "drupal/drupal": "~7.0",
-                "drupal/file_entity": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.x-dev",
-                    "datestamp": "1335312213"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "shenzhuxi",
-                    "homepage": "https://www.drupal.org/user/193802"
-                }
-            ],
-            "description": "Index file enity types into Solr core.",
-            "homepage": "https://www.drupal.org/project/apachesolr_file",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr_file"
-            },
-            "time": "2013-03-19 16:09:56"
-        },
-        {
-            "name": "drupal/apachesolr_search",
-            "version": "1.7.0",
-            "require": {
-                "drupal/apachesolr": "self.version",
-                "drupal/drupal": "*"
-            },
-            "type": "metapackage",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.7",
-                    "datestamp": "1449086147"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "JacobSingh",
-                    "homepage": "https://www.drupal.org/user/68912"
-                },
-                {
-                    "name": "Nick_vh",
-                    "homepage": "https://www.drupal.org/user/122682"
-                },
-                {
-                    "name": "cpliakas",
-                    "homepage": "https://www.drupal.org/user/266779"
-                },
-                {
-                    "name": "drunken monkey",
-                    "homepage": "https://www.drupal.org/user/205582"
-                },
-                {
-                    "name": "febbraro",
-                    "homepage": "https://www.drupal.org/user/43670"
-                },
-                {
-                    "name": "janusman",
-                    "homepage": "https://www.drupal.org/user/153120"
-                },
-                {
-                    "name": "jgrubb",
-                    "homepage": "https://www.drupal.org/user/606908"
-                },
-                {
-                    "name": "jpmckinney",
-                    "homepage": "https://www.drupal.org/user/472460"
-                },
-                {
-                    "name": "mkalkbrenner",
-                    "homepage": "https://www.drupal.org/user/124705"
-                },
-                {
-                    "name": "pwolanin",
-                    "homepage": "https://www.drupal.org/user/49851"
-                },
-                {
-                    "name": "robertDouglass",
-                    "homepage": "https://www.drupal.org/user/5449"
-                },
-                {
-                    "name": "wonder95",
-                    "homepage": "https://www.drupal.org/user/87591"
-                }
-            ],
-            "description": "Search with Solr",
-            "homepage": "https://www.drupal.org/project/apachesolr",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr"
-            }
-        },
-        {
-            "name": "drupal/apachesolr_term",
-            "version": "dev-1.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr_term",
-                "reference": "8f6b67e7f8bceab30db5adb210ddbac62b3ee35f"
-            },
-            "require": {
-                "drupal/apachesolr": "*",
-                "drupal/drupal": "~7.0"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.x-dev",
-                    "datestamp": "1326413327"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Mac_Weber",
-                    "homepage": "https://www.drupal.org/user/789986"
-                },
-                {
-                    "name": "Nick_vh",
-                    "homepage": "https://www.drupal.org/user/122682"
-                }
-            ],
-            "description": "Indexer for reading taxonomy entity types into a solr core.",
-            "homepage": "https://www.drupal.org/project/apachesolr_term",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr_term"
-            },
-            "time": "2012-03-08 08:56:57"
-        },
-        {
-            "name": "drupal/apachesolr_user",
-            "version": "dev-1.x",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr_user",
-                "reference": "fe07a69ee502c67425893251f0b2055fa39f0dd8"
-            },
-            "require": {
-                "drupal/apachesolr_search": "*",
-                "drupal/drupal": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.x-dev",
-                    "datestamp": "1467968639"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Nick_vh",
-                    "homepage": "https://www.drupal.org/user/122682"
-                },
-                {
-                    "name": "dstuart",
-                    "homepage": "https://www.drupal.org/user/120013"
-                },
-                {
-                    "name": "m.abdulqader",
-                    "homepage": "https://www.drupal.org/user/1281252"
-                },
-                {
-                    "name": "robertDouglass",
-                    "homepage": "https://www.drupal.org/user/5449"
-                },
-                {
-                    "name": "shenzhuxi",
-                    "homepage": "https://www.drupal.org/user/193802"
-                }
-            ],
-            "description": "Index user entity types into a solr core.",
-            "homepage": "https://www.drupal.org/project/apachesolr_user",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr_user"
-            },
-            "time": "2015-04-24 08:14:21"
-        },
-        {
-            "name": "drupal/apachesolr_views",
-            "version": "1.1.0-beta1",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr_views",
-                "reference": "7.x-1.1-beta1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr_views-7.x-1.1-beta1.zip",
-                "reference": null,
-                "shasum": "1d5556a1dfa6d28a46f04801da7432e44e5653f2"
-            },
-            "require": {
-                "drupal/apachesolr": "*",
-                "drupal/apachesolr_search": "*",
-                "drupal/drupal": "~7.0",
-                "drupal/views": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.1-beta1",
-                    "datestamp": "1432238581"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "MiroslavBanov",
-                    "homepage": "https://www.drupal.org/user/1509224"
-                },
-                {
-                    "name": "Nick_vh",
-                    "homepage": "https://www.drupal.org/user/122682"
-                },
-                {
-                    "name": "Ravi.J",
-                    "homepage": "https://www.drupal.org/user/57130"
-                },
-                {
-                    "name": "Robin Monks",
-                    "homepage": "https://www.drupal.org/user/12246"
-                },
-                {
-                    "name": "Scott Reynolds",
-                    "homepage": "https://www.drupal.org/user/60009"
-                },
-                {
-                    "name": "dstuart",
-                    "homepage": "https://www.drupal.org/user/120013"
-                },
-                {
-                    "name": "ygerasimov",
-                    "homepage": "https://www.drupal.org/user/257311"
-                }
-            ],
-            "description": "Provides Apache Solr integration with Views",
-            "homepage": "https://www.drupal.org/project/apachesolr_views",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr_views"
-            }
-        },
-        {
-            "name": "drupal/apachesolr_workbench_moderation",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupal.org/project/apachesolr_workbench_moderation",
-                "reference": "7.x-1.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/apachesolr_workbench_moderation-7.x-1.1.zip",
-                "reference": null,
-                "shasum": "2bb40198387066d6afc98e2503811ff16d472942"
-            },
-            "require": {
-                "drupal/apachesolr": "*",
-                "drupal/drupal": "~7.0",
-                "drupal/workbench_moderation": "*"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-1.x": "1.x-dev"
-                },
-                "drupal": {
-                    "version": "7.x-1.1",
-                    "datestamp": "1374246370"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/7/downloads",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "lachezar.valchev",
-                    "homepage": "https://www.drupal.org/user/1482368"
-                },
-                {
-                    "name": "martichka5",
-                    "homepage": "https://www.drupal.org/user/1553888"
-                },
-                {
-                    "name": "mmartinov",
-                    "homepage": "https://www.drupal.org/user/207484"
-                },
-                {
-                    "name": "skek",
-                    "homepage": "https://www.drupal.org/user/417078"
-                }
-            ],
-            "description": "Make apachesolr and workbench moderation module compatibles.",
-            "homepage": "https://www.drupal.org/project/apachesolr_workbench_moderation",
-            "support": {
-                "source": "http://cgit.drupalcode.org/apachesolr_workbench_moderation"
             }
         },
         {
@@ -2777,7 +2237,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/facetapi_collapsible-7.x-1.1.zip",
-                "reference": "7.x-1.1",
+                "reference": null,
                 "shasum": "3f00c4abc2a2e3fef20ee173f84f2f5980477078"
             },
             "require": {
@@ -2792,6 +2252,9 @@
                 "drupal": {
                     "version": "7.x-1.1",
                     "datestamp": "1366997117"
+                },
+                "patches_applied": {
+                    "Make active facets collapsible": "patches/2887858-active-collapsible-config.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/7/downloads",
@@ -6343,7 +5806,7 @@
             "dist": {
                 "type": "zip",
                 "url": "https://ftp.drupal.org/files/projects/search_api_acquia-7.x-2.3.zip",
-                "reference": null,
+                "reference": "7.x-2.3",
                 "shasum": "ae54aa734e99144ab5e2a11c4b8b39516b150e19"
             },
             "require": {
@@ -8738,16 +8201,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.21",
+            "version": "v2.8.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "7fc8e2b4118ff316550596357325dfd92a51f531"
+                "reference": "88b65f0ac25355090e524aba4ceb066025df8bd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/7fc8e2b4118ff316550596357325dfd92a51f531",
-                "reference": "7fc8e2b4118ff316550596357325dfd92a51f531",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/88b65f0ac25355090e524aba4ceb066025df8bd2",
+                "reference": "88b65f0ac25355090e524aba4ceb066025df8bd2",
                 "shasum": ""
             },
             "require": {
@@ -8794,20 +8257,20 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-26T16:56:54+00:00"
+            "time": "2017-04-03T20:37:06+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v3.3.2",
+            "version": "v3.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "8e30690c67aafb6c7992d6d8eb0d707807dd3eaf"
+                "reference": "57fdaa55827ae14d617550ebe71a820f0a5e2282"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/8e30690c67aafb6c7992d6d8eb0d707807dd3eaf",
-                "reference": "8e30690c67aafb6c7992d6d8eb0d707807dd3eaf",
+                "url": "https://api.github.com/repos/symfony/process/zipball/57fdaa55827ae14d617550ebe71a820f0a5e2282",
+                "reference": "57fdaa55827ae14d617550ebe71a820f0a5e2282",
                 "shasum": ""
             },
             "require": {
@@ -8816,7 +8279,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -8843,17 +8306,13 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-22T12:32:03+00:00"
+            "time": "2017-03-27T18:07:02+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/apachesolr_comments": 20,
-        "drupal/apachesolr_file": 20,
-        "drupal/apachesolr_term": 20,
-        "drupal/apachesolr_user": 20,
         "drupal/dialog": 20,
         "drupal/facetapi": 20,
         "drupal/field_collection": 20,
