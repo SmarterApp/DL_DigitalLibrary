@@ -1,29 +1,31 @@
 diff --git a/collapsible_widget.inc b/collapsible_widget.inc
-index 52bdd13..2e9007f 100644
+index 52bdd13..3738434 100644
 --- a/collapsible_widget.inc
 +++ b/collapsible_widget.inc
-@@ -21,6 +21,7 @@ class FacetapiCollapsible extends FacetapiWidgetLinks {
+@@ -21,6 +21,8 @@ class FacetapiCollapsible extends FacetapiWidgetLinks {
      $keep_open = isset($settings['keep_open']) ? $settings['keep_open'] : 0;
      $expand = isset($settings['expand']) ? $settings['expand'] : 1;
      $collapsible_children = isset($settings['collapsible_children']) ? $settings['collapsible_children'] : 0;
 +    $active_collapsible = isset($settings['active_collapsible']) ? $settings['active_collapsible'] : 0;
++    $persistent_state = isset($settings['persistent_state']) ? $settings['persistent_state'] : 0;
      $element = array(
        '#theme' => 'item_list',
        '#items' => $this->buildListItems($element),
-@@ -39,7 +40,11 @@ class FacetapiCollapsible extends FacetapiWidgetLinks {
+@@ -39,7 +41,12 @@ class FacetapiCollapsible extends FacetapiWidgetLinks {
                  $this->facet['field alias'] => array(
                    'keep_open' => $keep_open,
                    'expand' => $expand,
 -                  'collapsible_children' => $collapsible_children))), 'type' => 'setting'),
 +                  'collapsible_children' => $collapsible_children,
 +                  'active_collapsible' => $active_collapsible,
++                  'persistent_state' => $persistent_state,
 +                )
 +              )
 +            ), 'type' => 'setting'),
            ),
          'css' => array(drupal_get_path('module', 'facetapi_collapsible') .'/facetapi_collapsible.css'),
        ),
-@@ -86,6 +91,17 @@ class FacetapiCollapsible extends FacetapiWidgetLinks {
+@@ -86,6 +93,28 @@ class FacetapiCollapsible extends FacetapiWidgetLinks {
            ),
          ),
        ),
@@ -38,11 +40,22 @@ index 52bdd13..2e9007f 100644
 +          ),
 +        ),
 +      ),
++      'persistent_state' => array(
++        '#type' => 'checkbox',
++        '#title' => t('Persist collapsed state'),
++        '#default_value' => isset($settings['persistent_state']) ? $settings['persistent_state'] : 0,
++        '#description' => t('If checked, the collapsed state of the facet will persist between page loads.'),
++        '#states' => array(
++          'visible' => array(
++            'select[name="widget"]' => array('value' => $this->id),
++          ),
++        ),
++      ),
      );
    }
  }
 diff --git a/facetapi_collapsible.js b/facetapi_collapsible.js
-index 0b3f265..678a481 100644
+index 0b3f265..48436a7 100644
 --- a/facetapi_collapsible.js
 +++ b/facetapi_collapsible.js
 @@ -32,11 +32,24 @@
@@ -71,3 +84,79 @@ index 0b3f265..678a481 100644
            // Add the 'expanded' class to the facet if configured to do so.
            facetCollapseExpanded($facet, 'expand', 1, 'addClass');
  
+@@ -88,21 +101,24 @@
+                 var $clickedlist = $('ul', $parentfacet.siblings('.item-list')).first();
+                 var $clickedlink = $(this).closest('a');
+                 $clickedlist.toggleClass("expanded");
+-                if (!cookie) {
+-                  cookie = {};
+-                }
+-                if (!cookie[parentfacetId]) {
+-                  cookie[parentfacetId] = [];
+-                }
+-                if ($clickedlist.hasClass('expanded')) {
+-                  $(this).html('-');
+-                  cookie[parentfacetId].push($clickedlink.attr('href'));
+-                }
+-                else {
+-                  $(this).html('+');
+-                  var index = cookie[parentfacetId].indexOf($clickedlink.attr('href'));
+-                  if (index !== -1) {
+-                    cookie[parentfacetId].splice(index, 1);
++
++                if (Drupal.settings.facetapi_collapsible[parentfacetId] && Drupal.settings.facetapi_collapsible[parentfacetId].persistent_state) {
++                  if (!cookie) {
++                    cookie = {};
++                  }
++                  if (!cookie[parentfacetId]) {
++                    cookie[parentfacetId] = [];
++                  }
++                  if ($clickedlist.hasClass('expanded')) {
++                    $(this).html('-');
++                    cookie[parentfacetId].push($clickedlink.attr('href'));
++                  }
++                  else {
++                    $(this).html('+');
++                    var index = cookie[parentfacetId].indexOf($clickedlink.attr('href'));
++                    if (index !== -1) {
++                      cookie[parentfacetId].splice(index, 1);
++                    }
+                   }
+                 }
+ 
+@@ -110,20 +126,24 @@
+                   $('ul', $list.closest('li').siblings('li')).each(function () {
+                     $(this).removeClass("expanded");
+                     $('a .facetapi-collapsible-handle', $(this).closest('li')).html('+');
+-                    var index = cookie[parentfacetId].indexOf($('a', $(this).closest('li')).attr('href'));
+-                    if (index !== -1) {
+-                      cookie[parentfacetId].splice(index, 1);
++                    if (Drupal.settings.facetapi_collapsible[parentfacetId] && Drupal.settings.facetapi_collapsible[parentfacetId].persistent_state) {
++                      var index = cookie[parentfacetId].indexOf($('a', $(this).closest('li')).attr('href'));
++                      if (index !== -1) {
++                        cookie[parentfacetId].splice(index, 1);
++                      }
+                     }
+                   });
+                 }
+-                $.cookie(
+-                  'Facetapi.collapsible.expanded',
+-                  JSON.stringify(cookie),
+-                  {
+-                    path: Drupal.settings.basePath,
+-                    expires: 1
+-                  }
+-                );
++                if (Drupal.settings.facetapi_collapsible[parentfacetId] && Drupal.settings.facetapi_collapsible[parentfacetId].persistent_state) {
++                  $.cookie(
++                    'Facetapi.collapsible.expanded',
++                    JSON.stringify(cookie),
++                    {
++                      path: Drupal.settings.basePath,
++                      expires: 1
++                    }
++                  );
++                }
+                 event.preventDefault();
+               });
+             }
