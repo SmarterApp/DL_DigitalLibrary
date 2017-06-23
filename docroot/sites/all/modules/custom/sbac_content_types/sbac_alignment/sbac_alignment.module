@@ -560,8 +560,16 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last
   $publication = $term->field_alignment_publication[LANGUAGE_NONE][0]['value'];
   if ($publication == 'CC-ELA-v1') {
     $level_title = "Strand/Domain";
+    $description_title = "Standard Description";
+  } elseif ($publication == 'CCC-ELA-v1') {
+    $level_title = "Domain";
+    $description_title = "Standard Description";
+  } elseif ($publication == 'TA-ELA-v1' || $publication == 'TA-MA-v1') {
+    $level_title = "Claim";
+    $description_title = "Target Description";
   } else {
     $level_title = "Domain";
+    $description_title = "Description";
   }
   // Get the standard name from the term
   $alignment_vocab = taxonomy_vocabulary_machine_name_load(SBAC_ALIGNMENT_VOCAB_NAME);
@@ -598,7 +606,7 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last
             <div class=\"description-content\">
               <h2>" . $subject_name . "</h2>
               <div class=\"standard-description\">
-                <h3>Standard Description</h3>
+                <h3>" . $description_title . "</h3>
                 " . $term->description . "
               </div>
               <div class=\"standard-grade\">
