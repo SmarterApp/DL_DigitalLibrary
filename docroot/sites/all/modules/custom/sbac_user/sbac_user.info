@@ -25,7 +25,6 @@ dependencies[] = sbac_authorized_domains
 dependencies[] = sbac_help
 dependencies[] = sbac_resource
 dependencies[] = sbac_resource_taxonomy
-dependencies[] = sbac_user
 dependencies[] = search
 dependencies[] = strongarm
 dependencies[] = system
