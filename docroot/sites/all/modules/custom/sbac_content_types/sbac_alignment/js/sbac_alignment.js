@@ -50,6 +50,9 @@ var read_more_less = function (element) {
 
       // Handler for syncing the checkboxes and adding parents as needed
       $('.standard-check').change(function (e) {
+        // Disable the checkboxes until the AJAX is done.
+        $('.standard-check').prop('disabled', true);
+
         // Get the tid so we can check if the parent version of this tid exists
         var tid = $(this).attr('value');
 
