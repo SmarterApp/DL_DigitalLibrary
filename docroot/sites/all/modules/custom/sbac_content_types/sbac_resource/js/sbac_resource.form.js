@@ -182,6 +182,10 @@
         isDirty = false;
       });
 
+      $(document).on('click', '#edit-submit-overlay', function() {
+        isDirty = false;
+      });
+
       $('#edit-save-continue').mousedown(function () {
         isDirty = false;
         clicked = true;
