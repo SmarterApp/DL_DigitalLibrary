@@ -162,6 +162,18 @@ function sbac_alignment_type($alignment_type = FALSE) {
   return array('type' => $storage['alignment_type'], 'container' => $storage['alignment_container']);
 }
 
+function sbac_alignment_type_title_name() {
+  $alignment = sbac_alignment_type();
+
+  switch ($alignment['type']) {
+    case 'education_alignment':
+      return t('Standards Browser');
+    case 'target_alignment':
+      return t('Targets Browser');
+  }
+  return '';
+}
+
 function sbac_alignment_type_button_name() {
   $alignment = sbac_alignment_type();
 
@@ -171,7 +183,7 @@ function sbac_alignment_type_button_name() {
     case 'target_alignment':
       return t('Add Target(s) to Resource');
   }
-  return FALSE;
+  return '';
 }
 
 function sbac_alignment_type_description() {
@@ -179,11 +191,11 @@ function sbac_alignment_type_description() {
 
   switch ($alignment['type']) {
     case 'education_alignment':
-      return t('Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)');
+      return t('Select the appropriate primary content standard for this resource.');
     case 'target_alignment':
-      return t('Choose Your Target Alignment ELA or Math Standard(s)');
+      return t('Select the appropriate assessment target for this resource.');
   }
-  return FALSE;
+  return '';
 }
 
 /**

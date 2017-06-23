@@ -1218,7 +1218,7 @@ function sbac_resource_modal_callback($alignment_type = FALSE, $js = FALSE) {
 //    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
-    $output[] = ctools_modal_command_display('Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
+    $output[] = ctools_modal_command_display(sbac_alignment_type_title_name(), sbac_alignment_ajax_alignment_page($_GET['nid']));
     $output[] = array('command' => 'modalContentResize');
 
     print ajax_render($output);

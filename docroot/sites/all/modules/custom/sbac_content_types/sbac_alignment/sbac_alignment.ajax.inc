@@ -70,25 +70,25 @@ function sbac_alignment_ajax_terms_callback() {
     'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Strand/Domain',
-    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
+    'Select the appropriate primary content standard for this resource.',
   );
   $ma_cc_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Domain',
-    'Choose Your Common Core Standard(s), ELA Anchor Standard(s), and/or Mathematical Practice(s)',
+    'Select the appropriate primary content standard for this resource.',
   );
   $ela_ta_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Claim',
-    'Choose Your Target Alignment ELA Standard(s)',
+    'Select the appropriate assessment target for this resource.',
   );
   $ma_ta_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
     'Choose Your Claim',
-    'Choose Your Target Alignment Math Standard(s)',
+    'Select the appropriate assessment target for this resource.',
   );
   $defaults = array(
     'Choose Your Subject Area',
