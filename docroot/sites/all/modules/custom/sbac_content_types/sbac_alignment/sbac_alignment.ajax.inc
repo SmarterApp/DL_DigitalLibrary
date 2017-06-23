@@ -81,13 +81,13 @@ function sbac_alignment_ajax_terms_callback() {
   $ela_ta_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
-    'Choose Your Domain',
+    'Choose Your Claim',
     'Choose Your Target Alignment ELA Standard(s)',
   );
   $ma_ta_titles = array(
     'Choose Your Subject Area',
     'Choose Your Grade',
-    'Choose Your Domain',
+    'Choose Your Claim',
     'Choose Your Target Alignment Math Standard(s)',
   );
   $defaults = array(
