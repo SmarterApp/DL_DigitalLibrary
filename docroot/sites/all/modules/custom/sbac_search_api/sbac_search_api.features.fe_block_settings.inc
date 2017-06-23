@@ -67,7 +67,7 @@ ajax/playlist/*',
   );
 
   $export['facetapi-7ERviPJtMLm6XXzQWWpYSLto72jI1HhP'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => '7ERviPJtMLm6XXzQWWpYSLto72jI1HhP',
     'module' => 'facetapi',
@@ -102,7 +102,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-9IXECKP1g9XgZkpivQrvFAjmjoVe947l'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => '9IXECKP1g9XgZkpivQrvFAjmjoVe947l',
     'module' => 'facetapi',
@@ -137,7 +137,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-CAR5oQ63BgUNqWF0g1XH5K6fcI7P504o'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'CAR5oQ63BgUNqWF0g1XH5K6fcI7P504o',
     'module' => 'facetapi',
@@ -172,7 +172,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-HqaeQBI5mLDpJpXNDoVO6Qz1I014gYWt'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'HqaeQBI5mLDpJpXNDoVO6Qz1I014gYWt',
     'module' => 'facetapi',
@@ -207,7 +207,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-NtPguqUCF0EUTwpi0v0Mnz1KbNyj9UNx'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'NtPguqUCF0EUTwpi0v0Mnz1KbNyj9UNx',
     'module' => 'facetapi',
@@ -242,7 +242,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-P8B9X4Dq1ud5HdIIwhUGtI1AmWVE0QXu'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'P8B9X4Dq1ud5HdIIwhUGtI1AmWVE0QXu',
     'module' => 'facetapi',
@@ -277,7 +277,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-SRzTQ59mFwugFsX5pvlijAz0PEacAZ6N'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'SRzTQ59mFwugFsX5pvlijAz0PEacAZ6N',
     'module' => 'facetapi',
@@ -312,7 +312,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-X36xv2RuY1Ot0DpUulF6YvxmwbYZqp5f'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'X36xv2RuY1Ot0DpUulF6YvxmwbYZqp5f',
     'module' => 'facetapi',
@@ -347,7 +347,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-covvO8Y5vniTt3pqlpKW11qLdeZ3fwyE'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'covvO8Y5vniTt3pqlpKW11qLdeZ3fwyE',
     'module' => 'facetapi',
@@ -382,7 +382,7 @@ cct/search-resources/*',
   );
 
   $export['facetapi-yNElAjJhESbU04dGEzguUfiDWud0Zqlh'] = array(
-    'cache' => 5,
+    'cache' => -1,
     'custom' => 0,
     'delta' => 'yNElAjJhESbU04dGEzguUfiDWud0Zqlh',
     'module' => 'facetapi',
