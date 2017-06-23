@@ -1,3 +1,23 @@
+var read_more_less = function (element) {
+  var $ = jQuery;
+  var term_id = $(element).attr('term');
+  var container = $(element).parent().parent();
+  var less = $(container).children('.checkbox-less-' + term_id);
+  var more = $(container).children('.checkbox-more-' + term_id);
+  if ($(less).hasClass('active')) {
+    $(less).removeClass('active');
+    $(less).hide();
+    $(more).addClass('active');
+    $(more).show();
+  }
+  else {
+    $(more).removeClass('active');
+    $(more).hide();
+    $(less).addClass('active');
+    $(less).show();
+  }
+};
+
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
 
@@ -12,24 +32,6 @@
 
   Drupal.behaviors.sbac_alignment_everything = {
     attach: function (context, settings) {
-      var read_more_less = function (element) {
-        var term_id = $(element).attr('term');
-        var container = $(element).parent().parent();
-        var less = $(container).children('.checkbox-less-' + term_id);
-        var more = $(container).children('.checkbox-more-' + term_id);
-        if ($(less).hasClass('active')) {
-          $(less).removeClass('active');
-          $(less).hide();
-          $(more).addClass('active');
-          $(more).show();
-        }
-        else {
-          $(more).removeClass('active');
-          $(more).hide();
-          $(less).addClass('active');
-          $(less).show();
-        }
-      };
 
       var valueUpdater = function () {
         var alignmentStandards = [];
