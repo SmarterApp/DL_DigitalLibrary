@@ -302,6 +302,9 @@
       },
       "drupal/facetapi_collapsible": {
         "Make active facets collapsible": "patches/2887858-active-collapsible-config.patch"
+      },
+      "drupal/webform_uuid": {
+        "Fix an overzealous hook_form_alter": "patches/webform_uuid.patch"
       }
     }
   }
