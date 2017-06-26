@@ -319,6 +319,8 @@
         var current_search_pairs = searchSplit(current.search);
         // Update the search to the new keywords.
         current_search_pairs['search'] = search;
+        // Reset pager to start at the beginning
+        delete current_search_pairs.page;
         // Put the search variables back together.
         var new_search = searchConcat(current_search_pairs);
 
