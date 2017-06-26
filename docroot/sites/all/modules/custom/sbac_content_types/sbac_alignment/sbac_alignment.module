@@ -561,10 +561,10 @@ function _sbac_alignment_build_table_row($tid, $selected, $indent = FALSE, $last
   if ($publication == 'CC-ELA-v1') {
     $level_title = "Strand/Domain";
     $description_title = "Standard Description";
-  } elseif ($publication == 'CCC-ELA-v1') {
+  } elseif ($publication == 'CCC-ELA-v1' || $publication == 'CC-MA-v1' ) {
     $level_title = "Domain";
     $description_title = "Standard Description";
-  } elseif ($publication == 'TA-ELA-v1' || $publication == 'TA-MA-v1') {
+  } elseif ($publication == 'TA-ELA-v1' || $publication == 'TA-Math-v1') {
     $level_title = "Claim";
     $description_title = "Target Description";
   } else {
