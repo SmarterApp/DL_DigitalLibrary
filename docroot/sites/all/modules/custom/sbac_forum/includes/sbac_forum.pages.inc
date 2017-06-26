@@ -495,7 +495,7 @@ function sbac_forum_view_forum_page($term) {
       $variables['file-type-icon'] = 'document';
   }
   // Use default image for State forum if none uploaded
-  if ($term->field_forum_access_states['und'][0]['value'] != '_none' && empty($term->field_state_or_district_image)) {
+  if ($term->field_forum_access_states['und'][0]['value'] == 0 && empty($term->field_state_or_district_image)) {
       $forum_image_url = '/' . drupal_get_path('theme', 'SBAC') . '/images/state-forum-default.png';
       $image_tag = '<img typeof="foaf:Image" src="' . $forum_image_url . '" width="268" height="138" alt="Forum thumbnail image" />';
       $variables['image'] = $image_tag;
