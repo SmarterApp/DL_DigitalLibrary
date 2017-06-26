@@ -285,6 +285,7 @@
       // The selectors for the search form on the 3 pages.
       var search_forms = '#views-exposed-form-search-api-resource-views-instructional, #views-exposed-form-search-api-resource-views-professional-learning, #views-exposed-form-search-api-resource-views-playlist';
       // Set up the AJAX request for when the keyword search is used.
+      $(search_forms).off('submit');
       $(search_forms).submit(function (e) {
         e.preventDefault();
         // Get the value to search for.
