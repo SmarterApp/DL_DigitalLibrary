@@ -299,6 +299,8 @@
             var item_search_pairs = searchSplit(item.search);
             // Add/update the search value.
             item_search_pairs['search'] = search;
+            // Reset pager to start at the beginning
+            delete item_search_pairs.page;
             // Put the search variables back together.
             var new_search = searchConcat(item_search_pairs);
             // Build the new URL.
