@@ -125,15 +125,6 @@ function sbac_forum_menu() {
     'file' => 'includes/sbac_forum.pages.inc',
   );
 
-  $items['forums-main-page/reset/%/%'] = array(
-    'title' => 'Forums',
-    'file' => 'includes/sbac_forum.pages.inc',
-    'page callback' => 'sbac_forum_main_landing_page_reset',
-    'page arguments' => array(2, 3),
-    'access callback' => '_sbac_forum_user_access',
-    'type' => MENU_CALLBACK,
-  );
-
   $items['keyword-search-redirect/%'] = array(
     'title' => 'Forums keyword search traffic control',
     'file' => 'includes/sbac_forum.pages.inc',
