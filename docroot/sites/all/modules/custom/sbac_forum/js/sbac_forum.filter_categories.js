@@ -330,7 +330,7 @@
     attach: function (context, settings) {
       var original_filters = $('#sbac-forum-original-filters').val();
       var $clear_all_div = $('<div id="clear-all"><span>Applied Filters</span></div>');
-      var $clear_all_link = $('<a href="sbac-forum/clear-filters">Clear All</a>');
+      var $clear_all_link = $('<a href="/sbac-forum/clear-filters">Clear All</a>');
       $clear_all_div.append($clear_all_link);
       current_filter_clicked = function () {
         var tid = $(this).attr('tid');

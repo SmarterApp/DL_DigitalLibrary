@@ -179,34 +179,6 @@ function sbac_forum_main_landing_page($page = NULL, $ajax = FALSE) {
 }
 
 /**
- * Middleground cleanup page callback to reset session variables and perform redirection.
- *
- * @param string $item which page is requesting cleanup (all forums or my forums)
- * @param string $severity default or all. Tells function how extensive the clear needs to be.
- *
- */
-function sbac_forum_main_landing_page_reset($item, $severity) {
-  switch ($item) {
-    case 'all-forums':
-      $_SESSION[SBAC_FORUM_CATEGORY_FILTERS] = '';
-      break;
-    case 'my-forums':
-      if ($severity == 'default') {
-        sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
-      }
-      else {
-        $_SESSION[SBAC_FORUM_MY_FORUM_CATEGORY_FILTERS] = '';
-        // sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_ALL);
-      }
-      break;
-    case 'topic-forums':
-      sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_TOPIC);
-      break;
-  }
-  drupal_goto('forums');
-}
-
-/**
  * Middleground traffic controller. Used to set the active subnav element on forums then redirect to page.
  *
  * @param string $where where to redirect to.
