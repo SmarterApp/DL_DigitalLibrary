@@ -285,6 +285,7 @@
       // The selectors for the search form on the 3 pages.
       var search_forms = '#views-exposed-form-search-api-resource-views-instructional, #views-exposed-form-search-api-resource-views-professional-learning, #views-exposed-form-search-api-resource-views-playlist';
       // Set up the AJAX request for when the keyword search is used.
+      $(search_forms).off('submit');
       $(search_forms).submit(function (e) {
         e.preventDefault();
         // Get the value to search for.
@@ -299,6 +300,8 @@
             var item_search_pairs = searchSplit(item.search);
             // Add/update the search value.
             item_search_pairs['search'] = search;
+            // Reset pager to start at the beginning
+            delete item_search_pairs.page;
             // Put the search variables back together.
             var new_search = searchConcat(item_search_pairs);
             // Build the new URL.
@@ -317,6 +320,8 @@
         var current_search_pairs = searchSplit(current.search);
         // Update the search to the new keywords.
         current_search_pairs['search'] = search;
+        // Reset pager to start at the beginning
+        delete current_search_pairs.page;
         // Put the search variables back together.
         var new_search = searchConcat(current_search_pairs);
 
