@@ -201,6 +201,7 @@
           var $parent = $(this).parent();
           // $parent.parent().css('background', 'none');
           // $(this).siblings('.checkbox-spacer').hide();
+          /*
           if (!$(this).hasClass('checkbox-spacer')) {
             if ($parent.hasClass('facetapi-inactive')) {
               $(this).prepend('<span class="facetapi-collapsible-handle plus-sign">+</span> ');
@@ -208,6 +209,7 @@
               $(this).prepend('<span class="facetapi-collapsible-handle minus-sign">-</span> ');
             }
           }
+          */
           $(this).off('click');
           //$(this).removeClass('facetapi-inactive facetapi-active');
           $(this).click(function (e) {

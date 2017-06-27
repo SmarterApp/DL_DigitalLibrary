@@ -257,7 +257,7 @@
 .page-playlist #sidebar-first .block-block li .facetapi-collapsible-handle,
 .page-search-resources #sidebar-first .block-facetapi li .facetapi-collapsible-handle,
 .page-search-resources #sidebar-first .block-block li .facetapi-collapsible-handle {
-  display: none;
+  display: inline-block;
   width: 12px;
   color: transparent;
 }
