@@ -425,13 +425,13 @@
 
         var $parent = $(this).parent();
         // Toggle the link and the parent between active and inactive to be consistent with the normal facet handling.
-        $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active facetapi-inactive');
+        $parent.children('a').filter('.facetapi-active,.facetapi-inactive').toggleClass('facetapi-active facetapi-inactive');
         if ($parent.hasClass('facetapi-active')) {
           $parent.parent().find('.active').each(function () {
             // Toggle the LI active class so the checkmarks are set correctly.
             $(this).toggleClass('active');
           });
-          $parent.parent().find('.facetapi-active').each(function () {
+          $parent.parent().find('.item-list .facetapi-active').each(function () {
             $(this).toggleClass('facetapi-active facetapi-inactive');
           });
         }
