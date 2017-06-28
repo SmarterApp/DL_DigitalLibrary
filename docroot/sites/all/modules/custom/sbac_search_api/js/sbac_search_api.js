@@ -430,7 +430,6 @@
         }
       });
 
-      var cnt = 0;
       // Add the click event to each link to update the other links.
       $('#sidebar-first').once('ajaxSearchClick').on('click', selectors.join(','), function (e) {
         // Don't do the normal click.
