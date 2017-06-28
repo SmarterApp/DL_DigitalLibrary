@@ -37274,6 +37274,6 @@ body.page-help-topics h1 {
     margin: 0 0 10px 10px;
     width: 100px;
 }
-.page-my-resources #modalContent{
-    min-height: 300px;
+.page-my-resources #modal-content{
+    min-height: 200px;
 }
