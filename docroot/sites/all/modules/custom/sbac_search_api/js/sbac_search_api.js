@@ -82,30 +82,6 @@
     $loading.fadeIn();
   }
 
-  // Load the facets from another URL so they don't block loading of the search page.
-  function cctLoad(query, search, clicked) {
-    //console.log('CCT!');
-    var parent = $(clicked).closest('.block-facetapi').find('.item-list > ul').filter(':first');
-    var block_id = $(parent).attr('id');
-    var $block = $('#' + block_id);
-
-    // Add throbber.
-    $(clicked).parent().children().filter(':last').append(' <img class="cct-throbber" src="/misc/throbber-active.gif" />');
-    $.get('/cct' + query, search, function (data) {
-      $('.cct-throbber').remove();
-      // Load the data returned by the request as context for the selectors below.
-      var context = $(data);
-      // Load the facet blocks.
-      $block.html($('#' + block_id, context).html());
-      // Remove the '/cct' from these links.
-      $block.find('a').each(function () {
-        $(this).attr('href', $(this).attr('href').substr(4));
-      });
-      // Re-attach behaviors.
-      Drupal.attachBehaviors('#sidebar-first');
-    });
-  }
-
   // Shows the full facet name for truncated items.
   function facetSwap($item) {
     var full_name = $item.attr('data-full-name');
@@ -183,20 +159,6 @@
         }
       }
     });
-
-    // Change how the CC and Target tag parents work.
-    $('#sidebar-first').once('cctProcess').on(
-      'click',
-      '.facetapi-facet-field-alignment-term a, .facetapi-facet-field-target-term a',
-      function (e) {
-        e.preventDefault();
-        // Get the clicked URL and query/search data.
-        var clicked_url = $(this).attr('href');
-        // Get the clicked URL and parse it into query and search parts.
-        var clicked = urlParse(clicked_url);
-        cctLoad(clicked.query, clicked.search, this);
-      }
-    );
   }
 
   Drupal.behaviors = Drupal.behaviors || {};
@@ -301,9 +263,38 @@
         });
       };
 
-      var doSearch = function(query, search) {
+      var doSearch = function(reset) {
+        // Stop any existing unfinished AJAX requests.
+        if (currentAJAX.hasOwnProperty('abort')) {
+          currentAJAX.abort();
+        }
+
         // Put up the dimmer while the AJAX request happens.
         searchLoading();
+
+        var facets = [];
+        $('a.facetapi-active').each(function () {
+          facets.push($(this).data('query'));
+        });
+
+        var term = $(search_forms).find('#edit-search').val();
+        if (term) {
+          current_search_pairs['search'] = term;
+        } else {
+          delete current_search_pairs.search;
+        }
+
+        // Reset pager to start at the beginning
+        if (reset) {
+          delete current_search_pairs.page;
+        }
+
+        var query = base_url + facets.join('');
+        var search = searchConcat(current_search_pairs);
+
+        // Update the history.
+        history.pushState({}, '', query + (search.length ? ('?' + search) : ''));
+
         // Do the AJAX call to get the new results.
         currentAJAX = $.get('/ajax' + query, search, function (data) {
           // Load the data returned by the request as context for the selectors below.
@@ -332,53 +323,50 @@
       $(search_forms).once('submitWrap').submit(function (e) {
         e.preventDefault();
 
-        // Stop any existing unfinished AJAX requests.
-        if (currentAJAX.hasOwnProperty('abort')) {
-          currentAJAX.abort();
-        }
+        doSearch(true);
+      });
 
-        // Get the value to search for.
-        var search = $('#edit-search', $(this)).val();
+      // Load the facets from another URL so they don't block loading of the search page.
+      function cctLoad(clicked) {
+        var parent = $(clicked).closest('.block-facetapi').find('.item-list > ul').filter(':first');
+        var block_id = $(parent).attr('id');
+        var $block = $('#' + block_id);
 
-        // Update the search to the new keywords.
-        if (search.length) {
-          current_search_pairs['search'] = search;
+        var facets = [];
+        $('a.facetapi-active').each(function () {
+          facets.push($(this).data('query'));
+        });
+        console.log('facets', facets);
+
+        var term = $(search_forms).find('#edit-search').val();
+        if (term) {
+          current_search_pairs['search'] = term;
         } else {
           delete current_search_pairs.search;
         }
+
         // Reset pager to start at the beginning
         delete current_search_pairs.page;
-        // Put the search variables back together.
-        var new_search = searchConcat(current_search_pairs);
 
-        // Go through all of the links and update them with the keyword search.
-        $(selectors.join(',')).each(function (k, s) {
-          // Get the URL for the link and parse it.
-          var item_url = $(this).attr('href');
-          var item = urlParse(item_url);
-          // Build the new URL.
-          var new_url = item.query + '?' + new_search;
-          // Update the link with the new URL.
-          $(this).attr('href', new_url);
+        var query = base_url + facets.join('');
+        var search = searchConcat(current_search_pairs);
+
+        // Add throbber.
+        $(clicked).parent().children().filter(':last').append(' <img class="cct-throbber" src="/misc/throbber-active.gif" />');
+        $.get('/cct' + query, search, function (data) {
+          $('.cct-throbber').remove();
+          // Load the data returned by the request as context for the selectors below.
+          var context = $(data);
+          // Load the facet blocks.
+          $block.html($('#' + block_id, context).html());
+          // Remove the '/cct' from these links.
+          $block.find('a').each(function () {
+            $(this).attr('href', $(this).attr('href').substr(4));
+          });
+          // Re-attach behaviors.
+          Drupal.attachBehaviors('#sidebar-first');
         });
-
-        // Update the history.
-        history.pushState({}, '', current.query + '?' + new_search);
-
-        // Set the new current URL.
-        current = urlParse(false);
-        base_url = current.query.match(base_slash)[0];
-        current_query_only = current.query.replace(base, '').split('/');
-        // Split the query parts up into pairs (i.e. - s/123).
-        current_pairs = [];
-        for (var x = 0; x < current_query_only.length; x += 2) {
-          current_pairs.push(current_query_only[x] + '/' + current_query_only[x + 1]);
-        }
-        // Split up the current and item URL search variables.
-        current_search_pairs = searchSplit(current.search);
-
-        doSearch(current.query, new_search);
-      });
+      }
 
       // Add the data-query and data-search values to links (if they don't already have them) so rebuilding them is easier.
       $(selectors.join(',')).not('[data-query]').each(function () {
@@ -431,134 +419,73 @@
       });
 
       // Add the click event to each link to update the other links.
-      $('#sidebar-first').once('ajaxSearchClick').on('click', selectors.join(','), function (e) {
+      $('#sidebar-first').once('facetClick').on('click', facet_selectors.join(','), function (e) {
         // Don't do the normal click.
         e.preventDefault();
 
-        // Stop any existing unfinished AJAX requests.
-        if (currentAJAX.hasOwnProperty('abort')) {
-          currentAJAX.abort();
-        }
-
-        // Get the clicked URL and query/search data.
-        var clicked_url = $(this).attr('href');
-        // Get the clicked URL and parse it into query and search parts.
-        var clicked = urlParse(clicked_url);
-        // Get the data that the clicked link changes in the URL.
-        var clicked_query_data = $(this).attr('data-query');
-        var clicked_search_data = $(this).attr('data-search');
-        // Split up the search variables for the clicked link.
-        var clicked_search_pairs = searchSplit(clicked.search);
-        // Determine if the link changes anything in the query and search parts of the URL.
-        var clicked_query_change = false;
-        if (clicked_query_data) {
-          if (clicked.query.match(new RegExp(clicked_query_data + '\\b'))) {
-            clicked_query_change = 'add';
-          } else {
-            clicked_query_change = 'remove';
-          }
-        }
-        var clicked_search_change = false;
-        if (clicked_search_data) {
-          clicked_search_change = true;
-        }
-
-        // If this is a facet item, we need to do some class updates and update the URL correctly.
-        if ($(facet_selectors.join(','), $(this).parent()).length) {
-          var $parent = $(this).parent();
-          // Toggle the link and the parent between active and inactive to be consistent with the normal facet handling.
-          $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active facetapi-inactive');
-          if ($parent.hasClass('facetapi-active')) {
-            $parent.parent().find('.active').each(function () {
-              $(this).toggleClass('active');
-            });
-          }
-          $parent.toggleClass('facetapi-active facetapi-inactive');
-          // Toggle the LI active class so the checkmarks are set correctly.
-          $parent.parent().toggleClass('active');
-          // Update the clicked URL for both the clicked link and the text part.
-          if (clicked_query_change === 'add') {
-            $parent.children('a').attr('href', clicked.query.replace(new RegExp(clicked_query_data + '\\b'), '') + (clicked.search.length ? ('?' + clicked.search) : ''));
-          } else if (clicked_query_change === 'remove') {
-            $parent.children('a').attr('href', clicked.query + clicked_query_data + (clicked.search.length ? ('?' + clicked.search) : ''));
-          }
-        }
-
-        // Only process the links if one of the URL parts changed.
-        if (clicked_query_change || clicked_search_change) {
-          // Update all of the links.
-          $(selectors.join(',')).each(function () {
-            // Get the URL of the current item.
-            var item_url = $(this).attr('href');
-            var item_query_data = $(this).attr('data-query');
-            var item_search_data = $(this).attr('data-search');
-
-            // Only process this if it isn't the clicked item.
-            if (!(clicked_query_data === item_query_data && clicked_search_data === item_search_data)) {
-              // Parse the item URL.
-              var item = urlParse(item_url);
-              // Default the query and search to the current values.
-              var new_query = item.query;
-              var new_search = item.search;
-              // Only change the query if it actually changed.
-              if (clicked_query_change) {
-                // If the item data is in the clicked URL already, it's active, so we don't want to add it back in.
-                if (clicked_url.match(new RegExp(item_query_data + '\\b'))) {
-                  new_query = clicked.query;
-                } else {
-                  // Otherwise, we'll build the URL from the clicked URL, and the item data
-                  new_query = clicked.query + item_query_data;
-                }
-              }
-
-              // Only change the search if it actually changed.
-              if (clicked_search_change) {
-                // Split up the item's search variables.
-                var item_search_pairs = searchSplit(item.search);
-                // For each variable type, check to see what changes and update appropriately.
-                $.each(search_vars, function (i, v) {
-                  // If the variable is set in both and they are different values.
-                  if (item_search_pairs.hasOwnProperty(v) && clicked_search_pairs.hasOwnProperty(v) && item_search_pairs[v] !== clicked_search_pairs[v]) {
-                    item_search_pairs[v] = clicked_search_pairs[v];
-                  }
-                  // If it's set in the clicked URL and not the item one.
-                  else if (!item_search_pairs.hasOwnProperty(v) && clicked_search_pairs.hasOwnProperty(v)){
-                    item_search_pairs[v] = clicked_search_pairs[v];
-                  }
-                  // If it's set in the item URL but not the clicked one.
-                  else if (item_search_pairs.hasOwnProperty(v) && !clicked_search_pairs.hasOwnProperty(v)){
-                    item_search_pairs[v] = '';
-                  }
-                });
-
-                new_search = searchConcat(item_search_pairs);
-              }
-
-              // Build the new URL.
-              var new_url = new_query;
-              new_url += new_search ? ('?' + new_search) : '';
-              // Update the link with the new URL.
-              $(this).attr('href', new_url);
-            }
+        var $parent = $(this).parent();
+        // Toggle the link and the parent between active and inactive to be consistent with the normal facet handling.
+        $parent.children('a[class^=facetapi-]').toggleClass('facetapi-active facetapi-inactive');
+        if ($parent.hasClass('facetapi-active')) {
+          $parent.parent().find('.active').each(function () {
+            // Toggle the LI active class so the checkmarks are set correctly.
+            $(this).toggleClass('active');
+          });
+          $parent.parent().find('.facetapi-active').each(function () {
+            $(this).toggleClass('facetapi-active facetapi-inactive');
           });
         }
+        $parent.toggleClass('facetapi-active facetapi-inactive');
+        // Toggle the LI active class so the checkmarks are set correctly.
+        $parent.parent().toggleClass('active');
 
-        // Update the history.
-        history.pushState({}, '', clicked_url);
-
-        // Set the new current URL.
-        current = urlParse(false);
-        base_url = current.query.match(base_slash)[0];
-        current_query_only = current.query.replace(base, '').split('/');
-        // Split the query parts up into pairs (i.e. - s/123).
-        current_pairs = [];
-        for (var x = 0; x < current_query_only.length; x += 2) {
-          current_pairs.push(current_query_only[x] + '/' + current_query_only[x + 1]);
+        // Change how the CC and Target tag parents work.
+        if ($(this).closest('.facetapi-facet-field-alignment-term, .facetapi-facet-field-target-term').length) {
+          cctLoad(this);
         }
-        // Split up the current and item URL search variables.
-        current_search_pairs = searchSplit(current.search);
 
-        doSearch(clicked.query, clicked.search);
+        doSearch(true);
+      });
+
+      $('.view-search-api-resource-views').once('pageClick').on('click', pager_selectors.join(','), function(e) {
+        e.preventDefault();
+
+        var item_url = $(this).attr('href');
+        // Parse the item URL.
+        var item = urlParse(item_url);
+
+        // Split up the current and item URL search variables.
+        var item_search_pairs = searchSplit(item.search);
+        if (item_search_pairs.hasOwnProperty('page')) {
+          current_search_pairs['page'] = item_search_pairs['page'];
+        } else {
+          delete current_search_pairs.page;
+        }
+
+        doSearch(false);
+      });
+
+      $('.block-search-api-sorts').once('sortClick').on('click', sort_selectors.join(','), function(e) {
+        e.preventDefault();
+
+        var item_url = $(this).attr('href');
+        // Parse the item URL.
+        var item = urlParse(item_url);
+
+        // Split up the current and item URL search variables.
+        var item_search_pairs = searchSplit(item.search);
+        if (item_search_pairs.hasOwnProperty('sort')) {
+          current_search_pairs['sort'] = item_search_pairs['sort'];
+        } else {
+          delete current_search_pairs.sort;
+        }
+        if (item_search_pairs.hasOwnProperty('order')) {
+          current_search_pairs['order'] = item_search_pairs['order'];
+        } else {
+          delete current_search_pairs.order;
+        }
+
+        doSearch(true);
       });
 
       // Show/hide the sorts on click.
