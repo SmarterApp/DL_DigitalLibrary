@@ -37277,3 +37277,7 @@ body.page-help-topics h1 {
 .page-my-resources #modal-content{
     min-height: 200px;
 }
+.page-digital-library-resources .shield-drop img {
+    max-height: 50px;
+    max-width: 50px;
+}
