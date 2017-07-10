@@ -105,6 +105,26 @@
     }
   }
 
+  function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+
+    if (!results) {
+      return null;
+    }
+
+    if (!results[2]) {
+      return '';
+    }
+
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+
   function initializeFacets() {
     // Set the initial toggle state of the plus/minus icons.
     plusMinusToggler('a .facetapi-collapsible-handle');
@@ -277,7 +297,17 @@
           facets.push($(this).data('query'));
         });
 
-        var term = $(search_forms).find('#edit-search').val();
+        var forms = $(search_forms);
+        if (0 === forms.length) {
+          forms = $('#views-exposed-form-search-api-resource-views-search-resources');
+        }
+
+        var term;
+        if (0 < forms.length) {
+          term = $(forms).find('#edit-search').val();
+        } else {
+          term = getParameterByName('search');
+        }
         if (term) {
           current_search_pairs['search'] = term;
         } else {
