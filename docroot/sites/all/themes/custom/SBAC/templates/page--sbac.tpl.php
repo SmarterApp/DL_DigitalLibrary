@@ -109,6 +109,7 @@
 </div>
 
     <div class="resource-feature"><?php print render($page['resource_feature']); ?></div>
+    <?php drupal_add_js(drupal_get_path('module', 'sbac_landing_page').'/sbac_landing_page.js', array('type'=>'file', 'group'=>JS_THEME)); ?>
 
 <?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
             <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>

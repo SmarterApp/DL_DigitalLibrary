@@ -44,6 +44,7 @@
 // Add links to the instructional, professional-learning, and playlist description blocks
 $titleLink = null;
 $pre_filters = null;
+$titleClass = [];
 if ('resource_feature' === $block->region) {
   if (module_exists('sbac_search_api')) {
     $menu_links = menu_tree_output(menu_tree_all_data('main-menu'));
@@ -55,6 +56,7 @@ if (null !== $pre_filters && is_array($menu_links)) {
   foreach ($menu_links as $link) {
     if (!empty($link['#href']) && preg_match("/\b{$link['#href']}\b/", $block->pages)){
       $titleLink = $link['#href'] . $pre_filters;
+      $titleClass = ['resource_feature_link'];
       break;
     }
   }
@@ -62,11 +64,11 @@ if (null !== $pre_filters && is_array($menu_links)) {
 ?>
 <?php if ($block->delta !== 'main'):  ?>
   <div class="<?php print $classes; ?>"<?php print $attributes; ?>>
-<?php endif; ?>    
+<?php endif; ?>
 
   <?php print render($title_prefix); ?>
   <?php if ($block->subject): ?>
-    <h2<?php print $title_attributes; ?>><?php print ($titleLink ? l($block->subject, $titleLink) : $block->subject) ?></h2>
+    <h2<?php print $title_attributes; ?>><?php print ($titleLink ? l($block->subject, $titleLink, array('attributes' => array('class' => $titleClass))) : $block->subject) ?></h2>
   <?php endif;?>
   <?php print render($title_suffix); ?>
 
