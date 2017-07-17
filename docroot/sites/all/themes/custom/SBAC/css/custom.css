@@ -21865,6 +21865,7 @@ a.th {
   background-color: #FFF;
   height: auto;
   border-bottom: 1px solid #006082;
+  border-top: 1px solid #006082;
   padding: 0 15px;
 }
 /* line 25, ../sass/components/_top-bar.scss */
