@@ -959,7 +959,7 @@ function sbac_goals_create_period_pdf($user, $date_range, $pdf_name, $certificat
                     margin-bottom: 40px;
                   }
                   .logo {
-                    background-image: url("/sites/all/themes/custom/SBAC/logo.png");
+                    background-image: url("/sites/all/themes/custom/SBAC/logo-pdf.png");
                     background-position: center center;
                     background-repeat: no-repeat;
                     background-size: 100px;
