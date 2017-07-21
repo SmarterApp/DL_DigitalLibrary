@@ -219,6 +219,20 @@ function sbac_resource_save_and_close(&$form, &$form_state) {
     $active_tab = $form_state['values']['additional_settings__active_tab'];
   }
 
+  $alignment_terms = explode(':', $form_state['values']['alignment_term_values']);
+  $target_terms = explode(':', $form_state['values']['target_term_values']);
+  $alignment_terms = array_unique($alignment_terms);
+  $target_terms = array_unique($target_terms);
+
+  $form_state['values']['field_alignment_term'][LANGUAGE_NONE] = array();
+  $form_state['values']['field_target_term'][LANGUAGE_NONE] = array();
+  foreach ($alignment_terms as $at) {
+    $form_state['values']['field_alignment_term'][LANGUAGE_NONE][] = array('tid' => $at);
+  }
+  foreach ($target_terms as $tt) {
+    $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array('tid' => $tt);
+  }
+
   // If the save button was clicked via the modal, do the following.
   if ($active_tab == 'edit-group_advanced' &&
     isset($_SESSION['post_resource_clicked'])
@@ -405,6 +419,9 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
         $form = drupal_rebuild_form('resource_node_form', $form_state);
         return $form;
       }
+    } elseif ($active_tab == 'edit-group_summary') {
+      $form = drupal_rebuild_form('resource_node_form', $form_state);
+      return $form;
     }
     
     $media_items = sbac_media_load_items($form['#node']->nid);
@@ -509,6 +526,17 @@ function sbac_resource_save_and_continue(&$form, &$form_state) {
       // Set state to Draft.
       $form_state['values']['workbench_moderation_state_new'] = 'draft';
     }
+  }
+
+  $alignment_terms = explode(':', $form_state['values']['alignment_term_values']);
+  $target_terms = explode(':', $form_state['values']['target_term_values']);
+  $form_state['values']['field_alignment_term'][LANGUAGE_NONE] = array();
+  $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array();
+  foreach ($alignment_terms as $at) {
+    $form_state['values']['field_alignment_term'][LANGUAGE_NONE][] = array('tid' => $at);
+  }
+  foreach ($target_terms as $tt) {
+    $form_state['values']['field_target_term'][LANGUAGE_NONE][] = array('tid' => $tt);
   }
 
   $save_all_changes_modal = FALSE;
@@ -1168,8 +1196,9 @@ function sbac_resource_enable_submit($errors) {
  * @param bool $js
  * @return array|mixed
  */
-function sbac_resource_modal_callback($js = FALSE) {
-  if ($js) {
+function sbac_resource_modal_callback($alignment_type = FALSE, $js = FALSE) {
+  if ($js && $alignment_type) {
+    sbac_alignment_type($alignment_type);
     ctools_include('ajax');
     ctools_include('modal');
     drupal_add_js(drupal_get_path("module", "sbac_alignment") . "/js/sbac_alignment.js");
@@ -1185,11 +1214,12 @@ function sbac_resource_modal_callback($js = FALSE) {
     ), 'setting');
     $output = array();
     $output[] = ctools_modal_command_dismiss();
-    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view', theme('status_messages'));
-    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
+//    $output[] = ajax_command_before('#sbac-resource-alignment-tag-view', theme('status_messages'));
+//    $output[] = ajax_command_html('#sbac-resource-alignment-tag-view', views_embed_view('alignment', 'resource_admin_view', $_GET['nid']));
 
     module_load_include('inc', 'sbac_alignment', 'sbac_alignment.ajax');
-    $output[] = ctools_modal_command_display('Common Core Standards Browser', sbac_alignment_ajax_alignment_page($_GET['nid']));
+    $output[] = ctools_modal_command_display(sbac_alignment_type_title_name(), sbac_alignment_ajax_alignment_page($_GET['nid']));
+    $output[] = array('command' => 'modalContentResize');
 
     print ajax_render($output);
     exit();
@@ -1204,6 +1234,7 @@ function sbac_resource_modal_callback($js = FALSE) {
  *
  * @param bool $js
  * @return array|mixed
+ * TODO: Delete this when the filter widget is no longer needed.
  */
 function sbac_resource_filter_modal_callback($js = FALSE) {
   if ($js) {
@@ -1419,7 +1450,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                       message_delete_multiple(array($message->mid));
                     }
                   }
-                }       
+                }
               }
             }
             else {
@@ -1654,6 +1685,11 @@ function _sbac_resource_create_open_container(&$form, &$form_state) {
  * @param $form_state
  */
 function _sbac_resource_create_resource_title(&$form, &$form_state) {
+  global $user;
+  $admin_link = '';
+  if (in_array('administrator', $user->roles)) {
+    $admin_link = '<a class="help-topic-link create-resource-help-topic-link" href="/admin/sbac/feedback/resource">Edit Help Text</a>';
+  }
   $default_value = "Untitled Resource";
   if ($form['title']['#default_value']) {
     $default_value = $form['title']['#default_value'];
@@ -1665,35 +1701,35 @@ function _sbac_resource_create_resource_title(&$form, &$form_state) {
   $form['title_of_resource_basic'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_basic'] = "group_basic";
 
   $form['title_of_resource_summary'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_summary'] = "group_summary";
 
   $form['title_of_resource_materials'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_materials'] = "group_materials";
 
   $form['title_of_resource_tags'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_tags'] = "group_tags";
 
   $form['title_of_resource_advanced'] = array(
     '#markup' => $default_value,
     '#prefix' => '<h2 class="title-of-resource">',
-    '#suffix' => '</h2>'
+    '#suffix' => '</h2>' . $admin_link
   );
   $form['#group_children']['title_of_resource_advanced'] = "group_advanced";
 }
@@ -1864,7 +1900,7 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
 
   // Remove Playlist form option for non-SLT's
   $is_slt  = sbac_report_is_slt($user);
-  
+
   if (!$is_slt && !in_array('administrator', $user->roles)) {
     unset($form['field_focus'][LANGUAGE_NONE]['#options']['78306']);
   }
@@ -1876,10 +1912,10 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
                       <button id="playlist-modal-continue" class="button right close-reveal-modal">Continue</button><button class="button right secondary close-reveal-modal">Cancel</button>   
                     </div>',
       '#prefix' => '<div id="playlist-modal-container" class="reveal-modal">',
-      '#suffix' => '</div>'        
+      '#suffix' => '</div>'
     );
     $form['#group_children']['playlist_modal'] = 'group_basic';
-    
+
   }
 
   // Connection to FAP
@@ -1896,7 +1932,7 @@ function _sbac_resource_form_basic(&$form, &$form_state) {
  * @param $form
  * @param $form_state
  */
-function _sbac_resource_form_summary(&$form, $form_state) {
+function _sbac_resource_form_summary(&$form, &$form_state) {
   $form['field_subject']['und']['#title'] = t('Subjects and Domains') . ' ' . theme('form_required_marker');
   if (isset($form['field_subject']['und']['#options']['_none'])) {
     unset($form['field_subject']['und']['#options']['_none']);
@@ -1906,12 +1942,56 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     unset($form['field_grades']['und']['#options']['_none']);
   }
 
+  $alignment_terms = $target_terms = [];
+  if (isset($form['#node']->nid)) {
+    if (isset($form['#node']->field_alignment_term[LANGUAGE_NONE])) {
+      foreach ($form['#node']->field_alignment_term[LANGUAGE_NONE] as $fat) {
+        $alignment_terms[] = $fat['tid'];
+      }
+    }
+    if (isset($form['#node']->field_target_term[LANGUAGE_NONE])) {
+      foreach ($form['#node']->field_target_term[LANGUAGE_NONE] as $ftt) {
+        $target_terms[] = $ftt['tid'];
+      }
+    }
+  }
+
+  if (!count($alignment_terms) && isset($form_state['values']['alignment_term_values']) && $form_state['values']['alignment_term_values']) {
+    $alignment_term_values = $form_state['values']['alignment_term_values'];
+    $alignment_terms = explode(':', $alignment_term_values);
+  } else {
+    $alignment_term_values = implode(':', $alignment_terms);
+  }
+  if (!count($target_terms) && isset($form_state['values']['target_term_values']) && $form_state['values']['target_term_values']) {
+    $target_term_values = $form_state['values']['target_term_values'];
+    $target_terms = explode(':', $target_term_values);
+  } else {
+    $target_term_values = implode(':', $target_terms);
+  }
+
+  $tables = _sbac_alignment_table_builder(array(), array_merge($alignment_terms, $target_terms), SBAC_ALIGNMENT_VOCAB_NAME);
+
+  $form['alignment_term_values'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $alignment_term_values,
+  );
+  $form['target_term_values'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $target_term_values,
+  );
+
+  // CC Alignment Container Start
+  $form['alignment_tag_container'] = array(
+    '#markup' => '<div id="alignment-tag-container">',
+    '#weight' => 22,
+  );
+  $form['#group_children']['alignment_tag_container'] = "group_summary";
   // Title
   $form['alignment_tag_title'] = array(
     '#markup' => '<h2>' . t('Common Core State Standard(s)') . '</h2>',
     '#prefix' => '<div class="form-item-title alignment-tag-title">',
     '#suffix' => '</div>',
-    '#weight' => 22,
+    '#weight' => 22.1,
   );
   $form['#group_children']['alignment_tag_title'] = "group_summary";
   // Description
@@ -1919,34 +1999,94 @@ function _sbac_resource_form_summary(&$form, $form_state) {
     '#markup' => '<p>' . t('Identify the standard(s) to which this resource is aligned. Note that Anchor Standards and Mathematical Practices are included alongside content standards for all grades.') . '</p>',
     '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
     '#suffix' => '</div>',
-    '#weight' => 23,
+    '#weight' => 22.2,
   );
   $form['#group_children']['alignment_tag_description'] = "group_summary";
   // Alignment View -> The initial load of the form does not have an nid.
   if (isset($form['#node']->nid)) {
     $form['alignment_tag_view'] = array(
-      '#markup' => views_embed_view('alignment', 'resource_admin_view', $form['#node']->nid),
+      '#markup' => $tables['ccss_html'],
       '#prefix' => '<div id="sbac-resource-alignment-tag-view">',
       '#suffix' => '</div>',
-      '#weight' => 23.5,
+      '#weight' => 22.3,
     );
     $form['#group_children']['alignment_tag_view'] = "group_summary";
 
     // Alignment Button
     $form['add_alignment_tag_button'] = array(
-      '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment', array(
+      '#markup' => l('Add Standard(s)', 'sbac_resource/nojs/add-alignment/ccss', array(
         'attributes' => array('title' => 'Add Standard(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-alignment'),
         'query' => array('nid' => $form['#node']->nid)
       )),
-      '#weight' => 23.6,
+      '#weight' => 22.4,
     );
     $form['#group_children']['add_alignment_tag_button'] = "group_summary";
   }
+  // Container End
+  $form['alignment_tag_container_end'] = array(
+    '#markup' => '</div>',
+    '#weight' => 22.5,
+  );
+  $form['#group_children']['alignment_tag_container_end'] = "group_summary";
+
+  // Target Container Start
+  $form['target_tag_container'] = array(
+    '#markup' => '<div id="target-tag-container">',
+    '#weight' => 23,
+  );
+  $form['#group_children']['target_tag_container'] = "group_summary";
+  // Title
+  $form['target_tag_title'] = array(
+    '#markup' => '<h2>' . t('Assessment Target(s)') . '</h2>',
+    '#prefix' => '<div class="form-item-title alignment-tag-title">',
+    '#suffix' => '</div>',
+    '#weight' => 23.1,
+  );
+  $form['#group_children']['target_tag_title'] = "group_summary";
+  // Description
+  $form['target_tag_description'] = array(
+    '#markup' => '<p>' . t('Identify the assesment target(s) to which this resource is aligned. Note that the assessment targets are directly from the Smarter Balanced Content Specifications in ELA/Literacy and Mathematics, and are organized by subject, grade, claim, then target.') . '</p>',
+    '#prefix' => '<div class="form-item-title-help alignment-tag-title-help">',
+    '#suffix' => '</div>',
+    '#weight' => 23.2,
+  );
+  $form['#group_children']['target_tag_description'] = "group_summary";
+  // Alignment View -> The initial load of the form does not have an nid.
+  if (isset($form['#node']->nid)) {
+    $form['target_tag_view'] = array(
+      '#markup' => $tables['target_html'],
+      '#prefix' => '<div id="sbac-resource-target-tag-view">',
+      '#suffix' => '</div>',
+      '#weight' => 23.3,
+    );
+    $form['#group_children']['target_tag_view'] = "group_summary";
+
+    // Target Button
+    $form['add_target_alignment_tag_button'] = array(
+      '#markup' => l('Add Target(s)', 'sbac_resource/nojs/add-alignment/target', array(
+        'attributes' => array('title' => 'Add Target(s)', 'class' => 'ctools-use-modal small button ctools-modal-ctools-ccss-style', 'id' => 'sbac-resource-modal-target-alignment'),
+        'query' => array('nid' => $form['#node']->nid)
+      )),
+      '#weight' => 23.4,
+    );
+    $form['#group_children']['add_target_alignment_tag_button'] = "group_summary";
+  }
+  // Container End
+  $form['target_tag_container_end'] = array(
+    '#markup' => '</div><div class="clearer"></div>',
+    '#weight' => 23.5,
+  );
+  $form['#group_children']['target_tag_container_end'] = "group_summary";
+  $form['tagging_summary'] = array(
+    '#markup' => '<p><strong>Standard and Assessment Target tags must be used accurately in order to help users find content. Please choose only the one or two target(s) and associated standard(s) that apply to the main purpose of your resource to avoid overtagging.</strong></p>',
+    '#weight' => 24,
+  );
+  $form['#group_children']['tagging_summary'] = "group_summary";
 
   // Contexts
   $form['field_contexts']['und'][0]['value']['#title'] = t('Context(s) Within Which the Resource Could Be Used') . ' ' . theme('form_required_marker');
   // Connection to CCSS
-  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards'); // . ' ' . theme('form_required_marker');
+  $form['field_connection_to_ccss']['und'][0]['value']['#title'] = t('Specific Connection to the Common Core State Standards');
   // Learning Goals
   $form['field_learning_goals']['und'][0]['value']['#title'] .= ' ' . theme('form_required_marker');
   // Success Critieria
@@ -1967,9 +2107,9 @@ function _sbac_resource_form_materials(&$form, $form_state) {
   sbac_media_widget_form_element($form, $form_state);
   global $user;
 
-  // Add Playlist template to Materials help text for SLTs 
+  // Add Playlist template to Materials help text for SLTs
   $is_slt  = sbac_report_is_slt($user);
-   
+
   if ($is_slt || in_array('administrator', $user->roles)) {
     drupal_add_js(drupal_get_path('module', 'sbac_resource') . '/js/sbac_resource.playlist.form.js');
   }
@@ -2140,7 +2280,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               if ($post_comment != '') {
                 $form['sbac_revisions']['post_comment'] = array(
                   '#markup' => $post_comment,
-                  '#prefix' => '<h2>Posting comments</h2><p>',
+                  '#prefix' => '<h2>Arbitration Comments</h2><p>',
                   '#suffix' => '</p>'
                 );
               }
@@ -2166,7 +2306,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 'comments' => more_less_text($comments, 140),
               ));
               $form['sbac_revisions']['recommendations'] = array(
-                '#markup' => $recommendations,
+                '#markup' => $recommendations . '<div class="clear"></div>',
               );
               $i++;
             }
@@ -2203,7 +2343,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 '#type' => 'fieldset',
               );
               $form['sbac_revisions']['feedback_' . $i]['label'] = array(
-                '#markup' => $i + 1 . '. ' . strip_tags($question_title),
+                '#prefix' => '<h3>',
+                '#markup' =>  ($i + 1) . '. ' . strip_tags($question_title),
+                '#suffix' => '</h3>',
               );
               $form['sbac_revisions']['feedback_' . $i]['description'] = array(
                 '#markup' => $question_desc,
@@ -2226,9 +2368,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                   '#type' => 'container',
                   '#attributes' => array(
                     'class' => array(
-                      'col'
+                      'feedback-review'
                     )
-                  )
+                  ),
                 );
                 $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['author'] = array(
                   '#markup' => t('Reviewer !j', array('!j' => $j)),
@@ -2253,6 +2395,9 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 $question_ids[] = $questions[$i]->item_id;
                 $j++;
               }
+              $form['sbac_revisions']['feedback_' . $i]['reviewers_comments'][$j]['clear'] = array(
+                '#markup' => '<div class="clear"></div>',
+              );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
                 '#title' => t("Contributor's comment <span class='form-required'>*</span><br/><span class='sub-title'>Please enter how this criterion has been addressed in this resubmission.</span>"),
@@ -2300,7 +2445,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
           }
           break;
         case 'gate_keeper':
-          // Get the last gatekepper comment
+          // Get the last gatekeeper comment
           $gk_id = db_query("SELECT id FROM eck_feedback WHERE node_id = :nid AND type = 'gate_keeper' AND completed = 1 ORDER BY id DESC LIMIT 0, 1", array(':nid' => $form['#node']->nid))->fetchCol();
           // check for gk feedback
           $gk = entity_load('feedback', $gk_id);
@@ -2315,7 +2460,7 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               )
             );
             $form['sbac_revisions']['header'] = array(
-              '#markup' => t('Gate Keeping Criteria'),
+              '#markup' => t('Gatekeeping Criteria'),
               '#prefix' => '<h2>',
               '#suffix' => '</h2>'
             );
@@ -2337,8 +2482,8 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
               );
               $form['sbac_revisions']['feedback_' . $i]['question'] = array(
                 '#markup' => $i . '. ' . strip_tags($question_title),
-                '#prefix' => '<h5>',
-                '#suffix' => '</h5>'
+                '#prefix' => '<h3>',
+                '#suffix' => '</h3>'
               );
               $form['sbac_revisions']['feedback_' . $i]['question_id'] = array(
                 '#type' => 'hidden',
@@ -2348,14 +2493,12 @@ function _sbac_resource_form_revisions(&$form, $form_state) {
                 '#markup' => $question_desc
               );
               $form['sbac_revisions']['feedback_' . $i]['gk_info'] = array(
-                '#type' => 'item',
-                '#title' => t('Reviewer 1'),
-                '#markup' => format_date($feedback->created, 'full')
-              );
-              $form['sbac_revisions']['feedback_' . $i]['gk_comment'] = array(
-                '#type' => 'item',
-                '#title' => t('Quality Criteria Level: !level', array('!level' => $level)),
-                '#markup' => more_less_text(filter_xss(field_entity_value($question, 'field_comments')))
+                '#prefix' => '<div class="feedback-review">',
+                '#markup' => '<div class="author">' . t('Reviewer 1') . '</div>
+                  <div class="created">' . format_date($feedback->created, 'full') . '</div>
+                  <div class="headline">' . t('Meets Criteria: !level', array('!level' => $level)) . '</div>
+                  <div class="comments">' . more_less_text(filter_xss(field_entity_value($question, 'field_comments'))) . '</div>',
+                '#suffix' => '</div><div class="clear"></div>'
               );
               $form['sbac_revisions']['feedback_' . $i]['contributor_comment'] = array(
                 '#type' => 'textarea',
@@ -2841,6 +2984,7 @@ function _sbac_resource_form_remove_elements(&$form, &$form_state) {
   $form['field_unique_downloads']['#access'] = FALSE;
   $form['field_node_avg_rating']['#access'] = FALSE;
   $form['field_alignment_term']['#access'] = FALSE;
+  $form['field_target_term']['#access'] = FALSE;
   $form['field_document_id']['#access'] = FALSE;
   $form['field_document_information']['#access'] = FALSE;
   $form['field_resource_state']['#access'] = FALSE;
@@ -3265,18 +3409,6 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
   $default = 'dl-newest'; // Hardcoded default. Change?
   $pwd_only = 0;
 
-  // If session var is set, make it the default.
-  if (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS]) &&
-    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] != ''
-  ) {
-    $default = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS];
-  }
-  if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD]) &&
-    $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] != ''
-  ) {
-    $pwd_only = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD];
-  }
-
   $options = array(
     'dl-newest' => t('Newest'),
     'dl-most-viewed' => t('Most Viewed'),
@@ -3341,7 +3473,6 @@ function sbac_resource_digital_library_sort_form($form, $form_state) {
 function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['dl_sort_order'];
-  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_SORTS] = $new_value_key;
   unset($_SESSION['load_more']['resources']['page']);
 
   // Just return the form, dont force page refresh.
@@ -3363,7 +3494,6 @@ function _sbac_resource_digital_library_sort_form__ajax__change($form, $form_sta
  */
 function _sbac_resource_digital_library_sort_form__pwd($form, $form_state) {
   $key = $form_state['values']['dl_pwd'];
-  $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] = $key;
   unset($_SESSION['load_more']['resources']['page']);
 
   ctools_include('ajax');
@@ -3388,10 +3518,10 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
   $default = 'rr-oldest'; // Hardcoded default. Change?
 
   // If session var is set, make it the default.
-  if (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS]) &&
-    $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] != ''
+  if (isset($_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS]) &&
+    $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS] != ''
   ) {
-    $default = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS];
+    $default = $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS];
   }
 
   $options = array(
@@ -3448,7 +3578,7 @@ function sbac_resource_resource_review_sort_form($form, $form_state) {
 function _sbac_resource_resource_review_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['rr_sort_order'];
-  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_SORTS] = $new_value_key;
+  $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_SORTS] = $new_value_key;
   unset($_SESSION['load_more']['resource_review']['page']);
 
   // Just return the form, dont force page refresh.
@@ -3476,10 +3606,10 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
   $default = 'mr-newest'; // Hardcoded default. Change?
 
   // If session var is set, make it the default.
-  if (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS]) &&
-    $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] != ''
+  if (isset($_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS]) &&
+    $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS] != ''
   ) {
-    $default = $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS];
+    $default = $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS];
   }
 
   $options = array(
@@ -3532,7 +3662,7 @@ function sbac_resource_my_resources_sort_form($form, $form_state) {
 function _sbac_resource_my_resources_sort_form__ajax__change($form, $form_state) {
   // Set session variable here. Session only gets set when form submits a change.
   $new_value_key = $form_state['values']['mr_sort_order'];
-  $_SESSION[SBAC_SEARCH_MY_RESOURCES_SORTS] = $new_value_key;
+  $_SESSION[SBAC_SEARCH_API_MY_RESOURCES_SORTS] = $new_value_key;
   unset($_SESSION['load_more']['my_resources']['page']);
 
   // Just return the form, dont force page refresh.

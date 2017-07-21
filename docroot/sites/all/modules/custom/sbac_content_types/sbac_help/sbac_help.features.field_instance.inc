@@ -151,6 +151,46 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
     ),
   );
 
+  // Exported field_instance: 'node-help_page-field_help_topic_category'.
+  $field_instances['node-help_page-field_help_topic_category'] = array(
+    'bundle' => 'help_page',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_help_topic_category',
+    'label' => 'Help Topic Category',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'apply_chosen' => '',
+        'label_help_description' => '',
+      ),
+      'type' => 'options_select',
+      'weight' => 8,
+    ),
+  );
+
   // Exported field_instance: 'node-help_page-field_help_user_roles'.
   $field_instances['node-help_page-field_help_user_roles'] = array(
     'bundle' => 'help_page',
@@ -193,6 +233,49 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
       ),
       'type' => 'options_select',
       'weight' => 9,
+    ),
+  );
+
+  // Exported field_instance: 'node-help_page-field_pdf_or_word_doc'.
+  $field_instances['node-help_page-field_pdf_or_word_doc'] = array(
+    'bundle' => 'help_page',
+    'deleted' => 0,
+    'description' => 'Upload a pdf or word document',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'file',
+        'settings' => array(),
+        'type' => 'file_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_pdf_or_word_doc',
+    'label' => 'PDF or Word Doc',
+    'required' => 0,
+    'settings' => array(
+      'description_field' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'pdf doc docx',
+      'max_filesize' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'file',
+      'settings' => array(
+        'label_help_description' => '',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'file_generic',
+      'weight' => 7,
     ),
   );
 
@@ -240,8 +323,11 @@ Note that if "Resource Tutorial" is selected, any previous content associated wi
   t('Body');
   t('Help Icon');
   t('Help Page Topic');
+  t('Help Topic Category');
+  t('PDF or Word Doc');
   t('Provides a summary on what this help topic is about.');
   t('Summary');
+  t('Upload a pdf or word document');
   t('User Roles');
 
   return $field_instances;

@@ -40,6 +40,12 @@
         $(this).after(button);
         $(this).remove();
       });
+
+      $('.sbac-search-toggle').click(function (e) {
+        $(this).fadeOut(function () {
+          $('.search .block-views').fadeIn();
+        })
+      })
     }
   };
 })(jQuery);

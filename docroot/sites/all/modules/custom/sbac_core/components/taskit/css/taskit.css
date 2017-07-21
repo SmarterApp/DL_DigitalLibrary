@@ -133,6 +133,7 @@
 }
 
 /* line 147, ../sass/taskit.scss */
+.taskit-interval .taskit-forum-cont,
 .taskit-interval.interval-today .taskit-forum-cont,
 .taskit-interval.interval-yesterday .taskit-forum-cont,
 .taskit-interval.interval-older .taskit-forum-cont,
@@ -140,6 +141,8 @@
   padding: 10px 40px 10px 10px;
 }
 /* line 151, ../sass/taskit.scss */
+.taskit-interval .taskit-forum-cont .taskit-content-toggle,
+.taskit-interval .taskit-forum-cont .taskit-topic-removed-message,
 .taskit-interval.interval-today .taskit-forum-cont .taskit-content-toggle,
 .taskit-interval.interval-today .taskit-forum-cont .taskit-topic-removed-message,
 .taskit-interval.interval-yesterday .taskit-forum-cont .taskit-content-toggle,
@@ -151,6 +154,7 @@
   margin-top: 3px;
 }
 /* line 155, ../sass/taskit.scss */
+.taskit-interval .taskit-forum-cont a,
 .taskit-interval.interval-today .taskit-forum-cont a,
 .taskit-interval.interval-yesterday .taskit-forum-cont a,
 .taskit-interval.interval-older .taskit-forum-cont a,
@@ -159,6 +163,7 @@
   font-weight: bold;
 }
 /* line 161, ../sass/taskit.scss */
+.taskit-interval .taskit-timestamp,
 .taskit-interval.interval-today .taskit-timestamp,
 .taskit-interval.interval-yesterday .taskit-timestamp,
 .taskit-interval.interval-older .taskit-timestamp,
@@ -170,5 +175,43 @@
 
 /* line 169, ../sass/taskit.scss */
 .devtools-tooltip-body .line {
+  border-bottom: none;
+}
+
+#notifications .taskit-interval-group {
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 0;
+}
+#notifications .taskit-interval-group h3 {
+  background-color: #e6f2f7;
+  border-radius: 5px 5px 0 0;
+  color: #006184;
+  margin: 0;
+  padding: 12px;
+  font-size: 1em;
+}
+#notifications .taskit-interval-group.taskit-group-collapsed h3 {
+  border-radius: 5px;
+}
+#notifications .taskit-interval-group h3 .taskit-group-expander {
+  float: right;
+}
+#notifications .taskit-interval-group h3 .taskit-group-expander i.material-icons::before {
+  content: 'remove_circle';
+}
+#notifications .taskit-interval-group.taskit-group-collapsed h3 .taskit-group-expander i.material-icons::before {
+  content: 'add_circle';
+}
+#notifications .taskit-interval-group .taskit-interval-content {
+  padding: 0 7px;
+}
+#notifications .taskit-interval-group.taskit-group-collapsed .taskit-interval-content {
+  display: none;
+}
+#notifications .taskit-interval-group .taskit-row.taskit-new {
+    background-color: #fff;
+}
+#notifications .taskit-interval-group .taskit-row:last-child {
   border-bottom: none;
 }

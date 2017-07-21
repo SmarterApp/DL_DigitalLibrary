@@ -13,6 +13,11 @@
 
 include_once 'sbac_flag.features.inc';
 
+const SBAC_FLAG_FORUM_RESOLVED = 1;
+const SBAC_FLAG_FORUM_REMOVED = 2;
+
+const SBAC_FLAG_FORUM_MODERATOR_ROLE = 'facilitator';
+
 define('SBAC_FLAG_MODERATION_COUNT', 7);
 
 /**
@@ -145,14 +150,16 @@ function sbac_flag_menu() {
   $items['sbac-forum/flag/resolve/%ctools_js/%/%/%'] = array(
     'page callback' => 'sbac_flag_collaboration_resolve_callback',
     'page arguments' => array(3, 4, 5, 6),
-    'access callback' => array('sbac_flag_moderation_access'),
+    'access callback' => array('sbac_flag_forum_moderation_access'),
+    'access arguments' => array(5),
     'file' => 'sbac_flag.modal.inc',
   );
 
   $items['sbac-forum/flag/remove/%ctools_js/%/%/%'] = array(
     'page callback' => 'sbac_flag_collaboration_remove_callback',
     'page arguments' => array(3, 4, 5, 6),
-    'access callback' => array('sbac_flag_moderation_access'),
+    'access callback' => array('sbac_flag_forum_moderation_access'),
+    'access arguments' => array(5),
     'file' => 'sbac_flag.modal.inc',
   );
 
@@ -166,10 +173,43 @@ function sbac_flag_menu() {
  */
 function sbac_flag_moderation_access() {
   global $user;
-  if (in_array('moderator', $user->roles)) {
+  $allowed_roles = array('authenticated user', 'moderator', 'basic end user');
+  $only_allowed = TRUE;
+  foreach ($user->roles as $role) {
+    if (!in_array($role, $allowed_roles)) {
+      $only_allowed = FALSE;
+    }
+  }
+  if ($only_allowed && in_array('moderator', $user->roles)) {
     return TRUE;
   }
   return FALSE;
+}
+
+/**
+ * Determine forum moderation access
+ *
+ * ONLY the creator of a forum or a user with a role to moderate forums will be
+ * able to resolve the flag or remove the discussion.
+ *
+ * @return bool
+ */
+function sbac_flag_forum_moderation_access($topicNid) {
+    global $user;
+    if (sbac_central_user_has_role(array(SBAC_FLAG_FORUM_MODERATOR_ROLE), $user)) {
+        // The user has the role to moderate forums
+        return true;
+    }
+
+    // The user is the creator of the forum (parent of the discussion topic)
+    $node = node_load($topicNid);
+    $forum = taxonomy_term_load($node->field_topic_forum_parent['und'][0]['tid']);
+    $forum_author = $forum->field_forum_facilitators['und'][0]['target_id'];
+    if ($user->uid === $forum_author) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
@@ -1121,6 +1161,7 @@ function sbac_flag_get_forum_flags($nid, $cid) {
   $query->fields('ef');
   $query->condition('nid', $nid, '=');
   $query->condition('target_id', ($cid ? $cid : $nid), '=');
+  $query->condition('resolved', SBAC_FLAG_FORUM_RESOLVED, '!='); // Ignore "Resolved"
   $query->orderBy('flag_selected');
   $query->orderBy('created', 'DESC');
   $report = $query->execute();
@@ -1230,7 +1271,7 @@ function sbac_flag_collaboration_unset_being_moderated($nid, $cid) {
 function sbac_flag_collaboration_resolve_forum($nid, $cid) {
   $update = db_update('eck_flag');
   $update->fields(array(
-    'resolved' => 1,
+    'resolved' => SBAC_FLAG_FORUM_RESOLVED,
     'changed' => time(),
   ));
   $update->condition('nid', $nid, '=');
@@ -1248,7 +1289,7 @@ function sbac_flag_collaboration_resolve_forum($nid, $cid) {
 function sbac_flag_collaboration_remove_forum($nid, $cid, $comment) {
   $update = db_update('eck_flag');
   $update->fields(array(
-    'resolved' => 2,
+    'resolved' => SBAC_FLAG_FORUM_REMOVED,
     'changed' => time(),
     'moderation_comment' => $comment,
   ));
@@ -1701,4 +1742,29 @@ function sbac_arg($index = NULL, $path = NULL) {
  */
 function sbac_flag_preprocess_sbac_flag_list_card_topic(&$vars) {
   $vars['flag_content']['eck_post']['post_body'] = truncate_utf8($vars['flag_content']['eck_post']['post_body'], 170, TRUE, TRUE);
+}
+
+/**
+ * Get user list for forum moderator role
+ */
+
+function sbac_flag_get_forum_moderators() {
+    $sql = <<<SQL
+SELECT u.uid
+  FROM {users} u
+ INNER JOIN {users_roles} ur ON ur.uid = u.uid
+ INNER JOIN {role} r ON r.rid = ur.rid
+ WHERE u.status = :status
+   AND r.name = :role
+ GROUP BY u.uid
+SQL;
+
+    $result = db_query($sql, array(':status' => '1', ':role' => SBAC_FLAG_FORUM_MODERATOR_ROLE));
+
+    $users = array();
+    foreach ($result as $row) {
+        $users[] = $row;
+    }
+
+    return $users;
 }

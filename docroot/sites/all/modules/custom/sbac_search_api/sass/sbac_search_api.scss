@@ -1,0 +1,476 @@
+// A couple of base colors.
+$block-grey: #ddd;
+$block-blue: #0e729d;
+$block-blue-lighter: #18a5d1;
+
+// Only apply these to the search pages.
+.page-instructional,
+.page-professional-learning,
+.page-playlist,
+.page-search-resources {
+  // Hide the title.
+  #page-title {
+    display: none;
+  }
+
+  // Set the max-width so the page can contract for smaller screens.
+  .row {
+    max-width: 1280px;
+  }
+
+  // Styling for the section info at the top of the page.
+  .resource-feature {
+    margin: 0 15px 15px 15px;
+    width: auto;
+    position: relative;
+    padding: 0 240px 0 0;
+    min-height: 150px;
+
+    &:after {
+      clear: both;
+      display: block;
+      height: 1px;
+      margin-top: -1px;
+      content: ' ';
+    }
+
+    .block {
+      width: auto;
+      padding: 0 15px;
+      position: relative;
+    }
+
+    h2 {
+      color: #444;
+      font-size: 150%;
+       a {
+        color: #000;
+        cursor: default;
+      }
+    }
+
+    p {
+      color: #000;
+      font-size: 120%;
+      margin: 0;
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      right: -240px;
+      height: 150px;
+      width: 225px;
+    }
+  }
+
+  // Styling for the facet blocks.
+  #sidebar-first {
+    .block-block {
+      display: none;
+    }
+
+    .block-facetapi,
+    .block-block {
+      box-sizing: border-box;
+      border: $block-grey solid 1px;
+      margin-bottom: 20px;
+
+      h2.block-title {
+        margin: 0;
+        padding: 5px 32px 5px 5px;
+        background: $block-grey url("../images/facet_open.png") 98% 50%/24px 24px no-repeat;
+        font-size: .9em;
+      }
+
+      p {
+        padding: 5px;
+        margin: 0;
+      }
+
+      .item-list ul {
+        padding: 0;
+        margin: 0;
+      }
+
+      li .item-list ul {
+        padding-left: 10px;
+      }
+
+      li {
+        margin: 0;
+        padding: 5px;
+        list-style: none;
+        background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
+        font-size: 13px;
+
+        &.active {
+          background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+        }
+
+        a {
+          color: #000;
+          outline: none;
+          position: relative;
+
+          &:hover {
+            color: #000;
+          }
+
+          &:visited {
+            color: #000;
+          }
+
+          &:active {
+            color: #000;
+          }
+
+          .facet-hover {
+            display: block;
+            position: absolute;
+            top: -3px;
+            left: -2px;
+            padding: 2px;
+            background-color: #fff4c8;
+            white-space: nowrap;
+          }
+        }
+
+        .subject-icon {
+          height: 18px;
+        }
+
+        .facetapi-collapsible-handle {
+          display: inline-block;
+          width: 12px;
+          color: transparent;
+        }
+
+        .facetapi-collapsible-handle.plus-sign {
+          background: transparent url("../images/facet_open.png") center center/12px 12px no-repeat;
+        }
+
+        .facetapi-collapsible-handle.minus-sign {
+          background: transparent url("../images/facet_close.png") center center/12px 12px no-repeat;
+        }
+
+        .element-invisible {
+          display: none;
+        }
+
+        .facetapi-facet .checkbox-spacer {
+          display: inline-block;
+          width: 17px;
+        }
+      }
+
+      &.expanded {
+        h2.block-title {
+          background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
+        }
+      }
+
+      &.expanded.active {
+        h2.block-title {
+          background: $block-grey none;
+        }
+      }
+    }
+  }
+
+  // Styling for the content area.
+  #main {
+    // Styling for when the message box is on the page.
+    &.messagebox {
+      padding-top: 55px;
+
+      #sidebar-left {
+        margin-top: -55px;
+      }
+
+      .alert-box {
+        margin-right: 15px;
+      }
+
+      .view {
+        padding-top: 20px;
+      }
+    }
+
+    // Styling for the blocks at the top (number of result, keyword search, sorts).
+    & > .block {
+      background-color: $block-grey;
+      height: 40px;
+    }
+
+    & > .block-current-search-search-sections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 170px;
+      padding: 10px;
+      z-index: 500;
+    }
+
+    & > .block-current-search.block-current-search-main-search {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 90%;
+      padding: 10px;
+    }
+
+    & > .block-views {
+      position: absolute;
+      width: 80%;
+      padding: 4px 141px 0 155px;
+      top: 0;
+      left: 15px;
+
+      .form-item {
+        margin: 0;
+      }
+
+      label {
+        display: none;
+      }
+
+      button {
+        position: absolute;
+        top: 8px;
+        right: 145px;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 5px;
+        background: transparent url('/sites/all/themes/custom/SBAC/images/search.png') 5px 5px no-repeat;
+        width: 26px;
+        height: 26px;
+        border: none;
+        text-shadow: none;
+        color: transparent;
+      }
+    }
+
+    & > .block-search-api-sorts {
+      position: absolute;
+      top: 0;
+      right: 15px;
+      width: 226px;
+      padding: 5px;
+
+      .default-sort {
+        background: $block-blue url('/sites/all/themes/custom/SBAC/images/icon-arrow-down-white.png') 195px 12px no-repeat;
+        color: #fff;
+        padding: 7px 20px 0 7px;
+        height: 30px;
+
+        &.active {
+          background: $block-blue url('/sites/all/themes/custom/SBAC/images/icon-arrow-up-white.png') 195px 12px no-repeat;
+        }
+      }
+
+      .search-api-sorts {
+        display: none;
+        position: absolute;
+        width: 190px;
+        border: 1px solid #fff;
+        background-color: $block-blue;
+        z-index: 9999;
+
+        li {
+          list-style: none;
+          padding: 5px 10px;
+          margin: 0;
+
+          a {
+            color: #fff;
+
+            &:hover {
+              color: $block-grey;
+            }
+          }
+        }
+      }
+    }
+
+    // Put some space and clear the floats before the view data itself.
+    .view {
+      clear: both;
+      padding-top: 55px;
+    }
+
+    // Put some space between the content and the bottom pager.
+    .view-content,
+    .view-empty {
+      margin-bottom: 20px;
+      position: relative;
+
+      #search-loading {
+        position: absolute;
+        top: 0;
+        left: -15px;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+      }
+    }
+
+    // Styling for the search results.
+    .view-id-search_api_resource_views {
+      .row {
+        width: auto;
+        border: 1px solid $block-blue;
+        margin-right: 0;
+        margin-bottom: -1px;
+        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+
+        .resource-main {
+          float: left;
+          width: 80%;
+          position: relative;
+
+          .resource-image {
+            position: relative;
+            width: 202px;
+            height: 105px;
+            overflow: hidden;
+            float: left;
+            margin: 10px;
+            border: 1px solid $block-blue;
+          }
+
+          .list-image {
+            width: 200px;
+          }
+
+          .views-field-field-digital-media-type {
+            width: 200px;
+            position: absolute;
+            bottom: 0;
+            color: #fff;
+            background-color: $block-blue;
+            background-color: rgba(14, 114, 157, 0.80);
+            text-align: center;
+            font-size: 80%;
+            padding: 3px 0;
+          }
+
+          .resource-summary {
+            margin: 10px 10px 10px 0;
+
+            a {
+              color: $block-blue;
+
+              &:hover {
+                color: $block-blue-lighter;
+              }
+
+              &:visited {
+                color: $block-blue;
+              }
+
+              &:active {
+                color: $block-blue-lighter;
+              }
+            }
+
+            .resource-tags {
+              font-size: 90%;
+              margin-bottom: 5px;
+
+              .subject-icon {
+                height: 18px;
+              }
+            }
+
+            .resource-date {
+              font-style: italic;
+            }
+
+            .resource-about {
+              font-size: 90%;
+              line-height: 120%;
+            }
+          }
+        }
+
+        .shield-drop {
+          position: absolute;
+          top: 0;
+          right: 16.66667%;
+        }
+
+        .resource-stats {
+          float: right;
+          width: 16.66667%;
+          background-color: $block-grey;
+          border-left: 1px solid $block-blue;
+          padding: 20px 20px 100px 0;
+          margin-bottom: -100px;
+          text-align: right;
+
+          .stat-views,
+          .stat-downloads {
+            margin-bottom: 10px;
+          }
+
+          .rating {
+            margin-bottom: 10px;
+
+            .rating-stars {
+              float: right;
+
+              .form-item {
+                margin: 0;
+              }
+
+              .off,
+              .on {
+                color: transparent;
+              }
+            }
+
+            .rating-count {
+              float: right;
+            }
+          }
+        }
+      }
+    }
+    .pager {
+      li {
+        &.pager-item,
+        &.pager-next,
+        &.pager-last,
+        &.pager-first,
+        &.pager-previous {
+          a {
+            color: #000;
+
+            &:hover {
+              color: $block-blue;
+            }
+
+            &:visited {
+              color: #000;
+            }
+
+            &:active {
+              color: #000;
+            }
+          }
+        }
+
+        &.pager-current {
+          background-color: $block-blue;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+.category-filter-list {
+  display: none;
+}

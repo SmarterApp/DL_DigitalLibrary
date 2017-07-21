@@ -94,50 +94,11 @@ function _sbac_forum_filter_categories() {
     sbac_forum__api__set_active_subnav(SBAC_FORUM_SUBNAV_RESOURCE);
   }
 
-  _sbac_search_create_taxonomy_filter($categories, 'subject', 'Subjects');
-  _sbac_search_create_taxonomy_filter($categories, 'grades', 'Grades');
-  _sbac_search_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
-  _sbac_search_create_taxonomy_filter($categories, 'title', 'Intended Participants');
-  _sbac_search_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
-//  if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
-//    _sbac_search_create_taxonomy_filter($categories, 'digital_media_type', 'Media Types');
-//    _sbac_search_create_taxonomy_filter($categories, 'focus', 'Resource Type');
-//    _sbac_search_create_taxonomy_filter($categories, 'educational_use', 'Educational Use');
-//    _sbac_search_create_taxonomy_filter($categories, 'smarter_balanced_keyword', 'Module Type');
-//  }
-
-  // Our custom filters
-//  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['display_name'] = 'Distinctions';
-//  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['vocabulary'] = (object) array(
-//    'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID
-//  );
-  //if ($active_tab == SBAC_FORUM_SUBNAV_RESOURCE) {
-  //  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
-  //    'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
-  //    'name' => 'Posted with Distinction',
-  //  );
-  //  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
-  //    'data' => 'Posted with Distinction',
-  //    'term' => (object) array(
-  //      'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_DISTINCTION_TID,
-  //      'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
-  //      'name' => 'Posted with Distinction',
-  //    )
-  //  );
-  //}
-  //$categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['terms'][] = (object) array(
-  //  'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
-  //  'name' => 'Favorited',
-  //);
-  //$categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#items'][] = array(
-  //  'data' => 'Favorited',
-  //  'term' => (object) array(
-  //    'tid' => SBAC_FORUM_FILTER_DISTINCTION_FILTER_FAVORITED_TID,
-  //    'vid' => SBAC_FORUM_FILTER_DISTINCTION_VID,
-  //    'name' => 'Favorited',
-  //  )
-  //);
-//  $categories[SBAC_FORUM_FILTER_DISTINCTION_CATEGORY]['tree']['#theme'] = 'sbac_filter_item_list';
+  _sbac_search_api_create_taxonomy_filter($categories, 'subject', 'Subjects');
+  _sbac_search_api_create_taxonomy_filter($categories, 'grades', 'Grades');
+  _sbac_search_api_create_taxonomy_filter($categories, 'attributes', 'Formative Assessment Attributes');
+  _sbac_search_api_create_taxonomy_filter($categories, 'title', 'Intended Participants');
+  _sbac_search_api_create_taxonomy_filter($categories, 'intended_student_populations', 'Intended Student Populations');
 
   $cf_value = NULL;
   $cf_html = array();
@@ -369,43 +330,44 @@ function sbac_forum_sub_nav_form($form, &$form_state, $count_values = array()) {
   );
 
   drupal_add_js(drupal_get_path('module', 'sbac_forum') . '/js/sbac_forum.subnav_form.js');
-  $form['forum_keyword'] = array(
-    '#prefix' => '<div class="forum-subnav-keyword-wrapper">',
-    '#suffix' => '</div>',
-    '#type' => 'textfield',
-    '#title' => t('Search forums'),
-    '#default_value' => 'Search Forums',
-    '#size' => 30,
-    '#ajax' => array(
-      'callback' => 'sbac_forum__ajax__keyword_search_trigger',
-      'event' => 'blur',
-      'wrapper' => 'form-subnav-keyword-wrapper',
-      'progress' => array('type' => 'none'),
-      'keypress' => TRUE,
-    )
-  );
 
-//  if ($active_tab == SBAC_FORUM_SUBNAV_TOPIC) {
-    $vocab = taxonomy_vocabulary_machine_name_load('forum');
-    $access_to_add = _sbac_forum_add_forum_user_access($vocab);
-    if ($access_to_add) {
-      $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
-      $new_forum_link_text .= '<a class="new-forum-link" href="#">Start a Forum</a>';
-      $new_forum_link_text .= '</div>';
-      $form['forum_start'] = array(
-        '#markup' => $new_forum_link_text,
-      );
-          $form['forum_modal'] = array(
+  $vocab = taxonomy_vocabulary_machine_name_load('forum');
+  $access_to_add = _sbac_forum_add_forum_user_access($vocab);
+  if ($access_to_add) {
+    $new_forum_link_text = '<div class="forum-subnav-start-link-wrapper">';
+    $new_forum_link_text .= '<a class="new-forum-link" href="#">Start a Forum</a>';
+    $new_forum_link_text .= '</div>';
+    $form['forum_start'] = array(
+      '#markup' => $new_forum_link_text,
+    );
+    $form['forum_modal'] = array(
       '#markup' => '<div class="forum-modal">
                       <h2>You are about to create a Forum.</h2>
                       <p>Before continuing, please confirm that you wish to be responsible for moderating this forum.  Click Continue to proceed.</p> 
                       <a id="forum-modal-continue" href="forums/forum/add" class="button right">Continue</a><button class="button right secondary close-reveal-modal" style="margin-right: 20px;">Cancel</button>   
                     </div>',
       '#prefix' => '<div id="forum-modal-container" class="reveal-modal">',
-      '#suffix' => '</div>'        
+      '#suffix' => '</div>'
     );
-    }
-//  }
+  }
+
+  $default = 0;
+  if (isset($_GET['only-joined']) && $_GET['only-joined'] == 1) {
+    $default = 1;
+  }
+
+  $form['forum_only_joined'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Joined Groups Only'),
+    '#default_value' => $default,
+    '#prefix' => '<div class="forum-subnav-joined-wrapper">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'sbac_forum__ajax__joined_only_trigger',
+      'event' => 'change',
+    ),
+  );
+
   return $form;
 }
 
@@ -517,8 +479,17 @@ function sbac_forum_delete_forum_confirm($form, &$form_state) {
  * =============================================================================
  */
 
-function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
+function sbac_forum_join_button_form($form, &$form_state, $forum_id = FALSE, $user_id = FALSE) {
   $form = array();
+
+  if (isset($form_state['ajax']) && $form_state['ajax']) {
+    $forum_id = $form_state['forum_to_join'];
+    $user_id = $form_state['uid'];
+
+    $form['submit_description'] = array(
+      '#markup' => '<h2>' . t('Are you sure you want to join this forum?') . '</h2><p> </p>',
+    );
+  }
 
   // Store these values for the ajax handler.
   $form['forum_id'] = array(
@@ -533,6 +504,7 @@ function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
   $form['join_forum'] = array(
     '#type' => 'submit',
     '#value' => t('Join Forum'),
+    '#attributes' => array('class' => array('disabler')),
     '#prefix' => '<div id="join-forum-button-wrapper">',
     '#suffix' => '</div>',
     '#executes_submit_callback' => TRUE,
@@ -542,6 +514,15 @@ function sbac_forum_join_button_form($form, &$form_state, $forum_id, $user_id) {
       'callback' => 'sbac_forum__ajax__join_button_form_execute',
     ),
   );
+
+  if (isset($form_state['ajax']) && $form_state['ajax']) {
+    $form['cancel'] = array(
+      '#type' => 'submit',
+      '#value' => 'Cancel',
+      '#attributes' => array('class' => array('edit-cancel-leave-overlay', 'gray', 'cancel'))
+    );
+  }
+
   return $form;
 }
 

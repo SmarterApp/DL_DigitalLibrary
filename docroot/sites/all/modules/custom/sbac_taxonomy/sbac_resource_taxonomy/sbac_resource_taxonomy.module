@@ -5,7 +5,7 @@
  */
 
 /**
- * Load the taxonomy terms and get there names.
+ * Load the taxonomy terms and get their names.
  *
  * @param $field
  * @param $ccss
@@ -17,23 +17,23 @@ function sbac_resource_taxonomy_get_taxonomy_terms($field, $ccss = FALSE) {
   foreach ($field['und'] as $key => $term) {
     if ($ccss) {
       if (isset($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'])){
-        $terms[] = $term['taxonomy_term']->field_alignment_shortname['und'][0]['value'];
+        $terms[] = l($term['taxonomy_term']->field_alignment_shortname['und'][0]['value'], 'taxonomy/term/' . $term['tid']);
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
         if ($temp_term) {
-          $terms[] = $temp_term->field_alignment_shortname['und'][0]['value'];
+          $terms[] = l($temp_term->field_alignment_shortname['und'][0]['value'], 'taxonomy/term/' . $term['tid']);
         }
       }
     }
     else {
       if (isset($term['taxonomy_term']->name)) {
-        $terms[] = $term['taxonomy_term']->name;
+        $terms[] = l($term['taxonomy_term']->name, 'taxonomy/term/' . $term['tid']);
       }
       else {
         $temp_term = taxonomy_term_load($term['tid']);
         if ($temp_term) {
-          $terms[] = $temp_term->name;
+          $terms[] = l($temp_term->name, 'taxonomy/term/' . $term['tid']);
         }
       }
     }
@@ -86,7 +86,7 @@ function _sbac_resource_taxonomy_get_parents($tid){
  */
 function sbac_resource_taxonomy_taxonomy_term_load($terms) {
   foreach ($terms as $term) {
-    if ($term->vocabulary_machine_name == 'education_alignment') {
+    if ($term->vocabulary_machine_name == 'education_alignment' || $term->vocabulary_machine_name == 'target_alignment') {
       continue;
     }
 

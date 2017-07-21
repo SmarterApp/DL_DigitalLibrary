@@ -1,0 +1,19 @@
+diff --git a/apachesolr_attachments.index.inc b/apachesolr_attachments.index.inc
+index 9e9517c..c69eb2d 100644
+--- a/apachesolr_attachments.index.inc
++++ b/apachesolr_attachments.index.inc
+@@ -254,6 +254,14 @@ function apachesolr_attachments_delete_file_usage(stdClass $file, $parent_entity
+ }
+ 
+ function apachesolr_attachments_clean_index_table() {
++  static $registered = FALSE;
++  if (!$registered) {
++    drupal_register_shutdown_function('apachesolr_attachments_clean_index_table_shutdown');
++    $registered = TRUE;
++  }
++}
++
++function apachesolr_attachments_clean_index_table_shutdown() {
+   $indexer_table = apachesolr_get_indexer_table('file');
+   // Clean all entries where parent_entity_id is empty
+   db_delete($indexer_table)

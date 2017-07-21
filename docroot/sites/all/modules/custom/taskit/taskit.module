@@ -99,6 +99,13 @@ function taskit_theme($existing, $type, $theme, $path) {
         'js_interval' => NULL,
       ),
     ),
+    'taskit_group' => array(
+      'variables' => array(
+        'name' => NULL,
+        'content' => NULL,
+        'js_interval' => NULL,
+      ),
+    ),
     'taskit_row' => array(
       'variables' => array(
         'class' => NULL,
@@ -255,6 +262,13 @@ function taskit_page($account, $role = NULL) {
     return FALSE;
   }
 
+
+  // Now use groupings:
+  //   Unread Messages
+  //   Resources (or Resource Review + Resource Creation?)
+  //   Forums
+  //   Goals
+
   $row_count = 0;
   if ($types = taskit_types()) {
     $breakdown = variable_get('taskit_breakdown');
@@ -340,6 +354,152 @@ function taskit_page($account, $role = NULL) {
     drupal_add_js(drupal_get_path('module', 'taskit') . '/js/taskit_module.js');
     drupal_add_css(drupal_get_path('module', 'taskit') . '/css/taskit_module.css');
     $output .= '<div class="bottom-load-more"><a href="#" id="taskit-load-more" interval="interval-' . $interval['name'] . '" page="1" role="' . $role->rid . '" class="button green">' . t('Load More Notifications') . '</a></div>';
+  }
+
+  return $output;
+}
+
+function taskit_page_grouped($account) {
+  $output = '';
+
+  $groups = array(
+    'Unread Messages' => array(),
+    'Resource Review' => array(),
+    'Resource Creation' => array(),
+    'Forums' => array(),
+    'Goals' => array(),
+    'SNE Requests' => array(),
+  );
+
+  if ($types = taskit_types()) {
+    // get time intervals & display content
+    $theme_callback = 'taskit_row';
+    $taskit_results = taskit_get_tasks_grouped($account->uid);
+
+    foreach ($taskit_results['results'] as $row) {
+      $task = taskit_get_object($row->type, $row->task_id);
+      if (!$task) {
+        continue;
+      }
+
+      /*
+      if (in_array($interval['name'], array('today', 'yesterday', 'prior'))) {
+        $task->setDateFormat('g:ia');
+      } else {
+        $task->setDateFormat('M j, g:ia');
+      }
+      */
+      $task->setDateFormat('M j, g:ia');
+
+      if ($task->getState() & taskit\Task::STATE_COMPLETED) {
+        $task->is_completed = TRUE;
+      }
+
+      switch ($task->getType()) {
+        case 'removed_resource_review':
+        case 'resolved_all_flags':
+        case 'resource_published_reviewer':
+        case 'resource_rated':
+        case 'resource_rejected_reviewer':
+        case 'review_completed':
+        case 'review_reminder':
+        case 'review_timeout':
+          $group_name = 'Resource Review';
+          break;
+
+        case 'html5_upload_error':
+        case 'removed_resource':
+        case 'resource_demoted':
+        case 'resource_flagged':
+        case 'resource_promoted':
+        case 'resource_reposted':
+        case 'resource_submitted':
+          $group_name = 'Resource Creation';
+          break;
+
+        case 'resource_published':
+        case 'resource_rejected':
+        case 'resource_resubmitted':
+          $task_output = $task->processDisplay($task->getEntities(), $task->getTriggeringUsers());
+          if (preg_match('/you reviewed/', $task_output)) {
+            $group_name = 'Resource Review';
+          } else {
+            $group_name = 'Resource Creation';
+          }
+          break;
+
+        case 'created_forum_comment':
+        case 'created_topic_node':
+        case 'deleted_forum_comment':
+        case 'deleted_forum_term':
+        case 'deleted_topic_node':
+        case 'forum_access_change':
+        case 'forum_flagged':
+        case 'new_forum':
+        case 'new_state_forum':
+        case 'new_state_forum_slt':
+        case 'posting_action':
+        case 'post_removed_creator':
+        case 'recommended_forum_comment':
+        case 'recommended_forum_member':
+        case 'restored_forum_member':
+        case 'topic_removed':
+        case 'topic_removed_creator':
+          $group_name = 'Forums';
+          break;
+
+        case 'goal_complete_contributed':
+        case 'goal_complete_rating':
+        case 'goal_complete_reviewed':
+        case 'most_active_members_contributed':
+        case 'most_active_members_rated':
+        case 'most_active_members_reviewed':
+          $group_name = 'Goals';
+          break;
+
+        case 'new_sne_request':
+          $group_name = 'SNE Requests';
+          break;
+
+        default:
+          $group_name = 'Other';
+          if (empty($groups[$group_name])) {
+            $groups[$group_name] = array();
+          }
+          break;
+      }
+
+      if ($rendered_taskit = $task->processDisplay($task->getEntities(), $task->getTriggeringUsers())) {
+        $vars = array(
+          'class' => taskit_zebra($group_name),
+          'rendered' => $rendered_taskit,
+          'task' => $task,
+        );
+        $output_row = theme($theme_callback, $vars);
+        $groups[$group_name][] = $output_row;
+        if (!$task->isViewed()) {
+          $groups['Unread Messages'][] = $output_row;
+        }
+      }
+    }
+
+    foreach ($groups as $key => $group) {
+      if (!empty($group)) {
+        $output .= theme('taskit_group', array(
+          'name' => $key,
+          'content' => implode("", $group),
+          'collapsed' => 'Unread Messages' !== $key,
+          'js_interval' => NULL,
+        ));
+      }
+    }
+  }
+
+  // TODO: move this dependency out of here
+  drupal_add_library('dialog', 'dialog');
+
+  if (empty($output)) {
+    $output = '<div id="taskit-empty">' . t('No notifications.') . '</div>';
   }
 
   return $output;
@@ -624,7 +784,7 @@ function taskit_load($task_id) {
 
 /**
  * Pulls up tasks and returns database result.
- * 
+ *
  * @param  int    $from       Timestamp
  * @param  int    $to         Timestamp
  * @param  int    $rid        Role id
@@ -701,6 +861,64 @@ function taskit_get_tasks($from, $to, $rid, $uid, $breakdown, $page = NULL) {
   if ($breakdown == 'role') {
     $args[':rid'] = $rid;
   }
+
+  $run_query = "SELECT  t.task_id, t.type FROM taskit t";
+  $run_query .= $query;
+  if ($page) {
+    $page = $page * TASKIT_PER_PAGE;
+    $results = db_query_range($run_query, $page, TASKIT_PER_PAGE, $args);
+  }
+  else {
+    $results = db_query_range($run_query, 0, TASKIT_PER_PAGE, $args);
+  }
+  return array('results' => $results);
+}
+
+/**
+ * Pulls up tasks and returns database result.
+ *
+ * @param  int    $uid        User id
+ * @return object    Database result
+ */
+function taskit_get_tasks_grouped($uid, $page = NULL) {
+  $query = '';
+
+  $query .= " LEFT JOIN   taskit_user_owner tuo
+                ON        tuo.task_id = t.task_id
+
+              LEFT JOIN   taskit_removed trr
+                ON        trr.task_id = t.task_id
+
+              -- restrict by state
+              WHERE       !(t.state & :state_completed)
+
+              -- restrict by removal
+              AND         trr.user_id IS NULL
+            ";
+
+  $query .= " -- restrict by visibility options using bitwise comparisons
+              AND  CASE
+                   WHEN (t.visibility & :visibility_role & :visibility_user)
+                        THEN tuo.user_id = :uid
+                   WHEN (t.visibility & :visibility_role)
+                        THEN 1
+                   WHEN (t.visibility & :visibility_user)
+                        THEN tuo.user_id = :uid
+                   ELSE 0
+              END
+            ";
+
+  $query .= " -- group by task id to eliminate duplicates
+              GROUP BY    t.task_id
+              ORDER BY    t.created DESC
+           ";
+
+  $args = array(
+    ':uid'  => $uid,
+    ':state_completed' => taskit\Task::STATE_COMPLETED,
+    ':visibility_user' => taskit\Task::VISIBILITY_USER,
+    ':visibility_role' => taskit\Task::VISIBILITY_ROLE,
+  );
 
   $run_query = "SELECT  t.task_id, t.type FROM taskit t";
   $run_query .= $query;

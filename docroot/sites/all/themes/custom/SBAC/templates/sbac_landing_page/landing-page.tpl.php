@@ -8,14 +8,6 @@
     <?php print $notifications; ?>
   </div>
 <?php endif; ?>
-<?php if($find_resource): ?>
-  <div id="lp-find-resource-wrapper">
-    <div id="lp-find-resource">
-      <div id="lp-find-resource-lable">What resources are you looking for?</div>
-      <?php print $find_resource; ?>
-    </div>
-  </div>
-<?php endif; ?>
 <?php if($featured_content): ?>
   <div id="lp-featured-content-wrapper">
     <div id="lp-featured-content">
@@ -29,7 +21,11 @@
       <h1>MOST ACTIVE MEMBERS</h1>    
     </div>
     <div id="leaderboards">
-      <?php print $leaderboards; ?>    
+      <?php print $leaderboards; ?>
+      <?php if (sbac_sne_webform_check_availability()): ?>
+        <div id="sne-signup-spacer"></div>
+        <div id="sne-signup">I am interested in contributing resources to the Digital Library <?php print l('Submit', '/sne-signup', array('attributes' => array('class' => array('button', 'sne-link')))); ?></div>
+      <?php endif; ?>
     </div>
   </div>
 <?php endif; ?>

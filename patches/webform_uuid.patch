@@ -1,0 +1,19 @@
+--- webform_uuid_old.module	2017-04-26 16:01:50.000000000 -0400
++++ webform_uuid.module	2017-04-26 16:02:43.000000000 -0400
+@@ -174,11 +174,9 @@
+   }
+ }
+ 
+-function webform_uuid_form_alter(&$form, &$form_state, $form_id)
+-{
+-   if (!empty($form['#node']) && !empty($form['#node']->uuid))
+-   {
+-      //Change the CSS ID that identifies this form for cross-server use from webform-NID to webform-UUID-{UUID} -RyanC
+-      $form['#attributes']['id'] = 'webform-uuid-'.$form['#node']->uuid;
+-   }
++function webform_uuid_form_alter(&$form, &$form_state, $form_id) {
++  if (!empty($form['#node']) && !empty($form['#node']->uuid) && $form['#node']->type == 'webform') {
++    //Change the CSS ID that identifies this form for cross-server use from webform-NID to webform-UUID-{UUID} -RyanC
++    $form['#attributes']['id'] = 'webform-uuid-'.$form['#node']->uuid;
++  }
+ }

@@ -5,6 +5,7 @@ body.page-help-topics{
     margin-top: 30px;
   }
   .help-topics-wrapper{
+    margin-top: 20px;
     margin-bottom: 20px;
     .help-topic-wrapper{
       margin-bottom: 20px;
@@ -57,4 +58,10 @@ body.page-help-topics{
 .welcome-tutorial-topic-link:focus {
   background: #bfd8e5;
   color: #006298;
+}
+
+.page-sort-content-help-topics .help-topic-link,
+.page-help-topics .help-topic-link {
+  bottom: 56px;
+  margin-left: 10px;
 }

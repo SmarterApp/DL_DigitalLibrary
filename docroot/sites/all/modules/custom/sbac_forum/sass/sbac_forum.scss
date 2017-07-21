@@ -3573,9 +3573,9 @@ h2.title {
 
 			a.comment-edit {
 				color: #0583AC;
-				position: absolute;
-				top: 9px;
-				right: 0;
+                display: inline-block;
+				float: right;
+                margin-top: 9px;
 			}
 
 			a.comment-edit:hover {

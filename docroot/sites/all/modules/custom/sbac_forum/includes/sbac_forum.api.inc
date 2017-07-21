@@ -356,7 +356,7 @@ function sbac_forum__api__get_author_picture($user_id, $image_style_name) {
  * @param bool $add_comma
  * @return null|string
  */
-function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
+function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE, $mail_to = TRUE) {
 //  $cached_output = cache_get('authpane_' . $user_id);
   $cached_output = FALSE;
   if ($cached_output) {
@@ -365,7 +365,7 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
   else {
     $account = user_load($user_id);
     $account_renderable = user_view($account, 'tooltip');
-
+    $mail_privacy = FALSE;
     $account_data = entity_metadata_wrapper('user', $account);
     $fn = $account_data->field_first_name->value();
     $ln = ''; // last name hide by default.
@@ -373,6 +373,10 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
       $privacy_settings = $account_data->field_privacy->value();
       if (in_array('field_last_name', $privacy_settings)) { // Check privacy settings
         $ln = ' ' . $account_data->field_last_name->value();
+      }
+      // Check privacy settings for mailto link
+      if (in_array('mail', $privacy_settings)) {
+        $mail_privacy = TRUE;
       }
     }
     $full_name = $fn . $ln;
@@ -390,6 +394,12 @@ function sbac_forum__api__get_authpane_hoverover($user_id, $add_comma = FALSE) {
       '!name' => $tooltip,
       '!date' => format_date($created, 'simple'),
     ));
+    
+    // Add mailto link if required
+    if ($mail_to && $mail_privacy) {
+      $email_link = l('', 'mailto:' . $account->mail, array('attributes' => array('class' => array('mailto-link'))));
+      $output = $output . $email_link;
+    }
 
 //    cache_set('authpane_' . $user_id, $output);
     return $output;

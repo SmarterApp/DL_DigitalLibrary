@@ -10,12 +10,9 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
   $digital_library_pwd = '';
   $pwd_showhide = '';
   $pwd_showmore = '<a href="#" id="sbac-pwd-show-fewer">Show Fewer</a>';
-  (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS]) ? $search_string = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] : $search_string = '');
-  (isset($_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] : $current_filters = '');
+  $search_string = '';
+  $current_filters = '';
   $pwd_enabled = '';
-  if (isset($_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD])) {
-    $pwd_enabled = $_SESSION[SBAC_SEARCH_DIGIAL_LIBRARY_RESOURCES_PWD] ? 'pwd-highlight' : '';
-  }
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.digital_library.categories.js');
@@ -67,7 +64,6 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
     $pwd_showhide = '<a href="#" id="sbac-pwd-hide-pwd">Hide</a>';
   }
   $digital_library_output = $view->preview();
-  $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_COUNT] = $view->total_rows;
   // dpq($view->build_info['query']);
   $count = count($view->result);
   if ($ajax) {
@@ -85,8 +81,6 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
   $ignore_smart_search = FALSE;
   if (!$count && ($search_string != '' || $current_filters != '')) {
     // Reset variables
-    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-    $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED] = TRUE;
 
     // Load up the view.
     $view = views_get_view('resources');
@@ -114,10 +108,6 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
     }
     else { // No search results. Diff behavour.
       // Reset variables
-      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
-      $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
-      $_COOKIE[SBAC_SEARCH_DIGITAL_LIBRARY_FILTERS_CLOSED] = TRUE;
-      $_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS] = FALSE;
       drupal_goto('digital-library-resources'); // Reload dlr tab with no filters set.
     }
   }
@@ -155,10 +145,10 @@ function sbac_resource_digital_library_page($page = NULL, $ajax = FALSE) {
 function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   $no_results = NULL;
 
-  (isset($_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] : $current_filters = '');
+  $current_filters = '';
   $display = sbac_resource_determine_grid_or_list();
   // Add appropriate JS.
-  drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.my_resources.categories.js');
+  // drupal_add_js(drupal_get_path('module', 'sbac_search_api') . '/js/sbac_search_api.my_resources.categories.js');
 
   // Load up the view.
   $view = views_get_view('my_resources');
@@ -182,7 +172,6 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
   sbac_resource_my_resource_apply_sorts($view);
   $my_resources_output = $view->preview();
   // dpq($view->build_info['query']);
-  $_SESSION[SBAC_SEARCH_MY_RESOURCES_COUNT] = $view->total_rows;
   $output = array();
   if ($ajax) {
     // Create the Drupal.settings attribute
@@ -198,8 +187,6 @@ function sbac_resource_my_resources_page($page = NULL, $ajax = FALSE) {
 
   if (!$view->total_rows && $current_filters != '') {
     // Reset variables
-    $_SESSION[SBAC_SEARCH_MY_RESOURCES_FILTERS] = '';
-    $_COOKIE[SBAC_SEARCH_MY_RESOURCES_FILTERS_CLOSED] = TRUE;
 
     drupal_get_messages();
     $no_results = sbac_resource_no_search_results();
@@ -227,21 +214,7 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
   $display = sbac_resource_determine_grid_or_list();
   $view = views_get_view('resource_review');
   $view->set_display($display);
-  // Remove session load more attribute when search is applied.
-  if (isset($_POST['current_filters']) || isset($_POST['search_keywords'])) {
-    unset($_SESSION['load_more'][$view->name]);
-  }
-  // If pager in URL is provided, change pager
-  if ($page) {
-    $view->items_per_page = ($page + 1) * 12;
-    $_SESSION['load_more'][$view->name]['page'] = $page;
-  }
-  // If session is set, change pager.
-  else {
-    if (isset($_SESSION['load_more'][$view->name]['page'])) {
-      $view->items_per_page = ($_SESSION['load_more'][$view->name]['page'] + 1) * 12;
-    }
-  }
+
   $view->apply_filter = $apply_filter;
   $view->resubmission_only = $resubmission_only;
   if ($apply_filter === TRUE) {
@@ -250,7 +223,7 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
   sbac_resource_resource_review_apply_sorts($view);
   $resource_review_output = $view->preview();
   $total_rows = $view->total_rows;
-//    dpq($view->build_info['query']);
+
   $output = array();
   if ($ajax) {
     // Create the Drupal.settings attribute
@@ -275,7 +248,8 @@ function _sbac_resource_resource_review_page_setup_resource_tab($page = NULL, $a
  * Menu callback
  */
 function sbac_resource_resource_review_page_reset() {
-  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] = '';
+  $_SESSION[SBAC_SEARCH_API_RESOURCE_REVIEW_FILTERS] = '';
+  unset($_SESSION['load_more']['resource_review']['page']);
   drupal_goto('resource-review');
 }
 
@@ -288,7 +262,7 @@ function sbac_resource_resource_review_page_reset() {
  */
 function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
   $no_results = NULL;
-  (isset($_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS]) ? $current_filters = $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS] : $current_filters = '');
+  $current_filters = '';
   // Add appropriate JS.
   drupal_add_js(drupal_get_path('module', 'sbac_search') . '/js/sbac_search.resource_review.categories.js');
 
@@ -322,9 +296,7 @@ function sbac_resource_resource_review_page($page = NULL, $ajax = FALSE) {
       break;
   }
   $resource_output = $active_tab_content['output'];
-  $_SESSION[SBAC_SEARCH_RESOURCE_REVIEW_COUNT] = $active_tab_content['count'];
   if (0 == $active_tab_content['count']) {
-    $_COOKIE[SBAC_SEARCH_RESOURCE_REVIEW_FILTERS_CLOSED] = TRUE;
     // Set error message
     $no_results = sbac_resource_no_search_results();
   }
@@ -382,7 +354,6 @@ function sbac_resource_smart_search_page() {
   $current_filter_array = array();
   if (isset($params['kw'])) {
     $kw_search = $params['kw'];
-    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = $kw_search;
     unset($params['kw']);
   }
   foreach ($params as $vocab => $term_ids) {
@@ -397,11 +368,9 @@ function sbac_resource_smart_search_page() {
 
   if (!empty($current_filter_array)) {
     $current_filters = implode('::', $current_filter_array);
-    $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = $current_filters;
     // setup more variables here. Collapsed filter tray etc.
   }
 
-  // $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
   $_SESSION[SBAC_RESOURCE_SMART_SEARCH_HIDE_FILTERS] = TRUE; // Hide the filter block.
   $_SESSION[SBAC_RESOURCE_SMART_SEARCH_SHOW_STATUS] = TRUE; // Show the help message in content region.
 

@@ -1,65 +1,65 @@
-administrator1.sbac@gedu-demo-pcg.com,administrator
-administrator.sbac@gedu-demo-pcg.com,administrator
-basic.user@gedu-demo-pcg.com,basic end user
-contributor1.UAT@gedu-demo-pcg.com,resource contributor
-contributor2.UAT@gedu-demo-pcg.com,resource contributor
-contributor3.UAT@gedu-demo-pcg.com,resource contributor
-contributor4.UAT@gedu-demo-pcg.com,resource contributor
-contributor5.UAT@gedu-demo-pcg.com,resource contributor
-digital-library-administrator1.sbac@gedu-demo-pcg.com,digital library administrator
-digital-library-administrator.sbac@gedu-demo-pcg.com,digital library administrator
-dl-administrator1.sbac@gedu-demo-pcg.com,digital library administrator
-dlrb-member1.sbac@gedu-demo-pcg.com,DLRB member
-dlrb-member1.UAT@gedu-demo-pcg.com,DLRB member
-dlrb-member2.sbac@gedu-demo-pcg.com,DLRB member
-dlrb-member3.sbac@gedu-demo-pcg.com,DLRB member
-dlrb-member4.sbac@gedu-demo-pcg.com,DLRB member
-dlrb-member5.sbac@gedu-demo-pcg.com,DLRB member
-educator1.UAT@gedu-demo-pcg.com,basic end user
-educator2.UAT@gedu-demo-pcg.com,basic end user
-educator3.UAT@gedu-demo-pcg.com,basic end user
-educator4.UAT@gedu-demo-pcg.com,basic end user
-educator5.UAT@gedu-demo-pcg.com,basic end user
-educator6.UAT@gedu-demo-pcg.com,basic end user
-educator7.UAT@gedu-demo-pcg.com,basic end user
-facilitator1.sbac@gedu-demo-pcg.com,facilitator
-facilitator1.UAT@gedu-demo-pcg.com,facilitator
-facilitator.sbac@gedu-demo-pcg.com,facilitator
-guest1.sbac@gedu-demo-pcg.com,guest
-guest.sbac@gedu-demo-pcg.com,guest
-help-desk1.sbac@gedu-demo-pcg.com,help desk
-help-desk.sbac@gedu-demo-pcg.com,help desk
-moderator1.sbac@gedu-demo-pcg.com,moderator
-moderator1.UAT@gedu-demo-pcg.com,moderator
-moderator.sbac@gedu-demo-pcg.com,moderator
-nlrb-member1.sbac@gedu-demo-pcg.com,DLRB member
-nlrb-member.sbac@gedu-demo-pcg.com,DLRB member
-publisher1.UAT@gedu-demo-pcg.com,resource publisher
-reports-administrator1.sbac@gedu-demo-pcg.com,reports administrator
-reports-administrator1.UAT@gedu-demo-pcg.com,reports administrator
-reports-administrator.sbac@gedu-demo-pcg.com,reports administrator
-resource.contributor1.sbac@gedu-demo-pcg.com,resource contributor
-resource.contributor2.sbac@gedu-demo-pcg.com,resource contributor
-resource.contributor3.sbac@gedu-demo-pcg.com,resource contributor
-resource.contributor4.sbac@gedu-demo-pcg.com,resource contributor
-resource.contributor5.sbac@gedu-demo-pcg.com,resource contributor
-resource.contributor.sbac@gedu-demo-pcg.com,resource contributor
-resource-publisher1.sbac@gedu-demo-pcg.com,resource publisher
-resource-publisher2.sbac@gedu-demo-pcg.com,resource publisher
-resource-publisher3.sbac@gedu-demo-pcg.com,resource publisher
-resource-publisher4.sbac@gedu-demo-pcg.com,resource publisher
-resource-publisher5.sbac@gedu-demo-pcg.com,resource publisher
-resource-publisher.sbac@gedu-demo-pcg.com,resource publisher
-resource-reviewer1.sbac@gedu-demo-pcg.com,resource reviewer
-resource-reviewer2.sbac@gedu-demo-pcg.com,resource reviewer
-resource-reviewer3.sbac@gedu-demo-pcg.com,resource reviewer
-resource-reviewer4.sbac@gedu-demo-pcg.com,resource reviewer
-resource-reviewer5.sbac@gedu-demo-pcg.com,resource reviewer
-resource-reviewer.sbac@gedu-demo-pcg.com,resource reviewer
-reviewer1.UAT@gedu-demo-pcg.com,resource reviewer
-reviewer2.UAT@gedu-demo-pcg.com,resource reviewer
-reviewer3.UAT@gedu-demo-pcg.com,resource reviewer
-reviewer4.UAT@gedu-demo-pcg.com,resource reviewer
-reviewer5.UAT@gedu-demo-pcg.com,resource reviewer
-system-administrator1.sbac@gedu-demo-pcg.com,system administrator
-system-administrator.sbac@gedu-demo-pcg.com,system administrator
+administrator1.sbac@gedu-demo-pcg.com,"administrator"
+administrator.sbac@gedu-demo-pcg.com,"administrator"
+basic.user@gedu-demo-pcg.com,"basic end user"
+contributor1.UAT@gedu-demo-pcg.com,"resource contributor"
+contributor2.UAT@gedu-demo-pcg.com,"resource contributor"
+contributor3.UAT@gedu-demo-pcg.com,"resource contributor"
+contributor4.UAT@gedu-demo-pcg.com,"resource contributor"
+contributor5.UAT@gedu-demo-pcg.com,"resource contributor"
+digital-library-administrator1.sbac@gedu-demo-pcg.com,"digital library administrator"
+digital-library-administrator.sbac@gedu-demo-pcg.com,"digital library administrator"
+dl-administrator1.sbac@gedu-demo-pcg.com,"digital library administrator"
+dlrb-member1.sbac@gedu-demo-pcg.com,"DLRB member"
+dlrb-member1.UAT@gedu-demo-pcg.com,"DLRB member"
+dlrb-member2.sbac@gedu-demo-pcg.com,"DLRB member"
+dlrb-member3.sbac@gedu-demo-pcg.com,"DLRB member"
+dlrb-member4.sbac@gedu-demo-pcg.com,"DLRB member"
+dlrb-member5.sbac@gedu-demo-pcg.com,"DLRB member"
+educator1.UAT@gedu-demo-pcg.com,"basic end user"
+educator2.UAT@gedu-demo-pcg.com,"basic end user"
+educator3.UAT@gedu-demo-pcg.com,"basic end user"
+educator4.UAT@gedu-demo-pcg.com,"basic end user"
+educator5.UAT@gedu-demo-pcg.com,"basic end user"
+educator6.UAT@gedu-demo-pcg.com,"basic end user"
+educator7.UAT@gedu-demo-pcg.com,"basic end user"
+facilitator1.sbac@gedu-demo-pcg.com,"facilitator"
+facilitator1.UAT@gedu-demo-pcg.com,"facilitator"
+facilitator.sbac@gedu-demo-pcg.com,"facilitator"
+guest1.sbac@gedu-demo-pcg.com,"guest"
+guest.sbac@gedu-demo-pcg.com,"guest"
+help-desk1.sbac@gedu-demo-pcg.com,"help desk"
+help-desk.sbac@gedu-demo-pcg.com,"help desk"
+moderator1.sbac@gedu-demo-pcg.com,"moderator"
+moderator1.UAT@gedu-demo-pcg.com,"moderator"
+moderator.sbac@gedu-demo-pcg.com,"moderator"
+nlrb-member1.sbac@gedu-demo-pcg.com,"DLRB member"
+nlrb-member.sbac@gedu-demo-pcg.com,"DLRB member"
+publisher1.UAT@gedu-demo-pcg.com,"resource publisher"
+reports-administrator1.sbac@gedu-demo-pcg.com,"reports administrator"
+reports-administrator1.UAT@gedu-demo-pcg.com,"reports administrator"
+reports-administrator.sbac@gedu-demo-pcg.com,"reports administrator"
+resource.contributor1.sbac@gedu-demo-pcg.com,"resource contributor"
+resource.contributor2.sbac@gedu-demo-pcg.com,"resource contributor"
+resource.contributor3.sbac@gedu-demo-pcg.com,"resource contributor"
+resource.contributor4.sbac@gedu-demo-pcg.com,"resource contributor"
+resource.contributor5.sbac@gedu-demo-pcg.com,"resource contributor"
+resource.contributor.sbac@gedu-demo-pcg.com,"resource contributor"
+resource-publisher1.sbac@gedu-demo-pcg.com,"resource publisher"
+resource-publisher2.sbac@gedu-demo-pcg.com,"resource publisher"
+resource-publisher3.sbac@gedu-demo-pcg.com,"resource publisher"
+resource-publisher4.sbac@gedu-demo-pcg.com,"resource publisher"
+resource-publisher5.sbac@gedu-demo-pcg.com,"resource publisher"
+resource-publisher.sbac@gedu-demo-pcg.com,"resource publisher"
+resource-reviewer1.sbac@gedu-demo-pcg.com,"resource reviewer"
+resource-reviewer2.sbac@gedu-demo-pcg.com,"resource reviewer"
+resource-reviewer3.sbac@gedu-demo-pcg.com,"resource reviewer" "resource publisher"
+resource-reviewer4.sbac@gedu-demo-pcg.com,"resource reviewer" "resource publisher"
+resource-reviewer5.sbac@gedu-demo-pcg.com,"resource reviewer" "resource publisher"
+resource-reviewer.sbac@gedu-demo-pcg.com,"resource reviewer"
+reviewer1.UAT@gedu-demo-pcg.com,"resource reviewer"
+reviewer2.UAT@gedu-demo-pcg.com,"resource reviewer"
+reviewer3.UAT@gedu-demo-pcg.com,"resource reviewer"
+reviewer4.UAT@gedu-demo-pcg.com,"resource reviewer"
+reviewer5.UAT@gedu-demo-pcg.com,"resource reviewer"
+system-administrator1.sbac@gedu-demo-pcg.com,"system administrator"
+system-administrator.sbac@gedu-demo-pcg.com,"system administrator"

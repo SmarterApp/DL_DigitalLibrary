@@ -95,6 +95,12 @@ function sbac_help_strongarm() {
         'path' => array(
           'weight' => '11',
         ),
+        'flag' => array(
+          'weight' => '10',
+        ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(),
     ),
@@ -122,7 +128,8 @@ function sbac_help_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'node_options_help_page';
   $strongarm->value = array(
-    0 => 'revision',
+    0 => 'status',
+    1 => 'revision',
   );
   $export['node_options_help_page'] = $strongarm;
 
