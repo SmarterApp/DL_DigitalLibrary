@@ -3,7 +3,7 @@
 
 function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $active_display = 'block') {
   $view_filters = $view->display_handler->get_option('filters');
-  $empty_text_url = 'forums-main-page/reset/all-forums/all';
+  $empty_text_url = 'sbac-forum/clear-filters';
 
   // Current filter session - create the args where needed.
   unset($view_filters['sticky']);
@@ -88,7 +88,7 @@ function sbac_forum_forum_listing_apply_filters(&$view, $current_filters, $activ
   if ($active_display == 'block_1') { // Machine name for second display for view "my forums".
     global $user;
     $view->set_arguments(array($user->uid));
-    $empty_text_url = 'forums-main-page/reset/my-forums/all';
+    $empty_text_url = 'sbac-forum/clear-filters';
   }
 
   if (!empty($current_filters)) {

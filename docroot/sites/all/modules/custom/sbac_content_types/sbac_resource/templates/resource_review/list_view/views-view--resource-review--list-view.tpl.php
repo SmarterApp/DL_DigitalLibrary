@@ -50,7 +50,11 @@
     <?php print $attachment_before; ?>
   </div>
 <?php endif; ?>
-
+<div class="reviewer-description">
+  <div>
+    <?php print t("The resources below match the subject and grade-level expertise you have selected in your profile."); ?>
+  </div>
+</div>
 <?php if ($rows): ?>
   <div class="view-content">
     <?php print $rows; ?>

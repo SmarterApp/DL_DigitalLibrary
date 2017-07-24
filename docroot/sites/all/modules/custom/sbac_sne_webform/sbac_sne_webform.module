@@ -35,7 +35,7 @@ function sbac_sne_webform_results_submissions() {
  */
 function sbac_sne_webform_form_alter(&$form, &$form_state) {
   if (isset($form['#node']) && ($form['#node']->title == 'Contribute to the Digital Library by Becoming a State Network Educator')) {
-    $form['#submit'][] = sbac_sne_webform_submit;
+    $form['#submit'][] = 'sbac_sne_webform_submit';
   }
 }
 

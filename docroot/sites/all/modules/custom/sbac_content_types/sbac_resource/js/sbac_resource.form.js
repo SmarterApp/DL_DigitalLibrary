@@ -45,7 +45,7 @@
   };
 
   /**
-   * Adjusts the hieght of the list.
+   * Adjusts the height of the list.
    *
    * @type {{attach: Function}}
    */
@@ -179,6 +179,10 @@
       });
 
       $('#sbac-resource-save-continue button').click(function () {
+        isDirty = false;
+      });
+
+      $(document).on('click', '#edit-submit-overlay', function() {
         isDirty = false;
       });
 

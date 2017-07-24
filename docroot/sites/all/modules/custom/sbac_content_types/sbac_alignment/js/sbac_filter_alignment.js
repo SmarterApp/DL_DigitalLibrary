@@ -1,3 +1,4 @@
+// TODO: Delete this when the filter widget is no longer needed.
 (function ($) {
   Drupal.behaviors = Drupal.behaviors || {};
 

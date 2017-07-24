@@ -23,11 +23,68 @@ function sbac_central_menu_default_menu_links() {
       'identifier' => 'main-menu_digital-library-resources:digital-library-resources',
     ),
     'module' => 'system',
+    'hidden' => 1,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -48,
+    'customized' => 1,
+  );
+  $menu_links['main-menu_instructional-resources:instructional'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'instructional',
+    'router_path' => 'instructional',
+    'link_title' => 'Instructional',
+    'options' => array(
+      'attributes' => array(
+        'title' => 'Instructional',
+      ),
+      'identifier' => 'main-menu_instructional-resources:instructional',
+    ),
+    'module' => 'system',
     'hidden' => 0,
     'external' => 0,
     'has_children' => 0,
     'expanded' => 0,
     'weight' => -48,
+    'customized' => 1,
+  );
+  $menu_links['main-menu_professional-learning-resources:professional-learning'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'professional-learning',
+    'router_path' => 'professional-learning',
+    'link_title' => 'Professional Learning',
+    'options' => array(
+      'attributes' => array(
+        'title' => 'Professional Learning',
+      ),
+      'identifier' => 'main-menu_professional-learning-resources:professional-learning',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -47,
+    'customized' => 1,
+  );
+  $menu_links['main-menu_playlist-resources:playlist'] = array(
+    'menu_name' => 'main-menu',
+    'link_path' => 'playlist',
+    'router_path' => 'playlist',
+    'link_title' => 'Playlist',
+    'options' => array(
+      'attributes' => array(
+        'title' => 'Playlist',
+      ),
+      'identifier' => 'main-menu_playlist-resources:playlist',
+    ),
+    'module' => 'system',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 0,
+    'expanded' => 0,
+    'weight' => -46,
     'customized' => 1,
   );
   // Exported menu link: main-menu_forums:forums

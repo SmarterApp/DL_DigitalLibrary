@@ -588,19 +588,17 @@ function sbac_forum__ajax__topic_comment_sort_form_change($form, $form_state) {
   exit();
 }
 
-function sbac_forum__ajax__keyword_search_trigger($form, $form_state) {
-  module_load_include('inc', 'sbac_forum', 'includes/sbac_forum.forms');
-  $keyword = $form_state['values']['forum_keyword'];
+function sbac_forum__ajax__joined_only_trigger($form, $form_state) {
+  $value = $form_state['values']['forum_only_joined'];
   $options = array(
     'query' => array(
-      'keyword' => $keyword,
+      'only-joined' => $value,
     ),
   );
 
   // Ctools ajax implementation using commands to refresh page.
   ctools_include('ajax');
-  $commands = array();
-  $url = 'forums-search';
+  $url = 'forums';
   $output[] = ctools_ajax_command_redirect($url, 0 , $options);
   print ajax_render($output);
   exit();

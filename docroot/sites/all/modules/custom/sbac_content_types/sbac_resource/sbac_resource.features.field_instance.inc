@@ -475,7 +475,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 24,
+      'weight' => 25,
     ),
   );
 
@@ -591,7 +591,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 27,
+      'weight' => 28,
     ),
   );
 
@@ -1221,7 +1221,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 25,
+      'weight' => 26,
     ),
     'xss' => 0,
   );
@@ -1734,7 +1734,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 29,
+      'weight' => 30,
     ),
   );
 
@@ -2375,7 +2375,7 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 26,
+      'weight' => 27,
     ),
   );
 
@@ -2433,7 +2433,60 @@ function sbac_resource_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 28,
+      'weight' => 29,
+    ),
+  );
+
+  // Exported field_instance: 'node-resource-field_target_term'.
+  $field_instances['node-resource-field_target_term'] = array(
+    'bundle' => 'resource',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 55,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'secondary_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_target_term',
+    'label' => 'Target Tagging Standard(s)',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'taxonomy',
+      'settings' => array(
+        'autocomplete_path' => 'taxonomy/autocomplete',
+        'label_help_description' => '',
+        'size' => 60,
+      ),
+      'type' => 'taxonomy_autocomplete',
+      'weight' => 24,
     ),
   );
 
@@ -3022,6 +3075,7 @@ function sbac_resource_field_default_field_instances() {
   t('Subscription Package Type');
   t('Success Criteria');
   t('Supporting Evidence');
+  t('Target Tagging Standard(s)');
   t('Technologies Required for Use in Classroom');
   t('Temp');
   t('Temporary Public Link Settings');

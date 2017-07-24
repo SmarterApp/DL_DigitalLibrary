@@ -11,7 +11,6 @@
       </h1></li>
     <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   </ul>
-  <h1 class="title left">Digital Library</h1>
   <?php if ($user->uid && !in_array('guest', $user->roles) && !$conflicting_profile): ?>
     <ul class="inline-list right user-nav">
       <li class="user-info">
@@ -50,6 +49,14 @@
           <?php print $help_dropdown; ?>
         <?php endif; ?>
       </li>
+      <?php if (isset($page['search']) && $page['search']): ?>
+          <li>
+              <div class="search">
+                  <span class="sbac-search-toggle"><span class="sbac-search"></span> Search</span>
+                <?php print render($page['search']); ?>
+              </div>
+          </li>
+      <?php endif; ?>
     </ul>
   <?php endif; ?>
   <?php if ($user->uid && in_array('guest', $user->roles)): ?>
@@ -98,13 +105,11 @@
       <?php endif; ?>
       </div>
    <?php endif; ?>
-  <?php if (isset($page['search']) && $page['search']): ?>
-    <div class="search right">
-      <?php print render($page['search']); ?>
-    </div>
-<?php endif; ?>
             </div>
 </div>
+
+    <div class="resource-feature"><?php print render($page['resource_feature']); ?></div>
+    <?php drupal_add_js(drupal_get_path('module', 'sbac_landing_page').'/sbac_landing_page.js', array('type'=>'file', 'group'=>JS_THEME)); ?>
 
 <?php if ($user->uid && !in_array(SBAC_SHARE_GUEST, $user->roles) && $page['filter']): ?>
             <div class="filters sbac-filter-cat-area"<?php /* hide category drawer if cookie  print sbac_search_hide_category_style();*/ ?>>

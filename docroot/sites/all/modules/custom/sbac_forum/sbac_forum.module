@@ -95,6 +95,13 @@ function sbac_forum_menu() {
     'weight' => -10,
   );
 
+  $items['sbac-forum/clear-filters'] = array(
+    'title' => 'Forums',
+    'page callback' => 'sbac_forum_clear_search',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   // Create own menu callback for adding a term. Dont need to mess with menu_alter.
   $items['forums/%taxonomy_vocabulary_machine_name/add'] = array(
     'title' => 'Start A Forum',
@@ -116,15 +123,6 @@ function sbac_forum_menu() {
     'access callback' => '_sbac_forum_view_forum_user_access',
     'access arguments' => array(2),
     'file' => 'includes/sbac_forum.pages.inc',
-  );
-
-  $items['forums-main-page/reset/%/%'] = array(
-    'title' => 'Forums',
-    'file' => 'includes/sbac_forum.pages.inc',
-    'page callback' => 'sbac_forum_main_landing_page_reset',
-    'page arguments' => array(2, 3),
-    'access callback' => '_sbac_forum_user_access',
-    'type' => MENU_CALLBACK,
   );
 
   $items['keyword-search-redirect/%'] = array(
@@ -1785,9 +1783,7 @@ function sbac_forum_taxonomy_term_presave($term) {
         $cids = array_keys($result['comment']);
       }
       if (!empty($cids)) {
-        foreach ($cids as $cid) {
-          apachesolr_mark_entity('comment', $cid);
-        }
+        search_api_track_item_change('comment', $cids);
       }
     }
 
@@ -2724,3 +2720,9 @@ function sbac_forum_set_default_image(&$field, $filename, $source, $destination)
   }
 }
 
+function sbac_forum_clear_search()
+{
+  $_SESSION[SBAC_FORUM_RESOURCE_FORUM_CATEGORY_FILTERS] = '';
+  $_SESSION[SBAC_FORUM_TOPIC_FORUM_CATEGORY_FILTERS] = '';
+  drupal_goto('forums');
+}

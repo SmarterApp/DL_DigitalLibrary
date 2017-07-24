@@ -8,14 +8,6 @@
     <?php print $notifications; ?>
   </div>
 <?php endif; ?>
-<?php if($find_resource): ?>
-  <div id="lp-find-resource-wrapper">
-    <div id="lp-find-resource">
-      <div id="lp-find-resource-lable">What resources are you looking for?</div>
-      <?php print $find_resource; ?>
-    </div>
-  </div>
-<?php endif; ?>
 <?php if($featured_content): ?>
   <div id="lp-featured-content-wrapper">
     <div id="lp-featured-content">

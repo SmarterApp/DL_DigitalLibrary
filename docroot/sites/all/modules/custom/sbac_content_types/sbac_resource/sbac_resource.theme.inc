@@ -720,6 +720,9 @@ function sbac_resource_views_view_fields__resource_review__grid_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  if (isset($variables['resub'])) {
+    $vars['fields']['resub'] = $variables['resub'];
+  }
   global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
@@ -770,6 +773,9 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
   if (isset($variables['media_types'])) {
     $vars['fields']['media_types'] = $variables['media_types'];
   }
+  if (isset($variables['resub'])) {
+    $vars['fields']['resub'] = $variables['resub'];
+  }
   global $base_url;
   $path = $vars['fields']['path']->content;
   $path = str_replace('<span class="field-content">', '', $path);
@@ -783,57 +789,53 @@ function sbac_resource_views_view_fields__resource_review__list_view__preprocess
  * @param $fields
  * @param $view_display
  *
- * @return string
+ * @return array|null
  */
 function _sbac_resource_grid_image($fields, $view_display = 'grid') {
   $variables = array();
-  $thumbnail_pieces = array();
+  $uri = NULL;
+  $url = NULL;
   if (isset($fields['nid']->raw)) {
     $class = 'grid-image lazy';
     if ($view_display == 'list') {
       $class = 'list-image lazy';
     }
-
-    $default_file = 'no_img';
-    $uri = NULL;
-    $url = NULL;
+    $use_default = FALSE;
+    $default_file = base_path() . drupal_get_path('theme', 'SBAC') . '/images/default.png';
     if (isset($fields['field_thumbnail_uri'])) {
-      $thumbnail_uri = $fields['field_thumbnail_uri']->content;
-      $thumbnail_uri = str_replace('<div class="field-content">', '', $thumbnail_uri);
-      $thumbnail_uri = str_replace('</div>', '', $thumbnail_uri);
+      $thumbnail_uri = strip_tags($fields['field_thumbnail_uri']->content);
       $thumbnail_pieces = explode('::', $thumbnail_uri);
       $uri = $thumbnail_pieces[0];
       $url = $thumbnail_pieces[1];
       $ext = pathinfo($uri, PATHINFO_EXTENSION);
       $type = _sbac_resource_determine_extension($ext);
       $real_path = drupal_realpath($uri);
-      if (!file_exists($real_path)) {
+      if (!file_exists($real_path) || $type != 'image') {
         $url = $default_file;
         $uri = $default_file;
-      }
-
-      if ($type != 'image') {
-        $url = $default_file;
-        $uri = $default_file;
+        $use_default = TRUE;
       }
     }
     else {
       $url = $default_file;
       $uri = $default_file;
+      $use_default = TRUE;
     }
 
-    if ($uri != 'no_img' && $url != 'no_img') {
+    if (!$use_default) {
       $image_url = file_create_url($uri);
-      $image_tag = '<img class="' . $class . '" typeof="foaf:Image" src="' . $image_url . '" width="268" height="138" alt="Resource thumbnail image" />';
-      $variables['image'] = $image_tag;
-      $variables['mime-type'] = file_get_mimetype($url);
-      $variables['file-type-icon'] = 'document';
+      $image_mimetype = file_get_mimetype($url);
+    } else {
+      $image_url = $url;
+      $image_mimetype = 'image/png';
     }
-  }
-  if (count($thumbnail_pieces) && $uri != 'no_img' && $url != 'no_img') {
+    $image_tag = '<img class="' . $class . '" typeof="foaf:Image" src="' . $image_url . '" alt="Resource thumbnail image" />';
+    $variables['image'] = $image_tag;
+    $variables['mime-type'] = $image_mimetype;
+    $variables['file-type-icon'] = 'document';
+
     return $variables;
-  }
-  else {
+  } else {
     return NULL;
   }
 }
@@ -1313,6 +1315,10 @@ function _sbac_resource_resource_review_links($fields, $row) {
   $positionals = array('1st', '2nd', '3rd');
   if ($feedback->qc_count == 3) {
     $variables['status_icons'][3] =  array('image' => 'grey-2.png', 'hover' => 'Needs Review');
+  }
+
+  if ($feedback->resubmission || $feedback->post_resubmission) {
+    $variables['resub'] = t('Resubmission');
   }
 
   if (!$feedback->gatekeeper_started) {

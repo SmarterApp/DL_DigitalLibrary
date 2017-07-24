@@ -24,6 +24,11 @@ Drupal.behaviors.sbac_taskit = {
       });
     });
 
+    $('#notifications').off('click', '.taskit-interval-group .taskit-group-expander');
+    $('#notifications').on('click', '.taskit-interval-group .taskit-group-expander', function(e){
+        $(e.target).closest('.taskit-interval-group').toggleClass('taskit-group-collapsed');
+    });
+
 //    $('.section-notifications a').click(function(e) {
 //      Drupal.behaviors.sbac_taskit.mark_notifications_read();
 //    });

@@ -130,5 +130,43 @@
       background-size: contain;
 			vertical-align: middle;
     }
+
+    .search {
+      .sbac-search {
+        background: url('../images/icons/search-small.png') center no-repeat;
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        background-size: contain;
+        vertical-align: middle;
+      }
+
+      .block-views {
+        display: none;
+
+        .form-item {
+          margin: 0;
+        }
+
+        label {
+          display: none;
+        }
+
+        button {
+          position: absolute;
+          top: 8px;
+          right: 18px;
+          box-shadow: none;
+          border-radius: 0;
+          padding: 5px;
+          background: transparent url('/sites/all/themes/custom/SBAC/images/search.png') 5px 5px no-repeat;
+          width: 26px;
+          height: 26px;
+          border: none;
+          text-shadow: none;
+          color: transparent;
+        }
+      }
+    }
   }
 }
