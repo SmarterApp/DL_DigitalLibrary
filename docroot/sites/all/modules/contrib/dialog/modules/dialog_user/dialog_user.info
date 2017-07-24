@@ -1,0 +1,6 @@
+name = Dialog User
+description = Provides dialog integration to the user module.
+core = 7.x
+package = User interface
+files[] = dialog_user.module
+dependencies[] = dialog
