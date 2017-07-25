@@ -287,7 +287,7 @@
                     "homepage": "https://www.drupal.org/user/1"
                 },
                 {
-                    "name": "GÃ¡bor Hojtsy",
+                    "name": "Gábor Hojtsy",
                     "homepage": "https://www.drupal.org/user/4166"
                 },
                 {
@@ -375,7 +375,7 @@
                     "homepage": "https://www.drupal.org/user/1"
                 },
                 {
-                    "name": "GÃ¡bor Hojtsy",
+                    "name": "Gábor Hojtsy",
                     "homepage": "https://www.drupal.org/user/4166"
                 },
                 {
@@ -2035,7 +2035,7 @@
                     "homepage": "https://www.drupal.org/user/139189"
                 },
                 {
-                    "name": "rÃ¶tzi",
+                    "name": "rötzi",
                     "homepage": "https://www.drupal.org/user/73064"
                 },
                 {
@@ -3799,6 +3799,53 @@
             "homepage": "https://www.drupal.org/project/flexslider",
             "support": {
                 "source": "http://cgit.drupalcode.org/flexslider"
+            }
+        },
+        {
+            "name": "drupal/front",
+            "version": "2.4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/front",
+                "reference": "7.x-2.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/front-7.x-2.4.zip",
+                "reference": "7.x-2.4",
+                "shasum": "81342c7a56fb0da331ef5a443633e67c82b2f13a"
+            },
+            "type": "drupal-module",
+            "notification-url": "https://packages.drupal.org/7/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "estoyausente",
+                    "homepage": "https://www.drupal.org/user/1232954"
+                },
+                {
+                    "name": "asenenko",
+                    "homepage": "https://www.drupal.org/user/2641733"
+                },
+                {
+                    "name": "Simon Georges",
+                    "homepage": "https://www.drupal.org/user/172312"
+                },
+                {
+                    "name": "timhilliard",
+                    "homepage": "https://www.drupal.org/user/195493"
+                },
+                {
+                    "name": "Dublin Drupaller",
+                    "homepage": "https://www.drupal.org/user/8625"
+                }
+            ],
+            "description": "Allows for customized home pages dependent on role",
+            "homepage": "https://www.drupal.org/project/front",
+            "support": {
+                "source": "http://cgit.drupalcode.org/front"
             }
         },
         {
@@ -8290,7 +8337,7 @@
             ],
             "authors": [
                 {
-                    "name": "FranÃ§ois Pluchino",
+                    "name": "François Pluchino",
                     "email": "francois.pluchino@gmail.com"
                 }
             ],
