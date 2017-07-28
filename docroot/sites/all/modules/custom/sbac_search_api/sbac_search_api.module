@@ -109,6 +109,73 @@ function sbac_search_api_block_info() {
     'weight' => 1,
   );
 
+  // Common settings for all of the manual facet blocks.
+  $common = array(
+    'status' => 1,
+    'region' => 'sidebar_first',
+    'pages' => "instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*",
+    'visibility' => BLOCK_VISIBILITY_LISTED,
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+
+  // Manual facet blocks.
+  $blocks['sbac_search_api_subjects'] = array(
+    'info' => t('Subjects Facet'),
+    'weight' => 0,
+  ) + $common;
+
+  $blocks['sbac_search_api_grades'] = array(
+    'info' => t('Grades Facet'),
+    'weight' => 1,
+  ) + $common;
+
+  $blocks['sbac_search_api_targets'] = array(
+    'info' => t('Target Tags Facet'),
+    'weight' => 2,
+  ) + $common;
+
+  $blocks['sbac_search_api_common_core'] = array(
+    'info' => t('Common Core Facet'),
+    'weight' => 3,
+  ) + $common;
+
+  $blocks['sbac_search_api_media_types'] = array(
+    'info' => t('Media Types Facet'),
+    'weight' => 4,
+  ) + $common;
+
+  $blocks['sbac_search_api_educational_use'] = array(
+    'info' => t('Educational Use Facet'),
+    'weight' => 5,
+  ) + $common;
+
+  $blocks['sbac_search_api_end_users'] = array(
+    'info' => t('End User Facet'),
+    'weight' => 6,
+  ) + $common;
+
+  $blocks['sbac_search_api_student_pops'] = array(
+    'info' => t('Student Populations Facet'),
+    'weight' => 7,
+  ) + $common;
+
+  $blocks['sbac_search_api_module_types'] = array(
+    'info' => t('Module Types Facet'),
+    'weight' => 8,
+  ) + $common;
+
+  $blocks['sbac_search_api_attributes'] = array(
+    'info' => t('Attributes Facet'),
+    'weight' => 9,
+  ) + $common;
+
   return $blocks;
 }
 
@@ -153,6 +220,47 @@ function sbac_search_api_block_view($delta = '') {
       $block['subject'] = t('');
       $content = '<a href="#" data-tooltip title="Categories allow you to filter results using specific attributes. Click to see the available options." id="sbac-search-cat-button" class="active">' . t('Categories') . '</a>';
       $block['content'] = $content;
+      break;
+    // Manual facet blocks.
+    case 'sbac_search_api_subjects':
+      $block['subject'] = t('Subject');
+      $block['content'] = _sbac_search_api_build_facets('field_subject');
+      break;
+    case 'sbac_search_api_grades':
+      $block['subject'] = t('Grade');
+      $block['content'] = _sbac_search_api_build_facets('field_grades');
+      break;
+    case 'sbac_search_api_targets':
+      $block['subject'] = t('Target Alignment');
+      $block['content'] = _sbac_search_api_build_facets('field_target_term');
+      break;
+    case 'sbac_search_api_common_core':
+      $block['subject'] = t('Common Core State Standard');
+      $block['content'] = _sbac_search_api_build_facets('field_alignment_term');
+      break;
+    case 'sbac_search_api_media_types':
+      $block['subject'] = t('Media Type');
+      $block['content'] = _sbac_search_api_build_facets('field_digital_media_type');
+      break;
+    case 'sbac_search_api_educational_use':
+      $block['subject'] = t('Educational Use');
+      $block['content'] = _sbac_search_api_build_facets('field_educational_use');
+      break;
+    case 'sbac_search_api_end_users':
+      $block['subject'] = t('Intended End User');
+      $block['content'] = _sbac_search_api_build_facets('field_intended_end_user');
+      break;
+    case 'sbac_search_api_student_pops':
+      $block['subject'] = t('Intended Student Population');
+      $block['content'] = _sbac_search_api_build_facets('field_intended_student');
+      break;
+    case 'sbac_search_api_module_types':
+      $block['subject'] = t('Module Type');
+      $block['content'] = _sbac_search_api_build_facets('field_smarter_balanced_keyword');
+      break;
+    case 'sbac_search_api_attributes':
+      $block['subject'] = t('Formative Assessment Attributes');
+      $block['content'] = _sbac_search_api_build_facets('field_attributes');
       break;
   }
   return $block;
@@ -924,4 +1032,163 @@ function sbac_search_api_clear_library_page() {
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_RESOURCES_FILTERS] = '';
   $_SESSION[SBAC_SEARCH_DIGITAL_LIBRARY_KEYWORDS] = '';
   drupal_goto('digital-library-resources');
+}
+
+/**
+ * Recurses through the taxonomy tree to build the nested list.
+ *
+ * @param $vocab_name
+ * @param $vocab
+ * @param $facet_alias
+ * @param int $parent
+ * @return array|bool
+ */
+function _sbac_search_api_facet_tree($vocab_name, $vocab, $facet_alias, $parent = 0) {
+  // Storage for the tree.
+  $tree = array();
+  // Whether the current level in the tree or it's children are active at build time.
+  $active = FALSE;
+  // Get one level of the tree, starting at the current parent.
+  $current_level = taxonomy_get_tree($vocab, $parent, 1);
+  // The URL used at build time.
+  $current_path = current_path();
+
+  // Icons for the subjects.
+  $icons = array(
+    'ELA' => 'ela.png',
+    'Math' => 'math.png',
+    'Science and Technical' => 'science.png',
+    'History/Social Studies' => 'history.png',
+    'Arts' => 'art.png',
+    'World Languages' => 'languages.png',
+    'Health' => 'health.png',
+    'Physical Education' => 'phys-ed.png',
+    'Career/Vocational' => 'career.png',
+    'Other' => 'other.png',
+    'Not Subject Specific' => 'nss.png'
+  );
+
+  // Go through all of the items at the current level and add them and their children to the tree.
+  foreach ($current_level as $term) {
+    // Display name of the facet.
+    $name = $term->name;
+    // The query that needs to be added to the URL for this facet.
+    $query = "/$facet_alias/" . $term->tid;
+    // Base class for the list item.
+    $classes = array('sbac-search-api-facet');
+
+    // If the query for this facet is in the current URL, take it out, add the active class, and mark the facet as active.
+    if (strpos($current_path, $query) !== FALSE) {
+      $new_path = str_replace($query, '', $current_path);
+      $classes[] = 'active-facet';
+      $active = TRUE;
+    }
+    // Otherwise, add the query and add the inactive class.
+    else {
+      $new_path = $current_path . $query;
+      $classes[] = 'inactive-facet';
+    }
+
+    // If the facet name is over 40 characters, truncate it to 38.
+    if (strlen($term->name) > 40) {
+      $truncated = truncate_utf8($term->name, 38, FALSE, TRUE);
+      $name = '<span class="facet-truncate" data-full-name="' . $term->name . '">' . $truncated . '</span>';
+    }
+
+    // If this is the subject facet, add the icons.
+    if ($vocab_name == 'subject') {
+      // Add the images to the items.
+      if (isset($icons[$term->name])) {
+        $image = '<img class="subject-icon" src="' . base_path() . drupal_get_path('theme', 'SBAC') . '/images/subject-icons/' . $icons[$term->name] . '" alt="' . $term->name . '" />';
+        $name = $image . ' ' . $name;
+      }
+    }
+
+    // Add the +/- toggle to the facet name.
+    $name = '<span class="facet-toggle plus-sign"></span>' . $name;
+
+    // Create the list item.
+    $data = array(
+      'data' => l($name, $new_path, array(
+        'attributes' => array(
+          'data-query' => $query,
+          'class' => array('sbac-search-api-facet-link'),
+        ),
+        'html' => TRUE,
+      )),
+      'class' => $classes,
+    );
+
+    // If this is the target or cc facet, add the term descriptions to each item.
+    if ($vocab_name == 'education_alignment' || $vocab_name == 'target_alignment') {
+      $data['data-hover'] = $term->description;
+      $data['class'][] = 'facet-hover';
+    }
+
+    // Get the child items.
+    $children = _sbac_search_api_facet_tree($vocab_name, $vocab, $facet_alias, $term->tid);
+    // If there are children, process them.
+    if ($children) {
+      // Add them to the list.
+      $data['children'] = $children['tree'];
+      // Add the parent class to this list item.
+      $data['class'][] = 'parent-facet';
+      // If there are active children, mark this list item as such, and add the class for it as well.
+      if ($children['active']) {
+        $data['class'][] = 'active-child-facet';
+        $active = TRUE;
+      }
+    }
+
+    // Add the list item to the tree.
+    $tree[] = $data;
+  }
+
+  // If there are list items, return them, otherwise return false.
+  if (count($tree)) {
+    return array('active' => $active, 'tree' => $tree);
+  }
+  return FALSE;
+}
+
+/**
+ * Builds a nested list of taxonomy terms for the manual facet blocks.
+ *
+ * @param $facet
+ * @return array
+ */
+function _sbac_search_api_build_facets($facet) {
+  // Create a CSS ID for this list.
+  $id = 'sbac-facet-' . str_replace('_', '-', $facet);
+  // Base list config.
+  $output = array(
+    '#theme' => 'item_list',
+    '#title' => '',
+    '#type' => 'ul',
+    '#items' => array(),
+    '#attributes' => array(
+      'id' => array($id),
+      'class' => array('sbac-search-api-facet-block'),
+    ),
+  );
+
+  // Load the facetapi adapter.
+  $adapter = facetapi_adapter_load('search_api@default_node_index');
+  if ($adapter) {
+    // Load the facet.
+    $facet = facetapi_facet_load($facet, 'search_api@default_node_index');
+    // Load the information for this facet.
+    $field = field_info_field($facet['field']);
+    // Load the vocabulary associated with this facet.
+    $vocab = taxonomy_vocabulary_machine_name_load($field['settings']['allowed_values'][0]['vocabulary']);
+    // Load the pretty paths processor.
+    $processor = new FacetapiUrlProcessorPrettyPaths($adapter);
+    // Get the alias for this facet.
+    $facet_alias = $processor->getFacetPrettyPathsAlias($facet);
+    // Build the tree.
+    $items = _sbac_search_api_facet_tree($field['settings']['allowed_values'][0]['vocabulary'], $vocab->vid, $facet_alias);
+    // Add it to the list.
+    $output['#items'] = $items['tree'];
+  }
+  return $output;
 }
