@@ -164,13 +164,23 @@
         });
       };
 
+      // Function to add the disabling of all children of a parent.
       var facetState = function () {
-        $('.sbac-search-api-facet.active-child-facet > a').once('disableChildren').click(function (e) {
+        // Only attach this to parents with active children.
+        $('.sbac-search-api-facet.active-child-facet > a').once('disableChildren').on('click.disableChildren', function (e) {
           e.preventDefault();
+          // Make all of the children inactive.
           $(this).parent().find('.active-facet').toggleClass('active-facet inactive-facet');
+          // Make any child parents inactive.
           $(this).parent().find('.active-child-facet').removeClass('active-child-facet');
+          // Make this parent inactive.
           $(this).parent().removeClass('active-child-facet');
+          // Disable these click events.
+          $(this).parent().find('a').off('click.disableChildren');
+          // Remove the 'once' class so this will be reprocessed when children are next clicked.
+          $(this).removeClass('disableChildren-processed');
 
+          // Process the search with the newly inactive items.
           doSearch(true);
         });
       };
