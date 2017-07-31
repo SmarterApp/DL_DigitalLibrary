@@ -104,9 +104,13 @@ $block-blue-lighter: #18a5d1;
 
           & > a {
             padding-left: 0;
+            pointer-events: none;
+            cursor: default;
           }
 
           &.active-child-facet a {
+            pointer-events: auto;
+            cursor: pointer;
             padding-left: 17px;
           }
         }
@@ -168,6 +172,8 @@ $block-blue-lighter: #18a5d1;
           width: 14px;
           height: 12px;
           color: transparent;
+          pointer-events: auto;
+          cursor: pointer;
         }
 
         .facet-toggle.plus-sign {
