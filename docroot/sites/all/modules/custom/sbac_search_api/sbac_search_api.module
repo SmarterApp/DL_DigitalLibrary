@@ -1077,8 +1077,9 @@ function _sbac_search_api_facet_tree($vocab_name, $vocab, $facet_alias, $parent 
     // Base class for the list item.
     $classes = array('sbac-search-api-facet');
 
-    // If the query for this facet is in the current URL, take it out, add the active class, and mark the facet as active.
-    if (strpos($current_path, $query) !== FALSE) {
+    // If the query for this facet is in the current URL, take it out, add the active class, and mark the facet as
+    // active. Add some extra slashes in there so we don't match partials (e.g. - /s/15 matching in /s/153).
+    if (strpos($current_path . '/', $query . '/') !== FALSE) {
       $new_path = str_replace($query, '', $current_path);
       $classes[] = 'active-facet';
       $active = TRUE;
