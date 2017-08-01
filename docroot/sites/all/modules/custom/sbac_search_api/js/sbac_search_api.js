@@ -175,10 +175,16 @@
           $(this).parent().find('.active-child-facet').removeClass('active-child-facet');
           // Make this parent inactive.
           $(this).parent().removeClass('active-child-facet');
-          // Disable these click events.
-          $(this).parent().find('a').off('click.disableChildren');
-          // Remove the 'once' class so this will be reprocessed when children are next clicked.
-          $(this).removeClass('disableChildren-processed');
+          // Disable these click events and remove the 'once' class so this will be reprocessed when children are next clicked.
+          $(this).parent().find('a').off('click.disableChildren').removeClass('disableChildren-processed');
+          // Check if any other parents still have children active, and disable them if they don't.
+          $(this).parents('.active-child-facet').each(function () {
+            if (!$(this).find('.active-facet').length) {
+              $(this).removeClass('active-child-facet');
+              $(this).find('a').off('click.disableChildren');
+              $(this).children('a').removeClass('disableChildren-processed');
+            }
+          });
 
           // Process the search with the newly inactive items.
           doSearch(true);
