@@ -774,7 +774,7 @@ function sbac_flag_resource_form($form, $form_state, $node) {
     '#title' => 'Details',
     '#prefix' => '<div id="sbac-flag-optional-comment" style="display:none">',
     '#suffix' => '</div>',
-    '#maxlength' => 600,
+    '#maxlength' => 255,
     '#maxlength_js' => TRUE,
     '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
   );
