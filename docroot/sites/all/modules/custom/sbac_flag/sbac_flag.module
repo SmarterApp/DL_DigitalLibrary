@@ -1060,38 +1060,28 @@ function sbac_flag_determine_access_for_user($node, $uid) {
  * Some convaluted way of determining "urgency"
  *
  * @param $flag_option
+ * @param $type
  * @return bool
  */
 function sbac_flag_determine_urgent($flag_option, $type = 'resource') {
   $urgent = FALSE;
-  if ($flag_option == 'pii') {
+
+  if ($flag_option === 'pii') {
     return TRUE;
   }
 
   $term = taxonomy_term_load($flag_option);
 
-  if ($type == 'resource') {
-    if ($term) {
-      if ($term->name == 'Contains personally identifiable information (PII)') {
-        return TRUE;
-      }
-      if (strstr($term->name, 'May be in violation of intellectual property rights')) {
-        return TRUE;
-      }
-      if ($term->name == "Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)") {
-        return TRUE;
-      }
-    }
-  }
-  elseif ($type == 'comment' || $type == 'topic') {
-    if ($term) {
-      if ($term->name == "Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)") {
-        return TRUE;
-      }
-      if ($term->name == 'Contains personally identifiable information (PII)') {
-        return TRUE;
-      }
-    }
+  switch ($term->name) {
+    case 'Duplicate':
+    case 'Inaccurate / misleading':
+    case 'Unintelligible / not viewable / technology does not function properly':
+    case 'Contains personally identifiable information (PII)':
+    case 'Does not support the formative assessment process':
+    case 'Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)':
+    case 'Biased and objectionable or culturally insensitive. <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>':
+    case 'May be in violation of intellectual property rights (i.e., copyright infringement)':
+      return TRUE;
   }
 
   return $urgent;
