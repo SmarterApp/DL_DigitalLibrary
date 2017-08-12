@@ -2,27 +2,6 @@
  * Created by jbaker on 4/21/17.
  */
 (function ($) {
-  // Function to toggle the plus/minus icons for expanded tags.
-  function plusMinusToggler(selector) {
-    $(selector).each(function () {
-      var $clickedlist = $(this).parent().parent().siblings('.item-list').children('ul');
-      if ($clickedlist.hasClass('expanded')) {
-        if (!$(this).hasClass('minus-sign')) {
-          $(this).addClass('minus-sign');
-        }
-        if ($(this).hasClass('plus-sign')) {
-          $(this).removeClass('plus-sign');
-        }
-      } else {
-        if ($(this).hasClass('minus-sign')) {
-          $(this).removeClass('minus-sign');
-        }
-        if (!$(this).hasClass('plus-sign')) {
-          $(this).addClass('plus-sign');
-        }
-      }
-    });
-  }
 
   // Parse URLs into the query and search. If url is false, it will use the current page URL.
   function urlParse(url) {
@@ -90,21 +69,6 @@
     $item.html(full_name)
   }
 
-  // Sets up the initial state of the CC and Target tag blocks.
-  function cctState() {
-    var current_url = urlParse(false);
-    if (current_url.query.indexOf('/cc/') !== -1) {
-      $('.block-facetapi-ynelajjhesbu04dgezguufidwud0zqlh').addClass('expanded');
-    } else {
-      $('.block-facetapi-ynelajjhesbu04dgezguufidwud0zqlh').children('.item-list').hide();
-    }
-    if (current_url.query.indexOf('/t/') !== -1) {
-      $('.block-facetapi-car5oq63bgunqwf0g1xh5k6fci7p504o').addClass('expanded');
-    } else {
-      $('.block-facetapi-car5oq63bgunqwf0g1xh5k6fci7p504o').children('.item-list').hide();
-    }
-  }
-
   function getParameterByName(name, url) {
     if (!url) {
       url = window.location.href;
@@ -125,62 +89,6 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  function initializeFacets() {
-    // Set the initial toggle state of the plus/minus icons.
-    plusMinusToggler('a .facetapi-collapsible-handle');
-
-    // Set up the show/hide for the CC and Target blocks.
-    $('.block-facetapi-ynelajjhesbu04dgezguufidwud0zqlh, .block-facetapi-car5oq63bgunqwf0g1xh5k6fci7p504o').once('fakeCollapsible').each(function () {
-      var $block = $(this);
-      $(this).children('h2').click(function (e) {
-        $block.children('.item-list').toggle();
-        $block.toggleClass('expanded');
-      })
-    });
-
-    // Remove the unused 2nd and third terms in the CC block.
-    var $cc_items = $('.facetapi-facet-field-alignment-term > li');
-    $cc_items.eq(3).remove();
-    $cc_items.eq(2).remove();
-    $cc_items.eq(1).addClass('last');
-
-    // Add hovers to truncated items.
-    $('.facet-truncate').once('facetHover').hover(function () {
-      $(this).toggleClass('facet-hover');
-      facetSwap($(this));
-    });
-
-    // Set the plus/minus state when you click.
-    $('a .facetapi-collapsible-handle').once('plusMinus').click(function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      plusMinusToggler(this);
-    });
-
-    // Add a click area to the fake checkboxes.
-    $('.facetapi-facet').each(function () {
-      var href = $(this).children('a.facetapi-active, a.facetapi-inactive').attr('href');
-      $(this).once('checkBoxSpacer').prepend('<a class="checkbox-spacer" href="' + href + '">&nbsp;</a>');
-    });
-
-    // Change all the parent items in the facets to just open, rather than select.
-    $('a[class^=facetapi-]').each(function () {
-      if (!$(this).parents('.facetapi-facet-field-alignment-term, .facetapi-facet-field-target-term').length) {
-        var $parent = $(this).parent();
-        if ($parent.siblings('.item-list').length) {
-          $parent.parent().css('background', 'none');
-          $(this).siblings('.checkbox-spacer').hide();
-          $(this).off('click');
-          $(this).removeClass('facetapi-inactive facetapi-active');
-          $(this).click(function (e) {
-            e.preventDefault();
-            $('.facetapi-collapsible-handle', this).click();
-          });
-        }
-      }
-    });
-  }
-
   Drupal.behaviors = Drupal.behaviors || {};
 
   /**
@@ -190,7 +98,135 @@
    */
   Drupal.behaviors.sbac_search_api_facets = {
     attach: function (context, settings) {
-      initializeFacets();
+      var doSearch = function(reset) {
+        // Stop any existing unfinished AJAX requests.
+        if (currentAJAX.hasOwnProperty('abort')) {
+          currentAJAX.abort();
+        }
+
+        // Put up the dimmer while the AJAX request happens.
+        searchLoading();
+
+        var facets = [];
+        $('li.active-facet a').each(function () {
+          facets.push($(this).data('query'));
+        });
+
+        var forms = $(search_forms);
+        if (0 === forms.length) {
+          forms = $('#views-exposed-form-search-api-resource-views-search-resources');
+        }
+
+        var term;
+        if (0 < forms.length) {
+          term = $(forms).find('#edit-search').val();
+        } else {
+          term = getParameterByName('search');
+        }
+        if (term) {
+          current_search_pairs['search'] = term;
+        } else {
+          delete current_search_pairs.search;
+        }
+
+        // Reset pager to start at the beginning
+        if (reset) {
+          delete current_search_pairs.page;
+        }
+
+        var query = base_url + facets.join('');
+        var search = searchConcat(current_search_pairs);
+
+        // Update the history.
+        history.pushState({}, '', query + (search.length ? ('?' + search) : ''));
+
+        // Do the AJAX call to get the new results.
+        currentAJAX = $.get('/ajax' + query, search, function (data) {
+          // Load the data returned by the request as context for the selectors below.
+          var context = $(data);
+          // Replace the current search results number.
+          $('.current-search-item').html($('.current-search-item', context).html());
+          // Replace the sort widget, as immediate updating isn't necessary here, and this is easier than doing it in JS.
+          $('.search-sort-widget').html($('.search-sort-widget', context).html());
+          // Replace the search results and pager.
+          $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
+          // Remove the '/ajax' from the pager and sort links.
+          $(pager_selectors.concat(sort_selectors)).each(function (i, v) {
+            if ($(v).length) {
+              $(v).each(function () {
+                $(this).attr('href', $(this).attr('href').substr(5));
+              });
+            }
+          });
+          // Re-attach behaviors.
+          //Drupal.attachBehaviors('#main');
+          Drupal.attachBehaviors('.view-search-api-resource-views');
+        });
+      };
+
+      // Function to add the disabling of all children of a parent.
+      var facetState = function () {
+        // Only attach this to parents with active children.
+        $('.sbac-search-api-facet.active-child-facet > a').once('disableChildren').on('click.disableChildren', function (e) {
+          e.preventDefault();
+          // Make all of the children inactive.
+          $(this).parent().find('.active-facet').toggleClass('active-facet inactive-facet');
+          // Make any child parents inactive.
+          $(this).parent().find('.active-child-facet').removeClass('active-child-facet');
+          // Make this parent inactive.
+          $(this).parent().removeClass('active-child-facet');
+          // Disable these click events and remove the 'once' class so this will be reprocessed when children are next clicked.
+          $(this).parent().find('a').off('click.disableChildren').removeClass('disableChildren-processed');
+          // Check if any other parents still have children active, and disable them if they don't.
+          $(this).parents('.active-child-facet').each(function () {
+            if (!$(this).find('.active-facet').length) {
+              $(this).removeClass('active-child-facet');
+              $(this).find('a').off('click.disableChildren');
+              $(this).children('a').removeClass('disableChildren-processed');
+            }
+          });
+
+          // Process the search with the newly inactive items.
+          doSearch(true);
+        });
+      };
+
+      // Set up the show/hide for the blocks.
+      $('.block-sbac-search-api').once('searchApiCollapsible').each(function () {
+        var $block = $(this);
+        if ($('.active-facet', $block).length) {
+          $block.addClass('expanded');
+        }
+        $(this).children('h2').click(function (e) {
+          $block.toggleClass('expanded');
+        });
+      });
+
+      facetState();
+
+      // Add hovers to truncated items.
+      $('.facet-truncate').once('facetTruncate').hover(function () {
+        $(this).toggleClass('facet-hover');
+        facetSwap($(this));
+      });
+
+      // Add hovers for facet descriptions.
+      $('.facet-hover a').once('facetHover').hover(function () {
+        var hover = $(this).parent().attr('data-hover');
+        if (hover) {
+          $(this).append('<div class="facet-description-hover">' + hover + '</div>');
+        }
+      }, function () {
+        $('.facet-description-hover', this).remove();
+      });
+
+      // Set the plus/minus state when you click.
+      $('.facet-toggle').once('plusMinus').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).toggleClass('plus-sign minus-sign');
+        $(this).parent().parent().children('.item-list').toggleClass('facets-open facets-closed');
+      });
 
       // Get the current URL and parse it.
       var current = urlParse(false);
@@ -200,9 +236,7 @@
 
       // The selectors for the facet-related links.
       var facet_selectors = [
-        'a.facetapi-inactive',
-        'a.facetapi-active',
-        'a.checkbox-spacer'
+        'a.sbac-search-api-facet-link'
       ];
       // The selectors for the pager-related links.
       var pager_selectors = [
@@ -216,6 +250,7 @@
       var sort_selectors = ['a.sort-item'];
       // Put all the selectors together.
       var selectors = facet_selectors.concat(pager_selectors, sort_selectors);
+      var search_selectors = pager_selectors.concat(sort_selectors);
 
       // The available variables that can be in the search section of the URL (except page, as we want that to reset).
       var search_vars = [
@@ -279,73 +314,7 @@
           $('#main').html($('#main', context).html());
           // Re-attach behaviors.
           Drupal.attachBehaviors('.main-row');
-          cctState();
-        });
-      };
-
-      var doSearch = function(reset) {
-        // Stop any existing unfinished AJAX requests.
-        if (currentAJAX.hasOwnProperty('abort')) {
-          currentAJAX.abort();
-        }
-
-        // Put up the dimmer while the AJAX request happens.
-        searchLoading();
-
-        var facets = [];
-        $('a.facetapi-active').each(function () {
-          facets.push($(this).data('query'));
-        });
-
-        var forms = $(search_forms);
-        if (0 === forms.length) {
-          forms = $('#views-exposed-form-search-api-resource-views-search-resources');
-        }
-
-        var term;
-        if (0 < forms.length) {
-          term = $(forms).find('#edit-search').val();
-        } else {
-          term = getParameterByName('search');
-        }
-        if (term) {
-          current_search_pairs['search'] = term;
-        } else {
-          delete current_search_pairs.search;
-        }
-
-        // Reset pager to start at the beginning
-        if (reset) {
-          delete current_search_pairs.page;
-        }
-
-        var query = base_url + facets.join('');
-        var search = searchConcat(current_search_pairs);
-
-        // Update the history.
-        history.pushState({}, '', query + (search.length ? ('?' + search) : ''));
-
-        // Do the AJAX call to get the new results.
-        currentAJAX = $.get('/ajax' + query, search, function (data) {
-          // Load the data returned by the request as context for the selectors below.
-          var context = $(data);
-          // Replace the current search results number.
-          $('.current-search-item').html($('.current-search-item', context).html());
-          // Replace the sort widget, as immediate updating isn't necessary here, and this is easier than doing it in JS.
-          $('.search-sort-widget').html($('.search-sort-widget', context).html());
-          // Replace the search results and pager.
-          $('.view-search-api-resource-views').html($('.view-search-api-resource-views', context).html());
-          // Remove the '/ajax' from the pager and sort links.
-          $(pager_selectors.concat(sort_selectors)).each(function (i, v) {
-            if ($(v).length) {
-              $(v).each(function () {
-                $(this).attr('href', $(this).attr('href').substr(5));
-              });
-            }
-          });
-          // Re-attach behaviors.
-          //Drupal.attachBehaviors('#main');
-          Drupal.attachBehaviors('.view-search-api-resource-views');
+          // cctState();
         });
       };
 
@@ -356,77 +325,12 @@
         doSearch(true);
       });
 
-      // Load the facets from another URL so they don't block loading of the search page.
-      function cctLoad(clicked) {
-        var parent = $(clicked).closest('.block-facetapi').find('.item-list > ul').filter(':first');
-        var block_id = $(parent).attr('id');
-        var $block = $('#' + block_id);
-
-        var facets = [];
-        $('a.facetapi-active').each(function () {
-          facets.push($(this).data('query'));
-        });
-        console.log('facets', facets);
-
-        var term = $(search_forms).find('#edit-search').val();
-        if (term) {
-          current_search_pairs['search'] = term;
-        } else {
-          delete current_search_pairs.search;
-        }
-
-        // Reset pager to start at the beginning
-        delete current_search_pairs.page;
-
-        var query = base_url + facets.join('');
-        var search = searchConcat(current_search_pairs);
-
-        // Add throbber.
-        $(clicked).parent().children().filter(':last').append(' <img class="cct-throbber" src="/misc/throbber-active.gif" />');
-        $.get('/cct' + query, search, function (data) {
-          $('.cct-throbber').remove();
-          // Load the data returned by the request as context for the selectors below.
-          var context = $(data);
-          // Load the facet blocks.
-          $block.html($('#' + block_id, context).html());
-          // Remove the '/cct' from these links.
-          $block.find('a').each(function () {
-            $(this).attr('href', $(this).attr('href').substr(4));
-          });
-          // Re-attach behaviors.
-          Drupal.attachBehaviors('#sidebar-first');
-        });
-      }
-
       // Add the data-query and data-search values to links (if they don't already have them) so rebuilding them is easier.
-      $(selectors.join(',')).not('[data-query]').each(function () {
-        var query_data = '';
+      $(search_selectors.join(',')).not('[data-search]').each(function () {
         // Get the URL of the current item.
         var item_url = $(this).attr('href');
         // Parse the item URL.
         var item = urlParse(item_url);
-        // If the link is just adding to the base URL, the part that's being added is the query data.
-        if (item.query.match(base_query)) {
-          query_data = item.query.replace(base_query, '');
-        }
-        // Otherwise, we need to figure out what is being taken away, as this must be active already.
-        else {
-          // Remove the first part of the URL (instructional, playlist, etc.) from the current and item URLs.
-          var item_query_only = item.query.replace(base, '').split('/');
-
-          // Split the query parts up into pairs (i.e. - s/123).
-          var item_pairs = [];
-          for (x = 0; x < item_query_only.length; x += 2) {
-            item_pairs.push(item_query_only[x] + '/' + item_query_only[x + 1]);
-          }
-
-          // Get the pair from the current URL that isn't in the item URL.
-          query_data = $(current_pairs).not(item_pairs).get();
-          // Standardize with the slash in front.
-          query_data = '/' + query_data[0];
-        }
-        // Add the data-query value from above to the item.
-        $(this).attr('data-query', query_data);
 
         // Split up the current and item URL search variables.
         var item_search_pairs = searchSplit(item.search);
@@ -449,34 +353,29 @@
       });
 
       // Add the click event to each link to update the other links.
-      $('#sidebar-first').once('facetClick').on('click', facet_selectors.join(','), function (e) {
+      $('#sidebar-first a.sbac-search-api-facet-link').once('facetClick').click(function (e) {
         // Don't do the normal click.
         e.preventDefault();
 
         var $parent = $(this).parent();
-        // Toggle the link and the parent between active and inactive to be consistent with the normal facet handling.
-        $parent.children('a').filter('.facetapi-active,.facetapi-inactive').toggleClass('facetapi-active facetapi-inactive');
-        if ($parent.hasClass('facetapi-active')) {
-          $parent.parent().find('.active').each(function () {
-            // Toggle the LI active class so the checkmarks are set correctly.
-            $(this).toggleClass('active');
-          });
-          $parent.parent().find('.item-list .facetapi-active').each(function () {
-            $(this).toggleClass('facetapi-active facetapi-inactive');
-          });
-        }
-        $parent.toggleClass('facetapi-active facetapi-inactive');
-        // Toggle the LI active class so the checkmarks are set correctly.
-        $parent.parent().toggleClass('active');
+        if (!$parent.hasClass('parent-facet')) {
+          // Toggle this facet to active or inactive.
+          $parent.toggleClass('active-facet inactive-facet');
 
-        // Change how the CC and Target tag parents work.
-        if ($(this).closest('.facetapi-facet-field-alignment-term, .facetapi-facet-field-target-term').length) {
-          cctLoad(this);
-        }
+          // If this facet or any of its siblings is active, make the parent active, otherwise make it inactive.
+          if ($parent.hasClass('active-facet') || $parent.siblings('.active-facet').length) {
+            $parent.parents('li.parent-facet').addClass('active-child-facet');
+          } else {
+            $parent.parents('li.parent-facet').removeClass('active-child-facet');
+          }
 
-        doSearch(true);
+          facetState();
+
+          doSearch(true);
+        }
       });
 
+      // Handle pager clicks.
       $('.view-search-api-resource-views').once('pageClick').on('click', pager_selectors.join(','), function(e) {
         e.preventDefault();
 
@@ -495,6 +394,7 @@
         doSearch(false);
       });
 
+      // Handle sort clicks.
       $('.block-search-api-sorts').once('sortClick').on('click', sort_selectors.join(','), function(e) {
         e.preventDefault();
 
@@ -530,6 +430,14 @@
   };
 
   $(document).ready(function () {
-    cctState();
+    // cctState();
+    $('.sbac-search-api-facet.parent-facet').each(function () {
+      if ($(this).hasClass('active-child-facet')) {
+        $('.facet-toggle', this).toggleClass('plus-sign minus-sign');
+        $('.item-list', this).addClass('facets-open');
+      } else {
+        $('.item-list', this).addClass('facets-closed');
+      }
+    });
   });
 })(jQuery);

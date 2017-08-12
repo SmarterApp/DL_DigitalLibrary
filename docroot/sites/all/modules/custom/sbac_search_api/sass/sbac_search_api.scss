@@ -66,12 +66,7 @@ $block-blue-lighter: #18a5d1;
 
   // Styling for the facet blocks.
   #sidebar-first {
-    .block-block {
-      display: none;
-    }
-
-    .block-facetapi,
-    .block-block {
+    .block-sbac-search-api {
       box-sizing: border-box;
       border: $block-grey solid 1px;
       margin-bottom: 20px;
@@ -104,14 +99,36 @@ $block-blue-lighter: #18a5d1;
         background: transparent url("../images/facet_unchecked.png") 5px 10px/12px 12px no-repeat;
         font-size: 13px;
 
-        &.active {
+        &.parent-facet {
+          background: none;
+
+          & > a {
+            padding-left: 0;
+            pointer-events: none;
+            cursor: default;
+          }
+
+          &.active-child-facet a {
+            pointer-events: auto;
+            cursor: pointer;
+            padding-left: 17px;
+          }
+        }
+
+        &.active-facet,
+        &.active-child-facet {
           background: transparent url("../images/facet_checked.png") 5px 10px/12px 12px no-repeat;
+        }
+
+        & > .facets-closed {
+          display: none;
         }
 
         a {
           color: #000;
           outline: none;
           position: relative;
+          padding-left: 17px;
 
           &:hover {
             color: #000;
@@ -129,10 +146,21 @@ $block-blue-lighter: #18a5d1;
             display: block;
             position: absolute;
             top: -3px;
-            left: -2px;
+            left: 15px;
             padding: 2px;
             background-color: #fff4c8;
             white-space: nowrap;
+          }
+
+          .facet-description-hover {
+            display: block;
+            position: absolute;
+            top: -3px;
+            right: -170px;
+            padding: 2px 5px;
+            background-color: #fff4c8;
+            width: 150px;
+            z-index: 9999;
           }
         }
 
@@ -140,39 +168,43 @@ $block-blue-lighter: #18a5d1;
           height: 18px;
         }
 
-        .facetapi-collapsible-handle {
+        &.parent-facet > a > .facet-toggle {
           display: inline-block;
-          width: 12px;
+          width: 14px;
+          height: 12px;
           color: transparent;
+          pointer-events: auto;
+          cursor: pointer;
         }
 
-        .facetapi-collapsible-handle.plus-sign {
-          background: transparent url("../images/facet_open.png") center center/12px 12px no-repeat;
+        .facet-toggle.plus-sign {
+          background: transparent url("../images/facet_open.png") 0 0/12px 12px no-repeat;
         }
 
-        .facetapi-collapsible-handle.minus-sign {
-          background: transparent url("../images/facet_close.png") center center/12px 12px no-repeat;
+        .facet-toggle.minus-sign {
+          background: transparent url("../images/facet_close.png") 0 0/12px 12px no-repeat;
         }
 
-        .element-invisible {
-          display: none;
-        }
+        //.element-invisible {
+        //  display: none;
+        //}
 
-        .facetapi-facet .checkbox-spacer {
-          display: inline-block;
-          width: 17px;
-        }
+        //.facetapi-facet .checkbox-spacer {
+        //  display: inline-block;
+        //  width: 17px;
+        //}
       }
 
+      & > .item-list {
+        display: none;
+      }
       &.expanded {
         h2.block-title {
           background: $block-grey url("../images/facet_close.png") 98% 50%/24px 24px no-repeat;
         }
-      }
 
-      &.expanded.active {
-        h2.block-title {
-          background: $block-grey none;
+        & > .item-list {
+          display: block;
         }
       }
     }

@@ -160,6 +160,7 @@
     "drupal/fivestar": "2.2.*",
     "drupal/flag": "3.7.*",
     "drupal/flexslider": "2.0.0-rc1",
+    "drupal/front": "2.4",
     "drupal/globalredirect": "1.5.*",
     "drupal/google_analytics": "2.2.*",
     "drupal/httprl": "1.x-dev#e3a8bdea43084d4f865ed8e361f6a5fbab368211",

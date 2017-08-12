@@ -91,8 +91,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -52,
       ),
@@ -126,8 +126,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -48,
       ),
@@ -161,8 +161,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -51,
       ),
@@ -196,8 +196,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -53,
       ),
@@ -231,8 +231,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -45,
       ),
@@ -266,8 +266,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -44,
       ),
@@ -301,8 +301,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -46,
       ),
@@ -336,8 +336,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -49,
       ),
@@ -371,8 +371,8 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -47,
       ),
@@ -406,13 +406,283 @@ cct/search-resources/*',
     'roles' => array(),
     'themes' => array(
       'SBAC' => array(
-        'region' => 'sidebar_first',
-        'status' => 1,
+        'region' => '',
+        'status' => 0,
         'theme' => 'SBAC',
         'weight' => -50,
       ),
     ),
     'title' => 'Common Core State Standard',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_attributes'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_attributes',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 9,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_common_core'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_common_core',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 3,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_educational_use'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_educational_use',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 5,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_end_users'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_end_users',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 6,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_grades'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_grades',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 1,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_media_types'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_media_types',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 4,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_module_types'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_module_types',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 8,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_student_pops'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_student_pops',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 7,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_subjects'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_subjects',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 0,
+      ),
+    ),
+    'title' => '',
+    'visibility' => 1,
+  );
+
+  $export['sbac_search_api-sbac_search_api_targets'] = array(
+    'cache' => 4,
+    'custom' => 0,
+    'delta' => 'sbac_search_api_targets',
+    'module' => 'sbac_search_api',
+    'node_types' => array(),
+    'pages' => 'instructional
+professional-learning
+playlist
+instructional/*
+professional-learning/*
+playlist/*
+search-resources
+search-resources/*',
+    'roles' => array(),
+    'themes' => array(
+      'SBAC' => array(
+        'region' => 'sidebar_first',
+        'status' => 1,
+        'theme' => 'SBAC',
+        'weight' => 2,
+      ),
+    ),
+    'title' => '',
     'visibility' => 1,
   );
 
