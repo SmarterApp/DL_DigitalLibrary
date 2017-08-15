@@ -37285,3 +37285,8 @@ body.page-help-topics h1 {
     max-height: 50px;
     max-width: 50px;
 }
+.eligibility-content {
+    -webkit-column-count: 4; /* Chrome, Safari, Opera */
+    -moz-column-count: 4; /* Firefox */
+    column-count: 4;
+}

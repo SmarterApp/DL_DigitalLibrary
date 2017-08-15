@@ -41,6 +41,50 @@ function sbac_self_registration_form($form, &$form_state) {
     '#description' => t('Email address must be from an authorized educational institution (school, district, etc.)'),
   );
 
+
+
+   $form['browser']['text'] = array(
+       '#type' => 'item',
+       '#title' => t('*Check Your Eligibility to Register'),
+       '#markup' => '<div class="eligibility-body">
+                        <p>Educators at K-12 public schools in these states are eligible to register for the Digital Library:</p>
+                            <div class="eligibility-content">
+                                <ul>
+                                    <li>
+                                        <a href="http://www.caaspp.org/training/dl-and-ia/index.html" style="color: #46a036;">California</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://ct.portal.airast.org/smarter-balanced-assessment/" style="color: #46a036;">Connecticut</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://www.doe.k12.de.us/domain/111" style="color: #46a036;">Delaware</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://www.hawaiipublicschools.org/TeachingAndLearning/Testing/StateAssessment/Pages/home.aspx" style="color: #46a036;">Hawaii</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://idaho.portal.airast.org/ela-math/" style="color: #46a036;">Idaho</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://opi.mt.gov/curriculum/MontCAS/index.html?gpm=1_3" style="color: #46a036;">Montana</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://www.doe.nv.gov/Assessments/Smarter_Balanced_Assessment_Consortium_(SBAC)/" style="color: #46a036;">Nevada</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://sd.portal.airast.org/" style="color: #46a036;">South Dakota</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://www.k12.wa.us/SMARTER/DigitalLibrary.aspx" style="color: #46a036;">Washington</a>
+                                    </li>
+                                    <li>
+                                        <a href="http://vt.portal.airast.org/digital-library/" style="color: #46a036;">Vermont</a>
+                                    </li>
+                                </ul>
+                            </div>
+                    </div>',
+       );
+
   $form['scan'] = array(
     '#type' => 'submit',
     '#value' => t('Register'),
