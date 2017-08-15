@@ -245,5 +245,12 @@ function sbac_core_strongarm() {
   $strongarm->value = 'user';
   $export['taskit_visibility'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_default_timezone';
+  $strongarm->value = '0';
+  $export['user_default_timezone'] = $strongarm;
+
   return $export;
 }
