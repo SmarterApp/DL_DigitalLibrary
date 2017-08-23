@@ -421,13 +421,13 @@ function sbac_forum_block_info() {
     'cache' => DRUPAL_NO_CACHE,
   );
 
-  $blocks['sbac_forum_back_button'] = array(
-    'info' => t('(sbac_forum) Back Button'),
-    'region' => 'filter',
-    'pages' => "forums/term/*\n",
-    'visibility' => BLOCK_VISIBILITY_LISTED,
-    'status' => 1,
-  );
+//  $blocks['sbac_forum_back_button'] = array(
+//    'info' => t('(sbac_forum) Back Button'),
+//    'region' => 'filter',
+//    'pages' => "forums/term/*\n",
+//    'visibility' => BLOCK_VISIBILITY_LISTED,
+//    'status' => 1,
+//  );
   return $blocks;
 }
 
@@ -446,11 +446,11 @@ function sbac_forum_block_view($delta = '') {
       $block['subject'] = NULL;
       $block['content'] = drupal_get_form('sbac_forum_category_forum_form');
       break;
-    case 'sbac_forum_back_button':
-      $previous_url = '/forums';
-      $block['subject'] = NULL;
-      $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
-      break;
+//    case 'sbac_forum_back_button':
+//      $previous_url = '/forums';
+//      $block['subject'] = NULL;
+//      $block['content'] = '<a href="' . $previous_url . '" class="button">Back</a>';
+//      break;
   }
   return $block;
 }
