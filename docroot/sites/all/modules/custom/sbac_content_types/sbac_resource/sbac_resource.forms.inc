@@ -1372,7 +1372,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
     if (!empty($form_state['executed'])) {
       $output = array();
       $output[] = ctools_modal_command_dismiss();
-      if ($form_state['triggering_element']['#value'] != 'Cancel') {
+      if ($form_state['triggering_element']['#value'] !== 'Cancel') {
         // TODO: using the nid from $_GET isn't safe - the user can modify it; can we pull
         // this value from $form_state?
         if (isset($_GET['nid'])) {
@@ -1405,62 +1405,66 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                   ->execute();
                 if (isset($feedbacks['feedback'])) {
                   foreach ($feedbacks['feedback'] as $feedback) {
-                    $recipients[] = entity_load_single('feedback', $feedback->id);
+                    $recipient = entity_load_single('feedback', $feedback->id);
+                    $recipients[$recipient->uid] = $recipient;
                   }
                 }
-              }
-              else {
+              } else {
                 // if there is already a gatekeeper entry, then this is a re-submission
                 $task_type = 'resource_resubmitted';
-                // get the current feedback for this node so we can notify the gk/reviewers
+                // get the current feedback for this node so we can notify the last gk/reviewer
                 $query = new EntityFieldQuery();
                 $feedbacks = $query->entityCondition('entity_type', 'feedback')
                   ->propertyCondition('completed', 1)
+                  ->propertyCondition('met_criteria', 0)
                   ->propertyCondition('type', array('qc', 'gate_keeper'), 'IN')
                   ->propertyCondition('node_id', $node->nid)
+                  ->entityOrderBy('created', 'DESC') // Only get last gk/reviewer
+                  ->range(0, 1) // Only get last gk/reviewer
                   ->execute();
                 if (isset($feedbacks['feedback'])) {
                   foreach ($feedbacks['feedback'] as $feedback) {
-                    $recipients[] = entity_load_single('feedback', $feedback->id);
+                    $recipient = entity_load_single('feedback', $feedback->id);
+                    $recipients[$recipient->uid] = $recipient;
                   }
-                }
-                // email reviewers
-                foreach ($recipients as $recipient) {
-                  $reviewer = user_load($recipient->uid);
-                  $username = sbac_email_user_link($reviewer);
-                  // Add resource link to message
-                  global $base_url;
-                  $values = array(
-                    'arguments' => array(
-                      '!resource-link' => $base_url . '/node/' . $node->nid,
-                      '!user-link' => $username,
-                    ),
-                    'uid' => $reviewer->uid,
-                  );
-                  $email_preference = $reviewer->field_email_preference['und'][0]['value'];
-                  if ($email_preference !== '' || $email_preference !== 'never') {
-                    // create message
-                    $message = message_create('resource_resubmitted', $values);
-                    $wrapper = entity_metadata_wrapper('message', $message);
-                    $wrapper->save();
-                    if ($email_preference == 'immediately') {
-                      // send email
-                      message_notify_send_message($message);
-                      // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-                      message_delete_multiple(array($message->mid));
+
+                  // email reviewer
+                  foreach ($recipients as $recipient) {
+                    $reviewer = user_load($recipient->uid);
+                    $username = sbac_email_user_link($reviewer);
+                    // Add resource link to message
+                    global $base_url;
+                    $values = array(
+                      'arguments' => array(
+                        '!resource-link' => $base_url . '/node/' . $node->nid,
+                        '!user-link' => $username,
+                      ),
+                      'uid' => $reviewer->uid,
+                    );
+                    $email_preference = $reviewer->field_email_preference['und'][0]['value'];
+                    if ($email_preference !== '' || $email_preference !== 'never') {
+                      // create message
+                      $message = message_create('resource_resubmitted', $values);
+                      $wrapper = entity_metadata_wrapper('message', $message);
+                      $wrapper->save();
+                      if ($email_preference === 'immediately') {
+                        // send email
+                        message_notify_send_message($message);
+                        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
+                        message_delete_multiple(array($message->mid));
+                      }
                     }
                   }
                 }
               }
-            }
-            else {
+            } else {
               $task_type = 'resource_submitted';
             }
 
             // Save the current state of the node.
             sbac_resource_save_current_state($node);
 
-            if ($task_type == 'resource_submitted') {
+            if ($task_type === 'resource_submitted') {
               if ($task = taskit_get_object($task_type)) {
                 global $user;
                 $task->addVisibility($task::VISIBILITY_USER);
@@ -1486,7 +1490,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                   $message = message_create('resource_ready_for_review', $values);
                   $wrapper = entity_metadata_wrapper('message', $message);
                   $wrapper->save();
-                  if ($email_preference == 'immediately') {
+                  if ($email_preference === 'immediately') {
                     // send email
                     message_notify_send_message($message);
                     // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
@@ -1494,8 +1498,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                   }
                 }
               }
-            }
-            else {
+            } else {
               if ($task = taskit_get_object($task_type)) {
                 global $user;
                 $task->addVisibility($task::VISIBILITY_USER);
@@ -1511,17 +1514,13 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
             sbac_resource_print_about_this_tab($node);
           }
         }
-      }
-      else {
+      } else {
         drupal_add_js(array('sbac_resource_valid_state' => FALSE), 'setting');
       }
     }
 
     print ajax_render($output);
     exit();
-  }
-  else {
-    return;
   }
 }
 
@@ -4057,35 +4056,6 @@ function _sbac_resource_save_contributor_comments(&$form, &$form_state) {
         $post_wrapper->save();
       }
     }
-    // Email last reviewer that a rejected resource is available for review
-    $last_reviewer = $form_state['values']['field_recent_reviewers']['und'][0]['target_id'];
-    // Send email to user
-    // Add resource link to message
-    $node = $form_state['node'];
-    global $base_url;
-    $user_profile = user_load($last_reviewer);
-    $username = sbac_email_user_link($user_profile);
-    $values = array(
-      'arguments' => array(
-        '!resource-link' => $base_url . '/node/' . $node->nid,
-        '!user-link' => $username,
-      ),
-      'uid' => $last_reviewer,
-    );
-    
-    $email_preference = $user_profile->field_email_reference[0]['und']['value'];
-    if ($email_preference !== '' && $email_preference !== 'never') {
-      // Create message
-      $message = message_create('resource_resubmitted', $values);
-      $wrapper = entity_metadata_wrapper('message', $message);
-      $wrapper->save();
-      if ($email_preference == 'immediately') {
-        // Send email
-        message_notify_send_message($message);
-        // delete message after it is sent so it doesn't show up in digest if a user switches email preferences
-        message_delete_multiple(array($message->mid));
-      }
-    }
   }
 }
 
@@ -4298,8 +4268,9 @@ SQL;
 
   $result = db_query($sql, array(':status' => '1', ':preference' => 'never', ':role' => '17', ':role1' => '16'));
 
+  $reviewers = array();
   foreach ($result as $row) {
-    $reviewers[] = $row;
+    $reviewers[$row->uid] = $row;
   }
 
   return $reviewers;
