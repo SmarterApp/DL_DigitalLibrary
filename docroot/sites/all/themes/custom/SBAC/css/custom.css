@@ -34037,7 +34037,6 @@ a.tabledrag-handle .handle {
 .section-container.auto > section.active #user-profile-form .form-item-name,
 .section-container.auto > section.active #user-profile-form .form-item-current-pass,
 .section-container.auto > section.active #user-profile-form .form-item-pass,
-.section-container.auto > section.active #user-profile-form fieldset#edit-timezone,
 .section-container.auto > section.active #user-profile-form fieldset#edit-legal {
   display: none;
 }

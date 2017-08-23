@@ -375,8 +375,7 @@ h2.name .field {
   font-size: 14px;
 }
 /* line 336, ../sass/profile.scss */
-.page-user .row.second #account .form-item-roles,
-.page-user .row.second #account fieldset#edit-timezone {
+.page-user .row.second #account .form-item-roles {
   display: none;
 }
 /* line 340, ../sass/profile.scss */
