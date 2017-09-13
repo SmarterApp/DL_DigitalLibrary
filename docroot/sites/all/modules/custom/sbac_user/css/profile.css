@@ -1301,3 +1301,6 @@ div[id*="edit-tab-container-forum-tab-buttons"] #sbac-favorites-resource-cancel:
   padding: 12px 0;
   text-transform: capitalize;
 }
+.page-user fieldset#edit-timezone--3 {
+  display: none;
+}
