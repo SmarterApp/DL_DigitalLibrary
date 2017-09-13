@@ -1419,7 +1419,7 @@ function sbac_resource_submit_resource_modal_callback($js = FALSE) {
                   ->propertyCondition('met_criteria', 0)
                   ->propertyCondition('type', array('qc', 'gate_keeper'), 'IN')
                   ->propertyCondition('node_id', $node->nid)
-                  ->entityOrderBy('created', 'DESC') // Only get last gk/reviewer
+                  ->propertyOrderBy('created', 'DESC') // Only get last gk/reviewer
                   ->range(0, 1) // Only get last gk/reviewer
                   ->execute();
                 if (isset($feedbacks['feedback'])) {
