@@ -445,10 +445,10 @@ h2.name .field {
   border: 1px #CECECE solid;
   /* border-radius: 5px;*/
   background: #fff;
-  height: 200px;
+  /*height: 200px;*/
   margin: 5px 0px;
   font-size: 20px;
-  width: 540px;
+  /*width: 540px;*/
   color: #5A5A5A;
 }
 /* line 419, ../sass/profile.scss */
