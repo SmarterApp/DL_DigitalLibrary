@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca5b6e74f098b5e76c6de08442f50537",
+    "content-hash": "1ec64abbb832a42e147cf0fe3c97311f",
     "packages": [
         {
             "name": "components/jquery",
@@ -167,16 +167,16 @@
         },
         {
             "name": "cweagans/composer-patches",
-            "version": "1.6.1",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cweagans/composer-patches.git",
-                "reference": "b3036f23b73570ab5d869e345277786c8eb248a9"
+                "reference": "014e968ca2ce4342476b3f2f6779b274fff8ae9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cweagans/composer-patches/zipball/b3036f23b73570ab5d869e345277786c8eb248a9",
-                "reference": "b3036f23b73570ab5d869e345277786c8eb248a9",
+                "url": "https://api.github.com/repos/cweagans/composer-patches/zipball/014e968ca2ce4342476b3f2f6779b274fff8ae9e",
+                "reference": "014e968ca2ce4342476b3f2f6779b274fff8ae9e",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 }
             ],
             "description": "Provides a way to patch Composer packages.",
-            "time": "2017-03-19T18:18:52+00:00"
+            "time": "2017-08-30T16:41:23+00:00"
         },
         {
             "name": "derhasi/composer-preserve-paths",
@@ -802,7 +802,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/apachesolr_comments"
             },
-            "time": "2013-03-07 22:07:35"
+            "time": "2013-03-07T22:07:35+00:00"
         },
         {
             "name": "drupal/apachesolr_file",
@@ -842,7 +842,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/apachesolr_file"
             },
-            "time": "2013-03-19 16:09:56"
+            "time": "2013-03-19T16:09:56+00:00"
         },
         {
             "name": "drupal/apachesolr_search",
@@ -962,7 +962,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/apachesolr_term"
             },
-            "time": "2012-03-08 08:56:57"
+            "time": "2012-03-08T08:56:57+00:00"
         },
         {
             "name": "drupal/apachesolr_user",
@@ -1021,7 +1021,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/apachesolr_user"
             },
-            "time": "2015-04-24 08:14:21"
+            "time": "2015-04-24T08:14:21+00:00"
         },
         {
             "name": "drupal/apachesolr_views",
@@ -1980,7 +1980,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/dialog"
             },
-            "time": "2012-01-16 18:14:11"
+            "time": "2012-01-16T18:14:11+00:00"
         },
         {
             "name": "drupal/diff",
@@ -2641,6 +2641,53 @@
             }
         },
         {
+            "name": "drupal/ez_timezone_select",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/ez_timezone_select",
+                "reference": "7.x-1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/ez_timezone_select-7.x-1.0.zip",
+                "reference": "7.x-1.0",
+                "shasum": "bd550b94951bc2609d92836b60d42236c45743c9"
+            },
+            "require": {
+                "drupal/drupal": "~7.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "7.x-1.0",
+                    "datestamp": "1483645742",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/7/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "joelstein",
+                    "homepage": "https://www.drupal.org/user/36598"
+                }
+            ],
+            "description": "Makes timezone select fields more user-friendly by grouping common options at the top.",
+            "homepage": "https://www.drupal.org/project/ez_timezone_select",
+            "support": {
+                "source": "http://cgit.drupalcode.org/ez_timezone_select"
+            }
+        },
+        {
             "name": "drupal/facetapi",
             "version": "dev-1.x",
             "source": {
@@ -2712,7 +2759,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/facetapi"
             },
-            "time": "2016-12-19 21:25:45"
+            "time": "2016-12-19T21:25:45+00:00"
         },
         {
             "name": "drupal/facetapi_bonus",
@@ -3340,7 +3387,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/field_collection"
             },
-            "time": "2015-03-26 17:40:46"
+            "time": "2015-03-26T17:40:46+00:00"
         },
         {
             "name": "drupal/field_group",
@@ -4027,7 +4074,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/httprl"
             },
-            "time": "2014-05-15 20:35:15"
+            "time": "2014-05-15T20:35:15+00:00"
         },
         {
             "name": "drupal/imce",
@@ -4704,7 +4751,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/mailgun"
             },
-            "time": "2016-06-26 04:07:34"
+            "time": "2016-06-26T04:07:34+00:00"
         },
         {
             "name": "drupal/maillog",
@@ -4759,7 +4806,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/maillog"
             },
-            "time": "2012-02-13 01:37:22"
+            "time": "2012-02-13T01:37:22+00:00"
         },
         {
             "name": "drupal/mailsystem",
@@ -7023,7 +7070,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/upload_qc"
             },
-            "time": "2012-11-01 22:30:03"
+            "time": "2012-11-01T22:30:03+00:00"
         },
         {
             "name": "drupal/user_import",
@@ -7680,7 +7727,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/views_infinite_scroll"
             },
-            "time": "2014-10-02 14:05:47"
+            "time": "2014-10-02T14:05:47+00:00"
         },
         {
             "name": "drupal/views_load_more",
@@ -8077,7 +8124,7 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/wordfilter"
             },
-            "time": "2011-02-26 01:36:03"
+            "time": "2011-02-26T01:36:03+00:00"
         },
         {
             "name": "drupal/workbench",
@@ -8830,7 +8877,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.26",
+            "version": "v2.8.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -8890,20 +8937,20 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.3.6",
+            "version": "v3.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "07432804942b9f6dd7b7377faf9920af5f95d70a"
+                "reference": "b7666e9b438027a1ea0e1ee813ec5042d5d7f6f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/07432804942b9f6dd7b7377faf9920af5f95d70a",
-                "reference": "07432804942b9f6dd7b7377faf9920af5f95d70a",
+                "url": "https://api.github.com/repos/symfony/process/zipball/b7666e9b438027a1ea0e1ee813ec5042d5d7f6f0",
+                "reference": "b7666e9b438027a1ea0e1ee813ec5042d5d7f6f0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": "^5.5.9|>=7.0.8"
             },
             "type": "library",
             "extra": {
@@ -8935,7 +8982,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-13T13:05:09+00:00"
+            "time": "2017-07-29T21:54:42+00:00"
         }
     ],
     "packages-dev": [],
