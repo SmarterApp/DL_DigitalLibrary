@@ -64,6 +64,7 @@
     "drupal/contextual": "*",
     "drupal/dashboard": "*",
     "drupal/dblog": "*",
+    "drupal/ez_timezone_select": "*",
     "drupal/field": "*",
     "drupal/field_sql_storage": "*",
     "drupal/list": "*",
