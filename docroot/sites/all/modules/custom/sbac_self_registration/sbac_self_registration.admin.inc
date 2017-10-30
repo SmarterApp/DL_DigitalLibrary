@@ -75,6 +75,9 @@ function sbac_self_registration_form($form, &$form_state) {
                                         <a href="http://sd.portal.airast.org/" style="color: #46a036;">South Dakota</a>
                                     </li>
                                     <li>
+                                        <a href="http://www.vide.vi/" style="color: #46a036;">U.S. Virgin Islands</a>
+                                    </li>
+                                    <li>
                                         <a href="http://www.k12.wa.us/SMARTER/DigitalLibrary.aspx" style="color: #46a036;">Washington</a>
                                     </li>
                                     <li>
