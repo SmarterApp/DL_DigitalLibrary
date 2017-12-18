@@ -1,0 +1,10 @@
+name = Apache Solr File
+description = Index file enity types into Solr core.
+package = Search Toolkit
+core = 7.x
+files[] = apachesolr_file.install
+files[] = apachesolr_file.module
+dependencies[] = "apachesolr_search"
+dependencies[] = "file_entity"
+configure = admin/config/search/apachesolr/settings
+
