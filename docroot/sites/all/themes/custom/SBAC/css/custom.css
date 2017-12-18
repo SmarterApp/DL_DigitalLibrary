@@ -32974,7 +32974,7 @@ a.tabledrag-handle .handle {
 #edit-field-success-criteria label,
 #edit-field-supporting-evidence label,
 #edit-field-principles label {
-  font-size: 1em;
+  font-size: .8em;
 }
 
 /* line 1350, ../sass/custom.scss */
@@ -34037,7 +34037,6 @@ a.tabledrag-handle .handle {
 .section-container.auto > section.active #user-profile-form .form-item-name,
 .section-container.auto > section.active #user-profile-form .form-item-current-pass,
 .section-container.auto > section.active #user-profile-form .form-item-pass,
-.section-container.auto > section.active #user-profile-form fieldset#edit-timezone,
 .section-container.auto > section.active #user-profile-form fieldset#edit-legal {
   display: none;
 }
@@ -37284,4 +37283,9 @@ body.page-help-topics h1 {
 .page-digital-library-resources .shield-drop img {
     max-height: 50px;
     max-width: 50px;
+}
+.eligibility-content {
+    -webkit-column-count: 4; /* Chrome, Safari, Opera */
+    -moz-column-count: 4; /* Firefox */
+    column-count: 4;
 }

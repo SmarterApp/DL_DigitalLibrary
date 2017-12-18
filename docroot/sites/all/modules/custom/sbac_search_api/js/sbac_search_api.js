@@ -366,7 +366,14 @@
           if ($parent.hasClass('active-facet') || $parent.siblings('.active-facet').length) {
             $parent.parents('li.parent-facet').addClass('active-child-facet');
           } else {
-            $parent.parents('li.parent-facet').removeClass('active-child-facet');
+            // Check if any other parents still have children active, and disable them if they don't.
+            $(this).parents('.active-child-facet').each(function () {
+              if (!$(this).find('.active-facet').length) {
+                $(this).removeClass('active-child-facet');
+                $(this).find('a').off('click.disableChildren');
+                $(this).children('a').removeClass('disableChildren-processed');
+              }
+            });
           }
 
           facetState();

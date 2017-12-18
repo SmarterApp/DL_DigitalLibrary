@@ -375,8 +375,7 @@ h2.name .field {
   font-size: 14px;
 }
 /* line 336, ../sass/profile.scss */
-.page-user .row.second #account .form-item-roles,
-.page-user .row.second #account fieldset#edit-timezone {
+.page-user .row.second #account .form-item-roles {
   display: none;
 }
 /* line 340, ../sass/profile.scss */
@@ -446,10 +445,10 @@ h2.name .field {
   border: 1px #CECECE solid;
   /* border-radius: 5px;*/
   background: #fff;
-  height: 200px;
+  /*height: 200px;*/
   margin: 5px 0px;
   font-size: 20px;
-  width: 540px;
+  /*width: 540px;*/
   color: #5A5A5A;
 }
 /* line 419, ../sass/profile.scss */
@@ -1301,4 +1300,7 @@ div[id*="edit-tab-container-forum-tab-buttons"] #sbac-favorites-resource-cancel:
   margin: 0;
   padding: 12px 0;
   text-transform: capitalize;
+}
+.page-user fieldset#edit-timezone--3 {
+  display: none;
 }

@@ -774,7 +774,7 @@ function sbac_flag_resource_form($form, $form_state, $node) {
     '#title' => 'Details',
     '#prefix' => '<div id="sbac-flag-optional-comment" style="display:none">',
     '#suffix' => '</div>',
-    '#maxlength' => 600,
+    '#maxlength' => 255,
     '#maxlength_js' => TRUE,
     '#attributes' => array('maxlength_js_label' => array('Character count: @remaining')),
   );
@@ -969,6 +969,10 @@ function sbac_flag_save_flag($flag, $comment, $nid, $cid = 0) {
   $entity->urgent = $urgent;
   drupal_write_record('eck_flag', $entity);
 
+  if ('resource' === $node->type) {
+    search_api_track_item_change('node', array($node->nid));
+  }
+
   $entity = get_object_vars($entity);
   return $entity;
 }
@@ -1060,38 +1064,28 @@ function sbac_flag_determine_access_for_user($node, $uid) {
  * Some convaluted way of determining "urgency"
  *
  * @param $flag_option
+ * @param $type
  * @return bool
  */
 function sbac_flag_determine_urgent($flag_option, $type = 'resource') {
   $urgent = FALSE;
-  if ($flag_option == 'pii') {
+
+  if ($flag_option === 'pii') {
     return TRUE;
   }
 
   $term = taxonomy_term_load($flag_option);
 
-  if ($type == 'resource') {
-    if ($term) {
-      if ($term->name == 'Contains personally identifiable information (PII)') {
-        return TRUE;
-      }
-      if (strstr($term->name, 'May be in violation of intellectual property rights')) {
-        return TRUE;
-      }
-      if ($term->name == "Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)") {
-        return TRUE;
-      }
-    }
-  }
-  elseif ($type == 'comment' || $type == 'topic') {
-    if ($term) {
-      if ($term->name == "Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)") {
-        return TRUE;
-      }
-      if ($term->name == 'Contains personally identifiable information (PII)') {
-        return TRUE;
-      }
-    }
+  switch ($term->name) {
+    case 'Duplicate':
+    case 'Inaccurate / misleading':
+    case 'Unintelligible / not viewable / technology does not function properly':
+    case 'Contains personally identifiable information (PII)':
+    case 'Does not support the formative assessment process':
+    case 'Biased, objectionable, or culturally insensitive material (e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)':
+    case 'Biased and objectionable or culturally insensitive. <span>(e.g. related to race, culture, religion, political viewpoint, gender, or socioeconomic status)</span>':
+    case 'May be in violation of intellectual property rights (i.e., copyright infringement)':
+      return TRUE;
   }
 
   return $urgent;
@@ -1316,6 +1310,7 @@ function sbac_flag_resolve_all_flags($node, $eck_review = FALSE) {
   }
   else {
     db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 1, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
+    search_api_track_item_change('node', array($node->nid));
   }
 }
 
@@ -1328,6 +1323,7 @@ function sbac_flag_resolve_all_flags($node, $eck_review = FALSE) {
  */
 function sbac_flag_remove_resource($node) {
   db_query("UPDATE {eck_flag} ef SET ef.resolved = :resolved, ef.changed = :changed WHERE ef.nid = :nid AND ef.target_type = :type", array(':resolved' => 2, ':changed' => time(), ':nid' => $node->nid, ':type' => 'resource'));
+  search_api_track_item_change('node', array($node->nid));
 }
 
 /**
@@ -1767,4 +1763,39 @@ SQL;
     }
 
     return $users;
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function sbac_flag_entity_property_info_alter(&$info) {
+  $info['node']['properties']['flagged'] = array(
+    'type' => 'boolean',
+    'label' => t('Resource is flagged'),
+    'description' => t('This property is set to true if the resource has an unresolved flag.'),
+    'computed' => true,
+    'entity views field' => true,
+    'sanitized' => true,
+    'getter callback' => 'sbac_flag_is_flagged',
+  );
+}
+
+/**
+ * Callback for the "flagged" property to expose it to search_api and views
+ *
+ * @param $item
+ * @return bool
+ */
+function sbac_flag_is_flagged($item) {
+  if (empty($item->nid) || $item->type !== 'resource') {
+    return false;
+  }
+
+  $sql = "SELECT * FROM {eck_flag} WHERE nid = :nid AND resolved = :resolved LIMIT 1";
+  $result = db_query($sql, array(':nid' => $item->nid, ':resolved' => 0));
+  if ($result->rowCount() > 0) {
+    return true;
+  }
+
+  return false;
 }

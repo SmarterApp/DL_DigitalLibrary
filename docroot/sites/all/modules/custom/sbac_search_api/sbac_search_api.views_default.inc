@@ -203,6 +203,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
 
   /* Display: Instructional Resources */
   $handler = $view->new_display('page', 'Instructional Resources', 'instructional');
@@ -255,6 +260,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'instructional';
 
   /* Display: Professional Learning Resources */
@@ -308,6 +318,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'professional-learning';
 
   /* Display: Playlist Resources */
@@ -357,6 +372,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'playlist';
 
   /* Display: Search Resources */
@@ -401,6 +421,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'search-resources';
 
   /* Display: Instructional Resources AJAX */
@@ -454,6 +479,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'ajax/instructional';
 
   /* Display: Instructional Resources CC/Target */
@@ -507,6 +537,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'cct/instructional';
 
   /* Display: Professional Learning Resources AJAX */
@@ -560,6 +595,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'ajax/professional-learning';
 
   /* Display: Professional Learning Resources CC/Target */
@@ -613,6 +653,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'cct/professional-learning';
 
   /* Display: Playlist Resources AJAX */
@@ -662,6 +707,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'ajax/playlist';
 
   /* Display: Playlist Resources CC/Target */
@@ -711,6 +761,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'cct/playlist';
 
   /* Display: Search Resources AJAX */
@@ -755,6 +810,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'ajax/search-resources';
 
   /* Display: Search Resources CC/Target */
@@ -799,6 +859,11 @@ function sbac_search_api_views_default_views() {
     31 => 0,
     36 => 0,
   );
+  /* Filter criterion: Indexed Node: Resource is flagged */
+  $handler->display->display_options['filters']['flagged']['id'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['table'] = 'search_api_index_default_node_index';
+  $handler->display->display_options['filters']['flagged']['field'] = 'flagged';
+  $handler->display->display_options['filters']['flagged']['value'] = '0';
   $handler->display->display_options['path'] = 'cct/search-resources';
   $export['search_api_resource_views'] = $view;
 

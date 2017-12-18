@@ -197,6 +197,7 @@ function sbac_search_api_default_search_api_index() {
         "field_topic_files:file:field_file_image_title_text" : { "type" : "list\\u003Ctext\\u003E" },
         "field_topic_files:file:name" : { "type" : "list\\u003Ctext\\u003E" },
         "field_unique_views" : { "type" : "integer" },
+        "flagged" : { "type" : "boolean" },
         "search_api_access_node" : { "type" : "list\\u003Cstring\\u003E" },
         "search_api_language" : { "type" : "string" },
         "search_api_url" : { "type" : "uri" },
